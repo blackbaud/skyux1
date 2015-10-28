@@ -1,0 +1,42 @@
+<div ng-controller="ScrollIntoViewTestController as scrollCtrl">
+    <h3>Tiles on pages</h3>
+
+    <button type="button" class="btn btn-primary" ng-click="scrollCtrl.scrollIntoView()">Scroll into view</button>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div style="background-color: #f2f2f2; padding: 15px">
+                <bb-tile bb-tile-header="resources.tile_header" bb-tile-collapsed="scrollCtrl.is_collapsed" bb-scroll-into-view="scrollCtrl.scrollIntoViewCount" bb-scroll-into-view-highlight="'true'">
+                    <div bb-tile-section style="height: 400px">
+                Test.
+                    </div>
+                </bb-tile>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <button type="button" class="btn btn-primary" ng-click="scrollCtrl.scrollIntoView()">Scroll into view</button>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div style="background-color: #f2f2f2; padding: 15px; height: 300px; position: relative; overflow-y: auto;">
+                <bb-tile bb-tile-header="scrollCtrl.resources.tile_header" bb-tile-collapsed="scrollCtrl.is_collapsed" bb-scroll-into-view="scrollCtrl.scrollParentIntoViewCount" bb-scroll-into-view-highlight="'true'" style="position: relative; top: 200px">
+                    <div bb-tile-section>
+                        This element is within another scrollable element, so the scrollable parent should be scrolled instead of the document.
+                    </div>
+                </bb-tile>
+                <div style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <button type="button" class="btn btn-primary" ng-click="scrollCtrl.scrollParentIntoView()">Scroll parent into view</button>
+
+</div>

@@ -1,0 +1,309 @@
+@import "mixins";
+
+$filterWidth: 240px;
+
+.bb-grid-container {
+    position: relative;
+}
+
+/* Overwrite the defualt Bootstrap pagination for the grid pagination because
+    it does strange things with focus */
+.bb-grid-pagination-container {
+    margin-top: 15px;
+    .pagination {
+        > li > a,
+        > li > span {
+            &:focus {
+                color: $pagination-color;
+                background-color: $pagination-bg;
+                border-color: $pagination-border;
+            }
+        }
+        > .active > a,
+        > .active > span {
+            &,
+            &:hover,
+            &:focus {
+                color: inherit;
+                cursor: default;
+                background-color: #f4f4f4;
+                border-color: #dddddd;
+                z-index: 2;
+            }
+        }
+
+        > .disabled {
+            > span,
+            > span:hover,
+            > span:focus,
+            > a,
+            > a:hover,
+            > a:focus {
+                color: $pagination-disabled-color;
+                background-color: $pagination-disabled-bg;
+                border-color: $pagination-disabled-border;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.bb-tile {
+    .bb-grid-top-scrollbar {
+        display: none;
+    }
+
+    .bb-table-backtotop {
+        display: none;
+    }
+}
+
+.bb-grid-table-wrapper {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.bb-grid-table-wrapper-overflow {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.bb-grid-top-scrollbar {
+    background-color: #fff;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.ui-jqgrid {
+    .ui-jqgrid-htable {
+        th.ui-th-column.bb-grid-th-right {
+            text-align: right;
+        }
+        th.ui-th-column.bb-grid-th-left {
+            text-align: left;
+        }
+        th.ui-th-column.bb-grid-th-center {
+            text-align: center;
+        }
+    }
+}
+
+.bb-grid-table .blockUI {
+    z-index: auto !important;
+}
+
+.bb-grid-filters {
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    z-index: $z-index-flyout;
+    right: 0;
+}
+
+.bb-grid-filters-fixed-top {
+    @extend .bb-grid-filters;
+    position: fixed;
+    right: 0;
+    bottom: auto;
+}
+
+.bb-grid-filters-fixed-bottom {
+    @extend .bb-grid-filters;
+    position: fixed;
+    right: 0;
+    top: auto;
+    bottom: 0;
+}
+
+body:not(.bb-viewkeeper-ignore-fixed) {
+    .bb-grid-filters.bb-viewkeeper-fixed {
+        left: auto !important;
+        right: 0;
+        z-index: $z-index-flyout;
+    }
+}
+
+.bb-grid-filters-box {
+    position: relative;
+}
+
+.bb-grid-filters-icon {
+    @include border-left-radius(20px);
+    background: $bb-color-blue;
+    float: left;
+    padding: 7px 10px 7px 13px;
+    font-size: 16px;
+    width: 40px;
+    color: #fff;
+    cursor: pointer;
+    -moz-box-shadow: 0px 3px 2px 0 rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 3px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 3px 2px 0 rgba(0, 0, 0, 0.2);
+
+    &:before {
+        content: $bbsky-char-filter;
+        font-family: BBSKY;
+    }
+
+    @media (max-width: $screen-xs-max) {
+        display: none;
+    }
+}
+
+.bb-grid-filters-container {
+    width: $filterWidth;
+    margin-left: 40px;
+    margin-bottom: 5px;
+    background: #f3f3f4;
+    border: 1px solid $gray-lighter;
+    -moz-box-shadow: 2px 3px 2px 0 rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 2px 3px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 3px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.bb-grid-filters-header {
+    background: #efefef;
+    padding: $padding $padding-plus-half;
+    cursor: pointer;
+}
+
+.bb-grid-filters-header-title {
+    display: inline;
+    text-transform: uppercase;
+}
+
+.bb-grid-filters-header-hide {
+    float: right;
+    font-size: 12px;
+    color: $bb-brand-alternate-light;
+}
+
+.bb-grid-filters-body-group-header-icon {
+    font-size: 11px;
+}
+
+.bb-grid-filters-body-group-content {
+    margin-left: 5px;
+}
+
+.bb-grid-filters-body,
+.bb-grid-filters-footer {
+    padding: $padding;
+}
+
+.bb-grid-column-picker-wrapper {
+    height: 400px;
+
+    @media (max-width: $screen-xs-max) {
+        height: 320px;
+    }
+}
+
+.bb-grid-column-picker-table {
+    .bb-checklist-name-column {
+        width: 160px;
+    }
+
+    .bb-checklist-description-column {
+        width: 420px;
+    }
+}
+
+.bb-grid-filter-summary-item:not(:last-child):after {
+    content: " \2022";
+}
+
+.bb-grid-action-bar {
+    min-height: 50px;
+    background-color: $gray-lightest;
+    width: 100%;
+    z-index: 100;
+}
+
+.bb-grid-action-bar-buttons {
+    display: inline-block;
+    padding: $padding;
+}
+
+.bb-grid-action-bar-clear-selection {
+    background: none repeat scroll 0 0 transparent;
+    color: $bb-color-blue;
+    font-family: "open sans", "Helvetica Neue", Arial, Helvetica, sans-serif, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 2;
+}
+
+.bb-grid-action-bar-and-back-to-top {
+    bottom: 0;
+    margin-top: 5px;
+    width: 100%;
+    .table-backtotop {
+        margin-top: 0;
+        .btn-link {
+            font-size: 13px;
+            vertical-align: baseline
+        }
+    }
+}
+
+.bb-grid-action-bar-mobile-buttons {
+    background-color: $bb-color-white;
+    -moz-box-shadow: 0 -1px 6px 0 $gray-lighter;
+    -webkit-box-shadow: 0 -1px 6px 0 $gray-lighter;
+    box-shadow: 0 -1px 6px 0 $gray-lighter;
+}
+
+.bb-grid-action-bar-mobile-btn {
+    margin-bottom: $margin;
+    padding-left: $padding;
+    text-align: left;
+}
+
+.bb-grid-action-bar-btn-container {
+    border-bottom: 1px solid $gray-lightest;
+    padding: 15px 15px;
+}
+
+.bb-grid-action-bar-mobile-cancel {
+    padding-left: 15px;
+}
+
+.bb-grid-toolbar-container {
+    .toolbar {
+        .bb-grid-toolbar-btn {
+            float: left;
+            font-size: 12px;
+            margin: 0 5px 0 0;
+            padding: 3px 6px;
+        }
+
+        .bb-column-picker-btn, .bb-filter-btn {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+    }
+}
+
+// Center the multiselect checkbox in the header since jqGrid doesn't do it for us.  This fixes an issue where
+// the header checkbox and the row checkboxes are misaligned when an explicit width is set on the checkbox column.
+.bb-grid-multiselect {
+    .ui-jqgrid-labels {
+        th:first-child {
+           text-align: center;
+        }
+    }
+}
+.bb-grid-toolbar-container {
+    .toolbar {
+        &.bb-table-toolbar {
+            height: auto;
+            min-height: 39px;
+        }
+    }
+}
+
+.bb-grid-toolbar-button-container {
+    float: left;
+    font-size: 12px;
+    display: inline-block;
+}

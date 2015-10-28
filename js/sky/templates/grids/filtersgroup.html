@@ -1,0 +1,7 @@
+<div class="form-group" ng-class="isCollapsed ? 'collapsed' : 'collapsible'">
+    <div ng-click="isCollapsed = !isCollapsed">
+        <i ng-class="'glyphicon-chevron-' + (isCollapsed ? 'down' : 'up')" class="bb-grid-filters-body-group-header-icon glyphicon"></i>
+        <label>{{bbGridFiltersGroupLabel}}</label>
+    </div>
+    <div class="bb-grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>
+</div>

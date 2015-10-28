@@ -1,0 +1,17 @@
+﻿<div ng-controller="PaginationTestController as paginationCtrl">
+  <div bb-pagination-content="paginationCtrl.itemsPaged">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Paged data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in paginationCtrl.itemsPaged.items">
+          <td>{{item.text}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div bb-pagination="paginationCtrl.itemsPaged"></div>
+</div>

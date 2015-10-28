@@ -1,0 +1,201 @@
+@import "mixins";
+
+/*Customizations to jqGrid styles.  Should be applied after the default jqGrid style are loaded*/
+
+.ui-jqgrid {
+
+    .bb-check-wrapper input:checked+.bb-check-checkbox:before,
+    .bb-check-wrapper input:checked+.bb-check-radio:before {
+        padding-left: 0;
+    }
+
+    .bb-check-wrapper {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    background-color: $bb-color-white;
+    //////////////////////////////////////////////////////////////
+    ///Begin: Apply styles to make jqGrid look like our normal tables
+    //////////////////////////////////////////////////////////////
+    thead {
+        border: 0;
+        border-bottom: 1px solid $gray-lighter;
+        white-space: nowrap;
+        background-color: $bb-color-white;
+    }
+
+    .ui-jqgrid-view {
+        font-size: $font-size-base;
+    }
+
+    .ui-jqgrid-htable th, tr.jqgrow td {
+        padding: $table-cell-padding;
+    }
+
+    .ui-th-column, .ui-jqgrid-htable th.ui-th-column {
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    tr.jqgrow:nth-child(even) {
+        background-color: lighten($body-bg, 2%);
+    }
+
+    tr.ui-state-hover {
+        background-color: #e4e5f8 !important;
+        .bb-check-checkbox, .bb-check-radio {
+            border-color: #fff;
+        }
+    }
+
+    .grid-multiselect {
+        tr.ui-state-highlight {
+            background-color: #eeeffb;
+            border: 1px solid #dadbf6;
+        }
+    }
+
+    tr.jqgrow {
+        vertical-align: top;
+        td {
+            white-space: normal;
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 1px dotted $gray-lighter;
+            @include ellipsis(false);
+            .bb-check-checkbox.checked:before {
+                padding-left: 0;
+            }
+        }
+    }
+
+    tr th {
+        font-weight: normal;
+        color: grey;
+        border: 0;
+        border-right: 1px solid $gray-lighter;
+    }
+
+    /* the important is necessary here because jqgrid puts a display: none;
+       style on the span element */
+    thead .sorting-desc > div > span, thead .sorting-asc > div > span {
+        display: inline-block !important;
+        font-size: 14px;
+        margin-left: 3px;
+        @extend .fa;
+    }
+
+    thead .sorting-desc > div > span {
+        @extend .fa-caret-down;
+    }
+
+    thead .sorting-asc > div > span {
+        @extend .fa-caret-up;
+    }
+
+    thead .sorting-desc, thead .sorting-asc {
+        > div:after {
+            display: none;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////
+    ///End: Apply styles to make jqGrid look like our normal tables
+    //////////////////////////////////////////////////////////////
+    /*Drag drop placeholder styles*/
+    .ui-sortable-placeholder {
+        background-color: #FFFFDF;
+    }
+    /*Drag drop style for item being dragged*/
+    th.ui-sortable-helper {
+        background-color: $gray-lighter;
+    }
+    /* Column Resize Helper - The line that is shown when actively resizing a column*/
+    .ui-jqgrid-resize-mark {
+        width: 2px;
+        left: 0;
+        background-color: #777;
+        cursor: e-resize;
+        cursor: col-resize;
+        position: absolute;
+        top: 0;
+        height: 100px;
+        overflow: hidden;
+        display: none;
+        border: 0 none;
+        z-index: 99999;
+    }
+    /*Better position move handle to be centered on the border between table headers*/
+    .ui-jqgrid-resize-ltr {
+        position: absolute;
+        right: -14px;
+        width: 30px;
+        z-index: 50;
+        min-height: 20px;
+        height: 50% !important;
+        vertical-align: middle;
+    }
+    /*Prevent browser touch action from interrupting drag and drop*/
+    .ui-jqgrid-htable {
+        -ms-touch-action: none;
+        touch-action: none;
+    }
+
+
+    .ui-jqgrid-htable th.ui-th-column {
+        overflow: visible;
+        position: relative;
+        font-weight: 600;
+    }
+
+    .ui-jqgrid-htable th {
+        cursor: pointer;
+
+        >div {
+            @include ellipsis(false);
+            height: auto !important;
+            max-height: 80px;
+            max-width: 100%;
+            vertical-align: middle;
+            white-space: pre-wrap;
+        }
+
+        .bb-check-checkbox {
+            height: 22px;
+        }
+
+        .bb-check-checkbox:before {
+            padding-left: 0;
+        }
+    }
+
+    /*jqgfirstrow is used by jqgrid to force the column widths from the headers
+      table to be respected in the body table.  Need to kill paddings there to prevent
+      this row from forcing a horizontal scrollbar on the table.
+    */
+    tr.jqgfirstrow td {
+        padding: 0;
+        border: none;
+    }
+
+    .ui-jqgrid-bdiv {
+        background-color: white;
+        overflow: hidden;
+    }
+
+    .loading {
+        display: none !important;
+    }
+
+    .dropdown-toggle {
+        color: $gray-light;
+        text-decoration: none!important;
+    }
+
+    tr.jqgrow td.bb-grid-dropdown-cell {
+        overflow: visible;
+    }
+}

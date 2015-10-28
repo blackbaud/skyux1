@@ -1,0 +1,53 @@
+<form>
+  <div ng-controller="SearchfieldLocalTestController as searchCtrl">
+    <h3>Local Search <small>(i.e. dropdown with search)</small></h3>
+    <div class="form-group">
+      <label class="control-label">Single Search</label>
+      <ui-select ng-model="searchCtrl.color_id">
+        <ui-select-match allow-clear placeholder="{{searchCtrl.resources.watermark_single}}">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="color.id as color in searchCtrl.colors | filter: $select.search">
+          <span>{{color.name}}</span>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="form-group">
+      <label class="control-label">Multiple Search</label>
+      <ui-select multiple ng-model="searchCtrl.color_ids">
+        <ui-select-match placeholder="{{searchCtrl.resources.watermark_multiple}}">{{$item.name}}</ui-select-match>
+        <ui-select-choices repeat="color.id as color in searchCtrl.colors | filter: $select.search">
+          <span>{{color.name}}</span>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+  <hr class="kitchen-sink-divider"/>
+
+  <div ng-controller="SearchfieldRemoteTestController as remoteCtrl">
+    <h3>Remote Search</h3>
+
+    <div class="form-group">
+      <label class="control-label">Single Search</label>
+      <ui-select ng-model="remoteCtrl.address">
+        <ui-select-match allow-clear placeholder="{{remoteCtrl.resources.watermark_single}}">{{$select.selected.formatted_address}}</ui-select-match>
+        <ui-select-choices repeat="address in remoteCtrl.singleSearchResults" refresh="remoteCtrl.addressSearch($select.search, 'single')" refresh-delay="250">
+          <span>{{address.formatted_address}}</span>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="form-group">
+      <label class="control-label">Multiple Search</label>
+      <ui-select multiple ng-model="remoteCtrl.addresses">
+        <ui-select-match placeholder="{{remoteCtrl.resources.watermark_multiple}}">{{$item.formatted_address}}</ui-select-match>
+        <ui-select-choices repeat="address in remoteCtrl.multipleSearchResults" refresh="remoteCtrl.addressSearch($select.search, 'multiple')" refresh-delay="250">
+          <span>{{address.formatted_address}}</span>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+</form>

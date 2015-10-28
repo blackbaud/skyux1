@@ -1,0 +1,20 @@
+<section ng-if="locals.noPageStatusSpecified() || bbPageStatus === locals.pageStatuses.LOADED">
+    <div ng-transclude ng-init="locals.onShowing()"></div>
+</section>
+<section class="container-fluid bb-page-content-column-container" ng-show="bbPageStatus === locals.pageStatuses.NOT_AUTHORIZED">
+    <div class="row">
+        <section class="bb-page-content-column col-xs-12 text-center">
+            <div class="m">
+                <h3>
+                    {{resources.page_noaccess_header}}
+                </h3>
+            </div>
+            <div class="bb-page-noaccess-description">{{resources.page_noaccess_description}}</div>
+            <div class="m-lg">
+                <button type="button" class="btn btn-lg btn-primary" ng-click="locals.navigateAway()" data-bbauto-field="NavigateAwayButton">
+                    {{resources.page_noaccess_button}}
+                </button>
+            </div>
+        </section>
+    </div>
+</section>

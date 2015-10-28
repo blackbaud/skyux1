@@ -1,0 +1,13 @@
+<!-- Animations need to be disabled because the position of the spinner must be the same for each test -->
+<style type="text/css">
+    #screenshot-wait {
+        height: 200px;
+        width: 200px;
+    }
+</style>
+
+<div class="container bb-screenshot-noanim">
+    <div id="screenshot-wait" ng-controller="WaitTestController" bb-wait="{{true}}">
+        Contents
+    </div>
+</div>

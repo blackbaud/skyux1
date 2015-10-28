@@ -1,0 +1,1 @@
+﻿angular.module('KitchenSink').controller('TextPatternController', angular.noop);

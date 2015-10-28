@@ -1,0 +1,47 @@
+<div class="row bb-file-drop-row">
+    <div class="col-xs-12 bb-file-drop-col" ng-class="{'col-sm-6': bbFileDrop.allowLinks}">
+        <div
+             class="bb-file-drop bb-file-drop-target"
+             ngf-drop
+             ngf-keep="false"
+             ngf-drag-over-class="{accept: 'bb-file-drop-accept', reject: 'bb-file-drop-reject'}"
+             ngf-change="bbFileDrop.fileChange($files, $event, $rejectedFiles)"
+             >
+            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">
+                <div class="bb-file-drop-contents-not-over">
+                    <h4>{{'file_upload_drag_file_here' | bbResources}}</h4>
+                    <h5>{{'file_upload_or_click_to_browse' | bbResources}}</h5>
+                    <i class="fa fa-cloud-upload bb-file-upload-icon"></i>
+                </div>
+                <div class="bb-file-drop-contents-accept">
+                    <h4>{{'file_upload_drop_files_here' | bbResources}}</h4>
+                    <i class="fa fa-bullseye bb-file-upload-icon"></i>
+                </div>
+                <div class="bb-file-drop-contents-reject">
+                    <h4>{{'file_upload_invalid_file' | bbResources}}</h4>
+                    <i class="fa fa-times-circle bb-file-upload-icon"></i>
+                </div>
+            </div>
+            <div class="bb-file-drop-contents-custom" ng-transclude></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xs-12 bb-file-drop-col" ng-if="bbFileDrop.allowLinks">
+        <div class="bb-file-drop-contents">
+            <div class="bb-file-drop-link">
+                <h4 class="bb-file-drop-link-header">{{'file_upload_paste_link' | bbResources}}</h4>
+                <div class="form-group">
+                    <input
+                           type="text"
+                           class="form-control"
+                           placeholder="{{'file_upload_link_placeholder' | bbResources}}"
+                           ng-model="bbFileDrop.url"
+                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink()"
+                           />
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink()">
+                    {{'file_upload_paste_link_done' | bbResources}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

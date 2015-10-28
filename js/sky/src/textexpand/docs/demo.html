@@ -1,0 +1,11 @@
+﻿<div ng-controller="ReadMoreTestController as readCtrl">
+  <h3>Text expand</h3>
+  <div bb-text-expand="readCtrl.longText" style="white-space: pre-wrap"></div>
+  <div class="row">&nbsp;</div>
+  <h3>Text expand repeater</h3>
+  <ul bb-text-expand-repeater bb-text-expand-repeater-max="2" bb-text-expand-repeater-data="readCtrl.repeaterData">
+    <li ng-repeat="item in readCtrl.repeaterData">
+      <span>{{item.text}}</span>
+    </li>
+  </ul>
+</div>

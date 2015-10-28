@@ -1,0 +1,234 @@
+@import "mixins";
+@import "animation/animate";
+
+.bb-tile {
+    clear: both;
+    margin-bottom: $margin-double;
+    margin-top: 0;
+    padding: 0;
+
+    .bb-tile-title {
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        background-color: #fff;
+        border-color: $border-color;
+        border-image: none;
+        border-style: solid solid none;
+        border-width: 4px 0px 0;
+        color: inherit;
+        margin-bottom: 0;
+        height: 48px;
+        cursor: pointer;
+        padding: 0;
+
+        .bb-tile-header {
+            font-family: $bb-font-family-narrow;
+            font-size: 22px;
+            font-weight: 100;
+            margin: 0;
+            padding: 9px $tile-header-tool-padding;
+            text-overflow: ellipsis;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            overflow: -moz-hidden-unscrollable;
+        }
+    }
+
+
+    .bb-tile-header-with-content {
+        float: left;
+        vertical-align: baseline;
+        @include ellipsis();
+        display: flex;
+        align-items: baseline;
+
+        .bb-tile-header {
+            float: none;
+            padding-right: $tile-header-tool-padding * (2 / 3);
+            max-width: 80%;
+        }
+    }
+
+    .bb-tile-tools {
+        -ms-touch-action: none;
+        touch-action: none;
+    }
+
+    .bb-no-records {
+        padding-top: $padding-triple;
+        padding-bottom: $padding-triple;
+    }
+
+    .row-header {
+        color: $gray-light;
+        padding-top: $padding-half;
+    }
+
+    .row-column {
+        padding-left: 0.8 * $padding;
+    }
+
+    .row-text {
+        overflow: hidden;
+        overflow-wrap: break-word;
+        padding: $padding-half 0;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .row-edit-button {
+        display: inline;
+        float: right;
+        padding-top: $padding-half;
+        font-size: $font-size-h4;
+        padding-bottom: $padding-half;
+        border: none;
+        background-color: transparent;
+    }
+}
+
+.bb-tile-header-content {
+    color: $bb-color-green;
+    display: inline-block;
+    font-family: $bb-font-family-narrow;
+    font-size: 18px;
+    font-weight: 400;
+    opacity: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow: -moz-hidden-unscrollable;
+    max-width: 50%;
+}
+
+ .bb-tile.collapsed .bb-tile-header-content {
+     @include transition(opacity 0.5s);
+     opacity: 1;
+}
+
+.bb-tile.collapsible .bb-tile-header-content {
+    @include transition(opacity 0.5s);
+    opacity: 0;
+}
+
+.bb-tile-header-check {
+    font-size: 16px;
+}
+
+.bb-tile-content {
+    background-color: #fff;
+    color: inherit;
+    border-color: $border-color;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0;
+    clear: both;
+}
+
+.bb-tile-tools {
+    display: inline-block;
+    float: right;
+    margin-top: 0;
+    position: relative;
+    padding: 0;
+}
+
+/*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
+tiles behave on a modal form.*/
+.modal-body {
+    .bb-tile {
+        .bb-tile-title {
+            height: 32px;
+
+            .bb-tile-header {
+                font-family: $font-family-base;
+                font-size: 13px;
+                font-weight: 600;
+                margin: 0;
+                padding: 7px $tile-header-tool-padding;
+            }
+        }
+
+        .bb-tile-tools {
+            margin-top: 7px;
+        }
+    }
+}
+
+/*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
+tiles behave within a column of tiles.*/
+.bb-page-content-tile-column {
+    .bb-tile {
+        //When columns are stacked in a tile, there is special behavior on extra small devices
+        @media (max-width: $screen-xs-max) {
+            padding-bottom: 0;
+
+            > div {
+                @include shadow($blur: 0);
+            }
+            //Create line above the tile
+            &:before {
+                content: "";
+                display: block;
+            }
+        }
+    }
+}
+
+.toolbar {
+    &.bb-tile-toolbar {
+        border: 1px solid $border-color;
+        border-right: none;
+        border-left: none;
+        border-top: none;
+    }
+}
+
+.bb-tile-chevron,
+.bb-tile-settings {
+    color: #D1DADE;
+    float: left;
+    margin: 1px 0;
+    padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
+}
+
+.modal-body {
+    .bb-tile-chevron {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.bb-tile-content-section {
+    padding: 15px;
+}
+
+.bb-tile-grab-handle {
+    color: #E7EAEC;
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    display: none;
+    font-size: 15px;
+    padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
+}
+
+// Hide the grab handle unless the tile's in a sortable column.
+
+.bb-page-content-tile-column-sortable {
+    min-height: 100px;
+
+    .bb-tile-grab-handle {
+        display: inline-block;
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+    .bb-tile {
+        margin-bottom: 0;
+    }
+}

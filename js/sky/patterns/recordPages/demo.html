@@ -1,0 +1,77 @@
+<div class="container-fluid">
+  <div class="row bb-page-content-multicolumn">
+    <div class="col-md-6 bb-page-content-tile-column">
+      <bb-tile bb-tile-header="'Tile header'">
+        <div bb-tile-section class="tile-content-section">
+          <h6 class="ng-binding">Tile subsection header</h6>
+          <div class="col-sm-6" ng-switch="data.addresses.length > 0">
+            <dl class="dl-horizontal">
+              <dt>
+                Data label
+              </dt>
+              <dd>
+                Data value
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-12">
+            <dl class="constituent-summary-details-emails dl-horizontal" data-bbauto-repeater="EmailList" data-bbauto-repeater-count="1">
+              <dt ng-repeat-start="email in data.emails" data-bbauto-field="EmailType" data-bbauto-index="0" class="ng-binding ng-scope">Email</dt>
+              <dd ng-repeat-end="" class="ng-scope"><a href="mailto:paul@paulcrowder.net" data-bbauto-field="EmailAddress" data-bbauto-index="0" class="ng-binding">paul@paulcrowder.net</a></dd><!-- end ngRepeat: email in data.emails -->
+            </dl>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </bb-tile>
+      <bb-tile bb-tile-header="'Read more'">
+        <div bb-tile-section ng-controller="ReadMoreTestController">
+          <div bb-text-expand="locals.longText" bb-text-expand-max-newlines="2" style="white-space: pre-wrap;"></div>
+        </div>
+      </bb-tile>
+      <bb-tile bb-tile-header="'Validation'">
+        <div bb-tile-section ng-controller="ValidationTestController">
+          <form name="form" novalidate>
+            <div>
+              Email validation
+              <input type="email" ng-model="locals.myEmail" bb-email-validation name="emailValidation" />
+              <span ng-show="form.emailValidation.$error.email">This email format is invalid!</span>
+            </div>
+          </form>
+        </div>
+      </bb-tile>
+    </div>
+    <div class="col-md-6 bb-page-content-tile-column">
+      <bb-tile bb-tile-header="'Pagination'">
+        <div bb-tile-section>
+          <div bb-pagination-content="locals.itemsPaged">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Text</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in locals.itemsPaged.items">
+                  <td>{{item.text}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div bb-pagination="locals.itemsPaged"></div>
+        </div>
+      </bb-tile>
+      <bb-tile bb-tile-header="'Highlight'">
+        <div bb-tile-section ng-controller="HighlightTestController">
+          Enter some text to highlight:
+          <br />
+          <input ng-model="locals.highlightText" />
+          <br />
+          <br />
+          <div bb-highlight="locals.highlightText">
+            What you type will be highlighted here.
+          </div>
+        </div>
+      </bb-tile>
+    </div>
+  </div>
+</div>

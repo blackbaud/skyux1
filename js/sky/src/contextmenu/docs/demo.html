@@ -1,0 +1,61 @@
+<div ng-controller="ContextMenuTestController as contextMenuCtrl">
+  <div>
+    <p>
+      You can use <code>bb-context-menu-item</code> with <code>bb-context-menu</code> for simple dropdowns.
+    </p>
+    <bb-context-menu>
+      <bb-context-menu-item ng-repeat="item in contextMenuCtrl.items" bb-context-menu-action="item.onClick()">{{item.text}}</bb-context-menu-item>
+    </bb-context-menu>
+  </div>
+
+  <div>
+    <p>
+      For more complicated dropdowns you can use <code>bb-context-menu</code> with your own dropdown list items or <code>bb-context-menu-button</code> to build a custom Bootstrap dropdown using the Sky-styled context menu button.
+    </p>
+    <div>
+      <bb-context-menu>
+        <li role="presentation">
+          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Above')">Action Above</a>
+        </li>
+        <li class="divider"></li>
+        <li class="disabled" role="presentation">
+          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Below')">Action Below</a>
+        </li>
+      </bb-context-menu>
+    </div>
+    <p></p>
+    <div>
+      <button type="button" class="btn btn-primary" ng-click="contextMenuCtrl.openDropdown($event)">Open 3rd Menu</button>
+      <p></p>
+      <div class="bb-context-menu" dropdown is-open="contextMenuCtrl.isOpen">
+        <bb-context-menu-button dropdown-toggle></bb-context-menu-button>
+        <ul class="dropdown-menu" role="menu">
+
+          <li role="presentation">
+            <a class="disabled" role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action B')">Action B</a>
+          </li>
+
+          <li role="presentation">
+              <bb-submenu>
+                  <bb-submenu-heading>
+                      Nested Menu
+                  </bb-submenu-heading>
+                  <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action A')">Action A</a>
+                  <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action A Sub')">Action A Sub</a>
+              </bb-submenu>
+          </li>
+
+          <li role="presentation">
+            <a class="disabled" role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action C')">Action C</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <p>
+  </p>
+  <hr>
+  <p>
+    Last action clicked: <strong>{{contextMenuCtrl.lastAction}}</strong>
+  </p>
+</div>

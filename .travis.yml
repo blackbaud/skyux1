@@ -1,0 +1,68 @@
+language: node_js
+node_js:
+  - '0.10'
+
+before_install:
+  # Used throughout the bash scripts
+  - export LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
+  - export RELEASE_VERSION="${LAST_COMMIT_MESSAGE#Release v}"
+  - export RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
+  - export RELEASE_BRANCH="^(master|rc-)"
+  - export SAVAGE_BRANCH="^savage-"
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
+
+  # The following enable xvfbs so that SlimerJS (a non-headless browser) can be run.
+  # They also enable pull requests from forks to use Firefox.
+  # http://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-GUI-(e.g.-a-Web-browser)
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
+  # This needs to happen here instead of before_script since some of the node moduules depend on it.
+  - gem install sass
+
+  # Make our three scripts executable
+  - chmod +x update-skyux.sh
+  - chmod +x update-skyux-docs.sh
+  - chmod +x update-skyux-releases.sh
+  - chmod +x update-skyux-visualtest-results.sh
+
+# Install a few additional things outside those listed in package.json
+before_script:
+  - npm install -g grunt-cli
+  - npm install -g bower
+  - bower install
+
+# We want deployment failures to fail the build
+script: npm test && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
+
+# Store our visual test results if there was an build error
+after_failure: ./update-skyux-visualtest-results.sh
+
+# When a push, only care about the master, rc-, and savage- branches.
+# Otherwise anytime we commit to internal branches this would run.
+branches:
+  only:
+    - master
+    - /^rc-.*$/
+    - /^savage-.*$/
+
+# Cache a few things
+cache:
+  directories:
+    - $HOME/node_modules
+    - $HOME/bower_components
+    - $HOME/.slimerjs-cache
+
+# Remove some folders from the cache since they arbitrarily change everytime
+before_cache:
+  - rm -rf $TMPDIR/npm-*
+  - find node_modules/\@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs/node_modules/ -type f -name 'package.json' -delete
+
+# Hooray Slack integration.
+notifications:
+  webhooks:
+    - http://sky-savage.cloudapp.net/savage/travis
+
+env:
+  global:
+    - TMPDIR=$HOME/.slimerjs-cache

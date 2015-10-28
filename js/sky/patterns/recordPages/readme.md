@@ -1,0 +1,2 @@
+﻿Sky uses a mix of glyph fonts to display icons, namely [GLYPHICONS](http://glyphicons.com/), [Font Awesome](http://fortawesome.github.io/Font-Awesome/) and a custom glyph font created specifically for Sky.
+While the full palette of icons is available for use, the following icons have been designated for use throughout Sky for particular actions.

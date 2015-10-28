@@ -1,0 +1,42 @@
+﻿<div ng-controller="WaitDemoController as waitCtrl">
+
+    <div>
+        <button ng-click="waitCtrl.onWaitDiv()" style="float: left;">Wait Div</button>
+        <div bb-wait="waitCtrl.waitDiv" style="height:200px; width: 300px; border: solid 1px red; float: left; margin-left: 10px">
+            A large area that needs to be waited.
+        </div>
+    </div>
+
+    <div style="float: left; margin-top: 10px; clear:both;">
+        <button ng-click="waitCtrl.onWaitSpan()">Wait Span</button>
+        <span bb-wait="waitCtrl.waitSpan">Some simple text that needs to be waited.</span>
+    </div>
+
+    <div style="float: left; margin-top: 10px; clear:both;">
+        <div style="float: left;">
+            <button ng-click="waitCtrl.onWaitIncrement()" style="width:150px">Wait Increment</button>
+            <br />
+            <button ng-click="waitCtrl.onWaitDecrement()" style="width:150px">Wait Decrement</button>
+        </div>
+        <div bb-wait="waitCtrl.waitCount" style="height: 100px; width: 100px; border: solid 1px red; float: left; margin-left: 10px; font-size: 18px; font-weight: bold;">
+            {{waitCtrl.waitCount}}
+        </div>
+    </div>
+
+    <div style="float: left; margin-top: 10px; clear:both;">
+        <button ng-click="waitCtrl.onShowPageWait()">Show Page Wait</button>
+    </div>
+
+    <div style="float: left; margin-top: 10px; clear:both;">
+        <button ng-click="waitCtrl.onShowNonblockingPageWait()">Show Nonblocking Page Wait</button>
+    </div>
+
+    <div style="float: left; margin-top: 10px; clear:both;">
+        <div style="float: left;">
+            Default value of waiting
+        </div>
+        <div bb-wait="{{true}}" style="height: 100px; width: 100px; border: solid 1px red; float: left; margin-left: 10px; font-size: 18px; font-weight: bold;">
+        </div>
+    </div>
+
+</div>

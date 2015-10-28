@@ -1,0 +1,48 @@
+﻿<div class="ibox page-content-tile-column">
+  <button class="btn btn-primary" ng-click="locals.openForm()">Open form</button>
+</div>
+
+<script type="text/ng-template" id="patterns/wizards/wizardform.html">
+  <bb-modal>
+    <div class="modal-form" ng-controller="WizardsModalPatternController">
+      <bb-modal-header>Wizard example</bb-modal-header>
+      <form ng-submit="locals.save()">
+        <div bb-modal-body>
+          <tabset bb-wizard>
+            <tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disabled="step.disabled()" bb-wizard-step-complete="step.complete()">
+              <ng-include src="step.templateUrl"></ng-include>
+            </tab>
+          </tabset>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button ng-click="locals.wizardNav.goToPrevious()" ng-disabled="locals.wizardNav.previousDisabled()">{{locals.wizardNav.previousText()}}</bb-modal-footer-button>
+          <bb-modal-footer-button-primary ng-click="locals.wizardNav.goToNext()" ng-disabled="locals.wizardNav.nextDisabled()">{{locals.wizardNav.nextText()}}</bb-modal-footer-button-primary>
+          <bb-modal-footer-button>Save and Close</bb-modal-footer-button>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>
+
+<script type="text/ng-template" id="patterns/wizards/step1.html">
+  <div class=" form-group">
+    <label>Enter text here to continue.</label>
+    <input type="text" class="form-control" ng-model="locals.requiredValue1" />
+  </div>
+</script>
+
+<script type="text/ng-template" id="patterns/wizards/step2.html">
+  <div class=" form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="locals.requiredValue2" />
+      Check this box to enable step 3.
+    </label>
+  </div>
+</script>
+
+<script type="text/ng-template" id="patterns/wizards/step3.html">
+  <div class=" form-group">
+    Some other content.
+  </div>
+</script>

@@ -1,0 +1,21 @@
+<div class="container">
+    <div ng-controller="SearchfieldLocalTestController">
+        <div id="screenshot-searchfield-single" class="form-group">
+            <ui-select ng-model="data.color_id">
+                <ui-select-match allow-clear placeholder="{{resources.watermark_single}}">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices id="screenshot-searchfield-single-choices" repeat="color.id as color in locals.colors | filter: $select.search">
+                    <span>{{color.name}}</span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+
+        <div id="screenshot-searchfield-multiple" class="form-group">
+            <ui-select multiple ng-model="data.color_ids">
+                <ui-select-match placeholder="{{resources.watermark_multiple}}">{{$item.name}}</ui-select-match>
+                <ui-select-choices id="screenshot-searchfield-multiple-choices" repeat="color.id as color in locals.colors | filter: $select.search">
+                    <span>{{color.name}}</span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+</div>

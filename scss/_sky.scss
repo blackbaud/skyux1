@@ -1,0 +1,53 @@
+/*Imports all of Sky including Bootstrap*/
+
+//Import variables and mixins from Sky and then Bootstrap
+@import "mixins";
+
+//Import Bootstrap
+@import "bootstrap";
+
+// Import Font Awesome
+@import "FontAwesome/font-awesome";
+
+// Google Fonts
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Oswald:300,400,700");
+
+//Load Sky styles
+@import "jqgrid";
+@import "actionbar";
+@import "badgeslabels";
+@import "buttons";
+@import "check";
+@import "checklist";
+@import "datefield";
+@import "dropdowns";
+@import "filters";
+@import "grid";
+@import "tables";
+@import "spinning";
+@import "navigation";
+@import "page";
+@import "pagination";
+@import "tile";
+@import "toolbars";
+@import "forms";
+@import "modals";
+@import "viewkeeper";
+@import "palette";
+@import "omnibar";
+@import "helpbutton";
+@import "toast";
+@import "wait";
+@import "scrollintoview";
+@import "searchfield";
+@import "tabs";
+@import "textexpand";
+@import "type";
+@import "wizard";
+@import "fileattachments";
+@import "repeaters";
+
+// Default Sky Theme
+@import "theme";
+
+@import "autonumeric";

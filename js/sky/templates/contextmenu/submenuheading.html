@@ -1,0 +1,7 @@
+<accordion-heading>
+    <div ng-click="toggleAccordion($event)">
+        <ng-transclude></ng-transclude>
+        <i ng-class="'fa-chevron-' + (accordionLocals.accordionOpen ? 'up' : 'down')" class="fa bb-submenu-chevron"></i>
+    </div>
+    
+</accordion-heading>

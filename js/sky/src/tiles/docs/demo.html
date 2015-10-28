@@ -1,0 +1,35 @@
+<div ng-controller="TileTestController as tileCtrl">
+    <h3>Tiles on pages</h3>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md-6">
+            <button class="btn bb-btn-secondary" ng-click="tileCtrl.open()" type="button">Open Modal with Tile</button>
+            <button class="btn bb-btn-secondary" ng-click="tileCtrl.collapseAll()" type="button">Collapse</button>
+            <button class="btn bb-btn-secondary" ng-click="tileCtrl.expandAll()" type="button">Expand</button>
+        </div>
+    </div>
+    <div style="background-color: #f2f2f2; margin-top: 15px; padding: 15px">
+        <bb-tile-dashboard bb-layout="tileCtrl.layout" bb-tiles="tileCtrl.tiles" bb-tile-dashboard-all-collapsed="tileCtrl.allCollapsed"></bb-tile-dashboard>
+    </div>
+</div>
+
+<script type="text/ng-template" id="demo/tile/tile1.html">
+    <bb-tile bb-tile-header="tile1Ctrl.resources.tile_header" bb-tile-collapsed="tile1Ctrl.is_collapsed" bb-tile-settings-click="tile1Ctrl.openSettings()">
+        <bb-tile-header-content>
+            {{123456789 | bbAutonumeric:'money':true}}
+        </bb-tile-header-content>
+        <div bb-tile-section>
+            Test.
+        </div>
+    </bb-tile>
+</script>
+
+<script type="text/ng-template" id="demo/tile/tile2.html">
+    <bb-tile bb-tile-header="'Tile with check'">
+        <bb-tile-header-content>
+            <bb-tile-header-check></bb-tile-header-check>
+        </bb-tile-header-content>
+        <div bb-tile-section>
+            Test 2.
+        </div>
+    </bb-tile>
+</script>

@@ -1,0 +1,24 @@
+﻿<div ng-controller="HighlightTestController as highCtrl">
+  <div class="tile-form">
+    <div class="input-group">
+      <label for="highlight-text-input-{{$id}}" class="control-label">
+        Enter some text to highlight:
+      </label>
+      <br />
+      <input id="highlight-text-input-{{$id}}" class="form-control" ng-model="highCtrl.highlightText" />
+    </div>
+    <div class="clearfix"></div>
+    <div class="input-group">
+      <label for="highlight-additional-content-{{$id}}" class="control-label">
+        <input type="checkbox" id="highlight-additional-content-{{$id}}" ng-model="highCtrl.showAdditionalContent" /> Show additional content
+      </label>
+    </div>
+    <div class="clearfix"></div>
+    <div bb-highlight="highCtrl.highlightText" bb-highlight-beacon="highCtrl.showAdditionalContent">
+      What you type will be highlighted here.
+      <div ng-if="highCtrl.showAdditionalContent">
+        This will be highlighted too!
+      </div>
+    </div>
+  </div>
+</div>

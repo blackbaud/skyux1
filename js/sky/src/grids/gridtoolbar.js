@@ -1,0 +1,139 @@
+/*global angular */
+
+(function () {
+    'use strict';
+
+
+    function BBGridToolbar(bbResources, bbModal) {
+        return {
+            require: '?^bbGrid',
+            scope: {
+                options: '=?bbToolbarOptions'
+            },
+            transclude: true,
+            link: function ($scope, el, attr, bbGrid) {
+                var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
+
+                function applySearchText() {
+                    var searchEl;
+
+                    searchEl = el.find('.bb-search-container input');
+                    /*istanbul ignore else: sanity check */
+                    if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
+                        searchEl.eq(0).select();
+                    }
+
+                    $scope.options.searchText = $scope.searchText;
+                }
+
+                function openColumnPicker() {
+                    bbModal.open({
+                        templateUrl: 'sky/templates/grids/columnpicker.html',
+                        controller: 'BBGridColumnPickerController',
+                        resolve: {
+                            columns: function () {
+                                return $scope.options.columns;
+                            },
+                            selectedColumnIds: function () {
+                                return $scope.options.selectedColumnIds;
+                            },
+                            columnPickerHelpKey: function () {
+                                return $scope.options.columnPickerHelpKey;
+                            },
+                            listMode: function () {
+                                return $scope.options.columnPickerMode;
+                            }
+                        }
+                    }).result.then(function (selectedColumnIds) {
+                        $scope.options.selectedColumnIds = selectedColumnIds;
+                    });
+                }
+
+                function toggleFilterMenu(isOpen) {
+                    if ($scope.options && $scope.options.hasInlineFilters) {
+                        if (angular.isDefined(isOpen)) {
+                            $scope.toolbarLocals.filtersVisible = isOpen;
+                        } else {
+                            $scope.toolbarLocals.filtersVisible = !$scope.toolbarLocals.filtersVisible;
+                        }
+                    /*istanbul ignore else: sanity check */
+                    } else if (bbGrid !== null && angular.isFunction(bbGrid.toggleFilterMenu)) {
+                        bbGrid.toggleFilterMenu(isOpen);
+                    }
+                }
+
+                function moveInlineFilters() {
+                    el.parents('.bb-grid-container').find('.bb-filters-inline')
+                        .appendTo(el.find('.bb-grid-filter-inline-container'));
+
+                }
+
+                $scope.toolbarLocals = {
+                    applySearchText: applySearchText,
+                    openColumnPicker: openColumnPicker,
+                    toggleFilterMenu: toggleFilterMenu
+                };
+
+                $scope.resources = bbResources;
+
+                /*istanbul ignore else: sanity check */
+                if (bbGrid !== null && angular.isUndefined($scope.options)) {
+                    $scope.$watch(function () {
+                        return bbGrid.scope.options;
+                    }, function (newValue) {
+                        $scope.options = newValue;
+                    });
+                }
+
+                //grid columns changed, initialize toolbar stuff
+                $scope.$watch('options.selectedColumnIds', function (newValue) {
+                    if (angular.isDefined(newValue)) {
+
+                        $scope.searchText = $scope.options.searchText;
+
+                        if ($scope.options.hasInlineFilters) {
+                            moveInlineFilters();
+                        }
+
+                        /*istanbul ignore else: sanity check */
+                        if (bbGrid !== null) {
+                            bbGrid.applySearchText = applySearchText;
+                        }
+
+                        if (angular.isFunction($scope.options.onAddClick)) {
+                            $scope.toolbarLocals.hasAdd = true;
+                        }
+                    }
+                }, true);
+
+                $scope.$watch('options.filtersOpen', function (newValue) {
+                    if (angular.isDefined(newValue)) {
+                        toggleFilterMenu(newValue);
+                    }
+                });
+
+                /*istanbul ignore else: sanity check */
+                if (bbGrid !== null) {
+                    topScrollbarEl.on('scroll', function () {
+                        bbGrid.syncGridHeaderScrollToTopScrollbar();
+                    });
+                }
+
+                $scope.$on('$destroy', function () {
+                    /*istanbul ignore else: sanity check */
+                    if (bbGrid !== null) {
+                        topScrollbarEl.off();
+                    }
+                });
+
+
+            },
+            templateUrl: 'sky/templates/grids/gridtoolbar.html'
+        };
+    }
+
+    BBGridToolbar.$inject = ['bbResources', 'bbModal'];
+
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker'])
+        .directive('bbGridToolbar', BBGridToolbar);
+}());

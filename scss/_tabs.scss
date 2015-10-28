@@ -1,0 +1,215 @@
+@import "mixins";
+
+.tab-pane {
+    background-color: $bb-color-white;
+}
+
+.nav-tabs > li > a {
+    padding: 7px 15px;
+}
+
+.bb-tabset-dropdown {
+    border-bottom: 2px solid $bb-color-blue;
+    .bb-tab-dropdown-button {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        margin-bottom: -1px;
+        .fa-caret-down {
+            margin-left: 5px;
+        }
+    }
+}
+
+.nav.nav-tabs, .nav-tabs.nav-justified {
+    border-bottom: 2px solid $bb-color-blue;
+
+    > li {
+        margin-top: 5px;
+    }
+
+    > li.bb-tab-close {
+        > a {
+            padding-right: 5px;
+        }
+    }
+
+    > li.bb-tab-button {
+        .bb-tab-button-wrap {
+            background-color: transparent;
+            border: none;
+            padding: 0px 0px;
+            width: 44px;
+            .bb-btn-secondary {
+                color: $bb-color-blue;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+        }
+        .bb-tab-button-wrap:active, .bb-tab-button-wrap:hover, .bb-tab-button-wrap:focus {
+            box-shadow: none;
+            outline: none;
+        }
+        .bb-tab-button-add {
+            .bb-btn-secondary {
+                padding-left: 7px;
+                padding-right: 7px;
+            }
+        }
+        .bb-tab-button-open {
+            .bb-btn-secondary {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+    }
+
+    .bb-tab-button-wrap {
+        background-color: transparent;
+        border: none;
+        padding: 0px 0px;
+        width: 44px;
+
+        .bb-btn-secondary {
+            color: $bb-color-blue;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+    }
+
+    .bb-tab-button-wrap:active, .bb-tab-button-wrap:hover, .bb-tab-button-wrap:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+    .bb-tab-button-add {
+        .bb-btn-secondary {
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+    }
+
+    .bb-tab-button-open {
+        .bb-btn-secondary {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
+
+    > li.bb-tab-button {
+        border-bottom: none;
+        margin-bottom: 0;
+        margin-left: 5px;
+    }
+
+
+    > li, ul.dropdown-menu > li {
+        > a {
+            color: $gray-light;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            .bb-tab-close-icon {
+                padding-left: 10px;
+                cursor: pointer;
+                -webkit-appearance: none;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                @extend .fa;
+                @extend .fa-times;
+            }
+
+            .bb-tab-close-icon:active,
+            .bb-tab-close-icon:hover,
+            .bb-tab-close-icon:focus {
+                box-shadow: none;
+                outline: none;
+            }
+        }
+
+        > a:hover {
+            background-color: $gray-lightest;
+            border-color: transparent;
+
+            border-bottom-color: $bb-color-blue;
+        }
+
+        .bb-tab-header-title {
+            margin-top: 0;
+        }
+
+        .bb-tab-header-count {
+            font-weight: normal;
+        }
+    }
+
+    ul.dropdown-menu > li {
+        > a {
+            padding-right: 5px;
+            .bb-tab-close-icon {
+                padding-top: 5px;
+                float: right;
+            }
+        }
+    }
+
+    > li.active, ul.dropdown-menu > li.active {
+        > a,
+        > a:hover,
+        > a:focus {
+            background-color: $bb-color-blue;
+            border-color: transparent;
+            color: $bb-color-white;
+        }
+
+        .bb-tab-header-title,
+        .bb-tab-header-count {
+            color: $bb-color-white;
+        }
+    }
+}
+
+.bb-tab-header-count {
+    color: $bb-color-blue;
+    font-size: 13px;
+    font-family: $bb-font-family-narrow;
+    margin-left: 5px;
+}
+
+.bb-tab-header-title {
+    color: #808486;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.bb-tab-spacer {
+    width: 100px;
+    visibility: hidden;
+}
+
+.bb-tab-scroll {
+    > .nav-tabs {
+        overflow-x: auto;
+        overflow-y: hidden;
+        position: relative;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+
+        li {
+            display: inline-block;
+            float: none;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .nav-justified>li, .nav-tabs.nav-justified>li {
+        width: auto;
+        >a {
+            border: none;
+        }
+    }
+}

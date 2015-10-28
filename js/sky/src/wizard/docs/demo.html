@@ -1,0 +1,48 @@
+<div ng-controller="WizardTestController as wizardCtrl">
+  <button class="btn btn-primary" ng-click="wizardCtrl.openForm()">Open wizard</button>
+</div>
+
+<script type="text/ng-template" id="demo/wizard/wizardform.html">
+  <bb-modal>
+    <div class="modal-form" ng-controller="WizardTestModalController as wizardModalCtrl">
+      <bb-modal-header>Wizard example</bb-modal-header>
+      <form ng-submit="wizardModalCtrl.save()">
+        <div bb-modal-body>
+          <tabset bb-wizard>
+            <tab ng-repeat="step in wizardModalCtrl.steps" heading="{{step.heading}}" active="step.active" disabled="step.disabled()" bb-wizard-step-complete="step.complete()">
+              <ng-include src="step.templateUrl"></ng-include>
+            </tab>
+          </tabset>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button ng-click="wizardModalCtrl.wizardNav.goToPrevious()" ng-disabled="wizardModalCtrl.wizardNav.previousDisabled()">{{wizardModalCtrl.wizardNav.previousText()}}</bb-modal-footer-button>
+          <bb-modal-footer-button-primary ng-click="wizardModalCtrl.wizardNav.goToNext()" ng-disabled="wizardModalCtrl.wizardNav.nextDisabled()">{{wizardModalCtrl.wizardNav.nextText()}}</bb-modal-footer-button-primary>
+          <bb-modal-footer-button>Save and Close</bb-modal-footer-button>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>
+
+<script type="text/ng-template" id="demo/wizard/step1.html">
+  <div class=" form-group">
+    <label>Enter text here to continue.</label>
+    <input type="text" class="form-control" ng-model="wizardModalCtrl.requiredValue1" />
+  </div>
+</script>
+
+<script type="text/ng-template" id="demo/wizard/step2.html">
+  <div class=" form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="wizardModalCtrl.requiredValue2" />
+      Check this box to enable step 3.
+    </label>
+  </div>
+</script>
+
+<script type="text/ng-template" id="demo/wizard/step3.html">
+  <div class=" form-group">
+    Some other content.
+  </div>
+</script>

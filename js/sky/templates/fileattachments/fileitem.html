@@ -1,0 +1,29 @@
+<div class="bb-file-item">
+    <div class="row bb-file-item-title">
+        <div class="col-xs-10">
+            <div class="bb-file-item-name">
+                <strong>{{item.name || item.url}}</strong>
+            </div>
+            <div class="bb-file-item-size" ng-if="bbFileItem.isFile()">
+                ({{item.size | bbFileSize}})
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="pull-right">
+                <button type="button" class="btn bb-btn-secondary bb-file-item-btn-delete" ng-click="itemDelete()">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3" ng-switch="bbFileItem.isImg()">
+            <img class="bb-file-item-preview-img center-block" ngf-src="item" ng-switch-when="true" />
+            <div class="bb-file-item-preview-other" ng-switch-when="false">
+                <i class="fa" ng-class="bbFileItem.otherCls"></i>
+            </div>
+        </div>
+        <div class="col-xs-9" ng-transclude>
+        </div>
+    </div>
+</div>

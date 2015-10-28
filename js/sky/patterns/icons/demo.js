@@ -1,0 +1,1 @@
+﻿angular.module('KitchenSink').controller('IconsPatternController', angular.noop);

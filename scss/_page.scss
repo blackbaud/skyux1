@@ -1,0 +1,32 @@
+.bb-page-content-multicolumn  {
+    .bb-page-content-tile-column-sortable {
+        margin-bottom: 50px;
+        padding-left: $padding;
+        padding-right: $padding;
+    }
+}
+
+.bb-page-content-multicolumn {
+    padding-left: $padding;
+    padding-right: $padding;
+}
+
+.bb-page-header {
+    background-color: #fff;
+    padding: $padding-double 0;
+}
+
+.bb-page-content,
+.bb-page-content-multicolumn {
+    margin-top: $margin-double;
+}
+
+.bb-page-noaccess-description {
+    white-space: pre-wrap;
+}
+
+.bb-page-tabs {
+    > .nav-tabs {
+        padding-left: $grid-gutter-width / 2;
+    }
+}

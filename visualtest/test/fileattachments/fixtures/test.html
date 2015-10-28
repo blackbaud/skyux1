@@ -1,0 +1,17 @@
+<div class="container" ng-controller="FileAttachmentTestController as fileCtrl">
+    <div id="screenshot-file-upload">
+        <div
+             bb-file-drop
+             bb-file-drop-change="fileCtrl.fileDropped(files, rejectedFiles)"
+             bb-file-drop-multiple="true"
+             bb-file-drop-max-size="5000000"
+             bb-file-drop-link
+             bb-file-drop-link-change="fileCtrl.fileLinked(link)">
+        </div>
+    </div>
+    
+    <div id="screenshot-file-delete">
+        <div bb-file-item="fileCtrl.item" bb-file-item-delete="fileCtrl.deleteAttachment(item)">
+        </div>
+    </div>
+</div>

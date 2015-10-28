@@ -1,0 +1,192 @@
+﻿@font-face {
+  font-family: 'BBSKY';
+  src: url("#{$sky-icon-font-path}BBSKY.eot") format("embedded-opentype"), url("#{$sky-icon-font-path}BBSKY.woff") format("woff"), url("#{$sky-icon-font-path}BBSKY.ttf") format("truetype"), url("#{$sky-icon-font-path}BBSKY.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.sky-icon {
+  display: inline-block;
+  font-family: BBSKY;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sky-icon-2x {
+  font-size: 2em;
+}
+
+.sky-icon-3x {
+  font-size: 3em;
+}
+
+.sky-icon-4x {
+  font-size: 4em;
+}
+
+.sky-icon-5x {
+  font-size: 5em;
+}
+
+.sky-icon-add:before {
+  content: "\e600";
+}
+
+.sky-icon-add-fill:before {
+  content: "\e601";
+}
+
+.sky-icon-add-nostroke:before {
+  content: "\e602";
+}
+
+.sky-icon-delete:before {
+  content: "\e603";
+}
+
+.sky-icon-close:before {
+  content: "\e604";
+}
+
+.sky-icon-check:before {
+  content: "\e605";
+}
+
+.sky-icon-check-nostroke:before {
+  content: "\e606";
+}
+
+.sky-icon-arrow:before {
+  content: "\e607";
+}
+
+.sky-icon-arrow-angle:before {
+  content: "\e608";
+}
+
+.sky-icon-arrow-bub:before {
+  content: "\e609";
+}
+
+.sky-icon-back:before {
+  content: "\e60a";
+}
+
+.sky-icon-search:before {
+  content: "\e60b";
+}
+
+.sky-icon-edit:before {
+  content: "\e60c";
+}
+
+.sky-icon-save:before {
+  content: "\e60d";
+}
+
+.sky-icon-print:before {
+  content: "\e60e";
+}
+
+.sky-icon-folder:before {
+  content: "\e60f";
+}
+
+.sky-icon-warning:before {
+  content: "\e610";
+}
+
+.sky-icon-gear:before {
+  content: "\e611";
+}
+
+.sky-icon-gear-fill:before {
+  content: "\e612";
+}
+
+.sky-icon-columns:before {
+  content: "\e613";
+}
+
+.sky-icon-filter:before {
+  content: "\e614";
+}
+
+.sky-icon-note:before {
+  content: "\e615";
+}
+
+.sky-icon-message-bubble:before {
+  content: "\e616";
+}
+
+.sky-icon-export:before {
+  content: "\e617";
+}
+
+.sky-icon-user:before {
+  content: "\e618";
+}
+
+.sky-icon-user-face:before {
+  content: "\e619";
+}
+
+.sky-icon-present:before {
+  content: "\e61a";
+}
+
+.sky-icon-phone:before {
+  content: "\e61b";
+}
+
+.sky-icon-calendar:before {
+  content: "\e61c";
+}
+
+.sky-icon-new-donor:before {
+  content: "\e61d";
+}
+
+.sky-icon-globe:before {
+  content: "\e61e";
+}
+
+.sky-icon-cloud:before {
+  content: "\e61f";
+}
+
+.sky-icon-key:before {
+  content: "\e620";
+}
+
+.sky-icon-key-angle:before {
+  content: "\e621";
+}
+
+.sky-icon-share:before {
+  content: "\e622";
+}
+
+.sky-icon-lock:before {
+  content: "\e623";
+}
+
+.sky-icon-unlock:before {
+  content: "\e624";
+}
+
+.sky-icon-copy:before {
+  content: "\e625";
+}
+
+.sky-icon-important-bubble:before {
+  content: "\e63d";
+}
+
+.sky-icon-multi-action:before {
+  content: "\e646";
+}

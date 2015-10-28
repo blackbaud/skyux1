@@ -1,0 +1,29 @@
+@import "mixins";
+
+/* TOOLBARS START */
+
+.toolbar{
+    background-color: $toolbar-background-color;
+    border-color: $border-color;
+    height: 43px;
+
+    .btn {
+        margin: 5px 0 0 5px;
+    }
+}
+
+.addbutton{
+    border: none;
+    background-color: transparent;
+    font-size: $toolbar-button-fontsize;
+    color: $toolbar-button-color;
+    padding: 8px 8px 8px $padding-plus-half - 1;
+}
+
+.addbutton-text{
+    font-family: $font-family-base;
+    font-size: $toolbar-button-fontsize;
+    color: $toolbar-button-color;
+}
+
+/* TOOLBARS END */

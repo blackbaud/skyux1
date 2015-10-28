@@ -1,0 +1,213 @@
+.dropdown-menu {
+  border: medium none;
+  border-radius: 3px;
+  box-shadow: 0 0 3px rgba(86, 96, 117, 0.7);
+  display: none;
+  float: left;
+  font-size: 12px;
+  left: 0;
+  list-style: none outside none;
+  padding: 0;
+  position: absolute;
+  text-shadow: none;
+  top: 100%;
+  z-index: 1000;
+  border-radius: 2px;
+}
+
+.dropdown-menu > li > a {
+  border-radius: 3px;
+  color: inherit;
+  line-height: 25px;
+  margin: 4px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.caret {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    height: auto;
+    margin-left: 3px;
+    width: auto;
+    @extend .fa;
+    @extend .fa-caret-down;
+}
+
+.bb-context-menu-btn {
+    border-color: #c1c1c1;
+    border-radius: 50%;
+    padding: 0;
+    height: 24px;
+    width: 24px;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+        border-color: #b0b0b0;
+    }
+}
+
+.open .dropdown-toggle.bb-btn-secondary.bb-context-menu-btn {
+    border-color: #b0b0b0;
+}
+
+
+.bb-submenu {
+    .panel-body {
+        a {
+            border-radius: 3px;
+            clear: both;
+            color: inherit;
+            display: block;
+            font-weight: normal;
+            line-height: 25px;
+            margin: 4px;
+            padding: 3px 20px;
+            text-align: left;
+            white-space: nowrap;
+
+            &.font-bold {
+                font-weight: 600;
+            }
+
+            &:hover,
+            &:focus {
+                text-decoration: none;
+                color: $dropdown-link-hover-color;
+                background-color: $dropdown-link-hover-bg;
+            }
+        }
+    }
+
+    .disabled .panel-body a {
+        &,
+        &:hover,
+        &:focus {
+            color: $dropdown-link-disabled-color;
+        }
+
+        // Nuke hover/focus effects
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            background-color: transparent;
+            background-image: none; // Remove CSS gradient
+            @include reset-filter;
+            cursor: $cursor-disabled;
+        }
+    }
+
+    .panel-title {
+        font-size: inherit;
+    }
+}
+
+.bb-context-menu .dropdown-menu {
+
+    li > a {
+        border-radius: 3px;
+        clear: both;
+        color: inherit;
+        display: block;
+        font-weight: normal;
+        line-height: 25px;
+        margin: 4px;
+        padding: 3px 20px;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    li > a.font-bold {
+        font-weight: 600;
+    }
+
+    li > a, .bb-submenu .panel-body a {
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: $dropdown-link-hover-color;
+            background-color: $dropdown-link-hover-bg;
+        }
+    }
+
+    .active > a {
+        &,
+        &:hover,
+        &:focus {
+            color: $dropdown-link-active-color;
+            text-decoration: none;
+            outline: 0;
+            background-color: $dropdown-link-active-bg;
+        }
+    }
+
+    .disabled > a {
+        &,
+        &:hover,
+        &:focus {
+            color: $dropdown-link-disabled-color;
+        }
+
+        // Nuke hover/focus effects
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            background-color: transparent;
+            background-image: none; // Remove CSS gradient
+            @include reset-filter;
+            cursor: $cursor-disabled;
+        }
+    }
+}
+
+body.dropdown {
+    position: static;
+}
+
+body.dropup {
+    position: static;
+}
+.bb-submenu {
+
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+
+    .panel-group {
+        margin-bottom: 0;
+        .panel {
+            border: none;
+            .panel-body {
+                padding: 0;
+                a {
+                    padding-left: 30px;
+                }
+            }
+        }
+    }
+
+    .panel-title {
+        > a {
+            outline: none;
+            font-weight: normal;
+        }
+        .bb-submenu-chevron {
+            color: #D1DADE;
+            float: right;
+            margin: 1px 0;
+            padding: 0;
+        }
+    }
+    .panel-heading {
+        background-color: #f8f8f9;
+        margin-left: 0;
+        padding-left: 20px;
+    }
+
+    ul {
+        list-style: none outside none;
+        padding: 0;
+    }
+}

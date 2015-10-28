@@ -1,0 +1,16 @@
+@import "mixins";
+
+.bb-filters-inline {
+    background-color: #e9f4fc;
+    padding: 10px;
+}
+
+.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active {
+    color: $bb-color-green;
+    border: 2px solid $bb-color-green;
+    border-radius: 3px
+}
+
+.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover {
+    color: $text-color;
+}

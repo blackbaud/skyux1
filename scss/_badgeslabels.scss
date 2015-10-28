@@ -1,0 +1,51 @@
+.label {
+  background-color: $gray-lighter;
+  color: $bb-label-badge-color;
+  font-family: $font-family-base;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  text-shadow: none;
+}
+
+.badge {
+  background-color: $gray-lighter;
+  color: $bb-label-badge-color;
+  font-family: $font-family-base;
+  font-size: 11px;
+  font-weight: 600;
+  padding-bottom: 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-shadow: none;
+}
+
+.label-primary,
+.bb-badge-primary {
+  background-color: $bb-color-green;
+  color: white;
+}
+
+.label-success,
+.bb-badge-success {
+  background-color: $bb-color-blue;
+  color: white;
+}
+
+.label-warning,
+.bb-badge-warning {
+  background-color: $bb-color-yellow;
+  color: white;
+}
+
+.label-danger,
+.bb-badge-danger {
+  background-color: $bb-color-red;
+  color: white;
+}
+
+.label-info,
+.bb-badge-info {
+  background-color: $bb-color-aqua;
+  color: white;
+}

@@ -1,0 +1,19 @@
+demo: demo/
+build: <%= stache.config.demo %>build/
+content: <%= stache.config.demo %>content/
+static: <%= stache.config.demo %>static/
+includes: <%= stache.config.demo %>includes/
+data: <%= stache.config.demo %>data/
+
+markdown: false
+showOmnibar: false
+partial_header_search: <%= stache.config.includes %>partial-header-search.hbs
+partial_jsdoc_header: <%= stache.config.includes %>partial-jsdoc-header.hbs
+partial_jsdoc_body: <%= stache.config.includes %>partial-jsdoc-body.hbs
+partial_jsdoc_footer: <%= stache.config.includes %>partial-jsdoc-footer.hbs
+partial_sky_css: <%= stache.config.includes %>partial-sky-css.hbs
+partial_sky_js: <%= stache.config.includes %>partial-sky-js.hbs
+
+files:
+  js:
+    - /js/KitchenSink.js

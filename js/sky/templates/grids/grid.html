@@ -1,0 +1,52 @@
+<section class="bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">
+
+
+    <div class="bb-grid-toolbar-viewkeeper">
+        <div ng-if="!customToolbar.hasCustomToolbar">
+            <div ng-show="locals.showToolbar">
+                <bb-grid-toolbar>
+                    <ng-transclude></ng-transclude>
+                </bb-grid-toolbar>
+            </div>
+        </div>
+
+        <div ng-if="customToolbar.hasCustomToolbar">
+            <div ng-show="locals.showToolbar">
+                <ng-transclude></ng-transclude>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="table-responsive">
+
+        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
+    </div>
+
+    <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">
+        <span class="fa fa-cloud-download"></span>
+        <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>
+    </div>
+
+    <div ng-if="paginationOptions" class="bb-grid-pagination-container">
+        <pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></pagination>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="bb-grid-action-bar-and-back-to-top">
+        <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">
+        </bb-grid-action-bar>
+        <div class="bb-table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">
+            <span style="float:left">
+                <span class="fa fa-arrow-up "></span>
+                <button type="button" class="btn btn-link">{{resources.grid_back_to_top}}</button>
+            </span>
+            <span style="float:right">
+                <span class="fa fa-arrow-up "></span>
+                <button type="button" class="btn btn-link">{{resources.grid_back_to_top}}</button>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</section>

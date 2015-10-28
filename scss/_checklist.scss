@@ -1,0 +1,125 @@
+@import "mixins";
+
+.bb-checklist-wrapper {
+    overflow-y: auto;
+
+    table {
+        margin: 0;
+
+        thead {
+            th:first-child, th:last-child {
+                @include rounded-corners(0, 0, 0, 0);
+            }
+        }
+    }
+}
+
+.bb-checklist-table {
+    border-top: 1px solid $gray-lighter;
+}
+
+.bb-checklist-checkbox-column {
+    width: 30px;
+}
+
+.bb-checklist-row {
+    cursor: pointer;
+}
+
+.bb-checklist-filter-bar {
+    background-color: $gray-lightest;
+    border-bottom: 1px solid $gray-lighter;
+    padding: $padding;
+    
+    &:last-child {
+        border: none;
+    }
+
+    .btn {
+        margin: 0 $margin-half;
+        min-width: 65px;
+    
+        &.btn-link {
+            margin: 0 $margin-half 0 0;
+            min-width: 0;
+            outline: none;
+        }
+    }
+    
+    .btn-primary {
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    input {
+        background-color: #fff;
+        height: 26px;
+        width: 100%;
+        outline: none;
+        border: none;
+        -webkit-appearance: none;
+    }
+}
+
+.bb-checklist-select-all-bar {
+    padding-bottom: $padding-half;
+    padding-top: $padding-half;
+}
+
+.bb-checklist-category-bar {
+    white-space: nowrap;
+    overflow: auto;
+}
+
+.bb-checklist-search {
+    display: table;
+    width: 100%;
+}
+
+.bb-checklist-search-box {
+    display: table-cell;
+}
+
+.bb-checklist-search-icon {
+    background-color: #fff;
+    display: table-cell;
+    width: 22px;
+}
+
+.bb-checklist-link {
+    margin-right: $margin;
+}
+
+.bb-checklist-no-items {
+    text-align: center;
+    margin-top: $margin;
+    margin-bottom: $margin;
+}
+
+.bb-checklist-list-row {
+    border-bottom: dotted 1px $gray-lighter;
+    cursor: pointer;
+    display: table;
+    margin-bottom: 0;
+    padding: $padding;
+    width: 100%;
+    
+    &:last-child {
+        border: none;
+    }
+}
+
+.bb-checklist-list-col {
+    display: table-cell;
+    font-weight: normal;
+    padding-right: $padding;
+    vertical-align: middle;
+}
+
+.bb-checklist-list-col-checkbox {
+    width: $padding + 22px;
+}
+
+.bb-checklist-list-title {
+    font-weight: 700;
+}

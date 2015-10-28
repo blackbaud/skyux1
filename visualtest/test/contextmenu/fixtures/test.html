@@ -1,0 +1,33 @@
+<div class="container bb-screenshot-noanim" ng-controller="ContextMenuTestController as MenuController">
+    <div id="screenshot-contextmenu" style="height: 250px;">
+        <bb-context-menu>
+            <bb-context-menu-item ng-repeat="item in MenuController.items" bb-context-menu-action="item.onClick()">{{item.text}}</bb-context-menu-item>
+        </bb-context-menu>
+    </div>
+
+    <div id="screenshot-submenu" style="height: 300px">
+        <div class="bb-context-menu" dropdown is-open="contextMenuCtrl.isOpen">
+          <bb-context-menu-button dropdown-toggle></bb-context-menu-button>
+          <ul class="dropdown-menu" role="menu">
+
+            <li role="presentation">
+              <a class="disabled" role="menuitem" href="javascript:void(0)">Action B</a>
+            </li>
+
+            <li role="presentation">
+                <bb-submenu>
+                    <bb-submenu-heading>
+                        Nested Menu
+                    </bb-submenu-heading>
+                    <a role="menuitem" href="javascript:void(0)">Action A</a>
+                    <a role="menuitem" href="javascript:void(0)">Action A Sub</a>
+                </bb-submenu>
+            </li>
+
+            <li role="presentation">
+              <a class="disabled" role="menuitem" href="javascript:void(0)">Action C</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+</div>

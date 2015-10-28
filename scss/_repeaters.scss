@@ -1,0 +1,20 @@
+.bb-repeater {
+    padding: $padding-plus-half;
+}
+
+.bb-tile-content-section > .bb-repeater {
+    padding: 0;
+}
+
+.bb-repeater-item {
+    padding: $padding;
+    border-bottom: dotted 1px #ccc;
+
+    &:first-child {
+        padding-top: 0;
+    }
+}
+
+.bb-repeater-item-title {
+    margin: 0 0 10px;
+}

@@ -1,0 +1,26 @@
+<style>
+  .swatch {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+  }
+</style>
+
+<div ng-controller="PaletteTestController as paletteCtrl">
+
+  <h4>Example using getColorSequence()</h4>
+  <p>List 18 colors returned from getColorSequence using the default multi palette.</p>
+  <ol>
+    <li ng-repeat="color in paletteCtrl.paletteService.getColorSequence(18) track by $index">
+      <span class="swatch" ng-style="{ 'background-color': color }"></span>
+      {{ color }}
+    </li>
+  </ol>
+
+  <h4>Example using getColorByIndex()</h4>
+  <p>Return the 7th color in the mono palette, which would be:</p>
+  <p>
+    <span class="swatch" ng-style="{ 'background-color': paletteCtrl.paletteService.getColorByIndex(7, 'mono') }"></span>
+    {{ paletteCtrl.paletteService.getColorByIndex(7, 'mono') }}
+  </p>
+</div>

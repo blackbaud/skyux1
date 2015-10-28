@@ -1,0 +1,160 @@
+@import "mixins";
+
+
+/* FORMS START */
+.tile-form {
+    background: $tile-form-background;
+    border-top: 1px solid $form-border-color;
+    padding: 15px 15px;
+
+    .form-horizontal {
+        .radio,
+        .checkbox {
+            min-height: 18px;
+        }
+    }
+
+    .control-label {
+        text-align: left;
+        font-family: $font-family-base;
+        font-size: $font-size-base;
+        font-weight: normal;
+        min-width: 150px;
+        vertical-align: middle;
+    }
+
+    .radio label, .checkbox label {
+        display: inline-block;
+        margin-top: 1px;
+        margin-bottom: 0;
+    }
+
+    .date {
+        margin-top: 5px;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+        border: 1px solid $form-textarea-color;
+        font-size: $font-size-base;
+        height: 10em;
+        padding: 5px;
+    }
+
+    input[type=freeform]{
+        width: 100%;
+        margin: 5px 0 10px 0;
+        border: 1px solid $form-textarea-color;
+        font-size: $font-size-base;
+        padding: 5px;
+        -webkit-appearance: none;
+    }
+
+    div.textarea-container {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .control-label.required:after {
+        content: "*";
+        color: $bb-error-color;
+        padding-left: 5px;
+    }
+}
+
+.form-header {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: $form-header-color;
+    font-weight: bold;
+    padding-left: 15px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.sky-form-header {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: $gray-dark;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+select.error,
+input.error {
+    @include field-invalid;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: $invalid-field-color;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid $invalid-field-color;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+input, select {
+    font-size: 12px;
+}
+
+input[type="text"] {
+    padding-left: 5px;
+}
+
+select, select.form-control {
+    padding-left: 0;
+}
+
+.validation-summary-errors {
+    color: $invalid-field-color;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+input.ng-invalid.ng-touched,
+select.ng-invalid.submitted,
+.date.ng-invalid input {
+    @include field-invalid;
+}
+
+.bb-date-field-calendar-button {
+    background-color: $bb-color-white;
+    color: $gray;
+}
+
+.input-group .btn {
+    border-color: #ddd;
+    border-radius: 0;
+    height: $input-height-base;
+}
+
+.form-control {
+  background-color: white;
+  background-image: none;
+  border: 1px solid #e5e6e7;
+  border-radius: 1px;
+  color: inherit;
+  display: block;
+  padding: 6px 12px;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+  width: 100%;
+}
+
+/* FORMS END */

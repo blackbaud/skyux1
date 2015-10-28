@@ -1,0 +1,34 @@
+<div id="screenshot-modal">
+  <div ng-controller="ModalTestController">
+    <div id="screenshot-modal-tiles">
+      <bb-modal>
+        <div class="modal-form">
+          <bb-modal-header bb-modal-help-key="'bb-security-users.html'">My Header</bb-modal-header>
+          <div bb-modal-body class="bb-modal-body-tiled">
+            <form>
+              <bb-tile bb-tile-header="'Tile Header'">
+                <div bb-tile-section>
+                  Test.
+                </div>
+              </bb-tile>
+            </form>
+          </div>
+          <bb-modal-footer>
+            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+          </bb-modal-footer>
+        </div>
+      </bb-modal>
+    </div>
+    <div id="screenshot-modal-help-key">
+      <bb-modal>
+          <bb-modal-header bb-modal-help-key="'helpkey.html'">My Header</bb-modal-header>
+      </bb-modal>
+    </div>
+    <div id="screenshot-modal-no-help-key">
+      <bb-modal>
+          <bb-modal-header>My Header</bb-modal-header>
+      </bb-modal>
+    </div>
+  </div>
+</div>

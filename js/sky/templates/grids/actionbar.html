@@ -1,0 +1,25 @@
+<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">
+    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar">
+        <div ng-if="!locals.mobileButtons" class="bb-grid-action-bar-buttons" ng-repeat="action in locals.actions">
+            <button type="button" class="btn" ng-class="{'btn-primary': action.isPrimary, 'bb-btn-secondary': !action.isPrimary}" data-bbauto-field="{{action.automationId}}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>
+        </div>
+        <div ng-if="locals.mobileButtons" class="bb-grid-action-bar-buttons">
+            <button type="button" class="btn btn-primary" ng-click="locals.chooseAction()">
+                <span>{{resources.grid_action_bar_choose_action}}</span>
+            </button>
+        </div>
+        <button type="button" class="btn bb-grid-action-bar-clear-selection" ng-click="locals.clearSelection()">
+            {{resources.grid_action_bar_clear_selection}}
+        </button>
+    </div>
+    <div ng-if="locals.showMobileActions" class="bb-grid-action-bar-mobile-buttons">
+        <div class="bb-grid-action-bar-btn-container">
+            <div ng-repeat="action in locals.actions">
+                <button type="button" class="bb-grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{'btn-primary': action.isPrimary, 'bb-btn-secondary': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>
+            </div>
+        </div>
+        <button type="button" class="btn bb-grid-action-bar-mobile-cancel bb-grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">
+            {{resources.grid_action_bar_cancel_mobile_actions}}
+        </button>
+    </div>
+</div>

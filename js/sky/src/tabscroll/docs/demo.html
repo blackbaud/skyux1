@@ -1,0 +1,35 @@
+<div ng-controller="TabscrollTestController as tabscrollCtrl">
+  <tabset bb-tab-scroll bb-tab-scroll-ready="tabscrollCtrl.ready">
+    <tab>
+        <tab-heading>
+            Tab 1
+        </tab-heading>
+        Content 1
+    </tab>
+    <tab>
+      <tab-heading>
+        Tab With Count
+        <span class="bb-tab-header-count">2</span>
+      </tab-heading>
+      Content 2
+    </tab>
+    <tab heading="Tab 3">
+      Content 3
+    </tab>
+    <tab class="bb-tab-spacer"></tab>
+    <tab heading="Tab 4">
+      Content 4
+    </tab>
+    <tab heading="Tab 5">
+      Content 5
+    </tab>
+    <tab heading="Tab 6">
+      Content 6
+    </tab>
+    <tab heading="Tab 7">
+      Content 7
+    </tab>
+  </tabset>
+  <br />
+  <button class="btn btn-primary" ng-click="tabscrollCtrl.replay()">Replay animation</button>
+</div>

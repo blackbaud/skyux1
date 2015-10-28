@@ -1,0 +1,72 @@
+@import "mixins";
+
+ul.bb-datefield.dropdown-menu {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    z-index: 5000;
+}
+
+.bb-datefield.input-group, ul.bb-datefield.dropdown-menu {
+
+    .btn-default {
+        color: $text-color;
+        background-color: #fff;
+        border-color: #fff;
+        border-radius: 3px;
+    }
+
+    .btn-default:hover, .btn-default:focus, .btn-default:active, btn-default.active {
+        color: $text-color;
+        background-color: #ebebeb;
+        border-color: #adadad;
+    }
+
+    .btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active {
+        color: #fff;
+        background-color: $bb-color-blue;
+        border-color: #ccc;
+
+        .text-info {
+            color: #fff;
+        }
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: $bb-color-blue;
+        border-color: #ddd;
+
+        .text-info {
+            color: #fff;
+        }
+    }
+
+    ul.dropdown-menu {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        left: auto !important;
+        right: 0;
+    }
+
+    .bb-date-field-calendar-button {
+        color: #666;
+        background-color: #fff;
+        border-color: #ddd;
+        border-radius: 0;
+    }
+
+    .text-info {
+        color: #31708f;
+    }
+
+    .bb-date-field-calendar-button:hover, .bb-date-field-calendar-button:focus, .bb-date-field-calendar-button:active, .bb-date-field-calendar-button.active, .bb-datefield-open .bb-date-field-calendar-button {
+        background-color: #bababa;
+        color: #fff;
+    }
+}
+
+.ng-invalid-required > .bb-datefield > input.form-control.ng-untouched {
+    border: 1px solid #e5e6e7;
+    box-shadow: none;
+    outline: none;
+}

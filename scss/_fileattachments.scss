@@ -1,0 +1,138 @@
+.bb-file-drop-row {
+    margin-left: -$margin-half;
+    margin-right: -$margin-half;
+}
+
+.bb-file-drop-col {
+    margin-bottom: $margin;
+    padding-left: $margin-half;
+    padding-right: $margin-half;
+}
+
+.bb-file-drop-contents,
+.bb-file-item {
+    border: solid 1px $gray-lighter;
+    background-color: $gray-lightest;
+    padding: $padding;
+}
+
+.bb-file-drop-contents {
+    color: $gray;
+    cursor: pointer;
+    display: table;
+    height: 120px;
+    width: 100%;
+    text-align: center;
+
+    h4,
+    h5 {
+        font-style: italic;
+    }
+
+    h4 {
+        font-size: $bb-font-size-xl;
+        margin: 0;
+    }
+
+    h5 {
+        font-size: $bb-font-size-lg;
+        margin-top: $margin-half;
+    }
+
+    .bb-file-drop-link-header {
+        margin-bottom: $margin-half;
+    }
+}
+
+.bb-file-drop-noclick {
+    .bb-file-drop-contents {
+        cursor: default;
+
+        h5 {
+            display: none;
+        }
+    }
+}
+
+.bb-file-drop-contents-not-over,
+.bb-file-drop-contents-accept,
+.bb-file-drop-contents-reject,
+.bb-file-drop-link {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.bb-file-drop-accept,
+.bb-file-drop-reject {
+    .bb-file-drop-contents {
+        border-style: dashed;
+        border-width: 1px;
+    }
+
+    .bb-file-drop-contents-not-over {
+        display: none;
+    }
+}
+
+.bb-file-drop-accept {
+    .bb-file-drop-contents {
+        border-color: $bb-color-green;
+        color: $bb-color-green;
+    }
+}
+
+.bb-file-drop-reject {
+    .bb-file-drop-contents {
+        border-color: $bb-color-red;
+        color: $bb-color-red;
+    }
+}
+
+.bb-file-drop-contents-accept,
+.bb-file-drop-contents-reject {
+    display: none;
+}
+
+.bb-file-drop-accept {
+    .bb-file-drop-contents-accept {
+        display: table-cell;
+    }
+}
+
+.bb-file-drop-reject {
+    .bb-file-drop-contents-reject {
+        display: table-cell;
+    }
+}
+
+.bb-file-upload-icon {
+    display: block;
+    font-size: 40px;
+    margin-top: $margin;
+}
+
+.bb-file-drop-link {
+    cursor: default;
+}
+
+.bb-file-item-name {
+    @include ellipsis();
+}
+
+.bb-file-item-title {
+    margin-bottom: $margin;
+}
+
+.bb-file-item-preview-img {
+    max-width: 100%;
+    height: auto;
+    @include box-shadow(0 0 5px #666);
+}
+
+.bb-file-item-preview-other {
+    color: $gray-light;
+    font-size: 100px;
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+}

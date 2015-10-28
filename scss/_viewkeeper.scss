@@ -1,0 +1,36 @@
+@import "mixins";
+@import "variables";
+
+$viewkeeper-margin-top: $omnibar-height !default;
+$viewkeeper-margin-top-small: $omnibar-height-small !default;
+
+body:not(.bb-viewkeeper-ignore-fixed) {
+    .bb-viewkeeper-fixed {
+        position: fixed;
+        z-index: 100;
+        opacity: 0.95;
+        filter: alpha(opacity=95);
+        overflow: hidden;
+    }
+
+    &:not(.omnibar-not-fixed) {
+        .bb-viewkeeper-fixed,
+        .viewkeeper-fixed {
+            margin-top: $viewkeeper-margin-top;
+        }
+
+        @media(min-width:$screen-sm-min) {
+            .bb-viewkeeper-fixed,
+            .viewkeeper-fixed {
+                margin-top: $viewkeeper-margin-top-small;
+            }
+        }
+    }
+    /*Special handling for jqGrid since it already specifies the position attribute with a more specific selector */
+    .ui-jqgrid-hdiv {
+        &.bb-viewkeeper-fixed,
+        &.viewkeeper-fixed {
+            position: fixed;
+        }
+    }
+}

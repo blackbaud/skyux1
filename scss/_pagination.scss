@@ -1,0 +1,105 @@
+@import "mixins";
+
+/* PAGINATION START */
+
+.icon-flipped {
+    @include scaleX(-1);
+}
+
+.pagination-container {
+    margin: 10px 0 0 0;
+}
+
+.pagination {
+    margin: 0;
+
+    .first,
+    .previous,
+    .next,
+    .last,
+    [ng-if='::directionLinks'] {
+        a {
+            @extend .fa;
+            padding-left: 8.5px;
+            padding-right: 8.5px;
+            line-height: $line-height-base;
+            top: 0;
+            transform: none;
+        }
+    }
+
+    .first a {
+        @extend .fa-backward;
+    }
+
+    .previous a,
+    [ng-if='::directionLinks']:first-child a {
+        @extend .fa-caret-left;
+        border-radius: 0;
+    }
+
+    .next a,
+    [ng-if='::directionLinks']:last-child a {
+        @extend .fa-caret-right;
+        border-radius: 0;
+    }
+
+    .last a {
+        @extend .fa-forward;
+    }
+
+    > .active {
+        a,
+        a:hover,
+        a:focus,
+        span,
+        span:hover,
+        span:focus {
+            background-color: #f4f4f4;
+            border-color: #ddd;
+            color: inherit;
+            cursor: default;
+            z-index: 2;
+        }
+    }
+
+    > li {
+        > a,
+        > span {
+            background-color: white;
+            border: 1px solid #ddd;
+            color: inherit;
+            float: left;
+            line-height: $line-height-base;
+            margin-left: -1px;
+            padding: 4px 10px;
+            position: relative;
+            text-decoration: none;
+        }
+
+        > a {
+            &:hover, &:focus {
+                z-index: 1;
+            }
+        }
+
+        &.active {
+            a,
+            a:hover,
+            a:focus {
+                z-index: 2;
+                cursor: default;
+            }
+        }
+
+        &.disabled {
+            a,
+            a:hover,
+            a:focus {
+                cursor: default;
+            }
+        }
+    }
+}
+
+/* PAGINATION END */

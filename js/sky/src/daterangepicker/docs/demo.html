@@ -1,0 +1,24 @@
+﻿<div ng-controller="DateRangePickerDemoController as dateRangeCtrl">
+    <div class="form-group">
+        <label>Date Range Picker</label>
+        <bb-date-range-picker bb-date-range-picker-value="dateRangeCtrl.dateRangePickerValue"
+                              bb-date-range-picker-options="dateRangeCtrl.dateRangePickerOptions"
+                              bb-date-range-picker-automation-id="'DirectiveDemo'"></bb-date-range-picker>
+
+        The selected dateRangeType is: <b>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
+        <br />
+        The type captions is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(dateRangeCtrl.dateRangePickerValue)}}'</b>.
+        <br />
+        The type filter description is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(dateRangeCtrl.dateRangePickerValue)}}'</b>.
+
+        <br /><br />
+        <button ng-click="dateRangeCtrl.selectToday()">Select today</button>
+        <br />
+        <button ng-click="dateRangeCtrl.reset()">Reset</button>
+        <br />
+        <label>
+            <input type="checkbox" ng-model="dateRangeCtrl.options.pastOnly" /> Past items filter
+        </label>
+
+    </div>
+</div>

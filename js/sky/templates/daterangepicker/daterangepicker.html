@@ -1,0 +1,6 @@
+﻿<div>
+    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"
+            class="form-control"
+            ng-options="locals.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerOptions.availableDateRangeTypes || locals.bbDateRangePicker.defaultDateRangeOptions)"
+            ng-model="bbDateRangePickerValue.dateRangeType" />
+</div>

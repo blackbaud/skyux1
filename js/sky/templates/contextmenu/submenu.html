@@ -1,0 +1,16 @@
+<div class="bb-submenu">
+    <accordion>
+        <accordion-group is-open="accordionLocals.accordionOpen">
+
+            <accordion-heading ng-if="accordionLocals.staticHeader">
+                <div ng-click="toggleAccordion($event)">
+                    <span>
+                        {{heading}}
+                    <span>
+                    <i ng-class="'fa-chevron-' + (accordionLocals.accordionOpen ? 'up' : 'down')" class="fa bb-submenu-chevron"></i>
+                </div>
+            </accordion-heading>
+            <ng-transclude></ng-transclude>
+        </accordion-group>
+    </accordion>
+</div>

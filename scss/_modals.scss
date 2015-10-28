@@ -1,0 +1,141 @@
+@import "Bootstrap/variables";
+@import "mixins";
+
+
+.modal-header {
+    min-height: 45px;
+
+    .bb-dialog-header {
+        white-space: nowrap;
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 80%;
+        float: left;
+        line-height: 1.4; /* Keeps font descenders from being cut off */
+        font-family: $font-family-base;
+        font-weight: 600;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .bb-helpbutton {
+        float: right;
+        margin-right: 20px;
+        margin-top: 2px !important;
+        font-size: 16px;
+    }
+
+    .close {
+        margin-top: 3px;
+    }
+}
+
+.modal-body {
+    padding: 15px;
+
+    input[type=email] {
+        border: 1px solid #ccc;
+        -webkit-appearance: none;
+    }
+}
+
+.modal-body-tiled,
+.bb-modal-body-tiled {
+    background-color: $tile-form-background;
+}
+
+.modal {
+    -webkit-overflow-scrolling: auto;
+}
+
+.modal-footer {
+    padding: 19px;
+    margin: 0;
+    text-align: left;
+    background: $form-background;
+    .btn+.btn {
+        margin-left: 10px;
+    }
+
+}
+
+.bb-modal {
+    overflow-y: hidden;
+
+    .modal-body {
+        overflow-y: auto;
+    }
+}
+
+.bb-modal-open-mobile {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    position: fixed;
+
+    .bb-modal {
+        position: absolute;
+    }
+}
+
+.bb-modal-content-wrapper {
+    background: $form-background;
+    border-top: 1px solid $form-border-color;
+
+    .radio label, .checkbox label {
+        display: inline-block;
+        margin-top: 1px;
+        margin-bottom: 0;
+    }
+
+    .form-horizontal {
+        .radio,
+        .checkbox {
+            min-height: 18px;
+        }
+    }
+
+    .control-label {
+        text-align: left;
+        font-family: $font-family-base;
+        font-size: $font-size-base;
+        font-weight: normal;
+        min-width: 150px;
+        vertical-align: middle;
+    }
+
+    .control-placeholder-label {
+        color: $gray-light;
+        font-style: italic;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+        border: 1px solid $form-textarea-color;
+        font-size: $font-size-base;
+        height: 10em;
+        padding: 5px;
+    }
+
+    input[type=freeform]{
+        border: 1px solid $form-textarea-color;
+        font-size: $font-size-base;
+        -webkit-appearance: none;
+    }
+
+    div.textarea-container {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .control-label.required:after {
+        content: "*";
+        color: $bb-error-color;
+        padding-left: 5px;
+    }
+}

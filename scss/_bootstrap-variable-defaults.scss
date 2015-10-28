@@ -1,0 +1,26 @@
+@import "variables";
+/* begin _bootstrap-variable-defaults */
+/* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
+
+$border-color: #e7eaec;
+
+$icon-font-path: 'sky/bootstrap/fonts/' !default;
+
+$nav-link-padding: 0px 5px !default;
+$alert-padding: 10px !default;
+$btn-primary-bg: $bb-brand-alternate-light !default;
+
+$link-color: $bb-color-blue;
+
+$modal-inner-padding: $padding !default;
+$modal-title-padding: $padding-plus-half !default;
+
+$font-family-sans-serif: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+$font-family-serif: BenchNine, Trebuchet, serif !default;
+$font-family-base: $font-family-sans-serif !default;
+
+/* end _bootstrap-variable-defaults */
+
+/* Font Awesome defaults */
+$fa-font-path: 'sky/fontawesome/fonts' !default;

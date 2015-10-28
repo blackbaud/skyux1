@@ -1,0 +1,62 @@
+@import "mixins";
+
+.bb-action-bar {
+    background-color: #f9f8f8;
+    padding: $padding;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+
+    .bb-action-bar-group {
+        display: inline-block;
+        .dropdown-menu {
+            .bb-action-bar-item-button {
+                background-color: transparent;
+                display: block;
+                box-sizing: border-box;
+                padding: 3px 20px;
+                clear: both;
+                white-space: nowrap;
+                font-weight: normal;
+                font-size: 12px;
+                text-align: left;
+                margin: 4px;
+                line-height: 25px;
+                color: inherit;
+                border: none;
+                border-radius: 3px;
+                width: 95%
+            }
+            .bb-action-bar-item-button:hover, .bb-action-bar-item-button:focus {
+                text-decoration: none;
+                color: $dropdown-link-hover-color;
+                background-color: $dropdown-link-hover-bg;
+
+
+            }
+            .bb-action-bar-item-button:focus {
+                outline: 5px auto -webkit-focus-ring-color;
+                outline-offset: -2px;
+            }
+        }
+    }
+
+    .btn+.btn {
+        margin-left: 10px;
+    }
+
+    .dropdown {
+        display: inline-block;
+    }
+
+    .btn+.dropdown, .dropdown+.btn {
+        margin-left: 10px;
+    }
+
+    .bb-btn-secondary {
+        min-width: 0;
+    }
+
+    .caret {
+        margin-left: 5px;
+    }
+}

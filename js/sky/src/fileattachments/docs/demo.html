@@ -1,0 +1,29 @@
+<div ng-controller="FileAttachmentDemoController as fileAttachmentDemo">
+    <div class="row">
+        <div class="col-md-6">
+            <div 
+                 bb-file-drop
+                 bb-file-drop-change="fileAttachmentDemo.fileDropped(files, rejectedFiles)"
+                 bb-file-drop-multiple="true"
+                 bb-file-drop-max-size="5000000"
+                 bb-file-drop-link
+                 bb-file-drop-link-change="fileAttachmentDemo.fileLinked(link)"
+                 >
+            </div>
+            <div class="alert alert-danger alert-dismissable" ng-show="fileAttachmentDemo.rejected.length > 0">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="fileAttachmentDemo.rejected.length = 0"><span aria-hidden="true">&times;</span></button>
+                The file <strong>{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}</strong> is invalid.  Files must be an image and less than 500 KB.
+            </div>
+            <div ng-repeat="item in fileAttachmentDemo.allItems" bb-file-item="item" bb-file-item-delete="fileAttachmentDemo.deleteAttachment(item)" style="margin-bottom: 10px">
+                <div class="form-group">
+                    <label>Name for this attachment</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Tags for this attachment</label>
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

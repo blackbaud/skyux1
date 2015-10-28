@@ -1,0 +1,21 @@
+<div ng-controller="AutoFocusTestController as autoCtrl">
+  <button type="button" class="btn btn-primary" ng-click="autoCtrl.open()">Open Modal</button>
+</div>
+
+<script type="text/ng-template" id="demo/autofocus/autofocusform.html">
+  <bb-modal>
+    <div class="modal-form">
+      <bb-modal-header>Autofocus Example</bb-modal-header>
+      <div bb-modal-body>
+        <div class="form-group">
+          <label>Focus should be placed here</label>
+          <input class="form-control" bb-autofocus />
+        </div>
+      </div>
+      <bb-modal-footer>
+        <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+        <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+      </bb-modal-footer>
+    </div>
+  </bb-modal>
+</script>

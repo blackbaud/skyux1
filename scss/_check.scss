@@ -1,0 +1,51 @@
+@import "mixins";
+
+.bb-check-wrapper input {
+    display: none;
+}
+
+.bb-check-checkbox,
+.bb-check-radio{
+    border: 1px solid $gray-lighter;
+    //content: "";
+    cursor: pointer;
+    display: inline-block;
+    *display: inline;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 22px;
+}
+
+.bb-check-radio {
+    border-radius: 50%;
+}
+
+.bb-check-checkbox:hover,
+.bb-check-radio:hover {
+    border: 2px solid $bb-color-blue;
+}
+
+.bb-check-wrapper input:checked + .bb-check-checkbox,
+.bb-check-wrapper input:checked  + .bb-check-radio {
+    background-color: $bb-color-blue;
+    border: none;
+
+    &:before {
+        color: $bb-color-white;
+        content: $bbsky-char-check-nostroke;
+        font-family: BBSKY;
+        font-size: $bb-font-size-sm;
+        padding-left: 5px;
+        vertical-align: middle;
+    }
+}
+
+
+.bb-check-wrapper input:disabled + .bb-check-checkbox,
+.bb-check-wrapper input:disabled + .bb-check-radio {
+    background-color: $gray-lighter;
+    border: 1px solid $gray-lighter;
+    cursor: default;
+}

@@ -1,0 +1,302 @@
+@import "mixins";
+
+.btn {
+  border-radius: $bb-btn-border-radius;
+}
+
+.btn-primary {
+  background-color: $bb-color-green;
+  border-color: $bb-color-green;
+  color: white;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  background-color: darken($bb-color-green, 3%);
+  border-color: darken($bb-color-green, 3%);
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+
+.btn-primary.disabled,
+.btn-primary.disabled:hover,
+.btn-primary.disabled:focus,
+.btn-primary.disabled:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled],
+.btn-primary[disabled]:hover,
+.btn-primary[disabled]:focus,
+.btn-primary[disabled]:active,
+.btn-primary.active[disabled],
+fieldset[disabled] .btn-primary,
+fieldset[disabled] .btn-primary:hover,
+fieldset[disabled] .btn-primary:focus,
+fieldset[disabled] .btn-primary:active,
+fieldset[disabled] .btn-primary.active {
+  background-color: lighten($bb-color-green, 4%);
+  border-color: lighten($bb-color-green, 4%);
+}
+
+.btn-success {
+  background-color: $bb-color-blue;
+  border-color: $bb-color-blue;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active,
+.open .dropdown-toggle.btn-success {
+  background-color: darken($bb-color-blue, 3%);
+  border-color: darken($bb-color-blue, 3%);
+}
+
+.btn-success:active,
+.btn-success.active,
+.open .dropdown-toggle.btn-success {
+  background-image: none;
+}
+
+.btn-success.disabled,
+.btn-success.disabled:hover,
+.btn-success.disabled:focus,
+.btn-success.disabled:active,
+.btn-success.disabled.active,
+.btn-success[disabled],
+.btn-success[disabled]:hover,
+.btn-success[disabled]:focus,
+.btn-success[disabled]:active,
+.btn-success.active[disabled],
+fieldset[disabled] .btn-success,
+fieldset[disabled] .btn-success:hover,
+fieldset[disabled] .btn-success:focus,
+fieldset[disabled] .btn-success:active,
+fieldset[disabled] .btn-success.active {
+  background-color: lighten($bb-color-blue, 4%);
+  border-color: lighten($bb-color-blue, 4%);
+}
+
+.btn-info {
+  background-color: $bb-color-aqua;
+  border-color: $bb-color-aqua;
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active,
+.open .dropdown-toggle.btn-info {
+  background-color: darken($bb-color-aqua, 3%);
+  border-color: darken($bb-color-aqua, 3%);
+}
+
+.btn-info:active,
+.btn-info.active,
+.open .dropdown-toggle.btn-info {
+  background-image: none;
+}
+
+.btn-info.disabled,
+.btn-info.disabled:hover,
+.btn-info.disabled:focus,
+.btn-info.disabled:active,
+.btn-info.disabled.active,
+.btn-info[disabled],
+.btn-info[disabled]:hover,
+.btn-info[disabled]:focus,
+.btn-info[disabled]:active,
+.btn-info.active[disabled],
+fieldset[disabled] .btn-info,
+fieldset[disabled] .btn-info:hover,
+fieldset[disabled] .btn-info:focus,
+fieldset[disabled] .btn-info:active,
+fieldset[disabled] .btn-info.active {
+  background-color: lighten($bb-color-aqua, 4%);
+  border-color: lighten($bb-color-aqua, 4%);
+}
+
+.bb-btn-secondary {
+    color: $text-color;
+    background-color: $bb-color-white;
+    border: 1px solid $border-color;
+}
+
+.bb-btn-secondary:hover,
+.bb-btn-secondary:focus,
+.bb-btn-secondary:active,
+.bb-btn-secondary.active,
+.open .dropdown-toggle.bb-btn-secondary {
+    color: inherit;
+    border: 1px solid #d2d2d2;
+    background-color: $bb-color-white;
+}
+.bb-btn-secondary:active,
+.bb-btn-secondary.active {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15) inset;
+}
+
+.bb-btn-secondary:active,
+.bb-btn-secondary.active,
+.open .dropdown-toggle.bb-btn-secondary {
+  background-image: none;
+}
+
+.bb-btn-secondary.disabled,
+.bb-btn-secondary.disabled:hover,
+.bb-btn-secondary.disabled:focus,
+.bb-btn-secondary.disabled:active,
+.bb-btn-secondary.disabled.active,
+.bb-btn-secondary[disabled],
+.bb-btn-secondary[disabled]:hover,
+.bb-btn-secondary[disabled]:focus,
+.bb-btn-secondary[disabled]:active,
+.bb-btn-secondary.active[disabled],
+fieldset[disabled] .bb-btn-secondary,
+fieldset[disabled] .bb-btn-secondary:hover,
+fieldset[disabled] .bb-btn-secondary:focus,
+fieldset[disabled] .bb-btn-secondary:active,
+fieldset[disabled] .bb-btn-secondary.active {
+  color: #cacaca;
+}
+
+.btn-warning {
+  background-color: $bb-color-yellow;
+  border-color: $bb-color-yellow;
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active,
+.open .dropdown-toggle.btn-warning {
+  background-color: darken($bb-color-yellow, 3%);
+  border-color: darken($bb-color-yellow, 3%);
+}
+
+.btn-warning:active,
+.btn-warning.active,
+.open .dropdown-toggle.btn-warning {
+  background-image: none;
+}
+
+.btn-warning.disabled,
+.btn-warning.disabled:hover,
+.btn-warning.disabled:focus,
+.btn-warning.disabled:active,
+.btn-warning.disabled.active,
+.btn-warning[disabled],
+.btn-warning[disabled]:hover,
+.btn-warning[disabled]:focus,
+.btn-warning[disabled]:active,
+.btn-warning.active[disabled],
+fieldset[disabled] .btn-warning,
+fieldset[disabled] .btn-warning:hover,
+fieldset[disabled] .btn-warning:focus,
+fieldset[disabled] .btn-warning:active,
+fieldset[disabled] .btn-warning.active {
+  background-color: lighten($bb-color-yellow, 4%);
+  border-color: lighten($bb-color-yellow, 4%);
+}
+
+.btn-danger {
+  background-color: $bb-color-red;
+  border-color: $bb-color-red;
+  color: white;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active,
+.open .dropdown-toggle.btn-danger {
+  background-color: darken($bb-color-red, 3%);
+  border-color: darken($bb-color-red, 3%);
+  color: white;
+}
+
+.btn-danger:active,
+.btn-danger.active,
+.open .dropdown-toggle.btn-danger {
+  background-image: none;
+}
+
+.btn-danger.disabled,
+.btn-danger.disabled:hover,
+.btn-danger.disabled:focus,
+.btn-danger.disabled:active,
+.btn-danger.disabled.active,
+.btn-danger[disabled],
+.btn-danger[disabled]:hover,
+.btn-danger[disabled]:focus,
+.btn-danger[disabled]:active,
+.btn-danger.active[disabled],
+fieldset[disabled] .btn-danger,
+fieldset[disabled] .btn-danger:hover,
+fieldset[disabled] .btn-danger:focus,
+fieldset[disabled] .btn-danger:active,
+fieldset[disabled] .btn-danger.active {
+  background-color: lighten($bb-color-red, 4%);
+  border-color: lighten($bb-color-red, 4%);
+}
+
+.btn-link {
+  color: inherit;
+}
+
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active,
+.btn-link.active,
+.open .dropdown-toggle.btn-link {
+  color: $bb-color-blue;
+}
+
+.btn-link:active,
+.btn-link.active,
+.open .dropdown-toggle.btn-link {
+  background-image: none;
+}
+
+.btn-link.disabled,
+.btn-link.disabled:hover,
+.btn-link.disabled:focus,
+.btn-link.disabled:active,
+.btn-link.disabled.active,
+.btn-link[disabled],
+.btn-link[disabled]:hover,
+.btn-link[disabled]:focus,
+.btn-link[disabled]:active,
+.btn-link.active[disabled],
+fieldset[disabled] .btn-link,
+fieldset[disabled] .btn-link:hover,
+fieldset[disabled] .btn-link:focus,
+fieldset[disabled] .btn-link:active,
+fieldset[disabled] .btn-link.active {
+  color: #cacaca;
+}
+
+.btn-primary {
+  @include button-variant($bb-color-white, $bb-color-blue, $bb-color-blue);
+}
+
+.btn-link {
+  color: $link-color;
+  padding: 0;
+  &:hover {
+    color: $link-hover-color;
+  }
+}
+
+.bb-show-more {
+  @extend .badge;
+  border: 0;
+  background-color: $gray-lightest;
+  color: $text-color;
+}

@@ -1,0 +1,11 @@
+<div class="container">
+    <div ng-controller="ReadMoreTestController">
+        <div id="screenshot-text-expand" bb-text-expand="locals.longText" style="white-space: pre-wrap"></div>
+        <div id="screenshot-text-expand-line-break" bb-text-expand="locals.textWithLineBreak" style="white-space: pre-wrap"></div>
+        <ul id="screenshot-text-expand-repeater" bb-text-expand-repeater bb-text-expand-repeater-max="2" bb-text-expand-repeater-data="locals.repeaterData">
+            <li ng-repeat="item in locals.repeaterData">
+                <span>{{item.text}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

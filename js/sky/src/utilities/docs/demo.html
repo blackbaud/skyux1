@@ -1,0 +1,20 @@
+<div ng-controller="UtilitiesController as utilCtrl">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group">
+                <label for="formatFilter">Enter Some Text</label>
+                <input class="form-control" type="text" name="formatFilter" ng-model="utilCtrl.formattedText" />
+            </div>
+            <div>Formatted result is: {{'*{0}{0}*' | format:utilCtrl.formattedText}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group">
+                <label for="encodeURIFilter">Enter URI to encode</label>
+                <input class="form-control" type="text" name="encodeURIFilter" ng-model="utilCtrl.encodedText" />
+            </div>
+            <div>Encoded result is: {{utilCtrl.encodedText | encodeURIComponent}}</div>
+        </div>
+    </div>
+</div>

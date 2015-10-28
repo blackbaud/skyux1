@@ -1,0 +1,52 @@
+@import "mixins";
+
+.bb-wizard {
+    .nav.nav-tabs {
+        border: none;
+
+        li {
+            border-bottom: none;
+            margin-right: $margin / 2;
+            margin-top: 0;
+
+            a {
+                @include border-radius($border-radius-small);
+                background-color: $gray-lightest;
+                border: none;
+                color: $bb-color-blue;
+                padding-top: $padding / 2;
+                padding-bottom: $padding / 2;
+                max-width: 200px;
+            }
+
+            &.disabled {
+                a {
+                    color: $gray;
+                }
+            }
+
+            &.bb-wizard-step-complete {
+                a {
+                    background-color: lighten($bb-color-green, 40%);
+                    color: $bb-color-white;
+                }
+            }
+
+            &.active,
+            &.active.bb-wizard-step-complete {
+                a {
+                    @include button-variant($btn-primary-color, $bb-color-green, $btn-primary-border);
+
+                    &:hover,
+                    &:focus {
+                        background-color: $bb-color-green;
+                    }
+                }
+            }
+        }
+    }
+
+    .tab-content {
+        margin-top: $margin-plus-half;
+    }
+}

@@ -1,0 +1,41 @@
+@import "variables";
+@import "bootstrap-variable-defaults";
+@import "Bootstrap/variables";
+@import "compass";
+@import "animation/core";
+@import "Bootstrap/mixins";
+
+@mixin shadow ($h-shadow:0px, $v-shadow:0px, $blur:5px, $spread-radius:0, $color:$gray-dark-text) {
+    box-shadow: $h-shadow $v-shadow $blur $spread-radius $color;
+}
+
+@mixin rounded-corners ($tl-length:5px, $tr-length:5px, $br-length:5px, $bl-length:5px) {
+    border-radius: $tl-length $tr-length $br-length $bl-length;
+}
+
+@mixin text-shadow ($h-shadow:1px, $v-shadow:1px, $blur:0px, $color:$gray) {
+    text-shadow: $h-shadow $v-shadow $blur $color;
+}
+
+@mixin field-invalid {
+    box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
+    border: 1px solid #ed5565;
+    outline: none;
+}
+
+@mixin input-group-field {
+    margin-bottom: 21px;
+}
+
+@mixin input-group-field-invalid {
+    margin-bottom: 1px;
+}
+
+@mixin spin ($speed: 1s) {
+    -webkit-animation: bb-spin-frames $speed infinite linear;
+    -moz-animation: bb-spin-frames $speed infinite linear;
+    -o-animation: bb-spin-frames $speed infinite linear;
+    animation: bb-spin-frames $speed infinite linear;
+    /* Make the element inline-block so that it spins in place. */
+    display: inline-block;
+}

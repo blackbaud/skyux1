@@ -1,0 +1,43 @@
+﻿<div class="ibox page-content-tile-column">
+  <button class="btn btn-primary" ng-click="locals.openForm()">Open form</button>
+</div>
+
+<script type="text/ng-template" id="patterns/forms/modalform.html">
+  <bb-modal>
+    <div class="modal-form">
+      <bb-modal-header>Form elements</bb-modal-header>
+      <form ng-submit="locals.save()">
+        <div bb-modal-body>
+          <div class="form-group">
+            <label class="control-label">Text field</label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="control-label required">Required field</label>
+            <input type="text" required class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="control-label">Date field</label>
+            <bb-date-field ng-model="date"></bb-date-field>
+          </div>
+          <div class="form-group">
+            <label class="control-label">
+              <input bb-check type="checkbox" ng-model="checkbox">
+              Check box
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">
+              <input bb-check type="radio" ng-model="radio1">
+              Radio button
+            </label>
+          </div>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>

@@ -1,0 +1,248 @@
+@import "mixins";
+
+html, form, body {
+    font-size: $font-size-base;
+    font-family: $font-family-base;
+}
+
+body {
+    background-color: $body-bg;
+    color: $text-color;
+}
+
+/*Headings*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-weight: 100;
+    font-family: $font-family-base;
+}
+
+h2,
+.h2 {
+    font-size: 24px;
+}
+
+h3,
+.h3 {
+    font-size: 16px;
+}
+
+h4,
+.h4 {
+    font-size: 14px;
+}
+
+h5,
+.h5 {
+    font-size: 12px;
+}
+
+h6,
+.h6 {
+    font-size: 10px;
+}
+
+h3,
+h4,
+h5,
+h6,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-weight: 600;
+}
+
+h1,
+.h1 {
+    font-family: $bb-font-family-narrow;
+    font-size: 32px;
+}
+
+h6,
+.h6 {
+    font-size: 14px;
+}
+
+/* Bootstrap class */
+.page-header {
+    border-bottom: none;
+    margin: $margin-double 0;
+    padding-bottom: 0;
+}
+
+/*End Headings*/
+
+/* Links */
+a {
+    &.no-pointer {
+        pointer-events: none;
+    }
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+}
+/* End Links */
+
+/* Placeholder Text */
+::-webkit-input-placeholder {
+    font-style: italic;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+    font-style: italic;
+    opacity: 1; // See https://github.com/twbs/bootstrap/pull/11526
+}
+
+input:-moz-placeholder { /* Firefox 18- */
+    font-style: italic;
+}
+
+:-ms-input-placeholder { /* IE */
+    font-style: italic;
+}
+/* End Placeholder Text */
+
+/* Form Elements */
+.control-label {
+    font-weight: normal;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
+    border: 1px solid #1f90d8;
+}
+
+.form-control:focus.ng-invalid {
+    box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
+    border: 1px solid #ed5565;
+}
+
+.checkbox {
+    font-weight: normal;
+    line-height: 1.67;
+    margin-top: 0;
+}
+
+/* End Form Elements */
+
+/* Data Elements */
+.bb-no-records {
+    color: $gray-light;
+    font-style: italic;
+    text-align: center;
+    font-size: $font-size-h4;
+    white-space: pre-line;
+}
+
+/* End Data Elements */
+
+//$screen-xs-max
+@media (max-width: $screen-xs-max) {
+    .bb-page-content-column-container,
+    .bb-page-content-column,
+    .bb-page-content-tile-column {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    // Since we remove the gutters on the sides of tiles on small screens, we need to remove
+    // the right margin and padding from the header so it doesn't create a horizontal scroll.
+    .bb-tile .bb-tile-title > .row {
+        margin-right: 0;
+    }
+
+    .bb-tile-header-column-tools {
+        padding-right: 0;
+    }
+}
+
+.highlight {
+    background-color: #ffe96d;
+}
+
+.grid-no-search .highlight {
+    background-color: initial;
+}
+
+/* Labels */
+
+label.error {
+    margin-top: 0;
+    margin-bottom: 2px;
+    color: $bb-error-color;
+    font-weight: normal;
+}
+
+/* End Labels*/
+
+/* Info Alerts */
+
+.info-alert {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/* End Info Alerts*/
+
+/* Tooltip */
+
+/*overriding default tooltip styling for angular ui bootstrap */
+.tooltip-inner {
+    white-space: nowrap;
+    max-width: none;
+    background-color: $bb-color-white;
+    padding: 0;
+
+    text-align: left;
+    color: $gray-dark;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    padding: 10px;
+    @include shadow($color:$gray-light);
+
+    .bb-tooltip-title {
+        font-weight: bold;
+    }
+
+    hr {
+        margin: 0;
+        padding-bottom: 5px;
+    }
+}
+
+.tooltip.in {
+    opacity: 1;
+}
+
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: $gray-lighter;
+    border-width: 0 10px 5px 10px;
+}
+
+/* Tooltip End*/
+
+dt {
+    font-weight: 600;
+}
+
+#page-wrapper {
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+}

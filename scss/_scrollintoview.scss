@@ -1,0 +1,15 @@
+.bb-scroll-into-view-highlighting {
+    @include animation(bb-scroll-into-view-highlight 1s ease-out 1);
+}
+
+@include keyframes(bb-scroll-into-view-highlight) {
+    0% {
+        box-shadow: 0 0 5px 0 transparent;
+    }
+    5% {
+        box-shadow: 0 0 20px 5px $bb-color-blue;
+    }
+    100% {
+        box-shadow: 0 0 100px 20px transparent;
+    }
+}

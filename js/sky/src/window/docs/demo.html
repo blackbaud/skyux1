@@ -1,0 +1,18 @@
+<div ng-controller="WindowServiceController as windowCtrl">
+    <div class="row">
+        <div class="col-md-6">
+            <label>Change Window Title</label>
+            <input ng-model="windowCtrl.windowTitle" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div>Current browser scrollbar width is: {{windowCtrl.scrollbarWidth}}px</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div>This is <span ng-show="!windowCtrl.isIosUserAgent">not </span>an iOS device</div>
+        </div>
+    </div>
+</div>
