@@ -13,11 +13,7 @@ if [[ "$IS_RELEASE" == "true" ]]; then
   git config --global user.name "Travis"
 
   # Clones the sky-docs repo into a "docs/" folder
-  git clone --quiet https://${GH_TOKEN}@github.com/blackbaud/sky-docs.git docs > /dev/null
-
-  # Temporarily pushing to bbcon branch
-  git checkout $branch
-  git pull
+  git clone --quiet --branch=$branch https://${GH_TOKEN}@github.com/blackbaud/sky-docs.git docs > /dev/null
 
   # Copy jsdoc output
   cp -f demo/data/sky.json docs/sky-jsdoc/sky-$RELEASE_VERSION.json
