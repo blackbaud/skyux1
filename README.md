@@ -1,5 +1,10 @@
 # Sky UX
 
+[![release](https://img.shields.io/bower/v/blackbaud-skyux.svg)](http://skyux.developer.blackbaud.com)
+[![status](https://travis-ci.org/blackbaud/skyux.svg?branch=master)](https://travis-ci.org/blackbaud/skyux)
+[![coverage](https://coveralls.io/repos/blackbaud/skyux/badge.svg?branch=master&service=github)](https://coveralls.io/github/blackbaud/skyux?branch=master)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg](https://github.com/blackbaud/skyux/blob/master/LICENSE)
+
 SKY UX provides an HTML, CSS, and JavaScript framework to implement Blackbaud’s design patterns, along with the guidance to handle visual design and interaction patterns.
 
 http://skyux.developer.blackbaud.com/
@@ -11,6 +16,7 @@ You have two options for consuming Sky UX.  The first and easiest is to point yo
     <!-- Put this in your page's HEAD element -->
     <link rel="stylesheet" type="text/css" src="//sky.blackbaudcdn.net/skyux/1.4.0/css/libs.css" />
     <link rel="stylesheet" type="text/css" src="//sky.blackbaudcdn.net/skyux/1.4.0/css/sky.css" />
+
     <!-- Put this at the bottom of your page's BODY element -->
     <script src="//sky.blackbaudcdn.net/skyux/1.4.0/js/libs.min.js"></script>
     <script src="//sky.blackbaudcdn.net/skyux/1.4.0/js/sky.min.js"></script>
