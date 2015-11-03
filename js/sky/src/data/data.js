@@ -22,7 +22,7 @@
   - `cancel(promise)` Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request.  The promise will be rejected after cancelling.
 */
 
-(function (window, $) {
+(function ($) {
     'use strict';
 
     var DEFAULT_PROP = '__DEFAULT__',
@@ -178,14 +178,14 @@
         return result;
     }
 
-    function bbData($http, $q, $templateCache, bbDataConfig) {
+    function bbData($http, $q, $templateCache, bbDataConfig, $window) {
         function ajaxUrl(url, requestType) {
             var filter,
                 parts;
 
             requestType = requestType || 0;
 
-            if (window.define && window.define.amd && window.require) {
+            if ($window.define && $window.define.amd && $window.require) {
                 parts = url.split('?');
 
                 // Grab the portion before the query string and get the fully-qualified URL.
@@ -261,7 +261,7 @@
                 timeout: timeoutPromise
             };
 
-            if (data instanceof window.FormData) {
+            if (data instanceof $window.FormData) {
                 // Angular sets the Content-Type to application/json by default, but when posting FormData
                 // it should clear out the Content-Type and let the browser determine it.
                 // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
@@ -441,9 +441,9 @@
         };
     }
 
-    bbData.$inject = ['$http', '$q', '$templateCache', 'bbDataConfig'];
+    bbData.$inject = ['$http', '$q', '$templateCache', 'bbDataConfig', '$window'];
 
     angular.module('sky.data', [])
         .constant('bbDataConfig', {})
         .factory('bbData', bbData);
-}(this, jQuery));
+}(jQuery));

@@ -19,7 +19,7 @@
  - `getCurrent()` Gets the current media breakpoint object.
  */
 
-(function (window) {
+(function () {
     'use strict';
 
     var mediaBreakpointsConfig = {
@@ -32,57 +32,60 @@
         },
         bp = {},
         handlers = [],
-        mediaBreakpoints,
-        timeout;
+        mediaBreakpoints;
 
-    function updateStatus(newSize) {
-        var handler,
-            i;
 
-        bp.xs = bp.sm = bp.md = bp.lg = false;
-        bp[newSize] = true;
 
-        for (i = 0; i < handlers.length; i += 1) {
-            handler = handlers[i];
+    function runRegisterEnquire($window, $timeout) {
+        function registerEnquire(enquire) {
+            var mediaQueries = mediaBreakpointsConfig.mediaQueries,
+                p;
 
-            /*istanbul ignore else */
-            if (handler) {
-                handler(bp);
+            function updateStatus(newSize) {
+                var handler,
+                    i;
+                bp.xs = bp.sm = bp.md = bp.lg = false;
+                bp[newSize] = true;
+
+                for (i = 0; i < handlers.length; i += 1) {
+                    handler = handlers[i];
+
+                    /*istanbul ignore else */
+                    if (handler) {
+                        handler(bp);
+                    }
+                }
+                $timeout(angular.noop);
+            }
+
+
+            function registerQuery(name) {
+                if (!angular.isDefined(enquire.queries[mediaQueries[name]])) {
+                    enquire.register(mediaQueries[name], function () {
+                        updateStatus(name);
+                    });
+                }
+            }
+
+            for (p in mediaQueries) {
+                /*istanbul ignore else */
+                if (mediaQueries.hasOwnProperty(p)) {
+                    registerQuery(p);
+                }
             }
         }
 
-        // Trigger a digest cycle if it's available
-        if (timeout) {
-            timeout(angular.noop, 0);
-        }
-    }
-
-    (function (register) {
         /* istanbul ignore next boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
-            require(['enquire'], register);
-        } else if (window.enquire) {
+            require(['enquire'], registerEnquire);
+        } else if ($window.enquire) {
             // Browser globals
-            register(enquire);
+            registerEnquire(enquire);
         }
-    }(function (enquire) {
-        var mediaQueries = mediaBreakpointsConfig.mediaQueries,
-            p;
+    }
 
-        function registerQuery(name) {
-            enquire.register(mediaQueries[name], function () {
-                updateStatus(name);
-            });
-        }
-
-        for (p in mediaQueries) {
-            /*istanbul ignore else */
-            if (mediaQueries.hasOwnProperty(p)) {
-                registerQuery(p);
-            }
-        }
-    }));
+    runRegisterEnquire.$inject = ['$window', '$timeout'];
 
     mediaBreakpoints = {
         register: function (callback) {
@@ -110,8 +113,8 @@
 
     angular.module('sky.mediabreakpoints', [])
         .constant('bbMediaBreakpointsConfig', mediaBreakpointsConfig)
-        .factory('bbMediaBreakpoints', ['$timeout', function ($timeout) {
-            timeout = $timeout;
+        .run(runRegisterEnquire)
+        .factory('bbMediaBreakpoints', [function () {
             return mediaBreakpoints;
         }]);
-}(this));
+}());
