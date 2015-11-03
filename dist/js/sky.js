@@ -912,7 +912,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
   - `cancel(promise)` Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request.  The promise will be rejected after cancelling.
 */
 
-(function (window, $) {
+(function ($) {
     'use strict';
 
     var DEFAULT_PROP = '__DEFAULT__',
@@ -1068,14 +1068,14 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
         return result;
     }
 
-    function bbData($http, $q, $templateCache, bbDataConfig) {
+    function bbData($http, $q, $templateCache, bbDataConfig, $window) {
         function ajaxUrl(url, requestType) {
             var filter,
                 parts;
 
             requestType = requestType || 0;
 
-            if (window.define && window.define.amd && window.require) {
+            if ($window.define && $window.define.amd && $window.require) {
                 parts = url.split('?');
 
                 // Grab the portion before the query string and get the fully-qualified URL.
@@ -1151,7 +1151,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 timeout: timeoutPromise
             };
 
-            if (data instanceof window.FormData) {
+            if (data instanceof $window.FormData) {
                 // Angular sets the Content-Type to application/json by default, but when posting FormData
                 // it should clear out the Content-Type and let the browser determine it.
                 // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
@@ -1331,12 +1331,12 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
         };
     }
 
-    bbData.$inject = ['$http', '$q', '$templateCache', 'bbDataConfig'];
+    bbData.$inject = ['$http', '$q', '$templateCache', 'bbDataConfig', '$window'];
 
     angular.module('sky.data', [])
         .constant('bbDataConfig', {})
         .factory('bbData', bbData);
-}(this, jQuery));
+}(jQuery));
 
 /*jshint browser: true */
 /*global angular, jQuery */
@@ -4852,7 +4852,7 @@ reloading the grid with the current data after the event has fired.
  - `getCurrent()` Gets the current media breakpoint object.
  */
 
-(function (window) {
+(function () {
     'use strict';
 
     var mediaBreakpointsConfig = {
@@ -4865,57 +4865,60 @@ reloading the grid with the current data after the event has fired.
         },
         bp = {},
         handlers = [],
-        mediaBreakpoints,
-        timeout;
+        mediaBreakpoints;
 
-    function updateStatus(newSize) {
-        var handler,
-            i;
 
-        bp.xs = bp.sm = bp.md = bp.lg = false;
-        bp[newSize] = true;
 
-        for (i = 0; i < handlers.length; i += 1) {
-            handler = handlers[i];
+    function runRegisterEnquire($window, $timeout) {
+        function registerEnquire(enquire) {
+            var mediaQueries = mediaBreakpointsConfig.mediaQueries,
+                p;
 
-            /*istanbul ignore else */
-            if (handler) {
-                handler(bp);
+            function updateStatus(newSize) {
+                var handler,
+                    i;
+                bp.xs = bp.sm = bp.md = bp.lg = false;
+                bp[newSize] = true;
+
+                for (i = 0; i < handlers.length; i += 1) {
+                    handler = handlers[i];
+
+                    /*istanbul ignore else */
+                    if (handler) {
+                        handler(bp);
+                    }
+                }
+                $timeout(angular.noop);
+            }
+
+
+            function registerQuery(name) {
+                if (!angular.isDefined(enquire.queries[mediaQueries[name]])) {
+                    enquire.register(mediaQueries[name], function () {
+                        updateStatus(name);
+                    });
+                }
+            }
+
+            for (p in mediaQueries) {
+                /*istanbul ignore else */
+                if (mediaQueries.hasOwnProperty(p)) {
+                    registerQuery(p);
+                }
             }
         }
 
-        // Trigger a digest cycle if it's available
-        if (timeout) {
-            timeout(angular.noop, 0);
-        }
-    }
-
-    (function (register) {
         /* istanbul ignore next boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
-            require(['enquire'], register);
-        } else if (window.enquire) {
+            require(['enquire'], registerEnquire);
+        } else if ($window.enquire) {
             // Browser globals
-            register(enquire);
+            registerEnquire(enquire);
         }
-    }(function (enquire) {
-        var mediaQueries = mediaBreakpointsConfig.mediaQueries,
-            p;
+    }
 
-        function registerQuery(name) {
-            enquire.register(mediaQueries[name], function () {
-                updateStatus(name);
-            });
-        }
-
-        for (p in mediaQueries) {
-            /*istanbul ignore else */
-            if (mediaQueries.hasOwnProperty(p)) {
-                registerQuery(p);
-            }
-        }
-    }));
+    runRegisterEnquire.$inject = ['$window', '$timeout'];
 
     mediaBreakpoints = {
         register: function (callback) {
@@ -4943,11 +4946,11 @@ reloading the grid with the current data after the event has fired.
 
     angular.module('sky.mediabreakpoints', [])
         .constant('bbMediaBreakpointsConfig', mediaBreakpointsConfig)
-        .factory('bbMediaBreakpoints', ['$timeout', function ($timeout) {
-            timeout = $timeout;
+        .run(runRegisterEnquire)
+        .factory('bbMediaBreakpoints', [function () {
             return mediaBreakpoints;
         }]);
-}(this));
+}());
 
 /*jshint browser: true */
 /*global angular, jQuery */
@@ -5190,24 +5193,27 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 @description The moment module allows you to use the [moment](http://momentjs.com/) library.
 */
 
-(function (window) {
+(function () {
     'use strict';
 
-    function defineModule(moment) {
-        angular.module('sky.moment', [])
-            .constant('bbMoment', moment);
-    }
-    
-    /*istanbul ignore next boilerplate require gunk */
-    if (typeof window.define === 'function' && window.define.amd) {
-        window.define(['moment'], defineModule);
-    } else if (window.module !== undefined && window.module && window.module.exports) {
-        defineModule(window.require('moment'));
-    } else {
-        defineModule(window.moment);
+    function bbMoment($window) {
+        /*istanbul ignore next boilerplate require gunk */
+        if (typeof $window.define === 'function' && $window.define.amd) {
+            return $window.define(['moment']);
+        } else if ($window.module !== undefined && $window.module && $window.module.exports) {
+            return $window.require('moment');
+        } else {
+            return $window.moment;
+        }
     }
 
-}(this));
+    bbMoment.$inject = ['$window'];
+
+    angular.module('sky.moment', [])
+        .factory('bbMoment', bbMoment);
+
+}());
+
 /*global angular, jQuery */
 
 /** @module Navbar
