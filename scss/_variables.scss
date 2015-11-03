@@ -2,18 +2,17 @@
 
 // begin _variables
 
-// New variables that use naming conventions
-$bb-nav-bg-color: #2f4050 !default; // $nav-bg
-$bb-btn-border-radius: 3px !default; // $btn-border-radius
-$bb-label-badge-color: #5e5e5e !default; // $label-badge-color
+$bb-nav-bg-color: #2f4050 !default;
+$bb-btn-border-radius: 3px !default;
+$bb-label-badge-color: #5e5e5e !default;
 
-$bb-color-green: #1ab394 !default; // $navy
-$bb-color-blue: #1c84c6 !default; // $blue
-$bb-color-aqua: #23c6c8 !default; // $lazur
-$bb-color-yellow: #f8ac59 !default; // $yellow
-$bb-color-red: #ed5565 !default; // $red
-$bb-color-white: #fff !default; //white
-$bb-color-purple: #6533c5 !default; //purple
+$bb-color-green: #1ab394 !default;
+$bb-color-blue: #1c84c6 !default;
+$bb-color-aqua: #23c6c8 !default;
+$bb-color-yellow: #f8ac59 !default;
+$bb-color-red: #ed5565 !default;
+$bb-color-white: #fff !default;
+$bb-color-purple: #6533c5 !default;
 
 $bb-brand-alternate: $bb-color-blue !default;
 $bb-brand-alternate-light: lighten($bb-brand-alternate, 10%) !default; //#1a80b3
