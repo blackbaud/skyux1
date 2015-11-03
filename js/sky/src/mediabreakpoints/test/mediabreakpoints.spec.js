@@ -6,10 +6,10 @@ describe('Media breakpoints service', function () {
 
     var bbMediaBreakpoints,
         bbMediaBreakpointsConfig;
-    
+
     function validateExpectedBp(bp, expected) {
         var p;
-        
+
         for (p in bp) {
             if (bp.hasOwnProperty(p)) {
                 expect(bp[p]).toBe(expected === p);
@@ -24,14 +24,12 @@ describe('Media breakpoints service', function () {
         bbMediaBreakpoints = _bbMediaBreakpoints_;
         bbMediaBreakpointsConfig = _bbMediaBreakpointsConfig_;
     }));
-    
+
     function callEnquireListener(mediaQuery) {
         // Fake out how enquire calls breakpoint listeners.
         var enquireQuery = enquire.queries[mediaQuery];
-        
         spyOn(enquireQuery, 'matches').and.returnValue(true);
-        
-        enquireQuery.listener(enquireQuery.mql);
+        enquireQuery.assess();
     }
 
     it('should register enquire breakpoints for each configured media query', function () {
@@ -39,36 +37,40 @@ describe('Media breakpoints service', function () {
             configQueryCount = 0,
             mediaQuery,
             p,
-            testBp;
-        
+            testBp,
+            handled = 0;
+
         function breakpointHandler(bp) {
             testBp = bp;
+            handled++;
         }
-        
+
         bbMediaBreakpoints.register(breakpointHandler);
 
         for (p in configQueries) {
             if (configQueries.hasOwnProperty(p)) {
                 mediaQuery = configQueries[p];
-                
+
                 callEnquireListener(mediaQuery);
-                
+
                 // Check the triggered breakpoint against the media query that triggered it.
                 validateExpectedBp(testBp, p);
-                
+
                 // Make sure getCurrent() returns the last triggered breakpoint.
                 expect(bbMediaBreakpoints.getCurrent()).toBe(testBp);
-                
+
                 configQueryCount++;
             }
         }
-        
+
         expect(configQueryCount).toBe(4);
+        expect(handled).toBe(5);
+
     });
 
     it('should unregister listeners', function () {
         var breakpointCallCount = 0;
-        
+
         function breakpointHandler() {
             breakpointCallCount++;
         }
@@ -80,12 +82,13 @@ describe('Media breakpoints service', function () {
         callEnquireListener(bbMediaBreakpointsConfig.mediaQueries.xs);
 
         expect(breakpointCallCount).toBe(2);
-        
+
         bbMediaBreakpoints.unregister(breakpointHandler);
 
         callEnquireListener(bbMediaBreakpointsConfig.mediaQueries.lg);
-        
+
         // The handler function shouldn't be called again after being unregistered.
         expect(breakpointCallCount).toBe(2);
+
     });
 });
