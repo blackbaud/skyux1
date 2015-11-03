@@ -3,7 +3,7 @@
 [![release](https://img.shields.io/bower/v/blackbaud-skyux.svg)](http://skyux.developer.blackbaud.com)
 [![status](https://travis-ci.org/blackbaud/skyux.svg?branch=master)](https://travis-ci.org/blackbaud/skyux)
 [![coverage](https://coveralls.io/repos/blackbaud/skyux/badge.svg?branch=master&service=github)](https://coveralls.io/github/blackbaud/skyux?branch=master)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg](https://github.com/blackbaud/skyux/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/blackbaud/skyux/blob/master/LICENSE)
 
 SKY UX provides an HTML, CSS, and JavaScript framework to implement Blackbaud’s design patterns, along with the guidance to handle visual design and interaction patterns.
 
