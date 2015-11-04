@@ -6,14 +6,14 @@ if [[ "$IS_RELEASE" == "true" ]]; then
   echo -e "Starting to update sky docs\n"
 
   # This is normally master
-  branch="bbcon"
+  branch="master"
 
   # What user will be committing to the sky-docs repo
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "Travis"
 
   # Clones the sky-docs repo into a "docs/" folder
-  git clone --quiet --branch=$branch https://${GH_TOKEN}@github.com/blackbaud/sky-docs.git docs > /dev/null
+  git clone --quiet --branch=$branch https://${GH_TOKEN}@github.com/blackbaud/skyux-docs.git docs > /dev/null
 
   # Copy jsdoc output
   cp -f demo/data/sky.json docs/sky-jsdoc/sky-$RELEASE_VERSION.json
