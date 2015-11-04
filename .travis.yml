@@ -58,8 +58,9 @@ before_cache:
   - rm -rf $TMPDIR/npm-*
   - find node_modules/\@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs/node_modules/ -type f -name 'package.json' -delete
 
-# Hooray Slack integration.
 notifications:
+  slack:
+    secure: X3VK9q9hmAcdzxdf8Ba0OHNThYoKKxvFLaDE09s45/75NM38pWQ9iOBJ8GOxYOA0WePzRNEScPxUAFMVKXK0KDbgtcEZ5DdM7kBe7JMo+fB39VLD3L70MVRLdpXnsPZE283GyXmjrmSVg+5gJrSYLwifnvyoqnnRlexL/Hz2JvxbDxdigbgLv8nvgEm5k62RN6kTVFS8aWI7sY1K1aEQdn8yTMy0u1VhBNA3wcFYVpAD1rbyBoSuFhARDVBujTh/RQamngDFLDThKGdCIvf57ierCgLFv6XLFPsviQP5qBMzEbBwu9u0DmOeevUsXUGUPtBSzQN9hBlMU995/n79PoSrlGGmBjISzqwzvp4JNMSDfCh+ne/PX1kIqeFW8egSTVTfCgavbHN4kJvtJZNmi6eDHhFHagSHSBkRgAc6JGvVHVToA1I/u97rcV1nVInhEvUNE6NZ/gkMj0El841ce3IvSZUsFcz/8IoYANxY1LCTmgnF/9GZ3QkKvBU0qhOjsMNnH2zwih38H1Ppqb0/+e+6mlmHpksnKgYwwAS83ZuKzyZbw7I3wyKUEOBCy7wWq45ZjRc74hnrZn/TngHyQ5UXCIlUBn1SjqjyljIKsp85A0lsZLcIEUIsR+7brnMRtMUW5IUaOSow2b52lr4suHG/ShXnUAe1sj2+uxCiy64=
   webhooks:
     - http://sky-savage.cloudapp.net/savage/travis
 
