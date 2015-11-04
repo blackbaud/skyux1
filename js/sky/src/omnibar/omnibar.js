@@ -78,6 +78,8 @@
                     }
 
                     function userLoaded(userData) {
+                        var omnibarIndicatesNullUserTime;
+
                         //If the user ID loaded in the omnibar does not match the user who loaded the page, sign the
                         //user out of the application.  This will result in a redirect back to the auth size to update
                         //the user's claims or ask the user to log back in.
@@ -97,7 +99,8 @@
                                 //is signed out.  The page is still secure because the Auth claims are evaluated on the server.
                                 //This special case is just about dealing with an edge case issue with client side javascript.
                                 if ($window.localStorage) {
-                                    var omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
+                                    omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
+                                    
                                     if (omnibarIndicatesNullUserTime && (new Date() - Date.parse(omnibarIndicatesNullUserTime)) / 1000 <= 10) {
                                         // We just looped through Auth within the last 10 seconds, so don't leave again now.
                                         return;
