@@ -5288,7 +5288,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
             serviceName: 'Sky',
             signOutUrl: '',
             tenantId: '',
-            url: '//signin.blackbaud.com/omnibar.js'
+            url: 'https://signin.blackbaud.com/omnibar.min.js'
         })
         .directive('bbOmnibar', ['$window', 'bbOmnibarConfig', function ($window, bbOmnibarConfig) {
             return {
@@ -5345,7 +5345,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                         });
 
                         scope.$apply();
-                        
+
                         if (angular.isFunction(bbOmnibarConfig.afterLoad)) {
                             /* jshint validthis: true */
                             bbOmnibarConfig.afterLoad.apply(this, arguments);
@@ -5353,6 +5353,8 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                     }
 
                     function userLoaded(userData) {
+                        var omnibarIndicatesNullUserTime;
+
                         //If the user ID loaded in the omnibar does not match the user who loaded the page, sign the
                         //user out of the application.  This will result in a redirect back to the auth size to update
                         //the user's claims or ask the user to log back in.
@@ -5372,7 +5374,8 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                                 //is signed out.  The page is still secure because the Auth claims are evaluated on the server.
                                 //This special case is just about dealing with an edge case issue with client side javascript.
                                 if ($window.localStorage) {
-                                    var omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
+                                    omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
+                                    
                                     if (omnibarIndicatesNullUserTime && (new Date() - Date.parse(omnibarIndicatesNullUserTime)) / 1000 <= 10) {
                                         // We just looped through Auth within the last 10 seconds, so don't leave again now.
                                         return;
@@ -5394,7 +5397,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                             // Log out and redirect to auth service.
                             $window.location.href = bbOmnibarConfig.signOutUrl;
                         }
-                        
+
                         if (angular.isFunction(bbOmnibarConfig.userLoaded)) {
                             /* jshint validthis: true */
                             bbOmnibarConfig.userLoaded.apply(this, arguments);
