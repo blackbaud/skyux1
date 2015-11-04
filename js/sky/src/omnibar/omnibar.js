@@ -13,7 +13,7 @@
             serviceName: 'Sky',
             signOutUrl: '',
             tenantId: '',
-            url: '//signin.blackbaud.com/omnibar.js'
+            url: 'https://signin.blackbaud.com/omnibar.min.js'
         })
         .directive('bbOmnibar', ['$window', 'bbOmnibarConfig', function ($window, bbOmnibarConfig) {
             return {
@@ -70,7 +70,7 @@
                         });
 
                         scope.$apply();
-                        
+
                         if (angular.isFunction(bbOmnibarConfig.afterLoad)) {
                             /* jshint validthis: true */
                             bbOmnibarConfig.afterLoad.apply(this, arguments);
@@ -119,7 +119,7 @@
                             // Log out and redirect to auth service.
                             $window.location.href = bbOmnibarConfig.signOutUrl;
                         }
-                        
+
                         if (angular.isFunction(bbOmnibarConfig.userLoaded)) {
                             /* jshint validthis: true */
                             bbOmnibarConfig.userLoaded.apply(this, arguments);
