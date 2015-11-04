@@ -127,7 +127,7 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
                     /*jslint unparam: true */
                     $timeout(function () {
                         $element.focus();
-                    }, 100);
+                    }, 500);
                 }
             };
         }]);
