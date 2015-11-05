@@ -357,7 +357,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('generatedocs', ['stache_jsdoc', 'status:demo/build', 'build', 'copy:demo']);
     grunt.registerTask('compilescripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
-    grunt.registerTask('compilestyles', ['sass:dist', 'sass:palette', 'copy:dist']);
+    grunt.registerTask('compilestyles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'copy:dist']);
     grunt.registerTask('buildall', ['compilestyles', 'compilescripts']);
     grunt.registerTask('watchandtest', ['buildall', 'karma:watch:start', 'watch']);
     grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
