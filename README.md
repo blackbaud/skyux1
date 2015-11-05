@@ -55,4 +55,4 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
 
 ## Filing Issues
 
-To file a bug, just go to the [issues](https://github.com/blackbaud/skyux/issues) page and create a new issue. You can assign the We are operating under the expectation that we will close bugs within two weeks of filing. On the newly created issue, there will be an option for you to subscribe to notifications which will send you emails about commits, comments, and releases related to the bug so you can know exactly where the bug is within its lifecycle.
+To file a bug, just go to the [issues](https://github.com/blackbaud/skyux/issues) page and create a new issue. We are operating under the expectation that we will close bugs within two weeks of filing. On the newly created issue, there will be an option for you to subscribe to notifications which will send you emails about commits, comments, and releases related to the bug so you can know exactly where the bug is within its lifecycle.
