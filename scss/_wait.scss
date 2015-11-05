@@ -6,12 +6,12 @@
 
 .bb-wait-spinner {
     @include spin(1s);
-    margin-top: -7px;
 
     &::before {
         content: $bbsky-char-loading;
         font-family: BBSKY;
         font-size: 35px;
+        line-height: 35px;
         display: block;
         clear: both;
         width: 35px;
