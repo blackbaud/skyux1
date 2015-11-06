@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         skipTest,
         visualTestsPath,
         visualTestPort = 8010,
-        webdriverTestPort;
+        webdriverTestPort = 8000;
 
     // Logging some TRAVIS environment variables
     (function () {
