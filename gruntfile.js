@@ -410,9 +410,9 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('webdrivertest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:visualtest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
-    grunt.registerTask('webdrivertestlocal', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:visualtest', 'webdriver:local', 'cleanupwebdrivertestfixtures']);
-    grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:webdrivertest', 'phantomcss', 'cleanupvisualtestfixtures']);
+    grunt.registerTask('webdrivertest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
+    grunt.registerTask('webdrivertestlocal', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:local', 'cleanupwebdrivertestfixtures']);
+    grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
