@@ -7,7 +7,7 @@
             'webdrivertest/test/**/*.visual.js'
         ],
         logLevel: 'silent',
-        baseUrl: 'http://localhost:8000/webdrivertest/test',
+        baseUrl: 'http://localhost:8010/webdrivertest/test',
         capabilities: [
             {
                 browserName: 'chrome'

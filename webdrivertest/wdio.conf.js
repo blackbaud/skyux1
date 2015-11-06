@@ -4,7 +4,7 @@
     'use strict';
     exports.config = {
         user: process.env.BROWSER_STACK_USERNAME,
-        key: process.env.BROWSERSTACK_ACCESS_KEY,
+        key: process.env.BROWSER_STACK_ACCESS_KEY,
         specs: [
             'webdrivertest/test/**/*.visual.js'
         ],
@@ -17,7 +17,7 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
-                build: process.env.TRAVIS_BUILD_NUMBER
+                build: 'webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             }/*,
             {
                 browserName: 'firefox',
