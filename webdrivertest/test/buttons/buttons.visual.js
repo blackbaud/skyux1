@@ -1,38 +1,40 @@
 
 /*global describe, it, browser, expect */
 
-describe('actionbar', function () {
+describe('buttons', function () {
     'use strict';
 
-    it('should take the button default screenshots', function (done) {
+    it('should take the button default hclick test', function (done) {
+        var screenshotName = this.screenshot_prefix + 'button_default_click';
         browser
             .url('/buttons/fixtures/test.full.html')
-            .webdrivercss('button-default', [
+            .moveToObject('.btn-default')
+            .webdrivercss('button_default_click', [
                 {
-                    name: 'button_default',
+                    name: screenshotName,
                     elem: '#screenshots-buttons-default'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
-                expect(res.button_default[0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
-
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            })
+            .call(done);
     });
 
-    it('should take the button default hover test', function (done) {
+
+    it('should take the button default screenshots', function (done) {
+        var screenshotName = this.screenshot_prefix + 'button_default';
         browser
-        .url('/buttons/fixtures/test.full.html')
-        .moveToObject('.btn-default')
-        .webdrivercss('button_default_hover', [
-            {
-                name: 'button_default_hover',
-                elem: '#screenshots-buttons-default'
-            }
-        ], function (err, res) {
-            expect(err).toBe(undefined);
-            expect(res.button_default_hover[0].isWithinMisMatchTolerance).toBe(true);
-        })
-        .call(done);
+            .url('/buttons/fixtures/test.full.html')
+            .webdrivercss('button-default', [
+                {
+                    name: screenshotName,
+                    elem: '#screenshots-buttons-default'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 
 });

@@ -3,10 +3,10 @@ node_js:
   - '0.10'
 
 addons:
-    apt:
-        packages:
-        - graphicsmagick
-        - libcairo2-dev
+  apt:
+    packages:
+      - graphicsmagick
+      - libcairo2-dev
 
 before_install:
   # Used throughout the bash scripts
