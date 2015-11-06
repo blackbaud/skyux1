@@ -365,6 +365,14 @@ module.exports = function (grunt) {
                     port: visualTestPort
                 }
             }
+        },
+        webdriver: {
+            test: {
+                configFile: './webdrivertest/wdio.conf.js'
+            },
+            local: {
+                configFile: './webdrivertest/wdio.local.conf.js'
+            }
         }
     });
 
@@ -384,6 +392,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('blackbaud-stache-jsdoc');
     grunt.loadNpmTasks('@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs');
+    grunt.loadNpmTasks('grunt-webdriver');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -395,6 +404,8 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
+    grunt.registerTask('webdrivertest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:visualtest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
+    grunt.registerTask('webdrivertestlocal', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:visualtest', 'webdriver:local', 'cleanupwebdrivertestfixtures']);
     grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
 
     // Generate our JS config for each supported locale
@@ -426,16 +437,17 @@ module.exports = function (grunt) {
         });
     });
 
-    // Generate the files needed for visual tests
-    grunt.registerTask('buildvisualtestfixtures', function () {
-        var template = grunt.file.read('visualtest/fixtures/template.html');
+
+    function buildTestFixtures(root) {
+        var template = grunt.file.read((root + '/fixtures/template.html')),
+            pattern = root + '/test/**/fixtures/*.html';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            'visualtest/test/**/fixtures/*.html'
+            pattern
         ).forEach(function (file) {
             var destFile,
                 html;
@@ -445,29 +457,48 @@ module.exports = function (grunt) {
                 html = grunt.file.read(file);
                 html = template.replace(/##TEST_HTML##/gi, html);
                 html = html.replace(/##DIST_PATH##/gi, skyDistPath);
-
                 destFile = file.replace('.html', '.full.html');
-
                 grunt.file.write(destFile, html);
 
                 grunt.log.writeln('File "' + destFile + '" created.');
             }
         });
-    });
+    }
 
-    // Remove the temporary files needed for visual tests
-    grunt.registerTask('cleanupvisualtestfixtures', function () {
+    function cleanupTestFixtures(root) {
+        var pattern = root + '/test/**/fixtures/*.full.html';
+
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            'visualtest/test/**/fixtures/*.full.html'
+            pattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });
 
         grunt.log.writeln('Visual test fixture temp files deleted.');
+    }
+
+    // Generate the files needed for visual tests
+    grunt.registerTask('buildwebdrivertestfixtures', function () {
+        buildTestFixtures('webdrivertest');
+    });
+
+    // Generate the files needed for visual tests
+    grunt.registerTask('buildvisualtestfixtures', function () {
+        buildTestFixtures('visualtest');
+    });
+
+    // Remove the temporary files needed for visual tests
+    grunt.registerTask('cleanupwebdrivertestfixtures', function () {
+        cleanupTestFixtures('webdrivertest');
+    });
+
+    // Remove the temporary files needed for visual tests
+    grunt.registerTask('cleanupvisualtestfixtures', function () {
+        cleanupTestFixtures('visualtest');
     });
 
     // Generate our JS config for the bbPalette service
@@ -507,6 +538,7 @@ module.exports = function (grunt) {
             if (!skipTest) {
                 tasks.push('karma:' + karmaTarget);
                 tasks.push('visualtest');
+                tasks.push('webdrivertest');
             }
         }
 
