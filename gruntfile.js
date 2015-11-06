@@ -157,11 +157,6 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= skyDistPath %>css/libs.css': [
-                        'bower_components/free-jqgrid/css/ui.jqgrid.css',
-                        'bower_components/angular-toastr/dist/angular-toastr.min.css',
-                        'bower_components/angular-ui-select/dist/select.min.css'
-                    ],
                     '<%= skyDistPath %>js/libs.js': [
                         'bower_components/jquery/dist/jquery.js',
                         'bower_components/jquery-ui/jquery-ui.js',
@@ -215,7 +210,7 @@ module.exports = function (grunt) {
             }
         },
         // Renamed the original grunt-contrib-watch task
-        watchRenamed: {
+        watchNoConflict: {
             scripts: {
                 files: src.concat(['<%= skyLocalesPath %>**/*.*', '<%= skyTemplatesPath %>**/*.html']),
                 tasks: ['scripts', 'karma:watch:run']
@@ -257,6 +252,22 @@ module.exports = function (grunt) {
                 },
                 files: {
                     '<%= paletteCssPath %>': '<%= paletteTemplatesPath %>template.scss'
+                }
+            }
+        },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1,
+                sourceMap: true
+            },
+            dist: {
+                files: {
+                    '<%= skyDistPath %>css/libs.css': [
+                        'bower_components/free-jqgrid/css/ui.jqgrid.css',
+                        'bower_components/angular-toastr/dist/angular-toastr.min.css',
+                        'bower_components/angular-ui-select/dist/select.min.css'
+                    ]
                 }
             }
         },
@@ -359,6 +370,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ngdocs');
@@ -375,14 +387,14 @@ module.exports = function (grunt) {
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
-    grunt.task.renameTask('watch', 'watchRenamed');
+    grunt.task.renameTask('watch', 'watchNoConflict');
 
     grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('docs', ['stache_jsdoc', 'status:demo/build', 'stache', 'copy:demo']);
     grunt.registerTask('scripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
-    grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'copy:dist']);
+    grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
-    grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchRenamed']);
+    grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
 
     // Generate our JS config for each supported locale
