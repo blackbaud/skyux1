@@ -20,6 +20,8 @@ before_install:
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
   - gem install sass
 
+  - sudo apt-get install graphicsmagick libcairo2-dev
+
   # Make our three scripts executable
   - chmod +x update-skyux.sh
   - chmod +x update-skyux-docs.sh
