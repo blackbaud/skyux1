@@ -2,6 +2,12 @@ language: node_js
 node_js:
   - '0.10'
 
+addons:
+    apt:
+        packages:
+        - graphicsmagick
+        - libcairo2-dev
+
 before_install:
   # Used throughout the bash scripts
   - export LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
@@ -19,8 +25,6 @@ before_install:
 
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
   - gem install sass
-
-  - sudo apt-get install graphicsmagick libcairo2-dev
 
   # Make our three scripts executable
   - chmod +x update-skyux.sh
