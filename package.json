@@ -9,7 +9,7 @@
   "private": true,
   "devDependencies": {
     "@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs": "git+https://github.com/Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs.git",
-    "blackbaud-stache": "git+https://github.com/blackbaud-community/stache.git#ba9b67d7b1e75b9d6ec02706dc7dc541041a899d",
+    "blackbaud-stache": "latest",
     "blackbaud-stache-jsdoc": "latest",
     "grunt": "^0.4.5",
     "grunt-bump": "~0.3.0",
