@@ -127,11 +127,6 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= skyDistPath %>css/libs.css': [
-                        'bower_components/free-jqgrid/css/ui.jqgrid.css',
-                        'bower_components/angular-toastr/dist/angular-toastr.min.css',
-                        'bower_components/angular-ui-select/dist/select.min.css'
-                    ],
                     '<%= skyDistPath %>js/libs.js': [
                         'bower_components/jquery/dist/jquery.js',
                         'bower_components/jquery-ui/jquery-ui.js',
@@ -226,6 +221,22 @@ module.exports = function (grunt) {
                 },
                 files: {
                     '<%= paletteCssPath %>': '<%= paletteTemplatesPath %>template.scss'
+                }
+            }
+        },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1,
+                sourceMap: true
+            },
+            dist: {
+                files: {
+                    '<%= skyDistPath %>css/libs.css': [
+                        'bower_components/free-jqgrid/css/ui.jqgrid.css',
+                        'bower_components/angular-toastr/dist/angular-toastr.min.css',
+                        'bower_components/angular-ui-select/dist/select.min.css'
+                    ]
                 }
             }
         },
@@ -328,6 +339,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ngdocs');
@@ -345,7 +357,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('generatedocs', ['stache_jsdoc', 'status:demo/build', 'build', 'copy:demo']);
     grunt.registerTask('compilescripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
-    grunt.registerTask('compilestyles', ['sass:dist', 'sass:palette', 'copy:dist']);
+    grunt.registerTask('compilestyles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'copy:dist']);
     grunt.registerTask('buildall', ['compilestyles', 'compilescripts']);
     grunt.registerTask('watchandtest', ['buildall', 'karma:watch:start', 'watch']);
     grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
