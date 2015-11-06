@@ -540,7 +540,7 @@ module.exports = function (grunt) {
                 'build'
             ];
 
-        function checkSkipTest(karmaTarget) {
+        function checkSkipTest() {//karmaTarget) {
             if (!skipTest) {
                 //tasks.push('karma:' + karmaTarget);
                 //tasks.push('visualtest');
