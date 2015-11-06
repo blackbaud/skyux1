@@ -95,6 +95,36 @@ module.exports = function (grunt) {
         }
     }());
 
+    // Temporary.  Deprecating some original tasks.
+    (function () {
+        var task,
+            tasks = {
+                'buildall': 'build',
+                'compilescripts': 'scripts',
+                'compilestyles': 'styles',
+                'generatedocs': 'docs',
+                'watchandtest': 'watch'
+            };
+        function register(deprecated, replacement) {
+            grunt.registerTask(deprecated, function () {
+                grunt.log.writeln('');
+                grunt.log.warn([
+                    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+                    '`grunt ' + deprecated + '` is deprecated and will be removed in the future.',
+                    'Please use `grunt ' + replacement + '` instead, which I will run now.',
+                    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+                ].join('\n'));
+                grunt.log.writeln('');
+                grunt.task.run(replacement);
+            });
+        }
+        for (task in tasks) {
+            if (tasks.hasOwnProperty(task)) {
+                register(task, tasks[task]);
+            }
+        }
+    }());
+
     // Variables that are only needed in the grunt config can be defined here
     grunt.config.init({
         neutralLocale: neutralLocale,
@@ -184,10 +214,11 @@ module.exports = function (grunt) {
                 dest: '<%= skyDistPath %>js/skylint.min.js'
             }
         },
-        watch: {
+        // Renamed the original grunt-contrib-watch task
+        watchRenamed: {
             scripts: {
                 files: src.concat(['<%= skyLocalesPath %>**/*.*', '<%= skyTemplatesPath %>**/*.html']),
-                tasks: ['compilescripts', 'karma:watch:run']
+                tasks: ['scripts', 'karma:watch:run']
             },
             skylint: {
                 files: ['js/sky/linter/skylint.js'],
@@ -203,11 +234,11 @@ module.exports = function (grunt) {
             },
             demo: {
                 files: ['<%= skySrcPath %>*/docs/*.js', '<%= skySrcPath %>*/docs/*.html'],
-                tasks: ['generatedocs']
+                tasks: ['docs']
             },
             sass: {
                 files: ['**/*.scss'],
-                tasks: ['compilestyles', 'karma:watch:run']
+                tasks: ['styles', 'karma:watch:run']
             }
         },
         sass: {
@@ -295,7 +326,7 @@ module.exports = function (grunt) {
         stache: {
             pages: [{
                 url: '<%= stacheConfig.data %>sky.json',
-                dest: 'directives/',
+                dest: 'components/',
                 type: 'jsdoc'
             }]
         },
@@ -342,12 +373,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('blackbaud-stache-jsdoc');
     grunt.loadNpmTasks('@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs');
 
+    // We like clean task names too, rename a few of the defaults.
+    grunt.task.renameTask('build', 'stache');
+    grunt.task.renameTask('watch', 'watchRenamed');
+
     grunt.registerTask('lint', ['jshint', 'jscs']);
-    grunt.registerTask('generatedocs', ['stache_jsdoc', 'status:demo/build', 'build', 'copy:demo']);
-    grunt.registerTask('compilescripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
-    grunt.registerTask('compilestyles', ['sass:dist', 'sass:palette', 'copy:dist']);
-    grunt.registerTask('buildall', ['compilestyles', 'compilescripts']);
-    grunt.registerTask('watchandtest', ['buildall', 'karma:watch:start', 'watch']);
+    grunt.registerTask('docs', ['stache_jsdoc', 'status:demo/build', 'stache', 'copy:demo']);
+    grunt.registerTask('scripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
+    grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'copy:dist']);
+    grunt.registerTask('build', ['styles', 'scripts']);
+    grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchRenamed']);
     grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
 
     // Generate our JS config for each supported locale
@@ -453,7 +488,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', function () {
         var tasks = [
                 'lint',
-                'buildall'
+                'build'
             ];
 
         function checkSkipTest(karmaTarget) {
@@ -466,7 +501,7 @@ module.exports = function (grunt) {
         switch (target) {
         case 'local':
             checkSkipTest('unit');
-            tasks.push('generatedocs');
+            tasks.push('docs');
             break;
         case 'travis-pr-branch':
             checkSkipTest('internal');
