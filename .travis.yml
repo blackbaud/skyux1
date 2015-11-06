@@ -25,6 +25,7 @@ before_install:
   - chmod +x update-skyux-docs.sh
   - chmod +x update-skyux-releases.sh
   - chmod +x update-skyux-visualtest-results.sh
+  - chmod +x run-browserstack-local.sh
 
 # Install a few additional things outside those listed in package.json
 before_script:
@@ -33,7 +34,7 @@ before_script:
   - bower install
 
 # We want deployment failures to fail the build
-script: npm test && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
+script: ./run-browserstack-local.sh && npm test && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
 
 # Store our visual test results if there was an build error
 after_failure: ./update-skyux-visualtest-results.sh
