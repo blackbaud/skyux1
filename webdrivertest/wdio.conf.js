@@ -32,7 +32,7 @@
         host: 'hub.browserstack.com',
         port: 80,
         logLevel: 'silent',
-        baseUrl: 'http://localhost:8000/webdrivertest/test',
+        baseUrl: 'http://localhost:8010/webdrivertest/test',
         plugins: {
             webdrivercss: {
                 screenshotRoot: 'screenshots',
