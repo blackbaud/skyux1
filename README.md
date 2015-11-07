@@ -37,16 +37,16 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
 1. Fork the master branch into your own repo
 2. Create a branch named after the feature you will be contributing (.e.g. my-new-feature)
 3. Clone your repo locally, then run `npm install` and `bower install` from your local repo's directory to install all required dependencies
-4. Run `grunt buildall` to do your initial build.  As you write your code, the individual pieces will be built (see step 1 below)
+4. Run `grunt build` to do your initial build.  As you write your code, the individual pieces will be built (see step 1 below)
 
 ### Writing the code
 
-1. Launch a command prompt, `cd` to the folder where you cloned your branch, then run `grunt watchandtest`.  
+1. Launch a command prompt, `cd` to the folder where you cloned your branch, then run `grunt watch`.  
 2. Write your code, documentation and unit tests.  All new code must have 100% unit test coverage and include documentation for how to use the feature or the pull request will not be accepted.  
 
-  - You should include documentation for each Sky UX module you create within your source code. We use JSDoc-style comments at the top of our JavaScript files to generate Markdown documentation. You can generate the Markdown documentation by running the command `grunt generatedocs` from the command line.
-  - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watchandtest` task will generate documentation which you can find under `demo/build`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
- - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watchandtest` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
+  - You should include documentation for each Sky UX module you create within your source code. We use JSDoc-style comments at the top of our JavaScript files to generate Markdown documentation. You can generate the Markdown documentation by running the command `grunt docs` from the command line.
+  - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watch` task will generate documentation which you can find under `demo/build`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
+ - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watch` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
 
 ### Submitting the code
 
