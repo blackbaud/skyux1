@@ -15,6 +15,8 @@ if [ -d screenshots/baseline ]; then
 
   cp -rf ../screenshots/baseline/*.* failures/
 
+  cp -rf ../webdriver-screenshot-diffs/ failures/
+
   mkdir -p all
 
   cd ../visualtest/test/
@@ -22,6 +24,8 @@ if [ -d screenshots/baseline ]; then
   # The --parents flag is only valid on Linux.  If you need to test this on a Mac, install coreutils and use the gcp command.
   # https://www.topbug.net/blog/2013/04/14/install-and-use-gnu-command-line-tools-in-mac-os-x/
   cp -rf **/screenshots/ ../../skyux-visualtest-results/all/ --parents
+
+  cp -rf ../../../webdriver-screenshots/ ../../skyux-visualtest-results/all/ 
 
   cd ../../skyux-visualtest-results
 

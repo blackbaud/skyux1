@@ -15,7 +15,7 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
   # https://www.topbug.net/blog/2013/04/14/install-and-use-gnu-command-line-tools-in-mac-os-x/
   cp -rf visualtest/test/**/screenshots/baseline/ skyux/ --parents
 
-  cp webdriver-screenshots/ skyux/
+  cp -rf webdriver-screenshots/ skyux/
 
   cd skyux
   git add dist/
