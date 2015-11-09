@@ -1,10 +1,21 @@
 
-/*global describe, it, browser, expect */
+/*global describe, it, browser, beforeEach, expect */
 
 describe('badges', function () {
     'use strict';
+
+    var screenshot_prefix;
+
+    beforeEach(function (done) {
+
+        browser.session(function (err, res) {
+            screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
+        }).call(done);
+    });
+
+
     it('should take badge screenshots', function (done) {
-        var screenshotName = this.screenshot_prefix + 'button_default';
+        var screenshotName = screenshot_prefix + 'button_default';
         browser
             .url('/badges/fixtures/test.full.html')
             .webdrivercss('badges', [

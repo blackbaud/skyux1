@@ -1,16 +1,21 @@
 /* global describe, it, browser, beforeEach, expect */
 
-beforeEach(function (done) {
-    'use strict';
-    browser.session(function (err, res) {
-        this.screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
-    }).call(done);
-});
+
 
 describe('actionbar', function () {
     'use strict';
+
+    var screenshot_prefix;
+
+    beforeEach(function (done) {
+        
+        browser.session(function (err, res) {
+            screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
+        }).call(done);
+    });
+
     it('should take an actionbar screenshot', function (done) {
-        var screenshotName = this.screenshot_prefix + 'button_default';
+        var screenshotName = screenshot_prefix + 'button_default';
         browser
             .url('/actionbar/fixtures/test.full.html')
             .webdrivercss('actionbar', [

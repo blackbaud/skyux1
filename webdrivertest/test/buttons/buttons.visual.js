@@ -1,11 +1,20 @@
 
-/*global describe, it, browser, expect */
+/*global describe, it, browser, beforeEach, expect */
 
 describe('buttons', function () {
     'use strict';
 
+    var screenshot_prefix;
+
+    beforeEach(function (done) {
+
+        browser.session(function (err, res) {
+            screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
+        }).call(done);
+    });
+
     it('should take the button default screenshots', function (done) {
-        var screenshotName = this.screenshot_prefix + 'button_default';
+        var screenshotName = screenshot_prefix + 'button_default';
         browser
             .url('/buttons/fixtures/test.full.html')
             .webdrivercss('button-default', [
@@ -20,7 +29,7 @@ describe('buttons', function () {
     });
 
     it('should take the button default hover test', function (done) {
-        var screenshotName = this.screenshot_prefix + 'button_default_hover';
+        var screenshotName = screenshot_prefix + 'button_default_hover';
         browser
             .url('/buttons/fixtures/test.full.html')
             .moveToObject('.btn-default')

@@ -17,7 +17,7 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
-                build: 'webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+                build: 'chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             },
             {
                 browserName: 'firefox',
@@ -26,7 +26,8 @@
                 browserDisconnectTimeout: 3e5,
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
-                captureTimeout: 3e5
+                captureTimeout: 3e5,
+                build: 'firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             }
         ],
         host: 'hub.browserstack.com',
