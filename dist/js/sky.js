@@ -796,7 +796,12 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
             replace: true,
             restrict: 'E',
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
+            templateUrl: 'sky/templates/contextmenu/contextmenu.html',
+            link: function ($scope) {
+                $scope.contextButtonStopPropagation = function ($event) {
+                    $event.stopPropagation();
+                };
+            }
         };
     }
 
@@ -9182,11 +9187,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" dropdown>\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" dropdown-toggle></bb-context-menu-button>\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="contextButtonStopPropagation($event)" dropdown-toggle></bb-context-menu-button>\n' +
         '    <ul class="dropdown-menu" role="menu">\n' +
         '        <ng-transclude/>\n' +
         '    </ul>\n' +
-        '</div>');
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <accordion>\n' +
