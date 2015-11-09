@@ -13,14 +13,14 @@ describe('buttons', function () {
         }).call(done);
     });
 
-    it('should take the button default screenshots', function (done) {
-        var screenshotName = screenshot_prefix + 'button_default';
+    it('should take the button screenshots', function (done) {
+        var screenshotName = screenshot_prefix + 'buttons';
         browser
             .url('/buttons/fixtures/test.full.html')
-            .webdrivercss('button-default', [
+            .webdrivercss('buttons', [
                 {
                     name: screenshotName,
-                    elem: '#screenshots-buttons-default'
+                    elem: '#screenshot-buttons'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
@@ -28,59 +28,108 @@ describe('buttons', function () {
             }).call(done);
     });
 
-    it('should take the button default hover test', function (done) {
-        var screenshotName = screenshot_prefix + 'button_default_hover';
+    function getSelector(type, prefix) {
+        return (prefix !== undefined ? ('.' + prefix + '-') : '.') + 'btn-' + type;
+    }
+
+    function hoverTest(type, done, prefix) {
+        var screenshotName = screenshot_prefix + 'button_' + type + '_hover',
+            selector = getSelector(type, prefix);
         browser
             .url('/buttons/fixtures/test.full.html')
-            .moveToObject('.btn-default')
-            .webdrivercss('button_default_hover', [
+            .moveToObject(selector)
+            .webdrivercss(('button_' + type + '_hover'), [
                 {
                     name: screenshotName,
-                    elem: '#screenshots-buttons-default'
+                    elem: ('#screenshots-buttons-' + type)
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
             })
             .call(done);
-    });
-
-
-
-
-});
-/*(function () {
-    'use strict';
-
-    var casper = phantom.casper,
-        phantomcss = phantom.phantomcss;
-
-    function captureStates(name, prefix) {
-        return function () {
-            var btnSelector = '.' + (prefix ? prefix + '-' : '') + 'btn-' + name,
-                divSelector = '#screenshots-buttons-' + name;
-
-            casper.then(function () {
-                phantomcss.screenshot(divSelector, 'button ' + name);
-            })
-            .then(function () {
-                casper.mouse.move(btnSelector);
-                phantomcss.screenshot(divSelector, 'button ' + name + ' (hover)');
-            })
-            .then(function () {
-                casper.mouse.down(btnSelector);
-                phantomcss.screenshot(divSelector, 'button ' + name + ' (active)');
-            });
-        };
     }
 
-    casper.thenOpen(phantom.rootUrl + 'buttons/fixtures/test.full.html')
-        .then(captureStates('default'))
-        .then(captureStates('primary'))
-        .then(captureStates('secondary', 'bb'))
-        .then(captureStates('success'))
-        .then(captureStates('info'))
-        .then(captureStates('warning'))
-        .then(captureStates('danger'))
-        .then(captureStates('link'));
-}());*/
+    function clickTest(type, done, prefix) {
+        var screenshotName = screenshot_prefix + 'button_' + type + '_click',
+            selector = getSelector(type, prefix);
+        browser
+            .url('/buttons/fixtures/test.full.html')
+            .click(selector)
+            .webdrivercss(('button_' + type + '_click'), [
+                {
+                    name: screenshotName,
+                    elem: ('#screenshots-buttons-' + type)
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            })
+            .call(done);
+    }
+
+    it('should take the button default hover test', function (done) {
+        hoverTest('default', done);
+    });
+
+    it('should take the button default click test', function (done) {
+        clickTest('default', done);
+    });
+
+    it('should take the button primary hover test', function (done) {
+        hoverTest('primary', done);
+    });
+
+    it('should take the button primary click test', function (done) {
+        clickTest('primary', done);
+    });
+
+    it('should take the button secondary hover test', function (done) {
+        hoverTest('secondary', done, 'bb');
+    });
+
+    it('should take the button secondary click test', function (done) {
+        clickTest('secondary', done, 'bb');
+    });
+
+    it('should take the button success hover test', function (done) {
+        hoverTest('success', done);
+    });
+
+    it('should take the button success click test', function (done) {
+        clickTest('success', done);
+    });
+
+    it('should take the button info hover test', function (done) {
+        hoverTest('info', done);
+    });
+
+    it('should take the button info click test', function (done) {
+        clickTest('info', done);
+    });
+
+    it('should take the button warning hover test', function (done) {
+        hoverTest('warning', done);
+    });
+
+    it('should take the button warning click test', function (done) {
+        clickTest('warning', done);
+    });
+
+    it('should take the button danger hover test', function (done) {
+        hoverTest('danger', done);
+    });
+
+    it('should take the button danger click test', function (done) {
+        clickTest('danger', done);
+    });
+
+    it('should take the button link hover test', function (done) {
+        hoverTest('link', done);
+    });
+
+    it('should take the button link click test', function (done) {
+        clickTest('link', done);
+    });
+
+});
