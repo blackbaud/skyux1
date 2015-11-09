@@ -18,7 +18,7 @@
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
                 build: 'webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-            }/*,
+            },
             {
                 browserName: 'firefox',
                 'browserstack.local': 'true',
@@ -27,7 +27,7 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5
-            }*/
+            }
         ],
         host: 'hub.browserstack.com',
         port: 80,
