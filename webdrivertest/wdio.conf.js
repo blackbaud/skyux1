@@ -17,7 +17,7 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
-                build: 'chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+                build: 'win8-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             },
             {
                 browserName: 'firefox',
@@ -27,7 +27,7 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
-                build: 'firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+                build: 'win8-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             }
         ],
         host: 'hub.browserstack.com',
@@ -36,8 +36,8 @@
         baseUrl: 'http://localhost:8000/webdrivertest/test',
         plugins: {
             webdrivercss: {
-                screenshotRoot: 'screenshots',
-                failedComparisonsRoot: 'screenshot-diffs',
+                screenshotRoot: 'webdriver-screenshots',
+                failedComparisonsRoot: 'webdriver-screenshot-diffs',
                 mismatchTolerance: 0.05,
                 screenWidth: [1280]
             }

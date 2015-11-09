@@ -29,7 +29,8 @@ describe('buttons', function () {
     });
 
     function getSelector(type, prefix) {
-        return (prefix !== undefined ? ('.' + prefix + '-') : '.') + 'btn-' + type;
+        var selector = (prefix !== undefined ? ('.' + prefix + '-') : '.') + 'btn-' + type;
+        return selector;
     }
 
     function hoverTest(type, done, prefix) {
