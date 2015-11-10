@@ -568,7 +568,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('webdrivertest', function () {
+    grunt.registerTask('webdrivertestrun', function () {
 
         if (target === 'travis-pr-fork') {
             grunt.log.writeln('Pull requests from forks are ran via blackbaud-sky-savage.');
