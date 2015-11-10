@@ -12,7 +12,7 @@
             {
                 browserName: 'chrome',
                 'browserstack.local': 'true',
-                platform: 'WIN8',
+                platform: 'MAC',
                 browserDisconnectTimeout: 3e5,
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
@@ -22,7 +22,7 @@
             {
                 browserName: 'firefox',
                 'browserstack.local': 'true',
-                platform: 'WIN8',
+                platform: 'MAC',
                 browserDisconnectTimeout: 3e5,
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
