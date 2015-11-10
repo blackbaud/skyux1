@@ -1,4 +1,4 @@
-/* global describe, it, browser, beforeEach, console, expect */
+/* global describe, it, browser, beforeEach, expect */
 
 
 
@@ -11,7 +11,6 @@ describe('actionbar', function () {
 
         browser.session(function (err, res) {
             screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
-            console.log(screenshot_prefix);
         }).call(done);
     });
 
