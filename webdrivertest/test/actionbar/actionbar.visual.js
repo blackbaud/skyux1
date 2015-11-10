@@ -1,7 +1,5 @@
 /* global describe, it, browser, beforeEach, expect */
 
-
-
 describe('actionbar', function () {
     'use strict';
 
