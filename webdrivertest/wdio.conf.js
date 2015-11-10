@@ -17,7 +17,7 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
-                build: 'win8-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+                build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             },
             {
                 browserName: 'firefox',
@@ -27,7 +27,41 @@
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
-                build: 'win8-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+                build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+            },
+            {
+                browserName: 'safari',
+                'browserstack.local': 'true',
+                platform: 'MAC',
+                browserDisconnectTimeout: 3e5,
+                browserDisconnectTolerance: 3,
+                browserNoActivityTimeout: 3e5,
+                captureTimeout: 3e5,
+                build: 'mac-safari-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+            },
+            {
+                'browserstack.local': 'true',
+                browserDisconnectTimeout: 3e5,
+                browserDisconnectTolerance: 3,
+                browserNoActivityTimeout: 3e5,
+                captureTimeout: 3e5,
+                browser: 'ie',
+                browser_version: '11.0',
+                os: 'Windows',
+                os_version: '8.1',
+                build: 'win81-ie11-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+            },
+            {
+                'browserstack.local': 'true',
+                browserDisconnectTimeout: 3e5,
+                browserDisconnectTolerance: 3,
+                browserNoActivityTimeout: 3e5,
+                captureTimeout: 3e5,
+                browser: 'ie',
+                browser_version: '10.0',
+                os: 'Windows',
+                os_version: '8',
+                build: 'win8-ie10-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             }
         ],
         host: 'hub.browserstack.com',
