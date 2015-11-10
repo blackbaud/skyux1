@@ -1,4 +1,4 @@
-/* global describe, it, browser, beforeEach, expect */
+/* global describe, it, browser, beforeEach, console, expect */
 
 describe('actionbar', function () {
     'use strict';
@@ -8,7 +8,9 @@ describe('actionbar', function () {
     beforeEach(function (done) {
 
         browser.status().then(function (res) {
-            var osName = res.value.os.name.replace(/\s+/g, '');
+            var osName;
+            console.log(res);
+            osName = res.value.os.name.replace(/\s+/g, '');
             screenshot_prefix =  osName + '_' + res.value.os.version + '_';
 
         }).call(done);
