@@ -9,9 +9,10 @@ describe('buttons', function () {
     beforeEach(function (done) {
 
         browser.status().then(function (res) {
-            screenshot_prefix = res.os.name.replace(/\s+/g, '') + '_' + res.os.version;
-            done();
-        });
+            var osName = res.value.os.name.replace(/\s+/g, '');
+            screenshot_prefix =  osName + '_' + res.value.os.version + '_';
+
+        }).call(done);
     });
 
     it('should take the button screenshots', function (done) {
