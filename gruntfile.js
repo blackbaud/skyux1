@@ -540,10 +540,11 @@ module.exports = function (grunt) {
                 'build'
             ];
 
-        function checkSkipTest(karmaTarget) {
+        function checkSkipTest() {//karmaTarget) {
             if (!skipTest) {
-                tasks.push('karma:' + karmaTarget);
+                //tasks.push('karma:' + karmaTarget);
                 tasks.push('visualtest');
+                tasks.push('webdrivertest');
             }
         }
 
@@ -568,14 +569,5 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('webdrivertestrun', function () {
-
-        if (target === 'travis-pr-fork') {
-            grunt.log.writeln('Pull requests from forks are ran via blackbaud-sky-savage.');
-        } else {
-            grunt.task.run('webdrivertest');
-        }
-
-    });
 
 };
