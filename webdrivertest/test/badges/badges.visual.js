@@ -8,9 +8,10 @@ describe('badges', function () {
 
     beforeEach(function (done) {
 
-        browser.session(function (err, res) {
-            screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
-        }).call(done);
+        browser.status().then(function (res) {
+            screenshot_prefix = res.os.name.replace(/\s+/g, '') + '_' + res.os.version;
+            done();
+        });
     });
 
 

@@ -10,9 +10,10 @@
         ],
         capabilities: [
             {
-                browserName: 'chrome',
+                browser: 'chrome',
                 'browserstack.local': 'true',
-                platform: 'MAC',
+                os: 'OS X',
+                os_version: 'Yosemite',
                 browserDisconnectTimeout: 3e5,
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
@@ -22,22 +23,13 @@
             {
                 browserName: 'firefox',
                 'browserstack.local': 'true',
-                platform: 'MAC',
+                os: 'OS X',
+                os_version: 'Yosemite',
                 browserDisconnectTimeout: 3e5,
                 browserDisconnectTolerance: 3,
                 browserNoActivityTimeout: 3e5,
                 captureTimeout: 3e5,
                 build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-            },
-            {
-                browserName: 'safari',
-                'browserstack.local': 'true',
-                platform: 'MAC',
-                browserDisconnectTimeout: 3e5,
-                browserDisconnectTolerance: 3,
-                browserNoActivityTimeout: 3e5,
-                captureTimeout: 3e5,
-                build: 'mac-safari-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
             },
             {
                 'browserstack.local': 'true',

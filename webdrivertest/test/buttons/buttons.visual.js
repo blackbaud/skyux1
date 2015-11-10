@@ -8,9 +8,10 @@ describe('buttons', function () {
 
     beforeEach(function (done) {
 
-        browser.session(function (err, res) {
-            screenshot_prefix = res.value.platform + '_' + res.value.browserName + '_';
-        }).call(done);
+        browser.status().then(function (res) {
+            screenshot_prefix = res.os.name.replace(/\s+/g, '') + '_' + res.os.version;
+            done();
+        });
     });
 
     it('should take the button screenshots', function (done) {
@@ -46,7 +47,7 @@ describe('buttons', function () {
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
-                
+
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
             })
             .call(done);
