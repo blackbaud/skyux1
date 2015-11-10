@@ -544,7 +544,6 @@ module.exports = function (grunt) {
             if (!skipTest) {
                 tasks.push('karma:' + karmaTarget);
                 tasks.push('visualtest');
-                tasks.push('webdrivertest');
             }
         }
 
