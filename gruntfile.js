@@ -568,4 +568,15 @@ module.exports = function (grunt) {
             grunt.task.run(tasks);
         }
     });
+
+    grunt.registerTask('webdrivertest', function () {
+
+        if (target === 'travis-pr-fork') {
+            grunt.log.writeln('Pull requests from forks are ran via blackbaud-sky-savage.');
+        } else {
+            grunt.task.run('webdrivertest');
+        }
+
+    });
+
 };

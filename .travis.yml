@@ -40,7 +40,7 @@ before_script:
   - bower install
 
 # We want deployment failures to fail the build
-script: ./run-browserstack-local.sh && npm test && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
+script: npm test && ./run-browserstack-local.sh && npm webdrivertest && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
 
 # Store our visual test results if there was an build error
 after_failure: ./update-skyux-visualtest-results.sh
