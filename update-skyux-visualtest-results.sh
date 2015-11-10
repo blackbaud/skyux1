@@ -34,6 +34,7 @@ if [ -d screenshots/baseline ]; then
     git push -fq origin $TRAVIS_BUILD_NUMBER > /dev/null
     echo -e "skyux-visualtest-results successfully updated.\nTest results may be viewed at https://github.com/blackbaud/skyux-visualtest-results"
   fi
+  cd ..
 fi
 
 if [ -d webdriver-screenshot-diffs ]; then
