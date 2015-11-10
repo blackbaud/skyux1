@@ -1,5 +1,9 @@
 # This file only runs if there are results from the visualtests
 # It's using the deploy key specified in Travis since Secure Environemnt Variables aren't available to forks.
+cd webdriver-screenshots
+cd ../webdriver-screenshot-diffs/..
+
+
 if [ -d webdriver-screenshot-diffs ]; then
   echo -e "Starting to update skyux-visualtest-results.\n"
 
