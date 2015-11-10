@@ -9,7 +9,13 @@ describe('badges', function () {
     beforeEach(function (done) {
 
         browser.session().then(function (res) {
-            screenshot_prefix =  res.value.platform + '_' + res.value.browserName + '_';
+            var browserName = res.value.browserName.replace(/\s+/g, ''),
+                platform = res.value.platform;
+            screenshot_prefix =  res.value.platform + '_' + browserName + '_';
+
+            if (platform === "WINDOWS") {
+                screenshot_prefix += res.value.version;
+            }
         }).call(done);
     });
 
