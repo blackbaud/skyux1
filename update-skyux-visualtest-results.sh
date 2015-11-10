@@ -1,6 +1,6 @@
 # This file only runs if there are results from the visualtests
 # It's using the deploy key specified in Travis since Secure Environemnt Variables aren't available to forks.
-if [ -d screenshots/baseline ] || [ -d webdriver-screenshot-diffs ]; then
+if [[ -d screenshots/baseline || -d webdriver-screenshot-diffs ]]; then
   echo -e "Starting to update skyux-visualtest-results.\n"
 
   git config --global user.email "travis@travis-ci.org"
