@@ -1,26 +1,17 @@
 
-/*global describe, it, browser, beforeEach, expect */
+/*global describe, it, browser, beforeEach, expect, require */
 
 describe('buttons', function () {
     'use strict';
 
-    var screenshot_prefix;
+    var screenshot_prefix = {};
 
     beforeEach(function (done) {
-
-        browser.session().then(function (res) {
-            var browserName = res.value.browserName.replace(/\s+/g, ''),
-                platform = res.value.platform;
-            screenshot_prefix =  res.value.platform + '_' + browserName + '_';
-
-            if (platform === "WINDOWS") {
-                screenshot_prefix += res.value.version;
-            }
-        }).call(done);
+        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
 
     it('should take the button screenshots', function (done) {
-        var screenshotName = screenshot_prefix + 'buttons';
+        var screenshotName = screenshot_prefix.value + 'buttons';
         browser
             .url('/buttons/fixtures/test.full.html')
             .webdrivercss('buttons', [
@@ -40,7 +31,7 @@ describe('buttons', function () {
     }
 
     function hoverTest(type, done, prefix) {
-        var screenshotName = screenshot_prefix + 'button_' + type + '_hover',
+        var screenshotName = screenshot_prefix.value + 'button_' + type + '_hover',
             selector = getSelector(type, prefix);
         browser
             .url('/buttons/fixtures/test.full.html')
@@ -59,7 +50,7 @@ describe('buttons', function () {
     }
 
     function clickTest(type, done, prefix) {
-        var screenshotName = screenshot_prefix + 'button_' + type + '_click',
+        var screenshotName = screenshot_prefix.value + 'button_' + type + '_click',
             selector = getSelector(type, prefix);
         browser
             .url('/buttons/fixtures/test.full.html')

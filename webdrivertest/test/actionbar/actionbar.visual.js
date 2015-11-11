@@ -1,27 +1,17 @@
-/* global describe, it, browser, beforeEach, console, expect */
+/* global describe, it, browser, beforeEach,  expect, require */
+
 
 describe('actionbar', function () {
     'use strict';
 
-    var screenshot_prefix;
+    var screenshot_prefix = {};
 
     beforeEach(function (done) {
-
-        browser.session().then(function (res) {
-            var browserName = res.value.browserName.replace(/\s+/g, ''),
-                platform = res.value.platform;
-            screenshot_prefix =  res.value.platform + '_' + browserName + '_';
-
-            if (platform === "WINDOWS") {
-                screenshot_prefix += res.value.version;
-            }
-            console.log(screenshot_prefix);
-
-        }).call(done);
+        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
 
     it('should take an actionbar screenshot', function (done) {
-        var screenshotName = screenshot_prefix + 'button_default';
+        var screenshotName = screenshot_prefix.value + 'button_default';
         browser
             .url('/actionbar/fixtures/test.full.html')
             .webdrivercss('actionbar', [
