@@ -15,12 +15,9 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
   # https://www.topbug.net/blog/2013/04/14/install-and-use-gnu-command-line-tools-in-mac-os-x/
   cp -rf visualtest/test/**/screenshots/baseline/ skyux/ --parents
 
-  cp -rf webdriver-screenshots/ skyux/
-
   cd skyux
   git add dist/
   git add visualtest/test/**/screenshots/
-  git add webdriver-screenshots/
 
   if [ -z "$(git status --porcelain)" ]; then
     echo -e "No changes to commit to skyux."
