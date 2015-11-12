@@ -245,8 +245,6 @@
         ['inbox', null, MSG_LEGACY_CLASS],
         ['infont', null, MSG_LEGACY_CLASS],
         ['inline', null, MSG_LEGACY_CLASS],
-        ['input-group-addon', null, MSG_LEGACY_CLASS],
-        ['input-group-btn', null, MSG_LEGACY_CLASS],
         ['input-s', null, MSG_LEGACY_CLASS],
         ['input-s-lg', null, MSG_LEGACY_CLASS],
         ['input-s-sm', null, MSG_LEGACY_CLASS],
