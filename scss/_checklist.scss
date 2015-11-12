@@ -30,7 +30,7 @@
     background-color: $gray-lightest;
     border-bottom: 1px solid $gray-lighter;
     padding: $padding;
-    
+
     &:last-child {
         border: none;
     }
@@ -38,14 +38,14 @@
     .btn {
         margin: 0 $margin-half;
         min-width: 65px;
-    
+
         &.btn-link {
             margin: 0 $margin-half 0 0;
             min-width: 0;
             outline: none;
         }
     }
-    
+
     .btn-primary {
         font-size: 12px;
         font-weight: normal;
@@ -53,7 +53,6 @@
 
     input {
         background-color: #fff;
-        height: 26px;
         width: 100%;
         outline: none;
         border: none;
@@ -72,17 +71,13 @@
 }
 
 .bb-checklist-search {
-    display: table;
+    display: flex;
+    display: -ms-flex;
     width: 100%;
-}
-
-.bb-checklist-search-box {
-    display: table-cell;
 }
 
 .bb-checklist-search-icon {
     background-color: #fff;
-    display: table-cell;
     width: 22px;
 }
 
@@ -103,7 +98,7 @@
     margin-bottom: 0;
     padding: $padding;
     width: 100%;
-    
+
     &:last-child {
         border: none;
     }
