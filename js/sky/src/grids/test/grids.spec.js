@@ -2321,6 +2321,21 @@ describe('Grid directive', function () {
         });
     });
 
+    describe('wait', function () {
+        it('will show the empty wait div if no rows and wait is true', function () {
+            var emptyEl;
+
+            el = setUpGrid(basicGridHtml);
+            $scope.locals.gridOptions.loading = true;
+            $scope.$digest();
+
+            emptyEl = el.find('.bb-grid-empty-wait');
+
+            expect(emptyEl.length).toBe(1);
+
+        });
+    });
+
     it('will not add an invalid column from selectedColumnIds', function () {
         var headerEl;
 
