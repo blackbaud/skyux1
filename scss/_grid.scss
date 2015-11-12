@@ -213,6 +213,10 @@ body:not(.bb-viewkeeper-ignore-fixed) {
     content: " \2022";
 }
 
+.bb-grid-empty-wait {
+    height: 100px;
+}
+
 .bb-grid-action-bar {
     min-height: 50px;
     background-color: $gray-lightest;
