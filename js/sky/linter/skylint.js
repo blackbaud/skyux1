@@ -241,7 +241,6 @@
         ['icon', null, MSG_LEGACY_CLASS],
         ['icons-box', null, MSG_LEGACY_CLASS],
         ['image', null, MSG_LEGACY_CLASS],
-        ['img-circle', null, MSG_LEGACY_CLASS],
         ['inbox', null, MSG_LEGACY_CLASS],
         ['infont', null, MSG_LEGACY_CLASS],
         ['inline', null, MSG_LEGACY_CLASS],
