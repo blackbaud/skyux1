@@ -205,10 +205,5 @@ web.config
 js/sky/src/**/test/visual/screenshots/_local/
 visualtest/test/**/screenshots/_local/
 visualtest/test/**/*.full.html
-webdrivertest/test/**/*.full.html
 /screenshots
-/screenshots-local
-/screenshot-local-diffs
-/screenshot-diffs
-/webdriver-screenshot-diffs
 .slimerjs-cache/
