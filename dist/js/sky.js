@@ -4376,6 +4376,11 @@ reloading the grid with the current data after the event has fired.
                                 }
                             };
 
+                            $scope.locals.hasWaitAndEmpty = function () {
+                                return $scope.options && $scope.options.loading && $scope.options.data.length < 1;
+                            };
+                            
+
                             element.on('$destroy', function () {
 
                                 /*istanbul ignore else: sanity check */
@@ -9444,6 +9449,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="table-responsive">\n' +
         '\n' +
         '        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
+        '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()" bb-wait="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
         '    <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
