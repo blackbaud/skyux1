@@ -12,6 +12,7 @@ describe('actionbar', function () {
 
     it('should take an actionbar screenshot', function (done) {
         var screenshotName = screenshot_prefix.value + '_actionbar';
+        console('starting: ' + screenshotName);
         browser
             .url('/actionbar/fixtures/test.full.html')
             .webdrivercss('actionbar', [
@@ -20,10 +21,13 @@ describe('actionbar', function () {
                     elem: '#screenshot-actionbar'
                 }
             ], function (err, res) {
+                console('finishing: ' + screenshotName);
                 console.log(err);
                 expect(err).toBe(undefined);
 
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+
+                console('finished: ' + screenshotName);
             }).call(done);
     });
 });

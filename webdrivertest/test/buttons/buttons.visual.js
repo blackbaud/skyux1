@@ -12,6 +12,7 @@ describe('buttons', function () {
 
     it('should take the button screenshots', function (done) {
         var screenshotName = screenshot_prefix.value + 'buttons';
+        console.log('starting: ' + screenshotName);
         browser
             .url('/buttons/fixtures/test.full.html')
             .webdrivercss('buttons', [
@@ -20,9 +21,11 @@ describe('buttons', function () {
                     elem: '#screenshot-buttons'
                 }
             ], function (err, res) {
+                console.log('finishing: ' + screenshotName);
                 console.log(err);
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                console.log('finished: ' + screenshotName);
             }).call(done);
     });
 
@@ -34,6 +37,8 @@ describe('buttons', function () {
     function hoverTest(type, done, prefix) {
         var screenshotName = screenshot_prefix.value + 'button_' + type + '_hover',
             selector = getSelector(type, prefix);
+
+        console.log('starting: ' + screenshotName);
         browser
             .url('/buttons/fixtures/test.full.html')
             .moveToObject(selector)
@@ -43,10 +48,12 @@ describe('buttons', function () {
                     elem: ('#screenshots-buttons-' + type)
                 }
             ], function (err, res) {
+                console.log('finishing: ' + screenshotName);
                 console.log(err);
                 expect(err).toBe(undefined);
 
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                console.log('finished: ' + screenshotName);
             })
             .call(done);
     }
@@ -54,6 +61,8 @@ describe('buttons', function () {
     function clickTest(type, done, prefix) {
         var screenshotName = screenshot_prefix.value + 'button_' + type + '_click',
             selector = getSelector(type, prefix);
+
+        console.log('starting: ' + screenshotName);
         browser
             .url('/buttons/fixtures/test.full.html')
             .click(selector)
@@ -63,8 +72,11 @@ describe('buttons', function () {
                     elem: ('#screenshots-buttons-' + type)
                 }
             ], function (err, res) {
+                console.log('finishing: ' + screenshotName);
+                console.log(err);
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                console.log('finished: ' + screenshotName);
             })
             .call(done);
     }

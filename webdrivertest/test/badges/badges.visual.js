@@ -13,7 +13,8 @@ describe('badges', function () {
 
 
     it('should take badge screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'button_default';
+        var screenshotName = screenshot_prefix.value + 'badges';
+        console.log('starting: ' + screenshotName);
         browser
             .url('/badges/fixtures/test.full.html')
             .webdrivercss('badges', [
@@ -22,9 +23,11 @@ describe('badges', function () {
                     elem: '#screenshot-badges'
                 }
             ], function (err, res) {
+                console.log('finishing: ' + screenshotName);
                 console.log(err);
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                console.log('finished: ' + screenshotName);
             }).call(done);
     });
 });
