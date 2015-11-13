@@ -4,46 +4,6 @@
   border-radius: $bb-btn-border-radius;
 }
 
-.btn-primary {
-  background-color: $bb-color-green;
-  border-color: $bb-color-green;
-  color: white;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.open .dropdown-toggle.btn-primary {
-  background-color: darken($bb-color-green, 3%);
-  border-color: darken($bb-color-green, 3%);
-}
-
-.btn-primary:active,
-.btn-primary.active,
-.open .dropdown-toggle.btn-primary {
-  background-image: none;
-}
-
-.btn-primary.disabled,
-.btn-primary.disabled:hover,
-.btn-primary.disabled:focus,
-.btn-primary.disabled:active,
-.btn-primary.disabled.active,
-.btn-primary[disabled],
-.btn-primary[disabled]:hover,
-.btn-primary[disabled]:focus,
-.btn-primary[disabled]:active,
-.btn-primary.active[disabled],
-fieldset[disabled] .btn-primary,
-fieldset[disabled] .btn-primary:hover,
-fieldset[disabled] .btn-primary:focus,
-fieldset[disabled] .btn-primary:active,
-fieldset[disabled] .btn-primary.active {
-  background-color: lighten($bb-color-green, 4%);
-  border-color: lighten($bb-color-green, 4%);
-}
-
 .btn-success {
   background-color: $bb-color-blue;
   border-color: $bb-color-blue;
@@ -280,10 +240,6 @@ fieldset[disabled] .btn-link:focus,
 fieldset[disabled] .btn-link:active,
 fieldset[disabled] .btn-link.active {
   color: #cacaca;
-}
-
-.btn-primary {
-  @include button-variant($bb-color-white, $bb-color-blue, $bb-color-blue);
 }
 
 .btn-link {
