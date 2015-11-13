@@ -43,6 +43,7 @@ describe('buttons', function () {
                     elem: ('#screenshots-buttons-' + type)
                 }
             ], function (err, res) {
+                console.log(err);
                 expect(err).toBe(undefined);
 
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
