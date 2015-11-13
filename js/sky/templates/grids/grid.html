@@ -22,6 +22,7 @@
     <div class="table-responsive">
 
         <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
+        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()" bb-wait="locals.hasWaitAndEmpty()"></div>
     </div>
 
     <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">

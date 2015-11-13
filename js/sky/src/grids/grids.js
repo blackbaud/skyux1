@@ -1426,6 +1426,11 @@ reloading the grid with the current data after the event has fired.
                                 }
                             };
 
+                            $scope.locals.hasWaitAndEmpty = function () {
+                                return $scope.options && $scope.options.loading && $scope.options.data.length < 1;
+                            };
+                            
+
                             element.on('$destroy', function () {
 
                                 /*istanbul ignore else: sanity check */

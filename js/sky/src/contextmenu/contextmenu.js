@@ -20,7 +20,12 @@
             replace: true,
             restrict: 'E',
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
+            templateUrl: 'sky/templates/contextmenu/contextmenu.html',
+            link: function ($scope) {
+                $scope.contextButtonStopPropagation = function ($event) {
+                    $event.stopPropagation();
+                };
+            }
         };
     }
 
