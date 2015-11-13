@@ -22,7 +22,10 @@ describe('actionbar', function () {
                 }
             ], function (err, res) {
                 console('finishing: ' + screenshotName);
+                console.log('err: ');
                 console.log(err);
+                console.log('res: ');
+                console.log(res);
                 expect(err).toBe(undefined);
 
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);

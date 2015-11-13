@@ -24,7 +24,10 @@ describe('badges', function () {
                 }
             ], function (err, res) {
                 console.log('finishing: ' + screenshotName);
+                console.log('err: ');
                 console.log(err);
+                console.log('res: ');
+                console.log(res);
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
                 console.log('finished: ' + screenshotName);
