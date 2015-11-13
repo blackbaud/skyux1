@@ -7,7 +7,6 @@
 .bb-check-checkbox,
 .bb-check-radio{
     border: 1px solid $gray-lighter;
-    //content: "";
     cursor: pointer;
     display: inline-block;
     *display: inline;
@@ -16,6 +15,7 @@
     padding: 0;
     vertical-align: middle;
     width: 22px;
+    text-align: center;
 }
 
 .bb-check-radio {
@@ -37,7 +37,6 @@
         content: $bbsky-char-check-nostroke;
         font-family: BBSKY;
         font-size: $bb-font-size-sm;
-        padding-left: 5px;
         vertical-align: middle;
     }
 }
