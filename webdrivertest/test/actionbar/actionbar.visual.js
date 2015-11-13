@@ -1,4 +1,4 @@
-/* global describe, it, browser, beforeEach,  expect, require */
+/* global describe, it, browser, beforeEach,  expect, console, require */
 
 
 describe('actionbar', function () {
@@ -21,6 +21,7 @@ describe('actionbar', function () {
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
+                console.log(err);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
             }).call(done);
     });

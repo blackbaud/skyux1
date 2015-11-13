@@ -1,5 +1,5 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeEach, expect, console, require */
 
 describe('badges', function () {
     'use strict';
@@ -22,6 +22,7 @@ describe('badges', function () {
                     elem: '#screenshot-badges'
                 }
             ], function (err, res) {
+                console.log(err);
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
             }).call(done);
