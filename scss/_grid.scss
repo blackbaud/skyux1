@@ -6,46 +6,8 @@ $filterWidth: 240px;
     position: relative;
 }
 
-/* Overwrite the defualt Bootstrap pagination for the grid pagination because
-    it does strange things with focus */
 .bb-grid-pagination-container {
     margin-top: 15px;
-    .pagination {
-        > li > a,
-        > li > span {
-            &:focus {
-                color: $pagination-color;
-                background-color: $pagination-bg;
-                border-color: $pagination-border;
-            }
-        }
-        > .active > a,
-        > .active > span {
-            &,
-            &:hover,
-            &:focus {
-                color: inherit;
-                cursor: default;
-                background-color: #f4f4f4;
-                border-color: #dddddd;
-                z-index: 2;
-            }
-        }
-
-        > .disabled {
-            > span,
-            > span:hover,
-            > span:focus,
-            > a,
-            > a:hover,
-            > a:focus {
-                color: $pagination-disabled-color;
-                background-color: $pagination-disabled-bg;
-                border-color: $pagination-disabled-border;
-                cursor: not-allowed;
-            }
-        }
-    }
 }
 
 .bb-tile {

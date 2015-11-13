@@ -61,13 +61,24 @@ $gray: lighten(#000, 40%); // #666
 $gray-light: lighten(#000, 60%); // #999
 $gray-lighter: lighten(#000, 80%); // #ccc
 
-$brand-primary: $bb-color-yellow;
+$brand-primary: $bb-color-green;
 
 $thumbnail-bg: $bb-color-white;
 $nav-tabs-active-link-hover-bg: $bb-color-white;
 $nav-tabs-justified-active-link-border-color: $bb-color-white;
 
-$progress-bar-bg: $bb-color-green;
+$pagination-active-bg: #f4f4f4;
+$pagination-active-border: #ddd;
+
+$nav-pills-active-link-hover-bg: $bb-brand-alternate;
+
+$panel-primary-border: $bb-brand-alternate;
+
+$panel-primary-heading-bg: $bb-brand-alternate;
+
+$btn-primary-color: $bb-color-white;
+$btn-primary-bg: $bb-brand-alternate;
+$btn-primary-border: $bb-brand-alternate;
 
 //other colors
 $gray-lightest: lighten(#000, 93.5%); // #eee //used lots of places
