@@ -92,9 +92,19 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     applyCssSettings(el);
 
                     $scope.$watch(attrs.ngModel, function (newValue) {
+                        var getValue;
                         if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
                             el.autoNumeric('set', newValue);
+
+                            // Necessary to keep the model in sync
+                            getValue = el.autoNumeric('get');
+                            if (newValue.toString() !== getValue) {
+                                $timeout(autonumericChange);
+                            }
+
                         } else if (isNaN(newValue)) {
+                            // Necessary to keep the model in sync
+                            $timeout(autonumericChange);
                             return;
                         } else {
                             el.val(null);
