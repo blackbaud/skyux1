@@ -13,11 +13,12 @@ describe('badges', function () {
 
 
     it('should take badge screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'badges';
+        var screenshotName = screenshot_prefix.value + 'badges',
+            pageName = screenshotName + '_full';
         console.log('starting: ' + screenshotName);
         browser
             .url('/badges/fixtures/test.full.html')
-            .webdrivercss('badges', [
+            .webdrivercss(pageName, [
                 {
                     name: screenshotName,
                     elem: '#screenshot-badges'

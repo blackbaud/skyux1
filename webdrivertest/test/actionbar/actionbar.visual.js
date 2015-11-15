@@ -11,11 +11,12 @@ describe('actionbar', function () {
     });
 
     it('should take an actionbar screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + '_actionbar';
+        var screenshotName = screenshot_prefix.value + '_actionbar',
+            pageName = screenshotName + '_full';
         console.log('starting: ' + screenshotName);
         browser
             .url('/actionbar/fixtures/test.full.html')
-            .webdrivercss('actionbar', [
+            .webdrivercss(pageName, [
                 {
                     name: screenshotName,
                     elem: '#screenshot-actionbar'

@@ -11,11 +11,12 @@ describe('buttons', function () {
     });
 
     it('should take the button screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'buttons';
+        var screenshotName = screenshot_prefix.value + 'buttons',
+            pageName = screenshotName + '_full';
         console.log('starting: ' + screenshotName);
         browser
             .url('/buttons/fixtures/test.full.html')
-            .webdrivercss('buttons', [
+            .webdrivercss(pageName, [
                 {
                     name: screenshotName,
                     elem: '#screenshot-buttons'
@@ -40,13 +41,14 @@ describe('buttons', function () {
 
     function hoverTest(type, done, prefix) {
         var screenshotName = screenshot_prefix.value + 'button_' + type + '_hover',
-            selector = getSelector(type, prefix);
+            selector = getSelector(type, prefix),
+            pageName = screenshotName + '_full';
 
         console.log('starting: ' + screenshotName);
         browser
             .url('/buttons/fixtures/test.full.html')
             .moveToObject(selector)
-            .webdrivercss(('button_' + type + '_hover'), [
+            .webdrivercss(pageName, [
                 {
                     name: screenshotName,
                     elem: ('#screenshots-buttons-' + type)
@@ -67,13 +69,14 @@ describe('buttons', function () {
 
     function clickTest(type, done, prefix) {
         var screenshotName = screenshot_prefix.value + 'button_' + type + '_click',
-            selector = getSelector(type, prefix);
+            selector = getSelector(type, prefix),
+            pageName = screenshotName + '_full';
 
         console.log('starting: ' + screenshotName);
         browser
             .url('/buttons/fixtures/test.full.html')
             .click(selector)
-            .webdrivercss(('button_' + type + '_click'), [
+            .webdrivercss(pageName, [
                 {
                     name: screenshotName,
                     elem: ('#screenshots-buttons-' + type)
