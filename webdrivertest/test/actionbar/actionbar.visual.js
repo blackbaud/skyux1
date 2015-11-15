@@ -1,4 +1,4 @@
-/* global describe, it, browser, beforeEach,  expect, console, require */
+/* global describe, it, browser, beforeEach,  expect, require */
 
 
 describe('actionbar', function () {
@@ -13,7 +13,6 @@ describe('actionbar', function () {
     it('should take an actionbar screenshot', function (done) {
         var screenshotName = screenshot_prefix.value + '_actionbar',
             pageName = screenshotName + '_full';
-        console.log('starting: ' + screenshotName);
         browser
             .url('/actionbar/fixtures/test.full.html')
             .webdrivercss(pageName, [
@@ -22,16 +21,9 @@ describe('actionbar', function () {
                     elem: '#screenshot-actionbar'
                 }
             ], function (err, res) {
-                console.log('finishing: ' + screenshotName);
-                console.log('err: ');
-                console.log(err);
-                console.log('res: ');
-                console.log(res);
                 expect(err).toBe(undefined);
 
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-
-                console.log('finished: ' + screenshotName);
             }).call(done);
     });
 });
