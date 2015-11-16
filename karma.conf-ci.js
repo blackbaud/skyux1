@@ -64,7 +64,7 @@ module.exports = function (config) {
 
     shared.files.push(
         'dist/js/locales/sky-locale-en-US.js',
-        'dist/css/*.css',
+        'dist/css/sky-bundle.css',
         {
             pattern: 'dist/css/fonts/*.*',
             included: false,
