@@ -1,0 +1,16 @@
+<div class="container">
+    <div id="screenshot-check" ng-controller="CheckTestController">
+        <div ng-repeat="checkBoxItem in locals.checkBoxItems">
+            <label>
+                <input bb-check type="checkbox" ng-model="checkBoxItem.checked" ng-disabled="checkBoxItem.disabled">
+                {{checkBoxItem.description}}
+            </label>
+        </div>
+        <div ng-repeat="radioItem in locals.radioItems">
+            <label>
+                <input bb-check type="radio" ng-model="locals.selectedRadioItem" ng-value="radioItem.id" ng-disabled="radioItem.disabled">
+                {{radioItem.description}}
+            </label>
+        </div>
+    </div>
+</div>
