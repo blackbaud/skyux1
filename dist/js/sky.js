@@ -266,13 +266,16 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     */
                     el.on('focusin.bbAutonumeric', function () {
                         $timeout(function () {
-                            if (!isIosUserAgent) {
-                                el.select();
-                            } else {
-                                //use setSelectionRange instead of select because select in a timeout does not work with iOS
-                                el[0].setSelectionRange(0, 9999);
+                            // Check to ensure the field still has focus once the $timeout callback is executed.
+                            // https://github.com/blackbaud/skyux/issues/64
+                            if (el.is(':focus')) {
+                                if (!isIosUserAgent) {
+                                    el.select();
+                                } else {
+                                    //use setSelectionRange instead of select because select in a timeout does not work with iOS
+                                    el[0].setSelectionRange(0, 9999);
+                                }
                             }
-
                         });
                     });
 
