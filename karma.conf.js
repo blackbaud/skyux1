@@ -12,7 +12,7 @@ module.exports = function (config) {
     // Make en-US the default locale
     shared.files.push(
         'bin/js/locales/sky-locale-en-US.js',
-        'bin/css/*.css',
+        'bin/css/sky-bundle.css',
         {
             pattern: 'bin/css/fonts/*.*',
             included: false,
