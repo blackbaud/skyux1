@@ -114,18 +114,12 @@ module.exports = function (grunt) {
         }
 
         grunt.log.writeln('Building for target: ' + target);
-        switch (target) {
-        case 'travis-push':
-            skyDistPath = 'dist/';
-            break;
-        default:
+
+        if (target === 'local') {
             skyDistPath = 'bin/';
-
-            if (target === 'local') {
-                screenshotBasePath += '_local/';
-            }
-
-            break;
+            screenshotBasePath += '_local/';
+        } else {
+            skyDistPath = 'dist/';
         }
     }());
 
@@ -318,10 +312,10 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                configFile: 'karma.conf.js'
+                configFile: 'karma.conf-local.js'
             },
             internal: {
-                configFile: 'karma.conf-internal.js'
+                configFile: 'karma.conf-ci.js'
             },
             unit: {
                 singleRun: true
