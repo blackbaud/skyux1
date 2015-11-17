@@ -6,7 +6,7 @@
         user: process.env.BROWSER_STACK_USERNAME,
         key: process.env.BROWSER_STACK_ACCESS_KEY,
         specs: [
-            'webdrivertest/test/**/*.visual.js'
+            'webdrivertest/test/grids/grids.visual.js'
         ],
         capabilities: [
             {
