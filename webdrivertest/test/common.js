@@ -8,7 +8,7 @@
             screenshot_prefix.value =  res.value.platform + '_' + browserName + '_';
 
             if (platform === "WINDOWS") {
-                screenshot_prefix.value += res.value.version;
+                screenshot_prefix.value += (res.value.version + '_');
             }
 
         }).call(done);

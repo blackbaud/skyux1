@@ -32,6 +32,7 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
+            .waitForVisible('#screenshot-grid .bb-filter-btn')
             .click('#screenshot-grid .bb-filter-btn')
             .waitForVisible('#screenshot-grid .bb-visual-filter')
             .click('#screenshot-grid .bb-visual-filter')
@@ -52,6 +53,7 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
+            .waitForVisible('#screenshot-grid .bb-filter-btn')
             .click('#screenshot-grid .bb-filter-btn')
             .waitForVisible('#screenshot-grid .bb-visual-filter')
             .scroll(0, 49)
