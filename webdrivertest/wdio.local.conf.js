@@ -6,11 +6,14 @@
         specs: [
             'webdrivertest/test/**/*.visual.js'
         ],
-        logLevel: 'silent',
+        logLevel: 'verbose',
         baseUrl: 'http://localhost:8000/webdrivertest/test',
         capabilities: [
-            {
+            /*{
                 browserName: 'chrome'
+            },*/
+            {
+                browserName: 'firefox'
             }
         ],
         plugins: {

@@ -23,7 +23,8 @@ describe('buttons', function () {
             ], function (err, res) {
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            })
+            .call(done);
     });
 
     function getSelector(type, prefix) {

@@ -11,7 +11,7 @@ describe('checklist', function () {
 
 
     it('should take checklist screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_checklist',
+        var screenshotName = screenshot_prefix.value + 'checklist',
             pageName = screenshotName + '_full';
         browser
             .url('/checklist/fixtures/test.full.html')

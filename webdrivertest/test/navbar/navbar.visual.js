@@ -11,7 +11,7 @@ describe('navbar', function () {
 
 
     it('should take navbar screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_navbar',
+        var screenshotName = screenshot_prefix.value + 'navbar',
             pageName = screenshotName + '_full';
         browser
             .url('/navbar/fixtures/test.full.html')

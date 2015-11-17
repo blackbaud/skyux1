@@ -11,7 +11,7 @@ describe('file attachments', function () {
 
 
     it('should take fileattachment screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_fileattachments',
+        var screenshotName = screenshot_prefix.value + 'fileattachments',
             pageName = screenshotName + '_full';
         browser
             .url('/fileattachments/fixtures/test.full.html')

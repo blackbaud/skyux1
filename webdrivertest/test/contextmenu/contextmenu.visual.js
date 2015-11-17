@@ -11,7 +11,7 @@ describe('contextmenu', function () {
 
     describe('context menu', function () {
         it('should take contextmenu closed screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + '_contextmenu_closed',
+            var screenshotName = screenshot_prefix.value + 'contextmenu_closed',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')

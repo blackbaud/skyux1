@@ -12,7 +12,7 @@ describe('check', function () {
 
 
     it('should take check screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_check',
+        var screenshotName = screenshot_prefix.value + 'check',
             pageName = screenshotName + '_full';
         browser
             .url('/check/fixtures/test.full.html')

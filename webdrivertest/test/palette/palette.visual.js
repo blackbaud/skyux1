@@ -11,10 +11,10 @@ describe('palette', function () {
 
 
     it('should take palette screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_palette',
+        var screenshotName = screenshot_prefix.value + 'palette',
             pageName = screenshotName + '_full';
         browser
-            .url('/navbar/fixtures/test.full.html')
+            .url('/palette/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,

@@ -11,7 +11,7 @@ describe('labels', function () {
 
 
     it('should take label screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_labels',
+        var screenshotName = screenshot_prefix.value + 'labels',
             pageName = screenshotName + '_full';
         browser
             .url('/labels/fixtures/test.full.html')

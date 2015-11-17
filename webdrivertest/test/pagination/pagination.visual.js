@@ -11,7 +11,7 @@ describe('pagination', function () {
 
 
     it('should take pagination screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + '_pagination',
+        var screenshotName = screenshot_prefix.value + 'pagination',
             pageName = screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
@@ -27,7 +27,7 @@ describe('pagination', function () {
     });
 
     it('should take pagination hover screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + '_pagination_hover',
+        var screenshotName = screenshot_prefix.value + 'pagination_hover',
             pageName = screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
@@ -44,7 +44,7 @@ describe('pagination', function () {
     });
 
     it('should take pagination clicked screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + '_pagination_click',
+        var screenshotName = screenshot_prefix.value + 'pagination_click',
             pageName = screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')

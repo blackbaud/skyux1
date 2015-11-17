@@ -12,7 +12,7 @@ describe('modals', function () {
 
 
     it('should take modal screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_modal',
+        var screenshotName = screenshot_prefix.value + 'modal',
             pageName = screenshotName + '_full';
         browser
             .url('/modal/fixtures/test.full.html')

@@ -12,7 +12,7 @@ describe('highlight', function () {
 
 
     it('should take highlight screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_highlight',
+        var screenshotName = screenshot_prefix.value + 'highlight',
             pageName = screenshotName + '_full';
         browser
             .url('/highlight/fixtures/test.full.html')

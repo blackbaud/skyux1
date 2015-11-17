@@ -11,7 +11,7 @@ describe('repeaters', function () {
 
 
     it('should take repeaters screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_repeaters',
+        var screenshotName = screenshot_prefix.value + 'repeaters',
             pageName = screenshotName + '_full';
         browser
             .url('/repeaters/fixtures/test.full.html')

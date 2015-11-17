@@ -1,7 +1,6 @@
-/* global describe, it, browser, beforeEach,  expect, require */
+/*global describe, it, browser, beforeEach, expect, require */
 
-
-describe('actionbar', function () {
+describe('tabset', function () {
     'use strict';
 
     var screenshot_prefix = {};
@@ -10,21 +9,20 @@ describe('actionbar', function () {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
 
-    it('should take an actionbar screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + 'actionbar',
+    it('should take tabset screenshots', function (done) {
+        var screenshotName = screenshot_prefix.value + '_tabset',
             pageName = screenshotName + '_full';
         browser
-            .url('/actionbar/fixtures/test.full.html')
+            .url('/tabset/fixtures/test.full.html')
+            .moveToObject('#screenshot-tabset-open-add li:nth-child(2) a')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-actionbar'
+                    elem: '#screenshot-tabset-all'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
-
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
-            .call(done);
+            }).call(done);
     });
 });

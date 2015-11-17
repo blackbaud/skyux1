@@ -1,6 +1,6 @@
 /*global describe, it, browser, beforeEach, expect, require */
 
-describe('datepicker', function () {
+describe('toast', function () {
     'use strict';
 
     var screenshot_prefix = {};
@@ -9,15 +9,16 @@ describe('datepicker', function () {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
 
-    it('should take screenshot of closed datepickers', function (done) {
-        var screenshotName = screenshot_prefix.value + 'datepicker_closed',
+    it('should take toast screenshots', function (done) {
+        var screenshotName = screenshot_prefix.value + 'toast',
             pageName = screenshotName + '_full';
         browser
-            .url('/datepicker/fixtures/test.full.html')
+            .url('/toast/fixtures/test.full.html')
+            .click('#screenshot-toast-open')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-datepickers'
+                    elem: '#toast-container'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
@@ -25,17 +26,17 @@ describe('datepicker', function () {
             }).call(done);
     });
 
-    it('should take a screenshot of the open datepicker', function (done) {
-        var screenshotName = screenshot_prefix.value + '_datepicker_open',
+    it('should take toast mouseover screenshots', function (done) {
+        var screenshotName = screenshot_prefix.value + 'toast_mouseover',
             pageName = screenshotName + '_full';
         browser
-            .url('/datepicker/fixtures/test.full.html')
-            .click('#screenshot-datepicker .bb-date-field-calendar-button')
-            .waitForVisible('ul[datepicker-popup-wrap]')
+            .url('/toast/fixtures/test.full.html')
+            .click('#screenshot-toast-open')
+            .moveToObject('#toast-container')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-datepicker'
+                    elem: '#toast-container'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
@@ -43,23 +44,23 @@ describe('datepicker', function () {
             }).call(done);
     });
 
-    it('should take a screenshot of the open datepicker append', function (done) {
-        var screenshotName = screenshot_prefix.value + '_datepicker_open_append',
+    it('should take toast close mouseover screenshots', function (done) {
+        var screenshotName = screenshot_prefix.value + 'toast_mouseover_close',
             pageName = screenshotName + '_full';
         browser
-            .url('/datepicker/fixtures/test.full.html')
-            .click('#screenshot-datepicker-append-to-body .bb-date-field-calendar-button')
-            .waitForVisible('ul[datepicker-popup-wrap]')
+            .url('/toast/fixtures/test.full.html')
+            .click('#screenshot-toast-open')
+            .waitForVisible('#toast-container .toast-close-button')
+            .moveToObject('#toast-container .toast-close-button')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-datepicker-append-to-body'
+                    elem: '#toast-container'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
             }).call(done);
     });
-
 
 });

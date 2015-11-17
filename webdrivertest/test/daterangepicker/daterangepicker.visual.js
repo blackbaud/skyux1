@@ -11,7 +11,7 @@ describe('daterangepicker', function () {
 
 
     it('should take daterangepickers screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_daterangepicker',
+        var screenshotName = screenshot_prefix.value + 'daterangepicker',
             pageName = screenshotName + '_full';
         browser
             .url('/daterangepicker/fixtures/test.full.html')

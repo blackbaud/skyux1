@@ -12,7 +12,7 @@ describe('tabs', function () {
 
 
     it('should take tab screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_tabs',
+        var screenshotName = screenshot_prefix.value + 'tabs',
             pageName = screenshotName + '_full';
         browser
             .url('/tabs/fixtures/test.full.html')

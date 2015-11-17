@@ -12,7 +12,7 @@ describe('headers', function () {
 
 
     it('should take header screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_header',
+        var screenshotName = screenshot_prefix.value + 'header',
             pageName = screenshotName + '_full';
         browser
             .url('/headers/fixtures/test.full.html')

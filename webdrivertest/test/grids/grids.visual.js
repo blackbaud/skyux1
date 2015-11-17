@@ -24,7 +24,8 @@ describe('grids', function () {
             ], function (err, res) {
                 expect(err).toBe(undefined);
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            })
+            .call(done);
     });
 
     it('should takes screenshot of all filters', function (done) {
@@ -60,7 +61,7 @@ describe('grids', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '.bb-grid-filters'
+                    elem: '#screenshot-grid'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
