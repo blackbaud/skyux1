@@ -75,6 +75,8 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
+            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .click('#screenshot-grid-pagination .bb-filter-btn')
             .waitForExist('#screenshot-grid-pagination .bb-filters-inline', 1000)
             .scroll('#screenshot-grid-pagination .bb-filters-inline')
             .click('#screenshot-grid-pagination .bb-filters-inline input[type="checkbox"]')
