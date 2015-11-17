@@ -27,7 +27,7 @@ describe('contextmenu', function () {
         });
 
         it('should take contextmenu open screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + '_contextmenu_open',
+            var screenshotName = screenshot_prefix.value + 'contextmenu_open',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
@@ -46,7 +46,7 @@ describe('contextmenu', function () {
 
     describe('submenu', function () {
         it('should take the submenu collapsed screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + '_submenumenu_collapsed',
+            var screenshotName = screenshot_prefix.value + 'submenumenu_collapsed',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
@@ -63,7 +63,7 @@ describe('contextmenu', function () {
         });
 
         it('should take the submenu expanded screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + '_submenumenu_expanded',
+            var screenshotName = screenshot_prefix.value + 'submenumenu_expanded',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')

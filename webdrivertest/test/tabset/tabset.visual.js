@@ -10,7 +10,7 @@ describe('tabset', function () {
     });
 
     it('should take tabset screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + '_tabset',
+        var screenshotName = screenshot_prefix.value + 'tabset',
             pageName = screenshotName + '_full';
         browser
             .url('/tabset/fixtures/test.full.html')
