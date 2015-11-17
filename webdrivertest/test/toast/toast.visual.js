@@ -15,6 +15,7 @@ describe('toast', function () {
         browser
             .url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
+            .waitForVisible('#toast-container')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -33,6 +34,7 @@ describe('toast', function () {
             .url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
             .moveToObject('#toast-container')
+            .waitForVisible('#toast-container')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
