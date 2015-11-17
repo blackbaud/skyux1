@@ -17,7 +17,7 @@ describe('searchfield', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: 'screenshot-searchfield-full'
+                    elem: '#screenshot-searchfield-full'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);

@@ -42,7 +42,7 @@ describe('tiles', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-text-expand-all'
+                    elem: '#screenshot-tiles-all'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
