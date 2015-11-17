@@ -11,12 +11,12 @@ describe('grids', function () {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
 
-    it('should takes screenshot of all grids', function (done) {
+    it('should take screenshot of all grids', function (done) {
         var screenshotName = screenshot_prefix.value + 'grids_all',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
-            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .waitForExist('#screenshot-grid .bb-filter-btn', 20000)
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -34,7 +34,7 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
-            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .waitForExist('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid .bb-filter-btn')
             .waitForVisible('#screenshot-grid .bb-visual-filter')
             .click('#screenshot-grid .bb-visual-filter')
@@ -55,7 +55,7 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
-            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .waitForExist('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid .bb-filter-btn')
             .waitForVisible('#screenshot-grid .bb-visual-filter')
             .scroll(0, 49)
@@ -75,10 +75,9 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
-            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .waitForExist('#screenshot-grid-pagination .bb-filter-btn', 20000)
             .click('#screenshot-grid-pagination .bb-filter-btn')
-            .waitForExist('#screenshot-grid-pagination .bb-filters-inline', 1000)
-            .scroll('#screenshot-grid-pagination .bb-filters-inline')
+            .waitForExist('#screenshot-grid-pagination .bb-filters-inline', 20000)
             .click('#screenshot-grid-pagination .bb-filters-inline input[type="checkbox"]')
             .webdrivercss(pageName, [
                 {
@@ -96,7 +95,7 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
-            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .waitForExist('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid td label.bb-check-wrapper')
             .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)')
             .webdrivercss(pageName, [
@@ -115,7 +114,7 @@ describe('grids', function () {
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
-            .waitForExist('#screenshot-grid .bb-filter-btn', 10000)
+            .waitForExist('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid button.bb-context-menu-btn')
             .waitForVisible('ul.dropdown-menu li[bb-context-menu-action]')
             .webdrivercss(pageName, [
