@@ -5,8 +5,6 @@ describe('searchfield', function () {
 
     var screenshot_prefix = {};
 
-    browser.url('/searchfield/fixtures/test.full.html');
-
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -15,6 +13,7 @@ describe('searchfield', function () {
         var screenshotName = screenshot_prefix.value + 'searchfields',
             pageName = screenshotName + '_full';
         browser
+            .url('/searchfield/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -30,6 +29,7 @@ describe('searchfield', function () {
         var screenshotName = screenshot_prefix.value + 'searchfield_single_active',
             pageName = screenshotName + '_full';
         browser
+            .url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-single .ui-select-toggle')
             .webdrivercss(pageName, [
                 {
@@ -46,6 +46,8 @@ describe('searchfield', function () {
         var screenshotName = screenshot_prefix.value + 'searchfield_single_dropdown',
             pageName = screenshotName + '_full';
         browser
+            .url('/searchfield/fixtures/test.full.html')
+            .click('#screenshot-searchfield-single .ui-select-toggle')
             .moveToObject('#screenshot-searchfield-single-choices .ui-select-choices-row-inner')
             .webdrivercss(pageName, [
                 {
@@ -62,7 +64,7 @@ describe('searchfield', function () {
         var screenshotName = screenshot_prefix.value + 'searchfield_multiple_active',
             pageName = screenshotName + '_full';
         browser
-            .click('#screenshot-searchfield-single-choices .ui-select-choices-row-inner')
+            .url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-multiple .ui-select-search')
             .webdrivercss(pageName, [
                 {
@@ -79,6 +81,8 @@ describe('searchfield', function () {
         var screenshotName = screenshot_prefix.value + 'searchfield_multiple_dropdown',
             pageName = screenshotName + '_full';
         browser
+            .url('/searchfield/fixtures/test.full.html')
+            .click('#screenshot-searchfield-multiple .ui-select-search')
             .moveToObject('#screenshot-searchfield-multiple-choices .ui-select-choices-row-inner')
             .webdrivercss(pageName, [
                 {
@@ -95,6 +99,7 @@ describe('searchfield', function () {
         var screenshotName = screenshot_prefix.value + 'searchfield_multiple_close_hover',
             pageName = screenshotName + '_full';
         browser
+            .url('/searchfield/fixtures/test.full.html')
             .moveToObject('.ui-select-match-item .ui-select-match-close')
             .webdrivercss(pageName, [
                 {

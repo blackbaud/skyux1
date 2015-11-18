@@ -6,8 +6,6 @@ describe('tiles', function () {
 
     var screenshot_prefix = {};
 
-    browser.url('/tiles/fixtures/test.full.html');
-
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -16,6 +14,7 @@ describe('tiles', function () {
         var screenshotName = screenshot_prefix.value + 'tile_expanded',
             pageName = screenshotName + '_full';
         browser
+            .url('/tiles/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -31,6 +30,7 @@ describe('tiles', function () {
         var screenshotName = screenshot_prefix.value + 'tile_collapsed',
             pageName = screenshotName + '_full';
         browser
+            .url('/tiles/fixtures/test.full.html')
             .click('#screenshot-tile-minimal .bb-tile-title')
             .click('#screenshot-tile-with-settings .bb-tile-title')
             .click('#screenshot-tile-with-header-content .bb-tile-title')

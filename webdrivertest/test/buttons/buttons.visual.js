@@ -6,8 +6,6 @@ describe('buttons', function () {
 
     var screenshot_prefix = {};
 
-    browser.url('/buttons/fixtures/test.full.html');
-
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -16,6 +14,7 @@ describe('buttons', function () {
         var screenshotName = screenshot_prefix.value + 'buttons',
             pageName = screenshotName + '_full';
         browser
+            .url('/buttons/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -38,6 +37,7 @@ describe('buttons', function () {
             selector = getSelector(type, prefix),
             pageName = screenshotName + '_full';
         browser
+            .url('/buttons/fixtures/test.full.html')
             .moveToObject(selector)
             .webdrivercss(pageName, [
                 {
@@ -57,6 +57,7 @@ describe('buttons', function () {
             selector = getSelector(type, prefix),
             pageName = screenshotName + '_full';
         browser
+            .url('/buttons/fixtures/test.full.html')
             .click(selector)
             .webdrivercss(pageName, [
                 {

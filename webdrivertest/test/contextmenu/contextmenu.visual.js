@@ -5,8 +5,6 @@ describe('contextmenu', function () {
 
     var screenshot_prefix = {};
 
-    browser.url('/contextmenu/fixtures/test.full.html')
-
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -16,6 +14,7 @@ describe('contextmenu', function () {
             var screenshotName = screenshot_prefix.value + 'contextmenu_closed',
                 pageName = screenshotName + '_full';
             browser
+                .url('/contextmenu/fixtures/test.full.html')
                 .webdrivercss(pageName, [
                     {
                         name: screenshotName,
@@ -31,6 +30,7 @@ describe('contextmenu', function () {
             var screenshotName = screenshot_prefix.value + 'contextmenu_open',
                 pageName = screenshotName + '_full';
             browser
+                .url('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-contextmenu button.bb-context-menu-btn')
                 .webdrivercss(pageName, [
                     {
@@ -49,6 +49,7 @@ describe('contextmenu', function () {
             var screenshotName = screenshot_prefix.value + 'submenumenu_collapsed',
                 pageName = screenshotName + '_full';
             browser
+                .url('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-submenu button.bb-context-menu-btn')
                 .webdrivercss(pageName, [
                     {
@@ -65,6 +66,8 @@ describe('contextmenu', function () {
             var screenshotName = screenshot_prefix.value + 'submenumenu_expanded',
                 pageName = screenshotName + '_full';
             browser
+                .url('/contextmenu/fixtures/test.full.html')
+                .click('#screenshot-submenu button.bb-context-menu-btn')
                 .click('#screenshot-submenu .bb-submenu .panel-title .accordion-toggle > span > div')
                 .webdrivercss(pageName, [
                     {

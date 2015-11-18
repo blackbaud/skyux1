@@ -5,8 +5,6 @@ describe('datepicker', function () {
 
     var screenshot_prefix = {};
 
-    browser.url('/datepicker/fixtures/test.full.html');
-
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -15,6 +13,7 @@ describe('datepicker', function () {
         var screenshotName = screenshot_prefix.value + 'datepicker_closed',
             pageName = screenshotName + '_full';
         browser
+            .url('/datepicker/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -30,6 +29,7 @@ describe('datepicker', function () {
         var screenshotName = screenshot_prefix.value + '_datepicker_open',
             pageName = screenshotName + '_full';
         browser
+            .url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker .bb-date-field-calendar-button')
             .waitForVisible('ul[datepicker-popup-wrap]')
             .webdrivercss(pageName, [
@@ -47,6 +47,7 @@ describe('datepicker', function () {
         var screenshotName = screenshot_prefix.value + '_datepicker_open_append',
             pageName = screenshotName + '_full';
         browser
+            .url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker-append-to-body .bb-date-field-calendar-button')
             .waitForVisible('ul[datepicker-popup-wrap]')
             .webdrivercss(pageName, [

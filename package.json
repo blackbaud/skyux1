@@ -8,7 +8,6 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs": "git+https://github.com/Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs.git",
     "blackbaud-stache": "latest",
     "blackbaud-stache-jsdoc": "latest",
     "grunt": "^0.4.5",

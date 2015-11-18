@@ -4,7 +4,7 @@
     'use strict';
     exports.config = {
         specs: [
-            'webdrivertest/test/searchfield/searchfield.visual.js'
+            'webdrivertest/test/**/*.visual.js'
         ],
         logLevel: 'verbose',
         baseUrl: 'http://localhost:8000/webdrivertest/test',

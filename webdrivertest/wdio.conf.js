@@ -85,7 +85,8 @@
         },
         onComplete: function () {
             console.log('tests complete');
-        }
+        },
+        reporter: 'spec'
 
     };
 
