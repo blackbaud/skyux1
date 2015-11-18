@@ -5,6 +5,8 @@ describe('toast', function () {
 
     var screenshot_prefix = {};
 
+    browser.url('/toast/fixtures/test.full.html');
+
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -13,7 +15,6 @@ describe('toast', function () {
         var screenshotName = screenshot_prefix.value + 'toast',
             pageName = screenshotName + '_full';
         browser
-            .url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
             .waitForVisible('#toast-container')
             .webdrivercss(pageName, [
@@ -31,10 +32,7 @@ describe('toast', function () {
         var screenshotName = screenshot_prefix.value + 'toast_mouseover',
             pageName = screenshotName + '_full';
         browser
-            .url('/toast/fixtures/test.full.html')
-            .click('#screenshot-toast-open')
             .moveToObject('#toast-container')
-            .waitForVisible('#toast-container')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -50,9 +48,6 @@ describe('toast', function () {
         var screenshotName = screenshot_prefix.value + 'toast_mouseover_close',
             pageName = screenshotName + '_full';
         browser
-            .url('/toast/fixtures/test.full.html')
-            .click('#screenshot-toast-open')
-            .waitForVisible('#toast-container')
             .moveToObject('#toast-container .toast-close-button')
             .webdrivercss(pageName, [
                 {

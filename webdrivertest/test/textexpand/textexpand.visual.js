@@ -6,6 +6,8 @@ describe('textexpand', function () {
 
     var screenshot_prefix = {};
 
+    browser.url('/textexpand/fixtures/test.full.html');
+
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -14,7 +16,6 @@ describe('textexpand', function () {
         var screenshotName = screenshot_prefix.value + 'textexpand_collapsed',
             pageName = screenshotName + '_full';
         browser
-            .url('/textexpand/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -30,7 +31,6 @@ describe('textexpand', function () {
         var screenshotName = screenshot_prefix.value + 'textexpand_expanded',
             pageName = screenshotName + '_full';
         browser
-            .url('/textexpand/fixtures/test.full.html')
             .click('#screenshot-text-expand .bb-text-expand-see-more')
             .click('#screenshot-text-expand-line-break .bb-text-expand-see-more')
             .click('#screenshot-text-expand-repeater .bb-text-expand-see-more')

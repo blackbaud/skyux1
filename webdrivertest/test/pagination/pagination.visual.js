@@ -5,6 +5,8 @@ describe('pagination', function () {
 
     var screenshot_prefix = {};
 
+    browser.url('/pagination/fixtures/test.full.html');
+
     beforeEach(function (done) {
         require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
     });
@@ -14,7 +16,6 @@ describe('pagination', function () {
         var screenshotName = screenshot_prefix.value + 'pagination',
             pageName = screenshotName + '_full';
         browser
-            .url('/pagination/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -30,7 +31,6 @@ describe('pagination', function () {
         var screenshotName = screenshot_prefix.value + 'pagination_hover',
             pageName = screenshotName + '_full';
         browser
-            .url('/pagination/fixtures/test.full.html')
             .moveToObject('#screenshot-pagination li:nth-child(3) a')
             .webdrivercss(pageName, [
                 {
@@ -47,7 +47,6 @@ describe('pagination', function () {
         var screenshotName = screenshot_prefix.value + 'pagination_click',
             pageName = screenshotName + '_full';
         browser
-            .url('/pagination/fixtures/test.full.html')
             .click('#screenshot-pagination li:nth-child(3) a')
             .webdrivercss(pageName, [
                 {
