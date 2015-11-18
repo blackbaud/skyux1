@@ -79,7 +79,7 @@
 
     };
 
-    if (process.env.CI) {
+    if (process.env.TRAVIS) {
         config.user = process.env.BROWSER_STACK_USERNAME;
         config.key = process.env.BROWSER_STACK_ACCESS_KEY;
         config.capabilities = capabilities;
