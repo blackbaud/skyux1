@@ -1,4 +1,4 @@
-/* global module, require */
+/* global module, require, console */
 (function () {
     'use strict';
     var createScreenshotPrefix = function (browser, screenshot_prefix, done) {
@@ -26,7 +26,7 @@
             }
 
             screenshotRoot = 'webdriver-screenshots' + require('../wdio.conf.js').environment;
-
+            console.log(screenshotRoot);
             require('webdrivercss').init(browser, {
                 screenshotRoot: screenshotRoot + '/' + prefix,
                 failedComparisonsRoot: screenshotRoot + '-diffs/' + prefix,
