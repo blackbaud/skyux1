@@ -37,7 +37,7 @@ if [ -d screenshots/baseline ]; then
   cd ..
 fi
 
-if [[ -d webdriver-screenshot-Travis-diffs ]] && [[ "$(ls -A webdriver-screenshot-Travis-diffs 2> /dev/null)" == "" ]]; then
+if [[ -d webdriver-screenshots-diffs ]] && [[ "$(ls -A webdriver-screenshots-diffs 2> /dev/null)" == "" ]]; then
   echo -e "Starting to update webdriver test results.\n"
 
   git config --global user.email "travis@travis-ci.org"
@@ -50,11 +50,11 @@ if [[ -d webdriver-screenshot-Travis-diffs ]] && [[ "$(ls -A webdriver-screensho
 
   mkdir -p failures
 
-  cp -rf ../webdriver-screenshot-Travis-diffs/ failures/
+  cp -rf ../webdriver-screenshots-diffs/ failures/
 
   mkdir -p all
 
-  cp -rf ../webdriver-screenshots-Travis/ all/
+  cp -rf ../webdriver-screenshots/ all/
 
   git add -A
   if [ -z "$(git status --porcelain)" ]; then

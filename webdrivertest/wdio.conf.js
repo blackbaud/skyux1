@@ -85,7 +85,7 @@
         config.capabilities = capabilities;
         config.host = 'hub.browserstack.com';
         config.port = 80;
-        exports.environment = 'Travis';
+        exports.environment = '';
     } else {
         config.capabilities = [
             {
