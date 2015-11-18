@@ -4,14 +4,12 @@
 describe('textexpand', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     it('should take textexpand collapsed screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'textexpand_collapsed',
+        var screenshotName = 'textexpand_collapsed',
             pageName = screenshotName + '_full';
         browser
             .url('/textexpand/fixtures/test.full.html')
@@ -27,7 +25,7 @@ describe('textexpand', function () {
     });
 
     it('should take textexpand expanded screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'textexpand_expanded',
+        var screenshotName = 'textexpand_expanded',
             pageName = screenshotName + '_full';
         browser
             .url('/textexpand/fixtures/test.full.html')

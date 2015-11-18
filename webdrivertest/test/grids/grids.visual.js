@@ -5,14 +5,13 @@
 describe('grids', function () {
     'use strict';
 
-    var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     it('should take screenshot of all grids', function (done) {
-        var screenshotName = screenshot_prefix.value + 'grids_all',
+        var screenshotName = 'grids_all',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
@@ -30,7 +29,7 @@ describe('grids', function () {
     });
 
     it('should takes screenshot of all filters', function (done) {
-        var screenshotName = screenshot_prefix.value + 'grids_filters',
+        var screenshotName = 'grids_filters',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
@@ -51,7 +50,7 @@ describe('grids', function () {
     });
 
     it('should scroll the screen with the filter open', function (done) {
-        var screenshotName = screenshot_prefix.value + 'grids_filter_viewkeeper',
+        var screenshotName = 'grids_filter_viewkeeper',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
@@ -71,7 +70,7 @@ describe('grids', function () {
     });
 
     it('should have active inline filters', function (done) {
-        var screenshotName = screenshot_prefix.value + 'grids_filter_inline',
+        var screenshotName = 'grids_filter_inline',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
@@ -91,7 +90,7 @@ describe('grids', function () {
     });
 
     it('should have multiselect', function (done) {
-        var screenshotName = screenshot_prefix.value + 'grids_multiselect',
+        var screenshotName = 'grids_multiselect',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
@@ -110,7 +109,7 @@ describe('grids', function () {
     });
 
     it('should open the grid context menu', function (done) {
-        var screenshotName = screenshot_prefix.value + 'grids_contextmenu',
+        var screenshotName = 'grids_contextmenu',
             pageName = screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')

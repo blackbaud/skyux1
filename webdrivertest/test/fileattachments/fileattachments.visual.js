@@ -6,12 +6,12 @@ describe('file attachments', function () {
     var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take fileattachment screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'fileattachments',
+        var screenshotName = 'fileattachments',
             pageName = screenshotName + '_full';
         browser
             .url('/fileattachments/fixtures/test.full.html')

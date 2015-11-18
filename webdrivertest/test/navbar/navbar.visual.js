@@ -3,15 +3,13 @@
 describe('navbar', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take navbar screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'navbar',
+        var screenshotName = 'navbar',
             pageName = screenshotName + '_full';
         browser
             .url('/navbar/fixtures/test.full.html')

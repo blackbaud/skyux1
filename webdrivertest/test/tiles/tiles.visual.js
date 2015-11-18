@@ -4,14 +4,12 @@
 describe('tiles', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     it('should take tile expanded screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'tile_expanded',
+        var screenshotName = 'tile_expanded',
             pageName = screenshotName + '_full';
         browser
             .url('/tiles/fixtures/test.full.html')
@@ -27,7 +25,7 @@ describe('tiles', function () {
     });
 
     it('should take tile collapsed screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'tile_collapsed',
+        var screenshotName = 'tile_collapsed',
             pageName = screenshotName + '_full';
         browser
             .url('/tiles/fixtures/test.full.html')

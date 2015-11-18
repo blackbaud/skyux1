@@ -3,15 +3,13 @@
 describe('pagination', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take pagination screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + 'pagination',
+        var screenshotName = 'pagination',
             pageName = screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
@@ -27,7 +25,7 @@ describe('pagination', function () {
     });
 
     it('should take pagination hover screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + 'pagination_hover',
+        var screenshotName = 'pagination_hover',
             pageName = screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
@@ -44,7 +42,7 @@ describe('pagination', function () {
     });
 
     it('should take pagination clicked screenshot', function (done) {
-        var screenshotName = screenshot_prefix.value + 'pagination_click',
+        var screenshotName = 'pagination_click',
             pageName = screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')

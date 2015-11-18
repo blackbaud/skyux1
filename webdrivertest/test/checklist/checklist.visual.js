@@ -6,12 +6,12 @@ describe('checklist', function () {
     var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take checklist screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'checklist',
+        var screenshotName = 'checklist',
             pageName = screenshotName + '_full';
         browser
             .url('/checklist/fixtures/test.full.html')

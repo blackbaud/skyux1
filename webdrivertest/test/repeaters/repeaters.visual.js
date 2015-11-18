@@ -3,15 +3,13 @@
 describe('repeaters', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take repeaters screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'repeaters',
+        var screenshotName = 'repeaters',
             pageName = screenshotName + '_full';
         browser
             .url('/repeaters/fixtures/test.full.html')

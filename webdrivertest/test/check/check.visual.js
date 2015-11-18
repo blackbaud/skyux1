@@ -7,12 +7,11 @@ describe('check', function () {
     var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
-
     it('should take check screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'check',
+        var screenshotName = 'check',
             pageName = screenshotName + '_full';
         browser
             .url('/check/fixtures/test.full.html')

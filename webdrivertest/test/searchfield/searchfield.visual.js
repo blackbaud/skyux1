@@ -3,14 +3,12 @@
 describe('searchfield', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     it('should take searchfield screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'searchfields',
+        var screenshotName = 'searchfields',
             pageName = screenshotName + '_full';
         browser
             .url('/searchfield/fixtures/test.full.html')
@@ -26,7 +24,7 @@ describe('searchfield', function () {
     });
 
     it('should take searchfield single active screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'searchfield_single_active',
+        var screenshotName = 'searchfield_single_active',
             pageName = screenshotName + '_full';
         browser
             .url('/searchfield/fixtures/test.full.html')
@@ -43,7 +41,7 @@ describe('searchfield', function () {
     });
 
     it('should take searchfield single dropdown screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'searchfield_single_dropdown',
+        var screenshotName = 'searchfield_single_dropdown',
             pageName = screenshotName + '_full';
         browser
             .url('/searchfield/fixtures/test.full.html')
@@ -61,7 +59,7 @@ describe('searchfield', function () {
     });
 
     it('should take searchfield multiple active screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'searchfield_multiple_active',
+        var screenshotName = 'searchfield_multiple_active',
             pageName = screenshotName + '_full';
         browser
             .url('/searchfield/fixtures/test.full.html')
@@ -78,7 +76,7 @@ describe('searchfield', function () {
     });
 
     it('should take searchfield multiple dropdown screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'searchfield_multiple_dropdown',
+        var screenshotName = 'searchfield_multiple_dropdown',
             pageName = screenshotName + '_full';
         browser
             .url('/searchfield/fixtures/test.full.html')
@@ -96,7 +94,7 @@ describe('searchfield', function () {
     });
 
     it('should take searchfield multiple close hover screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'searchfield_multiple_close_hover',
+        var screenshotName = 'searchfield_multiple_close_hover',
             pageName = screenshotName + '_full';
         browser
             .url('/searchfield/fixtures/test.full.html')

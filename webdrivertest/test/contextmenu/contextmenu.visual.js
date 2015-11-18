@@ -6,12 +6,12 @@ describe('contextmenu', function () {
     var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     describe('context menu', function () {
         it('should take contextmenu closed screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + 'contextmenu_closed',
+            var screenshotName = 'contextmenu_closed',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
@@ -27,7 +27,7 @@ describe('contextmenu', function () {
         });
 
         it('should take contextmenu open screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + 'contextmenu_open',
+            var screenshotName = 'contextmenu_open',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
@@ -46,7 +46,7 @@ describe('contextmenu', function () {
 
     describe('submenu', function () {
         it('should take the submenu collapsed screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + 'submenumenu_collapsed',
+            var screenshotName = 'submenumenu_collapsed',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
@@ -63,7 +63,7 @@ describe('contextmenu', function () {
         });
 
         it('should take the submenu expanded screenshot', function (done) {
-            var screenshotName = screenshot_prefix.value + 'submenumenu_expanded',
+            var screenshotName = 'submenumenu_expanded',
                 pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')

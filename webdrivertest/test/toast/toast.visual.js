@@ -3,14 +3,12 @@
 describe('toast', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     it('should take toast screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'toast',
+        var screenshotName = 'toast',
             pageName = screenshotName + '_full';
         browser
             .url('/toast/fixtures/test.full.html')
@@ -28,7 +26,7 @@ describe('toast', function () {
     });
 
     it('should take toast mouseover screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'toast_mouseover',
+        var screenshotName = 'toast_mouseover',
             pageName = screenshotName + '_full';
         browser
             .url('/toast/fixtures/test.full.html')
@@ -47,7 +45,7 @@ describe('toast', function () {
     });
 
     it('should take toast close mouseover screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'toast_mouseover_close',
+        var screenshotName = 'toast_mouseover_close',
             pageName = screenshotName + '_full';
         browser
             .url('/toast/fixtures/test.full.html')

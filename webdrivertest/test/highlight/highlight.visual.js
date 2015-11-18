@@ -4,15 +4,14 @@
 describe('highlight', function () {
     'use strict';
 
-    var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take highlight screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'highlight',
+        var screenshotName = 'highlight',
             pageName = screenshotName + '_full';
         browser
             .url('/highlight/fixtures/test.full.html')

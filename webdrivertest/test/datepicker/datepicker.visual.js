@@ -6,11 +6,11 @@ describe('datepicker', function () {
     var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
     it('should take screenshot of closed datepickers', function (done) {
-        var screenshotName = screenshot_prefix.value + 'datepicker_closed',
+        var screenshotName = 'datepicker_closed',
             pageName = screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
@@ -26,7 +26,7 @@ describe('datepicker', function () {
     });
 
     it('should take a screenshot of the open datepicker', function (done) {
-        var screenshotName = screenshot_prefix.value + '_datepicker_open',
+        var screenshotName = '_datepicker_open',
             pageName = screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
@@ -44,7 +44,7 @@ describe('datepicker', function () {
     });
 
     it('should take a screenshot of the open datepicker append', function (done) {
-        var screenshotName = screenshot_prefix.value + '_datepicker_open_append',
+        var screenshotName = '_datepicker_open_append',
             pageName = screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')

@@ -3,15 +3,13 @@
 describe('labels', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take label screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'labels',
+        var screenshotName = 'labels',
             pageName = screenshotName + '_full';
         browser
             .url('/labels/fixtures/test.full.html')

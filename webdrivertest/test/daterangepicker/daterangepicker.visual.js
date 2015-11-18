@@ -6,12 +6,12 @@ describe('daterangepicker', function () {
     var screenshot_prefix = {};
 
     beforeEach(function (done) {
-        require('../common').createScreenshotPrefix(browser, screenshot_prefix, done);
+        require('../common').initWebdriverCss(browser, done);
     });
 
 
     it('should take daterangepickers screenshots', function (done) {
-        var screenshotName = screenshot_prefix.value + 'daterangepicker',
+        var screenshotName = 'daterangepicker',
             pageName = screenshotName + '_full';
         browser
             .url('/daterangepicker/fixtures/test.full.html')
