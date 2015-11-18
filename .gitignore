@@ -210,7 +210,7 @@ webdrivertest/test/**/*.full.html
 /screenshots-local
 /screenshot-local-diffs
 /screenshot-diffs
-/webdriver-screenshot-diffs
-/webdriver-screenshots-local
-/webdriver-screenshots-local-diffs
+/webdriver-screenshots-diffs
+/webdriver-screenshotslocal
+/webdriver-screenshotslocal-diffs
 .slimerjs-cache/

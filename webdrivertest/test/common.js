@@ -22,11 +22,10 @@
             prefix =  res.value.platform + '_' + browserName;
 
             if (platform === "WINDOWS") {
-                prefix.value += ('_' + res.value.version);
+                prefix += ('_' + res.value.version);
             }
 
             screenshotRoot = 'webdriver-screenshots' + require('../wdio.conf.js').environment;
-            console.log(screenshotRoot);
             require('webdrivercss').init(browser, {
                 screenshotRoot: screenshotRoot + '/' + prefix,
                 failedComparisonsRoot: screenshotRoot + '-diffs/' + prefix,
