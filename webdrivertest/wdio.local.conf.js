@@ -4,7 +4,7 @@
     'use strict';
     exports.config = {
         specs: [
-            'webdrivertest/test/toast/toast.visual.js'
+            'webdrivertest/test/**/*.visual.js'
         ],
         logLevel: 'verbose',
         baseUrl: 'http://localhost:8000/webdrivertest/test',

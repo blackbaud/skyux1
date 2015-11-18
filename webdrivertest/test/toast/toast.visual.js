@@ -19,7 +19,7 @@ describe('toast', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#toast-container'
+                    elem: '#screenshot-toast'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
@@ -38,7 +38,7 @@ describe('toast', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#toast-container'
+                    elem: '#screenshot-toast'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
@@ -52,12 +52,12 @@ describe('toast', function () {
         browser
             .url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
-            .waitForVisible('#toast-container .toast-close-button')
+            .waitForVisible('#toast-container')
             .moveToObject('#toast-container .toast-close-button')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#toast-container'
+                    elem: '#screenshot-toast'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
