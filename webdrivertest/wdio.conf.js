@@ -60,7 +60,7 @@
         baseUrl: 'http://localhost:8000/webdrivertest/test',
         framework: 'jasmine',
         jasmineNodeOpts: {
-            defaultTimeoutInterval: 32000,
+            defaultTimeoutInterval: 160000,
             expectationResultHandler: function () {
             }
         },
