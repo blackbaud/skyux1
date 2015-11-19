@@ -54,7 +54,7 @@
     config = {
 
         specs: [
-            'webdrivertest/test/**/*.visual.js'
+            'webdrivertest/test/contextmenu/contextmenu.visual.js'
         ],
         logLevel: 'silent',
         baseUrl: 'http://localhost:8000/webdrivertest/test',

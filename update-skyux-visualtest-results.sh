@@ -37,10 +37,6 @@ if [ -d screenshots/baseline ]; then
   cd ..
 fi
 
-if [[ -d webdriver-screenshots-diffs ]] && [[ "$(ls -A webdriver-screenshots-diffs 2> /dev/null)" == "" ]]; then
-
-fi
-
 echo -e "Starting to update webdriver test results.\n"
 
 git config --global user.email "travis@travis-ci.org"
