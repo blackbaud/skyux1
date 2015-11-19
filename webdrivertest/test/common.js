@@ -1,4 +1,4 @@
-/* global module, require, console */
+/* global module, require */
 (function () {
     'use strict';
     var createScreenshotPrefix = function (browser, screenshot_prefix, done) {
