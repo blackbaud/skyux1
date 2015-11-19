@@ -32,7 +32,7 @@ describe('grids', function () {
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid .bb-filter-btn')
-            .waitForVisible('#screenshot-grid .bb-visual-filter')
+            .waitForVisible('#screenshot-grid .bb-visual-filter', 20000)
             .click('#screenshot-grid .bb-visual-filter')
             .click('#screenshot-grid .bb-grid-filters-footer .btn-primary')
             .webdrivercss(pageName, [
@@ -53,7 +53,7 @@ describe('grids', function () {
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid .bb-filter-btn')
-            .waitForVisible('#screenshot-grid .bb-visual-filter')
+            .waitForVisible('#screenshot-grid .bb-visual-filter', 20000)
             .scroll(0, 49)
             .webdrivercss(pageName, [
                 {
@@ -112,7 +112,7 @@ describe('grids', function () {
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid button.bb-context-menu-btn')
-            .waitForVisible('ul.dropdown-menu li[bb-context-menu-action]')
+            .waitForVisible('ul.dropdown-menu li[bb-context-menu-action]', 20000)
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
