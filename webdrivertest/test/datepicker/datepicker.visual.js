@@ -24,7 +24,7 @@ describe('datepicker', function () {
     });
 
     it('should take a screenshot of the open datepicker', function (done) {
-        var screenshotName = '_datepicker_open',
+        var screenshotName = 'datepicker_open',
             pageName = screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
@@ -42,7 +42,7 @@ describe('datepicker', function () {
     });
 
     it('should take a screenshot of the open datepicker append', function (done) {
-        var screenshotName = '_datepicker_open_append',
+        var screenshotName = 'datepicker_open_append',
             pageName = screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
