@@ -1,19 +1,7 @@
 /* global module, require */
 (function () {
     'use strict';
-    var createScreenshotPrefix = function (browser, screenshot_prefix, done) {
-        browser.session().then(function (res) {
-            var browserName = res.value.browserName.replace(/\s+/g, ''),
-                platform = res.value.platform;
-            screenshot_prefix.value =  res.value.platform + '_' + browserName + '_';
-
-            if (platform === "WINDOWS") {
-                screenshot_prefix.value += (res.value.version + '_');
-            }
-
-        }).call(done);
-    },
-    initWebdriverCss = function (browser, options, done) {
+    var initWebdriverCss = function (browser, options, done) {
         browser.session().then(function (res) {
             var browserName = res.value.browserName.replace(/\s+/g, ''),
                 platform = res.value.platform,
@@ -35,8 +23,6 @@
 
         }).call(done);
     };
-
-    module.exports.createScreenshotPrefix = createScreenshotPrefix;
 
     module.exports.initWebdriverCss = initWebdriverCss;
 }());
