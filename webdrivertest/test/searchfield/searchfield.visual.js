@@ -29,6 +29,7 @@ describe('searchfield', function () {
         browser
             .url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-single .ui-select-toggle')
+            .waitForVisible('#screenshot-searchfield-single')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
