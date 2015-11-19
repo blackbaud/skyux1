@@ -80,6 +80,11 @@ $btn-primary-color: $bb-color-white;
 $btn-primary-bg: $bb-brand-alternate;
 $btn-primary-border: $bb-brand-alternate;
 
+$state-success-text: $bb-color-blue;
+$state-info-text: $bb-color-aqua;
+$state-warning-text: $bb-color-yellow;
+$state-danger-text: $bb-color-red;
+
 //other colors
 $gray-lightest: lighten(#000, 93.5%); // #eee //used lots of places
 
