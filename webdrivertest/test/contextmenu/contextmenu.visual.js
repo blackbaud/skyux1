@@ -9,37 +9,29 @@ describe('contextmenu', function () {
 
     describe('context menu', function () {
         it('should take contextmenu closed screenshot', function (done) {
-            var screenshotName = 'contextmenu_closed',
-                pageName = screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
-                .webdrivercss(pageName, [
+                .webdrivercss('contextmenu_closed_full', [
                     {
-                        name: screenshotName,
+                        name: 'contextmenu_closed',
                         elem: '#screenshot-contextmenu'
                     }
                 ], function (err, res) {
                     expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                    expect(res.contextmenu_closed[0].isWithinMisMatchTolerance).toBe(true);
+                })
+                .click('#screenshot-contextmenu button.bb-context-menu-btn')
+                .webdrivercss('contextmenu_open_full', [
+                    {
+                        name: 'contextmenu_open',
+                        elem: '#screenshot-contextmenu'
+                    }
+                ], function (err, res) {
+                    expect(err).toBe(undefined);
+                    expect(res.contextmenu_open[0].isWithinMisMatchTolerance).toBe(true);
                 }).call(done);
         });
 
-        it('should take contextmenu open screenshot', function (done) {
-            var screenshotName = 'contextmenu_open',
-                pageName = screenshotName + '_full';
-            browser
-                .url('/contextmenu/fixtures/test.full.html')
-                .click('#screenshot-contextmenu button.bb-context-menu-btn')
-                .webdrivercss(pageName, [
-                    {
-                        name: screenshotName,
-                        elem: '#screenshot-contextmenu'
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
-        });
     });
 
     describe('submenu', function () {
