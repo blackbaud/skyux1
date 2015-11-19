@@ -29,46 +29,29 @@ describe('contextmenu', function () {
                 ], function (err, res) {
                     expect(err).toBe(undefined);
                     expect(res.contextmenu_open[0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
-        });
-
-    });
-
-    describe('submenu', function () {
-        it('should take the submenu collapsed screenshot', function (done) {
-            var screenshotName = 'submenumenu_collapsed',
-                pageName = screenshotName + '_full';
-            browser
-                .url('/contextmenu/fixtures/test.full.html')
+                })
                 .click('#screenshot-submenu button.bb-context-menu-btn')
-                .webdrivercss(pageName, [
+                .webdrivercss('submenumenu_collapsed_full', [
                     {
-                        name: screenshotName,
+                        name: 'submenumenu_collapsed',
                         elem: '#screenshot-submenu'
                     }
                 ], function (err, res) {
                     expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
-        });
-
-        it('should take the submenu expanded screenshot', function (done) {
-            var screenshotName = 'submenumenu_expanded',
-                pageName = screenshotName + '_full';
-            browser
-                .url('/contextmenu/fixtures/test.full.html')
-                .click('#screenshot-submenu button.bb-context-menu-btn')
+                    expect(res.submenu_collapsed[0].isWithinMisMatchTolerance).toBe(true);
+                })
                 .click('#screenshot-submenu .bb-submenu .panel-title .accordion-toggle > span > div')
-                .webdrivercss(pageName, [
+                .webdrivercss('submenumenu_expanded_full', [
                     {
-                        name: screenshotName,
+                        name: 'submenumenu_expanded',
                         elem: '#screenshot-submenu'
                     }
                 ], function (err, res) {
                     expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                    expect(res.submenumenu_expanded[0].isWithinMisMatchTolerance).toBe(true);
                 }).call(done);
         });
+
     });
 
 });
