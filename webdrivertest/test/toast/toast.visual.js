@@ -6,6 +6,7 @@ describe('toast', function () {
     beforeAll(function (done) {
         require('../common').initWebdriverCss(browser, done);
     });
+    
 
     it('should take toast screenshots', function (done) {
         var screenshotName = 'toast',
