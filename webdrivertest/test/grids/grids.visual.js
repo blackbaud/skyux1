@@ -1,12 +1,9 @@
-
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeAll, expect, require */
 
 describe('grids', function () {
     'use strict';
 
-
-    beforeEach(function (done) {
+    beforeAll(function (done) {
         require('../common').initWebdriverCss(browser, done);
     });
 

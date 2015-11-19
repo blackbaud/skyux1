@@ -3,8 +3,6 @@
 describe('daterangepicker', function () {
     'use strict';
 
-    var screenshot_prefix = {};
-
     beforeEach(function (done) {
         require('../common').initWebdriverCss(browser, done);
     });

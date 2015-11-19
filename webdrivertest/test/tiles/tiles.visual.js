@@ -1,10 +1,10 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeAll, expect, require */
 
 describe('tiles', function () {
     'use strict';
 
-    beforeEach(function (done) {
+    beforeAll(function (done) {
         require('../common').initWebdriverCss(browser, done);
     });
 
