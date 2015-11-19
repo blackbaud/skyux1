@@ -3,13 +3,15 @@
 describe('tabset', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take tabset screenshots', function (done) {
         var screenshotName = 'tabset',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/tabset/fixtures/test.full.html')
             .moveToObject('#screenshot-tabset-open-add li:nth-child(2) a')

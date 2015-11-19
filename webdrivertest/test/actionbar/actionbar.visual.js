@@ -4,13 +4,15 @@
 describe('actionbar', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take an actionbar screenshot', function (done) {
         var screenshotName = 'actionbar',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/actionbar/fixtures/test.full.html')
             .webdrivercss(pageName, [

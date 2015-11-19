@@ -4,14 +4,16 @@
 describe('modals', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take modal screenshots', function (done) {
         var screenshotName = 'modal',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/modal/fixtures/test.full.html')
             .webdrivercss(pageName, [

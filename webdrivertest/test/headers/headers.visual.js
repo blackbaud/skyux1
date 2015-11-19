@@ -4,14 +4,16 @@
 describe('headers', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take header screenshots', function (done) {
         var screenshotName = 'header',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/headers/fixtures/test.full.html')
             .webdrivercss(pageName, [

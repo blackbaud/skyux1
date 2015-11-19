@@ -3,13 +3,15 @@
 describe('textstate', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take textstate screenshots', function (done) {
         var screenshotName = 'textstate',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/textstate/fixtures/test.full.html')
             .webdrivercss(pageName, [

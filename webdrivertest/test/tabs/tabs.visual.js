@@ -4,14 +4,16 @@
 describe('tabs', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take tab screenshots', function (done) {
         var screenshotName = 'tabs',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/tabs/fixtures/test.full.html')
             .moveToObject('#screenshot-tab-2')

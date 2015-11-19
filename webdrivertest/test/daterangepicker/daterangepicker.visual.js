@@ -3,14 +3,16 @@
 describe('daterangepicker', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take daterangepickers screenshots', function (done) {
         var screenshotName = 'daterangepicker',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/daterangepicker/fixtures/test.full.html')
             .webdrivercss(pageName, [

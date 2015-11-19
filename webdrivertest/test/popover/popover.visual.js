@@ -3,13 +3,15 @@
 describe('popover', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take popover title screenshot', function (done) {
         var screenshotName = 'popover_title',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/popover/fixtures/test.full.html')
             .click('#screenshot-popover-title a')
@@ -26,7 +28,7 @@ describe('popover', function () {
 
     it('should take popover no title screenshot', function (done) {
         var screenshotName = 'popover_no_title',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/popover/fixtures/test.full.html')
             .click('#screenshot-popover-no-title a')
@@ -43,7 +45,7 @@ describe('popover', function () {
 
     it('should take popover top screenshot', function (done) {
         var screenshotName = 'popover_top',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/popover/fixtures/test.full.html')
             .click('#screenshot-popover-top button')
@@ -60,7 +62,7 @@ describe('popover', function () {
 
     it('should take popover bottom screenshot', function (done) {
         var screenshotName = 'popover_bottom',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/popover/fixtures/test.full.html')
             .click('#screenshot-popover-bottom button')
@@ -77,7 +79,7 @@ describe('popover', function () {
 
     it('should take popover left screenshot', function (done) {
         var screenshotName = 'popover_left',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/popover/fixtures/test.full.html')
             .click('#screenshot-popover-left button')
@@ -94,7 +96,7 @@ describe('popover', function () {
 
     it('should take popover right screenshot', function (done) {
         var screenshotName = 'popover_right',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/popover/fixtures/test.full.html')
             .click('#screenshot-popover-right button')

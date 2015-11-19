@@ -13,7 +13,7 @@
 
         }).call(done);
     },
-    initWebdriverCss = function (browser, done) {
+    initWebdriverCss = function (browser, options, done) {
         browser.session().then(function (res) {
             var browserName = res.value.browserName.replace(/\s+/g, ''),
                 platform = res.value.platform,
@@ -24,7 +24,7 @@
             if (platform === "WINDOWS") {
                 prefix += ('_' + res.value.version);
             }
-
+            options.prefix = prefix + '_';
             screenshotRoot = 'webdriver-screenshots' + require('../wdio.conf.js').environment;
             require('webdrivercss').init(browser, {
                 screenshotRoot: screenshotRoot + '/' + prefix,

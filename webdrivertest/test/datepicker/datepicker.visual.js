@@ -3,13 +3,15 @@
 describe('datepicker', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take screenshot of closed datepickers', function (done) {
         var screenshotName = 'datepicker_closed',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
             .webdrivercss(pageName, [
@@ -25,7 +27,7 @@ describe('datepicker', function () {
 
     it('should take a screenshot of the open datepicker', function (done) {
         var screenshotName = 'datepicker_open',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker .bb-date-field-calendar-button')
@@ -43,7 +45,7 @@ describe('datepicker', function () {
 
     it('should take a screenshot of the open datepicker append', function (done) {
         var screenshotName = 'datepicker_open_append',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker-append-to-body .bb-date-field-calendar-button')

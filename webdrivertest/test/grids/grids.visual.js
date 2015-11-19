@@ -3,13 +3,15 @@
 describe('grids', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take screenshot of all grids', function (done) {
         var screenshotName = 'grids_all',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
@@ -27,7 +29,7 @@ describe('grids', function () {
 
     it('should takes screenshot of all filters', function (done) {
         var screenshotName = 'grids_filters',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
@@ -48,7 +50,7 @@ describe('grids', function () {
 
     it('should scroll the screen with the filter open', function (done) {
         var screenshotName = 'grids_filter_viewkeeper',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
@@ -68,7 +70,7 @@ describe('grids', function () {
 
     it('should have active inline filters', function (done) {
         var screenshotName = 'grids_filter_inline',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid-pagination .bb-filter-btn', 20000)
@@ -88,7 +90,7 @@ describe('grids', function () {
 
     it('should have multiselect', function (done) {
         var screenshotName = 'grids_multiselect',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
@@ -107,7 +109,7 @@ describe('grids', function () {
 
     it('should open the grid context menu', function (done) {
         var screenshotName = 'grids_contextmenu',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/grids/fixtures/test.full.html')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)

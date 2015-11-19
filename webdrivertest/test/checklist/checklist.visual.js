@@ -3,16 +3,16 @@
 describe('checklist', function () {
     'use strict';
 
-    var screenshot_prefix = {};
+    var options = {};
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take checklist screenshots', function (done) {
         var screenshotName = 'checklist',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/checklist/fixtures/test.full.html')
             .webdrivercss(pageName, [

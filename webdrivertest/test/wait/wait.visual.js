@@ -4,13 +4,15 @@
 describe('wait', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take wait screenshots', function (done) {
         var screenshotName = 'wait',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/wait/fixtures/test.full.html')
             .pause(1000)

@@ -4,14 +4,16 @@
 describe('badges', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take badge screenshots', function (done) {
         var screenshotName = 'badges',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/badges/fixtures/test.full.html')
             .webdrivercss(pageName, [

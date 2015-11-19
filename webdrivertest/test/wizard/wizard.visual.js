@@ -4,13 +4,15 @@
 describe('wizard', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take the wizard screenshot', function (done) {
         var screenshotName = 'wizard',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/wizard/fixtures/test.full.html')
             .click('#screenshots-wizard-open')

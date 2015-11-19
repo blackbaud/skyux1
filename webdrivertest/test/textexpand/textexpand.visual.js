@@ -4,13 +4,15 @@
 describe('textexpand', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take textexpand collapsed screenshots', function (done) {
         var screenshotName = 'textexpand_collapsed',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/textexpand/fixtures/test.full.html')
             .webdrivercss(pageName, [
@@ -26,7 +28,7 @@ describe('textexpand', function () {
 
     it('should take textexpand expanded screenshots', function (done) {
         var screenshotName = 'textexpand_expanded',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/textexpand/fixtures/test.full.html')
             .click('#screenshot-text-expand .bb-text-expand-see-more')

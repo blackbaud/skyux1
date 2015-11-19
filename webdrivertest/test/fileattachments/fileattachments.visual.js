@@ -3,14 +3,16 @@
 describe('file attachments', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take fileattachment screenshots', function (done) {
         var screenshotName = 'fileattachments',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/fileattachments/fixtures/test.full.html')
             .webdrivercss(pageName, [

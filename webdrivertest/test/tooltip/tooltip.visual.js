@@ -3,13 +3,15 @@
 describe('tooltip', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take tooltip screenshots', function (done) {
         var screenshotName = 'tooltip',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/tooltip/fixtures/test.full.html')
             .click('#screenshots-tooltip-link')

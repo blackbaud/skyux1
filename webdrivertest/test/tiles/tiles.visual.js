@@ -4,13 +4,15 @@
 describe('tiles', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take tile expanded screenshots', function (done) {
         var screenshotName = 'tile_expanded',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/tiles/fixtures/test.full.html')
             .webdrivercss(pageName, [
@@ -26,7 +28,7 @@ describe('tiles', function () {
 
     it('should take tile collapsed screenshots', function (done) {
         var screenshotName = 'tile_collapsed',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/tiles/fixtures/test.full.html')
             .click('#screenshot-tile-minimal .bb-tile-title')

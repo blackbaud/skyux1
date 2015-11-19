@@ -3,14 +3,16 @@
 describe('pagination', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take pagination screenshot', function (done) {
         var screenshotName = 'pagination',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
             .webdrivercss(pageName, [
@@ -26,7 +28,7 @@ describe('pagination', function () {
 
     it('should take pagination hover screenshot', function (done) {
         var screenshotName = 'pagination_hover',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
             .moveToObject('#screenshot-pagination li:nth-child(3) a')
@@ -43,7 +45,7 @@ describe('pagination', function () {
 
     it('should take pagination clicked screenshot', function (done) {
         var screenshotName = 'pagination_click',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/pagination/fixtures/test.full.html')
             .click('#screenshot-pagination li:nth-child(3) a')

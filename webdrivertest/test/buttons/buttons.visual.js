@@ -4,13 +4,15 @@
 describe('buttons', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take the button screenshots', function (done) {
         var screenshotName = 'buttons',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/buttons/fixtures/test.full.html')
             .webdrivercss(pageName, [
@@ -33,7 +35,7 @@ describe('buttons', function () {
     function hoverTest(type, done, prefix) {
         var screenshotName = 'button_' + type + '_hover',
             selector = getSelector(type, prefix),
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/buttons/fixtures/test.full.html')
             .moveToObject(selector)
@@ -53,7 +55,7 @@ describe('buttons', function () {
     function clickTest(type, done, prefix) {
         var screenshotName = 'button_' + type + '_click',
             selector = getSelector(type, prefix),
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/buttons/fixtures/test.full.html')
             .click(selector)

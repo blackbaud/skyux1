@@ -3,14 +3,16 @@
 describe('palette', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
     it('should take palette screenshots', function (done) {
         var screenshotName = 'palette',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/palette/fixtures/test.full.html')
             .webdrivercss(pageName, [

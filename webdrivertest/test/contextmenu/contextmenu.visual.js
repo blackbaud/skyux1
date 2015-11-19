@@ -3,14 +3,16 @@
 describe('contextmenu', function () {
     'use strict';
 
+    var options = {};
+
     beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     describe('context menu', function () {
         it('should take contextmenu closed screenshot', function (done) {
             var screenshotName = 'contextmenu_closed',
-                pageName = screenshotName + '_full';
+                pageName = options.prefix + screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
                 .webdrivercss(pageName, [
@@ -26,7 +28,7 @@ describe('contextmenu', function () {
 
         it('should take contextmenu open screenshot', function (done) {
             var screenshotName = 'contextmenu_open',
-                pageName = screenshotName + '_full';
+                pageName = options.prefix + screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-contextmenu button.bb-context-menu-btn')
@@ -46,7 +48,7 @@ describe('contextmenu', function () {
     describe('submenu', function () {
         it('should take the submenu collapsed screenshot', function (done) {
             var screenshotName = 'submenumenu_collapsed',
-                pageName = screenshotName + '_full';
+                pageName = options.prefix + screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-submenu button.bb-context-menu-btn')
@@ -63,7 +65,7 @@ describe('contextmenu', function () {
 
         it('should take the submenu expanded screenshot', function (done) {
             var screenshotName = 'submenumenu_expanded',
-                pageName = screenshotName + '_full';
+                pageName = options.prefix + screenshotName + '_full';
             browser
                 .url('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-submenu button.bb-context-menu-btn')

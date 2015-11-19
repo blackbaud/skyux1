@@ -4,13 +4,15 @@
 describe('check', function () {
     'use strict';
 
+    var options = {};
+
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
     it('should take check screenshots', function (done) {
         var screenshotName = 'check',
-            pageName = screenshotName + '_full';
+            pageName = options.prefix + screenshotName + '_full';
         browser
             .url('/check/fixtures/test.full.html')
             .webdrivercss(pageName, [
