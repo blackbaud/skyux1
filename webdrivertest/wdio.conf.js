@@ -34,6 +34,7 @@
             captureTimeout: 3e5,
             browser: 'ie',
             browser_version: '11.0',
+            'browserstack.ie.driver': '2.48',
             os: 'Windows',
             os_version: '8.1',
             build: 'win81-ie11-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
@@ -46,6 +47,7 @@
             captureTimeout: 3e5,
             browser: 'ie',
             browser_version: '10.0',
+            'browserstack.ie.driver': '2.48',
             os: 'Windows',
             os_version: '8',
             build: 'win8-ie10-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
@@ -54,13 +56,13 @@
     config = {
 
         specs: [
-            'webdrivertest/test/buttons/buttons.visual.js'
+            'webdrivertest/test/**/*.visual.js'
         ],
         logLevel: 'silent',
         baseUrl: 'http://localhost:8000/webdrivertest/test',
         framework: 'jasmine',
         jasmineNodeOpts: {
-            defaultTimeoutInterval: 160000,
+            defaultTimeoutInterval: 85000,
             expectationResultHandler: function () {
             }
         },
