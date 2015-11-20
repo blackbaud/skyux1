@@ -49,6 +49,11 @@ $bb-alternate-font-size-lg: ceil(($font-size-base * 2)) !default; // ~24px
 $bb-alternate-font-size-base: ceil(($font-size-base * 1.833)) !default; // ~22px
 $bb-alternate-font-size-sm: ceil(($font-size-base * 1.667)) !default; // ~20px
 
+$bb-text-color-success: $bb-color-blue !default;
+$bb-text-color-info: $bb-color-aqua !default;
+$bb-text-color-warning: $bb-color-yellow !default;
+$bb-text-color-danger: $bb-color-red !default;
+
 // End new variables
 
 
