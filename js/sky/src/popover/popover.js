@@ -1,4 +1,4 @@
-/*global angular, jQuery */
+/*global angular */
 
 /** @module Popover
 @icon newspaper-o
@@ -11,81 +11,20 @@ provided on the scope to dismiss the popover.
 The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](http://angular-ui.github.io/bootstrap/) directive and supports all of it's optional properties.
  */
 
-(function ($) {
+(function () {
     'use strict';
 
-    angular.module('sky.popover', ['sky.data'])
-        .directive('bbPopoverTemplatePopup', ['$templateCache', '$compile', '$timeout', '$window', function ($templateCache, $compile, $timeout, $window) {
+    angular.module('sky.popover', ['ui.bootstrap.tooltip'])
+        .directive('bbPopoverTemplatePopup', [function () {
             return {
-                restrict: 'EA',
                 replace: true,
-                scope: { title: '@', content: '@', placement: '@', animation: '&', isOpen: '&' },
-                templateUrl: 'sky/templates/popover/popup.html',
-                compile: function () {
-                    return function ($scope, el) {
-                        var compiledEl,
-                            html = $templateCache.get($scope.content),
-                            origScope,
-                            popoverFlyoutScope,
-                            popoverTriggerScope,
-                            windowEl = $($window);
-
-                        function removeTooltip() {
-                            /*istanbul ignore else: sanity check */
-                            if (el) {
-                                el.remove();
-                                el = null;
-                            }
-                            /*istanbul ignore else: sanity check */
-                            if (popoverFlyoutScope) {
-                                popoverFlyoutScope.$destroy();
-                                popoverFlyoutScope = null;
-                            }
-                        }
-
-                        function windowClickHandler(e) {
-                            if (!el.is(e.target) && el.has(e.target).length === 0) {
-                                $scope.$apply(function () {
-                                    popoverFlyoutScope.hide();
-                                });
-                            }
-                        }
-
-                        //Get the scope of the popover directive.
-                        popoverTriggerScope = $scope.$parent.$parent;
-
-                        //Get the original scope that contains the popover directive
-                        origScope = popoverTriggerScope.$parent;
-
-                        //Create a new scope that will be bound to the template inside the flyout.  Base
-                        //this scope on the original scope that contained the popover directive.
-                        popoverFlyoutScope = origScope.$new();
-
-                        popoverFlyoutScope.hide = function () {
-                            $scope.$parent.$parent.isOpen = false;
-
-                            //Borrowed from $tooltip, need to remove the item after the animation
-                            $timeout(removeTooltip, 500);
-                        };
-
-                        $scope.$watch('isOpen()', function (value) {
-                            if (value) {
-                                $timeout(function () {
-                                    windowEl.on('click', windowClickHandler);
-                                });
-                            } else {
-                                windowEl.off('click', windowClickHandler);
-                            }
-                        });
-
-                        compiledEl = $compile(html)(popoverFlyoutScope);
-                        el.find('.popover-content').html(compiledEl);
-                        popoverFlyoutScope.$apply();
-                    };
-                }
+                scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
+                templateUrl: 'sky/templates/popover/popup.html'
             };
         }])
-        .directive('bbPopoverTemplate', ['$tooltip', function ($tooltip) {
-            return $tooltip('bbPopoverTemplate', 'popover', 'click');
+        .directive('bbPopoverTemplate', ['$uibTooltip', function ($uibTooltip) {
+            return $uibTooltip('bbPopoverTemplate', 'popover', 'focus', {
+                useContentExp: true
+            });
         }]);
-}(jQuery));
+}());

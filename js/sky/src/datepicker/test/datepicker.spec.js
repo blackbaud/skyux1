@@ -920,7 +920,7 @@ describe('Datepicker directive', function () {
             openCalendar(el);
             $timeout.flush();
 
-            bodyCalendarEl = $('body > ul[datepicker-popup-wrap]');
+            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
 
             expect(bodyCalendarEl.length).toBe(1);
 
@@ -938,7 +938,7 @@ describe('Datepicker directive', function () {
             openCalendar(el);
             $timeout.flush();
 
-            bodyCalendarEl = $('body > ul[datepicker-popup-wrap]');
+            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
             expect(bodyCalendarEl[0].style.left).not.toBe(expectedWidth.toString() + 'px');
             expect(bodyCalendarEl).toHaveClass('bb-datefield');
 

@@ -30,7 +30,7 @@ These are optional properties of the object passed to `bbPaging.init()`
     var evtNsPos = 0;
 
     angular.module('sky.pagination', ['ui.bootstrap.pagination'])
-        .config(['paginationConfig', function (paginationConfig) {
+        .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
 

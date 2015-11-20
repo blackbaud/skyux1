@@ -69,7 +69,7 @@
                         dateChangeInternal = false;
 
                     function getBodyDatepicker() {
-                        return $('body > ul[datepicker-popup-wrap]');
+                        return $('body > ul[uib-datepicker-popup-wrap]');
                     }
 
                     function positionAbsoluteDatepicker() {
