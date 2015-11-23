@@ -4389,9 +4389,9 @@ reloading the grid with the current data after the event has fired.
                             };
 
                             $scope.locals.hasWaitAndEmpty = function () {
-                                return $scope.options && $scope.options.loading && $scope.options.data.length < 1;
+                                return $scope.options && $scope.options.loading && (!$scope.options.data || $scope.options.data.length < 1);
                             };
-                            
+
 
                             element.on('$destroy', function () {
 
@@ -5230,7 +5230,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
         }]);
 }(jQuery));
 
-/*global angular */
+/*global angular, define, require */
 
 /** @module Moment
 @icon clock-o
@@ -5242,19 +5242,27 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
     'use strict';
 
     function bbMoment($window) {
-        /*istanbul ignore next boilerplate require gunk */
-        if (typeof $window.define === 'function' && $window.define.amd) {
-            return $window.define(['moment']);
-        } else if ($window.module !== undefined && $window.module && $window.module.exports) {
-            return $window.require('moment');
-        } else {
-            return $window.moment;
-        }
+        return $window.moment;
     }
 
     bbMoment.$inject = ['$window'];
 
+    /*istanbul ignore next boilerplate require gunk */
+    function runRegisterMoment($window) {
+
+        function registerMoment(moment) {
+            $window.moment = moment;
+        }
+
+        if (angular.isUndefined($window.moment) && typeof define === 'function' && define.amd) {
+            require(['moment'], registerMoment);
+        }
+    }
+
+    runRegisterMoment.$inject = ['$window'];
+
     angular.module('sky.moment', [])
+        .run(runRegisterMoment)
         .factory('bbMoment', bbMoment);
 
 }());
@@ -9588,16 +9596,14 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="bb-tile">\n' +
         '    <div bb-scroll-into-view="scrollIntoView">\n' +
         '        <div class="bb-tile-title" ng-click="titleClick()">\n' +
-        '            <div class="row">\n' +
-        '                <div class="bb-tile-header-with-content col-xs-8 col-sm-9">\n' +
-        '                    <h2 class="bb-tile-header">{{tileHeader}}</h2>\n' +
-        '                </div>\n' +
-        '                <div class="col-xs-4 col-sm-3 bb-tile-header-column-tools">\n' +
-        '                    <div class="bb-tile-tools">\n' +
-        '                        <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
-        '                        <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
-        '                        <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
-        '                    </div>\n' +
+        '            <div class="bb-tile-header-with-content">\n' +
+        '                <h2 class="bb-tile-header">{{tileHeader}}</h2>\n' +
+        '            </div>\n' +
+        '            <div class="bb-tile-header-column-tools">\n' +
+        '                <div class="bb-tile-tools">\n' +
+        '                    <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
+        '                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                </div>\n' +
         '            </div>\n' +
         '        </div>\n' +
