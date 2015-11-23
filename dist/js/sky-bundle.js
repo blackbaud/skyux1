@@ -99181,16 +99181,14 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="bb-tile">\n' +
         '    <div bb-scroll-into-view="scrollIntoView">\n' +
         '        <div class="bb-tile-title" ng-click="titleClick()">\n' +
-        '            <div class="row">\n' +
-        '                <div class="bb-tile-header-with-content col-xs-8 col-sm-9">\n' +
-        '                    <h2 class="bb-tile-header">{{tileHeader}}</h2>\n' +
-        '                </div>\n' +
-        '                <div class="col-xs-4 col-sm-3 bb-tile-header-column-tools">\n' +
-        '                    <div class="bb-tile-tools">\n' +
-        '                        <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
-        '                        <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
-        '                        <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
-        '                    </div>\n' +
+        '            <div class="bb-tile-header-with-content">\n' +
+        '                <h2 class="bb-tile-header">{{tileHeader}}</h2>\n' +
+        '            </div>\n' +
+        '            <div class="bb-tile-header-column-tools">\n' +
+        '                <div class="bb-tile-tools">\n' +
+        '                    <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
+        '                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                </div>\n' +
         '            </div>\n' +
         '        </div>\n' +
