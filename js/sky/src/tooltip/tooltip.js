@@ -19,10 +19,6 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 
 
     function bbTooltip($compile) {
-        // Based on Adomas.NET's answer to this StackOverflow question:
-        // http://stackoverflow.com/questions/19029676/angular-ui-tooltip-with-html
-        // This allows us to use an HTML template with Angular binding instead of building
-        // HTML in the controller which leaves open the potential for HTML injection.
         return {
             restrict: 'A',
             scope: true,

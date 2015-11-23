@@ -14,17 +14,46 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 (function () {
     'use strict';
 
+    function bbPopoverTemplate($compile) {
+        return {
+            restrict: 'A',
+            scope: true,
+            link: function ($scope, el) {
+
+                //prevent breaking change by adding quotes around template url and
+                //passing to new directive
+                /*istanbul ignore else */
+                if (!el.attr('bb-uib-popover-template')) {
+                    el.attr('bb-uib-popover-template', "'" + el.attr('bb-popover-template') + "'");
+                }
+
+                el.removeAttr('bb-popover-template');
+                $compile(el)($scope);
+            }
+        };
+    }
+
+    bbPopoverTemplate.$inject = ['$compile'];
+
+    function bbUibPopoverTemplate($uibTooltip) {
+        return $uibTooltip('bbUibPopoverTemplate', 'popover', 'focus', {
+            useContentExp: true
+        });
+    }
+
+    bbUibPopoverTemplate.$inject = ['$uibTooltip'];
+
+    function bbUibPopoverTemplatePopup() {
+        return {
+            replace: true,
+            scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
+            templateUrl: 'sky/templates/popover/popup.html'
+        };
+    }
+
+
     angular.module('sky.popover', ['ui.bootstrap.tooltip'])
-        .directive('bbPopoverTemplatePopup', [function () {
-            return {
-                replace: true,
-                scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
-                templateUrl: 'sky/templates/popover/popup.html'
-            };
-        }])
-        .directive('bbPopoverTemplate', ['$uibTooltip', function ($uibTooltip) {
-            return $uibTooltip('bbPopoverTemplate', 'popover', 'focus', {
-                useContentExp: true
-            });
-        }]);
+        .directive('bbUibPopoverTemplatePopup', bbUibPopoverTemplatePopup)
+        .directive('bbUibPopoverTemplate', bbUibPopoverTemplate)
+        .directive('bbPopoverTemplate', bbPopoverTemplate);
 }());
