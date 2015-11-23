@@ -1,4 +1,4 @@
-/*global angular */
+/*global angular, define, require */
 
 /** @module Moment
 @icon clock-o
@@ -10,19 +10,27 @@
     'use strict';
 
     function bbMoment($window) {
-        /*istanbul ignore next boilerplate require gunk */
-        if (typeof $window.define === 'function' && $window.define.amd) {
-            return $window.define(['moment']);
-        } else if ($window.module !== undefined && $window.module && $window.module.exports) {
-            return $window.require('moment');
-        } else {
-            return $window.moment;
-        }
+        return $window.moment;
     }
 
     bbMoment.$inject = ['$window'];
 
+    /*istanbul ignore next boilerplate require gunk */
+    function runRegisterMoment($window) {
+
+        function registerMoment(moment) {
+            $window.moment = moment;
+        }
+
+        if (angular.isUndefined($window.moment) && typeof define === 'function' && define.amd) {
+            require(['moment'], registerMoment);
+        }
+    }
+
+    runRegisterMoment.$inject = ['$window'];
+
     angular.module('sky.moment', [])
+        .run(runRegisterMoment)
         .factory('bbMoment', bbMoment);
 
 }());
