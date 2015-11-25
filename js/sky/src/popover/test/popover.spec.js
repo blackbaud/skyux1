@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module, document */
+/*global inject, module, document */
 
 describe('Popover', function () {
     'use strict';
@@ -35,7 +35,7 @@ describe('Popover', function () {
     beforeEach(inject(function (_$rootScope_, $compile) {
         $scope = _$rootScope_.$new();
         $rootScope = _$rootScope_;
-        el = $compile('<div><a id="popoverTrigger" bb-popover-template="\'bbPopover/testpopover.html\'">{{message}}</a></div>')($scope);
+        el = $compile('<div><a id="popoverTrigger" bb-popover-template="bbPopover/testpopover.html">{{message}}</a></div>')($scope);
 
         body = $window.document.body;
         el.appendTo(body);
@@ -59,7 +59,7 @@ describe('Popover', function () {
 
     describe('directive', function () {
         it('should bind scope data into the template', function () {
-            trigger(popoverLink, 'focus');
+            trigger(popoverLink, 'click');
             $scope.$digest();
             expect(el.find('#messageWrapper')).toHaveText($scope.message);
 
@@ -68,7 +68,7 @@ describe('Popover', function () {
         it('should close when clicking outside of flyout', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
 
-            trigger(popoverLink, 'focus');
+            trigger(popoverLink, 'click');
             $scope.$digest();
 
             expect(el.find('#messageWrapper').length).toBe(1);
@@ -83,12 +83,13 @@ describe('Popover', function () {
         it('should close when calling close function on scope', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
 
-            trigger(popoverLink, 'focus');
+            trigger(popoverLink, 'click');
             $scope.$digest();
 
             expect(el.find('#messageWrapper').length).toBe(1);
 
-            trigger(el.find('#hidelink'), 'click');
+            //trigger(el.find('#hidelink'), 'click');
+            el.find('#hidelink').click();
             $scope.$digest();
             $timeout.flush();
 
