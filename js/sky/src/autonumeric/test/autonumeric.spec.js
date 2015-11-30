@@ -165,6 +165,22 @@ describe('Autonumeric', function () {
 
                 expect(el.val()).toBe('^123,456.78');
             });
+
+            it('should keep the model in sync with a pasted value that does not meet the requirements', function () {
+                var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />')($scope);
+
+                $scope.moneyOptions = {
+                    vMin: 0
+                };
+
+                $scope.moneyValue = -1.00;
+
+                $scope.$digest();
+                $timeout.flush();
+
+                expect(el.val()).toBe('$0.00');
+            });
+
         });
 
         describe('global configuration', function () {
