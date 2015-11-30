@@ -217,10 +217,15 @@ $invalid-field-color: #b94a48;
 // end form
 
 //begin dialog
-$z-index-flyout: 1040;
+$z-index-flyout: 1030;
 $z-index-dialog: 2000;
 $z-index-control: 10000;
 //end dialog
+
+// begin omnibar/help widget
+$help-widget-zindex: $zindex-modal-background + 1000 !default;
+$omnibar-zindex: $zindex-modal-background - 1 !default;
+//end omnibar/help widget
 
 //begin tile
 $tile-header-tool-padding: 15px;
