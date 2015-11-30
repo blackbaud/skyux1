@@ -223,6 +223,7 @@ $z-index-control: 10000;
 //end dialog
 
 // begin omnibar/help widget
+$zindex-modal-background: 1040;
 $help-widget-zindex: $zindex-modal-background + 1000 !default;
 $omnibar-zindex: $zindex-modal-background - 1 !default;
 //end omnibar/help widget
