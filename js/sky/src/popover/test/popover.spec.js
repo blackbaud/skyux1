@@ -1,10 +1,11 @@
 /*jshint browser: true, jasmine: true */
-/*global inject, module, document */
+/*global inject, angular, module, document */
 
 describe('Popover', function () {
     'use strict';
 
-    var $scope,
+    var $compile,
+        $scope,
         $timeout,
         $window,
         body,
@@ -32,9 +33,10 @@ describe('Popover', function () {
             '/<div>');
     }));
 
-    beforeEach(inject(function (_$rootScope_, $compile) {
+    beforeEach(inject(function (_$rootScope_, _$compile_) {
         $scope = _$rootScope_.$new();
         $rootScope = _$rootScope_;
+        $compile = _$compile_;
         el = $compile('<div><a id="popoverTrigger" bb-popover-template="bbPopover/testpopover.html">{{message}}</a></div>')($scope);
 
         body = $window.document.body;
@@ -66,16 +68,16 @@ describe('Popover', function () {
         });
 
         it('should close when clicking outside of flyout', function () {
-            expect(el.find('#messageWrapper').length).toBe(0);
-
             trigger(popoverLink, 'click');
-            $scope.$digest();
-
-            expect(el.find('#messageWrapper').length).toBe(1);
-            trigger(popoverLink, 'blur');
             $scope.$digest();
             $timeout.flush();
 
+            expect(el.find('#messageWrapper').length).toBe(1);
+
+            angular.element(body).trigger('click');
+            $scope.$digest();
+
+            $timeout.flush();
             expect(el.find('#messageWrapper').length).toBe(0);
         });
 
@@ -88,12 +90,41 @@ describe('Popover', function () {
 
             expect(el.find('#messageWrapper').length).toBe(1);
 
-            //trigger(el.find('#hidelink'), 'click');
             el.find('#hidelink').click();
             $scope.$digest();
             $timeout.flush();
 
             expect(el.find('#messageWrapper').length).toBe(0);
+        });
+
+        it('should use the existing popover-is-open attribute if available', function () {
+            var popOverIsOpenEl = $compile('<div><a id="popoverTrigger" popover-is-open="locals.isOpen" bb-popover-template="bbPopover/testpopover.html">{{message}}</a></div>')($scope);
+            $scope.locals = {
+                isOpen: false
+            };
+
+            body = $window.document.body;
+            popOverIsOpenEl.appendTo(body);
+            $scope.$digest();
+            $scope.message = "Hello World";
+            $scope.$digest();
+
+            popoverLink = popOverIsOpenEl.find('#popoverTrigger');
+
+            trigger(popoverLink, 'click');
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(popOverIsOpenEl.find('#messageWrapper').length).toBe(1);
+            expect($scope.locals.isOpen).toBe(true);
+
+            angular.element(body).trigger('click');
+            $scope.$digest();
+
+            $timeout.flush();
+            expect(popOverIsOpenEl.find('#messageWrapper').length).toBe(0);
+            expect($scope.locals.isOpen).toBe(false);
+            popOverIsOpenEl.remove();
         });
     });
 });

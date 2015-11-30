@@ -53,7 +53,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 
     bbUibPopoverTemplate.$inject = ['$uibTooltip'];
 
-    function bbUibPopoverTemplatePopup($window) {
+    function bbUibPopoverTemplatePopup($window, $parse) {
         return {
             replace: true,
             scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
@@ -66,8 +66,20 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 
                 popoverIsOpenAttr = origScope.bbPopoverAttr;
 
+                function closePopover() {
+
+                    /* Set the popover is open attribute this way to account for
+                       both variables directly on scope as well as using 'controller
+                       as' 
+                    */
+                    /* istanbul ignore else: sanity check */
+                    if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
+                        $parse(popoverIsOpenAttr).assign(origScope, false);
+                    }
+                }
+
                 origScope.hide = function () {
-                    origScope[popoverIsOpenAttr] = false;
+                    closePopover();
                 };
 
                 $scope.$watch('isOpen()', function (value) {
@@ -75,7 +87,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
                         windowEl.on('click.popover' + scopeId, function (event) {
                             if (!el.is(event.target) && el.has(event.target).length === 0 && $scope.isOpen) {
                                 $scope.$apply(function () {
-                                    origScope[popoverIsOpenAttr] = false;
+                                    closePopover();
                                 });
                             }
                         });
@@ -91,7 +103,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
             templateUrl: 'sky/templates/popover/popup.html'
         };
     }
-    bbUibPopoverTemplatePopup.$inject = ['$window'];
+    bbUibPopoverTemplatePopup.$inject = ['$window', '$parse'];
 
     angular.module('sky.popover', ['ui.bootstrap.tooltip'])
         .directive('bbUibPopoverTemplatePopup', bbUibPopoverTemplatePopup)
