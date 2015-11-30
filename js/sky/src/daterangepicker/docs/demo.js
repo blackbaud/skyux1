@@ -6,6 +6,8 @@
     function DateRangePickerDemoController($scope, bbDateRangePicker) {
         var self = this;
 
+        self.options = {};
+
         self.bbDateRangePicker = bbDateRangePicker;
         self.dateRangePickerValue = {
             dateRangeType: bbDateRangePicker.dateRangeTypes.TOMORROW

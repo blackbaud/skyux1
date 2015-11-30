@@ -27,9 +27,9 @@
     <div>
       <button type="button" class="btn btn-primary" ng-click="contextMenuCtrl.openDropdown($event)">Open 3rd Menu</button>
       <p></p>
-      <div class="bb-context-menu" dropdown is-open="contextMenuCtrl.isOpen">
-        <bb-context-menu-button dropdown-toggle></bb-context-menu-button>
-        <ul class="dropdown-menu" role="menu">
+      <div class="bb-context-menu" uib-dropdown is-open="contextMenuCtrl.isOpen">
+        <bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>
+        <ul uib-dropdown-menu role="menu">
 
           <li role="presentation">
             <a class="disabled" role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action B')">Action B</a>

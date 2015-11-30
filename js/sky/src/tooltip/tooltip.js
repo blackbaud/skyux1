@@ -1,9 +1,12 @@
 /*global angular */
 
 /** @module Tooltip
+@deprecated
 @icon info
-@summary The tooltip creates an HTML-formatted tooltip that is displayed by a trigger element.
- @description The tooltip directive enables an HTML-formatted tooltip to be displayed by a trigger element. This directive wraps up the Angular UI Bootstrap Tooltip directive while making it easier to define markup in a template rather than directly in the view's controller.
+@summary This directive is no longer being maintained. For adding templated tooltips, use the Angular UI Bootstrap Tooltip uib-tooltip-template attribute.
+ @description ### *Deprecated* ###
+
+ This directive is no longer being maintained. For adding templated tooltips, use the [Angular UI Bootstrap Tooltip](http://angular-ui.github.io/bootstrap/) uib-tooltip-template attribute.
 
 ### Tooltip Settings ##
 
