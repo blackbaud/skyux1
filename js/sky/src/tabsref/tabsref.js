@@ -28,8 +28,8 @@
                         sref = attrs.bbTabSref,
                         stateChangeDeregistration,
                         tabsetCtrl = controllers[0];
-                    
-                    
+
+
                     function checkCurrentState() {
                         if ($state.is(sref)) {
                             tabsetCtrl.select(el.isolateScope());
@@ -55,7 +55,7 @@
                                 });
                             }
                         });
-                        
+
                         scope.$on('$destroy', function () {
                             stateChangeDeregistration();
                         });

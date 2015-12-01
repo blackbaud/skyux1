@@ -13,6 +13,7 @@ describe('Tabset module', function () {
     beforeEach(module(
         'ngMock',
         'sky.tabset',
+        'sky.templates',
         'template/tabs/tabset.html',
         'template/tabs/tab.html'
     ));
