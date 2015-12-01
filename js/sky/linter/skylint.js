@@ -479,7 +479,23 @@
         ['pagination', 'uib-pagination'],
         ['tabset', 'uib-tabset'],
         ['tab', 'uib-tab'],
-        ['tab-heading', 'uib-tab-heading']
+        ['tab-heading', 'uib-tab-heading'],
+        ['alert', 'uib-alert'],
+        ['datepicker', 'uib-datepicker'],
+        ['popover-template', 'uib-popover-template'],
+        ['popover-html', 'uib-popover-html'],
+        ['popover', 'uib-popover'],
+        ['progress', 'uib-progress'],
+        ['bar', 'uib-bar'],
+        ['progressbar', 'uib-progressbar'],
+        ['rating', 'uib-rating'],
+        ['timepicker', 'uib-timepicker'],
+        ['tooltip', 'uib-tooltip'],
+        ['tooltip-html', 'uib-tooltip-html'],
+        ['typeahead', 'uib-typeahead'],
+        ['typeahead-popup', 'uib-typeahead-popup'],
+        ['typeahead-match', 'uib-typeahead-match']
+
     ];
 
     function getElText(el) {
