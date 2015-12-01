@@ -10,6 +10,7 @@ describe('Text expand', function () {
         $scope;
 
     beforeEach(module('ngMock'));
+    beforeEach(module('sky.templates'));
     beforeEach(module('sky.textexpand'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_) {
@@ -17,7 +18,7 @@ describe('Text expand', function () {
         $scope = _$rootScope_;
         bbResources = _bbResources_;
     }));
-        
+
     beforeEach(function () {
         // Remove animation delay so tests don't have to be asynchronous.
         fxOff = $.fx.off;
@@ -27,7 +28,7 @@ describe('Text expand', function () {
     afterEach(function () {
         $.fx.off = fxOff;
     });
-    
+
     describe('directive', function () {
         var collapsedText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut',
             longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
@@ -90,7 +91,7 @@ describe('Text expand', function () {
                 var el = $compile('<div bb-text-expand="longText"></div>')($scope),
                     expandTextEl,
                     seeMoreEl;
-                
+
                 el.appendTo(document.body);
 
                 $scope.longText = longText;
@@ -110,7 +111,7 @@ describe('Text expand', function () {
 
                 expect(expandTextEl).toHaveText(collapsedText);
                 expect(seeMoreEl).toHaveText(bbResources.text_expand_see_more);
-                
+
                 el.remove();
             });
 
@@ -126,27 +127,27 @@ describe('Text expand', function () {
 
         });
     });
-    
+
     describe('repeater directive', function () {
-        
+
         it('should not error when data is null or when there are fewer items than the max', function () {
             var el;
-            
+
             el = $compile(
                 '<ul bb-text-expand-repeater bb-text-expand-repeater-max="2" bb-text-expand-repeater-data="items">' +
                     '<li ng-repeat="item in items">{{item}}</li>' +
                 '</ul>'
             )($scope);
-            
+
             $scope.$digest();
-            
+
             $scope.items = [
                 'Item 1'
             ];
-            
+
             $scope.$digest();
         });
-        
+
         describe('see more link', function () {
             it('should toggle visiblity of extra items', function () {
                 var el,
@@ -188,7 +189,7 @@ describe('Text expand', function () {
 
                 expect(elToHide).not.toBeVisible();
                 expect(seeMoreEl).toHaveText(bbResources.text_expand_see_more);
-                
+
                 el.remove();
             });
         });

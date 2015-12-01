@@ -9,6 +9,7 @@ describe('Check directive', function () {
 
     beforeEach(module('ngMock'));
     beforeEach(module('sky.check'));
+    beforeEach(module('sky.templates'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
         $compile = _$compile_;
@@ -45,8 +46,6 @@ describe('Check directive', function () {
 
             verifyFancyCheck(el);
         });
-
-
     });
 
     describe('radio button', function () {
