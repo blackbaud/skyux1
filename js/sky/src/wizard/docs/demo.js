@@ -79,5 +79,3 @@
         .controller('WizardTestModalController', WizardTestModalController);
 
 }());
-
-﻿
