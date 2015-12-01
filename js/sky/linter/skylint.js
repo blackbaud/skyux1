@@ -476,7 +476,10 @@
         ['accordion-heading', 'uib-accordion-heading'],
         ['datepicker-popup', 'uib-datepicker-popup'],
         ['collapse', 'uib-collapse'],
-        ['pagination', 'uib-pagination']
+        ['pagination', 'uib-pagination'],
+        ['tabset', 'uib-tabset'],
+        ['tab', 'uib-tab'],
+        ['tab-heading', 'uib-tab-heading']
     ];
 
     function getElText(el) {

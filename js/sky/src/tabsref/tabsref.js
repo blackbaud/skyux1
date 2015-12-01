@@ -22,14 +22,16 @@
     angular.module('sky.tabsref', ['ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
-                require: ['^tabset', 'tab'],
+                require: ['^?tabset', '^?uibTabset'],
                 link: function (scope, el, attrs, controllers) {
                     var active = attrs.active,
                         sref = attrs.bbTabSref,
                         stateChangeDeregistration,
-                        tabsetCtrl = controllers[0];
-                    
-                    
+                        tabsetCtrl;
+
+                    tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
+
+
                     function checkCurrentState() {
                         if ($state.is(sref)) {
                             tabsetCtrl.select(el.isolateScope());
@@ -55,7 +57,7 @@
                                 });
                             }
                         });
-                        
+
                         scope.$on('$destroy', function () {
                             stateChangeDeregistration();
                         });

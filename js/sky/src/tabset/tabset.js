@@ -83,7 +83,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     function BBTabsetCollapsible($compile, bbMediaBreakpoints) {
         return {
             restrict: 'A',
-            require: 'tabset',
             controller: 'bbTabsetCollapsibleController',
             link: function ($scope, el) {
 
@@ -93,7 +92,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                 }
 
                 function getDropdownEl() {
-                    return angular.element('<div class="bb-tabset-dropdown nav nav-tabs" dropdown ng-show="bbTabsetOptions.isSmallScreen && bbTabsetOptions.tabCount > 1"><button type="button" class="btn btn-primary bb-tab-dropdown-button" dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button></div>');
+                    return angular.element('<div class="bb-tabset-dropdown nav nav-tabs" uib-dropdown ng-show="bbTabsetOptions.isSmallScreen && bbTabsetOptions.tabCount > 1"><button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button></div>');
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -221,7 +220,9 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .controller('bbTabsetCollapsibleController', BBTabsetCollapsibleController)
         .directive('tabset', Tabset)
+        .directive('uibTabset', Tabset)
         .directive('bbTabsetCollapsible', BBTabsetCollapsible)
         .directive('bbTabCollapseHeader', BBTabCollapseHeader)
-        .directive('tab', Tab);
+        .directive('tab', Tab)
+        .directive('uibTab', Tab);
 }());
