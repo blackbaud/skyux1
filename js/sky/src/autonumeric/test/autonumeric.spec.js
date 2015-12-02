@@ -179,6 +179,31 @@ describe('Autonumeric', function () {
                 $timeout.flush();
 
                 expect(el.val()).toBe('$0.00');
+                expect($scope.moneyValue).toBe(0);
+            });
+
+            it('should keep the model in sync when starting as undefined', function () {
+                var el = $compile([
+                    '<bb-tile>',
+                    '<div bb-tile-section>',
+                    '<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />',
+                    '</div>',
+                    '</bb-tile>'
+                ].join(''))($scope);
+
+                $scope.moneyOptions = {
+                    vMin: 0
+                };
+
+                $scope.$digest();
+                $timeout.flush();
+                $scope.moneyValue = -1.00;
+
+                $scope.$digest();
+                $timeout.flush();
+                expect($scope.moneyValue).toBe(0);
+                expect(el.find('input').val()).toBe('$0.00');
+
             });
 
         });

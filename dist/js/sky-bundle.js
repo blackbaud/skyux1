@@ -89964,14 +89964,19 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 (function () {
     'use strict';
     angular.module('sky.check', [])
-        .directive('bbCheck', [function () {
+        .directive('bbCheck', ['$templateCache', function ($templateCache) {
+            function createEl(name) {
+                return angular.element($templateCache.get('sky/templates/check/' + name + '.html'));
+            }
+
             return {
                 link: function (scope, el, attr) {
                     var labelEl = el.parent('label'),
+                        styledEl,
                         typeClass;
 
                     if (labelEl.length < 1) {
-                        el.wrap('<label class="bb-check-wrapper"></label>');
+                        el.wrap(createEl('wrapper'));
                     } else {
                         labelEl.addClass('bb-check-wrapper');
                     }
@@ -89980,8 +89985,11 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     } else {
                         typeClass = 'bb-check-checkbox';
                     }
-                    el.after('<span class="' + typeClass + '"></span>');
 
+                    styledEl = createEl('styled');
+                    styledEl.addClass(typeClass);
+
+                    el.after(styledEl);
                 }
             };
         }]);
@@ -90388,12 +90396,16 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 (function () {
     'use strict';
 
+    function getTemplateUrl(name) {
+        return 'sky/templates/contextmenu/' + name + '.html';
+    }
+
     function bbContextMenu() {
         return {
             replace: true,
             restrict: 'E',
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/contextmenu.html',
+            templateUrl: getTemplateUrl('contextmenu'),
             link: function ($scope) {
                 $scope.contextButtonStopPropagation = function ($event) {
                     $event.stopPropagation();
@@ -90410,14 +90422,15 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
             scope: {
                 clickItem: '&bbContextMenuAction'
             },
-            template: '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>'
+            templateUrl: getTemplateUrl('menuitem')
         };
     }
+
     function bbContextMenuButton() {
         return {
             restrict: 'E',
             replace: true,
-            template: '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>'
+            templateUrl: getTemplateUrl('menubutton')
         };
     }
 
@@ -90433,7 +90446,6 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
         self.toggleAccordion = function ($event) {
             toggleAccordion($event, $scope);
         };
-
     }
 
     BBSubmenuController.$inject = ['$scope'];
@@ -90446,7 +90458,6 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 heading: '=?bbSubmenuHeading'
             },
             link: function ($scope, el, attrs) {
-
                 $scope.accordionLocals = {
                     accordionOpen: false,
                     staticHeader: false
@@ -90459,10 +90470,9 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 $scope.toggleAccordion = function ($event) {
                     toggleAccordion($event, $scope);
                 };
-
             },
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/submenu.html'
+            templateUrl: getTemplateUrl('submenu')
         };
     }
 
@@ -90477,7 +90487,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 };
             },
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/submenuheading.html'
+            templateUrl: getTemplateUrl('submenuheading')
         };
     }
 
@@ -95912,7 +95922,7 @@ The search field can be used for a local search (i.e. dropdown box where you hav
                 }
             };
         }])
-        .directive('uiSelectChoices', ['bbResources', function (bbResources) {
+        .directive('uiSelectChoices', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
             return {
                 restrict: 'EA',
                 replace: false,
@@ -95935,7 +95945,10 @@ The search field can be used for a local search (i.e. dropdown box where you hav
                             // Display the "Searching..." or "No results..." message - only when we have empty results because we
                             //don't want the message to popup over a list of results as the user types.
                             msg = showSearchingMsg ? bbResources.searchfield_searching : bbResources.searchfield_no_records;
-                            msgEl = angular.element('<ul class="ui-select-choices ui-select-choices-content dropdown-menu"><li class="bb-searchfield-no-records">' + msg + '</li></ul>');
+
+                            msgEl = angular.element($templateCache.get('sky/templates/searchfield/choices.html'));
+                            msgEl.find('.bb-searchfield-no-records').text(msg);
+
                             selectContainerEl.append(msgEl);
                         }
                     }
@@ -96187,19 +96200,23 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 (function () {
     'use strict';
 
-    function Tabset($compile) {
+    function getTemplate($templateCache, name) {
+        return $templateCache.get('sky/templates/tabset/' + name + '.html');
+    }
+
+    function tabset($compile, $templateCache) {
         return {
             link: function ($scope, el, attr) {
                 var ulEl,
                     liEl;
+
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
                     ulEl = el.find('ul');
-                    liEl = angular.element('<li class="bb-tab-button"></li>');
+                    liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
                     if (angular.isDefined(attr.bbTabsetAdd)) {
-
-                        liEl.append($compile('<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary"><span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span></button>')($scope));
+                        liEl.append($compile(getTemplate($templateCache, 'addbutton'))($scope));
 
                         $scope.bbTabAdd = function () {
                             $scope.$eval(attr.bbTabsetAdd);
@@ -96207,7 +96224,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                     }
 
                     if (angular.isDefined(attr.bbTabsetOpen)) {
-                        liEl.append($compile('<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary"><span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span></button>')($scope));
+                        liEl.append($compile(getTemplate($templateCache, 'openbutton'))($scope));
 
                         $scope.bbTabOpen = function () {
                             $scope.$eval(attr.bbTabsetOpen);
@@ -96218,7 +96235,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    Tabset.$inject = ['$compile'];
+    tabset.$inject = ['$compile', '$templateCache'];
 
     function BBTabsetCollapsibleController($scope) {
         var self = this;
@@ -96242,11 +96259,11 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
 
-    function BBTabsetCollapsible($compile, bbMediaBreakpoints) {
+    function bbTabsetCollapsible($compile, $templateCache, bbMediaBreakpoints) {
         return {
             restrict: 'A',
             require: 'tabset',
-            controller: 'bbTabsetCollapsibleController',
+            controller: BBTabsetCollapsibleController,
             link: function ($scope, el) {
 
 
@@ -96255,7 +96272,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                 }
 
                 function getDropdownEl() {
-                    return angular.element('<div class="bb-tabset-dropdown nav nav-tabs" dropdown ng-show="bbTabsetOptions.isSmallScreen && bbTabsetOptions.tabCount > 1"><button type="button" class="btn btn-primary bb-tab-dropdown-button" dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button></div>');
+                    return angular.element(getTemplate($templateCache, 'dropdown'));
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -96321,7 +96338,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    BBTabsetCollapsible.$inject = ['$compile', 'bbMediaBreakpoints'];
+    bbTabsetCollapsible.$inject = ['$compile', '$templateCache', 'bbMediaBreakpoints'];
 
     function collapsibleTabTitle($scope, el, bbTabsetCollapsibleCtrl, getTabHeading) {
         //get ui-bootstrap tab scope
@@ -96350,7 +96367,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
 
-    function BBTabCollapseHeader() {
+    function bbTabCollapseHeader() {
         return {
             require: '^bbTabsetCollapsible',
             link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
@@ -96363,7 +96380,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    function Tab() {
+    function tab() {
         return {
             require: '?^bbTabsetCollapsible',
             link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
@@ -96381,11 +96398,10 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
-        .controller('bbTabsetCollapsibleController', BBTabsetCollapsibleController)
-        .directive('tabset', Tabset)
-        .directive('bbTabsetCollapsible', BBTabsetCollapsible)
-        .directive('bbTabCollapseHeader', BBTabCollapseHeader)
-        .directive('tab', Tab);
+        .directive('tabset', tabset)
+        .directive('bbTabsetCollapsible', bbTabsetCollapsible)
+        .directive('bbTabCollapseHeader', bbTabCollapseHeader)
+        .directive('tab', tab);
 }());
 
 /*global angular */
@@ -96418,8 +96434,8 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         sref = attrs.bbTabSref,
                         stateChangeDeregistration,
                         tabsetCtrl = controllers[0];
-                    
-                    
+
+
                     function checkCurrentState() {
                         if ($state.is(sref)) {
                             tabsetCtrl.select(el.isolateScope());
@@ -96445,7 +96461,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                                 });
                             }
                         });
-                        
+
                         scope.$on('$destroy', function () {
                             stateChangeDeregistration();
                         });
@@ -96593,8 +96609,12 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
         return 0;
     }
 
+    function createEl($templateCache, templateName) {
+        return angular.element($templateCache.get('sky/templates/textexpand/' + templateName + '.html'));
+    }
+
     angular.module('sky.textexpand', modules)
-        .directive('bbTextExpandRepeater', ['bbResources', function (bbResources) {
+        .directive('bbTextExpandRepeater', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
             function link(scope, el, attrs) {
                 scope.$watch(attrs.bbTextExpandRepeaterData, function (data) {
                     var length,
@@ -96606,7 +96626,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                     if (data) {
                         length = data.length;
                         maxToShow = +attrs.bbTextExpandRepeaterMax;
-                        seeMoreEl = angular.element('<a class="bb-text-expand-see-more">' + seeMoreText + '</a>');
+                        seeMoreEl = createEl($templateCache, 'seemore').text(seeMoreText);
 
                         if (length > maxToShow) {
                             el.find('li:gt(' + (maxToShow - 1) + ')').addClass('bb-text-expand-toggle-li').hide().end().append(
@@ -96619,6 +96639,8 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                     }
 
                                     seeMoreEl.toggleClass('bb-text-expand-see-more');
+
+                                    return false;
                                 })
                             );
                         }
@@ -96630,7 +96652,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                 link: link
             };
         }])
-        .directive('bbTextExpand', ['bbResources', 'bbScrollIntoView', function (bbResources, bbScrollIntoView) {
+        .directive('bbTextExpand', ['$templateCache', 'bbResources', 'bbScrollIntoView', function ($templateCache, bbResources, bbScrollIntoView) {
             function link(scope, el, attrs) {
                 var isExpanded,
                     maxLength = +attrs.bbTextExpandMaxLength || 200,
@@ -96702,7 +96724,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                             );
                     }
 
-                    containerEl = angular.element('<div></div>');
+                    containerEl = createEl($templateCache, 'container');
 
                     /* istanbul ignore else: nothing happens when there's no value, so there's nothing to test. */
                     if (newValue) {
@@ -96712,15 +96734,10 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                         if (collapsedText !== newValue) {
                             isExpanded = true;
 
-                            textEl = angular.element('<span class="bb-text-expand-text"></span>');
-                            textEl.text(collapsedText);
-
-                            ellipsisEl = angular.element('<span class="bb-text-expand-ellipsis">...</span>');
-
-                            spaceEl = angular.element('<span class="bb-text-expand-space"> </span>');
-
-                            expandEl = angular.element('<a href="#" class="bb-text-expand-see-more"></a>');
-                            expandEl.text(bbResources.text_expand_see_more);
+                            textEl = createEl($templateCache, 'text').text(collapsedText);
+                            ellipsisEl = createEl($templateCache, 'ellipsis');
+                            spaceEl = createEl($templateCache, 'space');
+                            expandEl = createEl($templateCache, 'seemore').text(bbResources.text_expand_see_more);
 
                             containerEl
                                 .empty()
@@ -98737,6 +98754,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '    <div class="bb-chart"></div>\n' +
         '</div>');
+    $templateCache.put('sky/templates/check/styled.html',
+        '<span></span>\n' +
+        '');
+    $templateCache.put('sky/templates/check/wrapper.html',
+        '<label class="bb-check-wrapper"></label>\n' +
+        '');
     $templateCache.put('sky/templates/checklist/checklist.html',
         '<div>\n' +
         '    <div>\n' +
@@ -98802,6 +98825,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <ng-transclude/>\n' +
         '    </ul>\n' +
         '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/contextmenu/menubutton.html',
+        '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>\n' +
+        '');
+    $templateCache.put('sky/templates/contextmenu/menuitem.html',
+        '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
@@ -99171,12 +99200,50 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="popover-content"></div>\n' +
         '  </div>\n' +
         '</div>');
+    $templateCache.put('sky/templates/searchfield/choices.html',
+        '<ul class="ui-select-choices ui-select-choices-content dropdown-menu">\n' +
+        '  <li class="bb-searchfield-no-records"></li>\n' +
+        '</ul>\n' +
+        '');
     $templateCache.put('sky/templates/tabs/tab.html',
         '<div ng-hide="!tabsInitialized" data-bbauto-field="{{bbTabAutomationId}}" class="responsiveTabControl">\n' +
         '    <ul ng-transclude>\n' +
         '\n' +
         '    </ul>\n' +
         '</div>');
+    $templateCache.put('sky/templates/tabset/addbutton.html',
+        '<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary">\n' +
+        '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span>\n' +
+        '</button>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/dropdown.html',
+        '<div class="bb-tabset-dropdown nav nav-tabs" dropdown ng-show="bbTabsetOptions.isSmallScreen &amp;&amp; bbTabsetOptions.tabCount > 1">\n' +
+        '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/openbutton.html',
+        '<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary">\n' +
+        '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span>\n' +
+        '</button>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/tabbutton.html',
+        '<li class="bb-tab-button"></li>\n' +
+        '');
+    $templateCache.put('sky/templates/textexpand/container.html',
+        '<div></div>\n' +
+        '');
+    $templateCache.put('sky/templates/textexpand/ellipsis.html',
+        '<span class="bb-text-expand-ellipsis">...</span>\n' +
+        '');
+    $templateCache.put('sky/templates/textexpand/seemore.html',
+        '<a href="#" class="bb-text-expand-see-more"></a>\n' +
+        '');
+    $templateCache.put('sky/templates/textexpand/space.html',
+        '<span class="bb-text-expand-space"> </span>\n' +
+        '');
+    $templateCache.put('sky/templates/textexpand/text.html',
+        '<span class="bb-text-expand-text"></span>\n' +
+        '');
     $templateCache.put('sky/templates/tiles/tile.html',
         '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="bb-tile">\n' +
         '    <div bb-scroll-into-view="scrollIntoView">\n' +

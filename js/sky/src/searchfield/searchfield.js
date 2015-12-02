@@ -113,7 +113,7 @@ The search field can be used for a local search (i.e. dropdown box where you hav
                 }
             };
         }])
-        .directive('uiSelectChoices', ['bbResources', function (bbResources) {
+        .directive('uiSelectChoices', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
             return {
                 restrict: 'EA',
                 replace: false,
@@ -136,7 +136,10 @@ The search field can be used for a local search (i.e. dropdown box where you hav
                             // Display the "Searching..." or "No results..." message - only when we have empty results because we
                             //don't want the message to popup over a list of results as the user types.
                             msg = showSearchingMsg ? bbResources.searchfield_searching : bbResources.searchfield_no_records;
-                            msgEl = angular.element('<ul class="ui-select-choices ui-select-choices-content dropdown-menu"><li class="bb-searchfield-no-records">' + msg + '</li></ul>');
+
+                            msgEl = angular.element($templateCache.get('sky/templates/searchfield/choices.html'));
+                            msgEl.find('.bb-searchfield-no-records').text(msg);
+
                             selectContainerEl.append(msgEl);
                         }
                     }

@@ -25,19 +25,23 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 (function () {
     'use strict';
 
-    function Tabset($compile) {
+    function getTemplate($templateCache, name) {
+        return $templateCache.get('sky/templates/tabset/' + name + '.html');
+    }
+
+    function tabset($compile, $templateCache) {
         return {
             link: function ($scope, el, attr) {
                 var ulEl,
                     liEl;
+
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
                     ulEl = el.find('ul');
-                    liEl = angular.element('<li class="bb-tab-button"></li>');
+                    liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
                     if (angular.isDefined(attr.bbTabsetAdd)) {
-
-                        liEl.append($compile('<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary"><span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span></button>')($scope));
+                        liEl.append($compile(getTemplate($templateCache, 'addbutton'))($scope));
 
                         $scope.bbTabAdd = function () {
                             $scope.$eval(attr.bbTabsetAdd);
@@ -45,7 +49,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                     }
 
                     if (angular.isDefined(attr.bbTabsetOpen)) {
-                        liEl.append($compile('<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary"><span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span></button>')($scope));
+                        liEl.append($compile(getTemplate($templateCache, 'openbutton'))($scope));
 
                         $scope.bbTabOpen = function () {
                             $scope.$eval(attr.bbTabsetOpen);
@@ -56,7 +60,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    Tabset.$inject = ['$compile'];
+    tabset.$inject = ['$compile', '$templateCache'];
 
     function BBTabsetCollapsibleController($scope) {
         var self = this;
@@ -80,10 +84,10 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
 
-    function BBTabsetCollapsible($compile, bbMediaBreakpoints) {
+    function bbTabsetCollapsible($compile, $templateCache, bbMediaBreakpoints) {
         return {
             restrict: 'A',
-            controller: 'bbTabsetCollapsibleController',
+            controller: BBTabsetCollapsibleController,
             link: function ($scope, el) {
 
 
@@ -92,7 +96,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                 }
 
                 function getDropdownEl() {
-                    return angular.element('<div class="bb-tabset-dropdown nav nav-tabs" uib-dropdown ng-show="bbTabsetOptions.isSmallScreen && bbTabsetOptions.tabCount > 1"><button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button></div>');
+                    return angular.element(getTemplate($templateCache, 'dropdown'));
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -158,7 +162,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    BBTabsetCollapsible.$inject = ['$compile', 'bbMediaBreakpoints'];
+    bbTabsetCollapsible.$inject = ['$compile', '$templateCache', 'bbMediaBreakpoints'];
 
     function collapsibleTabTitle($scope, el, bbTabsetCollapsibleCtrl, getTabHeading) {
         //get ui-bootstrap tab scope
@@ -187,7 +191,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
 
-    function BBTabCollapseHeader() {
+    function bbTabCollapseHeader() {
         return {
             require: '^bbTabsetCollapsible',
             link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
@@ -200,7 +204,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    function Tab() {
+    function tab() {
         return {
             require: '?^bbTabsetCollapsible',
             link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
@@ -218,11 +222,10 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
-        .controller('bbTabsetCollapsibleController', BBTabsetCollapsibleController)
-        .directive('tabset', Tabset)
-        .directive('uibTabset', Tabset)
-        .directive('bbTabsetCollapsible', BBTabsetCollapsible)
-        .directive('bbTabCollapseHeader', BBTabCollapseHeader)
-        .directive('tab', Tab)
-        .directive('uibTab', Tab);
+        .directive('tabset', tabset)
+        .directive('uibTabset', tabset)
+        .directive('bbTabsetCollapsible', bbTabsetCollapsible)
+        .directive('bbTabCollapseHeader', bbTabCollapseHeader)
+        .directive('tab', tab)
+        .directive('uibTab', tab);
 }());
