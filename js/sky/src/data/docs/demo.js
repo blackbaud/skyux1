@@ -1,10 +1,10 @@
 /* global angular */
 (function () {
     'use strict';
-    
+
     function DataTestController(bbData) {
         var self = this;
-        
+
         self.getFoo = function () {
             bbData.load(
                 {
@@ -12,15 +12,14 @@
                     resources: '/sampledata/resources.json'
                 }
             ).then(function (result) {
-                self.data = result.data;
-                self.resources = result.resources;
+                self.result = result;
             });
 
         };
     }
-    
+
     DataTestController.$inject = ['bbData'];
-    
+
     angular.module('stache')
         .controller('DataTestController', DataTestController);
 }());
