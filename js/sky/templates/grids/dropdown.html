@@ -1,10 +1,7 @@
-<div>
-    <div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-show="locals.items.length > 0" is-open="locals.is_open">
-        <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">
-        </bb-context-menu-button>
-        <ul uib-dropdown-menu role="menu">
-            <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>
-        </ul>
-    </div>
-
+<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">
+    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">
+    </bb-context-menu-button>
+    <ul uib-dropdown-menu role="menu">
+        <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>
+    </ul>
 </div>

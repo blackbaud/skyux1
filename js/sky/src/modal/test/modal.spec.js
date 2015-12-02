@@ -479,7 +479,7 @@ describe('Modal', function () {
 describe('Modal service', function () {
     'use strict';
 
-    var $modal,
+    var $uibModal,
         $rootScope,
         $window,
         bbModal;
@@ -490,7 +490,7 @@ describe('Modal service', function () {
     ));
 
     beforeEach(module(function ($provide) {
-        $modal = {
+        $uibModal = {
             open: function () {
                 return {
                     result: {
@@ -508,7 +508,7 @@ describe('Modal service', function () {
             }
         };
 
-        $provide.value('$modal', $modal);
+        $provide.value('$uibModal', $uibModal);
         $provide.value('$window', $window);
     }));
 
@@ -518,7 +518,7 @@ describe('Modal service', function () {
     }));
 
     it('should add default options and call through to the UI Bootstrap modal service', function () {
-        var openSpy = spyOn($modal, 'open').and.callThrough();
+        var openSpy = spyOn($uibModal, 'open').and.callThrough();
 
         bbModal.open({
             template: 'a'

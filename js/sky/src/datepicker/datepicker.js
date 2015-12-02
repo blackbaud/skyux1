@@ -27,7 +27,7 @@
 */
 (function ($) {
     'use strict';
-    angular.module('sky.datepicker', ['sky.resources', 'sky.moment'])
+    angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
         .constant('bbDatepickerConfig', {
             currentCultureDateFormatString: 'MM/dd/yyyy',
             showWeeks: false,
@@ -333,7 +333,7 @@
                 require: ['ngModel', '^bbDatepicker'],
                 link: function ($scope, el, attr, controllers) {
                     var ngModel = controllers[0],
-                        format = attr.datepickerPopup;
+                        format = attr.uibDatepickerPopup;
 
                     if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
                         ngModel.$parsers = [];

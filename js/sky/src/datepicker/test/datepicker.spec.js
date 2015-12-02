@@ -13,7 +13,6 @@ describe('Datepicker directive', function () {
         resources,
         datepickerScope;
 
-
     beforeEach(module('ngMock'));
     beforeEach(module('ui.bootstrap'));
     beforeEach(module('sky.templates'));
@@ -96,7 +95,6 @@ describe('Datepicker directive', function () {
 
         $scope.$digest();
     }
-
 
     it('sets up everything correctly with a valid date', function () {
         var el,

@@ -190,7 +190,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         });
     }
 
-
     function bbTabCollapseHeader() {
         return {
             require: '^bbTabsetCollapsible',
