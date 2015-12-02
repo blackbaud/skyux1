@@ -43,7 +43,7 @@ describe('Data service', function () {
         $httpBackend
             .when('GET', '/foo/data?abc=123')
             .respond(200, {foo: 'bar'});
-        
+
         $httpBackend
             .when('GET', '/foo/resources')
             .respond(200, {name: 'value'});
@@ -132,6 +132,42 @@ describe('Data service', function () {
             $httpBackend.flush();
         });
 
+        it('should return an httpResults property that contains the full result object from the underlying $http call', function () {
+            bbData.load({
+                data: '/foo/data',
+                resources: {
+                    c: '/foo/resources',
+                    d: '/foo/resources'
+                },
+                text: '/foo/text'
+            }).then(function (result) {
+                var dataResults,
+                    httpResults,
+                    resourcesResults,
+                    textResults;
+
+                httpResults = result.httpResults;
+
+                dataResults = httpResults.data;
+                resourcesResults = httpResults.resources;
+                textResults = httpResults.text;
+
+                expect(dataResults.status).toBe(200);
+                expect(dataResults.data.foo).toBe('bar');
+
+                expect(resourcesResults.c.status).toBe(200);
+                expect(resourcesResults.c.data.name).toBe('value');
+
+                expect(resourcesResults.d.status).toBe(200);
+                expect(resourcesResults.d.data.name).toBe('value');
+
+                expect(textResults.status).toBe(200);
+                expect(textResults.data).toBe('<div></div>');
+            });
+
+            $httpBackend.flush();
+        });
+
         it('should bypass $http if text is present in $templateCache', function () {
             // $httpBackend mock doesn't expect /foo/cache, so this test should fail if bbData
             // doesn't look in the template cache first.
@@ -200,31 +236,31 @@ describe('Data service', function () {
 
             $httpBackend.flush();
         });
-        
+
         it('should apply the expected transform and HTTP header properties when the data is form data (this allows files to be uploaded)', function () {
             var formData = new FormData(),
                 identitySpy = spyOn(angular, 'identity').and.callThrough();
-            
+
             formData.append('test', 'blah');
-            
+
             bbData.save({
                 url: '/foo/upload',
                 data: formData
             });
-            
+
             $httpBackend.expect('POST', '/foo/upload', formData, function (headers) {
                 return angular.isUndefined(headers['Content-Type']);
             }).respond(200, {});
-            
+
             $httpBackend.flush();
-            
+
             // The angular.identity function should be called as the transformRequest method instead of the
             // method that transforms it to JSON.
             expect(identitySpy).toHaveBeenCalled();
         });
     });
-    
-    describe('cancel() method', function () {        
+
+    describe('cancel() method', function () {
         it('should abort the HTTP request', function () {
             var promise;
 
@@ -246,7 +282,7 @@ describe('Data service', function () {
             promise = bbData.load({
                 data: '/foo/text'
             });
-            
+
             promise
                 .then(function () {
                     promiseResolved = true;
@@ -262,7 +298,7 @@ describe('Data service', function () {
 
             bbData.cancel(promise);
             $rootScope.$digest();
-            
+
             expect(promiseResolved).toBe(false);
             expect(promiseRejected).toBe(true);
         });
@@ -297,7 +333,7 @@ describe('Data service', function () {
             expect(promiseRejected).toBe(true);
         });
 
-        it('should do nothing if a null promise is supplied', function () {            
+        it('should do nothing if a null promise is supplied', function () {
             bbData.cancel();
         });
     });
@@ -305,59 +341,59 @@ describe('Data service', function () {
     describe('when require is present', function () {
         var windowDefine,
             windowRequire;
-        
+
         beforeEach(function () {
             windowDefine = window.define;
             windowRequire = window.require;
-            
+
             window.define = {
                 amd: true
             };
-            
+
             window.require = {
                 toUrl: angular.noop
             };
         });
-        
+
         afterEach(function () {
             window.define = windowDefine;
             window.require = windowRequire;
         });
-        
+
         it('should not pass the query string to the require.toUrl() method', function () {
             var toUrlSpy;
-            
+
             toUrlSpy = spyOn(window.require, 'toUrl');
-            
+
             bbData.load({
                 data: '/foo/data?abc=123'
             });
-            
+
             expect(toUrlSpy).toHaveBeenCalledWith('/foo/data');
         });
     });
-    
+
     describe('config', function () {
         var dataUrlFilter,
             resourceUrlFilter,
             textUrlFilter;
-        
+
         beforeEach(function () {
             function filter(url) {
                 return url;
             }
-            
+
             dataUrlFilter = bbDataConfig.dataUrlFilter;
             resourceUrlFilter = bbDataConfig.resourceUrlFilter;
             textUrlFilter = bbDataConfig.textUrlFilter;
-            
+
             angular.extend(bbDataConfig, {
                 dataUrlFilter: filter,
                 resourceUrlFilter: filter,
                 textUrlFilter: filter
             });
         });
-        
+
         afterEach(function () {
             angular.extend(bbDataConfig, {
                 dataUrlFilter: dataUrlFilter,
@@ -365,41 +401,41 @@ describe('Data service', function () {
                 textUrlFilter: textUrlFilter
             });
         });
-        
+
         it('should allow custom filter functions for each request type', function () {
             var dataUrlFilterSpy = spyOn(bbDataConfig, 'dataUrlFilter').and.callThrough(),
                 resourceUrlFilterSpy = spyOn(bbDataConfig, 'resourceUrlFilter').and.callThrough(),
                 textUrlFilterSpy = spyOn(bbDataConfig, 'textUrlFilter').and.callThrough();
-            
+
             bbData.load({
                 data: '/foo/data',
                 resources: '/foo/resources',
                 text: '/foo/text'
             });
-            
+
             expect(dataUrlFilterSpy).toHaveBeenCalledWith('/foo/data');
             expect(resourceUrlFilterSpy).toHaveBeenCalledWith('/foo/resources');
             expect(textUrlFilterSpy).toHaveBeenCalledWith('/foo/text');
         });
     });
-    
+
     describe('load manager', function () {
         var EVT_MARK_COMPLETED = 'bbData.loadManager.markCompleted',
             EVT_REGISTER_ITEM = 'bbData.loadManager.registerItem';
-        
+
         it('should raise the expected registered and completed events when passed to bbData.load()', function () {
             var $scope = $rootScope.$new(),
                 completedFired = false,
                 registerFired = false;
-            
+
             $rootScope.$on(EVT_REGISTER_ITEM, function () {
                 registerFired = true;
             });
-            
+
             $rootScope.$on(EVT_MARK_COMPLETED, function () {
                 completedFired = true;
             });
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -410,18 +446,18 @@ describe('Data service', function () {
 
             expect(registerFired).toBe(true);
             expect(completedFired).toBe(false);
-            
+
             $httpBackend.flush();
-            
+
             expect(completedFired).toBe(true);
         });
-        
+
         it('should start a page wait when the first child item begins to load', function () {
             var $scope = $rootScope.$new(),
                 emitSpy;
-            
+
             emitSpy = spyOn($scope, '$emit').and.callThrough();
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -430,28 +466,28 @@ describe('Data service', function () {
                     waitForFirstItem: true
                 }
             });
-            
+
             expect(emitSpy).toHaveBeenCalledWith('bbBeginWait');
         });
-        
+
         it('should allow wait to be canceled when waiting for first item', function () {
             var $scope = $rootScope.$new(),
                 emitSpy,
                 result;
-            
+
             result = bbData.loadManager({
                 scope: $scope,
                 name: 'LoadManagerTest',
                 waitForFirstItem: true
             });
-            
+
             emitSpy = spyOn($scope, '$emit').and.callThrough();
-            
+
             result.cancelWaiting();
-            
+
             expect(emitSpy).toHaveBeenCalledWith('bbEndWait');
         });
-        
+
         it('should allow wait to be canceled when showing a non-blocking wait for additional items', function () {
             var $childScope1,
                 $childScope2,
@@ -460,51 +496,51 @@ describe('Data service', function () {
                 childResult2,
                 emitSpy,
                 result;
-            
+
             $childScope1 = $scope.$new();
             $childScope2 = $scope.$new();
-            
+
             result = bbData.loadManager({
                 scope: $scope,
                 isAggregate: true,
                 name: 'LoadManagerTest',
                 nonblockWaitForAdditionalItems: true
             });
-            
+
             childResult1 = bbData.loadManager({
                 scope: $childScope1
             });
-            
+
             childResult2 = bbData.loadManager({
                 scope: $childScope2
             });
-            
+
             $childScope1.$emit(EVT_REGISTER_ITEM, childResult1);
             $childScope2.$emit(EVT_REGISTER_ITEM, childResult2);
-            
+
             $childScope1.$emit(EVT_MARK_COMPLETED, childResult1);
-            
+
             emitSpy = spyOn($scope, '$emit').and.callThrough();
-            
+
             result.cancelWaiting();
-            
+
             expect(emitSpy).toHaveBeenCalledWith('bbEndWait', {
                 nonblocking: true
             });
         });
-        
+
         it('should wait for all child items to finish loading', function () {
             var $scope = $rootScope.$new(),
                 parentResult;
-            
+
             parentResult = bbData.loadManager({
                 scope: $scope,
                 name: 'LoadManagerTest',
                 isAggregate: true
             });
-            
+
             expect(parentResult.isLoading).toBeFalsy();
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -514,7 +550,7 @@ describe('Data service', function () {
             }).then(function () {
                 expect(parentResult.isLoading).toBe(true);
             });
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -524,25 +560,25 @@ describe('Data service', function () {
             }).then(function () {
                 expect(parentResult.isLoading).toBe(false);
             });
-            
+
             expect(parentResult.isLoading).toBe(true);
-            
+
             $httpBackend.flush();
         });
-        
+
         it('should start a non-blocking wait after its first item is loaded', function () {
             var $scope = $rootScope.$new(),
                 emitSpy;
-            
+
             bbData.loadManager({
                 scope: $scope,
                 name: 'LoadManagerTest',
                 isAggregate: true,
                 nonblockWaitForAdditionalItems: true
             });
-            
+
             emitSpy = spyOn($scope, '$emit').and.callThrough();
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -554,7 +590,7 @@ describe('Data service', function () {
                     nonblocking: true
                 });
             });
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -566,21 +602,21 @@ describe('Data service', function () {
                     nonblocking: true
                 });
             });
-            
+
             $httpBackend.flush();
         });
-        
+
         it('should start a non-blocking wait when the first item has been loaded and a second item is registered', function () {
             var $scope = $rootScope.$new(),
                 emitSpy;
-            
+
             bbData.loadManager({
                 scope: $scope,
                 name: 'LoadManagerTest',
                 isAggregate: true,
                 nonblockWaitForAdditionalItems: true
             });
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -588,11 +624,11 @@ describe('Data service', function () {
                     name: 'LoadManagerChildTest1'
                 }
             });
-            
+
             $httpBackend.flush();
-            
+
             emitSpy = spyOn($scope, '$emit').and.callThrough();
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -600,16 +636,16 @@ describe('Data service', function () {
                     name: 'LoadManagerChildTest2'
                 }
             });
-            
+
             expect(emitSpy).toHaveBeenCalledWith('bbBeginWait', {
                 nonblocking: true
             });
         });
-        
+
         it('should end wait when the first item is loaded', function () {
             var $scope = $rootScope.$new(),
                 emitSpy;
-            
+
             bbData.loadManager({
                 scope: $scope,
                 name: 'LoadManagerTest',
@@ -617,7 +653,7 @@ describe('Data service', function () {
                 nonblockWaitForAdditionalItems: true,
                 waitForFirstItem: true
             });
-            
+
             bbData.load({
                 data: '/foo/data',
                 loadManager: {
@@ -625,23 +661,23 @@ describe('Data service', function () {
                     name: 'LoadManagerChildTest1'
                 }
             });
-            
+
             emitSpy = spyOn($scope, '$emit').and.callThrough();
-            
+
             $httpBackend.flush();
-            
+
             expect(emitSpy).toHaveBeenCalledWith('bbEndWait');
         });
-        
+
         it('should not error when mark completed is fired with no item', function () {
             var $scope = $rootScope.$new();
-            
+
             bbData.loadManager({
                 scope: $scope,
                 name: 'LoadManagerTest',
                 isAggregate: true
             });
-   
+
             $scope.$new().$emit(EVT_MARK_COMPLETED);
         });
     });

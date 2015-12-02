@@ -330,25 +330,34 @@
 
                     function success(args) {
                         var argIndex = 0,
-                            result = {};
+                            result = {
+                                httpResults: {}
+                            };
 
                         function addResult(name, props) {
                             var resultData,
+                                httpResult,
                                 i,
                                 n,
                                 p,
-                                resultItem;
+                                resultItem,
+                                resultItemHttpResults;
 
                             if (props) {
                                 for (i = 0, n = props.length; i < n; i++) {
                                     p = props[i];
-                                    resultData = args[argIndex].data;
+                                    httpResult = args[argIndex];
+                                    resultData = httpResult.data;
 
                                     if (p === DEFAULT_PROP) {
                                         resultItem = resultData;
+                                        resultItemHttpResults = httpResult;
                                     } else {
                                         resultItem = resultItem || {};
                                         resultItem[p] = resultData;
+
+                                        resultItemHttpResults = resultItemHttpResults || {};
+                                        resultItemHttpResults[p] = httpResult;
                                     }
 
                                     argIndex++;
@@ -357,6 +366,10 @@
 
                             if (angular.isDefined(resultItem)) {
                                 result[name] = resultItem;
+                            }
+
+                            if (angular.isDefined(resultItemHttpResults)) {
+                                result.httpResults[name] = resultItemHttpResults;
                             }
                         }
 
