@@ -99,7 +99,7 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
 
     bbActionBarItem.$inject = ['bbMediaBreakpoints'];
 
-    angular.module('sky.actionbar', ['sky.resources', 'sky.mediabreakpoints'])
+    angular.module('sky.actionbar', ['sky.resources', 'sky.mediabreakpoints', 'ui.bootstrap.dropdown'])
         .directive('bbActionBar', bbActionBar)
         .directive('bbActionBarItemGroup', bbActionBarItemGroup)
         .directive('bbActionBarItem', bbActionBarItem);
@@ -1392,7 +1392,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 */
 (function ($) {
     'use strict';
-    angular.module('sky.datepicker', ['sky.resources', 'sky.moment'])
+    angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
         .constant('bbDatepickerConfig', {
             currentCultureDateFormatString: 'MM/dd/yyyy',
             showWeeks: false,
@@ -1434,7 +1434,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                         dateChangeInternal = false;
 
                     function getBodyDatepicker() {
-                        return $('body > ul[datepicker-popup-wrap]');
+                        return $('body > ul[uib-datepicker-popup-wrap]');
                     }
 
                     function positionAbsoluteDatepicker() {
@@ -1698,7 +1698,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 require: ['ngModel', '^bbDatepicker'],
                 link: function ($scope, el, attr, controllers) {
                     var ngModel = controllers[0],
-                        format = attr.datepickerPopup;
+                        format = attr.uibDatepickerPopup;
 
                     if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
                         ngModel.$parsers = [];
@@ -5011,7 +5011,7 @@ reloading the grid with the current data after the event has fired.
 /** @module Modal
 @icon list-alt
 @summary The modal component launches modals in a way that is consistent with Sky UX applications.
- @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$modal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
+ @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$uibModal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
 
 In addition to the `bbModal` service for lauching modals, a `bb-modal` directive should be used to have common look-and-feel for modal content. Within `bb-modal`, use `bb-modal-header` to include a common modal header, `bb-modal-footer` to include a common modal footer and buttons, and `bb-modal-body` to wrap the modal's body content.
 
@@ -5035,7 +5035,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
     var openModalCount = 0;
 
     angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
-        .factory('bbModal', ['$modal', '$window', function ($modal, $window) {
+        .factory('bbModal', ['$uibModal', '$window', function ($uibModal, $window) {
             return {
                 open: function (opts) {
                     var bodyEl,
@@ -5076,7 +5076,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                         bodyEl.addClass('bb-modal-open-mobile');
                     }
 
-                    modalInstance = $modal.open(opts);
+                    modalInstance = $uibModal.open(opts);
                     openModalCount++;
 
                     modalInstance.result.then(modalClosed, modalClosed);
@@ -5613,7 +5613,7 @@ These are optional properties of the object passed to `bbPaging.init()`
     var evtNsPos = 0;
 
     angular.module('sky.pagination', ['ui.bootstrap.pagination'])
-        .config(['paginationConfig', function (paginationConfig) {
+        .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
 
@@ -5662,7 +5662,7 @@ These are optional properties of the object passed to `bbPaging.init()`
 
                     /*jslint white: true */
                     el.html(
-                        '<pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></pagination>' +
+                        '<uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></uib-pagination>' +
                         '<div class="clearfix"></div>'
                     );
                     /*jslint white: false */
@@ -5900,80 +5900,101 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 (function ($) {
     'use strict';
 
-    angular.module('sky.popover', ['sky.data'])
-        .directive('bbPopoverTemplatePopup', ['$templateCache', '$compile', '$timeout', '$window', function ($templateCache, $compile, $timeout, $window) {
-            return {
-                restrict: 'EA',
-                replace: true,
-                scope: { title: '@', content: '@', placement: '@', animation: '&', isOpen: '&' },
-                templateUrl: 'sky/templates/popover/popup.html',
-                compile: function () {
-                    return function ($scope, el) {
-                        var compiledEl,
-                            html = $templateCache.get($scope.content),
-                            origScope,
-                            popoverFlyoutScope,
-                            popoverTriggerScope,
-                            windowEl = $($window);
+    function bbPopoverTemplate($compile) {
+        return {
+            restrict: 'A',
+            scope: true,
+            link: function ($scope, el) {
+                var bbPopoverOpenAttr = 'bbPopoverOpen' + $scope.$id;
 
-                        function removeTooltip() {
-                            /*istanbul ignore else: sanity check */
-                            if (el) {
-                                el.remove();
-                                el = null;
-                            }
-                            /*istanbul ignore else: sanity check */
-                            if (popoverFlyoutScope) {
-                                popoverFlyoutScope.$destroy();
-                                popoverFlyoutScope = null;
-                            }
-                        }
+                //prevent breaking change by adding quotes around template url and
+                //passing to new directive
+                /*istanbul ignore else */
+                if (!el.attr('bb-uib-popover-template')) {
+                    el.attr('bb-uib-popover-template', "'" + el.attr('bb-popover-template') + "'");
+                }
 
-                        function windowClickHandler(e) {
-                            if (!el.is(e.target) && el.has(e.target).length === 0) {
+                if (!el.attr('popover-is-open')) {
+                    el.attr('popover-is-open', bbPopoverOpenAttr);
+                }
+
+                $scope.bbPopoverAttr = el.attr('popover-is-open');
+
+
+                el.removeAttr('bb-popover-template');
+                $compile(el)($scope);
+            }
+        };
+    }
+
+    bbPopoverTemplate.$inject = ['$compile'];
+
+    function bbUibPopoverTemplate($uibTooltip) {
+        var tooltip = $uibTooltip('bbUibPopoverTemplate', 'popover', 'click', {
+            useContentExp: true
+        });
+
+        return tooltip;
+    }
+
+    bbUibPopoverTemplate.$inject = ['$uibTooltip'];
+
+    function bbUibPopoverTemplatePopup($window, $parse) {
+        return {
+            replace: true,
+            scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
+            link: function ($scope, el) {
+
+                var origScope = $scope.originScope(),
+                    popoverIsOpenAttr,
+                    windowEl = $($window),
+                    scopeId = $scope.$id;
+
+                popoverIsOpenAttr = origScope.bbPopoverAttr;
+
+                function closePopover() {
+
+                    /* Set the popover is open attribute this way to account for
+                       both variables directly on scope as well as using 'controller
+                       as' 
+                    */
+                    /* istanbul ignore else: sanity check */
+                    if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
+                        $parse(popoverIsOpenAttr).assign(origScope, false);
+                    }
+                }
+
+                origScope.hide = function () {
+                    closePopover();
+                };
+
+                $scope.$watch('isOpen()', function (value) {
+                    if (value) {
+                        windowEl.on('click.popover' + scopeId, function (event) {
+                            if (!el.is(event.target) && el.has(event.target).length === 0 && $scope.isOpen) {
                                 $scope.$apply(function () {
-                                    popoverFlyoutScope.hide();
+                                    closePopover();
                                 });
-                            }
-                        }
-
-                        //Get the scope of the popover directive.
-                        popoverTriggerScope = $scope.$parent.$parent;
-
-                        //Get the original scope that contains the popover directive
-                        origScope = popoverTriggerScope.$parent;
-
-                        //Create a new scope that will be bound to the template inside the flyout.  Base
-                        //this scope on the original scope that contained the popover directive.
-                        popoverFlyoutScope = origScope.$new();
-
-                        popoverFlyoutScope.hide = function () {
-                            $scope.$parent.$parent.isOpen = false;
-
-                            //Borrowed from $tooltip, need to remove the item after the animation
-                            $timeout(removeTooltip, 500);
-                        };
-
-                        $scope.$watch('isOpen()', function (value) {
-                            if (value) {
-                                $timeout(function () {
-                                    windowEl.on('click', windowClickHandler);
-                                });
-                            } else {
-                                windowEl.off('click', windowClickHandler);
                             }
                         });
+                    }
 
-                        compiledEl = $compile(html)(popoverFlyoutScope);
-                        el.find('.popover-content').html(compiledEl);
-                        popoverFlyoutScope.$apply();
-                    };
-                }
-            };
-        }])
-        .directive('bbPopoverTemplate', ['$tooltip', function ($tooltip) {
-            return $tooltip('bbPopoverTemplate', 'popover', 'click');
-        }]);
+                });
+
+
+                $scope.$on('$destroy', function () {
+                    windowEl.off('click.popover' + scopeId);
+                });
+            },
+            templateUrl: 'sky/templates/popover/popup.html'
+        };
+    }
+    bbUibPopoverTemplatePopup.$inject = ['$window', '$parse'];
+
+    angular.module('sky.popover', ['ui.bootstrap.tooltip'])
+        .directive('bbUibPopoverTemplatePopup', bbUibPopoverTemplatePopup)
+        .directive('bbUibPopoverTemplate', bbUibPopoverTemplate)
+        .directive('bbPopoverTemplate', bbPopoverTemplate);
 }(jQuery));
 
 /*global angular */
@@ -6439,7 +6460,6 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
     angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
-                require: 'tabset',
                 link: function (scope, el, attrs) {
                     var lastWindowResizeTimeout,
                         lastWindowWidth;
@@ -6675,7 +6695,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     function bbTabsetCollapsible($compile, $templateCache, bbMediaBreakpoints) {
         return {
             restrict: 'A',
-            require: 'tabset',
             controller: BBTabsetCollapsibleController,
             link: function ($scope, el) {
 
@@ -6779,7 +6798,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         });
     }
 
-
     function bbTabCollapseHeader() {
         return {
             require: '^bbTabsetCollapsible',
@@ -6812,9 +6830,11 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('tabset', tabset)
+        .directive('uibTabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
-        .directive('tab', tab);
+        .directive('tab', tab)
+        .directive('uibTab', tab);
 }());
 
 /*global angular */
@@ -6841,13 +6861,14 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     angular.module('sky.tabsref', ['ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
-                require: ['^tabset', 'tab'],
+                require: ['^?tabset', '^?uibTabset'],
                 link: function (scope, el, attrs, controllers) {
                     var active = attrs.active,
                         sref = attrs.bbTabSref,
                         stateChangeDeregistration,
-                        tabsetCtrl = controllers[0];
+                        tabsetCtrl;
 
+                    tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
 
                     function checkCurrentState() {
                         if ($state.is(sref)) {
@@ -7755,9 +7776,12 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
 /*global angular */
 
 /** @module Tooltip
+@deprecated
 @icon info
-@summary The tooltip creates an HTML-formatted tooltip that is displayed by a trigger element.
- @description The tooltip directive enables an HTML-formatted tooltip to be displayed by a trigger element. This directive wraps up the Angular UI Bootstrap Tooltip directive while making it easier to define markup in a template rather than directly in the view's controller.
+@summary This directive is no longer being maintained. For adding templated tooltips, use the Angular UI Bootstrap Tooltip uib-tooltip-template attribute.
+ @description ### *Deprecated* ###
+
+ This directive is no longer being maintained. For adding templated tooltips, use the [Angular UI Bootstrap Tooltip](http://angular-ui.github.io/bootstrap/) uib-tooltip-template attribute.
 
 ### Tooltip Settings ##
 
@@ -7772,59 +7796,26 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
     'use strict';
 
 
-    function bbTooltip($compile, $timeout, bbData) {
-        // Based on Adomas.NET's answer to this StackOverflow question:
-        // http://stackoverflow.com/questions/19029676/angular-ui-tooltip-with-html
-        // This allows us to use an HTML template with Angular binding instead of building
-        // HTML in the controller which leaves open the potential for HTML injection.
+    function bbTooltip($compile) {
         return {
             restrict: 'A',
             scope: true,
-            compile: function (tElem) {
+            link: function ($scope, el) {
                 //Add bootstrap directive
                 /*istanbul ignore else */
-                if (!tElem.attr('tooltip-html-unsafe')) {
-                    tElem.attr('tooltip-html-unsafe', '{{tooltip}}');
+                if (!el.attr('uib-tooltip-template')) {
+                    el.attr('uib-tooltip-template', "'" + el.attr('bb-tooltip') + "'");
                 }
 
-                return function (scope, el, attrs) {
-                    function loadTemplate() {
-                        bbData.load({
-                            text: attrs.bbTooltip
-                        }).then(function (result) {
-                            var container = angular.element('<div></div>'),
-                                tplContent = result.text;
-
-                            container.html($compile(tplContent.trim())(scope));
-
-                            $timeout(function () {
-                                scope.tooltip = container.html();
-                            });
-                        });
-                    }
-
-                    //remove our direcive to avoid infinite loop
-                    el.removeAttr('bb-tooltip');
-
-                    //compile element to attach tooltip binding
-                    $compile(el)(scope);
-
-                    if (angular.isDefined(attrs.tooltipUpdater)) {
-                        scope.$watch(attrs.tooltipUpdater, function () {
-                            loadTemplate();
-                        });
-                    } else {
-                        loadTemplate();
-                    }
-                };
+                el.removeAttr('bb-tooltip');
+                $compile(el)($scope);
             }
         };
     }
 
+    bbTooltip.$inject = ['$compile'];
 
-    bbTooltip.$inject = ['$compile', '$timeout', 'bbData'];
-
-    angular.module('sky.tooltip', ['sky.data'])
+    angular.module('sky.tooltip', ['ui.bootstrap.tooltip'])
         .directive('bbTooltip', bbTooltip);
 
 }());
@@ -8797,7 +8788,7 @@ The `bbWizardNavigator` service has an `init()` function that takes an `options`
 
 
  - `active` Indicates whether the step is the currently active step. This should be the same property that is bound to the UI Bootstrap `tab` directive's `active` property.
- - `disabled()` A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `tab` directive's `disabled` property.
+ - `disabled()` A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `tab` directive's `disable` property.
  - `complete()` A function that returns a boolean indicating whether the tab is complete. This should be the same function that is bound to the tab's `bb-wizard-step-complete` property.
 
 The `bbWizardNavigator` also exposes the following methods:
@@ -8820,7 +8811,6 @@ The `bbWizardNavigator` also exposes the following methods:
                     /*jslint unparam: true */
                     el.addClass('bb-wizard');
                 },
-                require: 'tabset',
                 restrict: 'A'
             };
         })
@@ -9141,32 +9131,18 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <ng-transclude />\n' +
         '    </div>\n' +
         '    <div class="bb-action-bar-dropdown hidden-sm hidden-md hidden-lg">\n' +
-        '        <div class="dropdown">\n' +
+        '        <div uib-dropdown>\n' +
         '             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" href="javascript:void(0)">\n' +
         '            {{title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '\n' +
-        '            <ul class="dropdown-menu">\n' +
+        '            <ul uib-dropdown-menu>\n' +
         '\n' +
         '            </ul>\n' +
         '        </div>\n' +
         '    </div>\n' +
         '</span>\n' +
         '');
-    $templateCache.put('sky/templates/charts/scatterplot.html',
-        '<div class="bb-chart-container">\n' +
-        '    <div ng-style="moveBackStyle()" ng-show="moveBackVisible">\n' +
-        '        <a ng-href="#" ng-click="moveBack()" ng-disabled="moveBackDisabled()">\n' +
-        '            <i class="glyphicon glyphicon-play icon-flipped"></i>\n' +
-        '        </a>\n' +
-        '    </div>\n' +
-        '    <div ng-style="moveForwardStyle()" ng-show="moveForwardVisible">\n' +
-        '        <a ng-href="#" ng-click="moveForward()" ng-disabled="moveForwardDisabled()">\n' +
-        '            <i class="glyphicon glyphicon-play"></i>\n' +
-        '        </a>\n' +
-        '    </div>\n' +
-        '    <div class="bb-chart"></div>\n' +
-        '</div>');
     $templateCache.put('sky/templates/check/styled.html',
         '<span></span>\n' +
         '');
@@ -9232,9 +9208,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
-        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" dropdown>\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="contextButtonStopPropagation($event)" dropdown-toggle></bb-context-menu-button>\n' +
-        '    <ul class="dropdown-menu" role="menu">\n' +
+        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
+        '    <ul uib-dropdown-menu role="menu">\n' +
         '        <ng-transclude/>\n' +
         '    </ul>\n' +
         '</div>\n' +
@@ -9247,48 +9223,50 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
-        '    <accordion>\n' +
-        '        <accordion-group is-open="accordionLocals.accordionOpen">\n' +
+        '    <uib-accordion>\n' +
+        '        <uib-accordion-group is-open="accordionLocals.accordionOpen">\n' +
         '\n' +
-        '            <accordion-heading ng-if="accordionLocals.staticHeader">\n' +
+        '            <uib-accordion-heading ng-if="accordionLocals.staticHeader">\n' +
         '                <div ng-click="toggleAccordion($event)">\n' +
         '                    <span>\n' +
         '                        {{heading}}\n' +
         '                    <span>\n' +
         '                    <i ng-class="\'fa-chevron-\' + (accordionLocals.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '                </div>\n' +
-        '            </accordion-heading>\n' +
+        '            </uib-accordion-heading>\n' +
         '            <ng-transclude></ng-transclude>\n' +
-        '        </accordion-group>\n' +
-        '    </accordion>\n' +
+        '        </uib-accordion-group>\n' +
+        '    </uib-accordion>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/submenuheading.html',
-        '<accordion-heading>\n' +
+        '<uib-accordion-heading>\n' +
         '    <div ng-click="toggleAccordion($event)">\n' +
         '        <ng-transclude></ng-transclude>\n' +
         '        <i ng-class="\'fa-chevron-\' + (accordionLocals.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '    </div>\n' +
-        '    \n' +
-        '</accordion-heading>\n' +
+        '\n' +
+        '</uib-accordion-heading>\n' +
         '');
     $templateCache.put('sky/templates/datefield/datefield.html',
         '<span class="add-on input-group-btn">\n' +
         '    <button type="button" class="btn btn-default bb-date-field-calendar-button">\n' +
         '        <i class="fa fa-calendar"></i>\n' +
         '    </button>\n' +
-        '</span>');
+        '</span>\n' +
+        '');
     $templateCache.put('sky/templates/datepicker/datepicker.html',
         '<div>\n' +
         '    <div ng-if="locals.loaded" class="input-group bb-datefield">\n' +
-        '        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" max-date="maxDate" min-date="minDate" ng-required="locals.required" bb-min-date bb-max-date />\n' +
+        '        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" uib-datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" max-date="maxDate" min-date="minDate" ng-required="locals.required" bb-min-date bb-max-date />\n' +
         '        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{\'bb-datefield-open\': locals.opened}">\n' +
         '            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
         '            </button>\n' +
         '        </span>\n' +
         '    </div>\n' +
-        '</div>');
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
         '<div>\n' +
         '    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"\n' +
@@ -9425,13 +9403,14 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </bb-modal-footer>\n' +
         '</bb-modal>');
     $templateCache.put('sky/templates/grids/dropdown.html',
-        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">   \n' +
+        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">\n' +
         '    </bb-context-menu-button>\n' +
-        '    <ul class="dropdown-menu" role="menu">\n' +
+        '    <ul uib-dropdown-menu role="menu">\n' +
         '        <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>\n' +
         '    </ul>\n' +
-        '</div>');
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/grids/filters.html',
         '<div style="display:none;">\n' +
         '    <div bb-scrolling-view-keeper="viewKeeperOptions" class="bb-grid-filters grid-filters">\n' +
@@ -9458,8 +9437,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="bb-grid-filters-body-group-header-icon glyphicon"></i>\n' +
         '        <label>{{bbGridFiltersGroupLabel}}</label>\n' +
         '    </div>\n' +
-        '    <div class="bb-grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>\n' +
-        '</div>');
+        '    <div class="bb-grid-filters-body-group-content" uib-collapse="!!isCollapsed" ng-transclude></div>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/grids/filterssummary.html',
         '<div class="toolbar bb-table-toolbar bb-applied-filter-bar">\n' +
         '    <div class="bb-applied-filter-header">\n' +
@@ -9505,7 +9485,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
-        '        <pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></pagination>\n' +
+        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
@@ -9605,14 +9585,20 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</section>\n' +
         '');
     $templateCache.put('sky/templates/popover/popup.html',
-        '<div class="popover {{placement}} fade" ng-class="{ in: isOpen()}">\n' +
+        '<div class="popover {{placement}}"\n' +
+        '    tooltip-animation-class="fade"\n' +
+        '    uib-tooltip-classes\n' +
+        '    ng-class="{ in: isOpen() }">\n' +
         '  <div class="arrow"></div>\n' +
         '\n' +
         '  <div class="popover-inner">\n' +
-        '    <h3 class="popover-title" ng-bind="title" ng-show="title"></h3>\n' +
-        '    <div class="popover-content"></div>\n' +
+        '    <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n' +
+        '    <div class="popover-content"\n' +
+        '        uib-tooltip-template-transclude="contentExp()"\n' +
+        '        tooltip-template-transclude-scope="originScope()"></div>\n' +
         '  </div>\n' +
-        '</div>');
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/searchfield/choices.html',
         '<ul class="ui-select-choices ui-select-choices-content dropdown-menu">\n' +
         '  <li class="bb-searchfield-no-records"></li>\n' +
@@ -9630,8 +9616,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</button>\n' +
         '');
     $templateCache.put('sky/templates/tabset/dropdown.html',
-        '<div class="bb-tabset-dropdown nav nav-tabs" dropdown ng-show="bbTabsetOptions.isSmallScreen &amp;&amp; bbTabsetOptions.tabCount > 1">\n' +
-        '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button>\n' +
+        '<div class="bb-tabset-dropdown nav nav-tabs" uib-dropdown ng-show="bbTabsetOptions.isSmallScreen &amp;&amp; bbTabsetOptions.tabCount > 1">\n' +
+        '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/tabset/openbutton.html',
@@ -9672,7 +9658,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                </div>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <div collapse="isCollapsed" class="bb-tile-content" ng-transclude>\n' +
+        '        <div uib-collapse="isCollapsed" class="bb-tile-content" ng-transclude>\n' +
         '        </div>\n' +
         '    </div>\n' +
         '</section>\n' +
