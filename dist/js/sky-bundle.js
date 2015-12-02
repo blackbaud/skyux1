@@ -90830,25 +90830,34 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
                     function success(args) {
                         var argIndex = 0,
-                            result = {};
+                            result = {
+                                httpResults: {}
+                            };
 
                         function addResult(name, props) {
                             var resultData,
+                                httpResult,
                                 i,
                                 n,
                                 p,
-                                resultItem;
+                                resultItem,
+                                resultItemHttpResults;
 
                             if (props) {
                                 for (i = 0, n = props.length; i < n; i++) {
                                     p = props[i];
-                                    resultData = args[argIndex].data;
+                                    httpResult = args[argIndex];
+                                    resultData = httpResult.data;
 
                                     if (p === DEFAULT_PROP) {
                                         resultItem = resultData;
+                                        resultItemHttpResults = httpResult;
                                     } else {
                                         resultItem = resultItem || {};
                                         resultItem[p] = resultData;
+
+                                        resultItemHttpResults = resultItemHttpResults || {};
+                                        resultItemHttpResults[p] = httpResult;
                                     }
 
                                     argIndex++;
@@ -90857,6 +90866,10 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
                             if (angular.isDefined(resultItem)) {
                                 result[name] = resultItem;
+                            }
+
+                            if (angular.isDefined(resultItemHttpResults)) {
+                                result.httpResults[name] = resultItemHttpResults;
                             }
                         }
 
