@@ -119,6 +119,8 @@
                 outline: none;
                 @extend .fa;
                 @extend .fa-times;
+                position: absolute;
+                right: 0;
             }
 
             .bb-tab-close-icon:active,
@@ -171,6 +173,19 @@
     }
 }
 
+.bb-tab-close {
+    > a {
+        tab-heading {
+            position: relative;
+            padding-right: 30px;
+            display: block;
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+}
+
 .bb-tab-header-count {
     color: $bb-color-blue;
     font-size: 13px;
@@ -190,19 +205,23 @@
     visibility: hidden;
 }
 
-.bb-tab-scroll {
-    > .nav-tabs {
-        overflow-x: auto;
-        overflow-y: hidden;
-        position: relative;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-
-        li {
-            display: inline-block;
-            float: none;
-        }
+.bb-tab-scroll > .nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    li {
+        display: inline-block;
+        float: none;
     }
+}
+
+.bb-tab-header-text {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
 }
 
 @media (min-width: 768px) {
