@@ -15,12 +15,16 @@
 (function () {
     'use strict';
 
+    function getTemplateUrl(name) {
+        return 'sky/templates/contextmenu/' + name + '.html';
+    }
+
     function bbContextMenu() {
         return {
             replace: true,
             restrict: 'E',
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/contextmenu.html',
+            templateUrl: getTemplateUrl('contextmenu'),
             link: function ($scope) {
                 $scope.contextButtonStopPropagation = function ($event) {
                     $event.stopPropagation();
@@ -37,14 +41,15 @@
             scope: {
                 clickItem: '&bbContextMenuAction'
             },
-            template: '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>'
+            templateUrl: getTemplateUrl('menuitem')
         };
     }
+
     function bbContextMenuButton() {
         return {
             restrict: 'E',
             replace: true,
-            template: '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>'
+            templateUrl: getTemplateUrl('menubutton')
         };
     }
 
@@ -60,7 +65,6 @@
         self.toggleAccordion = function ($event) {
             toggleAccordion($event, $scope);
         };
-
     }
 
     BBSubmenuController.$inject = ['$scope'];
@@ -73,7 +77,6 @@
                 heading: '=?bbSubmenuHeading'
             },
             link: function ($scope, el, attrs) {
-
                 $scope.accordionLocals = {
                     accordionOpen: false,
                     staticHeader: false
@@ -86,10 +89,9 @@
                 $scope.toggleAccordion = function ($event) {
                     toggleAccordion($event, $scope);
                 };
-
             },
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/submenu.html'
+            templateUrl: getTemplateUrl('submenu')
         };
     }
 
@@ -104,7 +106,7 @@
                 };
             },
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/submenuheading.html'
+            templateUrl: getTemplateUrl('submenuheading')
         };
     }
 

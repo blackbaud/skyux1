@@ -8,7 +8,7 @@
 
         self.tabs = [
             {
-                title: 'Tab 1',
+                title: 'Tab 1 jklhsdf gjkhsd fgkjhdsfkjgh dknvkljhdfgkljhdfsgkljnbvkj bdfslkgjhlkjshgohdfglkj dfkjvnlskjdfgh sdfjkbvkjbdfsgkjh kjhsdfkgj hkjldsfgh kjh hgeiurhdjv njkdfgkjh',
                 content: '1 content'
             },
             {

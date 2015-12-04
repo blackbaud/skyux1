@@ -520,6 +520,7 @@
 
     function findDeprecatedClasses(el, msgs) {
         var deprecatedClass,
+            deprecatedClassName,
             deprecatedEls,
             msg,
             i,
@@ -527,11 +528,12 @@
 
         for (i = 0, n = deprecatedClasses.length; i < n; i++) {
             deprecatedClass = deprecatedClasses[i];
+            deprecatedClassName = deprecatedClass[0];
 
-            deprecatedEls = el.find('.' + deprecatedClass[0]);
+            deprecatedEls = el.find('.' + deprecatedClassName + ', [ng-class*=\'\\\'' + deprecatedClassName + '\\\'\']');
 
             if (deprecatedEls.length > 0) {
-                msg = 'The class "' + deprecatedClass[0] + '" is deprecated.';
+                msg = 'The class "' + deprecatedClassName + '" is deprecated.';
 
                 switch (deprecatedClass.length) {
                     case 3:

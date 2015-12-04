@@ -44,11 +44,13 @@
         @include ellipsis();
         display: flex;
         align-items: baseline;
+        width: 100%;
+        max-width: calc(100% - 90px);
 
         .bb-tile-header {
             float: none;
             padding-right: $tile-header-tool-padding * (2 / 3);
-            max-width: 80%;
+            max-width: calc(100% - 15px);
         }
     }
 

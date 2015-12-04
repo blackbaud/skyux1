@@ -1,16 +1,14 @@
 <section ng-class="isCollapsed ? 'collapsed' : 'collapsible'" class="bb-tile">
     <div bb-scroll-into-view="scrollIntoView">
         <div class="bb-tile-title" ng-click="titleClick()">
-            <div class="row">
-                <div class="bb-tile-header-with-content col-xs-8 col-sm-9">
-                    <h2 class="bb-tile-header">{{tileHeader}}</h2>
-                </div>
-                <div class="col-xs-4 col-sm-3 bb-tile-header-column-tools">
-                    <div class="bb-tile-tools">
-                        <i ng-class="'fa-chevron-' + (isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></i>
-                        <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>
-                        <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>
-                    </div>
+            <div class="bb-tile-header-with-content">
+                <h2 class="bb-tile-header">{{tileHeader}}</h2>
+            </div>
+            <div class="bb-tile-header-column-tools">
+                <div class="bb-tile-tools">
+                    <i ng-class="'fa-chevron-' + (isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></i>
+                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>
+                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 /*jslint nomen: true, plusplus: true */
-/*global angular */
+/*global angular, jQuery */
 
 /** @module Tabset
 @icon folder-open-o
@@ -22,22 +22,28 @@ You must then use the `bb-tab-collapse-header` attribute on your ui-bootstrap `t
 If you wish to add a close icon to a tab, just add the `bb-tab-close` class to the ui-bootstrap `tab` element, and add an `i` element with the `bb-tab-close-icon` class inside of the ui-bootstrap `tab-heading` directive.
 
  */
-(function () {
+(function ($) {
     'use strict';
 
-    function Tabset($compile) {
+    var DROPDOWN_CARET_WIDTH = 45;
+
+    function getTemplate($templateCache, name) {
+        return $templateCache.get('sky/templates/tabset/' + name + '.html');
+    }
+
+    function tabset($compile, $templateCache) {
         return {
             link: function ($scope, el, attr) {
                 var ulEl,
                     liEl;
+
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
                     ulEl = el.find('ul');
-                    liEl = angular.element('<li class="bb-tab-button"></li>');
+                    liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
                     if (angular.isDefined(attr.bbTabsetAdd)) {
-
-                        liEl.append($compile('<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary"><span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span></button>')($scope));
+                        liEl.append($compile(getTemplate($templateCache, 'addbutton'))($scope));
 
                         $scope.bbTabAdd = function () {
                             $scope.$eval(attr.bbTabsetAdd);
@@ -45,7 +51,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                     }
 
                     if (angular.isDefined(attr.bbTabsetOpen)) {
-                        liEl.append($compile('<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary"><span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span></button>')($scope));
+                        liEl.append($compile(getTemplate($templateCache, 'openbutton'))($scope));
 
                         $scope.bbTabOpen = function () {
                             $scope.$eval(attr.bbTabsetOpen);
@@ -56,7 +62,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    Tabset.$inject = ['$compile'];
+    tabset.$inject = ['$compile', '$templateCache'];
 
     function BBTabsetCollapsibleController($scope) {
         var self = this;
@@ -80,12 +86,14 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
 
-    function BBTabsetCollapsible($compile, bbMediaBreakpoints) {
+    function bbTabsetCollapsible($compile, $templateCache, $window, bbMediaBreakpoints) {
         return {
             restrict: 'A',
             require: 'tabset',
-            controller: 'bbTabsetCollapsibleController',
+            controller: BBTabsetCollapsibleController,
             link: function ($scope, el) {
+                var lastWindowWidth,
+                    tabCollapseId = $scope.$id;
 
 
                 function getBootstrapTabs() {
@@ -93,7 +101,35 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                 }
 
                 function getDropdownEl() {
-                    return angular.element('<div class="bb-tabset-dropdown nav nav-tabs" dropdown ng-show="bbTabsetOptions.isSmallScreen && bbTabsetOptions.tabCount > 1"><button type="button" class="btn btn-primary bb-tab-dropdown-button" dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button></div>');
+                    return angular.element(getTemplate($templateCache, 'dropdown'));
+                }
+
+                function setTabMaxWidth() {
+                    //later this will resize tabs to fit the window
+                    el.find('ul.nav-tabs li a').css('max-width', '');
+                }
+
+                function setDropdownMaxWidth() {
+                    var availableWidth,
+                        addOpenWidth = 0,
+                        addOpenButtonEl,
+                        i,
+                        dropdownTextMaxWidth;
+
+                    availableWidth = el.width();
+
+                    addOpenButtonEl = el.find('.bb-tab-button-wrap');
+
+                    for (i = 0; i < addOpenButtonEl.length; i++) {
+                        addOpenWidth += addOpenButtonEl.eq(i).width();
+                    }
+
+                    dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH;
+
+                    el.find('.bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
+
+                    el.find('.bb-tabset-dropdown ul.dropdown-menu li a').css('max-width', (availableWidth.toString() + 'px'));
+
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -114,6 +150,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         ulEl.removeClass('nav-tabs');
                         dropdownContainerEl.append(ulEl);
                         dropdownContainerEl.append(dropdownButtonsEl);
+                        setDropdownMaxWidth();
                     } else {
                         ulEl.removeClass('dropdown-menu');
                         ulEl.addClass('nav');
@@ -122,6 +159,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         el.prepend(ulEl);
 
                         ulEl.find('.bb-tab-button').append(dropdownButtonsEl);
+                        setTabMaxWidth();
                     }
                 }
 
@@ -152,14 +190,26 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
 
+                // Show initial scroll animation whenever the window width changes.
+                $($window).on('resize.tabcollapse' + tabCollapseId, function () {
+                    var windowWidth = $($window).width();
+
+                    if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
+                        setDropdownMaxWidth();
+                    }
+
+                    lastWindowWidth = windowWidth;
+                });
+
                 $scope.$on('$destroy', function () {
                     bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+                    $($window).off('.tabcollapse' + tabCollapseId);
                 });
             }
         };
     }
 
-    BBTabsetCollapsible.$inject = ['$compile', 'bbMediaBreakpoints'];
+    bbTabsetCollapsible.$inject = ['$compile', '$templateCache', '$window', 'bbMediaBreakpoints'];
 
     function collapsibleTabTitle($scope, el, bbTabsetCollapsibleCtrl, getTabHeading) {
         //get ui-bootstrap tab scope
@@ -188,7 +238,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
 
-    function BBTabCollapseHeader() {
+    function bbTabCollapseHeader() {
         return {
             require: '^bbTabsetCollapsible',
             link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
@@ -201,7 +251,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
     }
 
-    function Tab() {
+    function tab() {
         return {
             require: '?^bbTabsetCollapsible',
             link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
@@ -219,9 +269,8 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
-        .controller('bbTabsetCollapsibleController', BBTabsetCollapsibleController)
-        .directive('tabset', Tabset)
-        .directive('bbTabsetCollapsible', BBTabsetCollapsible)
-        .directive('bbTabCollapseHeader', BBTabCollapseHeader)
-        .directive('tab', Tab);
-}());
+        .directive('tabset', tabset)
+        .directive('bbTabsetCollapsible', bbTabsetCollapsible)
+        .directive('bbTabCollapseHeader', bbTabCollapseHeader)
+        .directive('tab', tab);
+}(jQuery));

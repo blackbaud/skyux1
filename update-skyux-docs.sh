@@ -2,7 +2,7 @@
 set -e
 
 # Only run for a release
-if [[ "$IS_RELEASE" == "true" ]]; then
+if [[ "$IS_RELEASE" == "true" && "$IS_PRERELEASE" == "false" ]]; then
   echo -e "Starting to update sky docs\n"
 
   # This is normally master
@@ -27,7 +27,7 @@ if [[ "$IS_RELEASE" == "true" ]]; then
   # Commit and push all our changes to the repo
   cd docs
   git add -f .
-  git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed $RELEASE_VERSION to sky-docs"
+  git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed $RELEASE_VERSION to skyux-docs"
   git push -fq origin $branch > /dev/null
 
   echo -e "Sky Docs successfully updated.\n"

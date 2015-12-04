@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module */
+/*global angular, inject, module, $ */
 
 describe('Tabset module', function () {
     'use strict';
@@ -13,6 +13,7 @@ describe('Tabset module', function () {
     beforeEach(module(
         'ngMock',
         'sky.tabset',
+        'sky.templates',
         'template/tabs/tabset.html',
         'template/tabs/tab.html'
     ));
@@ -527,6 +528,103 @@ describe('Tabset module', function () {
             $scope.$digest();
             validateLargeMode(el, 1, 0);
             el.remove();
+        });
+
+        describe('dropdown max width', function () {
+
+            function calculateExpectedWidth(el) {
+                return el.width() - 88 - 45;
+            }
+
+            function verifyMaxWidths(el, dropdownTextEl, dropdownMenuItemEl) {
+                var expectedWidth = calculateExpectedWidth(el);
+
+                expect(dropdownTextEl[0].style.maxWidth).toBe(expectedWidth.toString() + 'px');
+
+                expect(dropdownMenuItemEl[0].style.maxWidth).toBe((el.width().toString()) + 'px');
+                expect(dropdownMenuItemEl[1].style.maxWidth).toBe((el.width().toString()) + 'px');
+            }
+
+            it('adds max width when changing to collapsed mode', function () {
+                var el,
+                    dropdownTextEl,
+                    dropdownMenuItemEl;
+
+                el = setupCollapsibleTest(collapsibleTabsHtml);
+
+                callback({xs: true});
+
+                $scope.$digest();
+
+                dropdownTextEl = el.find('.bb-tab-header-text');
+
+                dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
+
+                verifyMaxWidths(el, dropdownTextEl, dropdownMenuItemEl);
+
+                callback({xs: false});
+
+                $scope.$digest();
+
+                dropdownMenuItemEl = el.find('ul.nav-tabs li a');
+                expect(dropdownMenuItemEl[0].style.maxWidth).toBe('');
+                expect(dropdownMenuItemEl[1].style.maxWidth).toBe('');
+
+                el.remove();
+            });
+
+            function getWidthSpy(widthFn, fakeWindowWidth) {
+                return spyOn($.fn, 'width').and.callFake(function () {
+                    if (this[0] === window) {
+                        return angular.isFunction(fakeWindowWidth) ? fakeWindowWidth() : fakeWindowWidth;
+                    }
+
+                    return widthFn.apply(this, arguments);
+                });
+            }
+
+            it('adds max width when window size changes', function () {
+                var el,
+                    spyWindowWidth,
+                    widthFn,
+                    widthSpy,
+                    dropdownTextEl,
+                    dropdownMenuItemEl;
+
+                widthFn = $.fn.width;
+
+                spyWindowWidth = 500;
+
+                widthSpy = getWidthSpy(widthFn, function () {
+                    return spyWindowWidth;
+                });
+
+                el = setupCollapsibleTest(collapsibleTabsHtml);
+
+                callback({xs: true});
+
+                $scope.$digest();
+
+                dropdownTextEl = el.find('.bb-tab-header-text');
+
+                dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
+
+                verifyMaxWidths(el, dropdownTextEl, dropdownMenuItemEl);
+
+                el.width(600);
+
+                spyWindowWidth = 200;
+
+                $(window).resize();
+
+                dropdownTextEl = el.find('.bb-tab-header-text');
+
+                dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
+
+                verifyMaxWidths(el, dropdownTextEl, dropdownMenuItemEl);
+
+                el.remove();
+            });
         });
     });
 });

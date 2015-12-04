@@ -81,26 +81,6 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                         }
                     }
 
-                    if (attrs.bbAutonumericSettings) {
-                        $scope.$watch(attrs.bbAutonumericSettings, function (newValue) {
-                            customSettings = newValue || {};
-                            applySettings();
-                        }, true);
-                    }
-
-                    el.autoNumeric(getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric));
-                    applyCssSettings(el);
-
-                    $scope.$watch(attrs.ngModel, function (newValue) {
-                        if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
-                            el.autoNumeric('set', newValue);
-                        } else if (isNaN(newValue)) {
-                            return;
-                        } else {
-                            el.val(null);
-                        }
-                    });
-
                     function autonumericChange() {
                         return $scope.$apply(function () {
                             var value = parseFloat(el.autoNumeric('get'));
@@ -113,7 +93,34 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                         });
                     }
 
-                    //Setup on change handler to update scope value
+                    if (attrs.bbAutonumericSettings) {
+                        $scope.$watch(attrs.bbAutonumericSettings, function (newValue) {
+                            customSettings = newValue || {};
+                            applySettings();
+                        }, true);
+                    }
+
+                    el.autoNumeric(getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric));
+                    applyCssSettings(el);
+
+                    // If a valid number, update the autoNumeric value.
+                    // Also handles the model being updated, but being in correct (usually a paste).
+                    // In that case, updates the model to what the autoNumeric plugin's value.
+                    $scope.$watch(attrs.ngModel, function (newValue) {
+                        var getValue;
+                        if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
+                            el.autoNumeric('set', newValue);
+                            getValue = el.autoNumeric('get');
+                            if (newValue.toString() !== getValue) {
+                                $timeout(autonumericChange);
+                            }
+                        } else if (newValue !== undefined && newValue !== null && isNaN(newValue)) {
+                            $timeout(autonumericChange);
+                        } else if (!isNaN(newValue)) {
+                            el.val(null);
+                        }
+                    });
+
                     el.on('change', function () {
                         autonumericChange();
                     });
@@ -131,13 +138,16 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     */
                     el.on('focusin.bbAutonumeric', function () {
                         $timeout(function () {
-                            if (!isIosUserAgent) {
-                                el.select();
-                            } else {
-                                //use setSelectionRange instead of select because select in a timeout does not work with iOS
-                                el[0].setSelectionRange(0, 9999);
+                            // Check to ensure the field still has focus once the $timeout callback is executed.
+                            // https://github.com/blackbaud/skyux/issues/64
+                            if (el.is(':focus')) {
+                                if (!isIosUserAgent) {
+                                    el.select();
+                                } else {
+                                    //use setSelectionRange instead of select because select in a timeout does not work with iOS
+                                    el[0].setSelectionRange(0, 9999);
+                                }
                             }
-
                         });
                     });
 

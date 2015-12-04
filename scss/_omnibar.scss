@@ -1,15 +1,11 @@
 @import "Bootstrap/variables";
 @import "mixins";
 
-// begin omnibar/help widget
-$help-widget-zindex: $zindex-modal-background + 1000 !default;
-$omnibar-zindex: $zindex-modal-background - 1 !default;
-//end omnibar/help widget
 
 .bb-omnibar {
     .search {
         font-family: $font-family-base;
-        
+
         > .searchContainer > input.searchbox:focus {
             box-shadow: none;
         }
