@@ -6,7 +6,7 @@ describe('textexpand', function () {
 
     var options = {};
 
-    beforeAll(function (done) {
+    beforeEach(function (done) {
         require('../common').initWebdriverCss(browser, options, done);
     });
 

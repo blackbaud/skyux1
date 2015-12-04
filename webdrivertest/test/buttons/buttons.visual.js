@@ -1,12 +1,12 @@
 
-/*global describe, it, browser, beforeAll, expect, require */
+/*global describe, it, browser, beforeEach, expect, require */
 
 describe('buttons', function () {
     'use strict';
 
     var options = {};
 
-    beforeAll(function (done) {
+    beforeEach(function (done) {
         require('../common').initWebdriverCss(browser, options, done);
     });
 
