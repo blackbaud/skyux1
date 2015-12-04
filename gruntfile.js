@@ -21,8 +21,6 @@ module.exports = function (grunt) {
         target = 'local',
         screenshotBasePath = 'screenshots/',
         skipTest,
-        visualTestsPath,
-        visualTestPort = 8010,
         webdriverTestPort = 8000;
 
     libsCss = [
@@ -77,17 +75,6 @@ module.exports = function (grunt) {
                 grunt.log.writeln(prop + ': ' + process.env[prop] + ' (' + typeof process.env[prop] + ')');
             });
         }
-    }());
-
-    // Determine which visual tests to run
-    (function () {
-        var visualTestsToRun = (grunt.option('visualtests') || '');
-
-        if (visualTestsToRun && visualTestsToRun.indexOf(',') >= 0) {
-            visualTestsToRun = '{' + visualTestsToRun + '}';
-        }
-
-        visualTestsPath = 'visualtest/test/' + (visualTestsToRun || '**') + '/*.visual.js';
     }());
 
     // Determine which environment we're running in.
@@ -164,7 +151,6 @@ module.exports = function (grunt) {
         skyTemplatesPath: 'js/sky/templates/',
         paletteTemplatesPath: 'js/sky/palette/',
         paletteCssPath: '.tmp/palette/palette.css',
-        visualTestPort: visualTestPort,
         html2js: {
             options: {
                 base: 'js/',
@@ -371,24 +357,7 @@ module.exports = function (grunt) {
                 dest: '<%= stacheConfig.data %>sky.json'
             }
         },
-        phantomcss: {
-            options: {
-                screenshots: screenshotBasePath + 'baseline',
-                results: screenshotBasePath + 'results',
-                viewportSize: [1280, 800],
-                mismatchTolerance: 0.05,
-                rootUrl: 'http://localhost:<%= visualTestPort %>/visualtest/test/'
-            },
-            src: [
-                visualTestsPath
-            ]
-        },
         connect: {
-            visualtest: {
-                options: {
-                    port: visualTestPort
-                }
-            },
             webdrivertest: {
                 options: {
                     port: webdriverTestPort
@@ -434,7 +403,6 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('webdrivertest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
-    grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
@@ -514,19 +482,9 @@ module.exports = function (grunt) {
         buildTestFixtures('webdrivertest');
     });
 
-    // Generate the files needed for visual tests
-    grunt.registerTask('buildvisualtestfixtures', function () {
-        buildTestFixtures('visualtest');
-    });
-
     // Remove the temporary files needed for visual tests
     grunt.registerTask('cleanupwebdrivertestfixtures', function () {
         cleanupTestFixtures('webdrivertest');
-    });
-
-    // Remove the temporary files needed for visual tests
-    grunt.registerTask('cleanupvisualtestfixtures', function () {
-        cleanupTestFixtures('visualtest');
     });
 
     // Generate our JS config for the bbPalette service
@@ -603,12 +561,10 @@ module.exports = function (grunt) {
                 'build'
             ];
 
-        function checkSkipTest() {/*karmaTarget) {*/
+        function checkSkipTest(karmaTarget) {
             if (!skipTest) {
-
-                //tasks.push('visualtest');
                 tasks.push('webdrivertest');
-                //tasks.push('karma:' + karmaTarget);
+                tasks.push('karma:' + karmaTarget);
             }
         }
 
