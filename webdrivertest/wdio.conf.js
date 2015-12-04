@@ -25,7 +25,7 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-        },
+        }/*,
         {
             'browserstack.local': 'true',
             browserDisconnectTimeout: 3e5,
@@ -51,7 +51,7 @@
             os: 'Windows',
             os_version: '8',
             build: 'win8-ie10-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-        }
+        }*/
     ],
     config = {
 
