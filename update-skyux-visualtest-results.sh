@@ -1,7 +1,7 @@
 # This file only runs if there are results from the visualtests
 # It's using the deploy key specified in Travis since Secure Environemnt Variables aren't available to forks.
 
-if [[ -d webdriver-screenshots-diffs ]]; then
+if [[ "$(ls -A webdriver-screenshots-diffs)" ]]; then
 
     echo -e "Starting to update webdriver test results.\n"
 

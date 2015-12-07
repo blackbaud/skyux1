@@ -367,9 +367,6 @@ module.exports = function (grunt) {
         webdriver: {
             test: {
                 configFile: './webdrivertest/wdio.conf.js'
-            },
-            local: {
-                configFile: './webdrivertest/wdio.local.conf.js'
             }
         }
     });

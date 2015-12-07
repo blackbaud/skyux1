@@ -16,7 +16,7 @@
             screenshotRoot = 'webdriver-screenshots' + require('../wdio.conf.js').environment;
             require('webdrivercss').init(browser, {
                 screenshotRoot: screenshotRoot + '/' + prefix,
-                failedComparisonsRoot: screenshotRoot + '-diffs/' + prefix,
+                failedComparisonsRoot: screenshotRoot + '-diffs/',
                 mismatchTolerance: 0.05,
                 screenWidth: [1280]
             });
