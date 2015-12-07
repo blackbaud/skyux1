@@ -107,23 +107,5 @@ describe('grids', function () {
             }).call(done);
     });
 
-    it('should open the grid context menu', function (done) {
-        var screenshotName = 'grids_contextmenu',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/grids/fixtures/test.full.html')
-            .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
-            .click('#screenshot-grid button.bb-context-menu-btn')
-            .waitForVisible('ul.dropdown-menu li[bb-context-menu-action]', 20000)
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-grid'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
-    });
 
 });

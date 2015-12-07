@@ -26,23 +26,6 @@ describe('pagination', function () {
             }).call(done);
     });
 
-    it('should take pagination hover screenshot', function (done) {
-        var screenshotName = 'pagination_hover',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/pagination/fixtures/test.full.html')
-            .moveToObject('#screenshot-pagination li:nth-child(3) a')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-pagination'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
-    });
-
     it('should take pagination clicked screenshot', function (done) {
         var screenshotName = 'pagination_click',
             pageName = options.prefix + screenshotName + '_full';
