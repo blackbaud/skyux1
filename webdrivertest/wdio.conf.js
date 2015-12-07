@@ -7,16 +7,13 @@
         {
             browser: 'chrome',
             'browserstack.local': 'true',
-            //os: 'OS X',
-            //os_version: 'Yosemite',
+            os: 'OS X',
+            os_version: 'Yosemite',
             browserDisconnectTimeout: 3e5,
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
-            //build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
-            os: 'Windows',
-            os_version: '8.1',
-            build: 'win81-ie11-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+            build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
         },
         {
             browserName: 'firefox',
