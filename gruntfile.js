@@ -399,7 +399,7 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('webdrivertest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
+    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
@@ -560,7 +560,7 @@ module.exports = function (grunt) {
 
         function checkSkipTest(karmaTarget) {
             if (!skipTest) {
-                tasks.push('webdrivertest');
+                tasks.push('visualtest');
                 tasks.push('karma:' + karmaTarget);
             }
         }
