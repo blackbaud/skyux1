@@ -30,6 +30,7 @@
                         tabsetCtrl;
 
                     tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
+                    
 
                     function checkCurrentState() {
                         if ($state.is(sref)) {
