@@ -5293,7 +5293,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 /** @module Navbar
 @icon compass
 @summary The navbar creates a Bootstrap `nav` element and applies Sky UX classes to it.
- @description The navbar directive creates a Bootstrap `nav` element with the appropriate Sky UX classes applied to it and its children, and also adds behavior such as showing sub-navigation items when the user hovers over the dropdown.
+ @description The navbar directive creates a Bootstrap `nav` element with the appropriate Sky UX classes applied to it and its children, and also adds behavior such as showing sub-navigation items when the user hovers over the dropdown. If you do not wish to use the omnibar for collapsing the navbar into a mobile menu on small screens, then place the `bb-navbar-showmobile` class on the `bb-navbar` directive.
  */
 
 (function ($) {
@@ -6620,7 +6620,7 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
 }(jQuery));
 
 /*jslint nomen: true, plusplus: true */
-/*global angular */
+/*global angular, jQuery */
 
 /** @module Tabset
 @icon folder-open-o
@@ -6643,8 +6643,10 @@ You must then use the `bb-tab-collapse-header` attribute on your ui-bootstrap `t
 If you wish to add a close icon to a tab, just add the `bb-tab-close` class to the ui-bootstrap `tab` element, and add an `i` element with the `bb-tab-close-icon` class inside of the ui-bootstrap `tab-heading` directive.
 
  */
-(function () {
+(function ($) {
     'use strict';
+
+    var DROPDOWN_CARET_WIDTH = 45;
 
     function getTemplate($templateCache, name) {
         return $templateCache.get('sky/templates/tabset/' + name + '.html');
@@ -6705,11 +6707,13 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
 
-    function bbTabsetCollapsible($compile, $templateCache, bbMediaBreakpoints) {
+    function bbTabsetCollapsible($compile, $templateCache, $window, bbMediaBreakpoints) {
         return {
             restrict: 'A',
             controller: BBTabsetCollapsibleController,
             link: function ($scope, el) {
+                var lastWindowWidth,
+                    tabCollapseId = $scope.$id;
 
 
                 function getBootstrapTabs() {
@@ -6718,6 +6722,34 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
                 function getDropdownEl() {
                     return angular.element(getTemplate($templateCache, 'dropdown'));
+                }
+
+                function setTabMaxWidth() {
+                    //later this will resize tabs to fit the window
+                    el.find('ul.nav-tabs li a').css('max-width', '');
+                }
+
+                function setDropdownMaxWidth() {
+                    var availableWidth,
+                        addOpenWidth = 0,
+                        addOpenButtonEl,
+                        i,
+                        dropdownTextMaxWidth;
+
+                    availableWidth = el.width();
+
+                    addOpenButtonEl = el.find('.bb-tab-button-wrap');
+
+                    for (i = 0; i < addOpenButtonEl.length; i++) {
+                        addOpenWidth += addOpenButtonEl.eq(i).width();
+                    }
+
+                    dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH;
+
+                    el.find('.bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
+
+                    el.find('.bb-tabset-dropdown ul.dropdown-menu li a').css('max-width', (availableWidth.toString() + 'px'));
+
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -6738,6 +6770,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         ulEl.removeClass('nav-tabs');
                         dropdownContainerEl.append(ulEl);
                         dropdownContainerEl.append(dropdownButtonsEl);
+                        setDropdownMaxWidth();
                     } else {
                         ulEl.removeClass('dropdown-menu');
                         ulEl.addClass('nav');
@@ -6746,6 +6779,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         el.prepend(ulEl);
 
                         ulEl.find('.bb-tab-button').append(dropdownButtonsEl);
+                        setTabMaxWidth();
                     }
                 }
 
@@ -6776,14 +6810,26 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
 
+                // Show initial scroll animation whenever the window width changes.
+                $($window).on('resize.tabcollapse' + tabCollapseId, function () {
+                    var windowWidth = $($window).width();
+
+                    if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
+                        setDropdownMaxWidth();
+                    }
+
+                    lastWindowWidth = windowWidth;
+                });
+
                 $scope.$on('$destroy', function () {
                     bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+                    $($window).off('.tabcollapse' + tabCollapseId);
                 });
             }
         };
     }
 
-    bbTabsetCollapsible.$inject = ['$compile', '$templateCache', 'bbMediaBreakpoints'];
+    bbTabsetCollapsible.$inject = ['$compile', '$templateCache', '$window', 'bbMediaBreakpoints'];
 
     function collapsibleTabTitle($scope, el, bbTabsetCollapsibleCtrl, getTabHeading) {
         //get ui-bootstrap tab scope
@@ -6842,13 +6888,14 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
-        .directive('tabset', tabset)
         .directive('uibTabset', tabset)
+        .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
         .directive('tab', tab)
         .directive('uibTab', tab);
-}());
+
+}(jQuery));
 
 /*global angular */
 
@@ -9630,7 +9677,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/tabset/dropdown.html',
         '<div class="bb-tabset-dropdown nav nav-tabs" uib-dropdown ng-show="bbTabsetOptions.isSmallScreen &amp;&amp; bbTabsetOptions.tabCount > 1">\n' +
-        '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle>{{bbTabsetOptions.selectedTabHeader}}<i class="fa fa-caret-down"></i></button>\n' +
+        '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle><div class="bb-tab-header-text">{{bbTabsetOptions.selectedTabHeader}}</div><i class="fa fa-caret-down"></i></button>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/tabset/openbutton.html',
