@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global inject, module, $, console */
+/*global inject, module, $ */
 
 describe('Modal', function () {
     'use strict';
@@ -15,14 +15,12 @@ describe('Modal', function () {
         bbResources;
 
     function closeModalInstance(modalInstance) {
-        console.log('closeModalInstance Start', $document.find('body .bb-modal-content-wrapper').length);
         modalInstance.close();
         $rootScope.$digest();
         $animate.flush();
         $rootScope.$digest();
         $animate.flush();
         $rootScope.$digest();
-        console.log('closeModalInstance End', $document.find('body .bb-modal-content-wrapper').length);
     }
 
     beforeEach(module(
@@ -144,7 +142,6 @@ describe('Modal', function () {
             $rootScope.$digest();
 
             modalEl = $('.bb-modal .modal-dialog');
-            console.log(modalEl.length);
 
             modalMargin = getPixelValue(modalEl.css('margin-top')) + getPixelValue(modalEl.css('margin-bottom'));
 
