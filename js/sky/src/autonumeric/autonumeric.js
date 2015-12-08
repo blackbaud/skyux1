@@ -71,6 +71,10 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     var customSettings = {},
                         isIosUserAgent = bbWindow.isIosUserAgent();
 
+                    ngModel.$options = {
+                        updateOn: 'blur'
+                    };
+
                     function applySettings() {
                         el.autoNumeric('update', angular.extend({}, getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric), customSettings));
                     }
@@ -108,6 +112,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     // In that case, updates the model to what the autoNumeric plugin's value.
                     $scope.$watch(attrs.ngModel, function (newValue) {
                         var getValue;
+
                         if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
                             el.autoNumeric('set', newValue);
                             getValue = el.autoNumeric('get');
