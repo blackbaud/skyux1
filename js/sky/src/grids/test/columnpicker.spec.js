@@ -4,7 +4,8 @@
 describe('Grid column picker', function () {
     'use strict';
 
-    var basicGridHtml,
+    var $animate,
+        basicGridHtml,
         $compile,
         $document,
         el,
@@ -43,9 +44,18 @@ describe('Grid column picker', function () {
         return $document.find('body .bb-modal-content-wrapper');
     }
 
-    function closeModal(modalEl) {
-        modalEl.find('.modal-footer button.btn-link').click();
-        $timeout.flush();
+    function closeModal(modalEl, alreadyClosing) {
+        if (!alreadyClosing) {
+            modalEl.find('.modal-footer button.btn-link').click();
+        }
+
+        // https://github.com/angular-ui/bootstrap/blob/0.14.x/src/modal/test/modal.spec.js
+        $scope.$digest();
+        $animate.flush();
+        $scope.$digest();
+        $animate.flush();
+        $scope.$digest();
+        $scope.$digest();
     }
 
     function getHeaders(el) {
@@ -56,13 +66,19 @@ describe('Grid column picker', function () {
         return rowEls.eq(rowIndex).find('.bb-checklist-list-title');
     }
 
+    angular.module('disableNgAnimate', []).run(['$animate', function ($animate) {
+        $animate.enabled(false);
+    }]);
+
     beforeEach(module('ngMock'));
+    beforeEach(module('ngAnimateMock'));
     beforeEach(module(
         'sky.grids',
         'sky.templates'
     ));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_) {
+    beforeEach(inject(function (_$animate_, _$rootScope_, _$compile_, _$document_, _$timeout_) {
+        $animate = _$animate_;
         $scope = _$rootScope_;
         $compile = _$compile_;
         $document = _$document_;
@@ -101,7 +117,6 @@ describe('Grid column picker', function () {
         fxOff =  $.fx.off;
         //turn off jquery animate.
         $.fx.off = true;
-
     }));
 
     afterEach(function () {
@@ -220,6 +235,7 @@ describe('Grid column picker', function () {
 
         expect(categoryEl.eq(2)).toHaveText('Nonesense');
         expect(categoryEl.eq(2)).toHaveClass('btn-default');
+
         closeModal(modalEl.eq(0));
     });
 
@@ -282,7 +298,6 @@ describe('Grid column picker', function () {
         expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
         expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
         expect(getChecklistItemTitleEl(modalRowsEl, 2)).toHaveText('Name');
-
         closeModal(modalEl.eq(0));
     });
 
@@ -316,8 +331,7 @@ describe('Grid column picker', function () {
         modalRowsEl.eq(2).find('.bb-check-wrapper input').eq(0).click();
 
         modalEl.eq(0).find('.modal-footer .btn-primary').eq(0).click();
-        $timeout.flush();
-        $scope.$digest();
+        closeModal(modalEl.eq(0), true);
 
         headerEl = getHeaders(el);
 

@@ -1,10 +1,12 @@
 /*jshint browser: true, jasmine: true */
-/*global inject, module, $ */
+/*global inject, module, $, console */
 
 describe('Modal', function () {
     'use strict';
 
-    var $compile,
+    var $animate,
+        $compile,
+        $document,
         $rootScope,
         $templateCache,
         $timeout,
@@ -13,12 +15,19 @@ describe('Modal', function () {
         bbResources;
 
     function closeModalInstance(modalInstance) {
+        console.log('closeModalInstance Start', $document.find('body .bb-modal-content-wrapper').length);
         modalInstance.close();
-        $timeout.flush();
+        $rootScope.$digest();
+        $animate.flush();
+        $rootScope.$digest();
+        $animate.flush();
+        $rootScope.$digest();
+        console.log('closeModalInstance End', $document.find('body .bb-modal-content-wrapper').length);
     }
 
     beforeEach(module(
         'ngMock',
+        'ngAnimateMock',
         'sky.helpbutton',
         'sky.modal',
         'sky.templates',
@@ -42,8 +51,10 @@ describe('Modal', function () {
         });
     }));
 
-    beforeEach(inject(function (_$compile_, _$modal_, _$rootScope_, _$templateCache_, _$timeout_, _$window_, _bbModal_, _bbResources_) {
+    beforeEach(inject(function (_$animate_, _$compile_, _$document_, _$modal_, _$rootScope_, _$templateCache_, _$timeout_, _$window_, _bbModal_, _bbResources_) {
+        $animate = _$animate_;
         $compile = _$compile_;
+        $document = _$document_;
         $rootScope = _$rootScope_;
         $templateCache = _$templateCache_;
         $timeout = _$timeout_;
@@ -133,6 +144,7 @@ describe('Modal', function () {
             $rootScope.$digest();
 
             modalEl = $('.bb-modal .modal-dialog');
+            console.log(modalEl.length);
 
             modalMargin = getPixelValue(modalEl.css('margin-top')) + getPixelValue(modalEl.css('margin-bottom'));
 
