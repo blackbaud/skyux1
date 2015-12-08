@@ -6929,6 +6929,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         tabsetCtrl;
 
                     tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
+                    
 
                     function checkCurrentState() {
                         if ($state.is(sref)) {
