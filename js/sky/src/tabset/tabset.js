@@ -268,8 +268,10 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
+        .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
+        .directive('tab', tab)
         .directive('uibTab', tab);
 
 }(jQuery));

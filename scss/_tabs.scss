@@ -175,7 +175,7 @@
 
 .bb-tab-close {
     > a {
-        tab-heading {
+        tab-heading, uib-tab-heading {
             position: relative;
             padding-right: 30px;
             display: block;
