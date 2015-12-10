@@ -533,7 +533,7 @@ describe('Tabset module', function () {
         describe('dropdown max width', function () {
 
             function calculateExpectedWidth(el) {
-                return el.width() - 88 - 45;
+                return el.width() - 88 - 45 - 15;
             }
 
             function verifyMaxWidths(el, dropdownTextEl, dropdownMenuItemEl) {

@@ -3,30 +3,30 @@
 
 describe('Tabscroll directive', function () {
     'use strict';
-    
+
     var $compile,
         $scope,
         $timeout,
         fxOff,
         wideTabHtml;
-    
+
     function validateSpyOnTabs(spy) {
         expect(spy).toHaveBeenCalled();
         expect(spy.calls.mostRecent().object).toHaveClass('nav-tabs');
     }
-    
+
     beforeEach(module(
         'ngMock',
         'sky.tabscroll',
         'template/tabs/tabset.html',
         'template/tabs/tab.html'
     ));
-    
+
     beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
         $compile = _$compile_;
         $scope = _$rootScope_;
         $timeout = _$timeout_;
-        
+
         wideTabHtml = '<tabset bb-tab-scroll bb-tab-scroll-ready="ready">' +
                 '<tab style="width: 100px" heading="1"></tab>' +
                 '<tab style="width: 100px" heading="2"></tab>' +
@@ -39,12 +39,12 @@ describe('Tabscroll directive', function () {
                 '<tab style="width: 100px" heading="9"></tab>' +
                 '<tab style="width: 100px" heading="10"></tab>' +
             '</tabset>';
-        
+
         // Remove animation delay so tests don't have to be asynchronous.
         fxOff = $.fx.off;
         $.fx.off = true;
     }));
-    
+
     afterEach(function () {
         $.fx.off = fxOff;
     });
@@ -53,44 +53,44 @@ describe('Tabscroll directive', function () {
         var el = $compile('<tabset bb-tab-scroll></tabset>')($scope);
 
         $scope.$digest();
-        
+
         expect(el).toHaveClass('bb-tab-scroll');
     });
-    
+
     it('should add a resize listener on window and remove it when the element is destroyed', function () {
         var el1 = $compile('<tabset bb-tab-scroll></tabset>')($scope),
             resizeListenerCount;
-        
+
         function getResizeListenerCount() {
             var eventsData = $._data($(window)[0], 'events'),
                 resizeListeners;
-            
+
             if (eventsData) {
                 resizeListeners = eventsData.resize;
-                
+
                 if (resizeListeners) {
                     return resizeListeners.length;
                 }
             }
-            
+
             return 0;
         }
-        
+
         $compile(wideTabHtml)($scope);
-        
+
         resizeListenerCount = getResizeListenerCount();
 
         $scope.$digest();
-        
+
         expect(getResizeListenerCount()).toBe(resizeListenerCount + 2);
-        
+
         // Causes the $destroy() event to fire which is what removes the window resize listener.
         el1.remove();
-        
+
         // The resize listener from el2 should still be present.
         expect(getResizeListenerCount()).toBe(resizeListenerCount + 1);
     });
-    
+
     describe('animation', function () {
         function validateScollOnClick(el, selector, expectedScrollLeft) {
             var animateSpy = spyOn($.fn, 'animate');
@@ -107,42 +107,42 @@ describe('Tabscroll directive', function () {
             );
 
             expect(animateSpy.calls.mostRecent().object).toHaveClass('nav-tabs');
-            
+
             el.remove();
         }
-        
+
         function getWidthSpy(widthFn, fakeWindowWidth) {
             return spyOn($.fn, 'width').and.callFake(function () {
                 if (this[0] === window || this.is('.bb-tab-scroll')) {
                     return angular.isFunction(fakeWindowWidth) ? fakeWindowWidth() : fakeWindowWidth;
                 }
-                
+
                 return widthFn.apply(this, arguments);
             });
         }
-        
+
         it('should not error when no tabs are present', function () {
             var el,
                 widthFn,
                 widthSpy;
-            
+
             /*jlsint white: true */
             el = $compile(
                 '<tabset bb-tab-scroll></tabset>'
             )($scope);
             /*jslint white: false */
-            
+
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             widthFn = $.fn.width;
-            
+
             widthSpy = getWidthSpy(widthFn, 200);
 
             $(window).resize();
             $timeout.flush();
-            
+
             el.remove();
         });
 
@@ -154,13 +154,13 @@ describe('Tabscroll directive', function () {
                 widthSpy;
 
             widthFn = $.fn.width;
-            
+
             spyWindowWidth = 500;
-            
+
             widthSpy = getWidthSpy(widthFn, function () {
                 return spyWindowWidth;
             });
-            
+
             /*jslint white: true */
             el = $compile(
                 '<tabset bb-tab-scroll>' +
@@ -170,24 +170,24 @@ describe('Tabscroll directive', function () {
                 '</tabset>'
             )($scope);
             /*jslint white: false */
-            
+
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             animateSpy = spyOn($.fn, 'animate');
-            
+
             spyWindowWidth = 200;
-            
+
             $(window).resize();
 
             // Verify that the animation is triggered on a delay.
             expect(animateSpy).not.toHaveBeenCalled();
-            
+
             $timeout.flush();
-            
+
             validateSpyOnTabs(animateSpy);
-            
+
             el.remove();
         });
 
@@ -199,9 +199,9 @@ describe('Tabscroll directive', function () {
                 spyWindowWidth,
                 widthFn,
                 widthSpy;
-            
+
             $scope.tabCActive = true;
-            
+
             /*jslint white: true */
             el = $compile(
                 '<tabset bb-tab-scroll>' +
@@ -211,43 +211,43 @@ describe('Tabscroll directive', function () {
                 '</tabset>'
             )($scope);
             /*jslint white: false */
-            
+
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             widthFn = $.fn.width;
-            
+
             spyWindowWidth = 200;
-            
+
             widthSpy = getWidthSpy(widthFn, function () {
                 return spyWindowWidth;
             });
 
             animateSpy = spyOn($.fn, 'animate');
-            
+
             scrollLeftSpy = spyOn($.fn, 'scrollLeft').and.callFake(function () {
                 if (this.hasClass('nav-tabs')) {
                     scrollWasCalled = true;
                 }
             });
-            
+
             $(window).resize();
             $timeout.flush();
-            
+
             expect(scrollWasCalled).toBe(true);
-            
+
             validateSpyOnTabs(animateSpy);
-            
+
             scrollWasCalled = false;
-            
+
             spyWindowWidth = 150;
-            
+
             $(window).resize();
             $timeout.flush();
-            
+
             expect(scrollWasCalled).toBe(false);
-            
+
             el.remove();
         });
 
@@ -257,7 +257,7 @@ describe('Tabscroll directive', function () {
                 spyWindowWidth,
                 widthFn,
                 widthSpy;
-            
+
             /*jslint white: true */
             el = $compile(
                 '<tabset bb-tab-scroll>' +
@@ -267,35 +267,35 @@ describe('Tabscroll directive', function () {
                 '</tabset>'
             )($scope);
             /*jslint white: false */
-            
+
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             widthFn = $.fn.width;
-            
+
             spyWindowWidth = 250;
-            
+
             widthSpy = getWidthSpy(widthFn, function () {
                 return spyWindowWidth;
             });
 
             animateSpy = spyOn($.fn, 'animate');
-            
+
             $(window).resize();
             $timeout.flush();
-            
+
             validateSpyOnTabs(animateSpy);
-            
+
             expect(animateSpy.calls.count()).toBe(1);
-            
+
             spyWindowWidth = 200;
-            
+
             $(window).resize();
             $timeout.flush();
-            
+
             expect(animateSpy.calls.count()).toBe(1);
-            
+
             el.remove();
         });
 
@@ -304,7 +304,7 @@ describe('Tabscroll directive', function () {
                 widthSpy;
 
             $compile('<tabset bb-tab-scroll></tabset>')($scope);
-            
+
             $scope.$digest();
 
             widthSpy = spyOn($.fn, 'width').and.returnValue(400);
@@ -313,12 +313,12 @@ describe('Tabscroll directive', function () {
             $(window).resize();
 
             widthSpy.and.callThrough();
-            
+
             $timeout.flush();
-            
+
             expect(animateSpy).not.toHaveBeenCalled();
         });
-        
+
         it('should occur when the tabs are ready', function () {
             /*jslint white: true */
             var animateSpy,
@@ -330,20 +330,20 @@ describe('Tabscroll directive', function () {
             /*jslint white: false */
 
             animateSpy = spyOn($.fn, 'animate');
-            
+
             // Ensure any current animation is stopped before animating again.
             stopSpy = spyOn($.fn, 'stop');
-            
+
             scrollLeftSpy = spyOn($.fn, 'scrollLeft').and.callThrough();
-            
+
             $scope.$digest();
 
             $scope.ready = true;
             $scope.$digest();
-            
+
             // Ensure the tabs are scrolled all the way to the right before animation begins.
             expect(scrollLeftSpy).toHaveBeenCalledWith(0);
-            
+
             validateSpyOnTabs(stopSpy);
             validateSpyOnTabs(animateSpy);
         });
@@ -352,29 +352,29 @@ describe('Tabscroll directive', function () {
             var el = $compile(wideTabHtml)($scope);
 
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             el.width(100);
-            
+
             $scope.ready = true;
             $scope.$digest();
 
             el.children('.nav-tabs').scrollLeft(10);
 
-            validateScollOnClick(el, 'li:first a', 0);
+            validateScollOnClick(el, 'li:first a', 15);
         });
 
         it('should occur when a right-most is clicked and scrolled partially off the right', function () {
             var el = $compile(wideTabHtml)($scope),
                 navTabsEl;
-            
+
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             el.width(100);
-            
+
             $scope.ready = true;
             $scope.$digest();
 
@@ -392,16 +392,16 @@ describe('Tabscroll directive', function () {
 
             el = $compile(wideTabHtml)($scope);
             /*jslint white: false */
-            
+
             el.appendTo(document.body);
-            
+
             $scope.$digest();
 
             el.width(400);
-            
+
             $scope.ready = true;
             $scope.$digest();
-            
+
             animateSpy = spyOn($.fn, 'animate');
             el.find('li:first a').click();
 
