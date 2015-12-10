@@ -112,7 +112,10 @@ describe('Autonumeric', function () {
 
             $scope.$digest();
             $timeout.flush();
-            expect(el[0].selectionStart).toBe(1);
+            if (angular.isFunction(el[0].setSelectionRange)) {
+                expect(el[0].selectionStart).toBe(1);
+            }
+
             expect(el.val()).toBe('3.00');
             el.remove();
 
