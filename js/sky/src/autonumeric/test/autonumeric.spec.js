@@ -216,7 +216,7 @@ describe('Autonumeric', function () {
 
             it('should keep the model in sync with a pasted value that does not meet the requirements', function () {
                 var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />')($scope);
-
+                el.appendTo(document.body);
                 $scope.moneyOptions = {
                     vMin: 0
                 };
@@ -229,6 +229,7 @@ describe('Autonumeric', function () {
                 console.log('after flush');
                 expect(el.val()).toBe('$0.00');
                 expect($scope.moneyValue).toBe(0);
+                el.remove();
             });
 
             it('should keep the model in sync when starting as undefined', function () {
@@ -239,7 +240,7 @@ describe('Autonumeric', function () {
                     '</div>',
                     '</bb-tile>'
                 ].join(''))($scope);
-
+                el.appendTo(document.body);
                 $scope.moneyOptions = {
                     vMin: 0
                 };
@@ -252,6 +253,7 @@ describe('Autonumeric', function () {
                 $timeout.flush();
                 expect($scope.moneyValue).toBe(0);
                 expect(el.find('input').val()).toBe('$0.00');
+                el.remove();
 
             });
 
