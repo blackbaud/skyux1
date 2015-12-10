@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module, $ */
+/*global angular, inject, module, console, $ */
 
 describe('Autonumeric', function () {
     'use strict';
