@@ -118,9 +118,11 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                             getValue = el.autoNumeric('get');
                             if (parseFloat(getValue) !== parseFloat(newValue)) {
                                 $timeout(autonumericChange);
-                            } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
+                            } else {
                                 $timeout(function () {
-                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                    if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
+                                        el[0].setSelectionRange(selectionStart, selectionStart);
+                                    }
                                 });
                             }
                         } else if (newValue === null) {
