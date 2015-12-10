@@ -98,6 +98,27 @@ describe('Autonumeric', function () {
             expect(el.val()).toBe('123,456.78');
         });
 
+        //This is a test for IE11
+        it('should set selection in the correct location', function () {
+            var el = $compile('<input type="text" ng-model="numericValue" bb-autonumeric />')($scope);
+            el.appendTo(document.body);
+
+            $scope.numericValue = 123456.78;
+
+            $scope.$digest();
+
+            $scope.numericValue = 3;
+            el[0].selectionStart = 1;
+
+            $scope.$digest();
+            $timeout.flush();
+            expect(el[0].selectionStart).toBe(1);
+            expect(el.val()).toBe('3.00');
+            el.remove();
+
+
+        });
+
         describe('money option', function () {
             it('should have bb-autonumeric-money class', function () {
                 var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" />')($scope);
@@ -118,6 +139,26 @@ describe('Autonumeric', function () {
                 el.change();
 
                 expect($scope.moneyValue).toBe(7654321);
+            });
+
+
+
+            it('should set scope value based on default configuration on paste events', function () {
+                var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" />')($scope);
+
+                $scope.moneyValue = 123456.78;
+
+                $scope.$digest();
+
+                el.val('$7,654,321.00');
+                el.trigger('paste');
+
+                expect($scope.moneyValue).toBe(7654321);
+
+                el.val('$8,654,321.00');
+                el.trigger('onpaste');
+
+                expect($scope.moneyValue).toBe(8654321);
             });
 
             it('should set scope value based on default configuration on enter press', function () {

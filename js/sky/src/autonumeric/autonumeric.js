@@ -1,6 +1,5 @@
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
-
 /** @module Autonumeric
 @icon calculator
 @summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
@@ -71,10 +70,6 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     var customSettings = {},
                         isIosUserAgent = bbWindow.isIosUserAgent();
 
-                    ngModel.$options = {
-                        updateOn: 'blur'
-                    };
-
                     function applySettings() {
                         el.autoNumeric('update', angular.extend({}, getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric), customSettings));
                     }
@@ -92,7 +87,6 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                             if (isNaN(value)) {
                                 value = null;
                             }
-
                             return ngModel.$setViewValue(value);
                         });
                     }
@@ -110,30 +104,37 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     // If a valid number, update the autoNumeric value.
                     // Also handles the model being updated, but being in correct (usually a paste).
                     // In that case, updates the model to what the autoNumeric plugin's value.
-                    $scope.$watch(attrs.ngModel, function (newValue) {
-                        var getValue;
-
+                    $scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                        var getValue,
+                            selectionStart;
                         if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
+
+                            if (parseFloat(newValue) !== parseFloat(oldValue)) {
+
+                                selectionStart = el[0].selectionStart;
+                            }
+
                             el.autoNumeric('set', newValue);
                             getValue = el.autoNumeric('get');
-                            if (newValue.toString() !== getValue) {
+                            if (parseFloat(getValue) !== parseFloat(newValue)) {
                                 $timeout(autonumericChange);
+                            } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
+                                $timeout(function () {
+                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                });
                             }
-                        } else if (newValue !== undefined && newValue !== null && isNaN(newValue)) {
-                            $timeout(autonumericChange);
-                        } else if (!isNaN(newValue)) {
-                            el.val(null);
                         }
-                    });
-
-                    el.on('change', function () {
-                        autonumericChange();
                     });
 
                     el.on('keydown', function (event) {
                         if (event.which === 13) {
                             autonumericChange();
                         }
+                    });
+
+                    el.on('change paste onpaste', function () {
+                        autonumericChange();
+
                     });
 
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
