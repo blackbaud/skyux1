@@ -224,8 +224,9 @@ describe('Autonumeric', function () {
                 $scope.moneyValue = -1.00;
 
                 $scope.$digest();
+                console.log('before flush');
                 $timeout.flush();
-
+                console.log('after flush');
                 expect(el.val()).toBe('$0.00');
                 expect($scope.moneyValue).toBe(0);
             });
