@@ -124,7 +124,8 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                                 $timeout(autonumericChange);
                             } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
                                 $timeout(function () {
-                                    console.log('before set selection');
+                                    console.log('before set selection', selectionStart);
+                                    console.log('function defined', angular.isFunction(el[0].setSelectionRange));
                                     el[0].setSelectionRange(selectionStart, selectionStart);
                                     console.log('after set selection');
                                 });
