@@ -14,10 +14,13 @@ describe('Autonumeric', function () {
     describe('directive', function () {
         beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
             $compile = _$compile_;
-            $scope = _$rootScope_;
+            $scope = _$rootScope_.$new();
             $timeout = _$timeout_;
         }));
 
+        afterEach(function () {
+            $scope.$destroy();
+        });
         function compileEl() {
             return $compile('<input type="text" ng-model="numericValue" bb-autonumeric />')($scope);
         }
@@ -239,7 +242,7 @@ describe('Autonumeric', function () {
                 $scope.moneyOptions = {
                     vMin: 0
                 };
-                
+
                 $scope.$digest();
 
                 $scope.moneyValue = -1.00;

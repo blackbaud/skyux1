@@ -1,5 +1,5 @@
 /*jslint browser: true, plusplus: true */
-/*global angular, jQuery, console */
+/*global angular, jQuery */
 /** @module Autonumeric
 @icon calculator
 @summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
@@ -120,9 +120,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                                 $timeout(autonumericChange);
                             } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
                                 $timeout(function () {
-                                    console.log('before set selectionrange');
                                     el[0].setSelectionRange(selectionStart, selectionStart);
-                                    console.log('after set selectionrange');
                                 });
                             }
                         } else if (newValue === null) {
