@@ -125,7 +125,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                             }
                         } else if (newValue === null) {
                             el.val(null);
-                            
+
                         }
                     });
 

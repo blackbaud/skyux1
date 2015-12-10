@@ -111,8 +111,9 @@ describe('Autonumeric', function () {
             el[0].selectionStart = 1;
 
             $scope.$digest();
-            $timeout.flush();
+
             if (angular.isFunction(el[0].setSelectionRange)) {
+                $timeout.flush();
                 expect(el[0].selectionStart).toBe(1);
             }
 
@@ -238,9 +239,9 @@ describe('Autonumeric', function () {
                 $scope.moneyOptions = {
                     vMin: 0
                 };
-
+                
                 $scope.$digest();
-                $timeout.flush();
+
                 $scope.moneyValue = -1.00;
 
                 $scope.$digest();
