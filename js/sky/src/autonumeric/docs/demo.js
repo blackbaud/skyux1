@@ -8,7 +8,8 @@
         self.moneyValue = 12345678;
         self.numberValue = 87654321;
         self.customSettings = {
-            aSign: '$'
+            aSign: '$',
+            vMin: 0
         };
 
         self.clickButton = function () {

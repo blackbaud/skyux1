@@ -1,15 +1,21 @@
 <div ng-controller="AutonumericInputTestController as autoCtrl">
+
   <div class="row">
     <div class="col-md-4">
+        <form>
       <div class="tile-form">
+
         <div class="form-group">
           <label for="autonumeric-money-{{$id}}" class="control-label">
             <h4>Enter a money value.</h4>
           </label>
           <br />
+
           <input type="text" class="form-control" id="autonumeric-money-{{$id}}" ng-model="autoCtrl.moneyValue" bb-autonumeric="money" bb-autonumeric-settings="autoCtrl.customSettings" />
+
           <a href="#"></a>
         </div>
+
         <div class="clearfix"></div>
         <div>
           Raw value: <strong>{{autoCtrl.moneyValue}}</strong>
@@ -55,6 +61,7 @@
           </div>
         </div>
       </div>
+    </form>
     </div>
   </div>
 </div>
