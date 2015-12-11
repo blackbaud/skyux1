@@ -18,7 +18,6 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
     'use strict';
 
     var tabScrollId = 0;
-
     angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
