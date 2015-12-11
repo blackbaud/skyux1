@@ -1401,6 +1401,41 @@ describe('Grid directive', function () {
             expect(topScrollbarEl[0].style.width).toBe('599px');
         });
 
+        it('reinitializes grid when grid element width changes from 0', function () {
+            var expectedScrollbarWidth,
+                tableWrapperEl,
+                topScrollbarEl,
+                topScrollbarDivEl,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid ng-show="locals.isVisible" bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+            locals.gridOptions.columns[0].width_all = 600;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 5;
+
+            el = setUpGrid(gridWrapperHtml, locals);
+
+            spyOn($.fn, 'setGridWidth');
+
+            tableWrapperEl = getTableWrapperEl(el);
+
+            tableWrapperEl.width(599);
+
+            windowEl.trigger('resize');
+
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(610);
+
+            topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarDivEl = topScrollbarEl.find('div');
+
+            expect(topScrollbarDivEl[0].style.width).toBe('610px');
+            expectedScrollbarWidth = bbWindow.getScrollbarWidth();
+
+            expect(topScrollbarDivEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+
+            expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+            expect(topScrollbarEl[0].style.width).toBe('599px');
+        });
+
         it('sets the total column width when no extended column and totalcolumn width exactly the same as the tablewrapperwidth', function () {
             var tableWrapperEl,
                 topScrollbarEl,
