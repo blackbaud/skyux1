@@ -96043,7 +96043,6 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
     'use strict';
 
     var tabScrollId = 0;
-
     angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
@@ -96221,7 +96220,8 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 (function ($) {
     'use strict';
 
-    var DROPDOWN_CARET_WIDTH = 45;
+    var DROPDOWN_CARET_WIDTH = 45,
+        TAB_PADDING = 15;
 
     function getTemplate($templateCache, name) {
         return $templateCache.get('sky/templates/tabset/' + name + '.html');
@@ -96320,7 +96320,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         addOpenWidth += addOpenButtonEl.eq(i).width();
                     }
 
-                    dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH;
+                    dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH - TAB_PADDING;
 
                     el.find('.bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
 
