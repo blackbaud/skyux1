@@ -360,7 +360,7 @@ describe('Tabscroll directive', function () {
             $scope.ready = true;
             $scope.$digest();
 
-            el.children('.nav-tabs').scrollLeft(10);
+            el.children('.nav-tabs').scrollLeft(20);
 
             validateScollOnClick(el, 'li:first a', 15);
         });
