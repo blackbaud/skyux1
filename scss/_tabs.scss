@@ -4,6 +4,10 @@
     background-color: $bb-color-white;
 }
 
+.nav.nav-tabs {
+    padding-left: 15px;
+}
+
 .nav-tabs > li > a {
     padding: 7px 15px;
 }
@@ -112,6 +116,8 @@
 
             .bb-tab-close-icon {
                 padding-left: 10px;
+                padding-top: 2px;
+                padding-bottom: 3px;
                 cursor: pointer;
                 -webkit-appearance: none;
                 background-color: transparent;
