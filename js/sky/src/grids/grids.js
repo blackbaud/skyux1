@@ -1422,7 +1422,7 @@ reloading the grid with the current data after the event has fired.
                                 handleTableWrapperResize();
                             });
 
-                            // Reinitialize grid when grid element resizes
+                            // Reinitialize grid when grid element resizes from 0
                             $scope.$watch(function () {
                                 return element.width();
                             }, function (newValue, oldValue) {
