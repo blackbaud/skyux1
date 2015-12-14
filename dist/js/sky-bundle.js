@@ -92871,8 +92871,7 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.rowcount = count;
                             }
 
-                            function mediaBreakpointHandler(newBreakpoints) {
-                                breakpoints = newBreakpoints;
+                            function reInitGrid() {
                                 if ($scope.options && $scope.options.selectedColumnIds && $scope.options.selectedColumnIds.length > 0 && tableEl[0].grid) {
 
                                     initGrid();
@@ -92881,6 +92880,11 @@ reloading the grid with the current data after the event has fired.
                                         setRows($scope.options.data);
                                     }
                                 }
+                            }
+
+                            function mediaBreakpointHandler(newBreakpoints) {
+                                breakpoints = newBreakpoints;
+                                reInitGrid();
                             }
 
                             function buildColumnClasses(column) {
@@ -93994,6 +93998,15 @@ reloading the grid with the current data after the event has fired.
 
                             windowEl.on('resize.' + windowEventId + ', orientationchange.' + windowEventId, function () {
                                 handleTableWrapperResize();
+                            });
+
+                            // Reinitialize grid when grid element resizes from 0
+                            $scope.$watch(function () {
+                                return element.width();
+                            }, function (newValue, oldValue) {
+                                if (newValue !== oldValue && oldValue === 0) {
+                                    reInitGrid();
+                                }
                             });
 
                             $scope.locals.topScrollbarScroll = function () {
