@@ -2299,7 +2299,8 @@ to the function.
                 scope.bbFileDrop = {
                     hasTranscludeContents: $.trim(el.find('.bb-file-drop-contents-custom').html()).length > 0,
                     allowLinks: angular.isDefined(attrs.bbFileDropLink),
-                    addLink: function () {
+                    addLink: function ($event) {
+                        $event.preventDefault();
                         scope.bbFileDropLinkChange({
                             link: {
                                 url: scope.bbFileDrop.url
@@ -9416,10 +9417,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           class="form-control"\n' +
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
-        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink()"\n' +
+        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"\n' +
         '                           />\n' +
         '                </div>\n' +
-        '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink()">\n' +
+        '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
         '                    {{\'file_upload_paste_link_done\' | bbResources}}\n' +
         '                </button>\n' +
         '            </div>\n' +
