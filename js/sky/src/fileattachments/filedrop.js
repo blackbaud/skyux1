@@ -19,7 +19,8 @@
                 scope.bbFileDrop = {
                     hasTranscludeContents: $.trim(el.find('.bb-file-drop-contents-custom').html()).length > 0,
                     allowLinks: angular.isDefined(attrs.bbFileDropLink),
-                    addLink: function () {
+                    addLink: function ($event) {
+                        $event.preventDefault();
                         scope.bbFileDropLinkChange({
                             link: {
                                 url: scope.bbFileDrop.url
