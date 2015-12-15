@@ -386,7 +386,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('blackbaud-stache-jsdoc');
-    grunt.loadNpmTasks('@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs');
     grunt.loadNpmTasks('grunt-webdriver');
 
     // We like clean task names too, rename a few of the defaults.
