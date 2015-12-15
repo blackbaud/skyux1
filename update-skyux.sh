@@ -11,10 +11,6 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
 
   cp -rf dist/ skyux/
 
-  # The --parents flag is only valid on Linux.  If you need to test this on a Mac, install coreutils and use the gcp command.
-  # https://www.topbug.net/blog/2013/04/14/install-and-use-gnu-command-line-tools-in-mac-os-x/
-  cp -rf visualtest/test/**/screenshots/baseline/ skyux/ --parents
-
   cp -rf webdriver-screenshots/ skyux/
 
   cd skyux
