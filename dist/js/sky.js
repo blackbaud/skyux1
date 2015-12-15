@@ -135,7 +135,6 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
-
 /** @module Autonumeric
 @icon calculator
 @summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
@@ -218,12 +217,12 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
                     function autonumericChange() {
                         return $scope.$apply(function () {
+
                             var value = parseFloat(el.autoNumeric('get'));
 
                             if (isNaN(value)) {
                                 value = null;
                             }
-
                             return ngModel.$setViewValue(value);
                         });
                     }
@@ -241,29 +240,40 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     // If a valid number, update the autoNumeric value.
                     // Also handles the model being updated, but being in correct (usually a paste).
                     // In that case, updates the model to what the autoNumeric plugin's value.
-                    $scope.$watch(attrs.ngModel, function (newValue) {
-                        var getValue;
+                    $scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                        var getValue,
+                            selectionStart;
                         if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
+
+                            if (parseFloat(newValue) !== parseFloat(oldValue)) {
+
+                                selectionStart = el[0].selectionStart;
+                            }
+
                             el.autoNumeric('set', newValue);
                             getValue = el.autoNumeric('get');
-                            if (newValue.toString() !== getValue) {
+                            if (parseFloat(getValue) !== parseFloat(newValue)) {
                                 $timeout(autonumericChange);
+                            } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
+                                $timeout(function () {
+                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                });
                             }
-                        } else if (newValue !== undefined && newValue !== null && isNaN(newValue)) {
-                            $timeout(autonumericChange);
-                        } else if (!isNaN(newValue)) {
+                        } else if (newValue === null) {
                             el.val(null);
-                        }
-                    });
 
-                    el.on('change', function () {
-                        autonumericChange();
+                        }
                     });
 
                     el.on('keydown', function (event) {
                         if (event.which === 13) {
                             autonumericChange();
                         }
+                    });
+
+                    el.on('change paste onpaste', function () {
+                        autonumericChange();
+
                     });
 
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
@@ -2289,7 +2299,8 @@ to the function.
                 scope.bbFileDrop = {
                     hasTranscludeContents: $.trim(el.find('.bb-file-drop-contents-custom').html()).length > 0,
                     allowLinks: angular.isDefined(attrs.bbFileDropLink),
-                    addLink: function () {
+                    addLink: function ($event) {
+                        $event.preventDefault();
                         scope.bbFileDropLinkChange({
                             link: {
                                 url: scope.bbFileDrop.url
@@ -3276,8 +3287,7 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.rowcount = count;
                             }
 
-                            function mediaBreakpointHandler(newBreakpoints) {
-                                breakpoints = newBreakpoints;
+                            function reInitGrid() {
                                 if ($scope.options && $scope.options.selectedColumnIds && $scope.options.selectedColumnIds.length > 0 && tableEl[0].grid) {
 
                                     initGrid();
@@ -3286,6 +3296,11 @@ reloading the grid with the current data after the event has fired.
                                         setRows($scope.options.data);
                                     }
                                 }
+                            }
+
+                            function mediaBreakpointHandler(newBreakpoints) {
+                                breakpoints = newBreakpoints;
+                                reInitGrid();
                             }
 
                             function buildColumnClasses(column) {
@@ -4399,6 +4414,15 @@ reloading the grid with the current data after the event has fired.
 
                             windowEl.on('resize.' + windowEventId + ', orientationchange.' + windowEventId, function () {
                                 handleTableWrapperResize();
+                            });
+
+                            // Reinitialize grid when grid element resizes from 0
+                            $scope.$watch(function () {
+                                return element.width();
+                            }, function (newValue, oldValue) {
+                                if (newValue !== oldValue && oldValue === 0) {
+                                    reInitGrid();
+                                }
                             });
 
                             $scope.locals.topScrollbarScroll = function () {
@@ -6448,7 +6472,6 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
     'use strict';
 
     var tabScrollId = 0;
-
     angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
@@ -6626,7 +6649,8 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 (function ($) {
     'use strict';
 
-    var DROPDOWN_CARET_WIDTH = 45;
+    var DROPDOWN_CARET_WIDTH = 45,
+        TAB_PADDING = 15;
 
     function getTemplate($templateCache, name) {
         return $templateCache.get('sky/templates/tabset/' + name + '.html');
@@ -6725,7 +6749,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         addOpenWidth += addOpenButtonEl.eq(i).width();
                     }
 
-                    dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH;
+                    dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH - TAB_PADDING;
 
                     el.find('.bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
 
@@ -9393,10 +9417,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           class="form-control"\n' +
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
-        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink()"\n' +
+        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"\n' +
         '                           />\n' +
         '                </div>\n' +
-        '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink()">\n' +
+        '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
         '                    {{\'file_upload_paste_link_done\' | bbResources}}\n' +
         '                </button>\n' +
         '            </div>\n' +
