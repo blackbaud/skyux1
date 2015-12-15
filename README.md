@@ -48,24 +48,24 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
 
 ### Visual regression tests
 
-We run visual regression tests through Browserstack using [webdrivercss](https://github.com/webdriverio/webdrivercss). To run these tests against a local selenium server you will need the following:
-  - [GraphicsMagick](http://www.graphicsmagick.org/) for image processing
-  #### Mac OS X using [Homebrew](http://mxcl.github.io/homebrew/)
+We run visual regression tests through Browserstack using [webdrivercss](https://github.com/webdriverio/webdrivercss). To run these tests against a local selenium server you will need [GraphicsMagick](http://www.graphicsmagick.org/) for image processing which you will have to install on your system.
+
+##### Mac OS X using [Homebrew](http://mxcl.github.io/homebrew/)
 ```sh
 $ brew install graphicsmagick
 ```
 
-#### Ubuntu using apt-get
+##### Ubuntu using apt-get
 ```sh
 $ sudo apt-get install graphicsmagick
 ```
 
-#### Windows
+##### Windows
 
 Download and install executables for [GraphicsMagick](http://www.graphicsmagick.org/download.html).
 Please make sure you install the right binaries desired for your system (32bit vs 64bit).
 
-  - A local selenium instance to run the tests against:
+You will also require a local selenium instance.
 ```
 npm install -g selenium-standalone
 selenium-standalone install
