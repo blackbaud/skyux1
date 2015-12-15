@@ -21,8 +21,7 @@ module.exports = function (grunt) {
         target = 'local',
         screenshotBasePath = 'screenshots/',
         skipTest,
-        visualTestsPath,
-        visualTestPort = 8000;
+        webdriverTestPort = 8000;
 
     libsCss = [
         'bower_components/free-jqgrid/css/ui.jqgrid.css',
@@ -76,17 +75,6 @@ module.exports = function (grunt) {
                 grunt.log.writeln(prop + ': ' + process.env[prop] + ' (' + typeof process.env[prop] + ')');
             });
         }
-    }());
-
-    // Determine which visual tests to run
-    (function () {
-        var visualTestsToRun = (grunt.option('visualtests') || '');
-
-        if (visualTestsToRun && visualTestsToRun.indexOf(',') >= 0) {
-            visualTestsToRun = '{' + visualTestsToRun + '}';
-        }
-
-        visualTestsPath = 'visualtest/test/' + (visualTestsToRun || '**') + '/*.visual.js';
     }());
 
     // Determine which environment we're running in.
@@ -163,7 +151,6 @@ module.exports = function (grunt) {
         skyTemplatesPath: 'js/sky/templates/',
         paletteTemplatesPath: 'js/sky/palette/',
         paletteCssPath: '.tmp/palette/palette.css',
-        visualTestPort: visualTestPort,
         html2js: {
             options: {
                 base: 'js/',
@@ -370,23 +357,16 @@ module.exports = function (grunt) {
                 dest: '<%= stacheConfig.data %>sky.json'
             }
         },
-        phantomcss: {
-            options: {
-                screenshots: screenshotBasePath + 'baseline',
-                results: screenshotBasePath + 'results',
-                viewportSize: [1280, 800],
-                mismatchTolerance: 0.05,
-                rootUrl: 'http://localhost:<%= visualTestPort %>/visualtest/test/'
-            },
-            src: [
-                visualTestsPath
-            ]
-        },
         connect: {
-            visualtest: {
+            webdrivertest: {
                 options: {
-                    port: visualTestPort
+                    port: webdriverTestPort
                 }
+            }
+        },
+        webdriver: {
+            test: {
+                configFile: './webdrivertest/wdio.conf.js'
             }
         }
     });
@@ -406,7 +386,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('blackbaud-stache-jsdoc');
-    grunt.loadNpmTasks('@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs');
+    grunt.loadNpmTasks('grunt-webdriver');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -418,7 +398,7 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
+    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
@@ -449,16 +429,17 @@ module.exports = function (grunt) {
         });
     });
 
-    // Generate the files needed for visual tests
-    grunt.registerTask('buildvisualtestfixtures', function () {
-        var template = grunt.file.read('visualtest/fixtures/template.html');
+
+    function buildTestFixtures(root) {
+        var template = grunt.file.read((root + '/fixtures/template.html')),
+            pattern = root + '/test/**/fixtures/*.html';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            'visualtest/test/**/fixtures/*.html'
+            pattern
         ).forEach(function (file) {
             var destFile,
                 html;
@@ -468,29 +449,38 @@ module.exports = function (grunt) {
                 html = grunt.file.read(file);
                 html = template.replace(/##TEST_HTML##/gi, html);
                 html = html.replace(/##DIST_PATH##/gi, skyDistPath);
-
                 destFile = file.replace('.html', '.full.html');
-
                 grunt.file.write(destFile, html);
 
                 grunt.log.writeln('File "' + destFile + '" created.');
             }
         });
-    });
+    }
 
-    // Remove the temporary files needed for visual tests
-    grunt.registerTask('cleanupvisualtestfixtures', function () {
+    function cleanupTestFixtures(root) {
+        var pattern = root + '/test/**/fixtures/*.full.html';
+
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            'visualtest/test/**/fixtures/*.full.html'
+            pattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });
 
         grunt.log.writeln('Visual test fixture temp files deleted.');
+    }
+
+    // Generate the files needed for visual tests
+    grunt.registerTask('buildwebdrivertestfixtures', function () {
+        buildTestFixtures('webdrivertest');
+    });
+
+    // Remove the temporary files needed for visual tests
+    grunt.registerTask('cleanupwebdrivertestfixtures', function () {
+        cleanupTestFixtures('webdrivertest');
     });
 
     // Generate our JS config for the bbPalette service
@@ -569,8 +559,8 @@ module.exports = function (grunt) {
 
         function checkSkipTest(karmaTarget) {
             if (!skipTest) {
-                tasks.push('karma:' + karmaTarget);
                 tasks.push('visualtest');
+                tasks.push('karma:' + karmaTarget);
             }
         }
 
@@ -594,4 +584,6 @@ module.exports = function (grunt) {
             grunt.task.run(tasks);
         }
     });
+
+
 };

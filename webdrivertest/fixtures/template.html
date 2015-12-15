@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html ng-app="screenshots">
+    <head>
+        <meta charset="utf-8"></meta>
+        <title></title>
+        <link rel="stylesheet" href="/##DIST_PATH##css/libs.css" />
+        <link rel="stylesheet" href="/##DIST_PATH##css/sky.css" />
+        <style type="text/css">
+          .bb-screenshot-noanim * {
+              /*CSS transitions*/
+              -o-transition-property: none !important;
+              -moz-transition-property: none !important;
+              -ms-transition-property: none !important;
+              -webkit-transition-property: none !important;
+              transition-property: none !important;
+              /*CSS transforms*/
+              -o-transform: none !important;
+              -moz-transform: none !important;
+              -ms-transform: none !important;
+              -webkit-transform: none !important;
+              transform: none !important;
+              /*CSS animations*/
+              -webkit-animation: none !important;
+              -moz-animation: none !important;
+              -o-animation: none !important;
+              -ms-animation: none !important;
+              animation: none !important;
+          }
+        </style>
+    </head>
+    <body>
+        ##TEST_HTML##
+        <script src="/##DIST_PATH##js/sky-bundle.js"></script>
+        <script>
+          $.fx.off = true;
+        </script>
+        <script src="test.js"></script>
+        <div style="margin-top: 50px;"></div>
+    </body>
+</html>

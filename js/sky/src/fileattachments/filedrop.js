@@ -26,7 +26,7 @@
                                 url: scope.bbFileDrop.url
                             }
                         });
-
+                        
                         scope.bbFileDrop.url = null;
                     },
                     fileChange: function ($files, $event, $rejectedFiles) {
