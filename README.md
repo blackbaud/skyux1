@@ -48,7 +48,7 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
 
 ### Visual regression tests
 
-We run visual regression tests through Browserstack using [webdrivercss](https://github.com/webdriverio/webdrivercss). To run these tests against a local selenium server you will need [GraphicsMagick](http://www.graphicsmagick.org/) for image processing which you will have to install on your system.
+We run visual regression tests through Browserstack using [webdrivercss](https://github.com/webdriverio/webdrivercss). To run these tests against a local selenium server you will need [GraphicsMagick](http://www.graphicsmagick.org/) for image processing installed on your system.
 
 ##### Mac OS X using [Homebrew](http://mxcl.github.io/homebrew/)
 ```sh
@@ -72,7 +72,7 @@ selenium-standalone install
 selenium-standalone start
 ```
 
-After installing these prerequisites you can run the visual regression tests using `grunt visualtest`, which will create screenshots in the `webdriver-screenshotslocal` folder.
+After installing these prerequisites you can run the visual regression tests using `grunt visualtest`, which will create and compare screenshots in the `webdriver-screenshotslocal` folder.
 
 ### Submitting the code
 
