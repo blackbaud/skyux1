@@ -44,7 +44,35 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
 
   - You should include documentation for each Sky UX module you create within your source code. We use JSDoc-style comments at the top of our JavaScript files to generate Markdown documentation. You can generate the Markdown documentation by running the command `grunt docs` from the command line.
   - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watch` task will generate documentation which you can find under `demo/build`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
- - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watch` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
+  - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watch` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
+
+### Visual regression tests
+
+We run visual regression tests through Browserstack using [webdrivercss](https://github.com/webdriverio/webdrivercss). To run these tests against a local selenium server you will need [GraphicsMagick](http://www.graphicsmagick.org/) for image processing installed on your system.
+
+##### Mac OS X using [Homebrew](http://mxcl.github.io/homebrew/)
+```sh
+$ brew install graphicsmagick
+```
+
+##### Ubuntu using apt-get
+```sh
+$ sudo apt-get install graphicsmagick
+```
+
+##### Windows
+
+Download and install executables for [GraphicsMagick](http://www.graphicsmagick.org/download.html).
+Please make sure you install the right binaries desired for your system (32bit vs 64bit).
+
+You will also require a local selenium instance.
+```
+npm install -g selenium-standalone
+selenium-standalone install
+selenium-standalone start
+```
+
+After installing these prerequisites you can run the visual regression tests using `grunt visualtest`, which will create and compare screenshots in the `webdriver-screenshotslocal` folder.
 
 ### Submitting the code
 
