@@ -15,7 +15,6 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
 
   cd skyux
   git add dist/
-  git add visualtest/test/**/screenshots/
   git add webdriver-screenshots/
 
   if [ -z "$(git status --porcelain)" ]; then
