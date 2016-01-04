@@ -2,12 +2,10 @@
   background-color: $gray-lighter;
   color: $bb-label-badge-color;
   font-family: $font-family-base;
-  font-size: $font-size-base;
+  font-size: 10px;
   font-weight: 600;
+  padding: 3px 8px;
   text-shadow: none;
-  padding-left: .6em;
-  padding-right: .6em;
-  border-radius: 10rem;
 }
 
 .badge {
