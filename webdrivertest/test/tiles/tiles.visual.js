@@ -49,4 +49,20 @@ describe('tiles', function () {
                 expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
             }).call(done);
     });
+
+    it('should take tile with configuration screenshot', function (done) {
+        var screenshotName = 'tile_config',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/tiles/fixtures/test.full.html')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-tile-with-settings'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
+    });
 });
