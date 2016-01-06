@@ -4,7 +4,8 @@
 describe('Text expand', function () {
     'use strict';
 
-    var bbResources,
+    var bbModal,
+        bbResources,
         fxOff,
         $compile,
         $scope;
@@ -13,10 +14,11 @@ describe('Text expand', function () {
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.textexpand'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_, _bbModal_) {
         $compile = _$compile_;
         $scope = _$rootScope_;
         bbResources = _bbResources_;
+        bbModal = _bbModal_;
     }));
 
     beforeEach(function () {
@@ -123,6 +125,23 @@ describe('Text expand', function () {
                 $scope.$digest();
 
                 expect(el.find('.bb-text-expand-text')).toHaveText('Lorem ipsum dolor');
+            });
+
+            it('should open a modal for text greater than the expanded limit', function () {
+                var el;
+
+                spyOn(bbModal, 'open').and.callThrough();
+
+                el = $compile('<div bb-text-expand="longText" bb-text-expand-max-length="20" bb-text-expand-max-expanded-length="50"></div>')($scope);
+
+                $scope.longText = longText;
+
+                $scope.$digest();
+
+                el.find('.bb-text-expand-see-more').click();
+
+                $scope.$digest();
+                expect(bbModal.open).toHaveBeenCalled();
             });
 
         });

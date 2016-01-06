@@ -27,7 +27,8 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
 
     var modules = [
             'sky.resources',
-            'sky.scrollintoview'
+            'sky.scrollintoview',
+            'sky.modal'
         ];
 
     function getNewlineCount(value) {
@@ -43,6 +44,13 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
     function createEl($templateCache, templateName) {
         return angular.element($templateCache.get('sky/templates/textexpand/' + templateName + '.html'));
     }
+
+    function BBTextExpandController(textExpandContent) {
+        var self = this;
+        self.textExpandContent = textExpandContent;
+    }
+
+    BBTextExpandController.$inject = ['textExpandContent'];
 
     angular.module('sky.textexpand', modules)
         .directive('bbTextExpandRepeater', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
@@ -83,7 +91,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                 link: link
             };
         }])
-        .directive('bbTextExpand', ['$templateCache', 'bbResources', 'bbScrollIntoView', function ($templateCache, bbResources, bbScrollIntoView) {
+        .directive('bbTextExpand', ['$templateCache', 'bbResources', 'bbScrollIntoView', 'bbModal', function ($templateCache, bbResources, bbScrollIntoView, bbModal) {
             function link(scope, el, attrs) {
                 var isExpanded,
                     maxLength = +attrs.bbTextExpandMaxLength || 200,
@@ -170,6 +178,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                             spaceEl = createEl($templateCache, 'space');
                             expandEl = createEl($templateCache, 'seemore').text(bbResources.text_expand_see_more);
 
+
                             containerEl
                                 .empty()
                                 .append(textEl)
@@ -177,18 +186,35 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                 .append(spaceEl)
                                 .append(expandEl);
 
-                            expandEl.on('click', function () {
-                                if (isExpanded) {
-                                    animateText(collapsedText, expandedText, bbResources.text_expand_see_less, (expandedText !== newValue));
-                                } else {
-                                    animateText(expandedText, collapsedText, bbResources.text_expand_see_more, true);
-                                }
+                            if (getNewlineCount(newValue) > maxExpandedNewlines || newValue.length > maxExpandedLength) {
+                                expandEl.on('click', function () {
+                                    bbModal.open({
+                                        templateUrl: 'sky/templates/textexpand/expandmodal.html',
+                                        controller: BBTextExpandController,
+                                        controllerAs: 'expandCtrl',
+                                        resolve: {
+                                            textExpandContent: function () {
+                                                return newValue;
+                                            }
+                                        }
+                                    });
+                                });
+                            } else {
+                                expandEl.on('click', function () {
+                                    if (isExpanded) {
+                                        animateText(collapsedText, expandedText, bbResources.text_expand_see_less, (expandedText !== newValue));
+                                    } else {
+                                        animateText(expandedText, collapsedText, bbResources.text_expand_see_more, true);
+                                    }
 
-                                bbScrollIntoView(expandEl);
-                                isExpanded = !isExpanded;
+                                    bbScrollIntoView(expandEl);
+                                    isExpanded = !isExpanded;
 
-                                return false;
-                            });
+                                    return false;
+                                });
+                            }
+
+
                         } else {
                             containerEl.text(newValue);
                         }
