@@ -31,7 +31,7 @@ describe('datepicker', function () {
         browser
             .url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker .bb-date-field-calendar-button')
-            .waitForVisible('ul[datepicker-popup-wrap]')
+            .waitForVisible('ul[uib-datepicker-popup-wrap]')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
@@ -49,7 +49,7 @@ describe('datepicker', function () {
         browser
             .url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker-append-to-body .bb-date-field-calendar-button')
-            .waitForVisible('ul[datepicker-popup-wrap]')
+            .waitForVisible('ul[uib-datepicker-popup-wrap]')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
