@@ -35,10 +35,10 @@
                            class="form-control"
                            placeholder="{{'file_upload_link_placeholder' | bbResources}}"
                            ng-model="bbFileDrop.url"
-                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink()"
+                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"
                            />
                 </div>
-                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink()">
+                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">
                     {{'file_upload_paste_link_done' | bbResources}}
                 </button>
             </div>

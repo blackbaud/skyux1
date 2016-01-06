@@ -34,7 +34,7 @@
                 self.links.push(link);
                 self.allItems.push(link);
             };
-
+            
             self.deleteAttachment = function (file) {
                 removeFromArray(self.links, file);
                 removeFromArray(self.attachments, file);

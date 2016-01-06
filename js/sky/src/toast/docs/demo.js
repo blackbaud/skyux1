@@ -38,7 +38,7 @@
 
         $interval(function () {
             self.timeOpen += 1;
-        }, 1000);
+        }, 20000);
     }
 
     ToastTestController.$inject = ['bbToast', '$templateCache'];

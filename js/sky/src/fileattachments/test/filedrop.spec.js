@@ -429,4 +429,28 @@ describe('File drop directive', function () {
         el.remove();
         nonTargetEl.remove();
     });
+
+    it('should call event prevent default on enter', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            $event,
+            isolateScope;
+
+        $event = jasmine.createSpyObj('$event', ['preventDefault']);
+
+        $scope.addLink = angular.noop;
+
+        el = getDropWithLinkEl($scope);
+
+        // The element has to be in the DOM to trigger its change event in Firefox.
+        el.appendTo(document.body);
+
+        isolateScope = el.isolateScope();
+
+        isolateScope.bbFileDrop.addLink($event);
+
+        expect($event.preventDefault).toHaveBeenCalled();
+
+        el.remove();
+    });
 });
