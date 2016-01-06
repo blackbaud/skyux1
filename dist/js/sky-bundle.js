@@ -99488,10 +99488,17 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
 /*global angular */
 
 /** @module Autofocus
+@deprecated
 @icon camera
 @summary  The autofocus component specifies the input item on a form that should get focus when the form loads.
- @description The `bb-autofocus` directive specifies the item on a form that should get focus when the form renders. You can use this directive when items such as Angular dynamically loaded templates do not play nicely with the HTML autofocus property.
+ @description ### *Deprecated* ###
+
+This directive is no longer being maintained. UI-Bootstrap now allows the use of HTML5 autofocus on modals to focus an input upon opening the modal.
+
+<s>
+The `bb-autofocus` directive specifies the item on a form that should get focus when the form renders. You can use this directive when items such as Angular dynamically loaded templates do not play nicely with the HTML autofocus property.
 The **Open Modal** button below demonstrates a modal form where the `bb-autofocus` directive places the focus on an input control on the form.
+</s>
  */
 
 (function () {
@@ -101677,13 +101684,14 @@ to the function.
                 scope.bbFileDrop = {
                     hasTranscludeContents: $.trim(el.find('.bb-file-drop-contents-custom').html()).length > 0,
                     allowLinks: angular.isDefined(attrs.bbFileDropLink),
-                    addLink: function () {
+                    addLink: function ($event) {
+                        $event.preventDefault();
                         scope.bbFileDropLinkChange({
                             link: {
                                 url: scope.bbFileDrop.url
                             }
                         });
-
+                        
                         scope.bbFileDrop.url = null;
                     },
                     fileChange: function ($files, $event, $rejectedFiles) {
@@ -108773,10 +108781,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           class="form-control"\n' +
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
-        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink()"\n' +
+        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"\n' +
         '                           />\n' +
         '                </div>\n' +
-        '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink()">\n' +
+        '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
         '                    {{\'file_upload_paste_link_done\' | bbResources}}\n' +
         '                </button>\n' +
         '            </div>\n' +
@@ -109114,7 +109122,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            <div class="bb-tile-header-column-tools">\n' +
         '                <div class="bb-tile-tools">\n' +
         '                    <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
-        '                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-cog" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
         '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                </div>\n' +
         '            </div>\n' +

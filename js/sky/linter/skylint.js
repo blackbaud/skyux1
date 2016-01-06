@@ -463,6 +463,7 @@
     ];
 
     deprecatedDirectives = [
+        ['bb-autofocus'],
         ['bb-chart-scatterplot'],
         ['bb-date-field', 'bb-datepicker'],
         ['bb-helpwidget', null, 'Use the "bbHelp" service instead to show the help panel from a controller.'],

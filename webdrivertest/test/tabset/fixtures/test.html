@@ -1,0 +1,63 @@
+<div class="container" ng-controller="TabsetVisualController as tabsetCtrl">
+
+    <div id="screenshot-tabset-all">
+        <div id="screenshot-tabset-open-add">
+            <tabset bb-tabset-open="tabsetCtrl.open()" bb-tabset-add="tabsetCtrl.add()">
+                <tab class="bb-tab-close">
+                    <tab-heading>
+                        Tab 1
+                        <i class="bb-tab-close-icon"></i>
+                    </tab-heading>
+                    Content 1
+                </tab>
+                <tab class="bb-tab-close">
+                    <tab-heading>
+                        Tab 2
+                        <i class="bb-tab-close-icon"></i>
+                    </tab-heading>
+                    Content 2
+                </tab>
+            </tabset>
+        </div>
+
+        <div id="screenshot-tabset-open">
+            <tabset bb-tabset-open="tabsetCtrl.open()">
+                <tab class="bb-tab-close">
+                    <tab-heading>
+                        Tab 1
+                        <i class="bb-tab-close-icon"></i>
+                    </tab-heading>
+                    Content 1
+                </tab>
+                <tab class="bb-tab-close">
+                    <tab-heading>
+                        Tab 2
+                        <i class="bb-tab-close-icon"></i>
+                    </tab-heading>
+                    Content 2
+                </tab>
+            </tabset>
+        </div>
+
+        <div id="screenshot-tabset-add">
+            <tabset bb-tabset-add="tabsetCtrl.add()">
+                <tab class="bb-tab-close">
+                    <tab-heading>
+                        Tab 1
+                        <i class="bb-tab-close-icon"></i>
+                    </tab-heading>
+                    Content 1
+                </tab>
+                <tab class="bb-tab-close">
+                    <tab-heading>
+                        Tab 2
+                        <i class="bb-tab-close-icon"></i>
+                    </tab-heading>
+                    Content 2
+                </tab>
+            </tabset>
+        </div>
+
+    </div>
+
+</div>
