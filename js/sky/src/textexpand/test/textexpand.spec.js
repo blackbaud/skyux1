@@ -8,17 +8,19 @@ describe('Text expand', function () {
         bbResources,
         fxOff,
         $compile,
-        $scope;
+        $scope,
+        $timeout;
 
     beforeEach(module('ngMock'));
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.textexpand'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_, _bbModal_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_, _bbModal_, _$timeout_) {
         $compile = _$compile_;
         $scope = _$rootScope_;
         bbResources = _bbResources_;
         bbModal = _bbModal_;
+        $timeout = _$timeout_;
     }));
 
     beforeEach(function () {
@@ -127,12 +129,20 @@ describe('Text expand', function () {
                 expect(el.find('.bb-text-expand-text')).toHaveText('Lorem ipsum dolor');
             });
 
+            function closeModal(modalEl) {
+                modalEl.find('.modal-footer .btn-link').click();
+                $scope.$digest();
+                $timeout.flush();
+            }
+
+
             it('should open a modal for text greater than the expanded limit', function () {
-                var el;
+                var el,
+                    modalEl;
 
                 spyOn(bbModal, 'open').and.callThrough();
 
-                el = $compile('<div bb-text-expand="longText" bb-text-expand-max-length="20" bb-text-expand-max-expanded-length="50"></div>')($scope);
+                el = $compile('<div bb-text-expand="longText" bb-text-expand-modal-title="modalTitle" bb-text-expand-max-length="20" bb-text-expand-max-expanded-length="50"></div>')($scope);
 
                 $scope.longText = longText;
 
@@ -142,6 +152,21 @@ describe('Text expand', function () {
 
                 $scope.$digest();
                 expect(bbModal.open).toHaveBeenCalled();
+
+                modalEl = $('.modal-dialog');
+
+                expect(modalEl.find('.bb-dialog-header')).toHaveText('Expanded view');
+                expect(modalEl.find('.modal-body')).toHaveText(longText);
+                closeModal(modalEl);
+
+                $scope.modalTitle = 'new title';
+                $scope.$digest();
+                el.find('.bb-text-expand-see-more').click();
+                $scope.$digest();
+
+                modalEl = $('.modal-dialog');
+                expect(modalEl.find('.bb-dialog-header')).toHaveText('new title');
+                closeModal(modalEl);
             });
 
         });
