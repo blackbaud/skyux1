@@ -95,6 +95,10 @@ a {
         text-decoration: none;
     }
 }
+
+a.alert-link:hover, a.alert-link:focus {
+  text-decoration: underline;
+}
 /* End Links */
 
 /* Placeholder Text */
