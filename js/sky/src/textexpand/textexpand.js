@@ -5,7 +5,7 @@
 /** @module Text Expand
 @icon text-height
 @summary The text expand component truncates long text with an ellipsis and a link that users can click to expand the text.
- @description The texteExpand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold then no action is taken. The 'See more' link will expand the text inline if the length of the text is below the specified expanded length limit or if the number of newlines in the text is below the specified expanded newline limit, otherwise the link will open the text in a modal view.
+ @description The texteExpand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold then no action is taken. The 'See more' link will expand the text inline if the length of the text is below the specified expanded length limit and if the number of newlines in the text is below the specified expanded newline limit, otherwise the link will open the text in a modal view.
 
 Note that collapsed text will have newlines removed. Also, if one or more newlines are detected, the text is automatically collapsed regardless of the total length of the text.
 
