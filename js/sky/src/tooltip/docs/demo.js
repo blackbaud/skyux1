@@ -19,6 +19,7 @@
         var self = this;
         self.tooltipTitle = 'Tooltip title';
         self.tooltipMessage = 'Tooltip content.';
+
     }
 
     RunTemplateCache.$inject = ['$templateCache'];

@@ -30,7 +30,7 @@ These are optional properties of the object passed to `bbPaging.init()`
     var evtNsPos = 0;
 
     angular.module('sky.pagination', ['ui.bootstrap.pagination'])
-        .config(['paginationConfig', function (paginationConfig) {
+        .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
 
@@ -79,7 +79,7 @@ These are optional properties of the object passed to `bbPaging.init()`
 
                     /*jslint white: true */
                     el.html(
-                        '<pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></pagination>' +
+                        '<uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></uib-pagination>' +
                         '<div class="clearfix"></div>'
                     );
                     /*jslint white: false */

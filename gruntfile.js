@@ -46,7 +46,8 @@ module.exports = function (grunt) {
         'bower_components/blockui/jquery.blockUI.js',
         'bower_components/angular-ui-select/dist/select.js',
         'bower_components/fastclick/lib/fastclick.js',
-        'bower_components/ng-file-upload/ng-file-upload.js'
+        'bower_components/ng-file-upload/ng-file-upload.js',
+        'libs/easyXDM.js'
     ];
 
     skyJs = src.concat([

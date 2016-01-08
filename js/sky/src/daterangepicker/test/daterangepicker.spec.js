@@ -3,20 +3,20 @@
 
 describe('Date range picker', function () {
     'use strict';
-    
+
     var $compile,
         $filter,
         $rootScope,
         $timeout,
         bbDateRangePicker,
         bbResources;
-    
+
     beforeEach(module(
         'ngMock',
         'sky.daterangepicker',
         'sky.templates'
     ));
-    
+
     beforeEach(inject(function (_$compile_, _$filter_, _$rootScope_, _$timeout_, _bbDateRangePicker_, _bbResources_) {
         $compile = _$compile_;
         $filter = _$filter_;
@@ -25,7 +25,7 @@ describe('Date range picker', function () {
         bbDateRangePicker = _bbDateRangePicker_;
         bbResources = _bbResources_;
     }));
-    
+
     describe('directive', function () {
         it('should have the expected default options', function () {
             var $scope = $rootScope.$new(),
@@ -46,7 +46,7 @@ describe('Date range picker', function () {
 
             for (p in options) {
                 if (options.hasOwnProperty(p)) {
-                    expect(selectEl.find('> option[value="' + options[p] + '"]').length).toBe(1);
+                    expect(selectEl.find('> option[value="number:' + options[p] + '"]').length).toBe(1);
                 }
             }
         });
@@ -78,7 +78,7 @@ describe('Date range picker', function () {
             }
         });
     });
-    
+
     describe('service', function () {
         describe('get caption method', function () {
             it('should return the "At any time" caption when no date range type is specified', function () {
@@ -100,7 +100,7 @@ describe('Date range picker', function () {
                 }
             });
         });
-        
+
         describe('get filter description method', function () {
             it('should return the "At any time" caption when no date range type is specified', function () {
                 expect(bbDateRangePicker.getDateRangeFilterDescription()).toBe(bbResources.date_range_picker_filter_description_at_any_time);

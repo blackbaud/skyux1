@@ -49,20 +49,20 @@
                 {{item.actionText}}
             </button>
 
-            <div dropdown class="hidden-xs" style="display: inline-block;">
-                <button class="btn bb-btn-secondary"  dropdown-toggle type="button" href="javascript:void(0)">
+            <div uib-dropdown class="hidden-xs" style="display: inline-block;">
+                <button class="btn bb-btn-secondary"  uib-dropdown-toggle type="button" href="javascript:void(0)">
                     {{actionCtrl.dropdownText}} <span class="caret"/>
                 </button>
 
-                <ul class="dropdown-menu" ng-include src="'actionbarList.html'"></ul>
+                <ul uib-dropdown-menu ng-include src="'actionbarList.html'"></ul>
             </div>
 
-            <div dropdown class="visible-xs">
-                <button class="btn bb-btn-secondary"  dropdown-toggle type="button" href="javascript:void(0)">
+            <div uib-dropdown class="visible-xs">
+                <button class="btn bb-btn-secondary"  uib-dropdown-toggle type="button" href="javascript:void(0)">
                     {{actionCtrl.collapsedText}} <span class="caret"/>
                 </button>
 
-                <ul class="dropdown-menu">
+                <ul uib-dropdown-menu>
                     <li ng-repeat="item in actionCtrl.items" ng-show="item.visible">
                         <a ng-click="item.action()">{{item.actionText}}</a>
                     </li>

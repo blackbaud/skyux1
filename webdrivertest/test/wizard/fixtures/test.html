@@ -11,7 +11,7 @@
           <form ng-submit="locals.save()">
             <div bb-modal-body>
               <tabset bb-wizard>
-                <tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disabled="step.disabled()" bb-wizard-step-complete="step.complete()">
+                <tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
                   <ng-include src="step.templateUrl"></ng-include>
                 </tab>
               </tabset>

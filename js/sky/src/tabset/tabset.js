@@ -90,7 +90,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     function bbTabsetCollapsible($compile, $templateCache, $window, bbMediaBreakpoints) {
         return {
             restrict: 'A',
-            require: 'tabset',
             controller: BBTabsetCollapsibleController,
             link: function ($scope, el) {
                 var lastWindowWidth,
@@ -238,7 +237,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         });
     }
 
-
     function bbTabCollapseHeader() {
         return {
             require: '^bbTabsetCollapsible',
@@ -270,8 +268,11 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
     }
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
+        .directive('uibTabset', tabset)
         .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
-        .directive('tab', tab);
+        .directive('tab', tab)
+        .directive('uibTab', tab);
+
 }(jQuery));
