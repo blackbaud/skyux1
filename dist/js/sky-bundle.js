@@ -106477,7 +106477,7 @@ The string template is specified with the `bb-template` attribute, and child ele
 /** @module Text Expand
 @icon text-height
 @summary The text expand component truncates long text with an ellipsis and a link that users can click to expand the text.
- @description The texteExpand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold then no action is taken.
+ @description The texteExpand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold then no action is taken. The 'See more' link will expand the text inline if the length of the text is below the specified expanded length limit and if the number of newlines in the text is below the specified expanded newline limit, otherwise the link will open the text in a modal view.
 
 Note that collapsed text will have newlines removed. Also, if one or more newlines are detected, the text is automatically collapsed regardless of the total length of the text.
 
@@ -106485,6 +106485,9 @@ Note that collapsed text will have newlines removed. Also, if one or more newlin
 
  - `bb-text-expand` The text to truncate.
  - `bb-text-expand-max-length` *(Default: 200)* The number of characters to show before truncating the text. The directive will attempt to look back up to 10 characters for a space and truncate there in order to avoid truncating in the middle of a word.
+ - `bb-text-expand-max-expanded-length` *(Default: 600)* The maximum number of characters to show in the inline expanded view. If there are more characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked.
+ - `bb-text-expand-max-expanded-newlines` *(Default: 2)* The maximum number of newline characters to show in the inline expanded view. If there are more newline characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked.
+ - `bb-text-expand-modal-title` The title to display in the modal expanded view.
 
 The Text Expand Repeater directive truncates a list of repeater items and will initially display a set number of items. Any items over the set maximum limit are hidden until the user elects to expand the list.
 
@@ -106499,7 +106502,8 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
 
     var modules = [
             'sky.resources',
-            'sky.scrollintoview'
+            'sky.scrollintoview',
+            'sky.modal'
         ];
 
     function getNewlineCount(value) {
@@ -106515,6 +106519,14 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
     function createEl($templateCache, templateName) {
         return angular.element($templateCache.get('sky/templates/textexpand/' + templateName + '.html'));
     }
+
+    function BBTextExpandController(textExpandContent, headerContent) {
+        var self = this;
+        self.textExpandContent = textExpandContent;
+        self.headerContent = headerContent;
+    }
+
+    BBTextExpandController.$inject = ['textExpandContent', 'headerContent'];
 
     angular.module('sky.textexpand', modules)
         .directive('bbTextExpandRepeater', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
@@ -106555,13 +106567,13 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                 link: link
             };
         }])
-        .directive('bbTextExpand', ['$templateCache', 'bbResources', 'bbScrollIntoView', function ($templateCache, bbResources, bbScrollIntoView) {
+        .directive('bbTextExpand', ['$templateCache', 'bbResources', 'bbScrollIntoView', 'bbModal', function ($templateCache, bbResources, bbScrollIntoView, bbModal) {
             function link(scope, el, attrs) {
                 var isExpanded,
                     maxLength = +attrs.bbTextExpandMaxLength || 200,
-                    maxExpandedLength = +attrs.bbTextExpandMaxExpandedLength || 6500,
+                    maxExpandedLength = +attrs.bbTextExpandMaxExpandedLength || 600,
                     maxNewlines = 1,
-                    maxExpandedNewlines = 50;
+                    maxExpandedNewlines = +attrs.bbTexExpandMaxExpandedNewlines || 2;
 
                 function getTruncatedText(value, length, newlines) {
                     var i;
@@ -106642,6 +106654,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                             spaceEl = createEl($templateCache, 'space');
                             expandEl = createEl($templateCache, 'seemore').text(bbResources.text_expand_see_more);
 
+
                             containerEl
                                 .empty()
                                 .append(textEl)
@@ -106649,18 +106662,38 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                 .append(spaceEl)
                                 .append(expandEl);
 
-                            expandEl.on('click', function () {
-                                if (isExpanded) {
-                                    animateText(collapsedText, expandedText, bbResources.text_expand_see_less, (expandedText !== newValue));
-                                } else {
-                                    animateText(expandedText, collapsedText, bbResources.text_expand_see_more, true);
-                                }
+                            if (getNewlineCount(newValue) > maxExpandedNewlines || newValue.length > maxExpandedLength) {
+                                expandEl.on('click', function () {
+                                    bbModal.open({
+                                        templateUrl: 'sky/templates/textexpand/expandmodal.html',
+                                        controller: BBTextExpandController,
+                                        controllerAs: 'expandCtrl',
+                                        resolve: {
+                                            textExpandContent: function () {
+                                                return newValue;
+                                            },
+                                            headerContent: function () {
+                                                return scope.$eval(attrs.bbTextExpandModalTitle) || bbResources.text_expand_modal_title;
+                                            }
+                                        }
+                                    });
+                                });
+                            } else {
+                                expandEl.on('click', function () {
+                                    if (isExpanded) {
+                                        animateText(collapsedText, expandedText, bbResources.text_expand_see_less, (expandedText !== newValue));
+                                    } else {
+                                        animateText(expandedText, collapsedText, bbResources.text_expand_see_more, true);
+                                    }
 
-                                bbScrollIntoView(expandEl);
-                                isExpanded = !isExpanded;
+                                    bbScrollIntoView(expandEl);
+                                    isExpanded = !isExpanded;
 
-                                return false;
-                            });
+                                    return false;
+                                });
+                            }
+
+
                         } else {
                             containerEl.text(newValue);
                         }
@@ -108514,6 +108547,7 @@ bbResourcesOverrides = {
     "page_noaccess_header": "Move along, there\'s nothing to see here",
     "text_expand_see_less": "See less", // Display less text content
     "text_expand_see_more": "See more",
+    "text_expand_modal_title": "Expanded view",
     "grid_action_bar_clear_selection": "Clear selection", // Clear the selections in the grid.
     "grid_action_bar_cancel_mobile_actions": "Cancel", // Close the menu where you choose an action in mobile multiselect.
     "grid_action_bar_choose_action": "Choose an action", // Open a menu to choose an action in mobile  multiselect.
@@ -108576,7 +108610,8 @@ bbResourcesOverrides = {
     "datepicker_today": "Today", //Text displayed in the Today button of the datepicker
     "datepicker_clear": "Clear", //Text displayed in the Clear button of the datepicker
     "datepicker_close": "Done" //Text displayed in the Close button of the datepicker
-};
+}
+;
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -109102,6 +109137,21 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/textexpand/ellipsis.html',
         '<span class="bb-text-expand-ellipsis">...</span>\n' +
+        '');
+    $templateCache.put('sky/templates/textexpand/expandmodal.html',
+        '<bb-modal>\n' +
+        '  <bb-modal-header>\n' +
+        '    {{expandCtrl.headerContent}}\n' +
+        '  </bb-modal-header>\n' +
+        '  <div class="modal-form">\n' +
+        '    <div bb-modal-body>\n' +
+        '      {{expandCtrl.textExpandContent}}\n' +
+        '    </div>\n' +
+        '    <bb-modal-footer>\n' +
+        '      <bb-modal-footer-button-cancel>Close</bb-modal-footer-button-cancel>\n' +
+        '    </bb-modal-footer>\n' +
+        '  </div>\n' +
+        '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/seemore.html',
         '<a href="#" class="bb-text-expand-see-more"></a>\n' +
