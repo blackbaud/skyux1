@@ -402,23 +402,42 @@ module.exports = function (grunt) {
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
-        var template = grunt.file.read(skyLocalesPath + 'template.js');
+        var RESOURCES_PREFIX = 'resources_',
+            template = grunt.file.read(skyLocalesPath + 'template.js');
 
         grunt.file.expand(
             {
-                filter: 'isDirectory',
+                filter: 'isFile',
                 cwd: '.'
             },
-            skyLocalesPath + '*'
-        ).forEach(function (dir) {
+            skyLocalesPath + RESOURCES_PREFIX + '*'
+        ).forEach(function (path) {
             var destFile,
+                fileName,
                 js,
                 locale,
-                parts = dir.split('/');
+                p,
+                parts = path.split('/'),
+                stringsIn,
+                stringsOut = {};
 
-            locale = parts[parts.length - 1];
+            fileName = parts[parts.length - 1];
 
-            js = 'bbResourcesOverrides = ' + grunt.file.read(dir + '/strings.json') + ';';
+            // Before restructuring the resource files we used a different file name format, so we are jumping
+            // through some hoops here to maintain the previous file name format for backwards compatibility.
+            locale = fileName
+                .substring(RESOURCES_PREFIX.length, fileName.length - 5) // Remove resources_ prefix and file extension ('.json')
+                .replace(/_/g, '-');
+
+            stringsIn = grunt.file.readJSON(path);
+
+            for (p in stringsIn) {
+                if (stringsIn.hasOwnProperty(p)) {
+                    stringsOut[p] = stringsIn[p].message;
+                }
+            }
+
+            js = 'bbResourcesOverrides = ' + JSON.stringify(stringsOut) + ';';
             js = template.replace('/*LOCALEJSON*/', js);
 
             destFile = skyDistPath + 'js/locales/sky-locale-' + locale + '.js';
@@ -428,7 +447,6 @@ module.exports = function (grunt) {
             grunt.log.writeln('File "' + destFile + '" created.');
         });
     });
-
 
     function buildTestFixtures(root) {
         var template = grunt.file.read((root + '/fixtures/template.html')),

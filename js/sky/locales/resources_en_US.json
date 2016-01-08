@@ -1,0 +1,426 @@
+{
+    "action_bar_actions": {
+        "_description": "The label for the actions dropdown on the action button bar",
+        "message": "Actions"
+    },
+    "autonumeric_abbr_billions": {
+        "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
+        "message": "b"
+    },
+    "autonumeric_abbr_millions": {
+        "_description": "The suffix to show after an abbreviated value in the millions (e.g. $1.2m)",
+        "message": "m"
+    },
+    "autonumeric_abbr_thousands": {
+        "_description": "The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)",
+        "message": "k"
+    },
+    "checklist_select_all": {
+        "_description": "Text for the link in a checklist to select all items.",
+        "message": "Select all"
+    },
+    "checklist_clear_all": {
+        "_description": "Text for the link in a checklist to clear selections.",
+        "message": "Clear all"
+    },
+    "checklist_no_items": {
+        "_description": "Text in a checklist when no items are shown based on the current filter.",
+        "message": "No items found"
+    },
+    "grid_back_to_top": {
+        "_description": "Text for link in grid to scroll back to the top.",
+        "message": "Back to top"
+    },
+    "grid_column_picker_all_categories": {
+        "_description": "Button text for category filters used to indicate that all columns should be shown in the column picker",
+        "message": "All"
+    },
+    "grid_column_picker_description_header": {
+        "_description": "In the column picker, the header for the column showing the description of the columns to include in the grid.",
+        "message": "Description"
+    },
+    "grid_column_picker_header": {
+        "_description": "Header text for the grid column picker screen",
+        "message": "Choose columns to show in the list"
+    },
+    "grid_column_picker_name_header": {
+        "_description": "In the column picker, the header for the column showing the names of the columns to include in the grid.",
+        "message": "Column"
+    },
+    "grid_column_picker_search_placeholder": {
+        "_description": "Search text placeholder for the search box on the grid column picker",
+        "message": "Search by name"
+    },
+    "grid_column_picker_submit": {
+        "_description": "Button text for applying changes made in the grid column picker",
+        "message": "Apply changes"
+    },
+    "grid_columns_button": {
+        "_description": "Label for button to select columns to display in a grid.",
+        "message": " Choose columns"
+    },
+    "grid_filters_apply": {
+        "_description": "Text for button on filters flyout to apply the selected filters to the grid",
+        "message": "Apply filters"
+    },
+    "grid_filters_button": {
+        "_description": "Label for button to select filters to be applied to a grid.",
+        "message": "Filters"
+    },
+    "grid_filters_clear": {
+        "_description": "Text for button on filters flyout to clear the selected filters for the grid",
+        "message": "Clear"
+    },
+    "grid_filters_header": {
+        "_description": "Header text for grid filters flyout",
+        "message": "Filter"
+    },
+    "grid_filters_hide": {
+        "_description": "Hide link text for grid filters flyout",
+        "message": "Hide"
+    },
+    "grid_filters_summary_header": {
+        "_description": "Header text for filter summary on top of grid",
+        "message": "Filter:"
+    },
+    "grid_load_more": {
+        "_description": "The text for the button to load additional rows into the grid if more rows are available.",
+        "message": "Load more"
+    },
+    "grid_search_placeholder": {
+        "_description": "Placeholder text in grid search box",
+        "message": "Find in this list"
+    },
+    "grid_column_picker_search_no_columns": {
+        "_description": "Displays when no columns are found for the specified search text.",
+        "message": "No columns found"
+    },
+    "modal_footer_cancel_button": {
+        "_description": "Default lable text for modal cancel button",
+        "message": "Cancel"
+    },
+    "modal_footer_primary_button": {
+        "_description": "Default lable text for modal primary button",
+        "message": "Save"
+    },
+    "month_short_april": {
+        "_description": "",
+        "message": "Apr"
+    },
+    "month_short_august": {
+        "_description": "",
+        "message": "Aug"
+    },
+    "month_short_december": {
+        "_description": "",
+        "message": "Dec"
+    },
+    "month_short_february": {
+        "_description": "",
+        "message": "Feb"
+    },
+    "month_short_january": {
+        "_description": "",
+        "message": "Jan"
+    },
+    "month_short_july": {
+        "_description": "",
+        "message": "Jul"
+    },
+    "month_short_june": {
+        "_description": "",
+        "message": "Jun"
+    },
+    "month_short_march": {
+        "_description": "",
+        "message": "Mar"
+    },
+    "month_short_may": {
+        "_description": "",
+        "message": "May"
+    },
+    "month_short_november": {
+        "_description": "",
+        "message": "Nov"
+    },
+    "month_short_october": {
+        "_description": "",
+        "message": "Oct"
+    },
+    "month_short_september": {
+        "_description": "",
+        "message": "Sep"
+    },
+    "page_noaccess_button": {
+        "_description": "",
+        "message": "Return to a non-classified page"
+    },
+    "page_noaccess_description": {
+        "_description": "",
+        "message": "Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator."
+    },
+    "page_noaccess_header": {
+        "_description": "",
+        "message": "Move along, there's nothing to see here"
+    },
+    "text_expand_see_less": {
+        "_description": "Display less text content",
+        "message": "See less"
+    },
+    "text_expand_see_more": {
+        "_description": "",
+        "message": "See more"
+    },
+    "text_expand_modal_title": {
+        "_description": "",
+        "message": "Expanded view"
+    },
+    "grid_action_bar_clear_selection": {
+        "_description": "Clear the selections in the grid.",
+        "message": "Clear selection"
+    },
+    "grid_action_bar_cancel_mobile_actions": {
+        "_description": "Close the menu where you choose an action in mobile multiselect.",
+        "message": "Cancel"
+    },
+    "grid_action_bar_choose_action": {
+        "_description": "Open a menu to choose an action in mobile  multiselect.",
+        "message": "Choose an action"
+    },
+    "date_field_invalid_date_message": {
+        "_description": "error message shown when an invalid date is entered.",
+        "message": "Please enter a valid date"
+    },
+    "date_range_picker_this_week": {
+        "_description": "text for date range picker",
+        "message": "This week"
+    },
+    "date_range_picker_last_week": {
+        "_description": "text for date range picker",
+        "message": "Last week"
+    },
+    "date_range_picker_next_week": {
+        "_description": "text for date range picker",
+        "message": "Next week"
+    },
+    "date_range_picker_this_month": {
+        "_description": "text for date range picker",
+        "message": "This month"
+    },
+    "date_range_picker_last_month": {
+        "_description": "text for date range picker",
+        "message": "Last month"
+    },
+    "date_range_picker_next_month": {
+        "_description": "text for date range picker",
+        "message": "Next month"
+    },
+    "date_range_picker_this_calendar_year": {
+        "_description": "text for date range picker",
+        "message": "This calendar year"
+    },
+    "date_range_picker_last_calendar_year": {
+        "_description": "text for date range picker",
+        "message": "Last calendar year"
+    },
+    "date_range_picker_next_calendar_year": {
+        "_description": "text for date range picker",
+        "message": "Next calendar year"
+    },
+    "date_range_picker_this_fiscal_year": {
+        "_description": "text for date range picker",
+        "message": "This fiscal year"
+    },
+    "date_range_picker_last_fiscal_year": {
+        "_description": "text for date range picker",
+        "message": "Last fiscal year"
+    },
+    "date_range_picker_next_fiscal_year": {
+        "_description": "text for date range picker",
+        "message": "Next fiscal year"
+    },
+    "date_range_picker_this_quarter": {
+        "_description": "text for date range picker",
+        "message": "This quarter"
+    },
+    "date_range_picker_last_quarter": {
+        "_description": "text for date range picker",
+        "message": "Last quarter"
+    },
+    "date_range_picker_next_quarter": {
+        "_description": "text for date range picker",
+        "message": "Next quarter"
+    },
+    "date_range_picker_at_any_time": {
+        "_description": "text for date range picker",
+        "message": "At any time"
+    },
+    "date_range_picker_today": {
+        "_description": "text for date range picker",
+        "message": "Today"
+    },
+    "date_range_picker_tomorrow": {
+        "_description": "text for date range picker",
+        "message": "Tomorrow"
+    },
+    "date_range_picker_yesterday": {
+        "_description": "text for date range picker",
+        "message": "Yesterday"
+    },
+    "date_range_picker_filter_description_this_week": {
+        "_description": "text for date range picker",
+        "message": "{0} for this week"
+    },
+    "date_range_picker_filter_description_last_week": {
+        "_description": "text for date range picker",
+        "message": "{0} from last week"
+    },
+    "date_range_picker_filter_description_next_week": {
+        "_description": "text for date range picker",
+        "message": "{0} for next week"
+    },
+    "date_range_picker_filter_description_this_month": {
+        "_description": "text for date range picker",
+        "message": "{0} for this month"
+    },
+    "date_range_picker_filter_description_last_month": {
+        "_description": "text for date range picker",
+        "message": "{0} from last month"
+    },
+    "date_range_picker_filter_description_next_month": {
+        "_description": "text for date range picker",
+        "message": "{0} for next month"
+    },
+    "date_range_picker_filter_description_this_calendar_year": {
+        "_description": "text for date range picker",
+        "message": "{0} for this calendar year"
+    },
+    "date_range_picker_filter_description_last_calendar_year": {
+        "_description": "text for date range picker",
+        "message": "{0} from last calendar year"
+    },
+    "date_range_picker_filter_description_next_calendar_year": {
+        "_description": "text for date range picker",
+        "message": "{0} for next calendar year"
+    },
+    "date_range_picker_filter_description_this_fiscal_year": {
+        "_description": "text for date range picker",
+        "message": "{0} for this fiscal year"
+    },
+    "date_range_picker_filter_description_last_fiscal_year": {
+        "_description": "text for date range picker",
+        "message": "{0} from last fiscal year"
+    },
+    "date_range_picker_filter_description_next_fiscal_year": {
+        "_description": "text for date range picker",
+        "message": "{0} for next fiscal year"
+    },
+    "date_range_picker_filter_description_this_quarter": {
+        "_description": "text for date range picker",
+        "message": "{0} for this quarter"
+    },
+    "date_range_picker_filter_description_last_quarter": {
+        "_description": "text for date range picker",
+        "message": "{0} from last quarter"
+    },
+    "date_range_picker_filter_description_next_quarter": {
+        "_description": "text for date range picker",
+        "message": "{0} for next quarter"
+    },
+    "date_range_picker_filter_description_at_any_time": {
+        "_description": "text for date range picker",
+        "message": "{0} at any time"
+    },
+    "date_range_picker_filter_description_today": {
+        "_description": "text for date range picker",
+        "message": "{0} for today"
+    },
+    "date_range_picker_filter_description_yesterday": {
+        "_description": "text for date range picker",
+        "message": "{0} from yesterday"
+    },
+    "date_range_picker_filter_description_tomorrow": {
+        "_description": "text for date range picker",
+        "message": "{0} for tomorrow"
+    },
+    "file_size_b_plural": {
+        "_description": "",
+        "message": "{0} bytes"
+    },
+    "file_size_b_singular": {
+        "_description": "",
+        "message": "{0} byte"
+    },
+    "file_size_kb": {
+        "_description": "",
+        "message": "{0} KB"
+    },
+    "file_size_mb": {
+        "_description": "",
+        "message": "{0} MB"
+    },
+    "file_size_gb": {
+        "_description": "",
+        "message": "{0} GB"
+    },
+    "file_upload_drag_file_here": {
+        "_description": "",
+        "message": "Drag a file here"
+    },
+    "file_upload_drop_files_here": {
+        "_description": "",
+        "message": "Drop files here"
+    },
+    "file_upload_invalid_file": {
+        "_description": "",
+        "message": "This file type is invalid"
+    },
+    "file_upload_link_placeholder": {
+        "_description": "",
+        "message": "http://www.something.com/file"
+    },
+    "file_upload_or_click_to_browse": {
+        "_description": "",
+        "message": "or click to browse"
+    },
+    "file_upload_paste_link": {
+        "_description": "",
+        "message": "Paste a link to a file"
+    },
+    "file_upload_paste_link_done": {
+        "_description": "",
+        "message": "Done"
+    },
+    "searchfield_searching": {
+        "_description": "text for ui-select search control while performing a remote search",
+        "message": "Searching..."
+    },
+    "searchfield_no_records": {
+        "_description": "",
+        "message": "text for ui-select search control when no records are found,"
+    },
+    "wizard_navigator_finish": {
+        "_description": "Text displayed on the next button when a wizard is ready for completion.",
+        "message": "Finish"
+    },
+    "wizard_navigator_next": {
+        "_description": "Text displayed on a wizard's next button.",
+        "message": "Next"
+    },
+    "wizard_navigator_previous": {
+        "_description": "Text displayed on a wizard's previous button.",
+        "message": "Previous"
+    },
+    "datepicker_today": {
+        "_description": "Text displayed in the Today button of the datepicker",
+        "message": "Today"
+    },
+    "datepicker_clear": {
+        "_description": "Text displayed in the Clear button of the datepicker",
+        "message": "Clear"
+    },
+    "datepicker_close": {
+        "_description": "Text displayed in the Close button of the datepicker",
+        "message": "Done"
+    }
+}
