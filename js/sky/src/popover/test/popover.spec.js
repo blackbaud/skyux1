@@ -1,15 +1,17 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module, document */
+/*global inject, angular, module, document */
 
 describe('Popover', function () {
     'use strict';
 
-    var $scope,
+    var $compile,
+        $scope,
         $timeout,
         $window,
         body,
         el,
-        popoverLink;
+        popoverLink,
+        $rootScope;
 
     beforeEach(module(
         'ngMock',
@@ -31,19 +33,21 @@ describe('Popover', function () {
             '/<div>');
     }));
 
-    beforeEach(inject(function (_$rootScope_, $compile) {
+    beforeEach(inject(function (_$rootScope_, _$compile_) {
         $scope = _$rootScope_.$new();
+        $rootScope = _$rootScope_;
+        $compile = _$compile_;
         el = $compile('<div><a id="popoverTrigger" bb-popover-template="bbPopover/testpopover.html">{{message}}</a></div>')($scope);
 
+        body = $window.document.body;
+        el.appendTo(body);
+        $scope.$digest();
         $scope.message = "Hello World";
         $scope.$digest();
 
         popoverLink = el.find('#popoverTrigger');
 
-        body = $window.document.body;
-        el.appendTo(body);
     }));
-
     afterEach(inject(function () {
         el.remove();
     }));
@@ -52,6 +56,7 @@ describe('Popover', function () {
         var myEvent = document.createEvent('Event');
         myEvent.initEvent(evt, true, false);
         element[0].dispatchEvent(myEvent);
+        $rootScope.$digest();
     }
 
     describe('directive', function () {
@@ -59,11 +64,10 @@ describe('Popover', function () {
             trigger(popoverLink, 'click');
             $scope.$digest();
             expect(el.find('#messageWrapper')).toHaveText($scope.message);
+
         });
 
         it('should close when clicking outside of flyout', function () {
-            expect(el.find('#messageWrapper').length).toBe(0);
-
             trigger(popoverLink, 'click');
             $scope.$digest();
             $timeout.flush();
@@ -77,39 +81,50 @@ describe('Popover', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
         });
 
-        it('should not close when clicking inside of flyout', function () {
-            expect(el.find('#messageWrapper').length).toBe(0);
-
-            trigger(popoverLink, 'click');
-            $scope.$digest();
-            $timeout.flush();
-
-            expect(el.find('#messageWrapper').length).toBe(1);
-
-            trigger(el.find('#messageWrapper'), 'click');
-            $scope.$digest();
-
-            expect(function () {
-                $timeout.flush();
-            }).toThrow();
-
-            expect(el.find('#messageWrapper').length).toBe(1);
-        });
 
         it('should close when calling close function on scope', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
 
             trigger(popoverLink, 'click');
             $scope.$digest();
-            $timeout.flush();
 
             expect(el.find('#messageWrapper').length).toBe(1);
 
-            trigger(el.find('#hidelink'), 'click');
+            el.find('#hidelink').click();
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(el.find('#messageWrapper').length).toBe(0);
+        });
+
+        it('should use the existing popover-is-open attribute if available', function () {
+            var popOverIsOpenEl = $compile('<div><a id="popoverTrigger" popover-is-open="locals.isOpen" bb-popover-template="bbPopover/testpopover.html">{{message}}</a></div>')($scope);
+            $scope.locals = {
+                isOpen: false
+            };
+
+            body = $window.document.body;
+            popOverIsOpenEl.appendTo(body);
+            $scope.$digest();
+            $scope.message = "Hello World";
+            $scope.$digest();
+
+            popoverLink = popOverIsOpenEl.find('#popoverTrigger');
+
+            trigger(popoverLink, 'click');
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(popOverIsOpenEl.find('#messageWrapper').length).toBe(1);
+            expect($scope.locals.isOpen).toBe(true);
+
+            angular.element(body).trigger('click');
             $scope.$digest();
 
             $timeout.flush();
-            expect(el.find('#messageWrapper').length).toBe(0);
+            expect(popOverIsOpenEl.find('#messageWrapper').length).toBe(0);
+            expect($scope.locals.isOpen).toBe(false);
+            popOverIsOpenEl.remove();
         });
     });
 });

@@ -99,7 +99,7 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
 
     bbActionBarItem.$inject = ['bbMediaBreakpoints'];
 
-    angular.module('sky.actionbar', ['sky.resources', 'sky.mediabreakpoints'])
+    angular.module('sky.actionbar', ['sky.resources', 'sky.mediabreakpoints', 'ui.bootstrap.dropdown'])
         .directive('bbActionBar', bbActionBar)
         .directive('bbActionBarItemGroup', bbActionBarItemGroup)
         .directive('bbActionBarItem', bbActionBarItem);

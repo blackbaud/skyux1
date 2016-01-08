@@ -4,7 +4,7 @@
 /** @module Modal
 @icon list-alt
 @summary The modal component launches modals in a way that is consistent with Sky UX applications.
- @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$modal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
+ @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$uibModal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
 
 In addition to the `bbModal` service for lauching modals, a `bb-modal` directive should be used to have common look-and-feel for modal content. Within `bb-modal`, use `bb-modal-header` to include a common modal header, `bb-modal-footer` to include a common modal footer and buttons, and `bb-modal-body` to wrap the modal's body content.
 
@@ -28,7 +28,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
     var openModalCount = 0;
 
     angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
-        .factory('bbModal', ['$modal', '$window', function ($modal, $window) {
+        .factory('bbModal', ['$uibModal', '$window', function ($uibModal, $window) {
             return {
                 open: function (opts) {
                     var bodyEl,
@@ -69,7 +69,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                         bodyEl.addClass('bb-modal-open-mobile');
                     }
 
-                    modalInstance = $modal.open(opts);
+                    modalInstance = $uibModal.open(opts);
                     openModalCount++;
 
                     modalInstance.result.then(modalClosed, modalClosed);

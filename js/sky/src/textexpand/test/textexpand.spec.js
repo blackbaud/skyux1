@@ -9,18 +9,19 @@ describe('Text expand', function () {
         fxOff,
         $compile,
         $scope,
-        $timeout;
+        $animate;
 
     beforeEach(module('ngMock'));
+    beforeEach(module('ngAnimateMock'));
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.textexpand'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_, _bbModal_, _$timeout_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_, _bbModal_, _$animate_) {
         $compile = _$compile_;
         $scope = _$rootScope_;
         bbResources = _bbResources_;
         bbModal = _bbModal_;
-        $timeout = _$timeout_;
+        $animate = _$animate_;
     }));
 
     beforeEach(function () {
@@ -132,7 +133,11 @@ describe('Text expand', function () {
             function closeModal(modalEl) {
                 modalEl.find('.modal-footer .btn-link').click();
                 $scope.$digest();
-                $timeout.flush();
+                $animate.flush();
+                $scope.$digest();
+                $animate.flush();
+                $scope.$digest();
+                $scope.$digest();
             }
 
 

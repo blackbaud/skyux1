@@ -13,7 +13,6 @@ describe('Datepicker directive', function () {
         resources,
         datepickerScope;
 
-
     beforeEach(module('ngMock'));
     beforeEach(module('ui.bootstrap'));
     beforeEach(module('sky.templates'));
@@ -96,7 +95,6 @@ describe('Datepicker directive', function () {
 
         $scope.$digest();
     }
-
 
     it('sets up everything correctly with a valid date', function () {
         var el,
@@ -920,7 +918,7 @@ describe('Datepicker directive', function () {
             openCalendar(el);
             $timeout.flush();
 
-            bodyCalendarEl = $('body > ul[datepicker-popup-wrap]');
+            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
 
             expect(bodyCalendarEl.length).toBe(1);
 
@@ -938,7 +936,7 @@ describe('Datepicker directive', function () {
             openCalendar(el);
             $timeout.flush();
 
-            bodyCalendarEl = $('body > ul[datepicker-popup-wrap]');
+            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
             expect(bodyCalendarEl[0].style.left).not.toBe(expectedWidth.toString() + 'px');
             expect(bodyCalendarEl).toHaveClass('bb-datefield');
 

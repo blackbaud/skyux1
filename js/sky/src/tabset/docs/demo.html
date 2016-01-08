@@ -1,13 +1,13 @@
 <div ng-controller="TabsetTestController as tabsetTestCtrl">
-    <tabset bb-tabset-add="tabsetTestCtrl.addTab()" bb-tabset-open="tabsetTestCtrl.openTab()" bb-tabset-collapsible>
-      <tab bb-tab-collapse-header="t.title" ng-repeat="t in tabsetTestCtrl.tabs" class="bb-tab-close">
-          <tab-heading>
+    <uib-tabset bb-tabset-add="tabsetTestCtrl.addTab()" bb-tabset-open="tabsetTestCtrl.openTab()" bb-tabset-collapsible>
+      <uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in tabsetTestCtrl.tabs" class="bb-tab-close">
+          <uib-tab-heading>
               {{t.title}}
               <button type="button" class="bb-tab-close-icon" ng-click="tabsetTestCtrl.closeTab($index, $event)"></button>
-          </tab-heading>
+          </uib-tab-heading>
           {{t.content}}
-      </tab>
-    </tabset>
+      </uib-tab>
+  </uib-tabset>
 </div>
 <script type="text/ng-template" id="demo/tabset/checklist.html">
     <bb-modal>

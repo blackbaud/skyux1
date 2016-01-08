@@ -27,7 +27,7 @@
 */
 (function ($) {
     'use strict';
-    angular.module('sky.datepicker', ['sky.resources', 'sky.moment'])
+    angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
         .constant('bbDatepickerConfig', {
             currentCultureDateFormatString: 'MM/dd/yyyy',
             showWeeks: false,
@@ -69,7 +69,7 @@
                         dateChangeInternal = false;
 
                     function getBodyDatepicker() {
-                        return $('body > ul[datepicker-popup-wrap]');
+                        return $('body > ul[uib-datepicker-popup-wrap]');
                     }
 
                     function positionAbsoluteDatepicker() {
@@ -333,7 +333,7 @@
                 require: ['ngModel', '^bbDatepicker'],
                 link: function ($scope, el, attr, controllers) {
                     var ngModel = controllers[0],
-                        format = attr.datepickerPopup;
+                        format = attr.uibDatepickerPopup;
 
                     if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
                         ngModel.$parsers = [];

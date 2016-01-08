@@ -4,7 +4,9 @@
 describe('Modal', function () {
     'use strict';
 
-    var $compile,
+    var $animate,
+        $compile,
+        $document,
         $rootScope,
         $templateCache,
         $timeout,
@@ -14,11 +16,16 @@ describe('Modal', function () {
 
     function closeModalInstance(modalInstance) {
         modalInstance.close();
-        $timeout.flush();
+        $rootScope.$digest();
+        $animate.flush();
+        $rootScope.$digest();
+        $animate.flush();
+        $rootScope.$digest();
     }
 
     beforeEach(module(
         'ngMock',
+        'ngAnimateMock',
         'sky.helpbutton',
         'sky.modal',
         'sky.templates',
@@ -42,8 +49,10 @@ describe('Modal', function () {
         });
     }));
 
-    beforeEach(inject(function (_$compile_, _$modal_, _$rootScope_, _$templateCache_, _$timeout_, _$window_, _bbModal_, _bbResources_) {
+    beforeEach(inject(function (_$animate_, _$compile_, _$document_, _$modal_, _$rootScope_, _$templateCache_, _$timeout_, _$window_, _bbModal_, _bbResources_) {
+        $animate = _$animate_;
         $compile = _$compile_;
+        $document = _$document_;
         $rootScope = _$rootScope_;
         $templateCache = _$templateCache_;
         $timeout = _$timeout_;
@@ -479,7 +488,7 @@ describe('Modal', function () {
 describe('Modal service', function () {
     'use strict';
 
-    var $modal,
+    var $uibModal,
         $rootScope,
         $window,
         bbModal;
@@ -490,7 +499,7 @@ describe('Modal service', function () {
     ));
 
     beforeEach(module(function ($provide) {
-        $modal = {
+        $uibModal = {
             open: function () {
                 return {
                     result: {
@@ -508,7 +517,7 @@ describe('Modal service', function () {
             }
         };
 
-        $provide.value('$modal', $modal);
+        $provide.value('$uibModal', $uibModal);
         $provide.value('$window', $window);
     }));
 
@@ -518,7 +527,7 @@ describe('Modal service', function () {
     }));
 
     it('should add default options and call through to the UI Bootstrap modal service', function () {
-        var openSpy = spyOn($modal, 'open').and.callThrough();
+        var openSpy = spyOn($uibModal, 'open').and.callThrough();
 
         bbModal.open({
             template: 'a'

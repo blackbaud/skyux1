@@ -99,7 +99,7 @@ describe('Toast service', function () {
 
         expect(toastr.info).toHaveBeenCalledWith("<div id='bbtoast-1'></div>", '', {allowHtml: true, iconClass: 'bb-toast'});
 
-        $animate.triggerCallbackPromise();
+        $animate.flush();
 
         $scope.$digest();
 
@@ -133,7 +133,7 @@ describe('Toast service', function () {
 
         expect(toastr.info).toHaveBeenCalled();
 
-        $animate.triggerCallbackPromise();
+        $animate.flush();
 
         $scope.$digest();
 
@@ -176,7 +176,7 @@ describe('Toast service', function () {
 
         expect(toastr.info).toHaveBeenCalled();
 
-        $animate.triggerCallbackPromise();
+        $animate.flush();
 
         $scope.$digest();
 

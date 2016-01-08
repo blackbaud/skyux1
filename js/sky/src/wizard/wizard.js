@@ -16,7 +16,7 @@ The `bbWizardNavigator` service has an `init()` function that takes an `options`
 
 
  - `active` Indicates whether the step is the currently active step. This should be the same property that is bound to the UI Bootstrap `tab` directive's `active` property.
- - `disabled()` A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `tab` directive's `disabled` property.
+ - `disabled()` A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `tab` directive's `disable` property.
  - `complete()` A function that returns a boolean indicating whether the tab is complete. This should be the same function that is bound to the tab's `bb-wizard-step-complete` property.
 
 The `bbWizardNavigator` also exposes the following methods:
@@ -39,7 +39,6 @@ The `bbWizardNavigator` also exposes the following methods:
                     /*jslint unparam: true */
                     el.addClass('bb-wizard');
                 },
-                require: 'tabset',
                 restrict: 'A'
             };
         })

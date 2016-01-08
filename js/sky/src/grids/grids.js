@@ -329,7 +329,6 @@ reloading the grid with the current data after the event has fired.
                                 return "data-grid-field='" + column.name + "'" + "data-bbauto-field='" + column.name + "'" + "data-bbauto-index='" + (tableEl.getInd(rowId) - 1) + "'";
                             }
 
-
                             function getColumnById(columns, id) {
                                 var column,
                                     i;
