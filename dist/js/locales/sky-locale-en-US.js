@@ -50,6 +50,7 @@ bbResourcesOverrides = {
     "page_noaccess_header": "Move along, there\'s nothing to see here",
     "text_expand_see_less": "See less", // Display less text content
     "text_expand_see_more": "See more",
+    "text_expand_modal_title": "Expanded view",
     "grid_action_bar_clear_selection": "Clear selection", // Clear the selections in the grid.
     "grid_action_bar_cancel_mobile_actions": "Cancel", // Close the menu where you choose an action in mobile multiselect.
     "grid_action_bar_choose_action": "Choose an action", // Open a menu to choose an action in mobile  multiselect.
@@ -112,7 +113,8 @@ bbResourcesOverrides = {
     "datepicker_today": "Today", //Text displayed in the Today button of the datepicker
     "datepicker_clear": "Clear", //Text displayed in the Clear button of the datepicker
     "datepicker_close": "Done" //Text displayed in the Close button of the datepicker
-};
+}
+;
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
