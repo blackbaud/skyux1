@@ -1,11 +1,11 @@
 /*jshint unused: false */
-/*global angular, bbResourcesOverrides */
+/*global angular */
 
 (function () {
 'use strict';
 
 var bbResourcesOverrides;
-    
+
 /*LOCALEJSON*/
 
 angular.module('sky.resources')
