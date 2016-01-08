@@ -1,16 +1,12 @@
 /*jshint unused: false */
-/*global angular, bbResourcesOverrides */
+/*global angular */
 
 (function () {
 'use strict';
 
 var bbResourcesOverrides;
-    
-bbResourcesOverrides = {
-    "autonumeric_abbr_billions": "B",
-    "autonumeric_abbr_millions": "M",
-    "autonumeric_abbr_thousands": "K"
-};
+
+bbResourcesOverrides = {"autonumeric_abbr_billions":"B","autonumeric_abbr_millions":"M","autonumeric_abbr_thousands":"K"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
