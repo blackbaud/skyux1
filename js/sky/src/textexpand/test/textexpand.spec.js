@@ -87,7 +87,6 @@ describe('Text expand', function () {
             $scope.longText = 'a\nb';
 
             $scope.$digest();
-            
 
             expect(el.find('.bb-text-expand-text')).toHaveText('a b');
         });
