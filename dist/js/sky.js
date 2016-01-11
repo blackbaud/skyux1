@@ -17,6 +17,10 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
 
     function bbActionBar() {
         return {
+            controller: angular.noop,
+            controllerAs: 'bbActionBar',
+            bindToController: true,
+            scope: {},
             transclude: true,
             restrict: 'E',
             templateUrl: 'sky/templates/actionbar/actionbar.html'
@@ -28,17 +32,19 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
             replace: true,
             transclude: true,
             controller: function () {
+                var vm = this;
 
+                if (vm.title === null || angular.isUndefined(vm.title)) {
+                    vm.title = bbResources.action_bar_actions;
+                }
             },
-            restrict: 'E',
-            scope: {
+            controllerAs: 'bbActionBarItemGroup',
+            bindToController: {
                 title: '=?bbActionBarItemGroupTitle'
             },
+            restrict: 'E',
+            scope: {},
             link: function ($scope, el) {
-                if ($scope.title === null || angular.isUndefined($scope.title)) {
-                    $scope.title = bbResources.action_bar_actions;
-                }
-
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         el.find('.bb-action-bar-buttons > ng-transclude').appendTo(el.find('.bb-action-bar-dropdown > .dropdown > ul'));
@@ -52,7 +58,6 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
                 $scope.$on('$destroy', function () {
                     bbMediaBreakpoints.unregister(mediaBreakpointHandler);
                 });
-
             },
             templateUrl: 'sky/templates/actionbar/actionbaritemgroup.html'
         };
@@ -63,6 +68,10 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
     function bbActionBarItem(bbMediaBreakpoints) {
         return {
             replace: true,
+            controller: angular.noop,
+            controllerAs: 'bbActionBarItem',
+            bindToController: true,
+            scope: {},
             require: '?^bbActionBarItemGroup',
             transclude: true,
             restrict: 'E',
@@ -9151,8 +9160,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '    <div class="bb-action-bar-dropdown hidden-sm hidden-md hidden-lg">\n' +
         '        <div uib-dropdown>\n' +
-        '             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" href="javascript:void(0)">\n' +
-        '            {{title}}<span class="caret"/>\n' +
+        '             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+        '            {{bbActionBarItemGroup.title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '\n' +
         '            <ul uib-dropdown-menu>\n' +
