@@ -295,12 +295,15 @@ describe('Tile', function () {
                 smallTileDisplayMode: true
             });
 
+            $timeout.flush();
+
             expect(elScope.smallTileDisplayMode).toBe(true);
 
             // This should have no effect if the tile has already been initialized.
             $rootScope.$broadcast('tilesInitialized', {
                 smallTileDisplayMode: false
             });
+            $timeout.flush();
 
             expect(elScope.smallTileDisplayMode).toBe(true);
         });
@@ -896,7 +899,10 @@ describe('Tile', function () {
                 tile1,
                 tile1El,
                 tile2,
-                tile1TitleEl;
+                tile2El,
+                tile2Scope,
+                tile1TitleEl,
+                tile2TitleEl;
 
             dashboard = createTileDashboard($scope, 'lg', true);
 
@@ -906,7 +912,8 @@ describe('Tile', function () {
                         'Tile1',
                         'Tile2'
                     ],
-                    []
+                    [
+                    ]
                 ]
             };
 
@@ -931,17 +938,45 @@ describe('Tile', function () {
             $scope.$digest();
 
             tile1Scope = dashboard.el.isolateScope().$new();
+            tile2Scope = dashboard.el.isolateScope().$new();
+
+            //ensure that layout is reloaded when new tiles are initialized
+            $scope.layout = {
+                two_column_layout: [
+                    [
+                        'Tile1'
+
+                    ],
+                    [
+                        'Tile2'
+                    ]
+                ]
+            };
 
             tile1El = $compile(
                 '<bb-tile>Tile 1</bb-tile>'
             )(tile1Scope);
 
+            tile2El = $compile(
+                '<bb-tile>Tile 2</bb-tile>'
+            )(tile2Scope);
+
             dashboard.el.find('div[data-tile-id="Tile1"]').append(tile1El);
 
             tile1Scope.$digest();
 
-            tile1TitleEl = dashboard.el.find('div[data-tile-id="Tile1"] .bb-tile-title');
+            $timeout.flush();
+
+            dashboard.el.find('div[data-tile-id="Tile2"]').append(tile2El);
+
+            tile2Scope.$digest();
+
+
+            tile1TitleEl = dashboard.el.find('div[data-dashboard-column="1"] div[data-tile-id="Tile1"] .bb-tile-title');
             expect(tile1TitleEl.length).toBe(1);
+
+            tile2TitleEl = dashboard.el.find('div[data-dashboard-column="2"] div[data-tile-id="Tile2"] .bb-tile-title');
+            expect(tile2TitleEl.length).toBe(1);
 
             expect(tile1.collapsed).toBe(false);
 

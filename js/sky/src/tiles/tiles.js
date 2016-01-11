@@ -92,6 +92,7 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                         if (oldCollapsed === collapsed) {
                             displayModeChanging = false;
                         }
+
                         scope.isCollapsed = collapsed;
 
                         if (collapsed && !tileInitialized) {
@@ -118,17 +119,19 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                     }
 
                     function initializeTile(data) {
-                        var tiles = data.tiles || /*istanbul ignore next: default value */ [];
+                        $timeout(function () {
+                            var tiles = data.tiles || /*istanbul ignore next: default value */ [];
 
-                        if (!tileInitialized) {
-                            //retrieve the tile id from the parent container
-                            scope.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
-                            scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
-                        }
+                            if (!tileInitialized) {
+                                //retrieve the tile id from the parent container
+                                scope.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
+                                scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
+                            }
 
-                        updateTileState(tiles);
+                            updateTileState(tiles);
 
-                        tileInitialized = true;
+                            tileInitialized = true;
+                        });
                     }
 
                     scope.isCollapsed = scope.bbTileCollapsed || false;
@@ -194,6 +197,7 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                         if (dashboardCtrl.dashboardInitialized() && !tileInitialized) {
                             dashboardState = dashboardCtrl.getDashboardState();
                             initializeTile(dashboardState);
+                            dashboardCtrl.layoutTiles();
                         }
                     }
                 },
@@ -329,6 +333,8 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
 
                     bbMediaBreakpoints.register(mediabreakpointChangeHandler);
 
+                    scope.layoutTiles = layoutTiles;
+
                     element.on('$destroy', function () {
                         bbMediaBreakpoints.unregister(mediabreakpointChangeHandler);
                     });
@@ -409,6 +415,15 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
 
                     self.dashboardInitialized = function () {
                         return $scope.dashboardInitialized;
+                    };
+
+                    self.layoutTiles = function () {
+                        /* This timeout is in place to allow a state change to
+                           complete before laying out tiles
+                        */
+                        $timeout(function () {
+                            $scope.layoutTiles();
+                        });
                     };
                 }],
                 templateUrl: 'sky/templates/tiles/tiledashboard.html'
