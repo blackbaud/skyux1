@@ -953,7 +953,6 @@ describe('Tile', function () {
                 ]
             };
 
-
             tile1El = $compile(
                 '<bb-tile>Tile 1</bb-tile>'
             )(tile1Scope);
