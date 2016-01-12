@@ -525,6 +525,7 @@ module.exports = function (grunt) {
         } else {
             screenshotRoot = 'webdriver-screenshotslocal';
         }
+        
         cleanupWorkingScreenshots(screenshotRoot);
     });
 
