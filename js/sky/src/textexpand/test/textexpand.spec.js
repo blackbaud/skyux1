@@ -87,7 +87,7 @@ describe('Text expand', function () {
             $scope.longText = 'a\nb';
 
             $scope.$digest();
-            
+
 
             expect(el.find('.bb-text-expand-text')).toHaveText('a b');
         });
@@ -173,6 +173,31 @@ describe('Text expand', function () {
                 modalEl = $('.modal-dialog');
                 expect(modalEl.find('.bb-dialog-header')).toHaveText('new title');
                 closeModal(modalEl);
+            });
+
+            it('should open a modal for text greater than the newline limit', function () {
+                var el,
+                    modalEl,
+                    newlineText = 'hey\nhey\nhey\n';
+
+                spyOn(bbModal, 'open').and.callThrough();
+
+                el = $compile('<div bb-text-expand="longText" bb-text-expand-modal-title="modalTitle" bb-text-expand-max-expanded-length="50"></div>')($scope);
+
+                $scope.longText = newlineText;
+
+                $scope.$digest();
+
+                el.find('.bb-text-expand-see-more').click();
+
+                $scope.$digest();
+                expect(bbModal.open).toHaveBeenCalled();
+
+                modalEl = $('.modal-dialog');
+
+                expect(modalEl.find('.bb-dialog-header')).toHaveText('Expanded view');
+                closeModal(modalEl);
+
             });
 
         });
