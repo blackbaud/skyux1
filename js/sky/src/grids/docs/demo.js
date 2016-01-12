@@ -349,7 +349,11 @@
                 selectedColumnIds: [1, 2, 3],
                 columnPickerHelpKey: 'bb-security-users.html',
                 sortOptions: {
-                    descending: true
+                    excludedColumns: [
+                        'cats',
+                        'name',
+                        'skills'
+                    ]
                 },
                 hasInlineFilters: true,
                 filters: {}
@@ -387,7 +391,7 @@
                 return self.gridOptions.sortOptions;
             }, function () {
                 self.gridOptions.data.sort(function (a, b) {
-                    var descending = self.gridOptions.sortOptions.descending ? 1 : -1,
+                    var descending = self.gridOptions.sortOptions.descending ? -1 : 1,
                         sortProperty = self.gridOptions.sortOptions.column;
                     if (a[sortProperty] > b[sortProperty]) {
                         return (descending);
