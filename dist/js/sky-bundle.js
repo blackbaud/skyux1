@@ -99380,14 +99380,14 @@ global.easyXDM = easyXDM;
 
 /** @module Action Bar
 @icon bolt
-@summary The action bar provides a Sky UX-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a Sky UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
+@summary The action bar provides a {{ stache.config.product_name_short }}-themed container for buttons that can collapse when the screen is in extra-small mode.
+@description The action bar creates a {{ stache.config.product_name_short }}-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
 ### Action Bar Settings ###
-    - `bb-action-bar` Wraps the content in the action bar.
-    - `bb-action-bar-item` Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
-    - `bb-action-bar-item-group` Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
+    - `bb-action-bar` &mdash; Wraps the content in the action bar.
+    - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
+    - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
 
-If it is necessary to apply action bar stylying to more complicated scenarios (e.g. hiding and showing buttons at different breakpoints other than xs, collapsing dropdowns into submenus), then you can place any content in a `div` that has the `bb-action-bar` class. Some Bootstrap convenience classes for showing/hiding arbitrary content are the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. You can get more information on these in the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
+If it is necessary to apply action bar stylying to more complicated scenarios (e.g. hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), then you can place any content in a `div` that has the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
 */
 
 (function () {
@@ -99505,7 +99505,7 @@ If it is necessary to apply action bar stylying to more complicated scenarios (e
 This directive is no longer being maintained. UI-Bootstrap now allows the use of HTML5 autofocus on modals to focus an input upon opening the modal.
 
 <s>
-The `bb-autofocus` directive specifies the item on a form that should get focus when the form renders. You can use this directive when items such as Angular dynamically loaded templates do not play nicely with the HTML autofocus property.
+The `bb-autofocus` directive specifies the item on a form that receives focus when the form renders. You can use this directive when items such as Angular dynamically loaded templates do not play nicely with the HTML autofocus property.
 The **Open Modal** button below demonstrates a modal form where the `bb-autofocus` directive places the focus on an input control on the form.
 </s>
  */
@@ -99542,17 +99542,17 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 
 ### Autonumeric Settings ###
 
- - `bb-autonumeric` This  can optionally be assigned the name of a property from the `bbAutonumericConfig` object.  If none is specified, it defaults to `number`.
- - `bb-autonumeric-settings` This can be assigned a value that represents a settings object that can be passed to autoNumeric.  These options will override any default options specified in the `bb-autonumeric` attribute.  A complete list of options is available [here](http://www.decorplanit.com/plugin/).
+ - `bb-autonumeric` &mdash; This  can optionally be assigned the name of a property from the `bbAutonumericConfig` object.  If none is specified, it defaults to `number`.
+ - `bb-autonumeric-settings` &mdash; This can be assigned a value that represents a settings object that can be passed to autoNumeric. These options override any default options specified in the `bb-autonumeric` attribute. A complete list of options is available [here](http://www.decorplanit.com/plugin/).
 
 ### Autonumeric Filter ###
 
 In addition to the directive, there is also a filter that can be used to format numbers.  The filter has the added feature of optionally abbreviating a number according to Sky patterns.  For instance,
 numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,000,000 as 1b.  The filter takes three arguments:
 
- - `input` The value to format.
- - `configType` The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` A Boolean value indicating whether to abbreviate large numbers.
+ - `input` &mdash; The value to format.
+ - `configType` &mdash; The name of the configuration (`number` or `money`) to apply to the value.
+ - `abbreviate` &mdash; A Boolean value indicating whether to abbreviate large numbers.
  */
 (function ($) {
     'use strict';
