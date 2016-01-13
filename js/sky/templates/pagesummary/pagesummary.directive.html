@@ -1,0 +1,15 @@
+<div class="bb-page-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="bb-page-summary-photo col-md-3 col-lg-2" ng-show="bbPageSummary.profilePhotoCtrl"></div>
+            <div ng-class="bbPageSummary.getSummaryContentCls()">
+                <h1 class="bb-page-summary-title">
+                </h1>
+                <div class="bb-page-summary-status">
+                </div>
+                <div class="bb-page-summary-content"></div>
+            </div>
+        </div>
+    </div>
+    <ng-transclude></ng-transclude>
+</div>

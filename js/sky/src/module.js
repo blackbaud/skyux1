@@ -26,6 +26,7 @@
         'sky.omnibar',
         'sky.palette',
         'sky.page',
+        'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
         'sky.resources',
