@@ -9387,9 +9387,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>\n' +
         '    </div>\n' +
         '    <div class="row">\n' +
-        '        <div class="col-xs-3" ng-switch="bbFileItem.isImg()">\n' +
-        '            <img class="bb-file-item-preview-img center-block" ngf-src="item" ng-switch-when="true" />\n' +
-        '            <div class="bb-file-item-preview-other" ng-switch-when="false">\n' +
+        '        <div ng-switch="bbFileItem.isImg()" class="col-xs-3">\n' +
+        '            <div ng-switch-when="true" class="center-block">\n' +
+        '              <img ng-if="item.url" class="bb-file-item-preview-img" ng-src="{{item.url}}" />\n' +
+        '              <img ng-if="!item.url" class="bb-file-item-preview-img" ngf-src="item" />\n' +
+        '            </div>\n' +
+        '            <div ng-switch-when="false" class="bb-file-item-preview-other">\n' +
         '                <i class="fa" ng-class="bbFileItem.otherCls"></i>\n' +
         '            </div>\n' +
         '        </div>\n' +
