@@ -1,15 +1,28 @@
-<bb-page-summary>
-  <bb-profile-photo bb-profile-photo-url="photoUrl" bb-profile-photo-change="changePhoto()"></bb-profile-photo>
-  <bb-page-summary-title>
-    Test
-  </bb-page-summary-title>
-  <bb-page-summary-status>
-    <span class="label label-primary">Fundraiser</span>
-    <span class="label">Inactive</span>
-  </bb-page-summary-status>
-  <bb-page-summary-content>
-    <span class="bb-text-block">
-      Some arbitrary content.
-    </span>
-  </bb-page-summary-content>
-</bb-page-summary>
+<div ng-controller="PageSummaryTestController as summaryCtrl">
+  <bb-page-summary>
+    <bb-profile-photo bb-profile-photo-url="summaryCtrl.photoUrl" bb-profile-photo-change="summaryCtrl.changePhoto()"></bb-profile-photo>
+    <bb-page-summary-title ng-if="summaryCtrl.showTitle">
+      Test
+    </bb-page-summary-title>
+    <bb-page-summary-status ng-if="summaryCtrl.showStatus">
+      <span class="label label-primary">Fundraiser</span>
+      <span class="label">Inactive</span>
+    </bb-page-summary-status>
+    <bb-page-summary-content ng-if="summaryCtrl.showContent">
+      <span class="bb-text-block">
+        Some arbitrary content.
+      </span>
+    </bb-page-summary-content>
+  </bb-page-summary>
+  <div>
+    <label>
+      <input type="checkbox" bb-check ng-model="summaryCtrl.showTitle" /> Show title
+    </label>
+    <label>
+      <input type="checkbox" bb-check ng-model="summaryCtrl.showStatus" /> Show status
+    </label>
+    <label>
+      <input type="checkbox" bb-check ng-model="summaryCtrl.showContent" /> Show additional content
+    </label>
+  </div>
+</div>
