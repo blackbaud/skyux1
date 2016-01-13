@@ -158,6 +158,21 @@ describe('File item directive', function () {
         }, false);
     });
 
+    it('should display a preview image when a URL is provided with the file (e.g. an edit scenario)', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            imgSelector = '.bb-file-item-preview-img',
+            imgUrl = 'koala.jpg';
+
+        el = getFileItemEl($scope, {
+            name: 'abc.jpg',
+            type: 'image/jpeg',
+            url: imgUrl
+        });
+
+        expect(el.find(imgSelector)).toHaveAttr('src', imgUrl);
+    });
+
     it('should display the appropriate preview icon based on file type', function () {
         var $scope = $rootScope.$new(),
             el;
