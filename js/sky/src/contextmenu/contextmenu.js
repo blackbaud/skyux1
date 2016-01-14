@@ -4,12 +4,12 @@
 
 @icon ellipsis-h
 @summary The context menu creates simple or complicated dropdown menus that you can incorporate into buttons.
-@description The context menu directives allow you to easily create Sky-styled  [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. There are 3 directives in the context menu module:
-  - `bb-context-menu` creates a dropdown with the context menu button.
-  - `bb-context-menu-item` creates dropdown menu items within a dropdown that execute `bb-context-menu-action` on click.
-  - `bb-context-menu-button` creates a button with the Sky context menu styles.
-  - `bb-submenu` creates an accordion style submenu in a dropdown, you can place it in a dropdown list element.
-    - `bb-submenu-heading` Can be either an attribute on `bb-submenu` that can be set equal to static header text, or can be used as a directive inside of `bb-submenu` to place arbitrary content in an accordion heading.
+@description The context menu directives allow you to create SKY UX-themed [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. The context menu module includes three directives.
+  - `bb-context-menu` &mdash; Creates a dropdown menu within the context menu button.
+  - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu. When clicked, the menu item executes `bb-context-menu-action`.
+  - `bb-context-menu-button` &mdash; Creates a button with the SKY UX context menu styles.
+  - `bb-submenu` &mdash; Creates an accordion-style submenu within a dropdown menu. You can place the submenu within a dropdown list element.
+    - `bb-submenu-heading` &mdash; Specifies a header for a submenu. To specify a static header, apply this as an attribute of `bb-submenu`. To place arbitrary content in th header, apply this as a directive within `bb-submenu`.
 */
 
 (function () {
