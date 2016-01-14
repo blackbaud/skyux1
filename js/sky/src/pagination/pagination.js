@@ -145,6 +145,9 @@ These are optional properties of the object passed to `bbPaging.init()`
                                     maxHeight = 0;
 
                                 function changePage(pageNumber) {
+                                    /* Disable animation for the page change
+                                       to prevent issues with ng-repeat
+                                       that impact min-height measurements */
                                     $animate.enabled(false, el);
                                     pagedData.currentPage = pageNumber;
 
