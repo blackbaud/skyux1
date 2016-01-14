@@ -8,18 +8,18 @@
 
 ### bbData Functions ###
 
-  - `load(loadObj)` &mdash; Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request.  Note that in addition to the `data`, `resources` and `text` properties on the result object there is also an `httpResults` property containing the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http).  These objects include metadata about the response such as the HTTP status code.
-    - `data` &mdash; Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`.  The requests to the specified URLs will be made with credentials.
-    - `resources` &mdash; Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.resources`. The requests to the specified URLs will be made without credentials.
-    - `text` &mdash; Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.text`.  The requests to the specified URLs will be made without credentials and the result will be returned as a string rather than an object.
-    - `loadManager` &mdash; An object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data.
-  - `query(url, queryParams)` &mdash; Creates a URL with a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
-  - `post(url, data)` &mdash; For use within `bbData.load`, creates a post request from a URL and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});`.
-  - `save(saveObj)` &mdash; A function that issues an HTTP post for the purpose of storing data on the remote server. Takes an argument with the following properties:
-    - `url` &mdash; The URL to which to send the request.
-    - `data` &mdash; The object to be POSTed to the URL.
-    - `type` &mdash; (*default: `POST`) The HTTP verb to use along with the request.
-  - `cancel(promise)` &mdash; Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request.  The promise will be rejected after cancelling.
+  - `load(loadObj)` &mdash; Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request. An `httpResults` property contains the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http). The object includes metadata about the response such as the HTTP status code.
+    - `data` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.data` contains the promise results. For example: `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`. Requests to the URLs are made with credentials.
+    - `resources` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.resources` contains the promise results. Requests to the URLs are made without credentials.
+    - `text` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.text` contains the promise results. Requests to the URLs are made without credentials, and the results are returned as strings instead of objects.
+    - `loadManager` &mdash; Specifies an object with `name` and `scope` properties that creates a wait while it and its child load managers retreive data.
+  - `query(url, queryParams)` &mdash; Creates a URL with a query string based on the queryParam's properties. For example: `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
+  - `post(url, data)` &mdash; Within `bbData.load`, creates a post request from a URL and data object. For example: `bbData.load({data: bbData.post('/foo/post', postData)});`.
+  - `save(saveObj)` &mdash; Issues an HTTP post to store data on the remote server. Takes an argument with the `url`, `data`, and `type` properties.
+    - `url` &mdash; Specifies the URL to send the request to.
+    - `data` &mdash; Specifies the object to POST to the URL.
+    - `type` &mdash; Specifies the HTTP verb to use with the request. *(Default: `POST`)* 
+  - `cancel(promise)` &mdash; Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request. The promise is then rejected.
 */
 
 (function ($) {

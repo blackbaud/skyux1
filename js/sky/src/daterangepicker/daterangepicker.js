@@ -3,27 +3,27 @@
 
 /** @module Date Range Picker
 @icon calendar
-@summary The date range picker creates an input text box that includes a dropdown for selecting date ranges from a well-known set of options.
- @description The date range picker directive allows you to easily choose a date range from a well-known set of options. A date range picker service also exists to work hand-in-hand with the directive to provide more service-oriented functionality.
+@summary The date-range picker creates an input text box with a dropdown to select date ranges from a set of well-known options.
+ @description The date-range picker directive creates an input text box where users can select date ranges from a set of well-known options. The directive works hand-in-hand with a date-range picker service to provide more service-oriented functionality.
 
-### Date Range Picker Settings ###
+### Date-range Picker Settings ###
 
- - `bb-date-range-picker-value` An object tracking the value of the date range picker control.  Right now, the only proeprty of the object is `.dateRangeType` gives you the integer (ENUM) value of the date range typ that was selected in the picker. See the date range picker service for details of this ENUM.
- - `bb-date-range-picker-automation-id` A string to use when creating the bb-auto-field attribute on elements in the date range picker
- - `bb-date-range-picker-options` Optional. An options object that can be provided to customize the behavior of the date range picker.
+ - `bb-date-range-picker-value` &mdash; Specifies an object that tracks the value of the date-range picker control. The `.dateRangeType` property provides the integer (ENUM) value of the date-range type selected in the picker. For details about the ENUM, see the Date-range Picker Service section below.
+ - `bb-date-range-picker-automation-id` &mdash; Specifies a string to use when creating the `bb-auto-field` attribute on elements in the date-range picker.
+ - `bb-date-range-picker-options` &mdash; *(Optional.)* Specifies an options object that can customize the behavior of the date-range picker.
 
-### Date Range Picker Options Settings ###
+### Date-range Picker Options Settings ###
 
- - `availableDateRangeTypes` Optional. An array of integers (`dateRangeTypes` ENUM) to specify the ordered list of date range types to be included in the dropdown.  Common variations can be found in the date range picker service.
+ - `availableDateRangeTypes` &mdash; Optional. Provides an array of integers (`dateRangeTypes` ENUM) to specify an ordered list of date-range types for the dropdown.  Common variations are available in the date-range picker service.
 
-### Date Range Picker Service ###
-This service provides additional functionality that works closely with the directive.  Below are a list of members provided by the service.
+### Date-range Picker Service ###
+The date-range picker service provides functionality that works closely with the directive. The service provides the following members:
 
- - `dateRangeTypes` An ENUM of all types of date ranges that are understood by the date range picker and can be available in the dropdown.
- - `defaultDateRangeOptions` An array of `dateRangeTypes` providing the default order and set of date range types that are included in the dropdown.
- - `pastDateRangeOptions` An array of `dateRangeTypes` that are appropriate for filtering for things that have occurred in the past.  For example, you wouldn't want to be able to search for items created 'next month'.
- - `getDateRangeTypeCaption` A function for getting the caption of the dropdown item selected for a given `bb-date-range-picker-value`.
- - `getDateRangeFilterDescription` A function for getting an appropriate description string explaining the meaning of a given `bb-date-range-picker-value`.
+ - `dateRangeTypes` &mdash; An ENUM of all date-range types that the date-range picker understands and can include in the dropdown.
+ - `defaultDateRangeOptions` &mdash; An array of `dateRangeTypes` that provides the default order and set of date-range types included in the dropdown.
+ - `pastDateRangeOptions` &mdash; An array of `dateRangeTypes` that are appropriate to filter for things that occurred in the past. For example, you don't want to search for items created "next month."
+ - `getDateRangeTypeCaption` &mdash; A function to get the caption of the dropdown item for a given `bb-date-range-picker-value`.
+ - `getDateRangeFilterDescription` &mdash; A function to get the description of a given `bb-date-range-picker-value`.
  */
 
 (function () {
