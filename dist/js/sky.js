@@ -9696,11 +9696,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="modal-form">\n' +
         '    <div bb-modal-body>\n' +
         '      <div>\n' +
-        '        <p class="bb-text-expand-text">\n' +
-        '          <span>\n' +
-        '            {{expandCtrl.textExpandContent}}\n' +
-        '          </span>\n' +
-        '        </p>\n' +
+        '        <span class="bb-text-expand-text">{{expandCtrl.textExpandContent}}</span>\n' +
         '      </div>\n' +
         '    </div>\n' +
         '    <bb-modal-footer>\n' +
