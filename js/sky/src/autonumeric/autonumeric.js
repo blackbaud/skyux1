@@ -2,7 +2,7 @@
 /*global angular, jQuery */
 /** @module Autonumeric
 @icon calculator
-@summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
+@summary The autonumeric component wraps the autoNumeric jQuery plugin to format any type of number, including currency.
  @description The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format any type of number, including currency. You must use this directive in conjunction with the `ngModel` directive where the property bound to `ngModel` is the raw numeric value on your model.
 
  ### Dependencies ###
@@ -18,12 +18,12 @@
 
 ### Autonumeric Filter ###
 
-In addition to the directive, there is also a filter that can be used to format numbers.  The filter has the added feature of optionally abbreviating a number according to Sky patterns.  For instance,
-numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,000,000 as 1b.  The filter takes three arguments:
+In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to {{ stache.config.product_name_short }} patterns. For example,
+it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
 
  - `input` &mdash; The value to format.
  - `configType` &mdash; The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` &mdash; A Boolean value indicating whether to abbreviate large numbers.
+ - `abbreviate` &mdash; A Boolean value that indicates whether to abbreviate large numbers.
  */
 (function ($) {
     'use strict';

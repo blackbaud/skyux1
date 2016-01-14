@@ -9,7 +9,7 @@
     - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
     - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
 
-If it is necessary to apply action bar stylying to more complicated scenarios (e.g. hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), then you can place any content in a `div` that has the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
+To apply action bar stylying to more complicated scenarios (hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), you can place content in a `div` with the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
 */
 
 (function () {
