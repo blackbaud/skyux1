@@ -18,7 +18,7 @@
 
 ### Autonumeric Filter ###
 
-In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to {{ stache.config.product_name_short }} patterns. For example,
+In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to SKY UX patterns. For example,
 it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
 
  - `input` &mdash; The value to format.

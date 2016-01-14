@@ -2,8 +2,8 @@
 
 /** @module Action Bar
 @icon bolt
-@summary The action bar provides a {{ stache.config.product_name_short }}-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a {{ stache.config.product_name_short }}-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
+@summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
+@description The action bar creates a SKY UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
 ### Action Bar Settings ###
     - `bb-action-bar` &mdash; Wraps the content in the action bar.
     - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
