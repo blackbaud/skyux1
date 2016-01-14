@@ -162,11 +162,11 @@ describe('File item directive', function () {
         var $scope = $rootScope.$new(),
             el,
             imgSelector = '.bb-file-item-preview-img',
-            imgUrl = 'koala.jpg';
+            imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAAFElEQVR42gEJAPb/AP//////////I+UH+Rtap+gAAAAASUVORK5CYII=';
 
         el = getFileItemEl($scope, {
-            name: 'abc.jpg',
-            type: 'image/jpeg',
+            name: 'abc.png',
+            type: 'image/png',
             url: imgUrl
         });
 
