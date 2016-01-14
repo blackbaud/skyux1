@@ -49,6 +49,7 @@ These are optional properties of the object passed to `bbPaging.init()`
                             currentPage = paging.currentPage - 1; // 1-based
 
                             startingIndex = currentPage * paging.itemsPerPage;
+
                             paging.items = sourceData.slice(startingIndex, startingIndex + paging.itemsPerPage);
                         }
                     }
@@ -115,7 +116,7 @@ These are optional properties of the object passed to `bbPaging.init()`
                 }
             };
         })
-        .directive('bbPaginationContent', ['$timeout', '$window', function ($timeout, $window) {
+        .directive('bbPaginationContent', ['$timeout', '$window', '$animate', function ($timeout, $window, $animate) {
             return {
                 link: function (scope, el) {
                     var evtNs;
@@ -144,10 +145,16 @@ These are optional properties of the object passed to `bbPaging.init()`
                                     maxHeight = 0;
 
                                 function changePage(pageNumber) {
+                                    /* Disable animation for the page change
+                                       to prevent issues with ng-repeat
+                                       that impact min-height measurements */
+                                    $animate.enabled(false, el);
                                     pagedData.currentPage = pageNumber;
-                                    pagedData.pageChanged();
 
+                                    pagedData.pageChanged();
                                     scope.$apply();
+                                    $animate.enabled(true, el);
+
                                 }
 
                                 if (height === 0 && tries < 5) {
