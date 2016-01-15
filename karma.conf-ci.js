@@ -20,7 +20,7 @@ module.exports = function (config) {
                 base: base,
                 browser: 'edge',
                 os: 'Windows',
-                os_version: '8.1'
+                os_version: '10'
             },
             bs_windows_chrome_latest: {
                 base: base,
