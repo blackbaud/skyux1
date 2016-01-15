@@ -524,13 +524,26 @@ reloading the grid with the current data after the event has fired.
                                 setScrollbarHeight();
                             }
 
+                            function setColumnSize(columnName, columnSize, totalWidth) {
+
+
+                                tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
+                                tableEl[0].grid.cols[extendedColumnIndex].style.width = columnSize + 'px';
+                                tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
+                                $('table:first', tableEl[0].bDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                $('table:first', tableEl[0].hDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                tableEl[0].grid.hDiv.scrollLeft = tableEl[0].grid.bDiv.scrollLeft;
+                            }
+
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
                                 var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
 
                                 //If the extended portion of the last column is less than the amount resized
                                 if (extendedShrinkWidth <= changedWidth) {
                                     //decrease extended column to original size
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+
 
                                     //increase grid width by remainder and wipe out all the extended stuff
                                     if (isIncreasing) {
@@ -538,19 +551,23 @@ reloading the grid with the current data after the event has fired.
                                     } else {
                                         totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
                                     }
+                                    setColumnSize(extendedColumnName, originalExtendedColumnWidth, totalColumnWidth);
 
                                     tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                                     resetExtendedColumn();
+
                                 } else {
                                     //decrease extended column width by changedWidth
                                     currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+
 
                                     if (!isIncreasing) {
                                         totalColumnWidth = totalColumnWidth - changedWidth;
                                     }
+                                    setColumnSize(extendedColumnName, currentExtendedColumnWidth, totalColumnWidth);
+
                                 }
-                                tableEl.setGridWidth(totalColumnWidth, true);
+                                tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                             }
 
