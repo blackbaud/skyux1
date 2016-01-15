@@ -526,7 +526,10 @@ reloading the grid with the current data after the event has fired.
 
                             function setColumnSize(columnName, columnSize, totalWidth) {
 
-
+                                /* jqGrid does not provide a function to change a single column column size.
+                                   This code snippet mirrors how jqGrid changes column size in their own dragEnd
+                                   function.
+                                */
                                 tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
                                 tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
                                 tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
