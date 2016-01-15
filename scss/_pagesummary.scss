@@ -5,10 +5,6 @@
     margin-bottom: $margin-double;
 }
 
-.bb-page-summary-status .label {
-    margin-right: $margin;
-}
-
 .bb-page-summary-title {
     margin-top: 0;
     margin-bottom: $margin-half;
@@ -21,6 +17,10 @@
 
 .bb-page-summary-status {
     margin-top: $margin;
+
+    .label {
+        margin-right: $margin;
+    }
 }
 
 .bb-page-summary-content {
