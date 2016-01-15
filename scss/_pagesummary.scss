@@ -1,0 +1,68 @@
+@import "mixins";
+
+.bb-page-summary-alert .alert {
+    margin-top: 0;
+    margin-bottom: $margin-double;
+}
+
+.bb-page-summary-status .label {
+    margin-right: $margin;
+}
+
+.bb-page-summary-title {
+    margin-top: 0;
+    margin-bottom: $margin-half;
+}
+
+.bb-page-summary-subtitle {
+    margin-top: 0;
+    margin-bottom: $margin;
+}
+
+.bb-page-summary-status {
+    margin-top: $margin;
+}
+
+.bb-page-summary-content {
+    margin-top: $margin-double;
+}
+
+.bb-page-summary-subtitle {
+    font-size: $bb-font-size-xl;
+    font-weight: 400;
+}
+
+.bb-page-summary-photo {
+    margin-bottom: $margin-double;
+}
+
+@media (min-width: $screen-sm-min) {
+    .bb-page-summary-left {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .bb-page-summary-photo {
+        width: 100 + $margin-double;
+        flex: 0 0 100 + $margin-double;
+        text-align: center;
+    }
+}
+
+@media (max-width: $screen-sm-max) {
+    .bb-page-summary-photo .bb-profile-photo {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .bb-page-summary-key-info {
+        margin-top: $margin-double;
+    }
+}
+
+.bb-key-info-item {
+    font-family: $bb-font-family-narrow;
+    font-size: $bb-alternate-font-size-lg;
+    font-weight: 100;
+    margin-bottom: $margin-plus-half;
+}

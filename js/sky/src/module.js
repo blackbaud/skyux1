@@ -6,6 +6,7 @@
 
     var modules = [
         'sky.actionbar',
+        'sky.alert',
         'sky.autofocus',
         'sky.autonumeric',
         'sky.check',
@@ -29,6 +30,7 @@
         'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
+        'sky.profilephoto',
         'sky.resources',
         'sky.scrollintoview',
         'sky.searchfield',

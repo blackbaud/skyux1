@@ -1,7 +1,7 @@
-/*global angular */
+/*global angular, jQuery */
 
 /** @module Page Summary
-@icon list-alt
+@icon eye
 @summary The modal component launches modals in a way that is consistent with Sky UX applications.
  @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$uibModal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
 
@@ -21,50 +21,137 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
  */
 
-(function () {
+(function ($) {
     'use strict';
 
-    function bbPageSummary() {
+    var components = [{
+        name: 'Alert',
+        cls: 'alert'
+    }, {
+        name: 'Content',
+        cls: 'content'
+    }, {
+        name: 'KeyInfo',
+        cls: 'key-info'
+    }, {
+        name: 'Photo',
+        cls: 'photo'
+    }, {
+        name: 'Status',
+        cls: 'status'
+    }, {
+        name: 'Title',
+        cls: 'title'
+    }, {
+        name: 'Subtitle',
+        cls: 'subtitle'
+    }],
+    pageSummaryModule = angular.module('sky.pagesummary');
+
+    function makePageSummaryComponent(component) {
+        var name = component.name;
+
+        function componentFn() {
+            function Controller() {
+
+            }
+
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbPageSummary = ctrls[1];
+
+                vm.el = el;
+
+                bbPageSummary['set' + name](vm);
+
+                scope.$on('$destroy', function () {
+                    vm.onDestroy();
+                    vm = null;
+                });
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbPageSummary' + name, '^bbPageSummary'],
+                controller: Controller,
+                controllerAs: 'bbPageSummary' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        pageSummaryModule.directive('bbPageSummary' + name, componentFn);
+    }
+
+    function bbPageSummary(bbMediaBreakpoints) {
+        function getCtrlPropName(component) {
+            var name = component.name;
+
+            return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+        }
+
         function Controller() {
             var vm = this;
 
-            function addComponentSetter(name) {
+            function addComponentSetter(component) {
+                var name = component.name;
+
                 vm['set' + name] = function (ctrl) {
-                    vm[name.toLowerCase() + 'Ctrl'] = ctrl;
+                    var propName = getCtrlPropName(component);
+
+                    vm[propName] = ctrl;
+
+                    ctrl.onDestroy = function () {
+                        vm[propName] = null;
+                    };
                 };
             }
 
-            addComponentSetter('Content');
-            addComponentSetter('Status');
-            addComponentSetter('Title');
+            components.forEach(addComponentSetter);
 
-            vm.getSummaryContentCls = function () {
-                var hasPhoto = !!vm.profilePhotoCtrl;
-
+            vm.getPageSummaryLeftCls = function () {
                 return {
-                    'col-md-9': hasPhoto,
-                    'col-lg-10': hasPhoto,
-                    'col-xs-12': !hasPhoto
+                    'col-sm-9': !!vm.keyInfoCtrl
                 };
             };
         }
 
         function link(scope, el, attrs, vm) {
-            function watchForComponent(name) {
+            function watchForComponent(component) {
                 scope.$watch(function () {
-                    return vm[name + 'Ctrl'];
+                    return vm[getCtrlPropName(component)];
                 }, function (newValue) {
                     if (newValue) {
-                        el.find('.bb-page-summary-' + name)
+                        el.find('.bb-page-summary-' + component.cls)
                             .empty()
                             .append(newValue.el);
                     }
                 });
             }
 
-            watchForComponent('content');
-            watchForComponent('status');
-            watchForComponent('title');
+            function mediaBreakpointHandler(breakpoint) {
+                var keyInfoEl = el.find('.bb-page-summary-key-info'),
+                    toEl;
+
+                if (breakpoint.xs) {
+                    toEl = el.find('.bb-page-summary-key-info-xs');
+                } else {
+                    toEl = el.find('.bb-page-summary-key-info-sm');
+                }
+
+                if (!$.contains(toEl, keyInfoEl)) {
+                    toEl.append(keyInfoEl);
+                }
+            }
+
+            components.forEach(watchForComponent);
+
+            bbMediaBreakpoints.register(mediaBreakpointHandler);
+
+            scope.$on('$destroy', function () {
+                mediaBreakpointHandler.unregister(mediaBreakpointHandler);
+            });
         }
 
         return {
@@ -79,6 +166,9 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
         };
     }
 
-    angular.module('sky.pagesummary')
-        .directive('bbPageSummary', bbPageSummary);
-}());
+    bbPageSummary.$inject = ['bbMediaBreakpoints'];
+
+    pageSummaryModule.directive('bbPageSummary', bbPageSummary);
+
+    components.forEach(makePageSummaryComponent);
+}(jQuery));

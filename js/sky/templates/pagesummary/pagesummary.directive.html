@@ -1,15 +1,21 @@
 <div class="bb-page-header">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="bb-page-summary-photo col-md-3 col-lg-2" ng-show="bbPageSummary.profilePhotoCtrl"></div>
-            <div ng-class="bbPageSummary.getSummaryContentCls()">
-                <h1 class="bb-page-summary-title">
-                </h1>
-                <div class="bb-page-summary-status">
-                </div>
-                <div class="bb-page-summary-content"></div>
-            </div>
+  <div class="container-fluid">
+    <div class="bb-page-summary-alert"></div>
+    <div class="row">
+      <div class="bb-page-summary-left col-xs-12" ng-class="bbPageSummary.getPageSummaryLeftCls()">
+        <div class="bb-page-summary-photo" ng-show="bbPageSummary.photoCtrl"></div>
+        <div>
+          <h1 class="bb-page-summary-title" ng-show="bbPageSummary.titleCtrl"></h1>
+          <h2 class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></h2>
+          <div class="bb-page-summary-status" ng-show="bbPageSummary.statusCtrl"></div>
+          <div class="bb-page-summary-key-info-xs"></div>
+          <div class="bb-page-summary-content"></div>
         </div>
+      </div>
+      <div class="bb-page-summary-key-info-sm col-sm-3 hidden-xs" ng-class="bbPageSummary.getKeyInfoCls()">
+        <div class="bb-page-summary-key-info"></div>
+      </div>
     </div>
-    <ng-transclude></ng-transclude>
+  </div>
+  <ng-transclude></ng-transclude>
 </div>

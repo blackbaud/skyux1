@@ -13,7 +13,7 @@
             controllerAs: 'bbProfilePhoto',
             link: function (scope, el, attr, vm) {
                 function setImageUrl(url) {
-                    el.css('background-image', 'url(\'' + url + '\')');
+                    el.find('.bb-profile-photo').css('background-image', 'url(\'' + url + '\')');
                 }
 
                 scope.$watch(function () {
