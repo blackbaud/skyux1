@@ -29,5 +29,10 @@ if [[ "$IS_RELEASE" == "true" ]]; then
 
     echo -e "skyux-releases successfully updated.\n"
 
+    # Publish to NPM
+    echo -e "blackbaud-skyux\n$NPM_PASSWORD\nsky-build-user@blackbaud.com" | npm login
+    npm publish
+    echo -e "skyux successfully deployed to NPM.\n"
+
   fi
 fi
