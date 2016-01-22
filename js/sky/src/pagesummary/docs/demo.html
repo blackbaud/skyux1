@@ -1,14 +1,14 @@
 <div ng-controller="PageSummaryTestController as summaryCtrl">
-  <div style="border: solid 3px #ccc; margin-bottom: 10px;">
+  <div style="border: solid 1px #ccc; margin-bottom: 10px;">
     <bb-page-summary>
       <bb-page-summary-alert ng-if="summaryCtrl.showAlert">
-        <bb-alert bb-alert-type="warning" bb-alert-closeable="true">This is an alert.</bb-alert>
+        <bb-alert bb-alert-type="info" bb-alert-closeable="true">This is an alert.</bb-alert>
       </bb-page-summary-alert>
-      <bb-page-summary-photo ng-if="summaryCtrl.showPhoto">
-        <bb-profile-photo bb-profile-photo-url="summaryCtrl.photoUrl" bb-profile-photo-change="summaryCtrl.changePhoto()"></bb-profile-photo>
-      </bb-page-summary-photo>
+      <bb-page-summary-image ng-if="summaryCtrl.showImage">
+        <bb-profile-photo bb-profile-photo-name="summaryCtrl.name"></bb-profile-photo>
+      </bb-page-summary-image>
       <bb-page-summary-title ng-if="summaryCtrl.showTitle">
-        Robert C. Hernandez
+        {{summaryCtrl.name}}
       </bb-page-summary-title>
       <bb-page-summary-subtitle ng-if="summaryCtrl.showSubtitle">
         Board Member
@@ -33,16 +33,6 @@
     <ul class="list-unstyled">
       <li>
         <label>
-          <input type="checkbox" bb-check ng-model="summaryCtrl.showAlert" /> Show alert
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="checkbox" bb-check ng-model="summaryCtrl.showPhoto" /> Show photo
-        </label>
-      </li>
-      <li>
-        <label>
           <input type="checkbox" bb-check ng-model="summaryCtrl.showTitle" /> Show title
         </label>
       </li>
@@ -53,17 +43,27 @@
       </li>
       <li>
         <label>
-          <input type="checkbox" bb-check ng-model="summaryCtrl.showStatus" /> Show status
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showImage" /> Show image
         </label>
       </li>
       <li>
         <label>
-          <input type="checkbox" bb-check ng-model="summaryCtrl.showContent" /> Show additional content
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showStatus" /> Show record status
         </label>
       </li>
       <li>
         <label>
-          <input type="checkbox" bb-check ng-model="summaryCtrl.showKeyInfo" /> Show key info
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showKeyInfo" /> Show key information
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showContent" /> Show arbitrary content
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showAlert" /> Show alert
         </label>
       </li>
     </ul>

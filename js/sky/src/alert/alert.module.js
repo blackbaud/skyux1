@@ -3,5 +3,5 @@
 (function () {
     'use strict';
 
-    angular.module('sky.alert', []);
+    angular.module('sky.alert', ['sky.alert.directive']);
 }());

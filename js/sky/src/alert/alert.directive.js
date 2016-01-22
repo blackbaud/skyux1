@@ -10,7 +10,7 @@
 
         function link(scope, el, attrs, vm) {
             vm.close = function () {
-
+                el.hide();
             };
         }
 
@@ -29,6 +29,6 @@
         };
     }
 
-    angular.module('sky.alert')
+    angular.module('sky.alert.directive', ['sky.resources'])
         .directive('bbAlert', bbAlert);
 }());

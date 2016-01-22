@@ -1,27 +1,32 @@
-/*global angular, jQuery */
+/*global angular */
 
 /** @module Page Summary
 @icon eye
-@summary The modal component launches modals in a way that is consistent with Sky UX applications.
- @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$uibModal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
+@summary The page summary should contain critical information and actions that need to be accessed quickly and frequently.
+ @description The page summary should contain critical information and actions that need to be accessed quickly and frequently. The summary components described here are all optional - the exact content will depend on the type of page and the scenario being designed for.
+ ###1. Title
+ The title be chosen so that it is understandable to the user and uniquely identifies the record. Often times there will be multiple pieces of data that could be used or combined - the correct data to use will depend on your understand of your users and the context in which they are visiting the page.
 
-In addition to the `bbModal` service for lauching modals, a `bb-modal` directive should be used to have common look-and-feel for modal content. Within `bb-modal`, use `bb-modal-header` to include a common modal header, `bb-modal-footer` to include a common modal footer and buttons, and `bb-modal-body` to wrap the modal's body content.
+ ###2. Photo
+ An image may be used if it will help the user quickly identify the record or complete a core task. Images used for decorative purposes are likely to be distracting and interfere with task completion.
 
-### Modal Header Settings ###
+ ###3. Record status
+ Important information about the status of a record can be shown in a label.
 
- - `bb-modal-help-key` Specifies the help key for the modal. This will be be linked from a help button included in the modal header.
+ ###4. Key information
+ Often a core task can be addressed by highlighting a few pieces of key information. This should be handled the same way it is in tiles, using the text-key classes for styling.
 
-### Modal Footer Buttons ##
+ ###5. Action bar
+ Actions related to the record overall, rather than to the child data shown in tiles, should be in the action bar. Ideally there would be just a handful of key actions for the record - if you find yourself needing to take many actions from the record page, it is worth re-examining the tasks you are supporting to see if an alternative workflow would be more effective.
 
- - `bb-modal-footer-button` Generic button for the modal footer. HTML included in this tag will be included in the contents of the button. You must register events for the button manually.
+ ###6. Arbitrary content
+ The content you put in the record summary should support the key tasks of the user visiting the page and account for the context in which the information will be used. The less information the summary contains, the more impact each element will have. There is a delicate balance in making effective use of the prime real estate without overloading it.
 
- - `bb-modal-footer-button-primary` Primary button for the modal footer which will have a custom look.  Default content is 'Save', but HTML included in this tag will be included as the contents of the button if provided. You must register events for the button manually.
-
- - `bb-modal-footer-button-cancel` Cancel button for the modal footer. Default content is 'Cancel', but HTML included in this tag will be included as the contents of the button if provided. This button automatically cancels the modal form.
-
+ ###7. Alert
+ Messages about the record that need to be seen right away can be shown in an alert. These could be system-generated messages triggered by certain criteria being met, or manually-entered notes about the record.
  */
 
-(function ($) {
+(function () {
     'use strict';
 
     var components = [{
@@ -34,8 +39,8 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
         name: 'KeyInfo',
         cls: 'key-info'
     }, {
-        name: 'Photo',
-        cls: 'photo'
+        name: 'Image',
+        cls: 'image'
     }, {
         name: 'Status',
         cls: 'status'
@@ -49,13 +54,21 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
     pageSummaryModule = angular.module('sky.pagesummary');
 
     function makePageSummaryComponent(component) {
-        var name = component.name;
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
 
         function componentFn() {
-            function Controller() {
-
-            }
-
             function link(scope, el, attrs, ctrls) {
                 var vm = ctrls[0],
                     bbPageSummary = ctrls[1];
@@ -63,17 +76,12 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                 vm.el = el;
 
                 bbPageSummary['set' + name](vm);
-
-                scope.$on('$destroy', function () {
-                    vm.onDestroy();
-                    vm = null;
-                });
             }
 
             return {
                 restrict: 'E',
                 require: ['bbPageSummary' + name, '^bbPageSummary'],
-                controller: Controller,
+                controller: controllerName,
                 controllerAs: 'bbPageSummary' + name,
                 bindToController: true,
                 link: link,
@@ -81,42 +89,46 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
             };
         }
 
-        pageSummaryModule.directive('bbPageSummary' + name, componentFn);
+        controllerName = 'BBPageSummary' + name + 'Controller';
+
+        pageSummaryModule
+            .controller(controllerName, Controller)
+            .directive('bbPageSummary' + name, componentFn);
     }
 
-    function bbPageSummary(bbMediaBreakpoints) {
-        function getCtrlPropName(component) {
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBPageSummaryController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
             var name = component.name;
 
-            return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
-        }
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
 
-        function Controller() {
-            var vm = this;
+                vm[propName] = ctrl;
 
-            function addComponentSetter(component) {
-                var name = component.name;
-
-                vm['set' + name] = function (ctrl) {
-                    var propName = getCtrlPropName(component);
-
-                    vm[propName] = ctrl;
-
-                    ctrl.onDestroy = function () {
-                        vm[propName] = null;
-                    };
-                };
-            }
-
-            components.forEach(addComponentSetter);
-
-            vm.getPageSummaryLeftCls = function () {
-                return {
-                    'col-sm-9': !!vm.keyInfoCtrl
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
                 };
             };
         }
 
+        components.forEach(addComponentSetter);
+
+        vm.getPageSummaryLeftCls = function () {
+            return {
+                'col-sm-9': !!vm.keyInfoCtrl
+            };
+        };
+    }
+
+    function bbPageSummary(bbMediaBreakpoints) {
         function link(scope, el, attrs, vm) {
             function watchForComponent(component) {
                 scope.$watch(function () {
@@ -140,7 +152,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                     toEl = el.find('.bb-page-summary-key-info-sm');
                 }
 
-                if (!$.contains(toEl, keyInfoEl)) {
+                if (!keyInfoEl.parent().is(toEl)) {
                     toEl.append(keyInfoEl);
                 }
             }
@@ -150,13 +162,13 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
             bbMediaBreakpoints.register(mediaBreakpointHandler);
 
             scope.$on('$destroy', function () {
-                mediaBreakpointHandler.unregister(mediaBreakpointHandler);
+                bbMediaBreakpoints.unregister(mediaBreakpointHandler);
             });
         }
 
         return {
             restrict: 'E',
-            controller: Controller,
+            controller: 'BBPageSummaryController',
             controllerAs: 'bbPageSummary',
             bindToController: true,
             link: link,
@@ -168,7 +180,9 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
     bbPageSummary.$inject = ['bbMediaBreakpoints'];
 
-    pageSummaryModule.directive('bbPageSummary', bbPageSummary);
+    pageSummaryModule
+        .controller('BBPageSummaryController', BBPageSummaryController)
+        .directive('bbPageSummary', bbPageSummary);
 
     components.forEach(makePageSummaryComponent);
-}(jQuery));
+}());

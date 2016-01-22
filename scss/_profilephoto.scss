@@ -1,13 +1,9 @@
 @import 'mixins';
 
-.bb-profile-photo {
+.bb-profile-photo,
+.bb-profile-photo-initials {
     height: 100px;
     width: 100px;
     background-position: 50%;
     background-size: cover;
-
-    &.bb-profile-photo-small {
-        height: 100px;
-        width: 100px;
-    }
 }

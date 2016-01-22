@@ -3,5 +3,5 @@
 (function () {
     'use strict';
 
-    angular.module('sky.profilephoto', []);
+    angular.module('sky.profilephoto', ['sky.profilephoto.directive']);
 }());

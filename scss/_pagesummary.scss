@@ -3,6 +3,7 @@
 .bb-page-summary-alert .alert {
     margin-top: 0;
     margin-bottom: $margin-double;
+    line-height: initial; /*TODO: This needs to come out */
 }
 
 .bb-page-summary-title {
@@ -11,6 +12,8 @@
 }
 
 .bb-page-summary-subtitle {
+    font-size: $bb-font-size-xl;
+    font-weight: 400;
     margin-top: 0;
     margin-bottom: $margin;
 }
@@ -19,7 +22,7 @@
     margin-top: $margin;
 
     .label {
-        margin-right: $margin;
+        margin-right: $margin-half;
     }
 }
 
@@ -27,12 +30,7 @@
     margin-top: $margin-double;
 }
 
-.bb-page-summary-subtitle {
-    font-size: $bb-font-size-xl;
-    font-weight: 400;
-}
-
-.bb-page-summary-photo {
+.bb-page-summary-image {
     margin-bottom: $margin-double;
 }
 
@@ -42,27 +40,18 @@
         align-items: stretch;
     }
 
-    .bb-page-summary-photo {
+    .bb-page-summary-image {
         width: 100 + $margin-double;
         flex: 0 0 100 + $margin-double;
-        text-align: center;
     }
 }
 
-@media (max-width: $screen-sm-max) {
-    .bb-page-summary-photo .bb-profile-photo {
-        margin-left: auto;
-        margin-right: auto;
+@media (max-width: $screen-xs-max) {
+    .bb-page-summary-image {
+        text-align: center;
     }
 
     .bb-page-summary-key-info {
         margin-top: $margin-double;
     }
-}
-
-.bb-key-info-item {
-    font-family: $bb-font-family-narrow;
-    font-size: $bb-alternate-font-size-lg;
-    font-weight: 100;
-    margin-bottom: $margin-plus-half;
 }
