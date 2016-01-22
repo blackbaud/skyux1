@@ -6,4 +6,7 @@
     width: 100px;
     background-position: 50%;
     background-size: cover;
+
+    /* this removes the "ghost margin" from the bottom of the canvas element that would otherwise be imposed by line height rules for inline elements */
+    display: block;
 }
