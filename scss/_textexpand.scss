@@ -11,3 +11,9 @@
 .bb-text-expand-see-more {
     white-space: nowrap;
 }
+
+.bb-text-expand-text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

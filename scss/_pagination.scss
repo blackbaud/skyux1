@@ -99,5 +99,14 @@
         }
     }
 }
+.bb-pagination-content {
+  margin-bottom: 15px;
+}
+.bb-pagination-content > table {
+  margin-bottom: 0;
+}
+.bb-pagination-content-calculating {
+  visibility: hidden;
+}
 
 /* PAGINATION END */

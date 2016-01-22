@@ -400,7 +400,7 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures']);
+    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
@@ -477,6 +477,22 @@ module.exports = function (grunt) {
         });
     }
 
+    function cleanupWorkingScreenshots(root) {
+        var pattern = root + '/**/*px.png';
+
+        grunt.file.expand(
+            {
+                filter: 'isFile',
+                cwd: '.'
+            },
+            pattern
+        ).forEach(function (file) {
+            grunt.file.delete(file);
+        });
+
+        grunt.log.writeln('Visual test working screenshots deleted.');
+    }
+
     function cleanupTestFixtures(root) {
         var pattern = root + '/test/**/fixtures/*.full.html';
 
@@ -501,6 +517,17 @@ module.exports = function (grunt) {
     // Remove the temporary files needed for visual tests
     grunt.registerTask('cleanupwebdrivertestfixtures', function () {
         cleanupTestFixtures('webdrivertest');
+    });
+
+    grunt.registerTask('cleanupworkingscreenshots', function () {
+        var screenshotRoot;
+        if (process.env.TRAVIS === 'true') {
+            screenshotRoot = 'webdriver-screenshots';
+        } else {
+            screenshotRoot = 'webdriver-screenshotslocal';
+        }
+        
+        cleanupWorkingScreenshots(screenshotRoot);
     });
 
     // Generate our JS config for the bbPalette service

@@ -101,7 +101,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                     maxLength = +attrs.bbTextExpandMaxLength || 200,
                     maxExpandedLength = +attrs.bbTextExpandMaxExpandedLength || 600,
                     maxNewlines = 1,
-                    maxExpandedNewlines = +attrs.bbTexExpandMaxExpandedNewlines || 2;
+                    maxExpandedNewlines = +attrs.bbTexExpandMaxExpandedNewlines || 3;
 
                 function getTruncatedText(value, length, newlines) {
                     var i;
@@ -190,7 +190,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                 .append(spaceEl)
                                 .append(expandEl);
 
-                            if (getNewlineCount(newValue) > maxExpandedNewlines || newValue.length > maxExpandedLength) {
+                            if (getNewlineCount(newValue) >= maxExpandedNewlines || newValue.length > maxExpandedLength) {
                                 expandEl.on('click', function () {
                                     bbModal.open({
                                         templateUrl: 'sky/templates/textexpand/expandmodal.html',
@@ -206,6 +206,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                         }
                                     });
                                 });
+                                
                             } else {
                                 expandEl.on('click', function () {
                                     if (isExpanded) {
