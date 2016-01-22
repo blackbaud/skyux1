@@ -34,6 +34,7 @@ describe('Alert directive', function () {
         $scope.$digest();
 
         expect(el.find('button.close')).toBeVisible();
+        expect(el.find('.alert')).toHaveClass('alert-dismissible');
 
         el.remove();
     });
@@ -73,5 +74,16 @@ describe('Alert directive', function () {
         expect(el.find('button.close .sr-only')).toHaveText(bbResources.alert_close);
 
         el.remove();
+    });
+
+    it('should add the appropriate styling when an alert type is specified', function () {
+        var el,
+            $scope = $rootScope.$new();
+
+        el = $compile('<bb-alert bb-alert-type="danger">Hello</bb-alert>')($scope);
+
+        $scope.$digest();
+
+        expect(el.find('.alert')).toHaveClass('alert-danger');
     });
 });
