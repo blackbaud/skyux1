@@ -8741,9 +8741,11 @@ This service supports the following functions
                 // A set timeout of 0 handles blocks added without async operations before starting another, which
                 // would indicate that the block should have been maintained anyways.
                 $timeout(function () {
+                    var $el;
+
                     /* istanbul ignore else: sanity check */
                     if (getWaitCount(el) === 0) {
-                        var $el = $(el);
+                        $el = $(el);
 
                         if (!isBlockUISupported()) {
                             return;
@@ -8754,16 +8756,17 @@ This service supports the following functions
                         } else {
                             $el.unblock();
                         }
-                        $(el).removeData(showingWaitAttr);
+                        $el.removeData(showingWaitAttr);
                     }
                 }, 0);
             }
 
             addWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Increases the element wait count and shows the wait if the count is above 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 count += 1;
 
                 setWaitCount(el, count, options.nonblocking);
@@ -8777,10 +8780,11 @@ This service supports the following functions
             };
 
             removeWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Decreases the element wait count and hides the wait if the count is at 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 if (count > 0) {
                     count -= 1;
 
