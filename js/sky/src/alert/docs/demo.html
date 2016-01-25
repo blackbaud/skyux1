@@ -1,0 +1,24 @@
+<div ng-controller="AlertTestController as alertCtrl">
+  <bb-alert bb-alert-type="{{alertCtrl.alertType}}" bb-alert-closeable="{{alertCtrl.closeable}}" bb-alert-closed="alertCtrl.alertClosed">
+    This is a sample alert.
+  </bb-alert>
+  <p ng-show="alertCtrl.alertClosed">
+    You closed the alert.  <a style="cursor: pointer;" ng-click="alertCtrl.openAlert()">Click here</a> to re-open it.
+  </p>
+  <div class="form-group">
+    <label>
+      Alert style
+      <select class="form-control" ng-model="alertCtrl.alertType">
+        <option>info</option>
+        <option>success</option>
+        <option>warning</option>
+        <option>danger</option>
+      </select>
+    </label>
+  </div>
+  <div class="form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="alertCtrl.closeable" /> Closeable
+    </label>
+  </div>
+</div>

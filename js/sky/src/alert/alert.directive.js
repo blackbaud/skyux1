@@ -1,5 +1,14 @@
 /*global angular */
 
+/** @module Alert
+@icon bell
+@summary The alert component displays a SKY UX-themed Bootstrap alert.
+@description The alert component displays a SKY UX-themed Bootstrap alert. It includes the option to allow the user to dismiss the alert with a close button.
+### Action Bar Settings ###
+    - `bb-alert-type` (default `warning`) &mdash; The style of alert to show.  Valid options are `success`, `info`, `warning`, and `danger`.
+    - `bb-alert-closeable` &mdash; A boolean indicating whether the alert can be dismissed by the user.
+*/
+
 (function () {
     'use strict';
 
@@ -10,7 +19,7 @@
 
         function link(scope, el, attrs, vm) {
             vm.close = function () {
-                el.hide();
+                vm.bbAlertClosed = true;
             };
         }
 
@@ -20,7 +29,8 @@
             controllerAs: 'bbAlert',
             bindToController: {
                 bbAlertType: '@',
-                bbAlertCloseable: '@'
+                bbAlertCloseable: '@',
+                bbAlertClosed: '='
             },
             link: link,
             scope: {},
