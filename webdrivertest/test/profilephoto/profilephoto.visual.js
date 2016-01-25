@@ -35,4 +35,8 @@ describe('Profile photo', function () {
     it('should match previous screenshot where image is not available', function (done) {
         takeScreenshot('placeholder', done);
     });
+
+    it('should match previous screenshot where image is not available and the name has only one initial', function (done) {
+        takeScreenshot('placeholder-one-initial', done);
+    });
 });
