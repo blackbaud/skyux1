@@ -264,6 +264,39 @@ describe('Grid directive', function () {
 
     });
 
+    it('keeps previous scroll location when data is loaded', function () {
+
+        var windowEl = $($window),
+            rowEl,
+            newData = [],
+            i,
+            k;
+
+        function setLargeData() {
+            for (i = 0; i < 100; i++) {
+                for (k = 0; k < 4; k++) {
+                    newData.push(dataSet1[k]);
+                }
+
+            }
+            setGridData(newData);
+        }
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        setLargeData();
+
+        windowEl.scrollTop(200);
+
+        setLargeData();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(800);
+
+        expect(windowEl.scrollTop()).toBe(200);
+
+    });
 
     describe('fixed headers', function () {
         it('has the option to fix header and toolbar', function () {

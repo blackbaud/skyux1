@@ -133,9 +133,9 @@ reloading the grid with the current data after the event has fired.
         }])
 
 
-        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
+        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow', '$q',
 
-            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
+            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
                     transclude: true,
@@ -221,9 +221,6 @@ reloading the grid with the current data after the event has fired.
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
-                            },
-                            loadMore: function () {
-                                $scope.$emit('loadMoreRows');
                             }
                         };
 
@@ -278,7 +275,8 @@ reloading the grid with the current data after the event has fired.
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth;
+                                scrollbarWidth,
+                                doNotResetRows = false;
 
                             function getTopScrollbar() {
                                 return element.find('.bb-grid-top-scrollbar');
@@ -1023,7 +1021,7 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setUpFancyCheckCell() {
-                                var checkCellEl = element.find('td .cbox');
+                                var checkCellEl = element.find('td > .cbox');
                                 wrapCheckboxEl(checkCellEl);
                                 element.find('td .bb-check-checkbox').on('click', function (event) {
                                     event.preventDefault();
@@ -1321,6 +1319,25 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.applySearchText();
                             };
 
+                            function loadMore() {
+                                var deferred = $q.defer(),
+                                    loadMorePromise = deferred.promise;
+
+                                loadMorePromise.then(function (moreRows) {
+                                    tableEl.addRowData('', moreRows);
+                                    $scope.options.data = $scope.options.data.concat(moreRows);
+                                    setUpFancyCheckCell();
+                                    doNotResetRows = true;
+                                });
+
+                                $scope.$emit('loadMoreRows', {
+                                    promise: deferred
+                                });
+
+                            }
+
+                            $scope.locals.loadMore = loadMore;
+
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
@@ -1393,7 +1410,13 @@ reloading the grid with the current data after the event has fired.
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', setRows);
+                            $scope.$watchCollection('options.data', function (newValue) {
+                                if (doNotResetRows) {
+                                    doNotResetRows = false;
+                                } else {
+                                    setRows(newValue);
+                                }
+                            });
 
                             $scope.syncViewKeepers = function () {
                                 /*istanbul ignore else: sanity check */
