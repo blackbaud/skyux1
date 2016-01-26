@@ -242,10 +242,6 @@
                 columnPickerMode: 'list'
             };
 
-
-
-
-
             self.guitarFilter = false;
 
             self.drumsFilter = false;
@@ -259,10 +255,6 @@
             function setSelections() {
                 self.selectedRows = [dataSetBand[3]];
             }
-
-
-
-
 
             $scope.$watch(function () {
                 return self.gridOptions.sortOptions;
@@ -338,8 +330,6 @@
                 filterAndSearch();
             });
 
-
-
             self.gridOptions.hasMoreRows = true;
 
             /* This function creates unique data sets to be appended to our
@@ -374,8 +364,6 @@
                 // after the user has changed the selected grid columns.
             });
         });
-
-
     }
 
     function PaginationGridTestController($scope) {
