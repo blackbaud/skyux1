@@ -39,6 +39,7 @@
     "install": "^0.1.8",
     "istanbul": "~0.3.7",
     "jasmine": "^2.3.2",
+    "jasmine-core": "^2.4.1",
     "karma": "^0.12.31",
     "karma-browserstack-launcher": "~0.1.3",
     "karma-chrome-launcher": "~0.1.7",
