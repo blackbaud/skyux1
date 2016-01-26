@@ -95,6 +95,7 @@
                     display: block;
                     padding-right: $padding;
                     float: left;
+                    cursor: pointer;
                     max-width: 99%;
                     @media (max-width: ($screen-md-max)) {
                         max-width: 98%;
@@ -106,7 +107,6 @@
 
                 .close {
                     color: $alert-warning-text;
-                    cursor: pointer;
                     padding-top: 3px;
                 }
             }
