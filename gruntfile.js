@@ -370,9 +370,9 @@ module.exports = function (grunt) {
                 configFile: './webdrivertest/wdio.conf.js'
             }
         },
-        browserstackTunnel: {
-            options: {
-                accessKey: process.env.BROWSER_STACK_ACCESS_KEY
+        exec: {
+            browserstackTunnel: {
+                cmd: './run-browserstack-local.sh'
             }
         }
     });
@@ -393,7 +393,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('blackbaud-stache-jsdoc');
     grunt.loadNpmTasks('grunt-webdriver');
-    grunt.loadNpmTasks('grunt-browserstack-tunnel');
+    grunt.loadNpmTasks('grunt-exec');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -406,7 +406,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
-
+    grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
         var RESOURCES_PREFIX = 'resources_',
