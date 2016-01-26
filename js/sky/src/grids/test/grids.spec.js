@@ -264,6 +264,62 @@ describe('Grid directive', function () {
 
     });
 
+    it('can load more data when clicking load more through a promise', function () {
+
+        var rowEl,
+            cellEl,
+            loadMoreButton;
+
+        locals.gridOptions.hasMoreRows = true;
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            data.promise.resolve(angular.copy(dataSet1));
+        });
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        setGridData(dataSet1);
+
+        loadMoreButton = el.find('.bb-table-loadmore');
+
+        loadMoreButton.click();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+        cellEl = rowEl.eq(4).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('John');
+        expect(cellEl.eq(1)).toHaveText('Rhythm guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(5).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Paul');
+        expect(cellEl.eq(1)).toHaveText('Bass');
+        expect(cellEl.eq(2)).toHaveText('Lorem');
+
+        cellEl = rowEl.eq(6).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('George');
+        expect(cellEl.eq(1)).toHaveText('Lead guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(7).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Ringo');
+        expect(cellEl.eq(1)).toHaveText('Drums');
+        expect(cellEl.eq(2)).toHaveText('');
+
+    });
 
     describe('fixed headers', function () {
         it('has the option to fix header and toolbar', function () {
