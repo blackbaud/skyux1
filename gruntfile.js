@@ -369,6 +369,11 @@ module.exports = function (grunt) {
             test: {
                 configFile: './webdrivertest/wdio.conf.js'
             }
+        },
+        exec: {
+            browserstackTunnel: {
+                cmd: './run-browserstack-local.sh'
+            }
         }
     });
 
@@ -388,6 +393,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('blackbaud-stache-jsdoc');
     grunt.loadNpmTasks('grunt-webdriver');
+    grunt.loadNpmTasks('grunt-exec');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -400,7 +406,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
-
+    grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
         var RESOURCES_PREFIX = 'resources_',
@@ -525,7 +531,7 @@ module.exports = function (grunt) {
         } else {
             screenshotRoot = 'webdriver-screenshotslocal';
         }
-        
+
         cleanupWorkingScreenshots(screenshotRoot);
     });
 
@@ -603,10 +609,13 @@ module.exports = function (grunt) {
                 'build'
             ];
 
-        function checkSkipTest(karmaTarget) {
+        function checkSkipTest(karmaTarget, browserstackTunnel) {
             if (!skipTest) {
-                tasks.push('visualtest');
                 tasks.push('karma:' + karmaTarget);
+                if (browserstackTunnel) {
+                    tasks.push('browserstackTunnel');
+                }
+                tasks.push('visualtest');
             }
         }
 
@@ -616,10 +625,10 @@ module.exports = function (grunt) {
             tasks.push('docs');
             break;
         case 'travis-pr-branch':
-            checkSkipTest('internal');
+            checkSkipTest('internal', true);
             break;
         case 'travis-push':
-            checkSkipTest('internal');
+            checkSkipTest('internal', true);
             tasks.push('stache_jsdoc');
             break;
         }
