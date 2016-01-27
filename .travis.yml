@@ -35,6 +35,9 @@ before_install:
   - chmod +x update-skyux-visualtest-results.sh
   - chmod +x run-browserstack-local.sh
 
+  # https://github.com/npm/npm/issues/11283
+  - npm set progress=false
+
 # Install a few additional things outside those listed in package.json
 before_script:
   - npm install -g grunt-cli
