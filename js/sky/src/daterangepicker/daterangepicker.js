@@ -33,7 +33,8 @@ The date-range picker service provides functionality that works closely with the
 
             var dateRangeTypes,
                 defaultDateRangeOptions,
-                pastDateRangeOptions;
+                pastDateRangeOptions,
+                dateRangeMap;
 
             dateRangeTypes = {
                 AT_ANY_TIME: 0,
@@ -95,6 +96,85 @@ The date-range picker service provides functionality that works closely with the
                 dateRangeTypes.THIS_FISCAL_YEAR
             ];
 
+            dateRangeMap = {
+                '0': {
+                    caption: bbResources.date_range_picker_at_any_time,
+                    description: bbResources.date_range_picker_filter_description_at_any_time
+                },
+                '1': {
+                    caption: bbResources.date_range_picker_next_week,
+                    description: bbResources.date_range_picker_filter_description_next_week
+                },
+                '2': {
+                    caption: bbResources.date_range_picker_this_month,
+                    description: bbResources.date_range_picker_filter_description_this_month
+                },
+                '3': {
+                    caption: bbResources.date_range_picker_next_month,
+                    description: bbResources.date_range_picker_filter_description_next_month
+                },
+                '4': {
+                    caption: bbResources.date_range_picker_this_quarter,
+                    description: bbResources.date_range_picker_filter_description_this_quarter
+                },
+                '5': {
+                    caption: bbResources.date_range_picker_next_quarter,
+                    description: bbResources.date_range_picker_filter_description_next_quarter
+                },
+                '6': {
+                    caption: bbResources.date_range_picker_this_fiscal_year,
+                    description: bbResources.date_range_picker_filter_description_this_fiscal_year
+                },
+                '7': {
+                    caption: bbResources.date_range_picker_next_fiscal_year,
+                    description: bbResources.date_range_picker_filter_description_next_fiscal_year
+                },
+                '8': {
+                    caption: bbResources.date_range_picker_this_calendar_year,
+                    description: bbResources.date_range_picker_filter_description_this_calendar_year
+                },
+                '9': {
+                    caption: bbResources.date_range_picker_next_calendar_year,
+                    description: bbResources.date_range_picker_filter_description_next_calendar_year
+                },
+                '10': {
+                    caption: bbResources.date_range_picker_last_week,
+                    description: bbResources.date_range_picker_filter_description_last_week
+                },
+                '11': {
+                    caption: bbResources.date_range_picker_last_month,
+                    description: bbResources.date_range_picker_filter_description_last_month
+                },
+                '12': {
+                    caption: bbResources.date_range_picker_last_quarter,
+                    description: bbResources.date_range_picker_filter_description_last_quarter
+                },
+                '13': {
+                    caption: bbResources.date_range_picker_last_fiscal_year,
+                    description: bbResources.date_range_picker_filter_description_last_fiscal_year
+                },
+                '14': {
+                    caption: bbResources.date_range_picker_last_calendar_year,
+                    description: bbResources.date_range_picker_filter_description_last_calendar_year
+                },
+                '15': {
+                    caption: bbResources.date_range_picker_today,
+                    description: bbResources.date_range_picker_filter_description_today
+                },
+                '16': {
+                    caption: bbResources.date_range_picker_yesterday,
+                    description: bbResources.date_range_picker_filter_description_yesterday
+                },
+                '17': {
+                    caption: bbResources.date_range_picker_tomorrow,
+                    description: bbResources.date_range_picker_filter_description_tomorrow
+                },
+                '18': {
+                    caption: bbResources.date_range_picker_this_week,
+                    description: bbResources.date_range_picker_filter_description_this_week
+                }
+            };
+
             function getDateRangeTypeCaption(dateRangePickerValue) {
                 if (angular.isNumber(dateRangePickerValue)) {
                     // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
@@ -109,65 +189,7 @@ The date-range picker service provides functionality that works closely with the
                     dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
                 }
 
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_at_any_time;
-
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_this_week;
-
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_tomorrow;
-
-                }
+                return dateRangeMap[dateRangePickerValue.dateRangeType].caption;
             }
 
             function getDateRangeFilterDescription(dateRangePickerValue) {
@@ -179,65 +201,7 @@ The date-range picker service provides functionality that works closely with the
                     dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
                 }
 
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_filter_description_at_any_time;
-
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_filter_description_this_week;
-
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_filter_description_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_filter_description_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_filter_description_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_filter_description_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_filter_description_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_filter_description_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_filter_description_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_filter_description_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_filter_description_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_filter_description_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_filter_description_tomorrow;
-
-                }
+                return dateRangeMap[dateRangePickerValue.dateRangeType].description;
             }
 
             return {
