@@ -9,17 +9,13 @@ module.exports = function (config) {
 
     var base = 'BrowserStack',
         customLaunchers = {
-            /* Disabling IE11 as there is currently issues with running
-               these tests in Browserstack.
-               https://github.com/blackbaud/skyux/issues/243
-
-               bs_windows_ie_11: {
+            bs_windows_ie_11: {
                 base: base,
                 browser: 'ie',
                 browser_version: '11.0',
                 os: 'Windows',
-                os_version: '8.1'
-            },*/
+                os_version: '10'
+            },
             bs_windows_edge: {
                 base: base,
                 browser: 'edge',
