@@ -41,14 +41,16 @@
     }
 
     .bb-page-summary-image {
-        width: 100 + $margin-double;
-        flex: 0 0 100 + $margin-double;
+        width: $bb-profile-photo-width + $margin-double;
+        flex: 0 0 $bb-profile-photo-width + $margin-double;
     }
 }
 
 @media (max-width: $screen-xs-max) {
     .bb-page-summary-image {
-        text-align: center;
+        width: $bb-profile-photo-width;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .bb-page-summary-key-info {

@@ -3,26 +3,26 @@
 .bb-profile-photo {
     .bb-file-drop-accept {
         .bb-profile-photo-wrapper {
-            border: dashed 2px $bb-color-green;
+            border: dashed $bb-profile-photo-border-width $bb-color-green;
         }
     }
 
     .bb-file-drop-reject {
         .bb-profile-photo-wrapper {
-            border: dashed 2px $bb-color-red;
+            border: dashed $bb-profile-photo-border-width $bb-color-red;
         }
     }
 }
 
 .bb-profile-photo-wrapper {
-    height: 104px;
-    width: 104px;
-    border: solid 2px transparent;
+    height: $bb-profile-photo-height + ($bb-profile-photo-border-width * 2);
+    width: $bb-profile-photo-width + ($bb-profile-photo-border-width * 2);;
+    border: solid $bb-profile-photo-border-width transparent;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
-    top: -2px;
-    left: -2px;
+    top: -$bb-profile-photo-border-width;
+    left: -$bb-profile-photo-border-width;
 }
 
 .bb-file-drop {
@@ -33,8 +33,8 @@
 
 .bb-profile-photo-image,
 .bb-profile-photo-initials {
-    height: 100px;
-    width: 100px;
+    height: $bb-profile-photo-height;
+    width: $bb-profile-photo-width;
     background-position: 50%;
     background-size: cover;
 
