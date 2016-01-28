@@ -5,7 +5,11 @@
         <bb-alert bb-alert-type="info" bb-alert-closeable="'true'">This is an alert.</bb-alert>
       </bb-page-summary-alert>
       <bb-page-summary-image ng-if="summaryCtrl.showImage">
-        <bb-profile-photo bb-profile-photo-name="summaryCtrl.name" bb-profile-photo-src="summaryCtrl.profilePhotoSrc" bb-profile-photo-change="summaryCtrl.profilePhotoChange(file)"></bb-profile-photo>
+        <bb-profile-photo
+            bb-profile-photo-name="summaryCtrl.name"
+            bb-profile-photo-src="summaryCtrl.profilePhotoSrc"
+            bb-profile-photo-change="summaryCtrl.profilePhotoChange(file)">
+        </bb-profile-photo>
       </bb-page-summary-image>
       <bb-page-summary-title ng-if="summaryCtrl.showTitle">
         {{summaryCtrl.name}}
@@ -19,7 +23,11 @@
       </bb-page-summary-status>
       <bb-page-summary-content ng-if="summaryCtrl.showContent">
         <span class="bb-text-block">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+          laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+          non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </span>
       </bb-page-summary-content>
       <bb-page-summary-key-info ng-if="summaryCtrl.showKeyInfo">
@@ -27,6 +35,18 @@
         <div class="bb-key-info-item">Key info</div>
         <div class="bb-key-info-item">Key info</div>
       </bb-page-summary-key-info>
+      <bb-page-summary-action-bar ng-if="summaryCtrl.showActionBar">
+        <bb-action-bar>
+          <bb-action-bar-item-group bb-action-bar-item-group-title="summaryCtrl.actionButtonCollapsedText">
+            <bb-action-bar-item
+                ng-repeat="item in summaryCtrl.actionBarItems"
+                ng-if="item.visible"
+                ng-click="item.action()">
+              {{item.actionText}}
+            </bb-action-bar-item>
+          </bb-action-bar-item-group>
+        </bb-action-bar>
+      </bb-page-summary-action-bar>
     </bb-page-summary>
   </div>
   <div>
@@ -64,6 +84,11 @@
       <li>
         <label>
           <input type="checkbox" bb-check ng-model="summaryCtrl.showAlert" /> Show alert
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showActionBar" /> Show action bar
         </label>
       </li>
     </ul>

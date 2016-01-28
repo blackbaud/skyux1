@@ -15,6 +15,25 @@
         vm.showStatus = true;
         vm.showContent = true;
         vm.showKeyInfo = true;
+        vm.showActionBar = true;
+
+        vm.actionBarItems = [
+            {
+                action: function () {},
+                actionText: 'Action 1',
+                visible: true
+            },
+            {
+                action: function () {},
+                actionText: 'Action 2',
+                visible: true
+            },
+            {
+                action: function () {},
+                actionText: 'Action 3',
+                visible: true
+            }
+        ];
 
         vm.profilePhotoChange = function (file) {
             if (file) {
