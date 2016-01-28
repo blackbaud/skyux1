@@ -1,7 +1,7 @@
 /*global angular */
 
 /** @module Page Summary
-@icon eye
+@icon newspaper-o
 @summary The page summary should contain critical information and actions that need to be accessed quickly and frequently.
  @description The page summary should contain critical information and actions that need to be accessed quickly and frequently. The summary components described here are all optional - the exact content will depend on the type of page and the scenario being designed for.
 
@@ -27,7 +27,7 @@ Often a core task can be addressed by highlighting a few pieces of key informati
 
 The key information component is represented by the `bb-page-summary-keyinfo` directive.
 
-##5.Arbitrary content
+##5. Arbitrary content
 The content you put in the record summary should support the key tasks of the user visiting the page and account for the context in which the information will be used. The less information the summary contains, the more impact each element will have. There is a delicate balance in making effective use of the prime real estate without overloading it.
 
 The arbitrary content section is represented by the `bb-page-summary-content` directive.
