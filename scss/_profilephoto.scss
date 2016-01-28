@@ -1,6 +1,37 @@
 @import 'mixins';
 
-.bb-profile-photo,
+.bb-profile-photo {
+    .bb-file-drop-accept {
+        .bb-profile-photo-wrapper {
+            border: dashed 2px $bb-color-green;
+        }
+    }
+
+    .bb-file-drop-reject {
+        .bb-profile-photo-wrapper {
+            border: dashed 2px $bb-color-red;
+        }
+    }
+}
+
+.bb-profile-photo-wrapper {
+    height: 104px;
+    width: 104px;
+    border: solid 2px transparent;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    top: -2px;
+    left: -2px;
+}
+
+.bb-file-drop {
+    .bb-profile-photo-wrapper {
+        cursor: pointer;
+    }
+}
+
+.bb-profile-photo-image,
 .bb-profile-photo-initials {
     height: 100px;
     width: 100px;

@@ -15,6 +15,12 @@
         vm.showStatus = true;
         vm.showContent = true;
         vm.showKeyInfo = true;
+
+        vm.profilePhotoChange = function (file) {
+            if (file) {
+                vm.profilePhotoSrc = file;
+            }
+        };
     }
 
     angular.module('stache')

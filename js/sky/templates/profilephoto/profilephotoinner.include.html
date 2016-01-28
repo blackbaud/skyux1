@@ -1,2 +1,4 @@
-<div class="bb-profile-photo img-circle" ng-show="bbProfilePhoto.url"></div>
-<canvas class="bb-profile-photo-initials img-circle" ng-show="!bbProfilePhoto.url"></canvas>
+<div class="bb-profile-photo-wrapper">
+  <div class="bb-profile-photo-image" ng-show="bbProfilePhoto.bbProfilePhotoSrc"></div>
+  <canvas class="bb-profile-photo-initials" ng-show="!bbProfilePhoto.bbProfilePhotoSrc"></canvas>
+</div>

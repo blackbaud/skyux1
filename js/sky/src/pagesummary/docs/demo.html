@@ -5,7 +5,7 @@
         <bb-alert bb-alert-type="info" bb-alert-closeable="'true'">This is an alert.</bb-alert>
       </bb-page-summary-alert>
       <bb-page-summary-image ng-if="summaryCtrl.showImage">
-        <bb-profile-photo bb-profile-photo-name="summaryCtrl.name"></bb-profile-photo>
+        <bb-profile-photo bb-profile-photo-name="summaryCtrl.name" bb-profile-photo-src="summaryCtrl.profilePhotoSrc" bb-profile-photo-change="summaryCtrl.profilePhotoChange(file)"></bb-profile-photo>
       </bb-page-summary-image>
       <bb-page-summary-title ng-if="summaryCtrl.showTitle">
         {{summaryCtrl.name}}
