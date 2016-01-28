@@ -14,7 +14,7 @@ module.exports = function (config) {
                 browser: 'ie',
                 browser_version: '11.0',
                 os: 'Windows',
-                os_version: '8.1'
+                os_version: '10'
             },
             bs_windows_edge: {
                 base: base,

@@ -48,7 +48,7 @@
                 outer.css('overflow', 'scroll');
                 w2 = inner[0].offsetWidth;
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore next: sanity check */
                 if (w1 === w2) {
                     w2 = outer[0].clientWidth;
                 }
