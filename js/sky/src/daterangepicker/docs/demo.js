@@ -31,7 +31,7 @@
             if (newVal === true) {
                 self.dateRangePickerOptions.availableDateRangeTypes = bbDateRangePicker.pastDateRangeOptions;
             } else {
-                self.dateRangePickerOptions.availableDateRangeTypes = bbDateRangePicker.defaultDateRangeOptions;
+                self.dateRangePickerOptions.availableDateRangeTypes = bbDateRangePicker.specificDateRangeOptions;
             }
         });
     }

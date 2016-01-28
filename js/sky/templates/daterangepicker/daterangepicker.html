@@ -1,6 +1,21 @@
-﻿<div>
-    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"
-            class="form-control"
-            ng-options="locals.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerOptions.availableDateRangeTypes || locals.bbDateRangePicker.defaultDateRangeOptions)"
-            ng-model="bbDateRangePickerValue.dateRangeType" />
+﻿<div class="form-inline">
+    <div class="form-group">
+      <label ng-if="bbDateRangePickerCtrl.pickerLabel">{{bbDateRangePickerCtrl.pickerLabel}}</label>
+      <div>
+        <select data-bbauto-field="{{bbDateRangePickerCtrl.bbDateRangePickerAutomationId}}_DateRangeType"
+          class="form-control"
+          ng-options="bbDateRangePickerCtrl.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerCtrl.bbDateRangePickerOptions.availableDateRangeTypes || bbDateRangePickerCtrl.bbDateRangePicker.defaultDateRangeOptions)"
+          ng-model="bbDateRangePickerCtrl.bbDateRangePickerValue.dateRangeType" />
+      </div>
+    </div>
+    <div class="form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">
+      <label>{{::bbDateRangePickerCtrl.resources.date_range_picker_from_date}}</label>
+      <bb-datepicker ng-model="bbDateRangePickerCtrl.fromDate" max-date="bbDateRangePickerCtrl.toDate"></bb-datepicker>
+
+    </div>
+    <div class="form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">
+      <label>{{::bbDateRangePickerCtrl.resources.date_range_picker_to_date}}</label>
+      <bb-datepicker ng-model="bbDateRangePickerCtrl.toDate" min-date="bbDateRangePickerCtrl.fromDate"></bb-datepicker>
+
+    </div>
 </div>

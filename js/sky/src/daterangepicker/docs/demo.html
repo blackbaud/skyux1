@@ -3,7 +3,9 @@
         <label>Date Range Picker</label>
         <bb-date-range-picker bb-date-range-picker-value="dateRangeCtrl.dateRangePickerValue"
                               bb-date-range-picker-options="dateRangeCtrl.dateRangePickerOptions"
-                              bb-date-range-picker-automation-id="'DirectiveDemo'"></bb-date-range-picker>
+                              bb-date-range-picker-automation-id="'DirectiveDemo'"
+                              bb-date-range-picker-from-date="dateRangeCtrl.fromDate"
+                              bb-date-range-picker-to-date="dateRangeCtrl.toDate"></bb-date-range-picker>
 
         The selected dateRangeType is: <b>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
         <br />
@@ -11,7 +13,11 @@
         <br />
         The type filter description is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(dateRangeCtrl.dateRangePickerValue)}}'</b>.
 
-        <br /><br />
+        <br />
+        The from date is {{dateRangeCtrl.fromDate}}
+        <br />
+        The to date is {{dateRangeCtrl.toDate}}
+        <br />
         <button ng-click="dateRangeCtrl.selectToday()">Select today</button>
         <br />
         <button ng-click="dateRangeCtrl.reset()">Reset</button>
