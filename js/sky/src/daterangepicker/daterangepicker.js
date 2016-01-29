@@ -271,7 +271,17 @@ The date-range picker service provides functionality that works closely with the
                     vm.specificRangeIsVisible = vm.bbDateRangePickerValue.dateRangeType === bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE;
                     newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
                 }, true);
-            }]
+            }],
+            link: function ($scope, el, attr, vm) {
+                vm.noLabels = attr.bbDateRangePickerNoLabels;
+                if (vm.noLabels) {
+                    vm.toPlaceholder = bbResources.date_range_picker_to_date;
+                    vm.fromPlaceholder = bbResources.date_range_picker_from_date;
+                } else {
+                    vm.toPlaceholder = '';
+                    vm.fromPlaceholder = '';
+                }
+            }
         };
     }
 
