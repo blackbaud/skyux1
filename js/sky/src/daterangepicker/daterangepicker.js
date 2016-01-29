@@ -241,13 +241,22 @@ The date-range picker service provides functionality that works closely with the
                 bbDateRangePickerOptions: '=',
                 fromDate: '=bbDateRangePickerFromDate',
                 toDate: '=bbDateRangePickerToDate',
-                pickerLabel: '=bbDateRangePickerLabel'
+                pickerLabel: '=bbDateRangePickerLabel',
+                isValid: '=bbDateRangePickerValid'
             },
             controller: ['$scope', function ($scope) {
                 var vm = this;
 
                 vm.bbDateRangePicker = bbDateRangePicker;
                 vm.resources = bbResources;
+
+                $scope.$watch(
+                    function () {
+                        return vm.dateRangeForm.$valid;
+                    }, function (newVal) {
+                        vm.isValid = newVal;
+                    }
+                );
 
                 $scope.$watch(
                     function () {

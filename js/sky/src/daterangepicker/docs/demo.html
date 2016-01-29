@@ -1,11 +1,12 @@
 ﻿<div ng-controller="DateRangePickerDemoController as dateRangeCtrl">
     <div class="form-group">
-        <label>Date Range Picker</label>
         <bb-date-range-picker bb-date-range-picker-value="dateRangeCtrl.dateRangePickerValue"
                               bb-date-range-picker-options="dateRangeCtrl.dateRangePickerOptions"
                               bb-date-range-picker-automation-id="'DirectiveDemo'"
                               bb-date-range-picker-from-date="dateRangeCtrl.fromDate"
-                              bb-date-range-picker-to-date="dateRangeCtrl.toDate"></bb-date-range-picker>
+                              bb-date-range-picker-to-date="dateRangeCtrl.toDate"
+                              bb-date-range-picker-label="'Date Range Picker'"
+                              bb-date-range-picker-valid="dateRangeCtrl.isValid"></bb-date-range-picker>
 
         The selected dateRangeType is: <b>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
         <br />
@@ -17,6 +18,10 @@
         The from date is {{dateRangeCtrl.fromDate}}
         <br />
         The to date is {{dateRangeCtrl.toDate}}
+        <br />
+        The date range is <span ng-hide="dateRangeCtrl.isValid">not</span> valid.
+
+        <br />
         <br />
         <button ng-click="dateRangeCtrl.selectToday()">Select today</button>
         <br />

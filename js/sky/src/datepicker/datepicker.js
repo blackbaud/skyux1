@@ -214,6 +214,12 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
                         return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
                     }
 
+                    function hasMinMaxError() {
+                        var inputNgModel = $scope.getInputNgModel();
+
+                        return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
+                    }
+
 
                     function dateFormatValidator() {
                         var customFormattingResult,
@@ -266,7 +272,7 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 
                         deferred = $q.defer();
 
-                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || datepickerIsPristine()) {
+                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || hasMinMaxError() || (!$scope.locals.required && $scope.locals.date === null) || datepickerIsPristine()) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {

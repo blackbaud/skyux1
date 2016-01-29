@@ -359,6 +359,14 @@
       "_description": "label for date range picker",
       "message": "To date"
     },
+    "date_range_picker_min_date_error": {
+      "_description": "error message for date range picker",
+      "message": "End date must be after start date"
+    },
+    "date_range_picker_max_date_error": {
+      "_description": "error message for date range picker",
+      "message": "Start date must be before end date"
+    },
     "file_size_b_plural": {
         "_description": "",
         "message": "{0} bytes"
