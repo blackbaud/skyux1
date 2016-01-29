@@ -37,7 +37,7 @@ You use the `bb-page-summary-content` directive to display the arbitrary content
 ### Alert
 You can display messages that require immediate attention in alerts within the page summary. For example, you can display system-generated messages when certain criteria are met, or you can display notes about a record that you enter manually.
 
-You use the `bb-page-summary-alert` directive to display the alerts. You can use in conjunction with the [`bb-alert`](../alert) directive.
+You use the `bb-page-summary-alert` directive to display the alerts. You can use this directive in conjunction with the [`bb-alert`](../alert) directive.
 
 ### Action Bar
 You can display actions within an action bar in the page summary. We recommend that you include only actions that relate to the page as a whole and that you exclude actions that are specific to tiles within the page. We also recommend that you limit the number of actions in the action bar. If your summary requires many actions, we recommend that you re-examine the tasks and consider an alternative workflow.
