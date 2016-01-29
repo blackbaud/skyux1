@@ -1,14 +1,12 @@
-.bb-date-range-picker-select {
-  padding-bottom: 22px;
-}
 
-.bb-date-range-picker-errors {
-  min-height: 22px;
-  label {
-    display: block;
+
+.form-inline {
+  .form-group.bb-date-range-picker-form-group {
+    padding-right: $padding;
+    vertical-align: top;
+    margin-bottom: $margin-half;
+    label {
+      display: block;
+    }
   }
-}
-
-.bb-date-range-picker-form-group {
-  padding-right: $padding;
 }
