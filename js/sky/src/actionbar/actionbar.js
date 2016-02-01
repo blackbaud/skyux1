@@ -10,8 +10,8 @@ To apply action bar styling to more complicated scenarios (such as hiding and sh
 ### Action Bar Settings ###
     - `bb-action-bar` &mdash; Wraps the content in the action bar to create a SKY UX-themed container for buttons.
         - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
-            - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. 
-                - `bb-action-bar-item-group-title` &mdash; *(Optional.)* Edits the default **Actions** label for the dropdown.
+        - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. 
+            - `bb-action-bar-item-group-title` &mdash; *(Optional.)* Edits the default **Actions** label for the dropdown.
 */
 
 (function () {

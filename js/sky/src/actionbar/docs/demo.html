@@ -31,16 +31,19 @@
   </bb-action-bar>
   <p></p>
   <p>
+        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
+  </p>
+  <p>
         <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle Action 2</button>
   </p>
   <p>
         <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add Action</button>
   </p>
-  <p>
-        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
-  </p>
+</div>
 
-  <p style="margin-top: 20px; margin-bottom: 20px;">Action Bar Classes for More Complicated Content</p>
+<div ng-controller="ActionButtonBarTestController as actionCtrl">
+
+  <h3 style="margin-top: 20px; margin-bottom: 20px;">Action Bar Classes for More Complicated Content</h3>
 
   <div class="bb-action-bar">
     <div class="row">
@@ -89,13 +92,13 @@
 </div>
   <p></p>
   <p>
+        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
+  </p>
+  <p>
         <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle Action 2</button>
   </p>
   <p>
         <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add Action</button>
-  </p>
-  <p>
-        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
   </p>
 
 </div>
