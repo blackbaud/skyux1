@@ -2,7 +2,7 @@
 
 (function () {
     'use strict';
-    
+
     function checklistModel($compile, $parse, bbChecklistUtility) {
         // http://stackoverflow.com/a/19228302/1458162
         function postLinkFn(scope, elem, attrs) {
@@ -67,9 +67,9 @@
             }
         };
     }
-    
+
     checklistModel.$inject = ['$compile', '$parse', 'bbChecklistUtility'];
-    
-    angular.module('sky.checklist.model', ['sky.checklist.utility'])
+
+    angular.module('sky.checklist.model.directive', ['sky.checklist.utility'])
         .directive('checklistModel', checklistModel);
 }());

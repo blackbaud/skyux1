@@ -1,0 +1,51 @@
+<div>
+  <div>
+    <div ng-if="bbChecklist.bbChecklistIncludeSearch" class="bb-checklist-filter-bar">
+      <div class="bb-checklist-search">
+        <input type="text" class="bb-checklist-search-box" maxlength="255" placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}" ng-model="bbChecklist.searchText" ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">
+        <div class="bb-checklist-search-icon">
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar">
+      <button type="button" class="btn btn-sm" ng-click="bbChecklist.filterByCategory()" ng-class="bbChecklist.selectedCategory ? 'btn-default' : 'btn-primary'">{{'grid_column_picker_all_categories' | bbResources}}</button>
+      <button ng-repeat="category in bbChecklist.bbChecklistCategories" type="button" class="btn btn-sm" ng-click="bbChecklist.filterByCategory(category)" ng-class="bbChecklist.selectedCategory === category ? 'btn-primary' : 'btn-default'">{{category}}</button>
+    </div>
+    <div class="bb-checklist-filter-bar bb-checklist-select-all-bar">
+      <button type="button" class="btn btn-link" data-bbauto-field="ChecklistSelectAll" ng-click="bbChecklist.selectAll()">{{'checklist_select_all' | bbResources}}</button>
+      <button type="button" class="btn btn-link" data-bbauto-field="ChecklistClear" ng-click="bbChecklist.clear()">{{'checklist_clear_all' | bbResources}}</button>
+    </div>
+  </div>
+  <div class="bb-checklist-wrapper" ng-switch="bbChecklist.bbChecklistMode">
+    <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
+      <label class="bb-checklist-list-row" ng-repeat="item in bbChecklist.filteredItems" data-bbauto-field="{{item.name}}">
+        <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">
+          <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" />
+        </div>
+        <div class="bb-checklist-list-col">
+          <div class="bb-checklist-list-title" bb-highlight="bbChecklist.searchText" ng-bind="item.title"></div>
+          <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>
+        </div>
+      </label>
+    </div>
+    <table class="table bb-checklist-table" ng-switch-default>
+      <thead>
+        <tr>
+          <th class="bb-checklist-checkbox-column"></th>
+          <th ng-repeat="column in bbChecklist.columns" class="{{column.class}}" ng-style="{'width': column.width}">{{column.caption}}</th>
+        </tr>
+      </thead>
+      <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
+        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">
+          <td>
+            <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />
+          </td>
+          <td ng-repeat="column in bbChecklist.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="bb-checklist-no-items" ng-if="!bbChecklist.filteredItems.length">{{bbChecklist.bbChecklistNoItemsMessage || ('checklist_no_items' | bbResources)}}</div>
+  </div>
+  <div ng-transclude></div>
+</div>
