@@ -69951,7 +69951,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');
 /**
  * State-based routing for AngularJS
- * @version v0.2.15
+ * @version v0.2.17
  * @link http://angular-ui.github.com/
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
@@ -69973,7 +69973,8 @@ var isDefined = angular.isDefined,
     isArray = angular.isArray,
     forEach = angular.forEach,
     extend = angular.extend,
-    copy = angular.copy;
+    copy = angular.copy,
+    toJson = angular.toJson;
 
 function inherit(parent, extra) {
   return extend(new (extend(function() {}, { prototype: parent }))(), extra);
@@ -70060,7 +70061,7 @@ function inheritParams(currentParams, newParams, $current, $to) {
   var parents = ancestors($current, $to), parentParams, inherited = {}, inheritList = [];
 
   for (var i in parents) {
-    if (!parents[i].params) continue;
+    if (!parents[i] || !parents[i].params) continue;
     parentParams = objectKeys(parents[i].params);
     if (!parentParams.length) continue;
 
@@ -70697,13 +70698,13 @@ function UrlMatcher(pattern, config, parentMatcher) {
   // The regular expression is somewhat complicated due to the need to allow curly braces
   // inside the regular expression. The placeholder regexp breaks down as follows:
   //    ([:*])([\w\[\]]+)              - classic placeholder ($1 / $2) (search version has - for snake-case)
-  //    \{([\w\[\]]+)(?:\:( ... ))?\}  - curly brace placeholder ($3) with optional regexp/type ... ($4) (search version has - for snake-case
+  //    \{([\w\[\]]+)(?:\:\s*( ... ))?\}  - curly brace placeholder ($3) with optional regexp/type ... ($4) (search version has - for snake-case
   //    (?: ... | ... | ... )+         - the regexp consists of any number of atoms, an atom being either
   //    [^{}\\]+                       - anything other than curly braces or backslash
   //    \\.                            - a backslash escape
   //    \{(?:[^{}\\]+|\\.)*\}          - a matched set of curly braces containing other atoms
-  var placeholder       = /([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
-      searchPlaceholder = /([:]?)([\w\[\]-]+)|\{([\w\[\]-]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
+  var placeholder       = /([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:\s*((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
+      searchPlaceholder = /([:]?)([\w\[\].-]+)|\{([\w\[\].-]+)(?:\:\s*((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
       compiled = '^', last = 0, m,
       segments = this.segments = [],
       parentParams = parentMatcher ? parentMatcher.params : {},
@@ -70713,7 +70714,7 @@ function UrlMatcher(pattern, config, parentMatcher) {
   function addParameter(id, type, config, location) {
     paramNames.push(id);
     if (parentParams[id]) return parentParams[id];
-    if (!/^\w+(-+\w+)*(?:\[\])?$/.test(id)) throw new Error("Invalid parameter name '" + id + "' in pattern '" + pattern + "'");
+    if (!/^\w+([-.]+\w+)*(?:\[\])?$/.test(id)) throw new Error("Invalid parameter name '" + id + "' in pattern '" + pattern + "'");
     if (params[id]) throw new Error("Duplicate parameter name '" + id + "' in pattern '" + pattern + "'");
     params[id] = new $$UMFP.Param(id, type, config, location);
     return params[id];
@@ -70724,7 +70725,10 @@ function UrlMatcher(pattern, config, parentMatcher) {
     if (!pattern) return result;
     switch(squash) {
       case false: surroundPattern = ['(', ')' + (optional ? "?" : "")]; break;
-      case true:  surroundPattern = ['?(', ')?']; break;
+      case true:
+        result = result.replace(/\/$/, '');
+        surroundPattern = ['(?:\/(', ')|\/)?'];
+      break;
       default:    surroundPattern = ['(' + squash + "|", ')?']; break;
     }
     return result + surroundPattern[0] + pattern + surroundPattern[1];
@@ -70740,7 +70744,11 @@ function UrlMatcher(pattern, config, parentMatcher) {
     cfg         = config.params[id];
     segment     = pattern.substring(last, m.index);
     regexp      = isSearch ? m[4] : m[4] || (m[1] == '*' ? '.*' : null);
-    type        = $$UMFP.type(regexp || "string") || inherit($$UMFP.type("string"), { pattern: new RegExp(regexp, config.caseInsensitive ? 'i' : undefined) });
+
+    if (regexp) {
+      type      = $$UMFP.type(regexp) || inherit($$UMFP.type("string"), { pattern: new RegExp(regexp, config.caseInsensitive ? 'i' : undefined) });
+    }
+
     return {
       id: id, regexp: regexp, segment: segment, type: type, cfg: cfg
     };
@@ -70870,20 +70878,29 @@ UrlMatcher.prototype.exec = function (path, searchParams) {
     return map(allReversed, unquoteDashes).reverse();
   }
 
+  var param, paramVal;
   for (i = 0; i < nPath; i++) {
     paramName = paramNames[i];
-    var param = this.params[paramName];
-    var paramVal = m[i+1];
+    param = this.params[paramName];
+    paramVal = m[i+1];
     // if the param value matches a pre-replace pair, replace the value before decoding.
-    for (j = 0; j < param.replace; j++) {
+    for (j = 0; j < param.replace.length; j++) {
       if (param.replace[j].from === paramVal) paramVal = param.replace[j].to;
     }
     if (paramVal && param.array === true) paramVal = decodePathArray(paramVal);
+    if (isDefined(paramVal)) paramVal = param.type.decode(paramVal);
     values[paramName] = param.value(paramVal);
   }
   for (/**/; i < nTotal; i++) {
     paramName = paramNames[i];
     values[paramName] = this.params[paramName].value(searchParams[paramName]);
+    param = this.params[paramName];
+    paramVal = searchParams[paramName];
+    for (j = 0; j < param.replace.length; j++) {
+      if (param.replace[j].from === paramVal) paramVal = param.replace[j].to;
+    }
+    if (isDefined(paramVal)) paramVal = param.type.decode(paramVal);
+    values[paramName] = param.value(paramVal);
   }
 
   return values;
@@ -70907,7 +70924,7 @@ UrlMatcher.prototype.parameters = function (param) {
 
 /**
  * @ngdoc function
- * @name ui.router.util.type:UrlMatcher#validate
+ * @name ui.router.util.type:UrlMatcher#validates
  * @methodOf ui.router.util.type:UrlMatcher
  *
  * @description
@@ -70960,6 +70977,8 @@ UrlMatcher.prototype.format = function (values) {
 
     if (isPathParam) {
       var nextSegment = segments[i + 1];
+      var isFinalPathParam = i + 1 === nPath;
+
       if (squash === false) {
         if (encoded != null) {
           if (isArray(encoded)) {
@@ -70975,9 +70994,12 @@ UrlMatcher.prototype.format = function (values) {
       } else if (isString(squash)) {
         result += squash + nextSegment;
       }
+
+      if (isFinalPathParam && param.squash === true && result.slice(-1) === '/') result = result.slice(0, -1);
     } else {
       if (encoded == null || (isDefaultValue && squash !== false)) continue;
       if (!isArray(encoded)) encoded = [ encoded ];
+      if (encoded.length === 0) continue;
       encoded = map(encoded, encodeURIComponent).join('&' + name + '=');
       result += (search ? '&' : '?') + (name + '=' + encoded);
       search = true;
@@ -71142,6 +71164,7 @@ Type.prototype.$asArray = function(mode, isSearch) {
     // Wraps type (.is/.encode/.decode) functions to operate on each value of an array
     function arrayHandler(callback, allTruthyMode) {
       return function handleArray(val) {
+        if (isArray(val) && val.length === 0) return val;
         val = arrayWrap(val);
         var result = map(val, callback);
         if (allTruthyMode === true)
@@ -71190,8 +71213,12 @@ function $UrlMatcherFactory() {
 
   var isCaseInsensitive = false, isStrictMode = true, defaultSquashPolicy = false;
 
-  function valToString(val) { return val != null ? val.toString().replace(/\//g, "%2F") : val; }
-  function valFromString(val) { return val != null ? val.toString().replace(/%2F/g, "/") : val; }
+  // Use tildes to pre-encode slashes.
+  // If the slashes are simply URLEncoded, the browser can choose to pre-decode them,
+  // and bidirectional encoding/decoding fails.
+  // Tilde was chosen because it's not a RFC 3986 section 2.2 Reserved Character
+  function valToString(val) { return val != null ? val.toString().replace(/~/g, "~~").replace(/\//g, "~2F") : val; }
+  function valFromString(val) { return val != null ? val.toString().replace(/~2F/g, "/").replace(/~~/g, "~") : val; }
 
   var $types = {}, enqueue = true, typeQueue = [], injector, defaultTypes = {
     string: {
@@ -71534,7 +71561,12 @@ function $UrlMatcherFactory() {
       if (config.type && urlType) throw new Error("Param '"+id+"' has two type configurations.");
       if (urlType) return urlType;
       if (!config.type) return (location === "config" ? $types.any : $types.string);
-      return config.type instanceof Type ? config.type : new Type(config.type);
+
+      if (angular.isString(config.type))
+        return $types[config.type];
+      if (config.type instanceof Type)
+        return config.type;
+      return new Type(config.type);
     }
 
     // array config: param name (param[]) overrides default settings.  explicit config overrides param name.
@@ -71729,7 +71761,7 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
    * });
    * </pre>
    *
-   * @param {object} rule Handler function that takes `$injector` and `$location`
+   * @param {function} rule Handler function that takes `$injector` and `$location`
    * services as arguments. You can use them to return a valid path as a string.
    *
    * @return {object} `$urlRouterProvider` - `$urlRouterProvider` instance
@@ -71765,7 +71797,7 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
    * });
    * </pre>
    *
-   * @param {string|object} rule The url path you want to redirect to or a function 
+   * @param {string|function} rule The url path you want to redirect to or a function 
    * rule that returns the url path. The function version is passed two params: 
    * `$injector` and `$location` services, and must return a url string.
    *
@@ -71794,7 +71826,9 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
    * @methodOf ui.router.router.$urlRouterProvider
    *
    * @description
-   * Registers a handler for a given url matching. if handle is a string, it is
+   * Registers a handler for a given url matching. 
+   * 
+   * If the handler is a string, it is
    * treated as a redirect, and is interpolated according to the syntax of match
    * (i.e. like `String.replace()` for `RegExp`, or like a `UrlMatcher` pattern otherwise).
    *
@@ -71823,7 +71857,7 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
    * </pre>
    *
    * @param {string|object} what The incoming path that you want to redirect.
-   * @param {string|object} handler The path you want to redirect your user to.
+   * @param {string|function} handler The path you want to redirect your user to.
    */
   this.when = function (what, handler) {
     var redirect, handlerIsString = isString(handler);
@@ -71934,8 +71968,8 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
    *
    */
   this.$get = $get;
-  $get.$inject = ['$location', '$rootScope', '$injector', '$browser'];
-  function $get(   $location,   $rootScope,   $injector,   $browser) {
+  $get.$inject = ['$location', '$rootScope', '$injector', '$browser', '$sniffer'];
+  function $get(   $location,   $rootScope,   $injector,   $browser,   $sniffer) {
 
     var baseHref = $browser.baseHref(), location = $location.url(), lastPushedUrl;
 
@@ -71974,6 +72008,12 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
       listener = listener || $rootScope.$on('$locationChangeSuccess', update);
       return listener;
     }
+
+    rules.sort(function(ruleA, ruleB) {
+      var aLength = ruleA.prefix ? ruleA.prefix.length : 0;
+      var bLength = ruleB.prefix ? ruleB.prefix.length : 0;
+      return bLength - aLength;
+    });
 
     if (!interceptDeferred) listen();
 
@@ -72068,6 +72108,8 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
         if (angular.isObject(isHtml5)) {
           isHtml5 = isHtml5.enabled;
         }
+
+        isHtml5 = isHtml5 && $sniffer.history;
         
         var url = urlMatcher.format(params);
         options = options || {};
@@ -72141,7 +72183,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
     // inherit 'data' from parent and override by own values (if any)
     data: function(state) {
       if (state.parent && state.parent.data) {
-        state.data = state.self.data = extend({}, state.parent.data, state.data);
+        state.data = state.self.data = inherit(state.parent.data, state.data);
       }
       return state.data;
     },
@@ -72272,7 +72314,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
 
     var name = state.name;
     if (!isString(name) || name.indexOf('@') >= 0) throw new Error("State must have a valid name");
-    if (states.hasOwnProperty(name)) throw new Error("State '" + name + "'' is already defined");
+    if (states.hasOwnProperty(name)) throw new Error("State '" + name + "' is already defined");
 
     // Get parent name
     var parentName = (name.indexOf('.') !== -1) ? name.substring(0, name.lastIndexOf('.'))
@@ -72640,7 +72682,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
    *
    * Callback function for when a state is entered. Good way
    *   to trigger an action or dispatch an event, such as opening a dialog.
-   * If minifying your scripts, make sure to explictly annotate this function,
+   * If minifying your scripts, make sure to explicitly annotate this function,
    * because it won't be automatically annotated by your build tools.
    *
    * <pre>onEnter: function(MyService, $stateParams) {
@@ -72652,7 +72694,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
    *
    * Callback function for when a state is exited. Good way to
    *   trigger an action or dispatch an event, such as opening a dialog.
-   * If minifying your scripts, make sure to explictly annotate this function,
+   * If minifying your scripts, make sure to explicitly annotate this function,
    * because it won't be automatically annotated by your build tools.
    *
    * <pre>onExit: function(MyService, $stateParams) {
@@ -72983,7 +73025,8 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
      *
      * @param {object=} params A map of the parameters that will be sent to the state, 
      * will populate $stateParams. Any parameters that are not specified will be inherited from currently 
-     * defined parameters. This allows, for example, going to a sibling state that shares parameters
+     * defined parameters. Only parameters specified in the state definition can be overridden, new 
+     * parameters will be ignored. This allows, for example, going to a sibling state that shares parameters
      * specified in a parent state. Parameter inheritance only works between common ancestor states, I.e.
      * transitioning to a sibling will get you the parameters for all parents, transitioning to a child
      * will get you all current parameters, etc.
@@ -72995,9 +73038,10 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
      * - **`relative`** - {object=$state.$current}, When transitioning with relative path (e.g '^'), 
      *    defines which state to be relative from.
      * - **`notify`** - {boolean=true}, If `true` will broadcast $stateChangeStart and $stateChangeSuccess events.
-     * - **`reload`** (v0.2.5) - {boolean=false}, If `true` will force transition even if the state or params 
-     *    have not changed, aka a reload of the same state. It differs from reloadOnSearch because you'd
-     *    use this when you want to force a reload when *everything* is the same, including search params.
+     * - **`reload`** (v0.2.5) - {boolean=false|string|object}, If `true` will force transition even if no state or params
+     *    have changed.  It will reload the resolves and views of the current state and parent states.
+     *    If `reload` is a string (or state object), the state object is fetched (by name, or object reference); and \
+     *    the transition reloads the resolves and views for that matched state, and all its children states.
      *
      * @returns {promise} A promise representing the state of the new transition.
      *
@@ -73135,6 +73179,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
         if (hash) toParams['#'] = hash;
         $state.params = toParams;
         copy($state.params, $stateParams);
+        copy(filterByKeys(to.params.$$keys(), $stateParams), to.locals.globals.$stateParams);
         if (options.location && to.navigable && to.navigable.url) {
           $urlRouter.push(to.navigable.url, toParams, {
             $$avoidResync: true, replace: options.location === 'replace'
@@ -73147,7 +73192,10 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
 
       // Filter parameters before we pass them to event handlers etc.
       toParams = filterByKeys(to.params.$$keys(), toParams || {});
-
+      
+      // Re-add the saved hash before we start returning things or broadcasting $stateChangeStart
+      if (hash) toParams['#'] = hash;
+      
       // Broadcast start event and cancel the transition if requested
       if (options.notify) {
         /**
@@ -73177,9 +73225,10 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
          * })
          * </pre>
          */
-        if ($rootScope.$broadcast('$stateChangeStart', to.self, toParams, from.self, fromParams).defaultPrevented) {
+        if ($rootScope.$broadcast('$stateChangeStart', to.self, toParams, from.self, fromParams, options).defaultPrevented) {
           $rootScope.$broadcast('$stateChangeCancel', to.self, toParams, from.self, fromParams);
-          $urlRouter.update();
+          //Don't update and resync url if there's been a new transition started. see issue #2238, #600
+          if ($state.transition == null) $urlRouter.update();
           return TransitionPrevented;
         }
       }
@@ -73224,9 +73273,6 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
             $injector.invoke(entering.self.onEnter, entering.self, entering.locals.globals);
           }
         }
-
-        // Re-add the saved hash before we start returning things
-        if (hash) toParams['#'] = hash;
 
         // Run it again, to catch any transitions in callbacks
         if ($state.transition !== transition) return TransitionSuperseded;
@@ -73561,7 +73607,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
 }
 
 angular.module('ui.router.state')
-  .value('$stateParams', {})
+  .factory('$stateParams', function () { return {}; })
   .provider('$state', $StateProvider);
 
 
@@ -73601,32 +73647,6 @@ function $ViewProvider() {
 
         if (options.view) {
           result = $templateFactory.fromConfig(options.view, options.params, options.locals);
-        }
-        if (result && options.notify) {
-        /**
-         * @ngdoc event
-         * @name ui.router.state.$state#$viewContentLoading
-         * @eventOf ui.router.state.$view
-         * @eventType broadcast on root scope
-         * @description
-         *
-         * Fired once the view **begins loading**, *before* the DOM is rendered.
-         *
-         * @param {Object} event Event object.
-         * @param {Object} viewConfig The view config properties (template, controller, etc).
-         *
-         * @example
-         *
-         * <pre>
-         * $scope.$on('$viewContentLoading',
-         * function(event, viewConfig){
-         *     // Access to all the view config properties.
-         *     // and one special property 'targetView'
-         *     // viewConfig.targetView
-         * });
-         * </pre>
-         */
-          $rootScope.$broadcast('$viewContentLoading', options);
         }
         return result;
       }
@@ -73834,12 +73854,18 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
     if ($animate) {
       return {
         enter: function(element, target, cb) {
-          var promise = $animate.enter(element, null, target, cb);
-          if (promise && promise.then) promise.then(cb);
+          if (angular.version.minor > 2) {
+            $animate.enter(element, null, target).then(cb);
+          } else {
+            $animate.enter(element, null, target, cb);
+          }
         },
         leave: function(element, cb) {
-          var promise = $animate.leave(element, cb);
-          if (promise && promise.then) promise.then(cb);
+          if (angular.version.minor > 2) {
+            $animate.leave(element).then(cb);
+          } else {
+            $animate.leave(element, cb);
+          }
         }
       };
     }
@@ -73871,31 +73897,41 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
         scope.$on('$stateChangeSuccess', function() {
           updateView(false);
         });
-        scope.$on('$viewContentLoading', function() {
-          updateView(false);
-        });
 
         updateView(true);
 
         function cleanupLastView() {
-          if (previousEl) {
-            previousEl.remove();
-            previousEl = null;
+          var _previousEl = previousEl;
+          var _currentScope = currentScope;
+
+          if (_currentScope) {
+            _currentScope._willBeDestroyed = true;
           }
 
-          if (currentScope) {
-            currentScope.$destroy();
-            currentScope = null;
+          function cleanOld() {
+            if (_previousEl) {
+              _previousEl.remove();
+            }
+
+            if (_currentScope) {
+              _currentScope.$destroy();
+            }
           }
 
           if (currentEl) {
             renderer.leave(currentEl, function() {
+              cleanOld();
               previousEl = null;
             });
 
             previousEl = currentEl;
-            currentEl = null;
+          } else {
+            cleanOld();
+            previousEl = null;
           }
+
+          currentEl = null;
+          currentScope = null;
         }
 
         function updateView(firstTime) {
@@ -73903,9 +73939,23 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
               name            = getUiViewName(scope, attrs, $element, $interpolate),
               previousLocals  = name && $state.$current && $state.$current.locals[name];
 
-          if (!firstTime && previousLocals === latestLocals) return; // nothing to do
+          if (!firstTime && previousLocals === latestLocals || scope._willBeDestroyed) return; // nothing to do
           newScope = scope.$new();
           latestLocals = $state.$current.locals[name];
+
+          /**
+           * @ngdoc event
+           * @name ui.router.state.directive:ui-view#$viewContentLoading
+           * @eventOf ui.router.state.directive:ui-view
+           * @eventType emits on ui-view directive scope
+           * @description
+           *
+           * Fired once the view **begins loading**, *before* the DOM is rendered.
+           *
+           * @param {Object} event Event object.
+           * @param {string} viewName Name of the view.
+           */
+          newScope.$emit('$viewContentLoading', name);
 
           var clone = $transclude(newScope, function(clone) {
             renderer.enter(clone, $element, function onUiViewEnter() {
@@ -73927,12 +73977,13 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
            * @name ui.router.state.directive:ui-view#$viewContentLoaded
            * @eventOf ui.router.state.directive:ui-view
            * @eventType emits on ui-view directive scope
-           * @description           *
+           * @description
            * Fired once the view is **loaded**, *after* the DOM is rendered.
            *
            * @param {Object} event Event object.
+           * @param {string} viewName Name of the view.
            */
-          currentScope.$emit('$viewContentLoaded');
+          currentScope.$emit('$viewContentLoaded', name);
           currentScope.$eval(onloadExp);
         }
       };
@@ -74009,6 +74060,43 @@ function stateContext(el) {
   }
 }
 
+function getTypeInfo(el) {
+  // SVGAElement does not use the href attribute, but rather the 'xlinkHref' attribute.
+  var isSvg = Object.prototype.toString.call(el.prop('href')) === '[object SVGAnimatedString]';
+  var isForm = el[0].nodeName === "FORM";
+
+  return {
+    attr: isForm ? "action" : (isSvg ? 'xlink:href' : 'href'),
+    isAnchor: el.prop("tagName").toUpperCase() === "A",
+    clickable: !isForm
+  };
+}
+
+function clickHook(el, $state, $timeout, type, current) {
+  return function(e) {
+    var button = e.which || e.button, target = current();
+
+    if (!(button > 1 || e.ctrlKey || e.metaKey || e.shiftKey || el.attr('target'))) {
+      // HACK: This is to allow ng-clicks to be processed before the transition is initiated:
+      var transition = $timeout(function() {
+        $state.go(target.state, target.params, target.options);
+      });
+      e.preventDefault();
+
+      // if the state has no URL, ignore one preventDefault from the <a> directive.
+      var ignorePreventDefaultCount = type.isAnchor && !target.href ? 1: 0;
+
+      e.preventDefault = function() {
+        if (ignorePreventDefaultCount-- <= 0) $timeout.cancel(transition);
+      };
+    }
+  };
+}
+
+function defaultOpts(el, $state) {
+  return { relative: stateContext(el) || $state.$current, inherit: true };
+}
+
 /**
  * @ngdoc directive
  * @name ui.router.state.directive:ui-sref
@@ -74019,17 +74107,17 @@ function stateContext(el) {
  * @restrict A
  *
  * @description
- * A directive that binds a link (`<a>` tag) to a state. If the state has an associated 
- * URL, the directive will automatically generate & update the `href` attribute via 
- * the {@link ui.router.state.$state#methods_href $state.href()} method. Clicking 
- * the link will trigger a state transition with optional parameters. 
+ * A directive that binds a link (`<a>` tag) to a state. If the state has an associated
+ * URL, the directive will automatically generate & update the `href` attribute via
+ * the {@link ui.router.state.$state#methods_href $state.href()} method. Clicking
+ * the link will trigger a state transition with optional parameters.
  *
- * Also middle-clicking, right-clicking, and ctrl-clicking on the link will be 
+ * Also middle-clicking, right-clicking, and ctrl-clicking on the link will be
  * handled natively by the browser.
  *
- * You can also use relative state paths within ui-sref, just like the relative 
+ * You can also use relative state paths within ui-sref, just like the relative
  * paths passed to `$state.go()`. You just need to be aware that the path is relative
- * to the state that the link lives in, in other words the state that loaded the 
+ * to the state that the link lives in, in other words the state that loaded the
  * template containing the link.
  *
  * You can specify options to pass to {@link ui.router.state.$state#go $state.go()}
@@ -74037,22 +74125,22 @@ function stateContext(el) {
  * and `reload`.
  *
  * @example
- * Here's an example of how you'd use ui-sref and how it would compile. If you have the 
+ * Here's an example of how you'd use ui-sref and how it would compile. If you have the
  * following template:
  * <pre>
  * <a ui-sref="home">Home</a> | <a ui-sref="about">About</a> | <a ui-sref="{page: 2}">Next page</a>
- * 
+ *
  * <ul>
  *     <li ng-repeat="contact in contacts">
  *         <a ui-sref="contacts.detail({ id: contact.id })">{{ contact.name }}</a>
  *     </li>
  * </ul>
  * </pre>
- * 
+ *
  * Then the compiled html would be (assuming Html5Mode is off and current state is contacts):
  * <pre>
  * <a href="#/home" ui-sref="home">Home</a> | <a href="#/about" ui-sref="about">About</a> | <a href="#/contacts?page=2" ui-sref="{page: 2}">Next page</a>
- * 
+ *
  * <ul>
  *     <li ng-repeat="contact in contacts">
  *         <a href="#/contacts/1" ui-sref="contacts.detail({ id: contact.id })">Joe</a>
@@ -74073,77 +74161,82 @@ function stateContext(el) {
  */
 $StateRefDirective.$inject = ['$state', '$timeout'];
 function $StateRefDirective($state, $timeout) {
-  var allowedOptions = ['location', 'inherit', 'reload', 'absolute'];
-
   return {
     restrict: 'A',
     require: ['?^uiSrefActive', '?^uiSrefActiveEq'],
     link: function(scope, element, attrs, uiSrefActive) {
-      var ref = parseStateRef(attrs.uiSref, $state.current.name);
-      var params = null, url = null, base = stateContext(element) || $state.$current;
-      // SVGAElement does not use the href attribute, but rather the 'xlinkHref' attribute.
-      var hrefKind = Object.prototype.toString.call(element.prop('href')) === '[object SVGAnimatedString]' ?
-                 'xlink:href' : 'href';
-      var newHref = null, isAnchor = element.prop("tagName").toUpperCase() === "A";
-      var isForm = element[0].nodeName === "FORM";
-      var attr = isForm ? "action" : hrefKind, nav = true;
+      var ref    = parseStateRef(attrs.uiSref, $state.current.name);
+      var def    = { state: ref.state, href: null, params: null };
+      var type   = getTypeInfo(element);
+      var active = uiSrefActive[1] || uiSrefActive[0];
 
-      var options = { relative: base, inherit: true };
-      var optionsOverride = scope.$eval(attrs.uiSrefOpts) || {};
+      def.options = extend(defaultOpts(element, $state), attrs.uiSrefOpts ? scope.$eval(attrs.uiSrefOpts) : {});
 
-      angular.forEach(allowedOptions, function(option) {
-        if (option in optionsOverride) {
-          options[option] = optionsOverride[option];
-        }
-      });
+      var update = function(val) {
+        if (val) def.params = angular.copy(val);
+        def.href = $state.href(ref.state, def.params, def.options);
 
-      var update = function(newVal) {
-        if (newVal) params = angular.copy(newVal);
-        if (!nav) return;
-
-        newHref = $state.href(ref.state, params, options);
-
-        var activeDirective = uiSrefActive[1] || uiSrefActive[0];
-        if (activeDirective) {
-          activeDirective.$$addStateInfo(ref.state, params);
-        }
-        if (newHref === null) {
-          nav = false;
-          return false;
-        }
-        attrs.$set(attr, newHref);
+        if (active) active.$$addStateInfo(ref.state, def.params);
+        if (def.href !== null) attrs.$set(type.attr, def.href);
       };
 
       if (ref.paramExpr) {
-        scope.$watch(ref.paramExpr, function(newVal, oldVal) {
-          if (newVal !== params) update(newVal);
-        }, true);
-        params = angular.copy(scope.$eval(ref.paramExpr));
+        scope.$watch(ref.paramExpr, function(val) { if (val !== def.params) update(val); }, true);
+        def.params = angular.copy(scope.$eval(ref.paramExpr));
       }
       update();
 
-      if (isForm) return;
-
-      element.bind("click", function(e) {
-        var button = e.which || e.button;
-        if ( !(button > 1 || e.ctrlKey || e.metaKey || e.shiftKey || element.attr('target')) ) {
-          // HACK: This is to allow ng-clicks to be processed before the transition is initiated:
-          var transition = $timeout(function() {
-            $state.go(ref.state, params, options);
-          });
-          e.preventDefault();
-
-          // if the state has no URL, ignore one preventDefault from the <a> directive.
-          var ignorePreventDefaultCount = isAnchor && !newHref ? 1: 0;
-          e.preventDefault = function() {
-            if (ignorePreventDefaultCount-- <= 0)
-              $timeout.cancel(transition);
-          };
-        }
-      });
+      if (!type.clickable) return;
+      element.bind("click", clickHook(element, $state, $timeout, type, function() { return def; }));
     }
   };
 }
+
+/**
+ * @ngdoc directive
+ * @name ui.router.state.directive:ui-state
+ *
+ * @requires ui.router.state.uiSref
+ *
+ * @restrict A
+ *
+ * @description
+ * Much like ui-sref, but will accept named $scope properties to evaluate for a state definition,
+ * params and override options.
+ *
+ * @param {string} ui-state 'stateName' can be any valid absolute or relative state
+ * @param {Object} ui-state-params params to pass to {@link ui.router.state.$state#href $state.href()}
+ * @param {Object} ui-state-opts options to pass to {@link ui.router.state.$state#go $state.go()}
+ */
+$StateRefDynamicDirective.$inject = ['$state', '$timeout'];
+function $StateRefDynamicDirective($state, $timeout) {
+  return {
+    restrict: 'A',
+    require: ['?^uiSrefActive', '?^uiSrefActiveEq'],
+    link: function(scope, element, attrs, uiSrefActive) {
+      var type   = getTypeInfo(element);
+      var active = uiSrefActive[1] || uiSrefActive[0];
+      var group  = [attrs.uiState, attrs.uiStateParams || null, attrs.uiStateOpts || null];
+      var watch  = '[' + group.map(function(val) { return val || 'null'; }).join(', ') + ']';
+      var def    = { state: null, params: null, options: null, href: null };
+
+      function runStateRefLink (group) {
+        def.state = group[0]; def.params = group[1]; def.options = group[2];
+        def.href = $state.href(def.state, def.params, def.options);
+
+        if (active) active.$$addStateInfo(ref.state, def.params);
+        if (def.href) attrs.$set(type.attr, def.href);
+      }
+
+      scope.$watch(watch, runStateRefLink, true);
+      runStateRefLink(scope.$eval(watch));
+
+      if (!type.clickable) return;
+      element.bind("click", clickHook(element, $state, $timeout, type, function() { return def; }));
+    }
+  };
+}
+
 
 /**
  * @ngdoc directive
@@ -74202,6 +74295,24 @@ function $StateRefDirective($state, $timeout) {
  *   </li>
  * </ul>
  * </pre>
+ *
+ * It is also possible to pass ui-sref-active an expression that evaluates
+ * to an object hash, whose keys represent active class names and whose
+ * values represent the respective state names/globs.
+ * ui-sref-active will match if the current active state **includes** any of
+ * the specified state names/globs, even the abstract ones.
+ *
+ * @Example
+ * Given the following template, with "admin" being an abstract state:
+ * <pre>
+ * <div ui-sref-active="{'active': 'admin.*'}">
+ *   <a ui-sref-active="active" ui-sref="admin.roles">Roles</a>
+ * </div>
+ * </pre>
+ *
+ * When the current state is "admin.roles" the "active" class will be applied
+ * to both the <div> and <a> elements. It is important to note that the state
+ * names/globs passed to ui-sref-active shadow the state provided by ui-sref.
  */
 
 /**
@@ -74223,53 +74334,98 @@ $StateRefActiveDirective.$inject = ['$state', '$stateParams', '$interpolate'];
 function $StateRefActiveDirective($state, $stateParams, $interpolate) {
   return  {
     restrict: "A",
-    controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
-      var states = [], activeClass;
+    controller: ['$scope', '$element', '$attrs', '$timeout', function ($scope, $element, $attrs, $timeout) {
+      var states = [], activeClasses = {}, activeEqClass, uiSrefActive;
 
       // There probably isn't much point in $observing this
       // uiSrefActive and uiSrefActiveEq share the same directive object with some
       // slight difference in logic routing
-      activeClass = $interpolate($attrs.uiSrefActiveEq || $attrs.uiSrefActive || '', false)($scope);
+      activeEqClass = $interpolate($attrs.uiSrefActiveEq || '', false)($scope);
+
+      try {
+        uiSrefActive = $scope.$eval($attrs.uiSrefActive);
+      } catch (e) {
+        // Do nothing. uiSrefActive is not a valid expression.
+        // Fall back to using $interpolate below
+      }
+      uiSrefActive = uiSrefActive || $interpolate($attrs.uiSrefActive || '', false)($scope);
+      if (isObject(uiSrefActive)) {
+        forEach(uiSrefActive, function(stateOrName, activeClass) {
+          if (isString(stateOrName)) {
+            var ref = parseStateRef(stateOrName, $state.current.name);
+            addState(ref.state, $scope.$eval(ref.paramExpr), activeClass);
+          }
+        });
+      }
 
       // Allow uiSref to communicate with uiSrefActive[Equals]
       this.$$addStateInfo = function (newState, newParams) {
-        var state = $state.get(newState, stateContext($element));
-
-        states.push({
-          state: state || { name: newState },
-          params: newParams
-        });
-
+        // we already got an explicit state provided by ui-sref-active, so we
+        // shadow the one that comes from ui-sref
+        if (isObject(uiSrefActive) && states.length > 0) {
+          return;
+        }
+        addState(newState, newParams, uiSrefActive);
         update();
       };
 
       $scope.$on('$stateChangeSuccess', update);
 
+      function addState(stateName, stateParams, activeClass) {
+        var state = $state.get(stateName, stateContext($element));
+        var stateHash = createStateHash(stateName, stateParams);
+
+        states.push({
+          state: state || { name: stateName },
+          params: stateParams,
+          hash: stateHash
+        });
+
+        activeClasses[stateHash] = activeClass;
+      }
+
+      /**
+       * @param {string} state
+       * @param {Object|string} [params]
+       * @return {string}
+       */
+      function createStateHash(state, params) {
+        if (!isString(state)) {
+          throw new Error('state should be a string');
+        }
+        if (isObject(params)) {
+          return state + toJson(params);
+        }
+        params = $scope.$eval(params);
+        if (isObject(params)) {
+          return state + toJson(params);
+        }
+        return state;
+      }
+
       // Update route state
       function update() {
-        if (anyMatch()) {
-          $element.addClass(activeClass);
-        } else {
-          $element.removeClass(activeClass);
-        }
-      }
-
-      function anyMatch() {
         for (var i = 0; i < states.length; i++) {
-          if (isMatch(states[i].state, states[i].params)) {
-            return true;
+          if (anyMatch(states[i].state, states[i].params)) {
+            addClass($element, activeClasses[states[i].hash]);
+          } else {
+            removeClass($element, activeClasses[states[i].hash]);
+          }
+
+          if (exactMatch(states[i].state, states[i].params)) {
+            addClass($element, activeEqClass);
+          } else {
+            removeClass($element, activeEqClass);
           }
         }
-        return false;
       }
 
-      function isMatch(state, params) {
-        if (typeof $attrs.uiSrefActiveEq !== 'undefined') {
-          return $state.is(state.name, params);
-        } else {
-          return $state.includes(state.name, params);
-        }
-      }
+      function addClass(el, className) { $timeout(function () { el.addClass(className); }); }
+      function removeClass(el, className) { el.removeClass(className); }
+      function anyMatch(state, params) { return $state.includes(state.name, params); }
+      function exactMatch(state, params) { return $state.is(state.name, params); }
+
+      update();
     }]
   };
 }
@@ -74277,7 +74433,8 @@ function $StateRefActiveDirective($state, $stateParams, $interpolate) {
 angular.module('ui.router.state')
   .directive('uiSref', $StateRefDirective)
   .directive('uiSrefActive', $StateRefActiveDirective)
-  .directive('uiSrefActiveEq', $StateRefActiveDirective);
+  .directive('uiSrefActiveEq', $StateRefActiveDirective)
+  .directive('uiState', $StateRefDynamicDirective);
 
 /**
  * @ngdoc filter
@@ -74290,8 +74447,8 @@ angular.module('ui.router.state')
  */
 $IsStateFilter.$inject = ['$state'];
 function $IsStateFilter($state) {
-  var isFilter = function (state) {
-    return $state.is(state);
+  var isFilter = function (state, params) {
+    return $state.is(state, params);
   };
   isFilter.$stateful = true;
   return isFilter;
@@ -74308,8 +74465,8 @@ function $IsStateFilter($state) {
  */
 $IncludedByStateFilter.$inject = ['$state'];
 function $IncludedByStateFilter($state) {
-  var includesFilter = function (state) {
-    return $state.includes(state);
+  var includesFilter = function (state, params, options) {
+    return $state.includes(state, params, options);
   };
   includesFilter.$stateful = true;
   return  includesFilter;
@@ -99380,14 +99537,14 @@ global.easyXDM = easyXDM;
 
 /** @module Action Bar
 @icon bolt
-@summary The action bar provides a {{ stache.config.product_name_short }}-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a {{ stache.config.product_name_short }}-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
+@summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
+@description The action bar creates a SKY UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
 ### Action Bar Settings ###
     - `bb-action-bar` &mdash; Wraps the content in the action bar.
     - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
     - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
 
-If it is necessary to apply action bar stylying to more complicated scenarios (e.g. hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), then you can place any content in a `div` that has the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
+To apply action bar stylying to more complicated scenarios (hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), you can place content in a `div` with the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
 */
 
 (function () {
@@ -99531,7 +99688,7 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 /*global angular, jQuery */
 /** @module Autonumeric
 @icon calculator
-@summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
+@summary The autonumeric component wraps the autoNumeric jQuery plugin to format any type of number, including currency.
  @description The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format any type of number, including currency. You must use this directive in conjunction with the `ngModel` directive where the property bound to `ngModel` is the raw numeric value on your model.
 
  ### Dependencies ###
@@ -99547,12 +99704,12 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 
 ### Autonumeric Filter ###
 
-In addition to the directive, there is also a filter that can be used to format numbers.  The filter has the added feature of optionally abbreviating a number according to Sky patterns.  For instance,
-numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,000,000 as 1b.  The filter takes three arguments:
+In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to SKY UX patterns. For example,
+it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
 
  - `input` &mdash; The value to format.
  - `configType` &mdash; The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` &mdash; A Boolean value indicating whether to abbreviate large numbers.
+ - `abbreviate` &mdash; A Boolean value that indicates whether to abbreviate large numbers.
  */
 (function ($) {
     'use strict';
@@ -99772,7 +99929,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 /** @module Check
 @icon check-square
 @summary The check applies a commonly styled selector to a checkbox or radio button.
- @description The check directive allows you to change an input element of type checkbox or radio into a commonly-styled selector.  The value that is selected is driven through the `ng-model` attribute specified on the input element and for radio input types the value to set on the `ng-model` can be specified by the value attribute.
+ @description The check directive allows you to change an input element of type checkbox or radio button into a commonly-styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
 
 ---
 
@@ -99817,31 +99974,31 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 /** @module Checklist
 @icon list-ul
-@summary The checklist builds a filterable checkbox list that can display multiple columns of data.
- @description The checklist directive allows you to easily build a filterable checkbox list.  Multiple columns of data can be provided for the checkbox rows using the `bb-checklist-column` element.  Items can also be displayed in a list view with each row displaying a title and description.  The list view is preferable when building a responsive application.
+@summary The checklist directive provides the tools to build a filterable checkbox list that can display multiple columns of data.
+ @description The checklist directive allows you to build a filterable checkbox list. The `bb-checklist-column` element allows you to specify multiple columns of data for the checkbox list. You can display items in a list view where each row displays a title and description. The list view is preferable when building a responsive application.
 
 ### Checklist Settings ###
 
- - `bb-checklist`
- - `bb-checklist-items` An array of objects representing the rows that will be shown in the list.
- - `bb-checklist-selected-items` An array representing the selected items in the list.
- - `bb-checklist-include-search` A Boolean to optionally include a search textbox for filtering the items.  The search text will be highlighted in the columns of the list.  A callback function can be used to filter the items based on the search text.
- - `bb-checklist-search-placeholder` Placeholder text for the search textbox.
- - `bb-checklist-filter-callback` A function to be called when the search text is modified.  Used by the consumer to update the `bb-checklist-items` array as desired based on the search text.  The function will be passed a single object as a parameter containing `searchText` and `category` properties.  Useful when loading items remotely or using custom logic other than simple case-insensitive string matching to filter items.
- - `bb-checklist-filter-local` When specified, items are filtered by the checklist directive by examining the properties of each item to match the specified category or search text.
- - `bb-checklist-search-debounce` Number of milliseconds to debounce changes to the search text.  Useful if making a web request in the `bb-checklist-filter-callback` to avoid making the request after every character typed.
- - `bb-checklist-no-items-message` *(Default: `'No items found'`)* Message to display when no items are in the list.
- - `bb-checklist-mode` *(Optional. Default: 'grid')* one of two possible values:
-  - `list` Displays items in a list with a title and description.  Items are expected to have `title`, `description` and `category` properties.  This is the preferred method of displaying a checklist.
-  - `grid` Displays items in a grid with any number of columns.  Columns are specified using mulitple `bb-checklist-column` elements.  For backwards compatibility reasons this is the default mode, but `list` is the preferred mode since it is mobile-responsive.
- - `bb-checklist-categories` An array of category names used to build category filter buttons at the top of the list.
+ - `bb-checklist` &mdash; Creates a filterable checkbox list.
+ - `bb-checklist-items` &mdash; Creates an array of objects that represents the rows to display in the list.
+ - `bb-checklist-selected-items` &mdash; Creates an array that represents the items selected in the list.
+ - `bb-checklist-include-search` &mdash; Provides a Boolean value that indicates whether to include a search field to filter the checkbox list. The search field uses a callback function to filter the list based on search criteria and highlights the search text in the filtered columns.
+ - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search textbox.
+ - `bb-checklist-filter-callback` &mdash; Specifies the function to call when a user modifies the search text. The function updates the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter with `searchText` and `category` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
+ - `bb-checklist-filter-local` &mdash; When specified, items are filtered by the checklist directive by examining the properties of each item to match the specified category or search text.
+ - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making a web request in `bb-checklist-filter-callback`, this setting helps avoid new requests for each character that users type.
+ - `bb-checklist-no-items-message` &mdash; Specifies the message to display when no items are displayed in the list. *(Default: `'No items found'`)*
+ - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or a grid. List mode is the preferred method because it is mobile-responsive, but for backwards-compatibility reasons, grid mode is the default.
+  - `list` &mdash; Displays checklist items in a list with titles and descriptions. Items should have `title`, `description`, and `category` properties. This is the preferred method to display checklists because it is mobile-responsive.
+  - `grid` &mdash; Displays checklist items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this is the default, but list mode is preferred because it is mobile-responsive.
+ - `bb-checklist-categories` &mdash; Provides an array of category names to create category filters at the top of the list.
 
 ### Checklist Column Settings ###
 
- - `bb-checklist-column-caption` Caption text for the column header.
- - `bb-checklist-column-field` The name of the property on the checklist items that contains the text to display in this column.
- - `bb-checklist-column-class` A CSS class to apply to this column's header and cells.
- - `bb-checklist-column-width` Set the width to be used by the column.
+ - `bb-checklist-column-caption` &mdash; Specifies a caption for the column header.
+ - `bb-checklist-column-field` &mdash; Specifies the name of the property on the checklist items that contains the text to display in the column.
+ - `bb-checklist-column-class` &mdash; Applies a CSS class to the column header and cells.
+ - `bb-checklist-column-width` &mdash; Sets the width of the column.
  */
 
 (function () {
@@ -100202,12 +100359,12 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 @icon ellipsis-h
 @summary The context menu creates simple or complicated dropdown menus that you can incorporate into buttons.
-@description The context menu directives allow you to easily create Sky-styled  [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. There are 3 directives in the context menu module:
-  - `bb-context-menu` creates a dropdown with the context menu button.
-  - `bb-context-menu-item` creates dropdown menu items within a dropdown that execute `bb-context-menu-action` on click.
-  - `bb-context-menu-button` creates a button with the Sky context menu styles.
-  - `bb-submenu` creates an accordion style submenu in a dropdown, you can place it in a dropdown list element.
-    - `bb-submenu-heading` Can be either an attribute on `bb-submenu` that can be set equal to static header text, or can be used as a directive inside of `bb-submenu` to place arbitrary content in an accordion heading.
+@description The context menu directives allow you to create SKY UX-themed [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. The context menu module includes three directives.
+  - `bb-context-menu` &mdash; Creates a dropdown menu within the context menu button.
+  - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu. When clicked, the menu item executes `bb-context-menu-action`.
+  - `bb-context-menu-button` &mdash; Creates a button with the SKY UX context menu styles.
+  - `bb-submenu` &mdash; Creates an accordion-style submenu within a dropdown menu. You can place the submenu within a dropdown list element.
+    - `bb-submenu-heading` &mdash; Specifies a header for a submenu. To specify a static header, apply this as an attribute of `bb-submenu`. To place arbitrary content in th header, apply this as a directive within `bb-submenu`.
 */
 
 (function () {
@@ -100323,22 +100480,22 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 @summary The data service provides access to convenience functions that allow you to manipulate data.
 @icon database
-@description The data service provides methods for loading data from and saving data to web service endpoints.
+@description The data service provides methods to load data and save data through web service endpoints.
 
 ### bbData Functions ###
 
-  - `load(loadObj)` Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request.  Note that in addition to the `data`, `resources` and `text` properties on the result object there is also an `httpResults` property containing the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http).  These objects include metadata about the response such as the HTTP status code.
-    - `data` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`.  The requests to the specified URLs will be made with credentials.
-    - `resources` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.resources`. The requests to the specified URLs will be made without credentials.
-    - `text` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.text`.  The requests to the specified URLs will be made without credentials and the result will be returned as a string rather than an object.
-    - `loadManager` An object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data.
-  - `query(url, queryParams)` Creates a URL with a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
-  - `post(url, data)` For use within `bbData.load`, creates a post request from a URL and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});`.
-  - `save(saveObj)` A function that issues an HTTP post for the purpose of storing data on the remote server. Takes an argument with the following properties:
-    - `url` The URL to which to send the request.
-    - `data` The object to be POSTed to the URL.
-    - `type` (*default: `POST`) The HTTP verb to use along with the request.
-  - `cancel(promise)` Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request.  The promise will be rejected after cancelling.
+  - `load(loadObj)` &mdash; Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request. An `httpResults` property contains the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http). The object includes metadata about the response such as the HTTP status code.
+    - `data` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.data` contains the promise results. For example: `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`. Requests to the URLs are made with credentials.
+    - `resources` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.resources` contains the promise results. Requests to the URLs are made without credentials.
+    - `text` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.text` contains the promise results. Requests to the URLs are made without credentials, and the results are returned as strings instead of objects.
+    - `loadManager` &mdash; Specifies an object with `name` and `scope` properties that creates a wait while it and its child load managers retreive data.
+  - `query(url, queryParams)` &mdash; Creates a URL with a query string based on the queryParam's properties. For example: `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
+  - `post(url, data)` &mdash; Within `bbData.load`, creates a post request from a URL and data object. For example: `bbData.load({data: bbData.post('/foo/post', postData)});`.
+  - `save(saveObj)` &mdash; Issues an HTTP post to store data on the remote server. Takes an argument with the `url`, `data`, and `type` properties.
+    - `url` &mdash; Specifies the URL to send the request to.
+    - `data` &mdash; Specifies the object to POST to the URL.
+    - `type` &mdash; Specifies the HTTP verb to use with the request. *(Default: `POST`)* 
+  - `cancel(promise)` &mdash; Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request. The promise is then rejected.
 */
 
 (function ($) {
@@ -100785,26 +100942,26 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 /** @module Date Picker
 @icon calendar-o
-@summary The date picker wraps the ui.bootstrap.datepicker directive from Angular UI Bootstrap to create an input text box that includes a calendar for selecting dates.
-@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/). It creates an input text box with a calendar picker for selecting dates.
+@summary The date picker wraps the ui.bootstrap.datepicker directive from Angular UI Bootstrap to create an input text box with a calendar to select dates.
+@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/). It creates an input text box with a calendar picker to select dates.
 
 ## Date Picker Settings
-  - `bb-custom-validation` an object containing the following:
-    - `formatValue` A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
-  - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDatepickerConfig` `currentCultureDateFormatString` property. The default format in sky is set as `MM/dd/yyyy`. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
-  - `bb-date-options` Options object for customizing the date picker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap date picker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDatepickerConfig`.
-  - `bb-datepicker-name` This value gets bound to the `name` attribute of the date picker input for use in validation and form submission.
-  - `close-on-date-selection` *(Default: true):*  Whether to close calendar when a date is chosen.
-  - `datepicker-append-to-body` *(Default: false):*  Append the date picker popup element to `body`, rather than inserting after the date picker input.
-  - `max-date` A Javascript Date object that can set a maximum date for the date picker control and input. Input validation will be bound to `$scope.myFormName.inputName.$error.maxDate`. This value can also be set globally in the `bbDatepickerConfig` object property `maxDate`.
-  - `min-date` A Javascript Date object that can set a minimum date for the date picker control and input. Input validation will be bound to `$scope.myFormName.inputName.$error.minDate`. This value can also be set globally in the `bbDatepickerConfig` object property `minDate`.
-  - `ng-model` An object to bind the date value in and out of the date picker. This will be set to a Javascript Date object when set or parsed from the bootstrap date picker.
-  - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
-  - `required` Attribute present if the `bb-datepicker` value is required.
-  - `show-button-bar` *(Default: false):*  Whether to display a button bar underneath the date picker. (see angular ui bootstrap date picker)
+  - `bb-custom-validation` &mdash; Specifies an object thta contains a function to validate entries in the text box.
+    - `formatValue` &mdash; A function to call when users enter text in the textbox. The only parameter to pass to the function is the raw value of the text box. If a problem occurs when formatting the input value, the function returns an object or a promise of an object with the `formattedValue` property and optionally the `formattingErrorMessage` property.
+  - `bb-date-format` &mdash; Specifies the format string to use for dates in the text box. This overrides the SKY UX default of `MM/dd/yyyy` that is set in the `bbDatepickerConfig`'s `currentCultureDateFormatString` property. You set up the format string just like format strings for the [Angular date filter](https://docs.angularjs.org/api/ng/filter/date).
+  - `bb-date-options` &mdash; Specifies an options object to customize the date picker. This includes all valid options for the Angular UI Bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the Angular UI Bootstrap date picker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. The SKY UX defaults for `showWeeks` and `startingDay` are  `false` and `0`.
+  - `bb-datepicker-name` &mdash; Provides the value to bind to the `name` attribute of the date picker input. The value is used in validation and form submission.
+  - `close-on-date-selection` &mdash; Indicates whether to close the date picker's calendar after a date is selected. *(Default: `true`)*
+  - `datepicker-append-to-body` &mdash; Indicates whether to append the date picker popup element to `body` instead of the date picker text box. *(Default: `false`)*
+  - `max-date` &mdash; A JavaScript Date object that sets a maximum date for the date picker control and input. Input validation is bound to `$scope.myFormName.inputName.$error.maxDate`. You can set this value globally in `bbDatepickerConfig`'s `maxDate` property.
+  - `min-date` &mdash; A JavaScript Date object that sets a minimum date for the date picker control and input. Input validation is bound to `$scope.myFormName.inputName.$error.minDate`. You can set this value globally in  `bbDatepickerConfig`'s `minDate` property.
+  - `ng-model` &mdash; Specifies an object to bind the date value in and out of the date picker. This is set to a JavaScript Date object when set or parsed from the Bootstrap date picker.
+  - `placeholder` &mdash; Overrides the default placeholder text of the `bb-datepicker` input.
+  - `required` &mdash; Indicates whether the date picker's text box is a required field.
+  - `show-button-bar` &mdash; Indicates whether to display a button bar under the date picker. *(Default: `false`)*
 
 ## Validation
-`bb-datepicker` sets validation on the date picker input using `bb-datepicker-name` for the input name, and the validity of the date entered in the input is in the `dateFormat` validator. So if you want to see if the date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date will be in `$scope.myFormName.inputName.invalidFormatMessage`.
+The `bb-datepicker` directive sets validation on the date picker input using `bb-datepicker-name` for the input name. The validity of the date in the input is in the `dateFormat` validator. To check if a date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date is in `$scope.myFormName.inputName.invalidFormatMessage`.
 
 */
 (function ($) {
@@ -101330,27 +101487,27 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 /** @module Date Range Picker
 @icon calendar
-@summary The date range picker creates an input text box that includes a dropdown for selecting date ranges from a well-known set of options.
- @description The date range picker directive allows you to easily choose a date range from a well-known set of options. A date range picker service also exists to work hand-in-hand with the directive to provide more service-oriented functionality.
+@summary The date-range picker creates an input text box with a dropdown to select date ranges from a set of well-known options.
+ @description The date-range picker directive creates an input text box where users can select date ranges from a set of well-known options. The directive works hand-in-hand with a date-range picker service to provide more service-oriented functionality.
 
-### Date Range Picker Settings ###
+### Date-range Picker Settings ###
 
- - `bb-date-range-picker-value` An object tracking the value of the date range picker control.  Right now, the only proeprty of the object is `.dateRangeType` gives you the integer (ENUM) value of the date range typ that was selected in the picker. See the date range picker service for details of this ENUM.
- - `bb-date-range-picker-automation-id` A string to use when creating the bb-auto-field attribute on elements in the date range picker
- - `bb-date-range-picker-options` Optional. An options object that can be provided to customize the behavior of the date range picker.
+ - `bb-date-range-picker-value` &mdash; Specifies an object that tracks the value of the date-range picker control. The `.dateRangeType` property provides the integer (ENUM) value of the date-range type selected in the picker. For details about the ENUM, see the Date-range Picker Service section below.
+ - `bb-date-range-picker-automation-id` &mdash; Specifies a string to use when creating the `bb-auto-field` attribute on elements in the date-range picker.
+ - `bb-date-range-picker-options` &mdash; *(Optional.)* Specifies an options object that can customize the behavior of the date-range picker.
 
-### Date Range Picker Options Settings ###
+### Date-range Picker Options Settings ###
 
- - `availableDateRangeTypes` Optional. An array of integers (`dateRangeTypes` ENUM) to specify the ordered list of date range types to be included in the dropdown.  Common variations can be found in the date range picker service.
+ - `availableDateRangeTypes` &mdash; Optional. Provides an array of integers (`dateRangeTypes` ENUM) to specify an ordered list of date-range types for the dropdown.  Common variations are available in the date-range picker service.
 
-### Date Range Picker Service ###
-This service provides additional functionality that works closely with the directive.  Below are a list of members provided by the service.
+### Date-range Picker Service ###
+The date-range picker service provides functionality that works closely with the directive. The service provides the following members:
 
- - `dateRangeTypes` An ENUM of all types of date ranges that are understood by the date range picker and can be available in the dropdown.
- - `defaultDateRangeOptions` An array of `dateRangeTypes` providing the default order and set of date range types that are included in the dropdown.
- - `pastDateRangeOptions` An array of `dateRangeTypes` that are appropriate for filtering for things that have occurred in the past.  For example, you wouldn't want to be able to search for items created 'next month'.
- - `getDateRangeTypeCaption` A function for getting the caption of the dropdown item selected for a given `bb-date-range-picker-value`.
- - `getDateRangeFilterDescription` A function for getting an appropriate description string explaining the meaning of a given `bb-date-range-picker-value`.
+ - `dateRangeTypes` &mdash; An ENUM of all date-range types that the date-range picker understands and can include in the dropdown.
+ - `defaultDateRangeOptions` &mdash; An array of `dateRangeTypes` that provides the default order and set of date-range types included in the dropdown.
+ - `pastDateRangeOptions` &mdash; An array of `dateRangeTypes` that are appropriate to filter for things that occurred in the past. For example, you don't want to search for items created "next month."
+ - `getDateRangeTypeCaption` &mdash; A function to get the caption of the dropdown item for a given `bb-date-range-picker-value`.
+ - `getDateRangeFilterDescription` &mdash; A function to get the description of a given `bb-date-range-picker-value`.
  */
 
 (function () {
@@ -102475,7 +102632,7 @@ To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid
   - `includedColumnsChanged` Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
 to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
 reloading the grid with the current data after the event has fired.
-  - `loadMoreRows` Fires when a page changes (when using pagination) or when the 'See more' button is clicked. When raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
+  - `loadMoreRows` Fires when a page changes (when using pagination) or a user clicks the 'Load more' button. When a user clicks the 'Load more' button, the event provides a promise. The consumer of the event should resolve the promise with the new data that the grid appends to the existing data. When the event is raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
 
 */
 (function ($) {
@@ -102521,9 +102678,9 @@ reloading the grid with the current data after the event has fired.
         }])
 
 
-        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
+        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow', '$q',
 
-            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
+            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
                     transclude: true,
@@ -102609,9 +102766,6 @@ reloading the grid with the current data after the event has fired.
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
-                            },
-                            loadMore: function () {
-                                $scope.$emit('loadMoreRows');
                             }
                         };
 
@@ -102666,7 +102820,8 @@ reloading the grid with the current data after the event has fired.
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth;
+                                scrollbarWidth,
+                                doNotResetRows = false;
 
                             function getTopScrollbar() {
                                 return element.find('.bb-grid-top-scrollbar');
@@ -102912,13 +103067,30 @@ reloading the grid with the current data after the event has fired.
                                 setScrollbarHeight();
                             }
 
+                            function setColumnSize(columnName, columnSize, totalWidth) {
+
+                                /* jqGrid does not provide a function to change a single column column size.
+                                   This code snippet mirrors how jqGrid changes column size in their own dragEnd
+                                   function.
+                                */
+                                tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
+                                tableEl[0].grid.cols[extendedColumnIndex].style.width = columnSize + 'px';
+                                /* istanbul ignore next: sanity check */
+                                tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
+                                $('table:first', tableEl[0].bDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                $('table:first', tableEl[0].hDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                tableEl[0].grid.hDiv.scrollLeft = tableEl[0].grid.bDiv.scrollLeft;
+                            }
+
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
                                 var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
 
                                 //If the extended portion of the last column is less than the amount resized
                                 if (extendedShrinkWidth <= changedWidth) {
                                     //decrease extended column to original size
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+
 
                                     //increase grid width by remainder and wipe out all the extended stuff
                                     if (isIncreasing) {
@@ -102926,19 +103098,23 @@ reloading the grid with the current data after the event has fired.
                                     } else {
                                         totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
                                     }
+                                    setColumnSize(extendedColumnName, originalExtendedColumnWidth, totalColumnWidth);
 
                                     tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                                     resetExtendedColumn();
+
                                 } else {
                                     //decrease extended column width by changedWidth
                                     currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+
 
                                     if (!isIncreasing) {
                                         totalColumnWidth = totalColumnWidth - changedWidth;
                                     }
+                                    setColumnSize(extendedColumnName, currentExtendedColumnWidth, totalColumnWidth);
+
                                 }
-                                tableEl.setGridWidth(totalColumnWidth, true);
+                                tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                             }
 
@@ -103391,7 +103567,7 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setUpFancyCheckCell() {
-                                var checkCellEl = element.find('td .cbox');
+                                var checkCellEl = element.find('td > .cbox');
                                 wrapCheckboxEl(checkCellEl);
                                 element.find('td .bb-check-checkbox').on('click', function (event) {
                                     event.preventDefault();
@@ -103689,6 +103865,25 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.applySearchText();
                             };
 
+                            function loadMore() {
+                                var deferred = $q.defer(),
+                                    loadMorePromise = deferred.promise;
+
+                                loadMorePromise.then(function (moreRows) {
+                                    tableEl.addRowData('', moreRows);
+                                    $scope.options.data = $scope.options.data.concat(moreRows);
+                                    setUpFancyCheckCell();
+                                    doNotResetRows = true;
+                                });
+
+                                $scope.$emit('loadMoreRows', {
+                                    promise: deferred
+                                });
+
+                            }
+
+                            $scope.locals.loadMore = loadMore;
+
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
@@ -103761,7 +103956,13 @@ reloading the grid with the current data after the event has fired.
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', setRows);
+                            $scope.$watchCollection('options.data', function (newValue) {
+                                if (doNotResetRows) {
+                                    doNotResetRows = false;
+                                } else {
+                                    setRows(newValue);
+                                }
+                            });
 
                             $scope.syncViewKeepers = function () {
                                 /*istanbul ignore else: sanity check */
@@ -108099,9 +108300,11 @@ This service supports the following functions
                 // A set timeout of 0 handles blocks added without async operations before starting another, which
                 // would indicate that the block should have been maintained anyways.
                 $timeout(function () {
+                    var $el;
+
                     /* istanbul ignore else: sanity check */
                     if (getWaitCount(el) === 0) {
-                        var $el = $(el);
+                        $el = $(el);
 
                         if (!isBlockUISupported()) {
                             return;
@@ -108112,16 +108315,17 @@ This service supports the following functions
                         } else {
                             $el.unblock();
                         }
-                        $(el).removeData(showingWaitAttr);
+                        $el.removeData(showingWaitAttr);
                     }
                 }, 0);
             }
 
             addWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Increases the element wait count and shows the wait if the count is above 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 count += 1;
 
                 setWaitCount(el, count, options.nonblocking);
@@ -108135,10 +108339,11 @@ This service supports the following functions
             };
 
             removeWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Decreases the element wait count and hides the wait if the count is at 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 if (count > 0) {
                     count -= 1;
 
@@ -108261,7 +108466,7 @@ This service supports the following functions
                 outer.css('overflow', 'scroll');
                 w2 = inner[0].offsetWidth;
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore next: sanity check */
                 if (w1 === w2) {
                     w2 = outer[0].clientWidth;
                 }
@@ -108971,7 +109176,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/seemore.html',
-        '<div bb-text-expand="data" bb-text-expand-max-length="100" style="white-space: pre-wrap"></div>');
+        '<div bb-text-expand="data" bb-text-expand-max-length="100" style="white-space: pre-wrap"></div>\n' +
+        '');
     $templateCache.put('sky/templates/modal/modal.html',
         '<div class="bb-modal-content-wrapper" ng-transclude></div>');
     $templateCache.put('sky/templates/modal/modalfooter.html',
@@ -109074,11 +109280,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="modal-form">\n' +
         '    <div bb-modal-body>\n' +
         '      <div>\n' +
-        '        <p class="bb-text-expand-text">\n' +
-        '          <span>\n' +
-        '            {{expandCtrl.textExpandContent}}\n' +
-        '          </span>\n' +
-        '        </p>\n' +
+        '        <span class="bb-text-expand-text">{{expandCtrl.textExpandContent}}</span>\n' +
         '      </div>\n' +
         '    </div>\n' +
         '    <bb-modal-footer>\n' +

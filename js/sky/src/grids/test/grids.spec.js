@@ -264,6 +264,62 @@ describe('Grid directive', function () {
 
     });
 
+    it('can load more data when clicking load more through a promise', function () {
+
+        var rowEl,
+            cellEl,
+            loadMoreButton;
+
+        locals.gridOptions.hasMoreRows = true;
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            data.promise.resolve(angular.copy(dataSet1));
+        });
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        setGridData(dataSet1);
+
+        loadMoreButton = el.find('.bb-table-loadmore');
+
+        loadMoreButton.click();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+        cellEl = rowEl.eq(4).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('John');
+        expect(cellEl.eq(1)).toHaveText('Rhythm guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(5).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Paul');
+        expect(cellEl.eq(1)).toHaveText('Bass');
+        expect(cellEl.eq(2)).toHaveText('Lorem');
+
+        cellEl = rowEl.eq(6).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('George');
+        expect(cellEl.eq(1)).toHaveText('Lead guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(7).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Ringo');
+        expect(cellEl.eq(1)).toHaveText('Drums');
+        expect(cellEl.eq(2)).toHaveText('');
+
+    });
 
     describe('fixed headers', function () {
         it('has the option to fix header and toolbar', function () {
@@ -953,8 +1009,13 @@ describe('Grid directive', function () {
 
             tableEl[0].p.resizeStart({}, 0);
             tableEl[0].p.resizeStop(200, 0);
-            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 300});
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(600, true);
+            expect(tableEl[0].p.colModel[2].width).toBe(300);
+            expect(tableEl[0].grid.headers[2].width).toBe(300);
+            expect(tableEl[0].grid.headers[2].el.style.width).toBe('300px');
+            expect(tableEl[0].grid.cols[2].style.width).toBe('300px');
+            expect(tableEl[0].p.tblwidth).toBe(600);
+
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(600, false);
 
         });
 
@@ -984,8 +1045,13 @@ describe('Grid directive', function () {
 
             tableEl[0].p.resizeStop(450, 0);
 
-            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 100});
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(650, true);
+            expect(tableEl[0].p.colModel[2].width).toBe(100);
+            expect(tableEl[0].grid.headers[2].width).toBe(100);
+            expect(tableEl[0].grid.headers[2].el.style.width).toBe('100px');
+            expect(tableEl[0].grid.cols[2].style.width).toBe('100px');
+            expect(tableEl[0].p.tblwidth).toBe(650);
+
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(650, false);
         });
 
         it('will set width normally when there is an extended column and the grid size is being decreased', function () {
@@ -1464,7 +1530,8 @@ describe('Grid directive', function () {
                 topScrollbarEl,
                 topScrollbarDivEl,
                 gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
-                windowEl = $($window);
+                windowEl = $($window),
+                tableEl;
 
             locals.gridOptions.columns[0].width_all = 5;
             locals.gridOptions.columns[1].width_all = 5;
@@ -1479,10 +1546,15 @@ describe('Grid directive', function () {
             tableWrapperEl.width(299);
 
             windowEl.trigger('resize');
+            tableEl = el.find('.table-responsive .bb-grid-table');
 
-            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 289});
+            expect(tableEl[0].p.colModel[2].width).toBe(289);
+            expect(tableEl[0].grid.headers[2].width).toBe(289);
+            expect(tableEl[0].grid.headers[2].el.style.width).toBe('289px');
+            expect(tableEl[0].grid.cols[2].style.width).toBe('289px');
+            expect(tableEl[0].p.tblwidth).toBe(299);
 
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, true);
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, false);
 
             topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
             topScrollbarDivEl = topScrollbarEl.find('div');
@@ -1497,7 +1569,8 @@ describe('Grid directive', function () {
                 topScrollbarEl,
                 topScrollbarDivEl,
                 gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
-                windowEl = $($window);
+                windowEl = $($window),
+                tableEl;
 
             locals.gridOptions.columns[0].width_all = 5;
             locals.gridOptions.columns[1].width_all = 5;
@@ -1511,12 +1584,16 @@ describe('Grid directive', function () {
 
             tableWrapperEl.width(589);
             windowEl.trigger('resize');
-            expect($.fn.setColProp).toHaveBeenCalledWith(
-                locals.gridOptions.columns[2].name,
-                {widthOrg: 589});
 
+            tableEl = el.find('.table-responsive .bb-grid-table');
 
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(599, true);
+            expect(tableEl[0].p.colModel[2].width).toBe(589);
+            expect(tableEl[0].grid.headers[2].width).toBe(589);
+            expect(tableEl[0].grid.headers[2].el.style.width).toBe('589px');
+            expect(tableEl[0].grid.cols[2].style.width).toBe('589px');
+            expect(tableEl[0].p.tblwidth).toBe(599);
+
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(599, false);
 
             topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
             topScrollbarDivEl = topScrollbarEl.find('div');
@@ -1529,6 +1606,7 @@ describe('Grid directive', function () {
             var tableWrapperEl,
                 topScrollbarEl,
                 topScrollbarDivEl,
+                tableEl,
                 gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
 
             locals.gridOptions.columns[0].width_all = 5;
@@ -1545,9 +1623,15 @@ describe('Grid directive', function () {
 
             setGridData(dataSet1);
 
-            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 289});
+            tableEl = el.find('.table-responsive .bb-grid-table');
 
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, true);
+            expect(tableEl[0].p.colModel[2].width).toBe(289);
+            expect(tableEl[0].grid.headers[2].width).toBe(289);
+            expect(tableEl[0].grid.headers[2].el.style.width).toBe('289px');
+            expect(tableEl[0].grid.cols[2].style.width).toBe('289px');
+            expect(tableEl[0].p.tblwidth).toBe(299);
+
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, false);
 
             topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
             topScrollbarDivEl = topScrollbarEl.find('div');
@@ -1561,6 +1645,7 @@ describe('Grid directive', function () {
                 tableWrapperEl,
                 topScrollbarEl,
                 topScrollbarDivEl,
+                tableEl,
                 gridWrapperHtml = '<div style="width: 300px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
 
             locals.gridOptions.columns[0].width_all = 5;
@@ -1575,11 +1660,16 @@ describe('Grid directive', function () {
 
             tableWrapperEl.width(289);
             setGridData(dataSet1);
-            expect($.fn.setColProp).toHaveBeenCalledWith(
-                locals.gridOptions.columns[2].name,
-                {widthOrg: 289});
 
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, true);
+            tableEl = el.find('.table-responsive .bb-grid-table');
+
+            expect(tableEl[0].p.colModel[2].width).toBe(289);
+            expect(tableEl[0].grid.headers[2].width).toBe(289);
+            expect(tableEl[0].grid.headers[2].el.style.width).toBe('289px');
+            expect(tableEl[0].grid.cols[2].style.width).toBe('289px');
+            expect(tableEl[0].p.tblwidth).toBe(299);
+
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, false);
 
 
             topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');

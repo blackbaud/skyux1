@@ -85,7 +85,7 @@ To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid
   - `includedColumnsChanged` &mdash; Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
 to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
 reloading the grid with the current data after the event has fired.
-  - `loadMoreRows` &mdash; Fires when a page changes (when using pagination) or when the 'See more' button is clicked. When raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
+  - `loadMoreRows` Fires when a page changes (when using pagination) or a user clicks the 'Load more' button. When a user clicks the 'Load more' button, the event provides a promise. The consumer of the event should resolve the promise with the new data that the grid appends to the existing data. When the event is raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
 
 */
 (function ($) {
@@ -131,9 +131,9 @@ reloading the grid with the current data after the event has fired.
         }])
 
 
-        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
+        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow', '$q',
 
-            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
+            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
                     transclude: true,
@@ -219,9 +219,6 @@ reloading the grid with the current data after the event has fired.
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
-                            },
-                            loadMore: function () {
-                                $scope.$emit('loadMoreRows');
                             }
                         };
 
@@ -276,7 +273,8 @@ reloading the grid with the current data after the event has fired.
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth;
+                                scrollbarWidth,
+                                doNotResetRows = false;
 
                             function getTopScrollbar() {
                                 return element.find('.bb-grid-top-scrollbar');
@@ -522,13 +520,30 @@ reloading the grid with the current data after the event has fired.
                                 setScrollbarHeight();
                             }
 
+                            function setColumnSize(columnName, columnSize, totalWidth) {
+
+                                /* jqGrid does not provide a function to change a single column column size.
+                                   This code snippet mirrors how jqGrid changes column size in their own dragEnd
+                                   function.
+                                */
+                                tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
+                                tableEl[0].grid.cols[extendedColumnIndex].style.width = columnSize + 'px';
+                                /* istanbul ignore next: sanity check */
+                                tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
+                                $('table:first', tableEl[0].bDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                $('table:first', tableEl[0].hDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                tableEl[0].grid.hDiv.scrollLeft = tableEl[0].grid.bDiv.scrollLeft;
+                            }
+
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
                                 var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
 
                                 //If the extended portion of the last column is less than the amount resized
                                 if (extendedShrinkWidth <= changedWidth) {
                                     //decrease extended column to original size
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+
 
                                     //increase grid width by remainder and wipe out all the extended stuff
                                     if (isIncreasing) {
@@ -536,19 +551,23 @@ reloading the grid with the current data after the event has fired.
                                     } else {
                                         totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
                                     }
+                                    setColumnSize(extendedColumnName, originalExtendedColumnWidth, totalColumnWidth);
 
                                     tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                                     resetExtendedColumn();
+
                                 } else {
                                     //decrease extended column width by changedWidth
                                     currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+
 
                                     if (!isIncreasing) {
                                         totalColumnWidth = totalColumnWidth - changedWidth;
                                     }
+                                    setColumnSize(extendedColumnName, currentExtendedColumnWidth, totalColumnWidth);
+
                                 }
-                                tableEl.setGridWidth(totalColumnWidth, true);
+                                tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                             }
 
@@ -1001,7 +1020,7 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setUpFancyCheckCell() {
-                                var checkCellEl = element.find('td .cbox');
+                                var checkCellEl = element.find('td > .cbox');
                                 wrapCheckboxEl(checkCellEl);
                                 element.find('td .bb-check-checkbox').on('click', function (event) {
                                     event.preventDefault();
@@ -1299,6 +1318,25 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.applySearchText();
                             };
 
+                            function loadMore() {
+                                var deferred = $q.defer(),
+                                    loadMorePromise = deferred.promise;
+
+                                loadMorePromise.then(function (moreRows) {
+                                    tableEl.addRowData('', moreRows);
+                                    $scope.options.data = $scope.options.data.concat(moreRows);
+                                    setUpFancyCheckCell();
+                                    doNotResetRows = true;
+                                });
+
+                                $scope.$emit('loadMoreRows', {
+                                    promise: deferred
+                                });
+
+                            }
+
+                            $scope.locals.loadMore = loadMore;
+
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
@@ -1371,7 +1409,13 @@ reloading the grid with the current data after the event has fired.
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', setRows);
+                            $scope.$watchCollection('options.data', function (newValue) {
+                                if (doNotResetRows) {
+                                    doNotResetRows = false;
+                                } else {
+                                    setRows(newValue);
+                                }
+                            });
 
                             $scope.syncViewKeepers = function () {
                                 /*istanbul ignore else: sanity check */

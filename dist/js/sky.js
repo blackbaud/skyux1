@@ -2,14 +2,14 @@
 
 /** @module Action Bar
 @icon bolt
-@summary The action bar provides a {{ stache.config.product_name_short }}-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a {{ stache.config.product_name_short }}-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
+@summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
+@description The action bar creates a SKY UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
 ### Action Bar Settings ###
     - `bb-action-bar` &mdash; Wraps the content in the action bar.
     - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
     - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
 
-If it is necessary to apply action bar stylying to more complicated scenarios (e.g. hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), then you can place any content in a `div` that has the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
+To apply action bar stylying to more complicated scenarios (hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), you can place content in a `div` with the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
 */
 
 (function () {
@@ -153,7 +153,7 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 /*global angular, jQuery */
 /** @module Autonumeric
 @icon calculator
-@summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
+@summary The autonumeric component wraps the autoNumeric jQuery plugin to format any type of number, including currency.
  @description The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format any type of number, including currency. You must use this directive in conjunction with the `ngModel` directive where the property bound to `ngModel` is the raw numeric value on your model.
 
  ### Dependencies ###
@@ -169,12 +169,12 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 
 ### Autonumeric Filter ###
 
-In addition to the directive, there is also a filter that can be used to format numbers.  The filter has the added feature of optionally abbreviating a number according to Sky patterns.  For instance,
-numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,000,000 as 1b.  The filter takes three arguments:
+In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to SKY UX patterns. For example,
+it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
 
  - `input` &mdash; The value to format.
  - `configType` &mdash; The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` &mdash; A Boolean value indicating whether to abbreviate large numbers.
+ - `abbreviate` &mdash; A Boolean value that indicates whether to abbreviate large numbers.
  */
 (function ($) {
     'use strict';
@@ -394,7 +394,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 /** @module Check
 @icon check-square
 @summary The check applies a commonly styled selector to a checkbox or radio button.
- @description The check directive allows you to change an input element of type checkbox or radio into a commonly-styled selector.  The value that is selected is driven through the `ng-model` attribute specified on the input element and for radio input types the value to set on the `ng-model` can be specified by the value attribute.
+ @description The check directive allows you to change an input element of type checkbox or radio button into a commonly-styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
 
 ---
 
@@ -439,31 +439,31 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 /** @module Checklist
 @icon list-ul
-@summary The checklist builds a filterable checkbox list that can display multiple columns of data.
- @description The checklist directive allows you to easily build a filterable checkbox list.  Multiple columns of data can be provided for the checkbox rows using the `bb-checklist-column` element.  Items can also be displayed in a list view with each row displaying a title and description.  The list view is preferable when building a responsive application.
+@summary The checklist directive provides the tools to build a filterable checkbox list that can display multiple columns of data.
+ @description The checklist directive allows you to build a filterable checkbox list. The `bb-checklist-column` element allows you to specify multiple columns of data for the checkbox list. You can display items in a list view where each row displays a title and description. The list view is preferable when building a responsive application.
 
 ### Checklist Settings ###
 
- - `bb-checklist`
- - `bb-checklist-items` An array of objects representing the rows that will be shown in the list.
- - `bb-checklist-selected-items` An array representing the selected items in the list.
- - `bb-checklist-include-search` A Boolean to optionally include a search textbox for filtering the items.  The search text will be highlighted in the columns of the list.  A callback function can be used to filter the items based on the search text.
- - `bb-checklist-search-placeholder` Placeholder text for the search textbox.
- - `bb-checklist-filter-callback` A function to be called when the search text is modified.  Used by the consumer to update the `bb-checklist-items` array as desired based on the search text.  The function will be passed a single object as a parameter containing `searchText` and `category` properties.  Useful when loading items remotely or using custom logic other than simple case-insensitive string matching to filter items.
- - `bb-checklist-filter-local` When specified, items are filtered by the checklist directive by examining the properties of each item to match the specified category or search text.
- - `bb-checklist-search-debounce` Number of milliseconds to debounce changes to the search text.  Useful if making a web request in the `bb-checklist-filter-callback` to avoid making the request after every character typed.
- - `bb-checklist-no-items-message` *(Default: `'No items found'`)* Message to display when no items are in the list.
- - `bb-checklist-mode` *(Optional. Default: 'grid')* one of two possible values:
-  - `list` Displays items in a list with a title and description.  Items are expected to have `title`, `description` and `category` properties.  This is the preferred method of displaying a checklist.
-  - `grid` Displays items in a grid with any number of columns.  Columns are specified using mulitple `bb-checklist-column` elements.  For backwards compatibility reasons this is the default mode, but `list` is the preferred mode since it is mobile-responsive.
- - `bb-checklist-categories` An array of category names used to build category filter buttons at the top of the list.
+ - `bb-checklist` &mdash; Creates a filterable checkbox list.
+ - `bb-checklist-items` &mdash; Creates an array of objects that represents the rows to display in the list.
+ - `bb-checklist-selected-items` &mdash; Creates an array that represents the items selected in the list.
+ - `bb-checklist-include-search` &mdash; Provides a Boolean value that indicates whether to include a search field to filter the checkbox list. The search field uses a callback function to filter the list based on search criteria and highlights the search text in the filtered columns.
+ - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search textbox.
+ - `bb-checklist-filter-callback` &mdash; Specifies the function to call when a user modifies the search text. The function updates the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter with `searchText` and `category` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
+ - `bb-checklist-filter-local` &mdash; When specified, items are filtered by the checklist directive by examining the properties of each item to match the specified category or search text.
+ - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making a web request in `bb-checklist-filter-callback`, this setting helps avoid new requests for each character that users type.
+ - `bb-checklist-no-items-message` &mdash; Specifies the message to display when no items are displayed in the list. *(Default: `'No items found'`)*
+ - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or a grid. List mode is the preferred method because it is mobile-responsive, but for backwards-compatibility reasons, grid mode is the default.
+  - `list` &mdash; Displays checklist items in a list with titles and descriptions. Items should have `title`, `description`, and `category` properties. This is the preferred method to display checklists because it is mobile-responsive.
+  - `grid` &mdash; Displays checklist items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this is the default, but list mode is preferred because it is mobile-responsive.
+ - `bb-checklist-categories` &mdash; Provides an array of category names to create category filters at the top of the list.
 
 ### Checklist Column Settings ###
 
- - `bb-checklist-column-caption` Caption text for the column header.
- - `bb-checklist-column-field` The name of the property on the checklist items that contains the text to display in this column.
- - `bb-checklist-column-class` A CSS class to apply to this column's header and cells.
- - `bb-checklist-column-width` Set the width to be used by the column.
+ - `bb-checklist-column-caption` &mdash; Specifies a caption for the column header.
+ - `bb-checklist-column-field` &mdash; Specifies the name of the property on the checklist items that contains the text to display in the column.
+ - `bb-checklist-column-class` &mdash; Applies a CSS class to the column header and cells.
+ - `bb-checklist-column-width` &mdash; Sets the width of the column.
  */
 
 (function () {
@@ -824,12 +824,12 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 @icon ellipsis-h
 @summary The context menu creates simple or complicated dropdown menus that you can incorporate into buttons.
-@description The context menu directives allow you to easily create Sky-styled  [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. There are 3 directives in the context menu module:
-  - `bb-context-menu` creates a dropdown with the context menu button.
-  - `bb-context-menu-item` creates dropdown menu items within a dropdown that execute `bb-context-menu-action` on click.
-  - `bb-context-menu-button` creates a button with the Sky context menu styles.
-  - `bb-submenu` creates an accordion style submenu in a dropdown, you can place it in a dropdown list element.
-    - `bb-submenu-heading` Can be either an attribute on `bb-submenu` that can be set equal to static header text, or can be used as a directive inside of `bb-submenu` to place arbitrary content in an accordion heading.
+@description The context menu directives allow you to create SKY UX-themed [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. The context menu module includes three directives.
+  - `bb-context-menu` &mdash; Creates a dropdown menu within the context menu button.
+  - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu. When clicked, the menu item executes `bb-context-menu-action`.
+  - `bb-context-menu-button` &mdash; Creates a button with the SKY UX context menu styles.
+  - `bb-submenu` &mdash; Creates an accordion-style submenu within a dropdown menu. You can place the submenu within a dropdown list element.
+    - `bb-submenu-heading` &mdash; Specifies a header for a submenu. To specify a static header, apply this as an attribute of `bb-submenu`. To place arbitrary content in th header, apply this as a directive within `bb-submenu`.
 */
 
 (function () {
@@ -945,22 +945,22 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 @summary The data service provides access to convenience functions that allow you to manipulate data.
 @icon database
-@description The data service provides methods for loading data from and saving data to web service endpoints.
+@description The data service provides methods to load data and save data through web service endpoints.
 
 ### bbData Functions ###
 
-  - `load(loadObj)` Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request.  Note that in addition to the `data`, `resources` and `text` properties on the result object there is also an `httpResults` property containing the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http).  These objects include metadata about the response such as the HTTP status code.
-    - `data` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`.  The requests to the specified URLs will be made with credentials.
-    - `resources` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.resources`. The requests to the specified URLs will be made without credentials.
-    - `text` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.text`.  The requests to the specified URLs will be made without credentials and the result will be returned as a string rather than an object.
-    - `loadManager` An object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data.
-  - `query(url, queryParams)` Creates a URL with a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
-  - `post(url, data)` For use within `bbData.load`, creates a post request from a URL and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});`.
-  - `save(saveObj)` A function that issues an HTTP post for the purpose of storing data on the remote server. Takes an argument with the following properties:
-    - `url` The URL to which to send the request.
-    - `data` The object to be POSTed to the URL.
-    - `type` (*default: `POST`) The HTTP verb to use along with the request.
-  - `cancel(promise)` Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request.  The promise will be rejected after cancelling.
+  - `load(loadObj)` &mdash; Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request. An `httpResults` property contains the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http). The object includes metadata about the response such as the HTTP status code.
+    - `data` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.data` contains the promise results. For example: `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`. Requests to the URLs are made with credentials.
+    - `resources` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.resources` contains the promise results. Requests to the URLs are made without credentials.
+    - `text` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.text` contains the promise results. Requests to the URLs are made without credentials, and the results are returned as strings instead of objects.
+    - `loadManager` &mdash; Specifies an object with `name` and `scope` properties that creates a wait while it and its child load managers retreive data.
+  - `query(url, queryParams)` &mdash; Creates a URL with a query string based on the queryParam's properties. For example: `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
+  - `post(url, data)` &mdash; Within `bbData.load`, creates a post request from a URL and data object. For example: `bbData.load({data: bbData.post('/foo/post', postData)});`.
+  - `save(saveObj)` &mdash; Issues an HTTP post to store data on the remote server. Takes an argument with the `url`, `data`, and `type` properties.
+    - `url` &mdash; Specifies the URL to send the request to.
+    - `data` &mdash; Specifies the object to POST to the URL.
+    - `type` &mdash; Specifies the HTTP verb to use with the request. *(Default: `POST`)* 
+  - `cancel(promise)` &mdash; Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request. The promise is then rejected.
 */
 
 (function ($) {
@@ -1407,26 +1407,26 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 /** @module Date Picker
 @icon calendar-o
-@summary The date picker wraps the ui.bootstrap.datepicker directive from Angular UI Bootstrap to create an input text box that includes a calendar for selecting dates.
-@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/). It creates an input text box with a calendar picker for selecting dates.
+@summary The date picker wraps the ui.bootstrap.datepicker directive from Angular UI Bootstrap to create an input text box with a calendar to select dates.
+@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/). It creates an input text box with a calendar picker to select dates.
 
 ## Date Picker Settings
-  - `bb-custom-validation` an object containing the following:
-    - `formatValue` A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
-  - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDatepickerConfig` `currentCultureDateFormatString` property. The default format in sky is set as `MM/dd/yyyy`. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
-  - `bb-date-options` Options object for customizing the date picker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap date picker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDatepickerConfig`.
-  - `bb-datepicker-name` This value gets bound to the `name` attribute of the date picker input for use in validation and form submission.
-  - `close-on-date-selection` *(Default: true):*  Whether to close calendar when a date is chosen.
-  - `datepicker-append-to-body` *(Default: false):*  Append the date picker popup element to `body`, rather than inserting after the date picker input.
-  - `max-date` A Javascript Date object that can set a maximum date for the date picker control and input. Input validation will be bound to `$scope.myFormName.inputName.$error.maxDate`. This value can also be set globally in the `bbDatepickerConfig` object property `maxDate`.
-  - `min-date` A Javascript Date object that can set a minimum date for the date picker control and input. Input validation will be bound to `$scope.myFormName.inputName.$error.minDate`. This value can also be set globally in the `bbDatepickerConfig` object property `minDate`.
-  - `ng-model` An object to bind the date value in and out of the date picker. This will be set to a Javascript Date object when set or parsed from the bootstrap date picker.
-  - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
-  - `required` Attribute present if the `bb-datepicker` value is required.
-  - `show-button-bar` *(Default: false):*  Whether to display a button bar underneath the date picker. (see angular ui bootstrap date picker)
+  - `bb-custom-validation` &mdash; Specifies an object thta contains a function to validate entries in the text box.
+    - `formatValue` &mdash; A function to call when users enter text in the textbox. The only parameter to pass to the function is the raw value of the text box. If a problem occurs when formatting the input value, the function returns an object or a promise of an object with the `formattedValue` property and optionally the `formattingErrorMessage` property.
+  - `bb-date-format` &mdash; Specifies the format string to use for dates in the text box. This overrides the SKY UX default of `MM/dd/yyyy` that is set in the `bbDatepickerConfig`'s `currentCultureDateFormatString` property. You set up the format string just like format strings for the [Angular date filter](https://docs.angularjs.org/api/ng/filter/date).
+  - `bb-date-options` &mdash; Specifies an options object to customize the date picker. This includes all valid options for the Angular UI Bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the Angular UI Bootstrap date picker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. The SKY UX defaults for `showWeeks` and `startingDay` are  `false` and `0`.
+  - `bb-datepicker-name` &mdash; Provides the value to bind to the `name` attribute of the date picker input. The value is used in validation and form submission.
+  - `close-on-date-selection` &mdash; Indicates whether to close the date picker's calendar after a date is selected. *(Default: `true`)*
+  - `datepicker-append-to-body` &mdash; Indicates whether to append the date picker popup element to `body` instead of the date picker text box. *(Default: `false`)*
+  - `max-date` &mdash; A JavaScript Date object that sets a maximum date for the date picker control and input. Input validation is bound to `$scope.myFormName.inputName.$error.maxDate`. You can set this value globally in `bbDatepickerConfig`'s `maxDate` property.
+  - `min-date` &mdash; A JavaScript Date object that sets a minimum date for the date picker control and input. Input validation is bound to `$scope.myFormName.inputName.$error.minDate`. You can set this value globally in  `bbDatepickerConfig`'s `minDate` property.
+  - `ng-model` &mdash; Specifies an object to bind the date value in and out of the date picker. This is set to a JavaScript Date object when set or parsed from the Bootstrap date picker.
+  - `placeholder` &mdash; Overrides the default placeholder text of the `bb-datepicker` input.
+  - `required` &mdash; Indicates whether the date picker's text box is a required field.
+  - `show-button-bar` &mdash; Indicates whether to display a button bar under the date picker. *(Default: `false`)*
 
 ## Validation
-`bb-datepicker` sets validation on the date picker input using `bb-datepicker-name` for the input name, and the validity of the date entered in the input is in the `dateFormat` validator. So if you want to see if the date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date will be in `$scope.myFormName.inputName.invalidFormatMessage`.
+The `bb-datepicker` directive sets validation on the date picker input using `bb-datepicker-name` for the input name. The validity of the date in the input is in the `dateFormat` validator. To check if a date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date is in `$scope.myFormName.inputName.invalidFormatMessage`.
 
 */
 (function ($) {
@@ -1952,27 +1952,27 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
 /** @module Date Range Picker
 @icon calendar
-@summary The date range picker creates an input text box that includes a dropdown for selecting date ranges from a well-known set of options.
- @description The date range picker directive allows you to easily choose a date range from a well-known set of options. A date range picker service also exists to work hand-in-hand with the directive to provide more service-oriented functionality.
+@summary The date-range picker creates an input text box with a dropdown to select date ranges from a set of well-known options.
+ @description The date-range picker directive creates an input text box where users can select date ranges from a set of well-known options. The directive works hand-in-hand with a date-range picker service to provide more service-oriented functionality.
 
-### Date Range Picker Settings ###
+### Date-range Picker Settings ###
 
- - `bb-date-range-picker-value` An object tracking the value of the date range picker control.  Right now, the only proeprty of the object is `.dateRangeType` gives you the integer (ENUM) value of the date range typ that was selected in the picker. See the date range picker service for details of this ENUM.
- - `bb-date-range-picker-automation-id` A string to use when creating the bb-auto-field attribute on elements in the date range picker
- - `bb-date-range-picker-options` Optional. An options object that can be provided to customize the behavior of the date range picker.
+ - `bb-date-range-picker-value` &mdash; Specifies an object that tracks the value of the date-range picker control. The `.dateRangeType` property provides the integer (ENUM) value of the date-range type selected in the picker. For details about the ENUM, see the Date-range Picker Service section below.
+ - `bb-date-range-picker-automation-id` &mdash; Specifies a string to use when creating the `bb-auto-field` attribute on elements in the date-range picker.
+ - `bb-date-range-picker-options` &mdash; *(Optional.)* Specifies an options object that can customize the behavior of the date-range picker.
 
-### Date Range Picker Options Settings ###
+### Date-range Picker Options Settings ###
 
- - `availableDateRangeTypes` Optional. An array of integers (`dateRangeTypes` ENUM) to specify the ordered list of date range types to be included in the dropdown.  Common variations can be found in the date range picker service.
+ - `availableDateRangeTypes` &mdash; Optional. Provides an array of integers (`dateRangeTypes` ENUM) to specify an ordered list of date-range types for the dropdown.  Common variations are available in the date-range picker service.
 
-### Date Range Picker Service ###
-This service provides additional functionality that works closely with the directive.  Below are a list of members provided by the service.
+### Date-range Picker Service ###
+The date-range picker service provides functionality that works closely with the directive. The service provides the following members:
 
- - `dateRangeTypes` An ENUM of all types of date ranges that are understood by the date range picker and can be available in the dropdown.
- - `defaultDateRangeOptions` An array of `dateRangeTypes` providing the default order and set of date range types that are included in the dropdown.
- - `pastDateRangeOptions` An array of `dateRangeTypes` that are appropriate for filtering for things that have occurred in the past.  For example, you wouldn't want to be able to search for items created 'next month'.
- - `getDateRangeTypeCaption` A function for getting the caption of the dropdown item selected for a given `bb-date-range-picker-value`.
- - `getDateRangeFilterDescription` A function for getting an appropriate description string explaining the meaning of a given `bb-date-range-picker-value`.
+ - `dateRangeTypes` &mdash; An ENUM of all date-range types that the date-range picker understands and can include in the dropdown.
+ - `defaultDateRangeOptions` &mdash; An array of `dateRangeTypes` that provides the default order and set of date-range types included in the dropdown.
+ - `pastDateRangeOptions` &mdash; An array of `dateRangeTypes` that are appropriate to filter for things that occurred in the past. For example, you don't want to search for items created "next month."
+ - `getDateRangeTypeCaption` &mdash; A function to get the caption of the dropdown item for a given `bb-date-range-picker-value`.
+ - `getDateRangeFilterDescription` &mdash; A function to get the description of a given `bb-date-range-picker-value`.
  */
 
 (function () {
@@ -3097,7 +3097,7 @@ To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid
   - `includedColumnsChanged` Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
 to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
 reloading the grid with the current data after the event has fired.
-  - `loadMoreRows` Fires when a page changes (when using pagination) or when the 'See more' button is clicked. When raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
+  - `loadMoreRows` Fires when a page changes (when using pagination) or a user clicks the 'Load more' button. When a user clicks the 'Load more' button, the event provides a promise. The consumer of the event should resolve the promise with the new data that the grid appends to the existing data. When the event is raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
 
 */
 (function ($) {
@@ -3143,9 +3143,9 @@ reloading the grid with the current data after the event has fired.
         }])
 
 
-        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
+        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow', '$q',
 
-            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
+            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
                     transclude: true,
@@ -3231,9 +3231,6 @@ reloading the grid with the current data after the event has fired.
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
-                            },
-                            loadMore: function () {
-                                $scope.$emit('loadMoreRows');
                             }
                         };
 
@@ -3288,7 +3285,8 @@ reloading the grid with the current data after the event has fired.
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth;
+                                scrollbarWidth,
+                                doNotResetRows = false;
 
                             function getTopScrollbar() {
                                 return element.find('.bb-grid-top-scrollbar');
@@ -3534,13 +3532,30 @@ reloading the grid with the current data after the event has fired.
                                 setScrollbarHeight();
                             }
 
+                            function setColumnSize(columnName, columnSize, totalWidth) {
+
+                                /* jqGrid does not provide a function to change a single column column size.
+                                   This code snippet mirrors how jqGrid changes column size in their own dragEnd
+                                   function.
+                                */
+                                tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
+                                tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
+                                tableEl[0].grid.cols[extendedColumnIndex].style.width = columnSize + 'px';
+                                /* istanbul ignore next: sanity check */
+                                tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
+                                $('table:first', tableEl[0].bDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                $('table:first', tableEl[0].hDiv).css("width", tableEl[0].p.tblwidth + 'px');
+                                tableEl[0].grid.hDiv.scrollLeft = tableEl[0].grid.bDiv.scrollLeft;
+                            }
+
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
                                 var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
 
                                 //If the extended portion of the last column is less than the amount resized
                                 if (extendedShrinkWidth <= changedWidth) {
                                     //decrease extended column to original size
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+
 
                                     //increase grid width by remainder and wipe out all the extended stuff
                                     if (isIncreasing) {
@@ -3548,19 +3563,23 @@ reloading the grid with the current data after the event has fired.
                                     } else {
                                         totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
                                     }
+                                    setColumnSize(extendedColumnName, originalExtendedColumnWidth, totalColumnWidth);
 
                                     tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                                     resetExtendedColumn();
+
                                 } else {
                                     //decrease extended column width by changedWidth
                                     currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+
 
                                     if (!isIncreasing) {
                                         totalColumnWidth = totalColumnWidth - changedWidth;
                                     }
+                                    setColumnSize(extendedColumnName, currentExtendedColumnWidth, totalColumnWidth);
+
                                 }
-                                tableEl.setGridWidth(totalColumnWidth, true);
+                                tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                             }
 
@@ -4013,7 +4032,7 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setUpFancyCheckCell() {
-                                var checkCellEl = element.find('td .cbox');
+                                var checkCellEl = element.find('td > .cbox');
                                 wrapCheckboxEl(checkCellEl);
                                 element.find('td .bb-check-checkbox').on('click', function (event) {
                                     event.preventDefault();
@@ -4311,6 +4330,25 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.applySearchText();
                             };
 
+                            function loadMore() {
+                                var deferred = $q.defer(),
+                                    loadMorePromise = deferred.promise;
+
+                                loadMorePromise.then(function (moreRows) {
+                                    tableEl.addRowData('', moreRows);
+                                    $scope.options.data = $scope.options.data.concat(moreRows);
+                                    setUpFancyCheckCell();
+                                    doNotResetRows = true;
+                                });
+
+                                $scope.$emit('loadMoreRows', {
+                                    promise: deferred
+                                });
+
+                            }
+
+                            $scope.locals.loadMore = loadMore;
+
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
@@ -4383,7 +4421,13 @@ reloading the grid with the current data after the event has fired.
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', setRows);
+                            $scope.$watchCollection('options.data', function (newValue) {
+                                if (doNotResetRows) {
+                                    doNotResetRows = false;
+                                } else {
+                                    setRows(newValue);
+                                }
+                            });
 
                             $scope.syncViewKeepers = function () {
                                 /*istanbul ignore else: sanity check */
@@ -8721,9 +8765,11 @@ This service supports the following functions
                 // A set timeout of 0 handles blocks added without async operations before starting another, which
                 // would indicate that the block should have been maintained anyways.
                 $timeout(function () {
+                    var $el;
+
                     /* istanbul ignore else: sanity check */
                     if (getWaitCount(el) === 0) {
-                        var $el = $(el);
+                        $el = $(el);
 
                         if (!isBlockUISupported()) {
                             return;
@@ -8734,16 +8780,17 @@ This service supports the following functions
                         } else {
                             $el.unblock();
                         }
-                        $(el).removeData(showingWaitAttr);
+                        $el.removeData(showingWaitAttr);
                     }
                 }, 0);
             }
 
             addWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Increases the element wait count and shows the wait if the count is above 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 count += 1;
 
                 setWaitCount(el, count, options.nonblocking);
@@ -8757,10 +8804,11 @@ This service supports the following functions
             };
 
             removeWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Decreases the element wait count and hides the wait if the count is at 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 if (count > 0) {
                     count -= 1;
 
@@ -8883,7 +8931,7 @@ This service supports the following functions
                 outer.css('overflow', 'scroll');
                 w2 = inner[0].offsetWidth;
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore next: sanity check */
                 if (w1 === w2) {
                     w2 = outer[0].clientWidth;
                 }
@@ -9593,7 +9641,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/seemore.html',
-        '<div bb-text-expand="data" bb-text-expand-max-length="100" style="white-space: pre-wrap"></div>');
+        '<div bb-text-expand="data" bb-text-expand-max-length="100" style="white-space: pre-wrap"></div>\n' +
+        '');
     $templateCache.put('sky/templates/modal/modal.html',
         '<div class="bb-modal-content-wrapper" ng-transclude></div>');
     $templateCache.put('sky/templates/modal/modalfooter.html',
@@ -9696,11 +9745,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="modal-form">\n' +
         '    <div bb-modal-body>\n' +
         '      <div>\n' +
-        '        <p class="bb-text-expand-text">\n' +
-        '          <span>\n' +
-        '            {{expandCtrl.textExpandContent}}\n' +
-        '          </span>\n' +
-        '        </p>\n' +
+        '        <span class="bb-text-expand-text">{{expandCtrl.textExpandContent}}</span>\n' +
         '      </div>\n' +
         '    </div>\n' +
         '    <bb-modal-footer>\n' +

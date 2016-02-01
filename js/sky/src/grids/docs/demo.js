@@ -27,82 +27,9 @@
 
     function GridTestController($scope, $filter, $timeout) {
 
-        var action1,
+        var newDataFlag = 0,
+            action1,
             action2,
-            dataSet1 = [
-                {
-                    name: 'Patrick',
-                    skills: 'Karate, Kung Fu, Italian cooking, Ditch digging'
-                },
-                {
-                    name: 'Paul',
-                    skills: 'Arguing',
-                    cats: '13'
-                },
-                {
-                    name: 'George',
-                    skills: 'Curiousity',
-                    cats: '1'
-                },
-                {
-                    name: 'Ringo',
-                    skills: 'Slow typing'
-                },
-                {
-                    name: 'Samwise',
-                    skills: 'Loyalty, Gardening'
-                }
-            ],
-            dataSet2 = [
-                {
-                    name: 'Corey',
-                    skills: 'Vegetables',
-                    cats: 'Threve'
-                },
-                {
-                    name: 'Daniel',
-                    skills: 'Arguing, spelunking',
-                    cats: '1'
-                },
-                {
-                    name: 'Rick',
-                    skills: 'Leadership, Zombie slaying'
-                },
-                {
-                    name: 'Jeremey',
-                    skills: 'Knowledge, Speling',
-                    cats: 'EleventySeven'
-                },
-                {
-                    name: 'Frodo',
-                    skills: 'Walking, Carrying'
-                }
-            ],
-            dataSet3 = [
-                {
-                    name: 'Gollum',
-                    skills: 'Precious, Filthy hobbitses, *gollum*'
-                },
-                {
-                    name: 'Franklin',
-                    skills: 'Turtles',
-                    cats: '13'
-                },
-                {
-                    name: 'Tater',
-                    skills: 'Salad',
-                    cats: '6'
-                },
-                {
-                    name: 'Bev',
-                    skills: 'Growling'
-                },
-                {
-                    name: 'Sean',
-                    skills: 'Method acting, Drama, Villiany',
-                    cats: '9'
-                }
-            ],
             dataSetBand = [
                 {
                     id: 'blaarrrh',
@@ -315,54 +242,6 @@
                 columnPickerMode: 'list'
             };
 
-            self.gridOptions2 = {
-                columns: [
-                    {
-                        caption: 'Name',
-                        jsonmap: 'name',
-                        id: 1,
-                        name: 'name',
-                        width_xs: 100,
-                        width_all: 300
-                    },
-                    {
-                        caption: 'Skills',
-                        jsonmap: 'skills',
-                        id: 2,
-                        name: 'skills',
-                        allow_see_more: true,
-                        width_all: 100
-                    },
-                    {
-                        caption: 'Number of cats',
-                        jsonmap: 'cats',
-                        id: 3,
-                        name: 'cats'
-                    }
-                ],
-                data: dataSet1,
-                fixedToolbar: true,
-                onAddClick: function () {
-                    alert('Add button clicked!!');
-                },
-                onAddClickLabel: 'Add button',
-                selectedColumnIds: [1, 2, 3],
-                columnPickerHelpKey: 'bb-security-users.html',
-                sortOptions: {
-                    excludedColumns: [
-                        'cats',
-                        'name',
-                        'skills'
-                    ]
-                },
-                hasInlineFilters: true,
-                filters: {}
-            };
-
-            self.paginationOptions = {
-                recordCount: 30
-            };
-
             self.guitarFilter = false;
 
             self.drumsFilter = false;
@@ -375,16 +254,6 @@
 
             function setSelections() {
                 self.selectedRows = [dataSetBand[3]];
-            }
-
-            function getDataSet(top, skip) {
-                if (skip === 0 || skip === 15) {
-                    return dataSet1;
-                } else if (skip === 5 || skip === 20) {
-                    return dataSet2;
-                } else {
-                    return dataSet3;
-                }
             }
 
             $scope.$watch(function () {
@@ -461,53 +330,33 @@
                 filterAndSearch();
             });
 
-            $scope.$watch(function () {
-                return self.gridOptions2.filters;
-            }, function (newValue) {
+            self.gridOptions.hasMoreRows = true;
 
-                self.gridOptions2.filtersAreActive = newValue && (newValue.checkFilter || newValue.selectFilter);
+            /* This function creates unique data sets to be appended to our
+               grid */
+            function getLoadMoreDataSet() {
+                var i,
+                    newData;
 
-                if (angular.isDefined(newValue)) {
+                newData = angular.copy(dataSetBand);
 
-                    if (newValue.checkFilter) {
-                        self.gridOptions2.data = [dataSet1[2]];
-                        self.paginationOptions.recordCount = 1;
-                    }
-
-                    if (newValue.selectFilter) {
-                        if (newValue.selectFilter === 'option1') {
-                            if (newValue.checkFilter) {
-                                self.gridOptions2.data = [dataSet1[0], dataSet1[2]];
-                            } else {
-                                self.gridOptions2.data = [dataSet1[0]];
-                            }
-
-                            self.paginationOptions.recordCount = self.gridOptions2.data.length;
-                            return;
-                        } else if (newValue.selectFilter === 'option2') {
-
-                            if (newValue.checkFilter) {
-                                self.gridOptions2.data = [dataSet1[1], dataSet1[2]];
-                            } else {
-                                self.gridOptions2.data = [dataSet1[1]];
-                            }
-
-                            self.paginationOptions.recordCount = self.gridOptions2.data.length;
-                            return;
-                        }
-                    } else if (newValue.checkFilter) {
-                        self.gridOptions2.data = [dataSet1[2]];
-                        self.paginationOptions.recordCount = self.gridOptions2.data.length;
-                        return;
-                    }
+                for (i = 0; i < dataSetBand.length; i++) {
+                    newData[i].flag = newDataFlag;
                 }
-                self.gridOptions2.data = dataSet1;
-                self.paginationOptions.recordCount = 30;
-
-            }, true);
+                newDataFlag++;
+                return newData;
+            }
 
             $scope.$on('loadMoreRows', function (event, data) {
-                self.gridOptions2.data = getDataSet(data.top, data.skip);
+                /* If a promise exists on the event data, then we can resolve
+                       it with the next set of data that should be concatenated
+                       to the grid */
+                self.gridOptions.loading = true;
+                $timeout(function () {
+                    data.promise.resolve(getLoadMoreDataSet());
+                    self.gridOptions.loading = false;
+                }, 2000);
+
             });
 
             $scope.$on('includedColumnsChanged', function (event, data) {
@@ -515,10 +364,194 @@
                 // after the user has changed the selected grid columns.
             });
         });
-
-
     }
 
+    function PaginationGridTestController($scope) {
+        var dataSet1 = [
+            {
+                name: 'Patrick',
+                skills: 'Karate, Kung Fu, Italian cooking, Ditch digging'
+            },
+            {
+                name: 'Paul',
+                skills: 'Arguing',
+                cats: '13'
+            },
+            {
+                name: 'George',
+                skills: 'Curiousity',
+                cats: '1'
+            },
+            {
+                name: 'Ringo',
+                skills: 'Slow typing'
+            },
+            {
+                name: 'Samwise',
+                skills: 'Loyalty, Gardening'
+            }
+        ],
+        dataSet2 = [
+            {
+                name: 'Corey',
+                skills: 'Vegetables',
+                cats: 'Threve'
+            },
+            {
+                name: 'Daniel',
+                skills: 'Arguing, spelunking',
+                cats: '1'
+            },
+            {
+                name: 'Rick',
+                skills: 'Leadership, Zombie slaying'
+            },
+            {
+                name: 'Jeremey',
+                skills: 'Knowledge, Speling',
+                cats: 'EleventySeven'
+            },
+            {
+                name: 'Frodo',
+                skills: 'Walking, Carrying'
+            }
+        ],
+        dataSet3 = [
+            {
+                name: 'Gollum',
+                skills: 'Precious, Filthy hobbitses, *gollum*'
+            },
+            {
+                name: 'Franklin',
+                skills: 'Turtles',
+                cats: '13'
+            },
+            {
+                name: 'Tater',
+                skills: 'Salad',
+                cats: '6'
+            },
+            {
+                name: 'Bev',
+                skills: 'Growling'
+            },
+            {
+                name: 'Sean',
+                skills: 'Method acting, Drama, Villiany',
+                cats: '9'
+            }
+        ],
+        self = this;
+
+        self.gridOptions2 = {
+            columns: [
+                {
+                    caption: 'Name',
+                    jsonmap: 'name',
+                    id: 1,
+                    name: 'name',
+                    width_xs: 100,
+                    width_all: 300
+                },
+                {
+                    caption: 'Skills',
+                    jsonmap: 'skills',
+                    id: 2,
+                    name: 'skills',
+                    allow_see_more: true,
+                    width_all: 100
+                },
+                {
+                    caption: 'Number of cats',
+                    jsonmap: 'cats',
+                    id: 3,
+                    name: 'cats'
+                }
+            ],
+            data: dataSet1,
+            fixedToolbar: true,
+            onAddClick: function () {
+                alert('Add button clicked!!');
+            },
+            onAddClickLabel: 'Add button',
+            selectedColumnIds: [1, 2, 3],
+            columnPickerHelpKey: 'bb-security-users.html',
+            sortOptions: {
+                excludedColumns: [
+                    'cats',
+                    'name',
+                    'skills'
+                ]
+            },
+            hasInlineFilters: true,
+            filters: {}
+        };
+
+        self.paginationOptions = {
+            recordCount: 30
+        };
+
+        function getPaginationDataSet(top, skip) {
+            if (skip === 0 || skip === 15) {
+                return dataSet1;
+            } else if (skip === 5 || skip === 20) {
+                return dataSet2;
+            } else {
+                return dataSet3;
+            }
+        }
+
+        $scope.$watch(function () {
+            return self.gridOptions2.filters;
+        }, function (newValue) {
+
+            self.gridOptions2.filtersAreActive = newValue && (newValue.checkFilter || newValue.selectFilter);
+
+            if (angular.isDefined(newValue)) {
+
+                if (newValue.checkFilter) {
+                    self.gridOptions2.data = [dataSet1[2]];
+                    self.paginationOptions.recordCount = 1;
+                }
+
+                if (newValue.selectFilter) {
+                    if (newValue.selectFilter === 'option1') {
+                        if (newValue.checkFilter) {
+                            self.gridOptions2.data = [dataSet1[0], dataSet1[2]];
+                        } else {
+                            self.gridOptions2.data = [dataSet1[0]];
+                        }
+
+                        self.paginationOptions.recordCount = self.gridOptions2.data.length;
+                        return;
+                    } else if (newValue.selectFilter === 'option2') {
+
+                        if (newValue.checkFilter) {
+                            self.gridOptions2.data = [dataSet1[1], dataSet1[2]];
+                        } else {
+                            self.gridOptions2.data = [dataSet1[1]];
+                        }
+
+                        self.paginationOptions.recordCount = self.gridOptions2.data.length;
+                        return;
+                    }
+                } else if (newValue.checkFilter) {
+                    self.gridOptions2.data = [dataSet1[2]];
+                    self.paginationOptions.recordCount = self.gridOptions2.data.length;
+                    return;
+                }
+            }
+            self.gridOptions2.data = dataSet1;
+            self.paginationOptions.recordCount = 30;
+
+        }, true);
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            self.gridOptions2.data = getPaginationDataSet(data.top, data.skip);
+        });
+    }
+
+    PaginationGridTestController.$inject = ['$scope'];
 
     RunTemplateCache.$inject = ['$templateCache'];
 
@@ -529,6 +562,7 @@
     angular.module('stache')
     .run(RunTemplateCache)
     .controller('TemplateController', TemplateController)
-    .controller('GridTestController', GridTestController);
+    .controller('GridTestController', GridTestController)
+    .controller('PaginationGridTestController', PaginationGridTestController);
 
 }());
