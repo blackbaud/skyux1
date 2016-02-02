@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global inject, module */
+/*global inject, module, angular */
 
 describe('Date range picker', function () {
     'use strict';
@@ -80,25 +80,42 @@ describe('Date range picker', function () {
 
         it('should show the datepickers when using specific date range', function () {
             var $scope = $rootScope.$new(),
-                el;
+                el,
+                labelsEl,
+                datepickersEl;
 
             $scope.dateRangePickerOptions = {};
 
             $scope.dateRangePickerOptions.availableDateRangeTypes = bbDateRangePicker.specificDateRangeOptions;
+            $scope.dateRangePickerValue = {
+                dateRangeType: bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE
+            };
 
-            $scope.dateRangePickerValue = bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE;
-
-            el = $compile('<bb-date-range-picker bb-date-range-picker-value="dateRangePickerValue"' +
+            el = angular.element('<bb-date-range-picker bb-date-range-picker-value="dateRangePickerValue"' +
                           'bb-date-range-picker-options="dateRangePickerOptions"' +
                           'bb-date-range-picker-from-date="fromDate"' +
                           'bb-date-range-picker-to-date="toDate"' +
                           'bb-date-range-picker-label="\'Date Range Picker\'"' +
                           'bb-date-range-picker-valid="isValid"' +
-                          '></bb-date-range-picker>')($scope);
+                          '></bb-date-range-picker>')
 
-            $scope.$digest();              
+            el.appendTo(document.body);
+
+            el = $compile(el)($scope);
+
+            $scope.$digest();
+            $timeout.flush();
+            $scope.$digest();
 
             //verify presence of datepickers and labels and no placeholder text
+            labelsEl = el.find('div.bb-date-range-picker-form-group > .bb-date-range-picker-label');
+            expect(labelsEl.length).toBe(3);
+            expect(labelsEl.eq(0)).toHaveText('Date Range Picker');
+            expect(labelsEl.eq(1)).toHaveText(bbResources.date_range_picker_from_date);
+            expect(labelsEl.eq(2)).toHaveText(bbResources.date_range_picker_to_date);
+
+            datepickersEl = el.find('.bb-datefield');
+            expect(datepickersEl.length).toBe(2);
 
             //verify binding of to and from date
 
