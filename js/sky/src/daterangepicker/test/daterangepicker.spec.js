@@ -77,6 +77,38 @@ describe('Date range picker', function () {
                 }
             }
         });
+
+        it('should show the datepickers when using specific date range', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.dateRangePickerOptions = {};
+
+            $scope.dateRangePickerOptions.availableDateRangeTypes = bbDateRangePicker.specificDateRangeOptions;
+
+            $scope.dateRangePickerValue = bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE;
+
+            el = $compile('<bb-date-range-picker bb-date-range-picker-value="dateRangePickerValue"' +
+                          'bb-date-range-picker-options="dateRangePickerOptions"' +
+                          'bb-date-range-picker-from-date="fromDate"' +
+                          'bb-date-range-picker-to-date="toDate"' +
+                          'bb-date-range-picker-label="\'Date Range Picker\'"' +
+                          'bb-date-range-picker-valid="isValid"' +
+                          '></bb-date-range-picker>')($scope);
+
+            $scope.$digest();              
+
+            //verify presence of datepickers and labels and no placeholder text
+
+            //verify binding of to and from date
+
+            //verify validation of dateFormat, min, and max date
+
+        });
+
+        it('should allow the use of no labels when that option is set', function () {
+            //verify no labels and placeholder text
+        });
     });
 
     describe('service', function () {

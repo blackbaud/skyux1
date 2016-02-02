@@ -285,7 +285,7 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
                             }
                         } else {
                             inputNgModel = $scope.getInputNgModel();
-
+                            /* istanbul ignore else: sanity check */
                             if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
                                 setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                             }
