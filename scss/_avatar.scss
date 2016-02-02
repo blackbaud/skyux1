@@ -1,0 +1,43 @@
+@import 'mixins';
+
+.bb-avatar {
+    .bb-file-drop-accept {
+        .bb-avatar-wrapper {
+            border: dashed $bb-avatar-border-width $bb-color-green;
+        }
+    }
+
+    .bb-file-drop-reject {
+        .bb-avatar-wrapper {
+            border: dashed $bb-avatar-border-width $bb-color-red;
+        }
+    }
+}
+
+.bb-avatar-wrapper {
+    height: $bb-avatar-height + ($bb-avatar-border-width * 2);
+    width: $bb-avatar-width + ($bb-avatar-border-width * 2);
+    border: solid $bb-avatar-border-width transparent;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    top: -$bb-avatar-border-width;
+    left: -$bb-avatar-border-width;
+}
+
+.bb-file-drop {
+    .bb-avatar-wrapper {
+        cursor: pointer;
+    }
+}
+
+.bb-avatar-image,
+.bb-avatar-initials {
+    height: $bb-avatar-height;
+    width: $bb-avatar-width;
+    background-position: 50%;
+    background-size: cover;
+
+    /* this removes the "ghost margin" from the bottom of the canvas element that would otherwise be imposed by line height rules for inline elements */
+    display: block;
+}

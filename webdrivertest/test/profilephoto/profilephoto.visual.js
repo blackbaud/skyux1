@@ -1,7 +1,7 @@
 /* global describe, it, browser, beforeEach,  expect, require */
 
 
-describe('Profile photo', function () {
+describe('Avatar', function () {
     'use strict';
 
     var options = {};
@@ -11,15 +11,15 @@ describe('Profile photo', function () {
     });
 
     function takeScreenshot(type, done) {
-        var screenshotName = 'profilephoto_' + type,
+        var screenshotName = 'avatar_' + type,
             pageName = options.prefix + screenshotName + '_full';
 
         browser
-            .url('/profilephoto/fixtures/test.full.html')
+            .url('/avatar/fixtures/test.full.html')
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-profilephoto-' + type
+                    elem: '#screenshot-avatar-' + type
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);

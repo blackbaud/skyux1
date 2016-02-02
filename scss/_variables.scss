@@ -269,10 +269,10 @@ $bb-palette-mono: (
 );
 // end color palette
 
-// begin profile profile
-$bb-profile-photo-height: 100px !default;
-$bb-profile-photo-width: $bb-profile-photo-height !default;
-$bb-profile-photo-border-width: 2px !default;
-// end profile photo
+// begin avatar
+$bb-avatar-height: 100px !default;
+$bb-avatar-width: $bb-avatar-height !default;
+$bb-avatar-border-width: 2px !default;
+// end avatar
 
 // end _variables

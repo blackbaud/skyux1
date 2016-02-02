@@ -1,7 +1,7 @@
 /*jshint browser: true, jasmine: true */
 /*global inject, module */
 
-describe('Profile photo directive', function () {
+describe('Avatar directive', function () {
     'use strict';
 
     var $compile,
@@ -10,7 +10,7 @@ describe('Profile photo directive', function () {
         imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAAFElEQVR42gEJAPb/AP//////////I+UH+Rtap+gAAAAASUVORK5CYII=';
 
     beforeEach(module('ngMock'));
-    beforeEach(module('sky.profilephoto'));
+    beforeEach(module('sky.avatar'));
     beforeEach(module('sky.templates'));
 
     beforeEach(module(function ($provide) {
@@ -33,11 +33,11 @@ describe('Profile photo directive', function () {
     }));
 
     function getPhotoEl(el) {
-        return el.find('.bb-profile-photo-image');
+        return el.find('.bb-avatar-image');
     }
 
     function getPlaceholderEl(el) {
-        return el.find('.bb-profile-photo-initials');
+        return el.find('.bb-avatar-initials');
     }
 
     function validateImageVisible(el, visible) {
@@ -59,7 +59,7 @@ describe('Profile photo directive', function () {
     }
 
     function createElNoImageUrl($scope) {
-        return $compile('<bb-profile-photo bb-profile-photo-name="\'Bobby Earl\'"></bb-profile-photo>')($scope);
+        return $compile('<bb-avatar bb-avatar-name="\'Bobby Earl\'"></bb-avatar>')($scope);
     }
 
     function validatePixelRatio(pixelRatio) {
@@ -86,7 +86,7 @@ describe('Profile photo directive', function () {
         var el,
             $scope = $rootScope.$new();
 
-        el = $compile('<bb-profile-photo bb-profile-photo-src="imgUrl"></bb-profile-photo>')($scope);
+        el = $compile('<bb-avatar bb-avatar-src="imgUrl"></bb-avatar>')($scope);
         el.appendTo(document.body);
 
         $scope.imgUrl = imgUrl;
@@ -119,7 +119,7 @@ describe('Profile photo directive', function () {
         var el,
             $scope = $rootScope.$new();
 
-        el = $compile('<bb-profile-photo bb-profile-photo-name="name"></bb-profile-photo>')($scope);
+        el = $compile('<bb-avatar bb-avatar-name="name"></bb-avatar>')($scope);
         el.appendTo(document.body);
 
         $scope.$digest();
@@ -140,7 +140,7 @@ describe('Profile photo directive', function () {
             photoChangeSpy,
             $scope = $rootScope.$new();
 
-        el = $compile('<bb-profile-photo bb-profile-photo-change="photoChange(file)"></bb-profile-photo>')($scope);
+        el = $compile('<bb-avatar bb-avatar-change="photoChange(file)"></bb-avatar>')($scope);
 
         $scope.photoChange = function () {
 
@@ -152,16 +152,16 @@ describe('Profile photo directive', function () {
 
         $scope.$digest();
 
-        el.isolateScope().bbProfilePhoto.photoDrop([droppedFile]);
+        el.isolateScope().bbAvatar.photoDrop([droppedFile]);
 
         expect(photoChangeSpy).toHaveBeenCalledWith(droppedFile);
     });
 
     function createFileEl($scope) {
-        return $compile('<bb-profile-photo bb-profile-photo-src="srcFile"></bb-profile-photo>')($scope);
+        return $compile('<bb-avatar bb-avatar-src="srcFile"></bb-avatar>')($scope);
     }
 
-    it('should show the profile photo when the specified source is a File object', function () {
+    it('should show the avatar when the specified source is a File object', function () {
         var el,
             $scope = $rootScope.$new();
 

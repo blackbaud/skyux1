@@ -3,5 +3,5 @@
     'use strict';
 
     angular.module('screenshots', ['sky'])
-        .controller('ProfilePhotoTestController', angular.noop);
+        .controller('AvatarTestController', angular.noop);
 }());

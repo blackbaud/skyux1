@@ -35,9 +35,9 @@
             }
         ];
 
-        vm.profilePhotoChange = function (file) {
+        vm.avatarChange = function (file) {
             if (file) {
-                vm.profilePhotoSrc = file;
+                vm.avatarSrc = file;
             }
         };
     }

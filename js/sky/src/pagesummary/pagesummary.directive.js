@@ -17,7 +17,7 @@ You use the `bb-page-summary-title` and `bb-page-summary-subtitle` directives to
 ### Image
 You can display an image in the summary to help users identify a record or complete a core task. We recommend that you do not include images just for decorative purposes because they are likely to distract users and interfere with task completion.
 
-You use the `bb-page-summary-image` directive to display the image. As the example below demonstrates, you can use this directive in conjunction with [the `bb-profile-photo` directive](../profilephoto) to allow users to manage and upload images.
+You use the `bb-page-summary-image` directive to display the image. As the example below demonstrates, you can use this directive in conjunction with [the `bb-avatar` directive](../avatar) to allow users to manage and upload images.
 
 ### Status
 You can display important status information about a page's content with labels in the status section of the pagesummary.
