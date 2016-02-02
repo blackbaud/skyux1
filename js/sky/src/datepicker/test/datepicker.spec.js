@@ -299,6 +299,58 @@ describe('Datepicker directive', function () {
         expect($scope.testform.$valid).toBe(true);
     });
 
+    it('handles invalid and then empty date', function () {
+        var el,
+            inputEl,
+            dateHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+        el = setupDatepicker(dateHtml, '');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, 'a');
+
+        expect($scope.testdate1).toBe('a');
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+        expect($scope.testform.$valid).toBe(false);
+
+        setInput(inputEl, null);
+        expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
+        expect($scope.testform.$valid).toBe(true);
+    });
+
+    it('handles invalid and then max date', function () {
+        var el,
+            inputEl,
+            dateHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-datepicker-name="testDate1" max-date="maxDate" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+
+        $scope.maxDate = new Date('5/18/2015');
+        el = setupDatepicker(dateHtml, '');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, 'a');
+
+        expect($scope.testdate1).toBe('a');
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+        expect($scope.testform.$valid).toBe(false);
+
+        setInput(inputEl, '5/19/2015');
+        expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
+        expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(true);
+    });
+
     it('handles MMddyyy translations', function () {
         var el,
             inputEl;
