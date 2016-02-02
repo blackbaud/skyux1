@@ -7,9 +7,10 @@
 
 ### Alert Settings ###
     - `bb-alert` &mdash; Creates a SKY UX-themed Bootstrap alert.
-        - `bb-alert-type` &mdash; Specifies the type of alert to display. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `warning`)*
+        - `bb-alert-type` &mdash; Specifies a style for the alert. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `warning`)*
         - `bb-alert-closeable` &mdash; Specifies a Boolean value to indicate whether users can dismiss the alert.
-        - `bb-alert-closed` &mdash; 
+        - `bb-alert-closed` &mdash; Specifies a function to be called when the user closes the alert.
+
 */
 
 (function () {
