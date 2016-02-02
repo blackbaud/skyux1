@@ -22,16 +22,18 @@
 
             // watch UI checked change
             scope.$watch('checked', function (newValue, oldValue) {
-                var current;
+                var current,
+                    isSingleSelect;
 
                 if (newValue === oldValue) {
                     return;
                 }
 
+                isSingleSelect = $parse(attrs.checklistSelectStyle)(scope.$parent) === 'single';
                 current = getter(scope.$parent);
 
                 if (newValue === true) {
-                    setter(scope.$parent, bbChecklistUtility.add(current, value));
+                    setter(scope.$parent, bbChecklistUtility.add(current, value, isSingleSelect));
                 } else {
                     setter(scope.$parent, bbChecklistUtility.remove(current, value));
                 }

@@ -23,6 +23,27 @@
       <li ng-repeat="item in checklistCtrl.selectedListItems">{{item.title}}</li>
     </ul>
   </div>
+  <h3>Single select example</h3>
+  <bb-checklist
+                bb-checklist-items="checklistCtrl.listItemsSingle"
+                bb-checklist-selected-items="checklistCtrl.selectedSingleItem"
+                bb-checklist-include-search="checklistCtrl.includeSearch"
+                bb-checklist-search-placeholder="Search for columns"
+                bb-checklist-no-items-message="No columns found"
+                bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+                bb-checklist-mode="list"
+                bb-checklist-select-style="single"
+                bb-checklist-filter-local>
+  </bb-checklist>
+  <p></p>
+  <hr>
+  <p></p>
+  <div>
+    <label>Selected item:</label>
+    <ul>
+      <li ng-repeat="item in checklistCtrl.selectedSingleItem">{{item.title}}</li>
+    </ul>
+  </div>
   <h3>Grid example</h3>
   <bb-checklist
                 bb-checklist-items="checklistCtrl.items"

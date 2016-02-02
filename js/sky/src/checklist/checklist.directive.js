@@ -49,7 +49,8 @@
                 bbChecklistNoItemsMessage: '@',
                 bbChecklistAutomationField: '=',
                 bbChecklistCategories: '=',
-                bbChecklistMode: '@'
+                bbChecklistMode: '@',
+                bbChecklistSelectStyle: '@'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',

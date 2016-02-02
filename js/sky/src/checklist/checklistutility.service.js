@@ -2,11 +2,11 @@
 
 (function () {
     'use strict';
-    
+
     angular.module('sky.checklist.utility', [])
         .factory('bbChecklistUtility', function () {
             return {
-                
+
                 contains: function (arr, item) {
                     var i;
 
@@ -21,10 +21,10 @@
                 },
 
                 // add
-                add: function (arr, item) {
+                add: function (arr, item, isSingleSelect) {
                     var i;
 
-                    arr = angular.isArray(arr) ? arr : [];
+                    arr = !isSingleSelect && angular.isArray(arr) ? arr : [];
                     for (i = 0; i < arr.length; i += 1) {
                         if (angular.equals(arr[i], item)) {
                             return arr;

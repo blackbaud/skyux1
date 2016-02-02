@@ -72,47 +72,64 @@
             }
         }
 
+        function itemIsSelected(item) {
+            return bbChecklistUtility.contains(vm.bbChecklistSelectedItems, item);
+        }
+
+        function eachFilteredItem(callback) {
+            vm.filteredItems.forEach(callback);
+        }
+
+        function selectItem(item) {
+            bbChecklistUtility.add(vm.bbChecklistSelectedItems, item);
+        }
+
+        function unselectItem(item) {
+            bbChecklistUtility.remove(vm.bbChecklistSelectedItems, item);
+        }
+
         vm.bbChecklistSelectedItems = vm.bbChecklistSelectedItems || [];
+        vm.itemIsSelected = itemIsSelected;
 
         vm.selectAll = function () {
-            var i,
-                item,
-                items = vm.filteredItems,
-                selected = vm.bbChecklistSelectedItems;
-
-            for (i = 0; i < items.length; i += 1) {
-                item = items[i];
-                if (!bbChecklistUtility.contains(selected, item)) {
-                    bbChecklistUtility.add(selected, item);
-                }
-            }
+            eachFilteredItem(selectItem);
         };
 
         vm.clear = function () {
-            var i,
-                item,
-                items = vm.filteredItems,
-                selected = vm.bbChecklistSelectedItems;
-
-            for (i = 0; i < items.length; i += 1) {
-                item = items[i];
-                bbChecklistUtility.remove(selected, item);
-            }
+            eachFilteredItem(unselectItem);
         };
 
         vm.rowClicked = function (item) {
-            var selected = vm.bbChecklistSelectedItems;
-
-            if (!bbChecklistUtility.contains(selected, item)) {
-                bbChecklistUtility.add(selected, item);
+            if (!itemIsSelected(item)) {
+                selectItem(item);
             } else {
-                bbChecklistUtility.remove(selected, item);
+                unselectItem(item);
             }
         };
 
         vm.filterByCategory = function (selectedCategory) {
             vm.selectedCategory = selectedCategory;
             invokeFilter();
+        };
+
+        vm.isSingleSelect = function () {
+            return vm.bbChecklistSelectStyle === 'single';
+        };
+
+        vm.getChecklistCls = function () {
+            return {
+                'bb-checklist-single': vm.isSingleSelect()
+            };
+        };
+
+        vm.getRowCls = function (item) {
+            return {
+                'bb-checklist-row-selected': itemIsSelected(item)
+            };
+        };
+
+        vm.setColumns = function (columns) {
+            vm.columns = columns;
         };
 
         $scope.$watch(function () {
@@ -129,10 +146,6 @@
                 invokeFilter();
             }
         });
-
-        vm.setColumns = function (columns) {
-            vm.columns = columns;
-        };
     }
 
     BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];

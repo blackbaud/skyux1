@@ -119,3 +119,13 @@
 .bb-checklist-list-title {
     font-weight: 700;
 }
+
+.bb-checklist-single {
+    .bb-checklist-row-selected {
+        background-color:#eeeffb; //TODO: Figure out if this needs to go into a variable
+    }
+
+    .bb-checklist-list-col-checkbox {
+        display: none;
+    }
+}
