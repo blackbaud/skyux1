@@ -3533,20 +3533,24 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setColumnSize(columnName, columnSize, totalWidth) {
+                                var gridHeaders,
+                                    colSizePx = columnSize + 'px',
+                                    bodyScrollLeft,
+                                    tableGrid = tableEl[0].grid;
 
+                                gridHeaders = tableGrid.headers;
+                                bodyScrollLeft = tableGrid.bDiv.scrollLeft;
                                 /* jqGrid does not provide a function to change a single column column size.
                                    This code snippet mirrors how jqGrid changes column size in their own dragEnd
                                    function.
                                 */
                                 tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
-                                tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
-                                tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
-                                tableEl[0].grid.cols[extendedColumnIndex].style.width = columnSize + 'px';
+                                gridHeaders[extendedColumnIndex].width = columnSize;
+                                gridHeaders[extendedColumnIndex].el.style.width = colSizePx;
+                                tableGrid.cols[extendedColumnIndex].style.width = colSizePx;
                                 /* istanbul ignore next: sanity check */
                                 tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
-                                $('table:first', tableEl[0].bDiv).css("width", tableEl[0].p.tblwidth + 'px');
-                                $('table:first', tableEl[0].hDiv).css("width", tableEl[0].p.tblwidth + 'px');
-                                tableEl[0].grid.hDiv.scrollLeft = tableEl[0].grid.bDiv.scrollLeft;
+                                tableGrid.hDiv.scrollLeft = bodyScrollLeft;
                             }
 
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
