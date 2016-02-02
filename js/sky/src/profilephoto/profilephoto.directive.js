@@ -2,15 +2,16 @@
 
 /** @module Profile Photo
  @icon user
- @summary The profile photo displays an image with the option to allow the user to change the image.
- @description The profile photo displays an image for a record with the option to allow the user to change the image.  It is typically used as a profile photo much like on social media sites.
+ @summary The profile photo component displays an image. It includes an option to let users change the image.
+ @description The profile photo directive displays an image to identify a record. Typically, the directive displays profile photos like on social media sites.
 
- In addition to displaying the photo you specify, the profile photo can fill in for missing photos by displaying the initials of a name you specify.  It also optionally allows the user to click the photo or drag a new photo onto it to change the photo.
+ The directive also includes an option to let users change the image. To select a different image, users can click the image or drag another image on top of it. In addition, when images are missing, the profile photo directive can display the initials of a name that you provide. 
 
  ### Profile Photo Settings
-     - `bb-profile-photo-src` &mdash; A reference to a URL or `File` object representing the profile photo.
-     - `bb-profile-photo-name` &mdash; The name of the record represented by the profile photo.  When no image is specified for `bb-profile-photo-src` the initials will be extracted from the name by pulling the first letter of the first word in the name and the first letter of the last word in the name.  For best results you will want to specify a name that does not contain a prefix (e.g. "Dr.", "Mrs.") or suffix (e.g. "Jr.", "Esq.") so that the initials can be properly extracted.  If you already know the initials you may provide them separated by a space (e.g. "R H").
-     - `bb-profile-photo-change` &mdash; When you specify a function for this attribute the profile photo will allow the user to select a new photo in much the same way that the `bb-file-drop` directive functions.  When the user selects a new photo the specified function will be called with the `File` object representing the new image that was chosen.  This file can then be uploaded and the `bb-profile-photo-src` property updated to show the new photo either with the provided File or the URL where the image was uploaded.
+    - `bb-profile-photo` &mdash; Displays a profile image to identify a record.
+        - `bb-profile-photo-src` &mdash; Provides a reference to a URL or `File` object that represents the profile image.
+        - `bb-profile-photo-name` &mdash; Specifies the name of the record that the profile photo represents. If `bb-profile-photo-src` does not specify an image, the directive extracts initials from the first and last words of this name and displays them in place of the missing image. To ensure that the directive extracts the correct initials, specify a name with no prefix (e.g. "Dr.", "Mrs.") or suffix (e.g. "Jr.", "Esq."). You can also provide the initials with a space between them (e.g. "R H").
+        - `bb-profile-photo-change` &mdash; Specifies a function to allow users to select different images, much like [the `bb-file-drop` directive](../fileattachments). When a user changes an image, the directive calls this function with the `File` object that represents the new image. The directive then uploads the image and updates the `bb-profile-photo-src` property with the provided `File` object or the URL of the uploaded image.
 **/
 
 (function ($) {

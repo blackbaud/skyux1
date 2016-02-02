@@ -2,45 +2,47 @@
 
 /** @module Page Summary
 @icon newspaper-o
-@summary The page summary should contain critical information and actions that need to be accessed quickly and frequently.
- @description The page summary should contain critical information and actions that need to be accessed quickly and frequently. The summary components described here are all optional - the exact content will depend on the type of page and the scenario being designed for.
+@summary The page summary displays critical information and actions for users to access quickly and frequently.
+ @description The page summary directive displays critical information and actions for users to access quickly and frequently. The parent `bb-page-summary` directive can contain multiple directives, and each one is optional. You select the directives to include in the summary based on the type of page and the scenario you design for.
 
-Each sub-component of the page summary component is represented by its own directive, and these directives are simple wrappers that can be specified in any order.  The page summary component will then be responsible for arranging these components which allows for perfect placement, spacing, etc. every time, even when the CSS classes needed to arrange these components change behind the scenes.
+The directives available within the `bb-page-summary` directive are simple wrappers that you can specify in any order. The page summary component arranges the directives to allow for perfect placement, spacing, etc. It maintains this even when the CSS classes that arrange the directives change behind the scenes.
 
-##1. Record title and subtitle
-The data used in the title should be chosen so that it is understandable to the user and uniquely identifies the record. There may be multiple pieces of data that could be used or combined - the correct data to use will depend on your understanding of your users and the context in which they are visiting the page. If you have two pieces of data that can be used to identify a record, you can use both a title and a subtitle. A common case for this would be if a record has a natural language name as well as a system-generated or coded identifier.
+<p class="alert alert-info">Keep in mind that the page summary is prime real estate on a page. To use it effectively, we recommend that you avoid overloading it. When you limit the number of items, you magnify the impact of each one.</p>
 
-The record title component is represented by the `bb-page-summary-title` directive and the subtitle component is represented by the `bb-page-summary-subtitle` directive.
+### Title and Subtitle
+You can display a title and subtitle in the summary to uniquely identify the page content. You can pull data for the title from multiple sources, and you can combine multiple pieces of data in the title. The data to use depends on your users and the context in which they visit the page. You can display additional information in the subtitle. For example, you can display a record's natural language name in the title and its system-generated or coded identifier in the subtitle.
 
-##2. Image
-An image may be used if it will help the user quickly identify the record or complete a core task. Images used only for decorative purposes are likely to be distracting and interfere with task completion.
+You use the `bb-page-summary-title` and `bb-page-summary-subtitle` directives to display the title and subtitle.
 
-The image component is represented by the `bb-page-summary-image` directive.  As in the example below, you can use this in conjunction with the [`bb-profile-photo`](../profilephoto) directive to allow the user to manage the record's photo by uploading new images.
+### Image
+You can display an image in the summary to help users identify a record or complete a core task. We recommend that you do not include images just for decorative purposes because they are likely to distract users and interfere with task completion.
 
-##3. Record status
-Important information about the status of a record can be shown in a label.
+You use the `bb-page-summary-image` directive to display the image. As the example below demonstrates, you can use this directive in conjunction with [the `bb-profile-photo` directive](../profilephoto) to allow users to manage and upload images.
 
-The record status component is represented by the `bb-page-summary-status` directive.  The contents are typically represented by a series of `span` elements with the appropriate [Bootstrap label CSS classes](http://getbootstrap.com/components/#labels).
+### Status
+You can display important status information about a page's content with labels in the status section of the pagesummary.
 
-##4. Key information
-Often a core task can be addressed by highlighting a few pieces of key information. While this content can be arbitrary a common example would be using a key information block to highlight some important summary numbers.
+You use the `bb-page-summary-status` directive to display the status section. You typically display the labels with  a series of `span` elements and the [Bootstrap CSS classes for labels](http://getbootstrap.com/components/#labels).
 
-The key information component is represented by the `bb-page-summary-keyinfo` directive.
+### Key Information
+You can highlight important information about a page's content in the key information section of the page summary. This section can display any type of content, but it generally highlights a key information block such as important summary numbers.
 
-##5. Arbitrary content
-The content you put in the record summary should support the key tasks of the user visiting the page and account for the context in which the information will be used. The less information the summary contains, the more impact each element will have. There is a delicate balance in making effective use of the prime real estate without overloading it.
+You use the `bb-page-summary-keyinfo` directive to display the key information section.
 
-The arbitrary content section is represented by the `bb-page-summary-content` directive.
+### Arbitrary Content
+You can display any kind of content in the arbitrary content section of the page summary. We recommend that you display content to support the key tasks of users who visit the page. We also recommend that you keep in mind the context of how users will use the content and limit the content to avoid overloading the summary.
 
-##6. Alert
-Messages about the record that need to be seen right away can be shown in an alert. These could be system-generated messages triggered by certain criteria being met, or manually-entered notes about the record.
+You use the `bb-page-summary-content` directive to display the arbitrary content section.
 
-The alert section is represented by the `bb-page-summary-alert` directive.  It can be used in conjunction with the [`bb-alert`](../alert) directive.
+### Alert
+You can display messages that require immediate attention as alerts within the page summary. For example, you can display system-generated messages when certain criteria are met, or you can display notes about a record that you enter manually.
 
-##7. Action bar
-Actions related to the record overall, rather than to the child data shown in tiles, should be in the action bar. Ideally there would be just a handful of key actions for the record - if you find yourself needing to take many actions from the record page, it is worth re-examining the tasks you are supporting to see if an alternative workflow would be more effective.
+You use the `bb-page-summary-alert` directive to display the alerts. You can use this directive in conjunction with the [the `bb-alert` directive](../alert).
 
-The action bar section is represented by the `bb-page-summary-action-bar` directive.  It can be used in conjunction with the [`bb-action-bar`](../actionbar) directive to display a responsive action bar.
+### Action Bar
+You can display actions within an action bar in the page summary. We recommend that you include only actions that relate to the page as a whole and that you exclude actions that are specific to tiles within the page. We also recommend that you limit the number of actions in the action bar. If your summary requires many actions, we recommend that you re-examine the tasks and consider an alternative workflow.
+
+You can use the `bb-page-summary-action-bar` directive to display the action bar. You can use this directive in conjunction with [the `bb-action-bar` directive](../actionbar).
 
  */
 
