@@ -100,87 +100,86 @@ The date-range picker service provides functionality that works closely with the
             dateRangeTypes.THIS_FISCAL_YEAR
         ];
 
-        dateRangeMap = {
-            '0': {
-                caption: bbResources.date_range_picker_at_any_time,
-                description: bbResources.date_range_picker_filter_description_at_any_time
-            },
-            '1': {
-                caption: bbResources.date_range_picker_next_week,
-                description: bbResources.date_range_picker_filter_description_next_week
-            },
-            '2': {
-                caption: bbResources.date_range_picker_this_month,
-                description: bbResources.date_range_picker_filter_description_this_month
-            },
-            '3': {
-                caption: bbResources.date_range_picker_next_month,
-                description: bbResources.date_range_picker_filter_description_next_month
-            },
-            '4': {
-                caption: bbResources.date_range_picker_this_quarter,
-                description: bbResources.date_range_picker_filter_description_this_quarter
-            },
-            '5': {
-                caption: bbResources.date_range_picker_next_quarter,
-                description: bbResources.date_range_picker_filter_description_next_quarter
-            },
-            '6': {
-                caption: bbResources.date_range_picker_this_fiscal_year,
-                description: bbResources.date_range_picker_filter_description_this_fiscal_year
-            },
-            '7': {
-                caption: bbResources.date_range_picker_next_fiscal_year,
-                description: bbResources.date_range_picker_filter_description_next_fiscal_year
-            },
-            '8': {
-                caption: bbResources.date_range_picker_this_calendar_year,
-                description: bbResources.date_range_picker_filter_description_this_calendar_year
-            },
-            '9': {
-                caption: bbResources.date_range_picker_next_calendar_year,
-                description: bbResources.date_range_picker_filter_description_next_calendar_year
-            },
-            '10': {
-                caption: bbResources.date_range_picker_last_week,
-                description: bbResources.date_range_picker_filter_description_last_week
-            },
-            '11': {
-                caption: bbResources.date_range_picker_last_month,
-                description: bbResources.date_range_picker_filter_description_last_month
-            },
-            '12': {
-                caption: bbResources.date_range_picker_last_quarter,
-                description: bbResources.date_range_picker_filter_description_last_quarter
-            },
-            '13': {
-                caption: bbResources.date_range_picker_last_fiscal_year,
-                description: bbResources.date_range_picker_filter_description_last_fiscal_year
-            },
-            '14': {
-                caption: bbResources.date_range_picker_last_calendar_year,
-                description: bbResources.date_range_picker_filter_description_last_calendar_year
-            },
-            '15': {
-                caption: bbResources.date_range_picker_today,
-                description: bbResources.date_range_picker_filter_description_today
-            },
-            '16': {
-                caption: bbResources.date_range_picker_yesterday,
-                description: bbResources.date_range_picker_filter_description_yesterday
-            },
-            '17': {
-                caption: bbResources.date_range_picker_tomorrow,
-                description: bbResources.date_range_picker_filter_description_tomorrow
-            },
-            '18': {
-                caption: bbResources.date_range_picker_this_week,
-                description: bbResources.date_range_picker_filter_description_this_week
-            },
-            '19': {
-                caption: bbResources.date_range_picker_specific_range,
-                description: bbResources.date_range_picker_filter_description_specific_range
-            }
+        dateRangeMap = {};
+        dateRangeMap[dateRangeTypes.AT_ANY_TIME] = {
+            caption: bbResources.date_range_picker_at_any_time,
+            description: bbResources.date_range_picker_filter_description_at_any_time
+        };
+        dateRangeMap[dateRangeTypes.YESTERDAY] = {
+            caption: bbResources.date_range_picker_yesterday,
+            description: bbResources.date_range_picker_filter_description_yesterday
+        };
+        dateRangeMap[dateRangeTypes.TODAY] = {
+            caption: bbResources.date_range_picker_today,
+            description: bbResources.date_range_picker_filter_description_today
+        };
+        dateRangeMap[dateRangeTypes.TOMORROW] = {
+            caption: bbResources.date_range_picker_tomorrow,
+            description: bbResources.date_range_picker_filter_description_tomorrow
+        };
+        dateRangeMap[dateRangeTypes.LAST_WEEK] = {
+            caption: bbResources.date_range_picker_last_week,
+            description: bbResources.date_range_picker_filter_description_last_week
+        };
+        dateRangeMap[dateRangeTypes.THIS_WEEK] = {
+            caption: bbResources.date_range_picker_this_week,
+            description: bbResources.date_range_picker_filter_description_this_week
+        };
+        dateRangeMap[dateRangeTypes.NEXT_WEEK] = {
+            caption: bbResources.date_range_picker_next_week,
+            description: bbResources.date_range_picker_filter_description_next_week
+        };
+        dateRangeMap[dateRangeTypes.LAST_QUARTER] = {
+            caption: bbResources.date_range_picker_last_quarter,
+            description: bbResources.date_range_picker_filter_description_last_quarter
+        };
+        dateRangeMap[dateRangeTypes.THIS_QUARTER] = {
+            caption: bbResources.date_range_picker_this_quarter,
+            description: bbResources.date_range_picker_filter_description_this_quarter
+        };
+        dateRangeMap[dateRangeTypes.NEXT_QUARTER] = {
+            caption: bbResources.date_range_picker_next_quarter,
+            description: bbResources.date_range_picker_filter_description_next_quarter
+        };
+        dateRangeMap[dateRangeTypes.LAST_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_last_calendar_year,
+            description: bbResources.date_range_picker_filter_description_last_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_this_calendar_year,
+            description: bbResources.date_range_picker_filter_description_this_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_next_calendar_year,
+            description: bbResources.date_range_picker_filter_description_next_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.LAST_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_last_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_last_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_this_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_this_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_next_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_next_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_MONTH] = {
+            caption: bbResources.date_range_picker_this_month,
+            description: bbResources.date_range_picker_filter_description_this_month
+        };
+        dateRangeMap[dateRangeTypes.NEXT_MONTH] = {
+            caption: bbResources.date_range_picker_next_month,
+            description: bbResources.date_range_picker_filter_description_next_month
+        };
+        dateRangeMap[dateRangeTypes.LAST_MONTH] = {
+            caption: bbResources.date_range_picker_last_month,
+            description: bbResources.date_range_picker_filter_description_last_month
+        };
+        dateRangeMap[dateRangeTypes.SPECIFIC_RANGE] = {
+            caption: bbResources.date_range_picker_specific_range,
+            description: bbResources.date_range_picker_filter_description_specific_range
         };
 
         function getDateRangeTypeCaption(dateRangePickerValue) {
