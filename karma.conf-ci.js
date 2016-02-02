@@ -25,7 +25,6 @@ module.exports = function (config) {
             bs_windows_chrome_latest: {
                 base: base,
                 browser: 'chrome',
-                browser_version: '47.0.2526',
                 os: 'Windows',
                 os_version: '8.1'
             },
