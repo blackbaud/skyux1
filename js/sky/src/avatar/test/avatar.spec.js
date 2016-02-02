@@ -58,6 +58,16 @@ describe('Avatar directive', function () {
         expect(hiddenEl).not.toBeVisible();
     }
 
+    function validateImageUrl(el, url) {
+        var backgroundImage = getPhotoEl(el).css('background-image'),
+            matches;
+
+        // Some browsers return quotes around the URL and some don't; account for both.
+        matches = backgroundImage === 'url("' + url + '")' || backgroundImage === 'url(' + url + ')';
+
+        expect(matches).toBe(true);
+    }
+
     function createElNoImageUrl($scope) {
         return $compile('<bb-avatar bb-avatar-name="\'Bobby Earl\'"></bb-avatar>')($scope);
     }
@@ -95,7 +105,7 @@ describe('Avatar directive', function () {
 
         validateImageVisible(el, true);
 
-        expect(getPhotoEl(el).css('background-image')).toBe('url("' + imgUrl + '")');
+        validateImageUrl(el, imgUrl);
 
         el.remove();
     });
@@ -171,7 +181,7 @@ describe('Avatar directive', function () {
 
         $scope.$digest();
 
-        expect(getPhotoEl(el).css('background-image')).toBe('url("' + imgUrl + '")');
+        validateImageUrl(el, imgUrl);
     });
 
     it('should clean up the previous object URL created when the specified source was a File object', function () {
