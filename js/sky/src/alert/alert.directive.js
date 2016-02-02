@@ -3,10 +3,13 @@
 /** @module Alert
 @icon bell
 @summary The alert component displays a SKY UX-themed Bootstrap alert.
-@description The alert component displays a SKY UX-themed Bootstrap alert. It includes the option to allow the user to dismiss the alert with a close button.
-### Action Bar Settings ###
-    - `bb-alert-type` (default `warning`) &mdash; The style of alert to show.  Valid options are `success`, `info`, `warning`, and `danger`.
-    - `bb-alert-closeable` &mdash; A boolean indicating whether the alert can be dismissed by the user.
+@description The alert directive displays a SKY UX-themed Bootstrap alert. It includes an option to let users dismiss the alert with a close button. For information about the Bootstrap alert, see the [Bootstrap documentation](http://getbootstrap.com/components/#alerts).
+
+### Alert Settings ###
+    - `bb-alert` &mdash; Creates a SKY UX-themed Bootstrap alert.
+        - `bb-alert-type` &mdash; Specifies the type of alert to display. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `warning`)*
+        - `bb-alert-closeable` &mdash; Specifies a Boolean value to indicate whether users can dismiss the alert.
+        - `bb-alert-closed` &mdash; 
 */
 
 (function () {
