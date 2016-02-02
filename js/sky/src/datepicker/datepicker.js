@@ -208,6 +208,21 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 
                     });
 
+                    function runValidators() {
+                        var inputNgModel = $scope.getInputNgModel();
+                        if (inputNgModel) {
+                            inputNgModel.$validate();
+                        }
+                    }
+
+                    $scope.$watch('maxDate', function () {
+                        runValidators();
+                    });
+
+                    $scope.$watch('minDate', function () {
+                        runValidators();
+                    });
+
                     function hasRequiredError() {
                         var inputNgModel = $scope.getInputNgModel();
 

@@ -1067,13 +1067,13 @@ describe('Datepicker directive', function () {
             var el,
                 minMaxDatepickerHtml = '<div>' +
                 '<form name="testform" novalidate>' +
-                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" min-date="minDate" max-date="maxDate"></bb-datepicker>' +
+                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" min-date="myMinDate" max-date="myMaxDate"></bb-datepicker>' +
                 '</form>' +
                 '</div>';
 
-            $scope.minDate = new Date('5/15/2015');
+            $scope.myMinDate = new Date('5/15/2015');
 
-            $scope.maxDate = new Date('5/18/2015');
+            $scope.myMaxDate = new Date('5/18/2015');
 
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
 
@@ -1095,6 +1095,8 @@ describe('Datepicker directive', function () {
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
 
             runMinAndMaxDateFullTest(el, '5/3/2015', '5/19/2015', '5/16/2015', 3, 19, 16);
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
         });
 
         it('only does min and max date validation if they are Javascript Date objects', function () {
@@ -1126,6 +1128,9 @@ describe('Datepicker directive', function () {
             expect(angular.isDefined($scope.testform.testDate1.$error.minDate)).toBe(false);
             expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(false);
 
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
+
         });
 
         it('can have the min and max date changed after initialization', function () {
@@ -1154,6 +1159,8 @@ describe('Datepicker directive', function () {
             $scope.$digest();
 
             runMinAndMaxDateFullTest(el, '5/19/2015', '5/26/2015', '5/23/2015', 19, 26, 23);
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
         });
 
         it('does max date validation without a min date', function () {

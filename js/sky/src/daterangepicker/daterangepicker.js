@@ -238,10 +238,10 @@ The date-range picker service provides functionality that works closely with the
                 bbDateRangePickerValue: "=",
                 bbDateRangePickerAutomationId: "=",
                 bbDateRangePickerOptions: '=',
-                fromDate: '=bbDateRangePickerFromDate',
-                toDate: '=bbDateRangePickerToDate',
-                pickerLabel: '=bbDateRangePickerLabel',
-                isValid: '=bbDateRangePickerValid'
+                fromDate: '=?bbDateRangePickerFromDate',
+                toDate: '=?bbDateRangePickerToDate',
+                pickerLabel: '=?bbDateRangePickerLabel',
+                isValid: '=?bbDateRangePickerValid'
             },
             controller: ['$scope', function ($scope) {
                 var vm = this;
@@ -254,6 +254,26 @@ The date-range picker service provides functionality that works closely with the
                         return vm.dateRangeForm.$valid;
                     }, function (newVal) {
                         vm.isValid = newVal;
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.fromDate;
+                    }, function (newVal) {
+                        /* This prevents minDate from having a reference
+                           to fromDate and changing it */
+                        vm.minDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.toDate;
+                    }, function (newVal) {
+                        /* This prevents maxDate from having a reference
+                           to toDate and changing it */
+                        vm.maxDate = angular.copy(newVal);
                     }
                 );
 
@@ -286,7 +306,7 @@ The date-range picker service provides functionality that works closely with the
 
     bbDateRangePickerDirective.$inject = ['bbDateRangePicker', 'bbResources'];
 
-    angular.module('sky.daterangepicker', ['sky.resources'])
+    angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])
         .factory('bbDateRangePicker', bbDateRangePickerFactory)
         .directive('bbDateRangePicker', bbDateRangePickerDirective);
 }());
