@@ -1,5 +1,29 @@
 /*global angular */
 
+(function () {
+    'use strict';
+
+    angular.module('sky.alert', ['sky.alert.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.avatar', ['sky.avatar.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.pagesummary', []);
+}());
+
+/*global angular */
+
 /** @module Action Bar
 @icon bolt
 @summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
@@ -112,6 +136,55 @@ To apply action bar stylying to more complicated scenarios (hiding and showing b
         .directive('bbActionBar', bbActionBar)
         .directive('bbActionBarItemGroup', bbActionBarItemGroup)
         .directive('bbActionBarItem', bbActionBarItem);
+}());
+
+/*global angular */
+
+/** @module Alert
+@icon bell
+@summary The alert component displays a SKY UX-themed Bootstrap alert.
+@description The alert directive displays a SKY UX-themed Bootstrap alert. It includes an option to let users dismiss the alert with a close button. For information about the Bootstrap alert, see the [Bootstrap documentation](http://getbootstrap.com/components/#alerts).
+
+### Alert Settings ###
+    - `bb-alert` &mdash; Creates a SKY UX-themed Bootstrap alert.
+        - `bb-alert-type` &mdash; Specifies a style for the alert. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `warning`)*
+        - `bb-alert-closeable` &mdash; Specifies a Boolean value to indicate whether users can dismiss the alert.
+        - `bb-alert-closed` &mdash; Specifies a function to be called when the user closes the alert.
+
+*/
+
+(function () {
+    'use strict';
+
+    function bbAlert() {
+        function Controller() {
+
+        }
+
+        function link(scope, el, attrs, vm) {
+            vm.close = function () {
+                vm.bbAlertClosed = true;
+            };
+        }
+
+        return {
+            restrict: 'E',
+            controller: Controller,
+            controllerAs: 'bbAlert',
+            bindToController: {
+                bbAlertType: '@',
+                bbAlertCloseable: '@',
+                bbAlertClosed: '='
+            },
+            link: link,
+            scope: {},
+            templateUrl: 'sky/templates/alert/alert.html',
+            transclude: true
+        };
+    }
+
+    angular.module('sky.alert.directive', ['sky.resources'])
+        .directive('bbAlert', bbAlert);
 }());
 
 /*jshint browser: true */
@@ -385,6 +458,190 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
                 return formatted;
             };
         }]);
+}(jQuery));
+
+/*global angular, jQuery */
+
+/** @module Avatar
+ @icon user
+ @summary The avatar component displays an image with an option to let users change the image.
+ @description The avatar directive displays an image to identify a record.
+
+ The directive also includes an option to let users change the image. To select a different image, users can click the image or drag another image on top of it. In addition, when images are missing, the avatar directive can display the initials of a name that you provide.
+
+ ### Avatar Settings
+    - `bb-avatar` &mdash; Displays an image to identify a record.
+        - `bb-avatar-src` &mdash; Provides a reference to a URL or `File` object that represents the avatar.
+        - `bb-avatar-name` &mdash; Specifies the name of the record that the avatar represents. If `bb-avatar-src` does not specify an image, the directive extracts initials from the first and last words of this name and displays them in place of the missing image. To ensure that the directive extracts the correct initials, specify a name with no prefix (e.g. "Dr.", "Mrs.") or suffix (e.g. "Jr.", "Esq."). You can also provide the initials with a space between them (e.g. "R H").
+        - `bb-avatar-change` &mdash; Specifying a function for this attribute will allow the user to select a new photo, much like [the `bb-file-drop` directive](../fileattachments). When a user changes an image, the directive calls this function with the `File` object that represents the new image. This file can then be uploaded and the `bb-avatar-src` property updated to show the new image either with the provided `File` or the URL of the uploaded image.
+**/
+
+(function ($) {
+    'use strict';
+
+    function bbAvatar($window, bbPalette) {
+        function link(scope, el, attrs, vm) {
+            var blobUrl,
+                templateLoaded;
+
+            function setImageUrl(url) {
+                el.find('.bb-avatar-image').css('background-image', 'url(' + url + ')');
+            }
+
+            function getInitial(name) {
+                return name.charAt(0).toUpperCase();
+            }
+
+            function getInitials(name) {
+                var initials,
+                    nameSplit;
+
+                if (name) {
+                    nameSplit = name.split(' ');
+                    initials = getInitial(nameSplit[0]);
+
+                    /* istanbul ignore else this is tested through a visual regression test */
+                    if (nameSplit.length > 1) {
+                        initials += getInitial(nameSplit[nameSplit.length - 1]);
+                    }
+                }
+
+                return initials;
+            }
+
+            function getPlaceholderColor(name) {
+                var colorIndex,
+                    colors = bbPalette.getColorSequence(6),
+                    seed;
+
+                if (name) {
+                    // Generate a unique-ish color based on the record name.  This is deterministic
+                    // so that a given name will always generate the same color.
+                    seed = name.charCodeAt(0) + name.charCodeAt(name.length - 1) + name.length;
+                    colorIndex = Math.abs(seed % colors.length);
+                } else {
+                    colorIndex = 0;
+                }
+
+                return colors[colorIndex];
+            }
+
+            function drawPlaceolderImage() {
+                var canvas,
+                    context,
+                    devicePixelRatio,
+                    fontSize = "46px",
+                    initials,
+                    name,
+                    size = 100;
+
+                name = vm.bbAvatarName;
+                initials = getInitials(name);
+
+                canvas = el.find('.bb-avatar-initials')[0];
+                context = canvas.getContext('2d');
+
+                devicePixelRatio = $window.devicePixelRatio;
+
+                /* istanbul ignore else */
+                if (devicePixelRatio) {
+                    $(canvas)
+                        .attr('width', size * devicePixelRatio)
+                        .attr('height', size * devicePixelRatio);
+
+                    context.scale(devicePixelRatio, devicePixelRatio);
+                }
+
+                context.fillStyle = getPlaceholderColor(name);
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                if (initials) {
+                    context.font = fontSize + ' Arial';
+                    context.textAlign = 'center';
+                    context.fillStyle = '#FFF';
+                    context.fillText(initials, size * 0.5, size * (2 / 3));
+                }
+            }
+
+            function revokeBlobUrl() {
+                if (blobUrl) {
+                    $window.URL.revokeObjectURL(blobUrl);
+                    blobUrl = null;
+                }
+            }
+
+            function loadPhoto() {
+                var src,
+                    url;
+
+                revokeBlobUrl();
+
+                if (templateLoaded) {
+                    src = vm.bbAvatarSrc;
+
+                    if (src) {
+                        if (src instanceof $window.File) {
+                            url = $window.URL.createObjectURL(src);
+
+                            // Keep the last blob URL around so we can revoke it later.
+                            // https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL
+                            blobUrl = url;
+                        } else {
+                            url = src;
+                        }
+
+                        setImageUrl(url);
+                    } else {
+                        drawPlaceolderImage();
+                    }
+                }
+            }
+
+            vm.onTemplateLoad = function () {
+                templateLoaded = true;
+            };
+
+            vm.photoDrop = function (files) {
+                vm.bbAvatarChange({
+                    file: files[0]
+                });
+            };
+
+            if (attrs.bbAvatarChange) {
+                vm.canChange = true;
+            }
+
+            scope.$watch(function () {
+                return templateLoaded;
+            }, loadPhoto);
+
+            scope.$watch(function () {
+                return vm.bbAvatarSrc;
+            }, loadPhoto);
+
+            scope.$on('$destroy', function () {
+                revokeBlobUrl();
+            });
+        }
+
+        return {
+            scope: {},
+            bindToController: {
+                bbAvatarSrc: '=',
+                bbAvatarName: '=',
+                bbAvatarChange: '&'
+            },
+            controller: angular.noop,
+            controllerAs: 'bbAvatar',
+            link: link,
+            templateUrl: 'sky/templates/avatar/avatar.directive.html'
+        };
+    }
+
+    bbAvatar.$inject = ['$window', 'bbPalette'];
+
+    angular.module('sky.avatar.directive', ['sky.palette'])
+        .directive('bbAvatar', bbAvatar);
 }(jQuery));
 
 /*jshint browser: true */
@@ -5683,6 +5940,218 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
 /*global angular */
 
+/** @module Page Summary
+@icon newspaper-o
+@summary The page summary displays critical information and actions for users to access quickly and frequently.
+ @description The page summary directive displays critical information and actions for users to access quickly and frequently. The parent `bb-page-summary` directive can contain multiple directives, and each one is optional. You select the directives to include in the summary based on the type of page and the scenario you design for.
+
+The directives available within the `bb-page-summary` directive are simple wrappers that you can specify in any order. The page summary component arranges the directives to allow for perfect placement, spacing, etc. It maintains this even when the CSS classes that arrange the directives change behind the scenes.
+
+<p class="alert alert-info">Keep in mind that the page summary is prime real estate on a page. To use it effectively, we recommend that you avoid overloading it. When you limit the number of items, you magnify the impact of each one.</p>
+
+### Title and Subtitle
+You can display a title and subtitle in the summary to uniquely identify the page content. You can pull data for the title from multiple sources, and you can combine multiple pieces of data in the title. The data to use depends on your users and the context in which they visit the page. You can display additional information in the subtitle. For example, you can display a record's natural language name in the title and its system-generated or coded identifier in the subtitle.
+
+You use the `bb-page-summary-title` and `bb-page-summary-subtitle` directives to display the title and subtitle.
+
+### Image
+You can display an image in the summary to help users identify a record or complete a core task. We recommend that you do not include images just for decorative purposes because they are likely to distract users and interfere with task completion.
+
+You use the `bb-page-summary-image` directive to display the image. As the example below demonstrates, you can use this directive in conjunction with [the `bb-avatar` directive](../avatar) to allow users to manage and upload images.
+
+### Status
+You can display important status information about a page's content with labels in the status section of the pagesummary.
+
+You use the `bb-page-summary-status` directive to display the status section. You typically display the labels with  a series of `span` elements and the [Bootstrap CSS classes for labels](http://getbootstrap.com/components/#labels).
+
+### Key Information
+You can highlight important information about a page's content in the key information section of the page summary. This section can display any type of content, but it generally highlights a key information block such as important summary numbers.
+
+You use the `bb-page-summary-keyinfo` directive to display the key information section.
+
+### Arbitrary Content
+You can display any kind of content in the arbitrary content section of the page summary. We recommend that you display content to support the key tasks of users who visit the page. We also recommend that you keep in mind the context of how users will use the content and limit the content to avoid overloading the summary.
+
+You use the `bb-page-summary-content` directive to display the arbitrary content section.
+
+### Alert
+You can display messages that require immediate attention as alerts within the page summary. For example, you can display system-generated messages when certain criteria are met, or you can display notes about a record that you enter manually.
+
+You use the `bb-page-summary-alert` directive to display the alerts. You can use this directive in conjunction with the [the `bb-alert` directive](../alert).
+
+### Action Bar
+You can display actions within an action bar in the page summary. We recommend that you include only actions that relate to the page as a whole and that you exclude actions that are specific to tiles within the page. We also recommend that you limit the number of actions in the action bar. If your summary requires many actions, we recommend that you re-examine the tasks and consider an alternative workflow.
+
+You can use the `bb-page-summary-action-bar` directive to display the action bar. You can use this directive in conjunction with [the `bb-action-bar` directive](../actionbar).
+
+ */
+
+(function () {
+    'use strict';
+
+    var components = [{
+        name: 'Alert',
+        cls: 'alert'
+    }, {
+        name: 'Content',
+        cls: 'content'
+    }, {
+        name: 'KeyInfo',
+        cls: 'key-info'
+    }, {
+        name: 'Image',
+        cls: 'image'
+    }, {
+        name: 'Status',
+        cls: 'status'
+    }, {
+        name: 'Title',
+        cls: 'title'
+    }, {
+        name: 'Subtitle',
+        cls: 'subtitle'
+    }, {
+        name: 'ActionBar',
+        cls: 'action-bar'
+    }],
+    pageSummaryModule = angular.module('sky.pagesummary');
+
+    function makePageSummaryComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbPageSummary = ctrls[1];
+
+                vm.el = el;
+
+                bbPageSummary['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbPageSummary' + name, '^bbPageSummary'],
+                controller: controllerName,
+                controllerAs: 'bbPageSummary' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBPageSummary' + name + 'Controller';
+
+        pageSummaryModule
+            .controller(controllerName, Controller)
+            .directive('bbPageSummary' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBPageSummaryController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
+            var name = component.name;
+
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
+
+                vm[propName] = ctrl;
+
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
+                };
+            };
+        }
+
+        components.forEach(addComponentSetter);
+
+        vm.getPageSummaryLeftCls = function () {
+            return {
+                'col-sm-9': !!vm.keyInfoCtrl
+            };
+        };
+    }
+
+    function bbPageSummary(bbMediaBreakpoints) {
+        function link(scope, el, attrs, vm) {
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-page-summary-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            function mediaBreakpointHandler(breakpoint) {
+                var keyInfoEl = el.find('.bb-page-summary-key-info'),
+                    toEl;
+
+                if (breakpoint.xs) {
+                    toEl = el.find('.bb-page-summary-key-info-xs');
+                } else {
+                    toEl = el.find('.bb-page-summary-key-info-sm');
+                }
+
+                if (!keyInfoEl.parent().is(toEl)) {
+                    toEl.append(keyInfoEl);
+                }
+            }
+
+            components.forEach(watchForComponent);
+
+            bbMediaBreakpoints.register(mediaBreakpointHandler);
+
+            scope.$on('$destroy', function () {
+                bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+            });
+        }
+
+        return {
+            restrict: 'E',
+            controller: 'BBPageSummaryController',
+            controllerAs: 'bbPageSummary',
+            bindToController: true,
+            link: link,
+            scope: {},
+            templateUrl: 'sky/templates/pagesummary/pagesummary.directive.html',
+            transclude: true
+        };
+    }
+
+    bbPageSummary.$inject = ['bbMediaBreakpoints'];
+
+    pageSummaryModule
+        .controller('BBPageSummaryController', BBPageSummaryController)
+        .directive('bbPageSummary', bbPageSummary);
+
+    components.forEach(makePageSummaryComponent);
+}());
+
+/*global angular */
+
 /** @module Pagination
 @icon files-o
 @summary The pagination component displays data across multiple pages and inserts a pagination control to page through the data.
@@ -9142,8 +9611,10 @@ The `bbWizardNavigator` also exposes the following methods:
 
     var modules = [
         'sky.actionbar',
+        'sky.alert',
         'sky.autofocus',
         'sky.autonumeric',
+        'sky.avatar',
         'sky.check',
         'sky.checklist',
         'sky.contextmenu',
@@ -9162,6 +9633,7 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.omnibar',
         'sky.palette',
         'sky.page',
+        'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
         'sky.resources',
@@ -9209,7 +9681,7 @@ The `bbWizardNavigator` also exposes the following methods:
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"text for ui-select search control when no records are found,","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"text for ui-select search control when no records are found,","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -9245,6 +9717,37 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>\n' +
         '    </div>\n' +
         '</span>\n' +
+        '');
+    $templateCache.put('sky/templates/alert/alert.html',
+        '<div class="alert" ng-class="[\'alert-\' + (bbAlert.bbAlertType || \'warning\'), bbAlert.bbAlertCloseable === \'true\' ? \'alert-dismissible\' : null]" ng-show="!bbAlert.bbAlertClosed" role="alert">\n' +
+        '    <button ng-show="bbAlert.bbAlertCloseable === \'true\'" type="button" class="close" ng-click="bbAlert.close({$event: $event})">\n' +
+        '        <span aria-hidden="true">&times;</span>\n' +
+        '        <span class="sr-only">{{\'alert_close\' | bbResources}}</span>\n' +
+        '    </button>\n' +
+        '    <div ng-transclude></div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/avatar/avatar.directive.html',
+        '<div class="bb-avatar" ng-switch="bbAvatar.canChange">\n' +
+        '  <div ng-switch-when="true">\n' +
+        '    <div\n' +
+        '       bb-file-drop\n' +
+        '       bb-file-drop-change="bbAvatar.photoDrop(files, rejectedFiles)"\n' +
+        '       bb-file-drop-accept="\'image/*\'"\n' +
+        '       >\n' +
+        '      <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '  <div ng-switch-default>\n' +
+        '    <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '  </div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/avatar/avatarinner.include.html',
+        '<div class="bb-avatar-wrapper">\n' +
+        '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
+        '  <canvas class="bb-avatar-initials" ng-show="!bbAvatar.bbAvatarSrc"></canvas>\n' +
+        '</div>\n' +
         '');
     $templateCache.put('sky/templates/check/styled.html',
         '<span></span>\n' +
@@ -9690,6 +10193,30 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </section>\n' +
         '    </div>\n' +
         '</section>\n' +
+        '');
+    $templateCache.put('sky/templates/pagesummary/pagesummary.directive.html',
+        '<div class="bb-page-header">\n' +
+        '  <div class="container-fluid">\n' +
+        '    <div class="bb-page-summary-alert"></div>\n' +
+        '    <div class="row">\n' +
+        '      <div class="bb-page-summary-left col-xs-12" ng-class="bbPageSummary.getPageSummaryLeftCls()">\n' +
+        '        <div class="bb-page-summary-image" ng-show="bbPageSummary.imageCtrl"></div>\n' +
+        '        <div>\n' +
+        '          <h1 class="bb-page-summary-title" ng-show="bbPageSummary.titleCtrl"></h1>\n' +
+        '          <h2 class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></h2>\n' +
+        '          <div class="bb-page-summary-status" ng-show="bbPageSummary.statusCtrl"></div>\n' +
+        '          <div class="bb-page-summary-key-info-xs"></div>\n' +
+        '          <div class="bb-page-summary-content"></div>\n' +
+        '        </div>\n' +
+        '      </div>\n' +
+        '      <div class="bb-page-summary-key-info-sm col-sm-3 hidden-xs" ng-class="bbPageSummary.getKeyInfoCls()">\n' +
+        '        <div class="bb-page-summary-key-info"></div>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</div>\n' +
+        '<div class="bb-page-summary-action-bar"></div>\n' +
         '');
     $templateCache.put('sky/templates/popover/popup.html',
         '<div class="popover {{placement}}"\n' +
