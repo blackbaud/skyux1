@@ -239,6 +239,8 @@ describe('Date range picker', function () {
             expect($scope.fromDate).toEqual(undefined);
             expect(datepickerInputEl.eq(0)).toHaveAttr('placeholder', bbResources.date_range_picker_from_date);
             expect(datepickerInputEl.eq(1)).toHaveAttr('placeholder', bbResources.date_range_picker_to_date);
+
+            el.remove();
         });
     });
 
