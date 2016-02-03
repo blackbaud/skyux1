@@ -15,21 +15,15 @@
     }
 
     function bbSelectField() {
-        function link(scope, el, attrs, ctrls) {
-            var vm = ctrls[0];
-
-            scope.$watch(attrs.ngModel, function (newValue) {
-                vm.selectedItem = newValue;
-            });
-        }
-
         return {
             require: ['bbSelectField', 'ngModel'],
             restrict: 'E',
-            bindToController: true,
+            bindToController: {
+                bbSelectFieldClick: '&',
+                bbSelectFieldSelectedItems: '='
+            },
             controller: BBSelectFieldController,
             controllerAs: 'bbSelectField',
-            link: link,
             scope: {},
             templateUrl: 'sky/templates/selectfield/selectfield.directive.html'
         };

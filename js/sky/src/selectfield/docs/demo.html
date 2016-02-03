@@ -1,4 +1,27 @@
 <div ng-controller="SelectFieldTestController as selectFieldCtrl">
-  <bb-select-field ng-model="selectFieldCtrl.selectedItems">
+  <bb-select-field bb-select-field-selected-items="selectFieldCtrl.selectedItems" bb-select-field-click="selectFieldCtrl.fieldClick()">
   </bb-select-field>
 </div>
+<script type="text/ng-template" id="demo/selectfield/selectfieldpicker.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Pick a value</bb-modal-header>
+            <div bb-modal-body>
+            <bb-checklist
+              bb-checklist-items="pickerCtrl.listItems"
+              bb-checklist-selected-items="pickerCtrl.selectedListItems"
+              bb-checklist-include-search="pickerCtrl.includeSearch"
+              bb-checklist-search-placeholder="Search for a value"
+              bb-checklist-no-items-message="No values found"
+              bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+              bb-checklist-mode="list"
+              bb-checklist-filter-local>
+              </bb-checklist>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary ng-click="pickerCtrl.save()"></bb-modal-footer-button-primary>
+                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
