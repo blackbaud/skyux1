@@ -13,5 +13,3 @@ Bootstrap colors for alert text, panel text and others.
 @include text-emphasis-variant('.text-info', $bb-text-color-info);
 
 @include text-emphasis-variant('.text-warning', $bb-text-color-warning);
-
-@include text-emphasis-variant('.text-danger', $bb-text-color-danger);
