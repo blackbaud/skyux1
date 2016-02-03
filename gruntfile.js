@@ -15,6 +15,7 @@ module.exports = function (grunt) {
         skyLocalesPath = 'js/sky/locales/',
         skySrcPath = 'js/sky/src/',
         src = [
+            '<%= skySrcPath %>*/*.module.js',
             '<%= skySrcPath %>*/*.js',
             '<%= skySrcPath %>module.js'
         ],
