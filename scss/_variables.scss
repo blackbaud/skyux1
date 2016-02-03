@@ -269,4 +269,10 @@ $bb-palette-mono: (
 );
 // end color palette
 
+// begin avatar
+$bb-avatar-height: 100px !default;
+$bb-avatar-width: $bb-avatar-height !default;
+$bb-avatar-border-width: 2px !default;
+// end avatar
+
 // end _variables
