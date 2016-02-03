@@ -1,7 +1,7 @@
 <div ng-controller="FileAttachmentDemoController as fileAttachmentDemo">
     <div class="row">
         <div class="col-md-6">
-            <div 
+            <div
                  bb-file-drop
                  bb-file-drop-change="fileAttachmentDemo.fileDropped(files, rejectedFiles)"
                  bb-file-drop-multiple="true"
@@ -10,7 +10,7 @@
                  bb-file-drop-link-change="fileAttachmentDemo.fileLinked(link)"
                  >
             </div>
-            <div class="alert alert-danger alert-dismissable" ng-show="fileAttachmentDemo.rejected.length > 0">
+            <div class="alert alert-danger alert-dismissible" ng-show="fileAttachmentDemo.rejected.length > 0">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="fileAttachmentDemo.rejected.length = 0"><span aria-hidden="true">&times;</span></button>
                 The file <strong>{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}</strong> is invalid.  Files must be an image and less than 500 KB.
             </div>

@@ -6,8 +6,10 @@
 
     var modules = [
         'sky.actionbar',
+        'sky.alert',
         'sky.autofocus',
         'sky.autonumeric',
+        'sky.avatar',
         'sky.check',
         'sky.checklist',
         'sky.contextmenu',
@@ -26,6 +28,7 @@
         'sky.omnibar',
         'sky.palette',
         'sky.page',
+        'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
         'sky.resources',

@@ -1,0 +1,95 @@
+<div ng-controller="PageSummaryTestController as summaryCtrl">
+  <div style="border: solid 1px #ccc; margin-bottom: 10px;">
+    <bb-page-summary>
+      <bb-page-summary-alert ng-if="summaryCtrl.showAlert">
+        <bb-alert bb-alert-type="info" bb-alert-closeable="'true'">This is an alert.</bb-alert>
+      </bb-page-summary-alert>
+      <bb-page-summary-image ng-if="summaryCtrl.showImage">
+        <bb-avatar
+            bb-avatar-name="summaryCtrl.name"
+            bb-avatar-src="summaryCtrl.avatarSrc"
+            bb-avatar-change="summaryCtrl.avatarChange(file)">
+        </bb-avatar>
+      </bb-page-summary-image>
+      <bb-page-summary-title ng-if="summaryCtrl.showTitle">
+        {{summaryCtrl.name}}
+      </bb-page-summary-title>
+      <bb-page-summary-subtitle ng-if="summaryCtrl.showSubtitle">
+        Board Member
+      </bb-page-summary-subtitle>
+      <bb-page-summary-status ng-if="summaryCtrl.showStatus">
+        <span class="label label-primary">Fundraiser</span>
+        <span class="label">Inactive</span>
+      </bb-page-summary-status>
+      <bb-page-summary-content ng-if="summaryCtrl.showContent">
+        <span class="bb-text-block">
+          This is the arbitrary content section. You can display any kind of content to complement the
+          content on a page. We recommend that you display content to support the key tasks of users
+          of users who visit the page. We also recommend that you keep in mind the context of how users will use the
+          content and limit the amount of content to avoid overloading the summary.
+        </span>
+      </bb-page-summary-content>
+      <bb-page-summary-key-info ng-if="summaryCtrl.showKeyInfo">
+        <div class="bb-key-info-item">The Key Information</div>
+        <div class="bb-key-info-item">Section Highlights</div>
+        <div class="bb-key-info-item">Important Details</div>
+      </bb-page-summary-key-info>
+      <bb-page-summary-action-bar ng-if="summaryCtrl.showActionBar">
+        <bb-action-bar>
+          <bb-action-bar-item-group bb-action-bar-item-group-title="summaryCtrl.actionButtonCollapsedText">
+            <bb-action-bar-item
+                ng-repeat="item in summaryCtrl.actionBarItems"
+                ng-if="item.visible"
+                ng-click="item.action()">
+              {{item.actionText}}
+            </bb-action-bar-item>
+          </bb-action-bar-item-group>
+        </bb-action-bar>
+      </bb-page-summary-action-bar>
+    </bb-page-summary>
+  </div>
+  <div>
+    <ul class="list-unstyled">
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showTitle" /> Show title
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showSubtitle" /> Show subtitle
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showImage" /> Show image
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showStatus" /> Show record status
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showKeyInfo" /> Show key information
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showContent" /> Show arbitrary content
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showAlert" /> Show alert
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="summaryCtrl.showActionBar" /> Show action bar
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>

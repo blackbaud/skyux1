@@ -1,0 +1,7 @@
+<div class="alert" ng-class="['alert-' + (bbAlert.bbAlertType || 'warning'), bbAlert.bbAlertCloseable === 'true' ? 'alert-dismissible' : null]" ng-show="!bbAlert.bbAlertClosed" role="alert">
+    <button ng-show="bbAlert.bbAlertCloseable === 'true'" type="button" class="close" ng-click="bbAlert.close({$event: $event})">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{'alert_close' | bbResources}}</span>
+    </button>
+    <div ng-transclude></div>
+</div>

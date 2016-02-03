@@ -30,6 +30,7 @@ module.exports = {
         'bower_components/angular-mocks/angular-mocks.js',
         'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
         'bower_components/ng-file-upload/ng-file-upload.js',
+        'js/sky/src/*/*.module.js',
         'js/sky/src/*/*.js',
         'js/sky/templates/templates.js.tmp',
         'js/sky/test/config.js',
