@@ -400,8 +400,8 @@
         "message": "Searching..."
     },
     "searchfield_no_records": {
-        "_description": "",
-        "message": "text for ui-select search control when no records are found,"
+        "_description": "text for ui-select search control when no records are found.",
+        "message": "Sorry, no matching records found"
     },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",
