@@ -1,7 +1,9 @@
 @import "mixins";
 
 .bb-check-wrapper input {
-    display: none;
+    opacity: 0.0;
+    width: 0;
+    height: 0;
 }
 
 .bb-check-checkbox,
@@ -47,4 +49,14 @@
     background-color: $gray-lighter;
     border: 1px solid $gray-lighter;
     cursor: default;
+}
+
+.bb-check-wrapper input:focus + .bb-check-checkbox,
+.bb-check-wrapper input:focus + .bb-check-radio {
+  //default
+  outline: thin dotted;
+
+  //webkit
+  outline: -webkit-focus-ring-color auto 5px;
+  outline-offset: -2px;
 }
