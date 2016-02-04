@@ -1,16 +1,16 @@
-﻿<div>
+<div>
   <div ng-controller="DateRangePickerDemoController as dateRangeCtrl" class="form-group">
       <bb-date-range-picker bb-date-range-picker-value="dateRangeCtrl.dateRangePickerValue"
                             bb-date-range-picker-options="dateRangeCtrl.dateRangePickerOptions"
                             bb-date-range-picker-automation-id="'DirectiveDemo'"
-                            bb-date-range-picker-label="'Date Range Picker'"
+                            bb-date-range-picker-label="'Date range picker'"
                             ></bb-date-range-picker>
 
-      The selected dateRangeType is: <b>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
+      Selected dateRangeType: <strong>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</strong>
       <br />
-      The type captions is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(dateRangeCtrl.dateRangePickerValue)}}'</b>.
+      Type caption: <strong>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(dateRangeCtrl.dateRangePickerValue)}}'</strong>
       <br />
-      The type filter description is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(dateRangeCtrl.dateRangePickerValue)}}'</b>.
+      Type filter description: <strong>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(dateRangeCtrl.dateRangePickerValue)}}'</strong>
 
       <br />
       <br />
@@ -23,29 +23,29 @@
       </label>
 
   </div>
-  <h3>Date range filter with specific dates </h3>
+  <h3>Date-range Picker with Option to Select Specific Dates</h3>
   <div ng-controller="SpecificDateRangePickerDemoController as specificRangeCtrl" class="form-group">
       <bb-date-range-picker bb-date-range-picker-value="specificRangeCtrl.dateRangePickerValue"
                               bb-date-range-picker-options="specificRangeCtrl.dateRangePickerOptions"
                               bb-date-range-picker-automation-id="'DirectiveDemo'"
                               bb-date-range-picker-from-date="specificRangeCtrl.fromDate"
                               bb-date-range-picker-to-date="specificRangeCtrl.toDate"
-                              bb-date-range-picker-label="'Date Range Picker'"
+                              bb-date-range-picker-label="'Date range picker'"
                               bb-date-range-picker-valid="specificRangeCtrl.isValid"
                               ></bb-date-range-picker>
 
-      The selected dateRangeType is: <b>'{{specificRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
+      Selected dateRangeType: <strong>'{{specificRangeCtrl.dateRangePickerValue.dateRangeType}}'</strong>
       <br />
-      The type captions is: <b>'{{specificRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(specificRangeCtrl.dateRangePickerValue)}}'</b>.
+      Type caption: <strong>'{{specificRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(specificRangeCtrl.dateRangePickerValue)}}'</strong>
       <br />
-      The type filter description is: <b>'{{specificRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(specificRangeCtrl.dateRangePickerValue)}}'</b>.
+      Type filter description: <strong>'{{specificRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(specificRangeCtrl.dateRangePickerValue)}}'</strong>
 
       <br />
-      The from date is {{specificRangeCtrl.fromDate}}
+      From date: <strong>{{specificRangeCtrl.fromDate | date: 'MM/dd/yyyy'}}</strong>
       <br />
-      The to date is {{specificRangeCtrl.toDate}}
+      To date: <strong>{{specificRangeCtrl.toDate | date: 'MM/dd/yyyy'}}</strong>
       <br />
-      The date range is <span ng-hide="specificRangeCtrl.isValid">not</span> valid.
+      Date range: <strong><span ng-hide="specificRangeCtrl.isValid">not</span> valid</strong>
 
       <br />
 
