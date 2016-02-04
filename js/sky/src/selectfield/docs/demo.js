@@ -34,8 +34,9 @@
 
     SelectFieldTestController.$inject = ['bbModal'];
 
-    function SelectFieldPickerTestController($uibModalInstance, selectedItems, selectedItemsChange) {
-        var vm = this;
+    function SelectFieldPickerTestController($scope, $uibModalInstance, selectedItems, selectedItemsChange) {
+        var initialLoad = true,
+            vm = this;
 
         vm.listItems = [
             {
@@ -62,13 +63,19 @@
 
         vm.selectedListItems = selectedItems.slice();
 
-        vm.save = function () {
-            selectedItemsChange(vm.selectedListItems);
-            $uibModalInstance.close();
-        }
+        $scope.$watchCollection(function () {
+            return vm.selectedListItems;
+        }, function () {
+            if (!initialLoad && vm.selectedListItems.length > 0) {
+                selectedItemsChange(vm.selectedListItems);
+                $uibModalInstance.close();
+            }
+
+            initialLoad = false;
+        });
     }
 
-    SelectFieldPickerTestController.$inject = ['$uibModalInstance', 'selectedItems', 'selectedItemsChange'];
+    SelectFieldPickerTestController.$inject = ['$scope', '$uibModalInstance', 'selectedItems', 'selectedItemsChange'];
 
     angular.module('stache')
         .controller('SelectFieldTestController', SelectFieldTestController)
