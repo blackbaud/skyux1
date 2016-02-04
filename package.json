@@ -11,12 +11,17 @@
   "bugs": {
     "url": "https://github.com/blacbkaud/skyux/issues"
   },
+  "files": [
+    "dist",
+    "scss"
+  ],
   "keywords": [
     "Blackbaud",
     "Sky",
     "UX"
   ],
   "devDependencies": {
+    "assemble-yaml": "^0.2.1",
     "blackbaud-stache": "latest",
     "blackbaud-stache-jsdoc": "latest",
     "grunt": "^0.4.5",

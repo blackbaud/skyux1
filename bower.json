@@ -17,6 +17,7 @@
   "license": "MIT",
   "ignore": [
     ".*",
+    "CONTRIBUTING.md",
     "demo",
     "gruntfile.js",
     "js/",
@@ -25,6 +26,8 @@
     "package.json",
     "*.sh",
     "visualtest",
+    "webdriver-screenshots",
+    "webdrivertest",
     "*.yml"
   ],
   "dependencies": {
