@@ -1,24 +1,53 @@
-﻿<div ng-controller="DateRangePickerDemoController as dateRangeCtrl">
-    <div class="form-group">
-        <label>Date Range Picker</label>
-        <bb-date-range-picker bb-date-range-picker-value="dateRangeCtrl.dateRangePickerValue"
-                              bb-date-range-picker-options="dateRangeCtrl.dateRangePickerOptions"
-                              bb-date-range-picker-automation-id="'DirectiveDemo'"></bb-date-range-picker>
+﻿<div>
+  <div ng-controller="DateRangePickerDemoController as dateRangeCtrl" class="form-group">
+      <bb-date-range-picker bb-date-range-picker-value="dateRangeCtrl.dateRangePickerValue"
+                            bb-date-range-picker-options="dateRangeCtrl.dateRangePickerOptions"
+                            bb-date-range-picker-automation-id="'DirectiveDemo'"
+                            bb-date-range-picker-label="'Date Range Picker'"
+                            ></bb-date-range-picker>
 
-        The selected dateRangeType is: <b>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
-        <br />
-        The type captions is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(dateRangeCtrl.dateRangePickerValue)}}'</b>.
-        <br />
-        The type filter description is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(dateRangeCtrl.dateRangePickerValue)}}'</b>.
+      The selected dateRangeType is: <b>'{{dateRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
+      <br />
+      The type captions is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(dateRangeCtrl.dateRangePickerValue)}}'</b>.
+      <br />
+      The type filter description is: <b>'{{dateRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(dateRangeCtrl.dateRangePickerValue)}}'</b>.
 
-        <br /><br />
-        <button ng-click="dateRangeCtrl.selectToday()">Select today</button>
-        <br />
-        <button ng-click="dateRangeCtrl.reset()">Reset</button>
-        <br />
-        <label>
-            <input type="checkbox" ng-model="dateRangeCtrl.options.pastOnly" /> Past items filter
-        </label>
+      <br />
+      <br />
+      <button ng-click="dateRangeCtrl.selectToday()">Select today</button>
+      <br />
+      <button ng-click="dateRangeCtrl.reset()">Reset</button>
+      <br />
+      <label>
+          <input type="checkbox" ng-model="dateRangeCtrl.options.pastOnly" /> Past items filter
+      </label>
 
-    </div>
+  </div>
+  <h3>Date range filter with specific dates </h3>
+  <div ng-controller="SpecificDateRangePickerDemoController as specificRangeCtrl" class="form-group">
+      <bb-date-range-picker bb-date-range-picker-value="specificRangeCtrl.dateRangePickerValue"
+                              bb-date-range-picker-options="specificRangeCtrl.dateRangePickerOptions"
+                              bb-date-range-picker-automation-id="'DirectiveDemo'"
+                              bb-date-range-picker-from-date="specificRangeCtrl.fromDate"
+                              bb-date-range-picker-to-date="specificRangeCtrl.toDate"
+                              bb-date-range-picker-label="'Date Range Picker'"
+                              bb-date-range-picker-valid="specificRangeCtrl.isValid"
+                              ></bb-date-range-picker>
+
+      The selected dateRangeType is: <b>'{{specificRangeCtrl.dateRangePickerValue.dateRangeType}}'</b>.
+      <br />
+      The type captions is: <b>'{{specificRangeCtrl.bbDateRangePicker.getDateRangeTypeCaption(specificRangeCtrl.dateRangePickerValue)}}'</b>.
+      <br />
+      The type filter description is: <b>'{{specificRangeCtrl.bbDateRangePicker.getDateRangeFilterDescription(specificRangeCtrl.dateRangePickerValue)}}'</b>.
+
+      <br />
+      The from date is {{specificRangeCtrl.fromDate}}
+      <br />
+      The to date is {{specificRangeCtrl.toDate}}
+      <br />
+      The date range is <span ng-hide="specificRangeCtrl.isValid">not</span> valid.
+
+      <br />
+
+  </div>
 </div>

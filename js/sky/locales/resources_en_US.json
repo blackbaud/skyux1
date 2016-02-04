@@ -271,6 +271,10 @@
         "_description": "text for date range picker",
         "message": "Yesterday"
     },
+    "date_range_picker_specific_range": {
+      "_description": "text for date range picker",
+      "message": "Specific range"
+    },
     "date_range_picker_filter_description_this_week": {
         "_description": "text for date range picker",
         "message": "{0} for this week"
@@ -346,6 +350,26 @@
     "date_range_picker_filter_description_tomorrow": {
         "_description": "text for date range picker",
         "message": "{0} for tomorrow"
+    },
+    "date_range_picker_filter_description_specific_range": {
+      "_description": "text for date range picker",
+      "message": "{0} from {1} to {2}"
+    },
+    "date_range_picker_from_date": {
+      "_description": "label for date range picker",
+      "message": "From date"
+    },
+    "date_range_picker_to_date": {
+      "_description": "label for date range picker",
+      "message": "To date"
+    },
+    "date_range_picker_min_date_error": {
+      "_description": "error message for date range picker",
+      "message": "End date must be after start date"
+    },
+    "date_range_picker_max_date_error": {
+      "_description": "error message for date range picker",
+      "message": "Start date must be before end date"
     },
     "file_size_b_plural": {
         "_description": "",
