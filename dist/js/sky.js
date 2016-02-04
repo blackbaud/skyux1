@@ -607,6 +607,10 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
                 });
             };
 
+            vm.showInitials = function () {
+                return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
+            };
+
             if (attrs.bbAvatarChange) {
                 vm.canChange = true;
             }
@@ -617,6 +621,10 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 
             scope.$watch(function () {
                 return vm.bbAvatarSrc;
+            }, loadPhoto);
+
+            scope.$watch(function () {
+                return vm.bbAvatarName;
             }, loadPhoto);
 
             scope.$on('$destroy', function () {
@@ -1869,10 +1877,31 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 
                     });
 
+                    function runValidators() {
+                        var inputNgModel = $scope.getInputNgModel();
+                        if (inputNgModel) {
+                            inputNgModel.$validate();
+                        }
+                    }
+
+                    $scope.$watch('maxDate', function () {
+                        runValidators();
+                    });
+
+                    $scope.$watch('minDate', function () {
+                        runValidators();
+                    });
+
                     function hasRequiredError() {
                         var inputNgModel = $scope.getInputNgModel();
 
                         return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
+                    }
+
+                    function hasMinMaxError() {
+                        var inputNgModel = $scope.getInputNgModel();
+
+                        return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
                     }
 
 
@@ -1927,7 +1956,7 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 
                         deferred = $q.defer();
 
-                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || datepickerIsPristine()) {
+                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || hasMinMaxError() || (!$scope.locals.required && $scope.locals.date === null) || datepickerIsPristine()) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
@@ -1940,7 +1969,7 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
                             }
                         } else {
                             inputNgModel = $scope.getInputNgModel();
-
+                            /* istanbul ignore else: sanity check */
                             if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
                                 setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                             }
@@ -2217,6 +2246,11 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
  - `bb-date-range-picker-value` &mdash; Specifies an object that tracks the value of the date-range picker control. The `.dateRangeType` property provides the integer (ENUM) value of the date-range type selected in the picker. For details about the ENUM, see the Date-range Picker Service section below.
  - `bb-date-range-picker-automation-id` &mdash; Specifies a string to use when creating the `bb-auto-field` attribute on elements in the date-range picker.
  - `bb-date-range-picker-options` &mdash; *(Optional.)* Specifies an options object that can customize the behavior of the date-range picker.
+ - `bb-date-range-picker-label` &mdash; *(Optional.)* The text for the label displayed over the date range select field.
+ - `bb-date-range-picker-from-date` &mdash; *(Optional.)* The variable bound to the 'from date' when using a specific date range.
+ - `bb-date-range-picker-to-date` &mdash; *(Optional.)* The variable bound to the 'to date' when using a specific date range.
+ - `bb-date-range-picker-valid` &mdash; *(Optional.)* Will be set to true if the specific dates are in a valid state, false otherwise.
+ - `bb-date-range-picker-no-labels` &mdash; *(Optional.)* When set to true, the labels for the select and specific date controls will no longer be visible. Instead, the specific date controls will have appropriate placeholder text.
 
 ### Date-range Picker Options Settings ###
 
@@ -2227,6 +2261,7 @@ The date-range picker service provides functionality that works closely with the
 
  - `dateRangeTypes` &mdash; An ENUM of all date-range types that the date-range picker understands and can include in the dropdown.
  - `defaultDateRangeOptions` &mdash; An array of `dateRangeTypes` that provides the default order and set of date-range types included in the dropdown.
+ - `specifcDateRangeOptions` &mdash; An array of `dateRangeTypes` that provides the default options, as well as the option for using a specific date range.
  - `pastDateRangeOptions` &mdash; An array of `dateRangeTypes` that are appropriate to filter for things that occurred in the past. For example, you don't want to search for items created "next month."
  - `getDateRangeTypeCaption` &mdash; A function to get the caption of the dropdown item for a given `bb-date-range-picker-value`.
  - `getDateRangeFilterDescription` &mdash; A function to get the description of a given `bb-date-range-picker-value`.
@@ -2234,260 +2269,287 @@ The date-range picker service provides functionality that works closely with the
 
 (function () {
     'use strict';
-    angular.module('sky.daterangepicker', ['sky.resources'])
-        .factory('bbDateRangePicker', ['bbResources', function (bbResources) {
 
-            var dateRangeTypes,
-                defaultDateRangeOptions,
-                pastDateRangeOptions;
 
-            dateRangeTypes = {
-                AT_ANY_TIME: 0,
-                NEXT_WEEK: 1,
-                THIS_MONTH: 2,
-                NEXT_MONTH: 3,
-                THIS_QUARTER: 4,
-                NEXT_QUARTER: 5,
-                THIS_FISCAL_YEAR: 6,
-                NEXT_FISCAL_YEAR: 7,
-                THIS_CALENDAR_YEAR: 8,
-                NEXT_CALENDAR_YEAR: 9,
-                LAST_WEEK: 10,
-                LAST_MONTH: 11,
-                LAST_QUARTER: 12,
-                LAST_FISCAL_YEAR: 13,
-                LAST_CALENDAR_YEAR: 14,
-                TODAY: 15,
-                YESTERDAY: 16,
-                TOMORROW: 17,
-                THIS_WEEK: 18
-            };
+    function bbDateRangePickerFactory(bbResources) {
+        var dateRangeTypes,
+            defaultDateRangeOptions,
+            specificDateRangeOptions,
+            pastDateRangeOptions,
+            dateRangeMap;
 
-            defaultDateRangeOptions = [
-                dateRangeTypes.AT_ANY_TIME,
-                dateRangeTypes.YESTERDAY,
-                dateRangeTypes.TODAY,
-                dateRangeTypes.TOMORROW,
-                dateRangeTypes.LAST_WEEK,
-                dateRangeTypes.THIS_WEEK,
-                dateRangeTypes.NEXT_WEEK,
-                dateRangeTypes.LAST_MONTH,
-                dateRangeTypes.THIS_MONTH,
-                dateRangeTypes.NEXT_MONTH,
-                dateRangeTypes.LAST_QUARTER,
-                dateRangeTypes.THIS_QUARTER,
-                dateRangeTypes.NEXT_QUARTER,
-                dateRangeTypes.LAST_CALENDAR_YEAR,
-                dateRangeTypes.THIS_CALENDAR_YEAR,
-                dateRangeTypes.NEXT_CALENDAR_YEAR,
-                dateRangeTypes.LAST_FISCAL_YEAR,
-                dateRangeTypes.THIS_FISCAL_YEAR,
-                dateRangeTypes.NEXT_FISCAL_YEAR
-            ];
+        dateRangeTypes = {
+            AT_ANY_TIME: 0,
+            NEXT_WEEK: 1,
+            THIS_MONTH: 2,
+            NEXT_MONTH: 3,
+            THIS_QUARTER: 4,
+            NEXT_QUARTER: 5,
+            THIS_FISCAL_YEAR: 6,
+            NEXT_FISCAL_YEAR: 7,
+            THIS_CALENDAR_YEAR: 8,
+            NEXT_CALENDAR_YEAR: 9,
+            LAST_WEEK: 10,
+            LAST_MONTH: 11,
+            LAST_QUARTER: 12,
+            LAST_FISCAL_YEAR: 13,
+            LAST_CALENDAR_YEAR: 14,
+            TODAY: 15,
+            YESTERDAY: 16,
+            TOMORROW: 17,
+            THIS_WEEK: 18,
+            SPECIFIC_RANGE: 19
+        };
 
-            pastDateRangeOptions = [
-                dateRangeTypes.AT_ANY_TIME,
-                dateRangeTypes.YESTERDAY,
-                dateRangeTypes.TODAY,
-                dateRangeTypes.LAST_WEEK,
-                dateRangeTypes.THIS_WEEK,
-                dateRangeTypes.LAST_MONTH,
-                dateRangeTypes.THIS_MONTH,
-                dateRangeTypes.LAST_QUARTER,
-                dateRangeTypes.THIS_QUARTER,
-                dateRangeTypes.LAST_CALENDAR_YEAR,
-                dateRangeTypes.THIS_CALENDAR_YEAR,
-                dateRangeTypes.LAST_FISCAL_YEAR,
-                dateRangeTypes.THIS_FISCAL_YEAR
-            ];
+        defaultDateRangeOptions = [
+            dateRangeTypes.AT_ANY_TIME,
+            dateRangeTypes.YESTERDAY,
+            dateRangeTypes.TODAY,
+            dateRangeTypes.TOMORROW,
+            dateRangeTypes.LAST_WEEK,
+            dateRangeTypes.THIS_WEEK,
+            dateRangeTypes.NEXT_WEEK,
+            dateRangeTypes.LAST_MONTH,
+            dateRangeTypes.THIS_MONTH,
+            dateRangeTypes.NEXT_MONTH,
+            dateRangeTypes.LAST_QUARTER,
+            dateRangeTypes.THIS_QUARTER,
+            dateRangeTypes.NEXT_QUARTER,
+            dateRangeTypes.LAST_CALENDAR_YEAR,
+            dateRangeTypes.THIS_CALENDAR_YEAR,
+            dateRangeTypes.NEXT_CALENDAR_YEAR,
+            dateRangeTypes.LAST_FISCAL_YEAR,
+            dateRangeTypes.THIS_FISCAL_YEAR,
+            dateRangeTypes.NEXT_FISCAL_YEAR
+        ];
 
-            function getDateRangeTypeCaption(dateRangePickerValue) {
-                if (angular.isNumber(dateRangePickerValue)) {
-                    // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
-                    dateRangePickerValue = { dateRangeType: dateRangePickerValue };
-                } else {
-                    // If the value is undefiend, then map it to a null object.
-                    dateRangePickerValue = dateRangePickerValue || {};
-                }
+        specificDateRangeOptions = defaultDateRangeOptions.push(dateRangeTypes.SPECIFIC_RANGE);
 
-                if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
-                    // If the enum value is undefined, then it represents any time.
-                    dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
-                }
+        pastDateRangeOptions = [
+            dateRangeTypes.AT_ANY_TIME,
+            dateRangeTypes.YESTERDAY,
+            dateRangeTypes.TODAY,
+            dateRangeTypes.LAST_WEEK,
+            dateRangeTypes.THIS_WEEK,
+            dateRangeTypes.LAST_MONTH,
+            dateRangeTypes.THIS_MONTH,
+            dateRangeTypes.LAST_QUARTER,
+            dateRangeTypes.THIS_QUARTER,
+            dateRangeTypes.LAST_CALENDAR_YEAR,
+            dateRangeTypes.THIS_CALENDAR_YEAR,
+            dateRangeTypes.LAST_FISCAL_YEAR,
+            dateRangeTypes.THIS_FISCAL_YEAR
+        ];
 
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_at_any_time;
+        dateRangeMap = {};
+        dateRangeMap[dateRangeTypes.AT_ANY_TIME] = {
+            caption: bbResources.date_range_picker_at_any_time,
+            description: bbResources.date_range_picker_filter_description_at_any_time
+        };
+        dateRangeMap[dateRangeTypes.YESTERDAY] = {
+            caption: bbResources.date_range_picker_yesterday,
+            description: bbResources.date_range_picker_filter_description_yesterday
+        };
+        dateRangeMap[dateRangeTypes.TODAY] = {
+            caption: bbResources.date_range_picker_today,
+            description: bbResources.date_range_picker_filter_description_today
+        };
+        dateRangeMap[dateRangeTypes.TOMORROW] = {
+            caption: bbResources.date_range_picker_tomorrow,
+            description: bbResources.date_range_picker_filter_description_tomorrow
+        };
+        dateRangeMap[dateRangeTypes.LAST_WEEK] = {
+            caption: bbResources.date_range_picker_last_week,
+            description: bbResources.date_range_picker_filter_description_last_week
+        };
+        dateRangeMap[dateRangeTypes.THIS_WEEK] = {
+            caption: bbResources.date_range_picker_this_week,
+            description: bbResources.date_range_picker_filter_description_this_week
+        };
+        dateRangeMap[dateRangeTypes.NEXT_WEEK] = {
+            caption: bbResources.date_range_picker_next_week,
+            description: bbResources.date_range_picker_filter_description_next_week
+        };
+        dateRangeMap[dateRangeTypes.LAST_QUARTER] = {
+            caption: bbResources.date_range_picker_last_quarter,
+            description: bbResources.date_range_picker_filter_description_last_quarter
+        };
+        dateRangeMap[dateRangeTypes.THIS_QUARTER] = {
+            caption: bbResources.date_range_picker_this_quarter,
+            description: bbResources.date_range_picker_filter_description_this_quarter
+        };
+        dateRangeMap[dateRangeTypes.NEXT_QUARTER] = {
+            caption: bbResources.date_range_picker_next_quarter,
+            description: bbResources.date_range_picker_filter_description_next_quarter
+        };
+        dateRangeMap[dateRangeTypes.LAST_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_last_calendar_year,
+            description: bbResources.date_range_picker_filter_description_last_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_this_calendar_year,
+            description: bbResources.date_range_picker_filter_description_this_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_next_calendar_year,
+            description: bbResources.date_range_picker_filter_description_next_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.LAST_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_last_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_last_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_this_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_this_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_next_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_next_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_MONTH] = {
+            caption: bbResources.date_range_picker_this_month,
+            description: bbResources.date_range_picker_filter_description_this_month
+        };
+        dateRangeMap[dateRangeTypes.NEXT_MONTH] = {
+            caption: bbResources.date_range_picker_next_month,
+            description: bbResources.date_range_picker_filter_description_next_month
+        };
+        dateRangeMap[dateRangeTypes.LAST_MONTH] = {
+            caption: bbResources.date_range_picker_last_month,
+            description: bbResources.date_range_picker_filter_description_last_month
+        };
+        dateRangeMap[dateRangeTypes.SPECIFIC_RANGE] = {
+            caption: bbResources.date_range_picker_specific_range,
+            description: bbResources.date_range_picker_filter_description_specific_range
+        };
 
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_this_week;
-
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_tomorrow;
-
-                }
-            }
-
-            function getDateRangeFilterDescription(dateRangePickerValue) {
+        function getDateRangeTypeCaption(dateRangePickerValue) {
+            if (angular.isNumber(dateRangePickerValue)) {
+                // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
+                dateRangePickerValue = { dateRangeType: dateRangePickerValue };
+            } else {
                 // If the value is undefiend, then map it to a null object.
                 dateRangePickerValue = dateRangePickerValue || {};
-
-                if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
-                    // If the enum value is undefined, then it represents any time.
-                    dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
-                }
-
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_filter_description_at_any_time;
-
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_filter_description_this_week;
-
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_filter_description_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_filter_description_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_filter_description_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_filter_description_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_filter_description_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_filter_description_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_filter_description_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_filter_description_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_filter_description_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_filter_description_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_filter_description_tomorrow;
-
-                }
             }
 
-            return {
-                dateRangeTypes: dateRangeTypes,
-                defaultDateRangeOptions: defaultDateRangeOptions,
-                pastDateRangeOptions: pastDateRangeOptions,
-                getDateRangeTypeCaption: getDateRangeTypeCaption,
-                getDateRangeFilterDescription: getDateRangeFilterDescription
-            };
+            if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
+                // If the enum value is undefined, then it represents any time.
+                dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
+            }
 
-        }])
-        .directive('bbDateRangePicker', ['bbDateRangePicker', function (bbDateRangePicker) {
-            /// <summary>
-            /// This directive provides a date range filter control
-            /// </summary>
+            return dateRangeMap[dateRangePickerValue.dateRangeType].caption;
+        }
 
-            return {
-                replace: true,
-                restrict: 'E',
-                templateUrl: 'sky/templates/daterangepicker/daterangepicker.html',
-                scope: {
-                    bbDateRangePickerValue: "=",
-                    bbDateRangePickerAutomationId: "=",
-                    bbDateRangePickerOptions: '='
-                },
-                controller: ['$scope', function ($scope) {
+        function getDateRangeFilterDescription(dateRangePickerValue) {
+            // If the value is undefiend, then map it to a null object.
+            dateRangePickerValue = dateRangePickerValue || {};
 
-                    $scope.locals = {
-                        bbDateRangePicker: bbDateRangePicker
-                    };
+            if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
+                // If the enum value is undefined, then it represents any time.
+                dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
+            }
 
-                    $scope.$watch("bbDateRangePickerValue", function (newVal) {
-                        if (!newVal) {
-                            $scope.bbDateRangePickerValue = {
-                                dateRangeType: bbDateRangePicker.dateRangeTypes.AT_ANY_TIME
-                            };
-                            return;
-                        }
-                        newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
-                    }, true);
-                }]
-            };
-        }]);
+            return dateRangeMap[dateRangePickerValue.dateRangeType].description;
+        }
 
+        return {
+            dateRangeTypes: dateRangeTypes,
+            defaultDateRangeOptions: defaultDateRangeOptions,
+            pastDateRangeOptions: pastDateRangeOptions,
+            specifcDateRangeOptions: specificDateRangeOptions,
+            getDateRangeTypeCaption: getDateRangeTypeCaption,
+            getDateRangeFilterDescription: getDateRangeFilterDescription
+        };
+    }
+
+    bbDateRangePickerFactory.$inject = ['bbResources'];
+
+    function bbDateRangePickerDirective(bbDateRangePicker, bbResources) {
+        /// <summary>
+        /// This directive provides a date range filter control
+        /// </summary>
+
+        return {
+            replace: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/daterangepicker/daterangepicker.html',
+            scope: {},
+            controllerAs: 'bbDateRangePickerCtrl',
+            bindToController: {
+                bbDateRangePickerValue: "=",
+                bbDateRangePickerAutomationId: "=",
+                bbDateRangePickerOptions: '=',
+                fromDate: '=?bbDateRangePickerFromDate',
+                toDate: '=?bbDateRangePickerToDate',
+                pickerLabel: '=?bbDateRangePickerLabel',
+                isValid: '=?bbDateRangePickerValid'
+            },
+            controller: ['$scope', function ($scope) {
+                var vm = this;
+
+                vm.bbDateRangePicker = bbDateRangePicker;
+                vm.resources = bbResources;
+
+                $scope.$watch(
+                    function () {
+                        return vm.dateRangeForm.$valid;
+                    }, function (newVal) {
+                        vm.isValid = newVal;
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.fromDate;
+                    }, function (newVal) {
+                        /* This prevents minDate from having a reference
+                           to fromDate and changing it */
+                        vm.minDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.toDate;
+                    }, function (newVal) {
+                        /* This prevents maxDate from having a reference
+                           to toDate and changing it */
+                        vm.maxDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.bbDateRangePickerValue;
+                    }, function (newVal) {
+                    if (!newVal) {
+                        vm.bbDateRangePickerValue = {
+                            dateRangeType: bbDateRangePicker.dateRangeTypes.AT_ANY_TIME
+                        };
+                        return;
+                    }
+                    vm.specificRangeIsVisible = vm.bbDateRangePickerValue.dateRangeType === bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE;
+                    newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
+                }, true);
+            }],
+            link: function ($scope, el, attr, vm) {
+                vm.noLabels = attr.bbDateRangePickerNoLabels;
+                if (vm.noLabels) {
+                    vm.toPlaceholder = bbResources.date_range_picker_to_date;
+                    vm.fromPlaceholder = bbResources.date_range_picker_from_date;
+                } else {
+                    vm.toPlaceholder = '';
+                    vm.fromPlaceholder = '';
+                }
+            }
+        };
+    }
+
+    bbDateRangePickerDirective.$inject = ['bbDateRangePicker', 'bbResources'];
+
+    angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])
+        .factory('bbDateRangePicker', bbDateRangePickerFactory)
+        .directive('bbDateRangePicker', bbDateRangePickerDirective);
 }());
 
 /*jshint browser: true */
@@ -9681,7 +9743,7 @@ The `bbWizardNavigator` also exposes the following methods:
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"text for ui-select search control when no records are found,","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -9746,11 +9808,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/avatar/avatarinner.include.html',
         '<div class="bb-avatar-wrapper">\n' +
         '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
-        '  <canvas class="bb-avatar-initials" ng-show="!bbAvatar.bbAvatarSrc"></canvas>\n' +
+        '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/check/styled.html',
-        '<span></span>\n' +
+        '<span role="input"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
@@ -9874,12 +9936,28 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
-        '<div>\n' +
-        '    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"\n' +
-        '            class="form-control"\n' +
-        '            ng-options="locals.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerOptions.availableDateRangeTypes || locals.bbDateRangePicker.defaultDateRangeOptions)"\n' +
-        '            ng-model="bbDateRangePickerValue.dateRangeType" />\n' +
-        '</div>');
+        '<div class="form-inline" ng-form="bbDateRangePickerCtrl.dateRangeForm">\n' +
+        '    <div class="form-group bb-date-range-picker-form-group">\n' +
+        '      <label class="bb-date-range-picker-label" ng-if="bbDateRangePickerCtrl.pickerLabel && !bbDateRangePickerCtrl.noLabels">{{bbDateRangePickerCtrl.pickerLabel}}</label>\n' +
+        '      <select data-bbauto-field="{{bbDateRangePickerCtrl.bbDateRangePickerAutomationId}}_DateRangeType"\n' +
+        '        class="form-control"\n' +
+        '        ng-options="bbDateRangePickerCtrl.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerCtrl.bbDateRangePickerOptions.availableDateRangeTypes || bbDateRangePickerCtrl.bbDateRangePicker.defaultDateRangeOptions)"\n' +
+        '        ng-model="bbDateRangePickerCtrl.bbDateRangePickerValue.dateRangeType" />\n' +
+        '    </div>\n' +
+        '    <div class="form-group bb-date-range-picker-form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">\n' +
+        '      <label class="bb-date-range-picker-label" ng-if="!bbDateRangePickerCtrl.noLabels">{{::bbDateRangePickerCtrl.resources.date_range_picker_from_date}}</label>\n' +
+        '      <bb-datepicker ng-model="bbDateRangePickerCtrl.fromDate" max-date="bbDateRangePickerCtrl.maxDate" bb-datepicker-name="fromDate" datepicker-append-to-body="true" placeholder="bbDateRangePickerCtrl.fromPlaceholder"></bb-datepicker>\n' +
+        '      <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.fromDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>\n' +
+        '      <label class="bb-date-range-picker-date-max-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.fromDate.$error.maxDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_max_date_error}}</label>\n' +
+        '    </div>\n' +
+        '    <div class="form-group bb-date-range-picker-form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">\n' +
+        '      <label class="bb-date-range-picker-label" ng-if="!bbDateRangePickerCtrl.noLabels">{{::bbDateRangePickerCtrl.resources.date_range_picker_to_date}}</label>\n' +
+        '      <bb-datepicker ng-model="bbDateRangePickerCtrl.toDate" min-date="bbDateRangePickerCtrl.minDate" bb-datepicker-name="toDate" datepicker-append-to-body="true" placeholder="bbDateRangePickerCtrl.toPlaceholder"></bb-datepicker>\n' +
+        '      <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>\n' +
+        '      <label class="bb-date-range-picker-date-min-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.minDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_min_date_error}}</label>\n' +
+        '    </div>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/fileattachments/filedrop.html',
         '<div class="row bb-file-drop-row">\n' +
         '    <div class="col-xs-12 bb-file-drop-col" ng-class="{\'col-sm-6\': bbFileDrop.allowLinks}">\n' +
@@ -10304,7 +10382,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            <div class="bb-tile-header-column-tools">\n' +
         '                <div class="bb-tile-tools">\n' +
         '                    <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
-        '                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-cog" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                    <i ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
         '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                </div>\n' +
         '            </div>\n' +

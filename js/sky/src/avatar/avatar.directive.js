@@ -145,6 +145,10 @@
                 });
             };
 
+            vm.showInitials = function () {
+                return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
+            };
+
             if (attrs.bbAvatarChange) {
                 vm.canChange = true;
             }
@@ -155,6 +159,10 @@
 
             scope.$watch(function () {
                 return vm.bbAvatarSrc;
+            }, loadPhoto);
+
+            scope.$watch(function () {
+                return vm.bbAvatarName;
             }, loadPhoto);
 
             scope.$on('$destroy', function () {
