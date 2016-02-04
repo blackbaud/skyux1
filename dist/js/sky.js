@@ -607,6 +607,10 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
                 });
             };
 
+            vm.showInitials = function () {
+                return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
+            };
+
             if (attrs.bbAvatarChange) {
                 vm.canChange = true;
             }
@@ -617,6 +621,10 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 
             scope.$watch(function () {
                 return vm.bbAvatarSrc;
+            }, loadPhoto);
+
+            scope.$watch(function () {
+                return vm.bbAvatarName;
             }, loadPhoto);
 
             scope.$on('$destroy', function () {
@@ -9800,7 +9808,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/avatar/avatarinner.include.html',
         '<div class="bb-avatar-wrapper">\n' +
         '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
-        '  <canvas class="bb-avatar-initials" ng-show="!bbAvatar.bbAvatarSrc"></canvas>\n' +
+        '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/check/styled.html',
