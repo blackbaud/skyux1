@@ -10,10 +10,15 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
   git clone --quiet --branch=$TRAVIS_BRANCH https://${GH_TOKEN}@github.com/blackbaud/skyux.git skyux > /dev/null
 
   cp -rf dist/ skyux/
-
   cp -rf webdriver-screenshots/ skyux/
-
   cd skyux
+
+  # Update version in README.md
+  if [[ "$IS_RELEASE" == "true" && "$IS_PRERELEASE" == "false" ]]; then
+    sed -i '' -E -e 's/blackbaudcdn.net\/skyux\/[0-9]+\.[0-9]+\.[0-9]+\//blackbaudcdn.net\/skyux\/'"$RELEASE_VERSION"'\//g' README.md
+    git add README.md
+  fi
+
   git add dist/
   git add webdriver-screenshots/
 
