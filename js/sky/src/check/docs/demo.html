@@ -9,7 +9,7 @@
 
     </div>
     <div class="m-t-sm">
-      <label>Scope State:</label>
+      <label>Scope state:</label>
       <ul>
         <li ng-repeat="checkBoxItem in checkCtrl.checkBoxItems">
           {{checkBoxItem.description}}: <strong>{{checkBoxItem.checked}}</strong></li>
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="col-sm-6">
-    <label>Radio Buttons:</label>
+    <label>Radio buttons:</label>
     <div ng-repeat="radioItem in checkCtrl.radioItems">
 
         <input bb-check type="radio" id="radio-id-{{$id}}" ng-model="checkCtrl.selectedRadioItem" ng-value="radioItem.id" ng-disabled="radioItem.disabled">
@@ -26,10 +26,10 @@
         </label>
     </div>
     <div class="m-t-sm">
-      <label>Scope State:</label>
+      <label>Scope state:</label>
       <ul>
         <li>
-          Radio Button Selected: <strong>{{checkCtrl.selectedRadioItem}}</strong>
+          Radio button selected: <strong>{{checkCtrl.selectedRadioItem}}</strong>
         </li>
       </ul>
     </div>
