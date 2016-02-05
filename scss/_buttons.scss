@@ -250,6 +250,12 @@ fieldset[disabled] .btn-link.active {
   }
 }
 
+.bb-btn-link-inline {
+  @extend .btn-link;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .bb-show-more {
   @extend .badge;
   border: 0;
