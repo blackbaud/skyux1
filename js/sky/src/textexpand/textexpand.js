@@ -48,13 +48,14 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
         return angular.element($templateCache.get('sky/templates/textexpand/' + templateName + '.html'));
     }
 
-    function BBTextExpandController(textExpandContent, headerContent) {
+    function BBTextExpandController(textExpandContent, headerContent, closeText) {
         var self = this;
         self.textExpandContent = textExpandContent;
         self.headerContent = headerContent;
+        self.closeText = closeText;
     }
 
-    BBTextExpandController.$inject = ['textExpandContent', 'headerContent'];
+    BBTextExpandController.$inject = ['textExpandContent', 'headerContent', 'closeText'];
 
     angular.module('sky.textexpand', modules)
         .directive('bbTextExpandRepeater', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
@@ -202,11 +203,14 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                             },
                                             headerContent: function () {
                                                 return scope.$eval(attrs.bbTextExpandModalTitle) || bbResources.text_expand_modal_title;
+                                            },
+                                            closeText: function () {
+                                                return bbResources.text_expand_close_text;
                                             }
                                         }
                                     });
                                 });
-                                
+
                             } else {
                                 expandEl.on('click', function () {
                                     if (isExpanded) {

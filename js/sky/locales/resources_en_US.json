@@ -179,6 +179,10 @@
         "_description": "",
         "message": "Expanded view"
     },
+    "text_expand_close_text": {
+      "_description": "Text for the close button on the text expand modal",
+      "message": "Close"
+    },
     "grid_action_bar_clear_selection": {
         "_description": "Clear the selections in the grid.",
         "message": "Clear selection"
