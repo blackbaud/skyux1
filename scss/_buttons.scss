@@ -254,6 +254,10 @@ fieldset[disabled] .btn-link.active {
   @extend .btn-link;
   font-size: inherit;
   line-height: inherit;
+  display: inline;
+  width: auto;
+  height: auto;
+  border: none;
 }
 
 .bb-show-more {
