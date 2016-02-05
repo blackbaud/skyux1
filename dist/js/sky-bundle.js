@@ -99562,13 +99562,15 @@ global.easyXDM = easyXDM;
 /** @module Action Bar
 @icon bolt
 @summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a SKY UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
-### Action Bar Settings ###
-    - `bb-action-bar` &mdash; Wraps the content in the action bar.
-    - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
-    - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
+@description The action bar creates a SKY UX-themed container for buttons. It includes an option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
 
-To apply action bar stylying to more complicated scenarios (hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), you can place content in a `div` with the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
+To apply action bar styling to more complicated scenarios, you can place content in a `div` with the `bb-action-bar` class. For example, this technique allows you to hide and show buttons at breakpoints other than xs and to collapse dropdowns into submenus. Bootstrap convenience classes to show or hide content include `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg`. For information about these classes, see the [Bootstrap documentation](http://getbootstrap.com/css/#responsive-utilities-classes).
+
+### Action Bar Settings ###
+    - `bb-action-bar` &mdash; Wraps the content in the action bar to create a SKY UX-themed container for buttons.
+        - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
+        - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. 
+            - `bb-action-bar-item-group-title` &mdash; *(Optional.)* Edits the default **Actions** label for the dropdown.
 */
 
 (function () {
@@ -99761,28 +99763,24 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 /*global angular, jQuery */
 /** @module Autonumeric
 @icon calculator
-@summary The autonumeric component wraps the autoNumeric jQuery plugin to format any type of number, including currency.
+@summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number.
  @description The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format any type of number, including currency. You must use this directive in conjunction with the `ngModel` directive where the property bound to `ngModel` is the raw numeric value on your model.
 
  ### Dependencies ###
-
- - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Used to format money values
+ - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Formats money values.
 
 ---
 
 ### Autonumeric Settings ###
+ - `bb-autonumeric` &mdash; *(Optional.)* Assigns the name of a property from the `bbAutonumericConfig` object. *(Default: `number`)*
+ - `bb-autonumeric-settings` &mdash; Specifies a value that represents a settings object to pass to the autoNumeric jQuery plugin. These options override any default options specified in the `bb-autonumeric` attribute. For more information, see the [complete list of options](http://www.decorplanit.com/plugin/).
 
- - `bb-autonumeric` &mdash; This  can optionally be assigned the name of a property from the `bbAutonumericConfig` object.  If none is specified, it defaults to `number`.
- - `bb-autonumeric-settings` &mdash; This can be assigned a value that represents a settings object that can be passed to autoNumeric. These options override any default options specified in the `bb-autonumeric` attribute. A complete list of options is available [here](http://www.decorplanit.com/plugin/).
+### Autonumeric Filter Settings ###
+In addition to the directive, the autonumeric component includes a filter that can format numbers. The filter can optionally abbreviate numbers according to SKY UX patterns. For example, it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
 
-### Autonumeric Filter ###
-
-In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to SKY UX patterns. For example,
-it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
-
- - `input` &mdash; The value to format.
- - `configType` &mdash; The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` &mdash; A Boolean value that indicates whether to abbreviate large numbers.
+ - `input` &mdash; Specifies the value to format.
+ - `configType` &mdash; Specifies the name of the configuration (`number` or `money`) to apply to the value.
+ - `abbreviate` &mdash; Provides a Boolean value to indicate whether to abbreviate large numbers.
  */
 (function ($) {
     'use strict';
@@ -100194,8 +100192,8 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 /** @module Check
 @icon check-square
 @summary The check applies a commonly styled selector to a checkbox or radio button.
- @description The check directive allows you to change an input element of type checkbox or radio button into a commonly-styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
-
+ @description The `bb-check` directive allows you to change an input element of type checkbox or radio button into a commonly styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
+ 
 ---
 
  */
@@ -100239,31 +100237,31 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 
 /** @module Checklist
 @icon list-ul
-@summary The checklist directive provides the tools to build a filterable checkbox list that can display multiple columns of data.
- @description The checklist directive allows you to build a filterable checkbox list. The `bb-checklist-column` element allows you to specify multiple columns of data for the checkbox list. You can display items in a list view where each row displays a title and description. The list view is preferable when building a responsive application.
+@summary The checklist builds a filterable checkbox list that can display multiple columns of data.
+ @description The checklist directive allows you to build a filterable checkbox list. The `bb-checklist-columns` element allows you to specify multiple columns for the rows in the checkbox list. You can display items in a list view where each row displays a title and description. The list view is preferred to the grid view because it is mobile-responsive.
 
 ### Checklist Settings ###
-
- - `bb-checklist` &mdash; Creates a filterable checkbox list.
- - `bb-checklist-items` &mdash; Creates an array of objects that represents the rows to display in the list.
- - `bb-checklist-selected-items` &mdash; Creates an array that represents the items selected in the list.
- - `bb-checklist-include-search` &mdash; Provides a Boolean value that indicates whether to include a search field to filter the checkbox list. The search field uses a callback function to filter the list based on search criteria and highlights the search text in the filtered columns.
- - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search textbox.
- - `bb-checklist-filter-callback` &mdash; Specifies the function to call when a user modifies the search text. The function updates the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter with `searchText` and `category` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
- - `bb-checklist-filter-local` &mdash; When specified, items are filtered by the checklist directive by examining the properties of each item to match the specified category or search text.
- - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making a web request in `bb-checklist-filter-callback`, this setting helps avoid new requests for each character that users type.
- - `bb-checklist-no-items-message` &mdash; Specifies the message to display when no items are displayed in the list. *(Default: `'No items found'`)*
- - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or a grid. List mode is the preferred method because it is mobile-responsive, but for backwards-compatibility reasons, grid mode is the default.
-  - `list` &mdash; Displays checklist items in a list with titles and descriptions. Items should have `title`, `description`, and `category` properties. This is the preferred method to display checklists because it is mobile-responsive.
-  - `grid` &mdash; Displays checklist items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this is the default, but list mode is preferred because it is mobile-responsive.
- - `bb-checklist-categories` &mdash; Provides an array of category names to create category filters at the top of the list.
+    - `bb-checklist` &mdash; Creates a filterable checkbox list.
+        - `bb-checklist-items` &mdash; An array of objects that represents the rows to display in the list.
+        - `bb-checklist-selected-items` &mdash; An array that represents the selected items in the list.
+        - `bb-checklist-include-search` &mdash; Provides a Boolean value to indicate whether to include a search text box to filter the checkbox list. A callback function can be used to filter the list based on search text. Search text is highlighted within the list.
+        - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search text box.
+        - `bb-checklist-filter-callback` &mdash; Specifies the function to be called when a user modifies the search text. The consumer uses this to update the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter that contains the `searchText` and `category` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
+        - `bb-checklist-filter-local` &mdash; Instructs the checklist directive to filter items in the list by making sure the properties of each item match a specified category or search text.
+        - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making web requests in `bb-checklist-filter-callback`, this avoids new requests after each character that users type.
+        - `bb-checklist-no-items-message` &mdash; Specifies a message to display when the list displays no items. *(Default: 'No items found')*
+        - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or grid. List mode is preferred because it is mobile-responsive, but grid mode is the default for backwards-compatibility. *(Default: `grid`)*
+            - `list` &mdash; Displays items in a list with titles and descriptions. Items are expected to have `title`, `description`, and `category` properties. This view is preferred to grid mode because it is mobile-responsive.
+            - `grid` &mdash; Displays items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this view is the default, but list mode is preferred because it is mobile-responsive.
+        - `bb-checklist-categories` &mdash; An array of category names to build category filters at the top of the list.
 
 ### Checklist Column Settings ###
-
- - `bb-checklist-column-caption` &mdash; Specifies a caption for the column header.
- - `bb-checklist-column-field` &mdash; Specifies the name of the property on the checklist items that contains the text to display in the column.
- - `bb-checklist-column-class` &mdash; Applies a CSS class to the column header and cells.
- - `bb-checklist-column-width` &mdash; Sets the width of the column.
+    - `bb-checklist-columns` &mdash; Allows you to specify multiple columns of data for the checkbox list.
+        - `bb-checklist-column` &mdash; Allows you to specify an individual column of data for the checkbox list.
+            - `bb-checklist-column-caption` &mdash; Specifies caption text for the column header.
+            - `bb-checklist-column-field` &mdash; Specifies the name of the property that contains the text to display in the column.
+            - `bb-checklist-column-class` &mdash; Specifies a CSS class to apply to the column header and cells.
+            - `bb-checklist-column-width` &mdash; Sets the width of the column.
  */
 
 (function () {
@@ -102092,48 +102090,36 @@ The date-range picker service provides functionality that works closely with the
 
 /** @module File Attachments
 @icon cloud-upload
-@summary The file attachments module provides the ability to add multiple files to a form and to display information about files after they are added.
-@description The file attachments module contains two directives to make it easier to add multiple files to a form.
-The `bb-file-drop` directive provides an element that can both be clicked to select a file from the user's
-local drive or serve as a drop zone where files can be dragged from the user's local drive.  The directive can
-also optionally display controls for the user to add a hyperlink to a file on the web.
+@summary The file attachments module provides the ability to add multiple files to a form and then display information about the files.
+@description The file attachments module contains two directives to add files to a form.
+The `bb-file-drop` directive provides an element that users can click to select files from their local drive or use as a drop zone to drag and drop files. The directive can
+also display controls for users to add hyperlinks to files on the web.
 
-The contents of the directive may be left blank to display the default UI for the drop zone, or you may include your
-own custom content to be displayed instead of the default UI.
+You can leave the contents of the directive blank to display the drop zone's default UI, or you can specify custom content to display instead.
 
-Also note that upon the initialization of the Sky module, dragging and dropping files will be disabled for the entire window so that
-accidentally dropping a file outside the target zone doesn't result in the file being opened in the browser window.  If you are
-implementing your own file drop functionality outside of the file drop directive, you can place the `bb-file-drop-target` CSS
-class on the element you wish to receive drop events and that element will be exempt from the drop exclusion rule.
+When the SKY UX module initializes, dragging and dropping files is disabled for the entire window. This prevents the browser from opening files that are accidentally dropped outside the target zone. If you implement your own file drop functionality outside of the file drop directive, you can place the `bb-file-drop-target` CSS
+class on the element that receives drop events to exempt it from the drop exclusion rule.
+
+The `bb-file-item` directive displays summary information about attachments that users add to forms. By default, the directive displays file names and delete buttons. For files from local drives, the directive also displays file sizes and thumbnails. Any content inside this directive is displayed to the right of the preview image.
 
 ### File Drop Settings ###
 
-- `bb-file-drop-accept` *(Optional)* A comma-delimited string literal of MIME types that may be dropped or selected (e.g. `bb-file-drop-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-drop-accept="'image/png'"`) or a custom validation function (e.g. `bb-file-drop-accept="fileAttachmentDemo.validate($file)"`).
-- `bb-file-drop-multiple` *(Default: `true`)* A flag indicating whether multiple files may be dropped at once.
-- `bb-file-drop-allow-dir` *(Default: `true`)* A flag indicating whether a directory can be selected.
-- `bb-file-drop-min-size` *(Optional)* The minimum size in bytes of a valid file.
-- `bb-file-drop-max-size` *(Optional)* The maximum size in bytes of a valid file.
-- `bb-file-drop-change` A function that is called when a file or files are selected when the user drops files onto the
-drop zone or selects them by clicking the element.  This function accepts 2 parameters:
- - `files` An array of valid files that were dropped or selected.  Each item is a JavaScript [File](https://developer.mozilla.org/en-US/docs/Web/API/File)
- object.
- - `rejectedFiles` An array of files that did not meet the specified file type and/or size requirements.
-- `bb-file-drop-link` *(Optional)* The attribute with no value can be specified)* Indicates that an option to add hyperlinks
-should be displayed.
-- `bb-file-drop-link-change` *(Optional)* A function that is called when the user adds a hyperlink.  The function accepts one
-`link` parameter.  The `link` will have a `url` property containing the link the user added.
-- `bb-file-drop-noclick` Specify this attribute when you want to disable the ability to select a file from a file dialog by clicking the element.
-
-The `bb-file-item` directive displays summary information about a file that has been added to a form.  By default
-it displays the file's name and a delete button, and if the file from the user's local drive rather than a hyperlink,
-a the file's size and thumbnail will also be displayed.  Any content inside this directive will be displayed to the right
-of the preview image.
+- `bb-file-drop-accept` &mdash; *(Optional)* Provides a comma-delimited string literal of MIME types that users can drop or select (`bb-file-drop-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-drop-accept="'image/png'"`) or a custom validation function (`bb-file-drop-accept="fileAttachmentDemo.validate($file)"`).
+- `bb-file-drop-multiple` &mdash; Indicates whether users can drop multiple files at the same time. *(Default: `true`)* 
+- `bb-file-drop-allow-dir` &mdash; Indicates whether users can select a directory when they attach files. *(Default: `true`)*
+- `bb-file-drop-min-size` &mdash; *(Optional)* Specifies the minimum size in bytes of a valid file.
+- `bb-file-drop-max-size` &mdash; *(Optional)* Specifies the maximum size in bytes of a valid file.
+- `bb-file-drop-change` &mdash; Specifies a function to call when users attach files. The function accepts two parameters:
+ - `files` &mdash; An array of valid files that a user selects or drags and drops. Each item is a [JavaScript File object](https://developer.mozilla.org/en-US/docs/Web/API/File).
+ - `rejectedFiles` &mdash; An array of files that are not valid because they do not meet the file type and/or size requirements.
+- `bb-file-drop-link` &mdash; *(Optional)* Indicates whether to display an option for users to specify hyperlinks to files on the web. You include this attribute with no value to display the hyperlink option. 
+- `bb-file-drop-link-change` &mdash; *(Optional)* Specifies a function to call when users add hyperlinks. The function accepts a `link` parameter with a `url` property that contains the hyperlink.
+- `bb-file-drop-noclick` &mdash; Disables the option for users to click the element and select files through a file dialog.
 
 ### File Item Settings ###
 
-- `bb-file-item` The file or hyperlink to display.  If the item is a file, the file size and a preview will be displayed.
-- `bb-file-item-delete` A function to call when an item's delete button is clicked.  The deleted item will be passed
-to the function.
+- `bb-file-item` &mdash; The file or hyperlink to display. For files, the directive displays file sizes and previews.
+- `bb-file-item-delete` &mdash; Specifies a function to call when users click the delete button for an item. The deleted item is passed to the function.
  */
 (function () {
     'use strict';
@@ -102405,12 +102391,11 @@ to the function.
 
 /** @module Format
 @icon paragraph
-@summary The format service provides functions to format text with a format string and to escape HTML characters.
-@description The format service gives you the following functions:
+@summary The format service provides access to functions that allow you to format text with a format string and to escape HTML characters.
+@description The format service provides access to the following functions:
 
-  - `formatText(formatString, args)` Formats the args with a given format string.
-  - `escape(text)` Replaces the `<`, `>`, and `&` tags with `&lt;`, `&gt;`, and `&amp;`.
-
+  - `formatText(formatString, args)` &mdash; Formats the args with a given format string.
+  - `escape(text)` &mdash; Replaces the `<`, `>`, and `&` characters with `&lt;`, `&gt;`, and `&amp;`.
 */
 
 (function () {
@@ -102868,7 +102853,7 @@ to the function.
 /** @module Grid
 @icon table
 @summary The grid builds a full-featured grid with a search box, column picker, and filter form.
- @description The grid directive allows you to build a full-featured grid with a search box, column picker, and filter form.
+ @description The grid directive builds a full-featured grid with a search box, column picker, and filter form.
 
  ### Dependencies ###
 
@@ -102876,70 +102861,68 @@ to the function.
 - **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
 ---
 
-The grid directive allows you to build a full-featured grid with a search box, column picker and filter form.
-
 ### Grid Settings ###
-- `bb-grid-filters` A directive you can use inside the bb-grid directive to create a filter flyout menu.
-  - `bb-options` An options object for bb-grid-filters that contains the following:
-      - `applyFilters` A function that is called when you click the apply filters button. You can pass updated filters to `bb-grid` by setting `args.filters`.
-      - `clearFilters` A function that is called when you click the clear filters button. You can pass updated filters to `bb-grid` by setting `args.filters`.
-  - `bb-grid-filters-group` A directive you can use inside of `bb-grid-filters` that creates labels (with the `bb-grid-filters-group-label` option) and collapsible areas.
-- `bb-grid-filters-summary` A directive you can use inside the bb-grid directive to create a summary toolbar for your applied filters.
-  - `bb-options` An options object for `bb-grid-filters-summary` that contains the following:
-      - `clearFilters` A function that is called when you click the clear filters (x) icon. You can pass updated filters to `bb-grid` by setting `args.filters`.
+- `bb-grid-filters` &mdash; Creates a flyout filter menu within the `bb-grid` directive.
+  - `bb-options` &mdash; Specifies an options object for the `bb-grid-filters` directive.
+      - `applyFilters` &mdash; Specifies a function to call when users click the apply filters button. You can set `args.filters` to pass updated filters to `bb-grid`.
+      - `clearFilters` &mdash; Specifies a function to call when users click the clear filters button. You can set `args.filters` to pass updated filters to `bb-grid`.
+  - `bb-grid-filters-group` &mdash; Creates labels (with `bb-grid-filters-group-label`) and collapsible areas within the `bb-grid-filters` directive.
+- `bb-grid-filters-summary` &mdash; Creates a summary toolbar for your applied filters within the bb-grid directive.
+  - `bb-options` &mdash; Specifies an options object for the `bb-grid-filters-summary` directive.
+      - `clearFilters` &mdash; Specifies a function to call when users click the clear filters icon. You can set `args.filters` to pass updated filters to `bb-grid`.
 
-- `bb-grid-options` An object with the following properties:
-  - `columns` An array of available columns.  Each column can have these properties:
-        - `allow_see_more` Allows the column to have a see more link to view overflow content.
-        - `caption` The text to display in the column header and column chooser.
-        - `category` A category for the column, can be used to filter in the column chooser.
-        - `center_align` True if the column header and contents should be center aligned.
-        - `controller` The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data. You can access row data from the grid in the column template controller using `$scope.rowData`.
-        - `description` A description for the column, seen in the column chooser.
-        - `exclude_from_search` If true, then the column does not highlight text on search.
-        - `id` A unique identifier for the column.  The ID is referenced by the option object's `selectedColumnIds` property.
-        - `jsonmap` The name of the property that maps to the column's data.
-        - `name` The name of the column.
-        - `right_align` True if the column header and contents should be right aligned.
-        - `template_url` The url for the column template to show formatted or complex data in a cell. The properties of the cell data object can be accessed using the format `data.property_name`.
-        - `width_all` The default width (in pixels) for a column if no breakpoint specific column is specified (`width_xs`, `width_sm`, `width_md`, `width_lg`). If no value is specified, columns will default to 150px, and if the columns do not take up the available room in the grid, the last column will be extended.
-        - `width_xs` The width of the column for screen sizes less than 768px.
-        - `width_sm` The width of the column for screen sizes from 768px to 991px.
-        - `width_md` The width of the column for screen sizes from 992px to 1199px.
-        - `width_lg` The width of the column for screen sizes greater than 1199px.
-  - `data` An array of objects representing the rows in the grid.  Each row should have properties that correspond to the `columns` `jsonmap` properties.
-  - `fixedToolbar` Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.
-  - `filtersAreActive` If true, the filter button highlights to indicate that filters are active.
-  - `filtersOpen` If set to true, opens filters. If set to false, closes filters.
-  - `getContextMenuItems` If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
-      - `id` A unique string identifier for the option.
-      - `title` The title shown for the dropdown option.
-      - `cmd` A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.
-  - `hasInlineFilters` If true, toggles hide/show on the transcluded content in the `bb-grid` directive when the filter button is pressed.
-  - `hasMoreRows` If set to true, then the `See more` button will appear below the grid when the grid does not use pagination.
-  - `hideColPicker` If true, hides the grid column picker in the toolbar.
-  - `hideFilters` If true, hides the filters button in the toolbar.
-  - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
-  - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
-  - `onAddClickLabel` Label for the add button.
-  - `searchText` The text entered in the grid search box, set by bbGrid.
-  - `selectedColumnIds` An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
-  - `sortOptions` Options around column sorting:
-      - `excludedColumns` An array of column names that should be excluded.
-      - `column` The name of the column that the data should be sorted by, set by bbGrid.
-      - `descending` Set to true by bbGrid if the sort should be in descending order.
-- `bb-grid-pagination` An object set when you intend to use pagination instead of infinite scrolling with your grid. It has the following properties:
-  - `itemsPerPage` The number of rows you wish to show in the grid per page, defaults to 5.
-  - `maxPages` The maximum number of pages to show in the pagination bar, defualts to 5.
-  - `recordCount` The total number of records available through pagination.
-- `bb-multiselect-actions` An array of actions that can be shown in the multiselect action bar. Each action can have the following:
-  - `actionCallback` A function that will be called when the action is clicked.
-  - `automationId` An identifier that will be placed in the `data-bbauto` attribute for automation purposes.
-  - `isPrimary` If true, this action will have the primary button color.
-  - `selections` The selected row objects from the list builder that are associated with this action, this can be updated through the `bb-selections-updated` function.
-  - `title` The text that will appear on the button for the action.
-- `bb-selected-rows` An object that has two way binding to the multiselected rows. It can be used to set the multiselected rows from the parent controller of the directive.
-- `bb-selections-updated` A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.
+- `bb-grid-options` &mdash; An object with the following properties:
+  - `columns` &mdash; An array of available columns.  Each column can have these properties:
+        - `allow_see_more` &mdash; Allows the column to have a see more link to view overflow content.
+        - `caption` &mdash; The text to display in the column header and column chooser.
+        - `category` &mdash; A category for the column, can be used to filter in the column chooser.
+        - `center_align` &mdash; True if the column header and contents should be center aligned.
+        - `controller` &mdash; The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data. You can access row data from the grid in the column template controller using `$scope.rowData`.
+        - `description` &mdash; A description for the column, seen in the column chooser.
+        - `exclude_from_search` &mdash; If true, then the column does not highlight text on search.
+        - `id` &mdash; A unique identifier for the column.  The ID is referenced by the option object's `selectedColumnIds` property.
+        - `jsonmap` &mdash; The name of the property that maps to the column's data.
+        - `name` &mdash; The name of the column.
+        - `right_align` &mdash; True if the column header and contents should be right aligned.
+        - `template_url` &mdash; The url for the column template to show formatted or complex data in a cell. &mdash; The properties of the cell data object can be accessed using the format `data.property_name`.
+        - `width_all` &mdash; The default width (in pixels) for a column if no breakpoint specific column is specified (`width_xs`, `width_sm`, `width_md`, `width_lg`). If no value is specified, columns will default to 150px, and if the columns do not take up the available room in the grid, the last column will be extended.
+        - `width_xs` &mdash; The width of the column for screen sizes less than 768px.
+        - `width_sm` &mdash; The width of the column for screen sizes from 768px to 991px.
+        - `width_md` &mdash; The width of the column for screen sizes from 992px to 1199px.
+        - `width_lg` &mdash; The width of the column for screen sizes greater than 1199px.
+  - `data` &mdash; An array of objects representing the rows in the grid.  Each row should have properties that correspond to the `columns` `jsonmap` properties.
+  - `fixedToolbar` &mdash; Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.
+  - `filtersAreActive` &mdash; If true, the filter button highlights to indicate that filters are active.
+  - `filtersOpen` &mdash; If set to true, opens filters. If set to false, closes filters.
+  - `getContextMenuItems` &mdash; If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
+      - `id` &mdash; A unique string identifier for the option.
+      - `title` &mdash; The title shown for the dropdown option.
+      - `cmd` &mdash; A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.
+  - `hasInlineFilters` &mdash; If true, toggles hide/show on the transcluded content in the `bb-grid` directive when the filter button is pressed.
+  - `hasMoreRows` &mdash; If set to true, then the `See more` button will appear below the grid when the grid does not use pagination.
+  - `hideColPicker` &mdash; If true, hides the grid column picker in the toolbar.
+  - `hideFilters` &mdash; If true, hides the filters button in the toolbar.
+  - `multiselect` &mdash; If true, adds a multiselect checkbox column to the listbuilder.
+  - `onAddClick` &mdash; If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
+  - `onAddClickLabel` &mdash; Label for the add button.
+  - `searchText` &mdash; The text entered in the grid search box, set by bbGrid.
+  - `selectedColumnIds` &mdash; An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
+  - `sortOptions` &mdash; Options around column sorting:
+      - `excludedColumns` &mdash; An array of column names that should be excluded.
+      - `column` &mdash; The name of the column that the data should be sorted by, set by bbGrid.
+      - `descending` &mdash; Set to true by bbGrid if the sort should be in descending order.
+- `bb-grid-pagination` &mdash; An object set when you intend to use pagination instead of infinite scrolling with your grid. It has the following properties:
+  - `itemsPerPage` &mdash; The number of rows you wish to show in the grid per page, defaults to 5.
+  - `maxPages` &mdash; The maximum number of pages to show in the pagination bar, defualts to 5.
+  - `recordCount` &mdash; The total number of records available through pagination.
+- `bb-multiselect-actions` &mdash; An array of actions that can be shown in the multiselect action bar. Each action can have the following:
+  - `actionCallback` &mdash; A function that will be called when the action is clicked.
+  - `automationId` &mdash; An identifier that will be placed in the `data-bbauto` attribute for automation purposes.
+  - `isPrimary` &mdash; If true, this action will have the primary button color.
+  - `selections` &mdash; The selected row objects from the list builder that are associated with this action, this can be updated through the `bb-selections-updated` function.
+  - `title` &mdash; The text that will appear on the button for the action.
+- `bb-selected-rows` &mdash; An object that has two way binding to the multiselected rows. It can be used to set the multiselected rows from the parent controller of the directive.
+- `bb-selections-updated` &mdash; A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.
 
 ### Custom Grid Toolbar ###
 If you need more content in the grid toolbar beyond the add button, search input, column chooser, and filter button, then you can add custom content between the add button and search input.
@@ -102948,7 +102931,7 @@ To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid
 
 ### Grid Events ###
 
-  - `includedColumnsChanged` Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
+  - `includedColumnsChanged` &mdash; Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
 to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
 reloading the grid with the current data after the event has fired.
   - `loadMoreRows` Fires when a page changes (when using pagination) or a user clicks the 'Load more' button. When a user clicks the 'Load more' button, the event provides a promise. The consumer of the event should resolve the promise with the new data that the grid appends to the existing data. When the event is raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
@@ -108126,13 +108109,13 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 
 /** @module Email Validation
 @icon check
-@summary The email validation directive allows you to validate email strings in input fields.
- @description The email validation provides the ability to validate email strings in input fields.
+@summary The email validation directive validates email address strings in input fields.
+ @description The email validation directive validates email address strings in input fields.
 
 ### Email Validation Settings ###
 
-- `ng-model` An object to bind the email value to on the input.
-- `type=email` indicates that email validation can be used.
+- `ng-model` &mdash; Specifies an object to bind the email value to on the input.
+- `type=email` &mdash; Indicates that email validation can be used.
  */
 
 (function () {
