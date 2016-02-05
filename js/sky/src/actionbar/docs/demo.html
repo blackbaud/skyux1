@@ -1,10 +1,10 @@
 <div ng-controller="ActionButtonBarTestController as actionCtrl">
     <script type="text/ng-template" id="actionbarList.html">
     <li>
-        <a ng-click="actionCtrl.subAction1()">Sub Action 1</a>
+        <a ng-click="actionCtrl.subAction1()">Sub-action 1</a>
     </li>
     <li>
-        <a ng-click="actionCtrl.subAction2()">Sub Action 2</a>
+        <a ng-click="actionCtrl.subAction2()">Sub-action 2</a>
     </li>
     </script>
 
@@ -31,13 +31,13 @@
   </bb-action-bar>
   <p></p>
   <p>
-        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
+        Last action clicked: <strong>{{actionCtrl.lastAction}}</strong>
   </p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle Action 2</button>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle action 2</button>
   </p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add Action</button>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add action</button>
   </p>
 </div>
 
@@ -92,13 +92,13 @@
 </div>
   <p></p>
   <p>
-        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
+        Last action clicked: <strong>{{actionCtrl.lastAction}}</strong>
   </p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle Action 2</button>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle action 2</button>
   </p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add Action</button>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add action</button>
   </p>
 
 </div>

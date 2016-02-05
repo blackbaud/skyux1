@@ -49,11 +49,11 @@
         };
 
         self.subAction1 = function () {
-            self.lastAction = 'Sub Action 1';
+            self.lastAction = 'Sub-action 1';
         };
 
         self.subAction2 = function () {
-            self.lastAction = 'Sub Action 2';
+            self.lastAction = 'Sub-action 2';
         };
 
         self.dropdownText = 'More actions';
