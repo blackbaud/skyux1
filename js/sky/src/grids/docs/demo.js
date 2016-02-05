@@ -239,7 +239,8 @@
                 filtersOpen: true,
                 selectedColumnIds: [1, 2, 3, 5],
                 columnPickerHelpKey: 'bb-security-users.html',
-                columnPickerMode: 'list'
+                columnPickerMode: 'list',
+                colPickerSearchProperties: ['caption', 'description']
             };
 
             self.guitarFilter = false;

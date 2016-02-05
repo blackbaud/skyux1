@@ -27,8 +27,8 @@
 
 
     function columnCompare(a, b) {
-        a = a.title.toLocaleLowerCase();
-        b = b.title.toLocaleLowerCase();
+        a = a.caption.toLocaleLowerCase();
+        b = b.caption.toLocaleLowerCase();
 
         if (a < b) {
             return -1;
@@ -52,13 +52,11 @@
         
         return selectedColumns;
     }
-
-    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode) {
-        var columns = [],
-            initialSelectedColumns;
-
-        angular.forEach(availableColumns, function (column) {
-            columns.push({
+    
+    function translateColumnsToChecklistObjects(columns) {
+        var translatedColumns = [];
+        angular.forEach(columns, function (column) {
+            translatedColumns.push({
                 id: column.id,
                 name: column.name,
                 title: column.caption,
@@ -66,10 +64,18 @@
                 description: column.description
             });
         });
-        
-        initialSelectedColumns = getInitialSelectedColumns(columns, initialSelectedColumnIds);
+        return translatedColumns;
+    }
 
+    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode, colPickerSearchProperties) {
+        var columns,
+            initialSelectedColumns;
+        
+        columns = angular.copy(availableColumns);
         columns.sort(columnCompare);
+        $scope.initialColumns = columns;
+        columns = translateColumnsToChecklistObjects(columns);        
+        initialSelectedColumns = getInitialSelectedColumns(columns, initialSelectedColumnIds);
 
         $scope.columns = columns;
         $scope.categories = buildCategoryList(columns);
@@ -77,6 +83,44 @@
         $scope.locals.selectedColumns = initialSelectedColumns.slice(0);
         $scope.columnPickerHelpKey = columnPickerHelpKey;
         $scope.listMode = listMode;
+        if (colPickerSearchProperties) {
+            $scope.colPickerSearchProperties = colPickerSearchProperties;
+            $scope.searchCallback = function (args) {
+                var i,
+                    j, 
+                    n,
+                    m, 
+                    p,
+                    val,
+                    item, 
+                    items = $scope.initialColumns,
+                    filteredItems = [],
+                    searchTextUpper = angular.isString(args.searchText) ? args.searchText.toUpperCase() : '';
+                for (i = 0, n = items.length; i < n; i++) {
+                    item = items[i];
+                        
+                    if (!args.category || item.category === args.category) {
+                        if (!searchTextUpper) {
+                            filteredItems.push(item);
+                        } else {
+                            for (j = 0, m = $scope.colPickerSearchProperties.length; j < m; j++) {
+                                p = $scope.colPickerSearchProperties[j];
+                                if (item.hasOwnProperty(p)) {
+                                    val = item[p];
+
+                                    if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
+                                        filteredItems.push(item);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                $scope.columns = translateColumnsToChecklistObjects(filteredItems); 
+            };
+        }
         
         $scope.applyChanges = function () {
             var column,
@@ -114,7 +158,7 @@
         };
     }
     
-    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode'];
+    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode', 'colPickerSearchProperties'];
 
     angular.module('sky.grids.columnpicker', ['sky.checklist', 'sky.resources'])
         .controller('BBGridColumnPickerController', BBGridColumnPickerController);

@@ -42,6 +42,9 @@
                             },
                             listMode: function () {
                                 return $scope.options.columnPickerMode;
+                            },
+                            colPickerSearchProperties: function () {
+                                return $scope.options.colPickerSearchProperties;
                             }
                         }
                     }).result.then(function (selectedColumnIds) {
