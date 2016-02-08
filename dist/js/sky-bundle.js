@@ -109023,7 +109023,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/seemore.html',
-        '<a href="javascript:void(0)" class="bb-text-expand-see-more"></a>\n' +
+        '<button class="btn bb-btn-link-inline bb-text-expand-see-more"></button>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/space.html',
         '<span class="bb-text-expand-space"> </span>\n' +
