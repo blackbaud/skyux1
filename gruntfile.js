@@ -676,8 +676,11 @@ module.exports = function (grunt) {
             tasks.push('docs');
             break;
         case 'travis-pr-branch':
+            checkSkipTest('internal', true);
+            break;
         case 'travis-push':
             checkSkipTest('internal', true);
+            tasks.push('docs');
             break;
         }
 
