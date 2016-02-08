@@ -48,6 +48,19 @@
     &.active {
         border-color: #b0b0b0;
     }
+
+    &:focus {
+      //default
+      outline: thin dotted;
+
+      //webkit
+      outline: -webkit-focus-ring-color auto 5px;
+      outline-offset: -2px;
+    }
+}
+
+.open > .bb-context-menu-btn:focus {
+  outline: none;
 }
 
 .open .dropdown-toggle.bb-btn-secondary.bb-context-menu-btn {

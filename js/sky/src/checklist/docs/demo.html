@@ -1,5 +1,5 @@
 <div ng-controller="ChecklistTestController as checklistCtrl">
-  <h3>List example</h3>
+  <h3>List Example</h3>
   <bb-checklist
                 bb-checklist-items="checklistCtrl.listItems"
                 bb-checklist-selected-items="checklistCtrl.selectedListItems"
@@ -12,7 +12,7 @@
   </bb-checklist>
   <p></p>
   <label>
-    <input bb-check type="checkbox" ng-model="checklistCtrl.includeSearch" /> Include searchbox
+    <input bb-check type="checkbox" ng-model="checklistCtrl.includeSearch" /> Include search text box
   </label>
   <p></p>
   <hr>
@@ -65,6 +65,7 @@
       </bb-checklist-column>
     </bb-checklist-columns>
   </bb-checklist>
+  <br>
   <div>
     <label>Selected items:</label>
     <ul>

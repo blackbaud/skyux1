@@ -10,7 +10,7 @@
             { description: 'Checkbox 1', checked: false, disabled: false },
             { description: 'Checkbox 2', checked: true, disabled: false },
             { description: 'Disabled', checked: false, disabled: true },
-            { description: 'Disabled and checked', checked: true, disabled: true }
+            { description: 'Disabled and selected', checked: true, disabled: true }
         ];
 
         self.radioItems = [
