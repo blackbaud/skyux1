@@ -14,8 +14,9 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
   cd skyux
 
   # Update version in README.md
+  # This is for GNU sed, OSX sed would require "sed -i '' -E -e" ...
   if [[ "$IS_RELEASE" == "true" && "$IS_PRERELEASE" == "false" ]]; then
-    sed -i '' -E -e 's/blackbaudcdn.net\/skyux\/[0-9]+\.[0-9]+\.[0-9]+\//blackbaudcdn.net\/skyux\/'"$RELEASE_VERSION"'\//g' README.md
+    sed -i -E -e 's/blackbaudcdn.net\/skyux\/[0-9]+\.[0-9]+\.[0-9]+\//blackbaudcdn.net\/skyux\/'"$RELEASE_VERSION"'\//g' README.md
     git add README.md
   fi
 
