@@ -38,6 +38,7 @@ module.exports = function (grunt) {
         'bower_components/enquire/dist/enquire.js',
         'bower_components/angular/angular.js',
         'bower_components/angular-animate/angular-animate.js',
+        'bower_components/angular-messages/angular-messages.js',
         'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
         'bower_components/angular-ui-router/release/angular-ui-router.js',
         'bower_components/moment/moment.js',
