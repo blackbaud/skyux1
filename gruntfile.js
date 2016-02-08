@@ -245,7 +245,7 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: ['**/*.scss'],
-                tasks: ['styles', 'karma:watch:run']
+                tasks: ['styles', 'karma:watch:run', 'copy:demo']
             }
         },
         sass: {
