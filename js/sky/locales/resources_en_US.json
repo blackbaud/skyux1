@@ -3,6 +3,10 @@
         "_description": "The label for the actions dropdown on the action button bar",
         "message": "Actions"
     },
+    "alert_close": {
+        "_description": "Screen reader text for the close button on alerts",
+        "message": "Close"
+    },
     "autonumeric_abbr_billions": {
         "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
         "message": "b"
@@ -175,6 +179,10 @@
         "_description": "",
         "message": "Expanded view"
     },
+    "text_expand_close_text": {
+      "_description": "Text for the close button on the text expand modal",
+      "message": "Close"
+    },
     "grid_action_bar_clear_selection": {
         "_description": "Clear the selections in the grid.",
         "message": "Clear selection"
@@ -267,6 +275,10 @@
         "_description": "text for date range picker",
         "message": "Yesterday"
     },
+    "date_range_picker_specific_range": {
+      "_description": "text for date range picker",
+      "message": "Specific range"
+    },
     "date_range_picker_filter_description_this_week": {
         "_description": "text for date range picker",
         "message": "{0} for this week"
@@ -343,6 +355,26 @@
         "_description": "text for date range picker",
         "message": "{0} for tomorrow"
     },
+    "date_range_picker_filter_description_specific_range": {
+      "_description": "text for date range picker",
+      "message": "{0} from {1} to {2}"
+    },
+    "date_range_picker_from_date": {
+      "_description": "label for date range picker",
+      "message": "From date"
+    },
+    "date_range_picker_to_date": {
+      "_description": "label for date range picker",
+      "message": "To date"
+    },
+    "date_range_picker_min_date_error": {
+      "_description": "error message for date range picker",
+      "message": "End date must be after start date"
+    },
+    "date_range_picker_max_date_error": {
+      "_description": "error message for date range picker",
+      "message": "Start date must be before end date"
+    },
     "file_size_b_plural": {
         "_description": "",
         "message": "{0} bytes"
@@ -396,8 +428,8 @@
         "message": "Searching..."
     },
     "searchfield_no_records": {
-        "_description": "",
-        "message": "text for ui-select search control when no records are found,"
+        "_description": "text for ui-select search control when no records are found.",
+        "message": "Sorry, no matching records found"
     },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",
