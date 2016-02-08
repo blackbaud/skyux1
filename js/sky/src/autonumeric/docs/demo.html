@@ -7,7 +7,7 @@
 
         <div class="form-group">
           <label for="autonumeric-money-{{$id}}" class="control-label">
-            <h4>Enter a money value.</h4>
+            <h4>Enter a money value:</h4>
           </label>
           <br />
 
@@ -26,7 +26,7 @@
         <div>&nbsp;</div>
         <div class="form-group">
           <label for="autonumeric-number-{{$id}}" class="control-label">
-            <h4>Enter a number value.</h4>
+            <h4>Enter a number value:</h4>
           </label>
           <br />
           <input type="text" class="form-control" id="autonumeric-number-{{$id}}" ng-model="autoCtrl.numberValue" bb-autonumeric="number" />
@@ -50,14 +50,14 @@
             Money value: <strong>{{autoCtrl.moneyValue | bbAutonumeric:'money'}}</strong>
           </div>
           <div>
-            Money value (abbreviated): <strong>{{autoCtrl.moneyValue | bbAutonumeric:'money':true}}</strong>
+            Abbreviated money value: <strong>{{autoCtrl.moneyValue | bbAutonumeric:'money':true}}</strong>
           </div>
           <br />
           <div>
             Number value: <strong>{{autoCtrl.numberValue | bbAutonumeric}}</strong>
           </div>
           <div>
-            Number value (abbreviated): <strong>{{autoCtrl.numberValue | bbAutonumeric:'number':true}}</strong>
+            Abbreviated number value: <strong>{{autoCtrl.numberValue | bbAutonumeric:'number':true}}</strong>
           </div>
         </div>
       </div>
