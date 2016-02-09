@@ -1,7 +1,7 @@
 <div ng-controller="ContextMenuTestController as contextMenuCtrl">
   <div>
     <p>
-      For simple dropdowns, you can use <code>bb-context-menu-item</code> within <code>bb-context-menu</code>.
+      For simple dropdowns, you can use <code>bb-context-menu-item</code> with <code>bb-context-menu</code>.
     </p>
     <bb-context-menu>
       <bb-context-menu-item ng-repeat="item in contextMenuCtrl.items" bb-context-menu-action="item.onClick()">{{item.text}}</bb-context-menu-item>
@@ -15,17 +15,17 @@
     <div>
       <bb-context-menu>
         <li role="presentation">
-          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Above')">Action Above</a>
+          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Above')">Action above</a>
         </li>
         <li class="divider"></li>
         <li class="disabled" role="presentation">
-          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Below')">Action Below</a>
+          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Below')">Action below</a>
         </li>
       </bb-context-menu>
     </div>
     <p></p>
     <div>
-      <button type="button" class="btn btn-primary" ng-click="contextMenuCtrl.openDropdown($event)">Open Third Menu</button>
+      <button type="button" class="btn btn-primary" ng-click="contextMenuCtrl.openDropdown($event)">Open third menu</button>
       <p></p>
       <div class="bb-context-menu" uib-dropdown is-open="contextMenuCtrl.isOpen">
         <bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>
@@ -38,10 +38,10 @@
           <li role="presentation">
               <bb-submenu>
                   <bb-submenu-heading>
-                      Nested Menu
+                      Nested menu
                   </bb-submenu-heading>
                   <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action A')">Action A</a>
-                  <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action A Sub')">Action A Sub</a>
+                  <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action A Sub')">Action A sub</a>
               </bb-submenu>
           </li>
 
@@ -56,6 +56,6 @@
   </p>
   <hr>
   <p>
-    Last Action Clicked: <strong>{{contextMenuCtrl.lastAction}}</strong>
+    Last action clicked: <strong>{{contextMenuCtrl.lastAction}}</strong>
   </p>
 </div>
