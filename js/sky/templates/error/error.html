@@ -1,0 +1,6 @@
+<div>
+  <img class="bb-error-image" ng-if="{{bbErrorCtrl.imageSource}}" ng-src="{{bbErrorCtrl.imageSource}}"></img>
+  <div class="bb-error-header">{{bbErrorCtrl.errorHeader}}</div>
+  <div class="bb-error-description">{{bbErrorCtrl.errorDescription}}</div>
+  <button type="button" class="btn btn-primary" ng-click="bbErrorCtrl.errorAction()">{{bbErrorCtrl.actionName}}</button>
+</div>
