@@ -186,6 +186,7 @@
 
                     function runValidators() {
                         var inputNgModel = $scope.getInputNgModel();
+                        /*istanbul ignore else: sanity check */
                         if (inputNgModel) {
                             inputNgModel.$validate();
                         }

@@ -18,7 +18,8 @@ describe('tabset', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-tabset-all'
+                    elem: '#screenshot-tabset-all',
+                    screenWidth: [480, 1280]
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
