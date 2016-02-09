@@ -1,6 +1,6 @@
 {
   "name": "blackbaud-skyux",
-  "version": "1.5.3",
+  "version": "1.5.6",
   "homepage": "http://skyux.developer.blackbaud.com",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
   "main": [
@@ -17,6 +17,7 @@
   "license": "MIT",
   "ignore": [
     ".*",
+    "CONTRIBUTING.md",
     "demo",
     "gruntfile.js",
     "js/",
@@ -25,6 +26,8 @@
     "package.json",
     "*.sh",
     "visualtest",
+    "webdriver-screenshots",
+    "webdrivertest",
     "*.yml"
   ],
   "dependencies": {

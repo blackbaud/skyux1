@@ -69951,7 +69951,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');
 /**
  * State-based routing for AngularJS
- * @version v0.2.17
+ * @version v0.2.18
  * @link http://angular-ui.github.com/
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
@@ -70474,7 +70474,7 @@ function $Resolve(  $q,    $injector) {
    * propagated immediately. Once the `$resolve` promise has been rejected, no 
    * further invocables will be called.
    * 
-   * Cyclic dependencies between invocables are not permitted and will caues `$resolve`
+   * Cyclic dependencies between invocables are not permitted and will cause `$resolve`
    * to throw an error. As a special case, an injectable can depend on a parameter 
    * with the same name as the injectable, which will be fulfilled from the `parent` 
    * injectable of the same name. This allows inherited values to be decorated. 
@@ -71221,7 +71221,7 @@ function $UrlMatcherFactory() {
   function valFromString(val) { return val != null ? val.toString().replace(/~2F/g, "/").replace(/~~/g, "~") : val; }
 
   var $types = {}, enqueue = true, typeQueue = [], injector, defaultTypes = {
-    string: {
+    "string": {
       encode: valToString,
       decode: valFromString,
       // TODO: in 1.0, make string .is() return false if value is undefined/null by default.
@@ -71229,19 +71229,19 @@ function $UrlMatcherFactory() {
       is: function(val) { return val == null || !isDefined(val) || typeof val === "string"; },
       pattern: /[^/]*/
     },
-    int: {
+    "int": {
       encode: valToString,
       decode: function(val) { return parseInt(val, 10); },
       is: function(val) { return isDefined(val) && this.decode(val.toString()) === val; },
       pattern: /\d+/
     },
-    bool: {
+    "bool": {
       encode: function(val) { return val ? 1 : 0; },
       decode: function(val) { return parseInt(val, 10) !== 0; },
       is: function(val) { return val === true || val === false; },
       pattern: /0|1/
     },
-    date: {
+    "date": {
       encode: function (val) {
         if (!this.is(val))
           return undefined;
@@ -71260,14 +71260,14 @@ function $UrlMatcherFactory() {
       pattern: /[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/,
       capture: /([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/
     },
-    json: {
+    "json": {
       encode: angular.toJson,
       decode: angular.fromJson,
       is: angular.isObject,
       equals: angular.equals,
       pattern: /[^/]*/
     },
-    any: { // does not encode/decode
+    "any": { // does not encode/decode
       encode: angular.identity,
       decode: angular.identity,
       equals: angular.equals,
@@ -72009,12 +72009,6 @@ function $UrlRouterProvider(   $locationProvider,   $urlMatcherFactory) {
       return listener;
     }
 
-    rules.sort(function(ruleA, ruleB) {
-      var aLength = ruleA.prefix ? ruleA.prefix.length : 0;
-      var bLength = ruleB.prefix ? ruleB.prefix.length : 0;
-      return bLength - aLength;
-    });
-
     if (!interceptDeferred) listen();
 
     return {
@@ -72217,7 +72211,8 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
 
     // Derive parameters for this state and ensure they're a super-set of parent's parameters
     params: function(state) {
-      return state.parent && state.parent.params ? extend(state.parent.params.$$new(), state.ownParams) : new $$UMFP.ParamSet();
+      var ownParams = pick(state.ownParams, state.ownParams.$$keys());
+      return state.parent && state.parent.params ? extend(state.parent.params.$$new(), ownParams) : new $$UMFP.ParamSet();
     },
 
     // If there is no explicit multi-view configuration, make one up so we don't have
@@ -73709,6 +73704,8 @@ function $ViewScrollProvider() {
 
 angular.module('ui.router.state').provider('$uiViewScroll', $ViewScrollProvider);
 
+var ngMajorVer = angular.version.major;
+var ngMinorVer = angular.version.minor;
 /**
  * @ngdoc directive
  * @name ui.router.state.directive:ui-view
@@ -73732,6 +73729,9 @@ angular.module('ui.router.state').provider('$uiViewScroll', $ViewScrollProvider)
  * when a view is populated. By default, $anchorScroll is overridden by ui-router's custom scroll
  * service, {@link ui.router.state.$uiViewScroll}. This custom service let's you
  * scroll ui-view elements into view when they are populated during a state activation.
+ *
+ * @param {string=} noanimation If truthy, the non-animated renderer will be selected (no animations
+ * will be applied to the ui-view)
  *
  * *Note: To revert back to old [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll)
  * functionality, call `$uiViewScrollProvider.useAnchorScroll()`.*
@@ -73844,24 +73844,35 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
   // Returns a set of DOM manipulation functions based on which Angular version
   // it should use
   function getRenderer(attrs, scope) {
-    var statics = function() {
-      return {
-        enter: function (element, target, cb) { target.after(element); cb(); },
-        leave: function (element, cb) { element.remove(); cb(); }
-      };
+    var statics = {
+      enter: function (element, target, cb) { target.after(element); cb(); },
+      leave: function (element, cb) { element.remove(); cb(); }
     };
 
+    if (!!attrs.noanimation) return statics;
+
+    function animEnabled(element) {
+      if (ngMajorVer === 1 && ngMinorVer >= 4) return !!$animate.enabled(element);
+      if (ngMajorVer === 1 && ngMinorVer >= 2) return !!$animate.enabled();
+      return (!!$animator);
+    }
+
+    // ng 1.2+
     if ($animate) {
       return {
         enter: function(element, target, cb) {
-          if (angular.version.minor > 2) {
+          if (!animEnabled(element)) {
+            statics.enter(element, target, cb);
+          } else if (angular.version.minor > 2) {
             $animate.enter(element, null, target).then(cb);
           } else {
             $animate.enter(element, null, target, cb);
           }
         },
         leave: function(element, cb) {
-          if (angular.version.minor > 2) {
+          if (!animEnabled(element)) {
+            statics.leave(element, cb);
+          } else if (angular.version.minor > 2) {
             $animate.leave(element).then(cb);
           } else {
             $animate.leave(element, cb);
@@ -73870,6 +73881,7 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
       };
     }
 
+    // ng 1.1.5
     if ($animator) {
       var animate = $animator && $animator(scope, attrs);
 
@@ -73879,7 +73891,7 @@ function $ViewDirective(   $state,   $injector,   $uiViewScroll,   $interpolate)
       };
     }
 
-    return statics();
+    return statics;
   }
 
   var directive = {
@@ -74224,7 +74236,7 @@ function $StateRefDynamicDirective($state, $timeout) {
         def.state = group[0]; def.params = group[1]; def.options = group[2];
         def.href = $state.href(def.state, def.params, def.options);
 
-        if (active) active.$$addStateInfo(ref.state, def.params);
+        if (active) active.$$addStateInfo(def.state, def.params);
         if (def.href) attrs.$set(type.attr, def.href);
       }
 
@@ -99535,17 +99547,29 @@ global.easyXDM = easyXDM;
 
 /*global angular */
 
-/** @module Action Bar
-@icon bolt
-@summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a SKY UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
-### Action Bar Settings ###
-    - `bb-action-bar` &mdash; Wraps the content in the action bar.
-    - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
-    - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
+(function () {
+    'use strict';
 
-To apply action bar stylying to more complicated scenarios (hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), you can place content in a `div` with the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
-*/
+    angular.module('sky.alert', ['sky.alert.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.avatar', ['sky.avatar.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.pagesummary', []);
+}());
+
+/*global angular */
 
 (function () {
     'use strict';
@@ -99649,23 +99673,44 @@ To apply action bar stylying to more complicated scenarios (hiding and showing b
         .directive('bbActionBarItem', bbActionBarItem);
 }());
 
-/*jshint browser: true */
-
 /*global angular */
 
-/** @module Autofocus
-@deprecated
-@icon camera
-@summary  The autofocus component specifies the input item on a form that should get focus when the form loads.
- @description ### *Deprecated* ###
+(function () {
+    'use strict';
 
-This directive is no longer being maintained. UI-Bootstrap now allows the use of HTML5 autofocus on modals to focus an input upon opening the modal.
+    function bbAlert() {
+        function Controller() {
 
-<s>
-The `bb-autofocus` directive specifies the item on a form that receives focus when the form renders. You can use this directive when items such as Angular dynamically loaded templates do not play nicely with the HTML autofocus property.
-The **Open Modal** button below demonstrates a modal form where the `bb-autofocus` directive places the focus on an input control on the form.
-</s>
- */
+        }
+
+        function link(scope, el, attrs, vm) {
+            vm.close = function () {
+                vm.bbAlertClosed = true;
+            };
+        }
+
+        return {
+            restrict: 'E',
+            controller: Controller,
+            controllerAs: 'bbAlert',
+            bindToController: {
+                bbAlertType: '@',
+                bbAlertCloseable: '@',
+                bbAlertClosed: '='
+            },
+            link: link,
+            scope: {},
+            templateUrl: 'sky/templates/alert/alert.html',
+            transclude: true
+        };
+    }
+
+    angular.module('sky.alert.directive', ['sky.resources'])
+        .directive('bbAlert', bbAlert);
+}());
+
+/*jshint browser: true */
+/*global angular */
 
 (function () {
     'use strict';
@@ -99686,31 +99731,7 @@ The **Open Modal** button below demonstrates a modal form where the `bb-autofocu
 
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
-/** @module Autonumeric
-@icon calculator
-@summary The autonumeric component wraps the autoNumeric jQuery plugin to format any type of number, including currency.
- @description The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format any type of number, including currency. You must use this directive in conjunction with the `ngModel` directive where the property bound to `ngModel` is the raw numeric value on your model.
 
- ### Dependencies ###
-
- - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Used to format money values
-
----
-
-### Autonumeric Settings ###
-
- - `bb-autonumeric` &mdash; This  can optionally be assigned the name of a property from the `bbAutonumericConfig` object.  If none is specified, it defaults to `number`.
- - `bb-autonumeric-settings` &mdash; This can be assigned a value that represents a settings object that can be passed to autoNumeric. These options override any default options specified in the `bb-autonumeric` attribute. A complete list of options is available [here](http://www.decorplanit.com/plugin/).
-
-### Autonumeric Filter ###
-
-In addition to the directive, there is also a filter that can format numbers. The filter can also optionally abbreviate numbers according to SKY UX patterns. For example,
-it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
-
- - `input` &mdash; The value to format.
- - `configType` &mdash; The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` &mdash; A Boolean value that indicates whether to abbreviate large numbers.
- */
 (function ($) {
     'use strict';
 
@@ -99922,18 +99943,186 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
         }]);
 }(jQuery));
 
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+
+    function bbAvatar($window, bbPalette) {
+        function link(scope, el, attrs, vm) {
+            var blobUrl,
+                templateLoaded;
+
+            function setImageUrl(url) {
+                el.find('.bb-avatar-image').css('background-image', 'url(' + url + ')');
+            }
+
+            function getInitial(name) {
+                return name.charAt(0).toUpperCase();
+            }
+
+            function getInitials(name) {
+                var initials,
+                    nameSplit;
+
+                if (name) {
+                    nameSplit = name.split(' ');
+                    initials = getInitial(nameSplit[0]);
+
+                    /* istanbul ignore else this is tested through a visual regression test */
+                    if (nameSplit.length > 1) {
+                        initials += getInitial(nameSplit[nameSplit.length - 1]);
+                    }
+                }
+
+                return initials;
+            }
+
+            function getPlaceholderColor(name) {
+                var colorIndex,
+                    colors = bbPalette.getColorSequence(6),
+                    seed;
+
+                if (name) {
+                    // Generate a unique-ish color based on the record name.  This is deterministic
+                    // so that a given name will always generate the same color.
+                    seed = name.charCodeAt(0) + name.charCodeAt(name.length - 1) + name.length;
+                    colorIndex = Math.abs(seed % colors.length);
+                } else {
+                    colorIndex = 0;
+                }
+
+                return colors[colorIndex];
+            }
+
+            function drawPlaceolderImage() {
+                var canvas,
+                    context,
+                    devicePixelRatio,
+                    fontSize = "46px",
+                    initials,
+                    name,
+                    size = 100;
+
+                name = vm.bbAvatarName;
+                initials = getInitials(name);
+
+                canvas = el.find('.bb-avatar-initials')[0];
+                context = canvas.getContext('2d');
+
+                devicePixelRatio = $window.devicePixelRatio;
+
+                /* istanbul ignore else */
+                if (devicePixelRatio) {
+                    $(canvas)
+                        .attr('width', size * devicePixelRatio)
+                        .attr('height', size * devicePixelRatio);
+
+                    context.scale(devicePixelRatio, devicePixelRatio);
+                }
+
+                context.fillStyle = getPlaceholderColor(name);
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                if (initials) {
+                    context.font = fontSize + ' Arial';
+                    context.textAlign = 'center';
+                    context.fillStyle = '#FFF';
+                    context.fillText(initials, size * 0.5, size * (2 / 3));
+                }
+            }
+
+            function revokeBlobUrl() {
+                if (blobUrl) {
+                    $window.URL.revokeObjectURL(blobUrl);
+                    blobUrl = null;
+                }
+            }
+
+            function loadPhoto() {
+                var src,
+                    url;
+
+                revokeBlobUrl();
+
+                if (templateLoaded) {
+                    src = vm.bbAvatarSrc;
+
+                    if (src) {
+                        if (src instanceof $window.File) {
+                            url = $window.URL.createObjectURL(src);
+
+                            // Keep the last blob URL around so we can revoke it later.
+                            // https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL
+                            blobUrl = url;
+                        } else {
+                            url = src;
+                        }
+
+                        setImageUrl(url);
+                    } else {
+                        drawPlaceolderImage();
+                    }
+                }
+            }
+
+            vm.onTemplateLoad = function () {
+                templateLoaded = true;
+            };
+
+            vm.photoDrop = function (files) {
+                vm.bbAvatarChange({
+                    file: files[0]
+                });
+            };
+
+            vm.showInitials = function () {
+                return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
+            };
+
+            if (attrs.bbAvatarChange) {
+                vm.canChange = true;
+            }
+
+            scope.$watch(function () {
+                return templateLoaded;
+            }, loadPhoto);
+
+            scope.$watch(function () {
+                return vm.bbAvatarSrc;
+            }, loadPhoto);
+
+            scope.$watch(function () {
+                return vm.bbAvatarName;
+            }, loadPhoto);
+
+            scope.$on('$destroy', function () {
+                revokeBlobUrl();
+            });
+        }
+
+        return {
+            scope: {},
+            bindToController: {
+                bbAvatarSrc: '=',
+                bbAvatarName: '=',
+                bbAvatarChange: '&'
+            },
+            controller: angular.noop,
+            controllerAs: 'bbAvatar',
+            link: link,
+            templateUrl: 'sky/templates/avatar/avatar.directive.html'
+        };
+    }
+
+    bbAvatar.$inject = ['$window', 'bbPalette'];
+
+    angular.module('sky.avatar.directive', ['sky.palette'])
+        .directive('bbAvatar', bbAvatar);
+}(jQuery));
+
 /*jshint browser: true */
-
 /*global angular */
-
-/** @module Check
-@icon check-square
-@summary The check applies a commonly styled selector to a checkbox or radio button.
- @description The check directive allows you to change an input element of type checkbox or radio button into a commonly-styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
-
----
-
- */
 
 (function () {
     'use strict';
@@ -99971,35 +100160,6 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 
 /*jslint browser: true */
 /*global angular */
-
-/** @module Checklist
-@icon list-ul
-@summary The checklist directive provides the tools to build a filterable checkbox list that can display multiple columns of data.
- @description The checklist directive allows you to build a filterable checkbox list. The `bb-checklist-column` element allows you to specify multiple columns of data for the checkbox list. You can display items in a list view where each row displays a title and description. The list view is preferable when building a responsive application.
-
-### Checklist Settings ###
-
- - `bb-checklist` &mdash; Creates a filterable checkbox list.
- - `bb-checklist-items` &mdash; Creates an array of objects that represents the rows to display in the list.
- - `bb-checklist-selected-items` &mdash; Creates an array that represents the items selected in the list.
- - `bb-checklist-include-search` &mdash; Provides a Boolean value that indicates whether to include a search field to filter the checkbox list. The search field uses a callback function to filter the list based on search criteria and highlights the search text in the filtered columns.
- - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search textbox.
- - `bb-checklist-filter-callback` &mdash; Specifies the function to call when a user modifies the search text. The function updates the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter with `searchText` and `category` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
- - `bb-checklist-filter-local` &mdash; When specified, items are filtered by the checklist directive by examining the properties of each item to match the specified category or search text.
- - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making a web request in `bb-checklist-filter-callback`, this setting helps avoid new requests for each character that users type.
- - `bb-checklist-no-items-message` &mdash; Specifies the message to display when no items are displayed in the list. *(Default: `'No items found'`)*
- - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or a grid. List mode is the preferred method because it is mobile-responsive, but for backwards-compatibility reasons, grid mode is the default.
-  - `list` &mdash; Displays checklist items in a list with titles and descriptions. Items should have `title`, `description`, and `category` properties. This is the preferred method to display checklists because it is mobile-responsive.
-  - `grid` &mdash; Displays checklist items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this is the default, but list mode is preferred because it is mobile-responsive.
- - `bb-checklist-categories` &mdash; Provides an array of category names to create category filters at the top of the list.
-
-### Checklist Column Settings ###
-
- - `bb-checklist-column-caption` &mdash; Specifies a caption for the column header.
- - `bb-checklist-column-field` &mdash; Specifies the name of the property on the checklist items that contains the text to display in the column.
- - `bb-checklist-column-class` &mdash; Applies a CSS class to the column header and cells.
- - `bb-checklist-column-width` &mdash; Sets the width of the column.
- */
 
 (function () {
     'use strict';
@@ -100355,18 +100515,6 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 }());
 /* global angular */
 
-/** @module Context Menu
-
-@icon ellipsis-h
-@summary The context menu creates simple or complicated dropdown menus that you can incorporate into buttons.
-@description The context menu directives allow you to create SKY UX-themed [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. The context menu module includes three directives.
-  - `bb-context-menu` &mdash; Creates a dropdown menu within the context menu button.
-  - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu. When clicked, the menu item executes `bb-context-menu-action`.
-  - `bb-context-menu-button` &mdash; Creates a button with the SKY UX context menu styles.
-  - `bb-submenu` &mdash; Creates an accordion-style submenu within a dropdown menu. You can place the submenu within a dropdown list element.
-    - `bb-submenu-heading` &mdash; Specifies a header for a submenu. To specify a static header, apply this as an attribute of `bb-submenu`. To place arbitrary content in th header, apply this as a directive within `bb-submenu`.
-*/
-
 (function () {
     'use strict';
 
@@ -100475,28 +100623,6 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 }());
 
 /*global angular, jQuery, require */
-
-/** @module Data
-
-@summary The data service provides access to convenience functions that allow you to manipulate data.
-@icon database
-@description The data service provides methods to load data and save data through web service endpoints.
-
-### bbData Functions ###
-
-  - `load(loadObj)` &mdash; Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request. An `httpResults` property contains the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http). The object includes metadata about the response such as the HTTP status code.
-    - `data` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.data` contains the promise results. For example: `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`. Requests to the URLs are made with credentials.
-    - `resources` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.resources` contains the promise results. Requests to the URLs are made without credentials.
-    - `text` &mdash; Specifies a URL to request or an object with multiple URLs to request. `result.text` contains the promise results. Requests to the URLs are made without credentials, and the results are returned as strings instead of objects.
-    - `loadManager` &mdash; Specifies an object with `name` and `scope` properties that creates a wait while it and its child load managers retreive data.
-  - `query(url, queryParams)` &mdash; Creates a URL with a query string based on the queryParam's properties. For example: `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
-  - `post(url, data)` &mdash; Within `bbData.load`, creates a post request from a URL and data object. For example: `bbData.load({data: bbData.post('/foo/post', postData)});`.
-  - `save(saveObj)` &mdash; Issues an HTTP post to store data on the remote server. Takes an argument with the `url`, `data`, and `type` properties.
-    - `url` &mdash; Specifies the URL to send the request to.
-    - `data` &mdash; Specifies the object to POST to the URL.
-    - `type` &mdash; Specifies the HTTP verb to use with the request. *(Default: `POST`)* 
-  - `cancel(promise)` &mdash; Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request. The promise is then rejected.
-*/
 
 (function ($) {
     'use strict';
@@ -100940,30 +101066,6 @@ it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filt
 /*jshint browser: true */
 /*global angular, jQuery */
 
-/** @module Date Picker
-@icon calendar-o
-@summary The date picker wraps the ui.bootstrap.datepicker directive from Angular UI Bootstrap to create an input text box with a calendar to select dates.
-@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/). It creates an input text box with a calendar picker to select dates.
-
-## Date Picker Settings
-  - `bb-custom-validation` &mdash; Specifies an object thta contains a function to validate entries in the text box.
-    - `formatValue` &mdash; A function to call when users enter text in the textbox. The only parameter to pass to the function is the raw value of the text box. If a problem occurs when formatting the input value, the function returns an object or a promise of an object with the `formattedValue` property and optionally the `formattingErrorMessage` property.
-  - `bb-date-format` &mdash; Specifies the format string to use for dates in the text box. This overrides the SKY UX default of `MM/dd/yyyy` that is set in the `bbDatepickerConfig`'s `currentCultureDateFormatString` property. You set up the format string just like format strings for the [Angular date filter](https://docs.angularjs.org/api/ng/filter/date).
-  - `bb-date-options` &mdash; Specifies an options object to customize the date picker. This includes all valid options for the Angular UI Bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the Angular UI Bootstrap date picker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. The SKY UX defaults for `showWeeks` and `startingDay` are  `false` and `0`.
-  - `bb-datepicker-name` &mdash; Provides the value to bind to the `name` attribute of the date picker input. The value is used in validation and form submission.
-  - `close-on-date-selection` &mdash; Indicates whether to close the date picker's calendar after a date is selected. *(Default: `true`)*
-  - `datepicker-append-to-body` &mdash; Indicates whether to append the date picker popup element to `body` instead of the date picker text box. *(Default: `false`)*
-  - `max-date` &mdash; A JavaScript Date object that sets a maximum date for the date picker control and input. Input validation is bound to `$scope.myFormName.inputName.$error.maxDate`. You can set this value globally in `bbDatepickerConfig`'s `maxDate` property.
-  - `min-date` &mdash; A JavaScript Date object that sets a minimum date for the date picker control and input. Input validation is bound to `$scope.myFormName.inputName.$error.minDate`. You can set this value globally in  `bbDatepickerConfig`'s `minDate` property.
-  - `ng-model` &mdash; Specifies an object to bind the date value in and out of the date picker. This is set to a JavaScript Date object when set or parsed from the Bootstrap date picker.
-  - `placeholder` &mdash; Overrides the default placeholder text of the `bb-datepicker` input.
-  - `required` &mdash; Indicates whether the date picker's text box is a required field.
-  - `show-button-bar` &mdash; Indicates whether to display a button bar under the date picker. *(Default: `false`)*
-
-## Validation
-The `bb-datepicker` directive sets validation on the date picker input using `bb-datepicker-name` for the input name. The validity of the date in the input is in the `dateFormat` validator. To check if a date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date is in `$scope.myFormName.inputName.invalidFormatMessage`.
-
-*/
 (function ($) {
     'use strict';
     angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
@@ -101147,10 +101249,32 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 
                     });
 
+                    function runValidators() {
+                        var inputNgModel = $scope.getInputNgModel();
+                        /*istanbul ignore else: sanity check */
+                        if (inputNgModel) {
+                            inputNgModel.$validate();
+                        }
+                    }
+
+                    $scope.$watch('maxDate', function () {
+                        runValidators();
+                    });
+
+                    $scope.$watch('minDate', function () {
+                        runValidators();
+                    });
+
                     function hasRequiredError() {
                         var inputNgModel = $scope.getInputNgModel();
 
                         return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
+                    }
+
+                    function hasMinMaxError() {
+                        var inputNgModel = $scope.getInputNgModel();
+
+                        return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
                     }
 
 
@@ -101205,7 +101329,7 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 
                         deferred = $q.defer();
 
-                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || datepickerIsPristine()) {
+                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || hasMinMaxError() || (!$scope.locals.required && $scope.locals.date === null) || datepickerIsPristine()) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
@@ -101218,7 +101342,7 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
                             }
                         } else {
                             inputNgModel = $scope.getInputNgModel();
-
+                            /* istanbul ignore else: sanity check */
                             if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
                                 setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                             }
@@ -101485,337 +101609,294 @@ The `bb-datepicker` directive sets validation on the date picker input using `bb
 /*jshint browser: true */
 /*global angular */
 
-/** @module Date Range Picker
-@icon calendar
-@summary The date-range picker creates an input text box with a dropdown to select date ranges from a set of well-known options.
- @description The date-range picker directive creates an input text box where users can select date ranges from a set of well-known options. The directive works hand-in-hand with a date-range picker service to provide more service-oriented functionality.
-
-### Date-range Picker Settings ###
-
- - `bb-date-range-picker-value` &mdash; Specifies an object that tracks the value of the date-range picker control. The `.dateRangeType` property provides the integer (ENUM) value of the date-range type selected in the picker. For details about the ENUM, see the Date-range Picker Service section below.
- - `bb-date-range-picker-automation-id` &mdash; Specifies a string to use when creating the `bb-auto-field` attribute on elements in the date-range picker.
- - `bb-date-range-picker-options` &mdash; *(Optional.)* Specifies an options object that can customize the behavior of the date-range picker.
-
-### Date-range Picker Options Settings ###
-
- - `availableDateRangeTypes` &mdash; Optional. Provides an array of integers (`dateRangeTypes` ENUM) to specify an ordered list of date-range types for the dropdown.  Common variations are available in the date-range picker service.
-
-### Date-range Picker Service ###
-The date-range picker service provides functionality that works closely with the directive. The service provides the following members:
-
- - `dateRangeTypes` &mdash; An ENUM of all date-range types that the date-range picker understands and can include in the dropdown.
- - `defaultDateRangeOptions` &mdash; An array of `dateRangeTypes` that provides the default order and set of date-range types included in the dropdown.
- - `pastDateRangeOptions` &mdash; An array of `dateRangeTypes` that are appropriate to filter for things that occurred in the past. For example, you don't want to search for items created "next month."
- - `getDateRangeTypeCaption` &mdash; A function to get the caption of the dropdown item for a given `bb-date-range-picker-value`.
- - `getDateRangeFilterDescription` &mdash; A function to get the description of a given `bb-date-range-picker-value`.
- */
-
 (function () {
     'use strict';
-    angular.module('sky.daterangepicker', ['sky.resources'])
-        .factory('bbDateRangePicker', ['bbResources', function (bbResources) {
 
-            var dateRangeTypes,
-                defaultDateRangeOptions,
-                pastDateRangeOptions;
 
-            dateRangeTypes = {
-                AT_ANY_TIME: 0,
-                NEXT_WEEK: 1,
-                THIS_MONTH: 2,
-                NEXT_MONTH: 3,
-                THIS_QUARTER: 4,
-                NEXT_QUARTER: 5,
-                THIS_FISCAL_YEAR: 6,
-                NEXT_FISCAL_YEAR: 7,
-                THIS_CALENDAR_YEAR: 8,
-                NEXT_CALENDAR_YEAR: 9,
-                LAST_WEEK: 10,
-                LAST_MONTH: 11,
-                LAST_QUARTER: 12,
-                LAST_FISCAL_YEAR: 13,
-                LAST_CALENDAR_YEAR: 14,
-                TODAY: 15,
-                YESTERDAY: 16,
-                TOMORROW: 17,
-                THIS_WEEK: 18
-            };
+    function bbDateRangePickerFactory(bbResources) {
+        var dateRangeTypes,
+            defaultDateRangeOptions,
+            specificDateRangeOptions,
+            pastDateRangeOptions,
+            dateRangeMap;
 
-            defaultDateRangeOptions = [
-                dateRangeTypes.AT_ANY_TIME,
-                dateRangeTypes.YESTERDAY,
-                dateRangeTypes.TODAY,
-                dateRangeTypes.TOMORROW,
-                dateRangeTypes.LAST_WEEK,
-                dateRangeTypes.THIS_WEEK,
-                dateRangeTypes.NEXT_WEEK,
-                dateRangeTypes.LAST_MONTH,
-                dateRangeTypes.THIS_MONTH,
-                dateRangeTypes.NEXT_MONTH,
-                dateRangeTypes.LAST_QUARTER,
-                dateRangeTypes.THIS_QUARTER,
-                dateRangeTypes.NEXT_QUARTER,
-                dateRangeTypes.LAST_CALENDAR_YEAR,
-                dateRangeTypes.THIS_CALENDAR_YEAR,
-                dateRangeTypes.NEXT_CALENDAR_YEAR,
-                dateRangeTypes.LAST_FISCAL_YEAR,
-                dateRangeTypes.THIS_FISCAL_YEAR,
-                dateRangeTypes.NEXT_FISCAL_YEAR
-            ];
+        dateRangeTypes = {
+            AT_ANY_TIME: 0,
+            NEXT_WEEK: 1,
+            THIS_MONTH: 2,
+            NEXT_MONTH: 3,
+            THIS_QUARTER: 4,
+            NEXT_QUARTER: 5,
+            THIS_FISCAL_YEAR: 6,
+            NEXT_FISCAL_YEAR: 7,
+            THIS_CALENDAR_YEAR: 8,
+            NEXT_CALENDAR_YEAR: 9,
+            LAST_WEEK: 10,
+            LAST_MONTH: 11,
+            LAST_QUARTER: 12,
+            LAST_FISCAL_YEAR: 13,
+            LAST_CALENDAR_YEAR: 14,
+            TODAY: 15,
+            YESTERDAY: 16,
+            TOMORROW: 17,
+            THIS_WEEK: 18,
+            SPECIFIC_RANGE: 19
+        };
 
-            pastDateRangeOptions = [
-                dateRangeTypes.AT_ANY_TIME,
-                dateRangeTypes.YESTERDAY,
-                dateRangeTypes.TODAY,
-                dateRangeTypes.LAST_WEEK,
-                dateRangeTypes.THIS_WEEK,
-                dateRangeTypes.LAST_MONTH,
-                dateRangeTypes.THIS_MONTH,
-                dateRangeTypes.LAST_QUARTER,
-                dateRangeTypes.THIS_QUARTER,
-                dateRangeTypes.LAST_CALENDAR_YEAR,
-                dateRangeTypes.THIS_CALENDAR_YEAR,
-                dateRangeTypes.LAST_FISCAL_YEAR,
-                dateRangeTypes.THIS_FISCAL_YEAR
-            ];
+        defaultDateRangeOptions = [
+            dateRangeTypes.AT_ANY_TIME,
+            dateRangeTypes.YESTERDAY,
+            dateRangeTypes.TODAY,
+            dateRangeTypes.TOMORROW,
+            dateRangeTypes.LAST_WEEK,
+            dateRangeTypes.THIS_WEEK,
+            dateRangeTypes.NEXT_WEEK,
+            dateRangeTypes.LAST_MONTH,
+            dateRangeTypes.THIS_MONTH,
+            dateRangeTypes.NEXT_MONTH,
+            dateRangeTypes.LAST_QUARTER,
+            dateRangeTypes.THIS_QUARTER,
+            dateRangeTypes.NEXT_QUARTER,
+            dateRangeTypes.LAST_CALENDAR_YEAR,
+            dateRangeTypes.THIS_CALENDAR_YEAR,
+            dateRangeTypes.NEXT_CALENDAR_YEAR,
+            dateRangeTypes.LAST_FISCAL_YEAR,
+            dateRangeTypes.THIS_FISCAL_YEAR,
+            dateRangeTypes.NEXT_FISCAL_YEAR
+        ];
 
-            function getDateRangeTypeCaption(dateRangePickerValue) {
-                if (angular.isNumber(dateRangePickerValue)) {
-                    // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
-                    dateRangePickerValue = { dateRangeType: dateRangePickerValue };
-                } else {
-                    // If the value is undefiend, then map it to a null object.
-                    dateRangePickerValue = dateRangePickerValue || {};
-                }
+        specificDateRangeOptions = defaultDateRangeOptions.push(dateRangeTypes.SPECIFIC_RANGE);
 
-                if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
-                    // If the enum value is undefined, then it represents any time.
-                    dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
-                }
+        pastDateRangeOptions = [
+            dateRangeTypes.AT_ANY_TIME,
+            dateRangeTypes.YESTERDAY,
+            dateRangeTypes.TODAY,
+            dateRangeTypes.LAST_WEEK,
+            dateRangeTypes.THIS_WEEK,
+            dateRangeTypes.LAST_MONTH,
+            dateRangeTypes.THIS_MONTH,
+            dateRangeTypes.LAST_QUARTER,
+            dateRangeTypes.THIS_QUARTER,
+            dateRangeTypes.LAST_CALENDAR_YEAR,
+            dateRangeTypes.THIS_CALENDAR_YEAR,
+            dateRangeTypes.LAST_FISCAL_YEAR,
+            dateRangeTypes.THIS_FISCAL_YEAR
+        ];
 
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_at_any_time;
+        dateRangeMap = {};
+        dateRangeMap[dateRangeTypes.AT_ANY_TIME] = {
+            caption: bbResources.date_range_picker_at_any_time,
+            description: bbResources.date_range_picker_filter_description_at_any_time
+        };
+        dateRangeMap[dateRangeTypes.YESTERDAY] = {
+            caption: bbResources.date_range_picker_yesterday,
+            description: bbResources.date_range_picker_filter_description_yesterday
+        };
+        dateRangeMap[dateRangeTypes.TODAY] = {
+            caption: bbResources.date_range_picker_today,
+            description: bbResources.date_range_picker_filter_description_today
+        };
+        dateRangeMap[dateRangeTypes.TOMORROW] = {
+            caption: bbResources.date_range_picker_tomorrow,
+            description: bbResources.date_range_picker_filter_description_tomorrow
+        };
+        dateRangeMap[dateRangeTypes.LAST_WEEK] = {
+            caption: bbResources.date_range_picker_last_week,
+            description: bbResources.date_range_picker_filter_description_last_week
+        };
+        dateRangeMap[dateRangeTypes.THIS_WEEK] = {
+            caption: bbResources.date_range_picker_this_week,
+            description: bbResources.date_range_picker_filter_description_this_week
+        };
+        dateRangeMap[dateRangeTypes.NEXT_WEEK] = {
+            caption: bbResources.date_range_picker_next_week,
+            description: bbResources.date_range_picker_filter_description_next_week
+        };
+        dateRangeMap[dateRangeTypes.LAST_QUARTER] = {
+            caption: bbResources.date_range_picker_last_quarter,
+            description: bbResources.date_range_picker_filter_description_last_quarter
+        };
+        dateRangeMap[dateRangeTypes.THIS_QUARTER] = {
+            caption: bbResources.date_range_picker_this_quarter,
+            description: bbResources.date_range_picker_filter_description_this_quarter
+        };
+        dateRangeMap[dateRangeTypes.NEXT_QUARTER] = {
+            caption: bbResources.date_range_picker_next_quarter,
+            description: bbResources.date_range_picker_filter_description_next_quarter
+        };
+        dateRangeMap[dateRangeTypes.LAST_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_last_calendar_year,
+            description: bbResources.date_range_picker_filter_description_last_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_this_calendar_year,
+            description: bbResources.date_range_picker_filter_description_this_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_next_calendar_year,
+            description: bbResources.date_range_picker_filter_description_next_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.LAST_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_last_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_last_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_this_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_this_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_next_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_next_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_MONTH] = {
+            caption: bbResources.date_range_picker_this_month,
+            description: bbResources.date_range_picker_filter_description_this_month
+        };
+        dateRangeMap[dateRangeTypes.NEXT_MONTH] = {
+            caption: bbResources.date_range_picker_next_month,
+            description: bbResources.date_range_picker_filter_description_next_month
+        };
+        dateRangeMap[dateRangeTypes.LAST_MONTH] = {
+            caption: bbResources.date_range_picker_last_month,
+            description: bbResources.date_range_picker_filter_description_last_month
+        };
+        dateRangeMap[dateRangeTypes.SPECIFIC_RANGE] = {
+            caption: bbResources.date_range_picker_specific_range,
+            description: bbResources.date_range_picker_filter_description_specific_range
+        };
 
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_this_week;
-
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_tomorrow;
-
-                }
-            }
-
-            function getDateRangeFilterDescription(dateRangePickerValue) {
+        function getDateRangeTypeCaption(dateRangePickerValue) {
+            if (angular.isNumber(dateRangePickerValue)) {
+                // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
+                dateRangePickerValue = { dateRangeType: dateRangePickerValue };
+            } else {
                 // If the value is undefiend, then map it to a null object.
                 dateRangePickerValue = dateRangePickerValue || {};
-
-                if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
-                    // If the enum value is undefined, then it represents any time.
-                    dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
-                }
-
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_filter_description_at_any_time;
-
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_filter_description_this_week;
-
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_filter_description_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_filter_description_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_filter_description_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_filter_description_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_filter_description_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_filter_description_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_filter_description_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_filter_description_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_filter_description_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_filter_description_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_filter_description_tomorrow;
-
-                }
             }
 
-            return {
-                dateRangeTypes: dateRangeTypes,
-                defaultDateRangeOptions: defaultDateRangeOptions,
-                pastDateRangeOptions: pastDateRangeOptions,
-                getDateRangeTypeCaption: getDateRangeTypeCaption,
-                getDateRangeFilterDescription: getDateRangeFilterDescription
-            };
+            if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
+                // If the enum value is undefined, then it represents any time.
+                dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
+            }
 
-        }])
-        .directive('bbDateRangePicker', ['bbDateRangePicker', function (bbDateRangePicker) {
-            /// <summary>
-            /// This directive provides a date range filter control
-            /// </summary>
+            return dateRangeMap[dateRangePickerValue.dateRangeType].caption;
+        }
 
-            return {
-                replace: true,
-                restrict: 'E',
-                templateUrl: 'sky/templates/daterangepicker/daterangepicker.html',
-                scope: {
-                    bbDateRangePickerValue: "=",
-                    bbDateRangePickerAutomationId: "=",
-                    bbDateRangePickerOptions: '='
-                },
-                controller: ['$scope', function ($scope) {
+        function getDateRangeFilterDescription(dateRangePickerValue) {
+            // If the value is undefiend, then map it to a null object.
+            dateRangePickerValue = dateRangePickerValue || {};
 
-                    $scope.locals = {
-                        bbDateRangePicker: bbDateRangePicker
-                    };
+            if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
+                // If the enum value is undefined, then it represents any time.
+                dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
+            }
 
-                    $scope.$watch("bbDateRangePickerValue", function (newVal) {
-                        if (!newVal) {
-                            $scope.bbDateRangePickerValue = {
-                                dateRangeType: bbDateRangePicker.dateRangeTypes.AT_ANY_TIME
-                            };
-                            return;
-                        }
-                        newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
-                    }, true);
-                }]
-            };
-        }]);
+            return dateRangeMap[dateRangePickerValue.dateRangeType].description;
+        }
 
+        return {
+            dateRangeTypes: dateRangeTypes,
+            defaultDateRangeOptions: defaultDateRangeOptions,
+            pastDateRangeOptions: pastDateRangeOptions,
+            specifcDateRangeOptions: specificDateRangeOptions,
+            getDateRangeTypeCaption: getDateRangeTypeCaption,
+            getDateRangeFilterDescription: getDateRangeFilterDescription
+        };
+    }
+
+    bbDateRangePickerFactory.$inject = ['bbResources'];
+
+    function bbDateRangePickerDirective(bbDateRangePicker, bbResources) {
+        /// <summary>
+        /// This directive provides a date range filter control
+        /// </summary>
+
+        return {
+            replace: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/daterangepicker/daterangepicker.html',
+            scope: {},
+            controllerAs: 'bbDateRangePickerCtrl',
+            bindToController: {
+                bbDateRangePickerValue: "=",
+                bbDateRangePickerAutomationId: "=",
+                bbDateRangePickerOptions: '=',
+                fromDate: '=?bbDateRangePickerFromDate',
+                toDate: '=?bbDateRangePickerToDate',
+                pickerLabel: '=?bbDateRangePickerLabel',
+                isValid: '=?bbDateRangePickerValid'
+            },
+            controller: ['$scope', function ($scope) {
+                var vm = this;
+
+                vm.bbDateRangePicker = bbDateRangePicker;
+                vm.resources = bbResources;
+
+                $scope.$watch(
+                    function () {
+                        return vm.dateRangeForm.$valid;
+                    }, function (newVal) {
+                        vm.isValid = newVal;
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.fromDate;
+                    }, function (newVal) {
+                        /* This prevents minDate from having a reference
+                           to fromDate and changing it */
+                        vm.minDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.toDate;
+                    }, function (newVal) {
+                        /* This prevents maxDate from having a reference
+                           to toDate and changing it */
+                        vm.maxDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.bbDateRangePickerValue;
+                    }, function (newVal) {
+                    if (!newVal) {
+                        vm.bbDateRangePickerValue = {
+                            dateRangeType: bbDateRangePicker.dateRangeTypes.AT_ANY_TIME
+                        };
+                        return;
+                    }
+                    vm.specificRangeIsVisible = vm.bbDateRangePickerValue.dateRangeType === bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE;
+                    newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
+                }, true);
+            }],
+            link: function ($scope, el, attr, vm) {
+                vm.noLabels = attr.bbDateRangePickerNoLabels;
+                if (vm.noLabels) {
+                    vm.toPlaceholder = bbResources.date_range_picker_to_date;
+                    vm.fromPlaceholder = bbResources.date_range_picker_from_date;
+                } else {
+                    vm.toPlaceholder = '';
+                    vm.fromPlaceholder = '';
+                }
+            }
+        };
+    }
+
+    bbDateRangePickerDirective.$inject = ['bbDateRangePicker', 'bbResources'];
+
+    angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])
+        .factory('bbDateRangePicker', bbDateRangePickerFactory)
+        .directive('bbDateRangePicker', bbDateRangePickerDirective);
 }());
 
 /*jshint browser: true */
 /*global angular */
 
-/** @module File Attachments
-@icon cloud-upload
-@summary The file attachments module provides the ability to add multiple files to a form and to display information about files after they are added.
-@description The file attachments module contains two directives to make it easier to add multiple files to a form.
-The `bb-file-drop` directive provides an element that can both be clicked to select a file from the user's
-local drive or serve as a drop zone where files can be dragged from the user's local drive.  The directive can
-also optionally display controls for the user to add a hyperlink to a file on the web.
-
-The contents of the directive may be left blank to display the default UI for the drop zone, or you may include your
-own custom content to be displayed instead of the default UI.
-
-Also note that upon the initialization of the Sky module, dragging and dropping files will be disabled for the entire window so that
-accidentally dropping a file outside the target zone doesn't result in the file being opened in the browser window.  If you are
-implementing your own file drop functionality outside of the file drop directive, you can place the `bb-file-drop-target` CSS
-class on the element you wish to receive drop events and that element will be exempt from the drop exclusion rule.
-
-### File Drop Settings ###
-
-- `bb-file-drop-accept` *(Optional)* A comma-delimited string literal of MIME types that may be dropped or selected (e.g. `bb-file-drop-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-drop-accept="'image/png'"`) or a custom validation function (e.g. `bb-file-drop-accept="fileAttachmentDemo.validate($file)"`).
-- `bb-file-drop-multiple` *(Default: `true`)* A flag indicating whether multiple files may be dropped at once.
-- `bb-file-drop-allow-dir` *(Default: `true`)* A flag indicating whether a directory can be selected.
-- `bb-file-drop-min-size` *(Optional)* The minimum size in bytes of a valid file.
-- `bb-file-drop-max-size` *(Optional)* The maximum size in bytes of a valid file.
-- `bb-file-drop-change` A function that is called when a file or files are selected when the user drops files onto the
-drop zone or selects them by clicking the element.  This function accepts 2 parameters:
- - `files` An array of valid files that were dropped or selected.  Each item is a JavaScript [File](https://developer.mozilla.org/en-US/docs/Web/API/File)
- object.
- - `rejectedFiles` An array of files that did not meet the specified file type and/or size requirements.
-- `bb-file-drop-link` *(Optional)* The attribute with no value can be specified)* Indicates that an option to add hyperlinks
-should be displayed.
-- `bb-file-drop-link-change` *(Optional)* A function that is called when the user adds a hyperlink.  The function accepts one
-`link` parameter.  The `link` will have a `url` property containing the link the user added.
-- `bb-file-drop-noclick` Specify this attribute when you want to disable the ability to select a file from a file dialog by clicking the element.
-
-The `bb-file-item` directive displays summary information about a file that has been added to a form.  By default
-it displays the file's name and a delete button, and if the file from the user's local drive rather than a hyperlink,
-a the file's size and thumbnail will also be displayed.  Any content inside this directive will be displayed to the right
-of the preview image.
-
-### File Item Settings ###
-
-- `bb-file-item` The file or hyperlink to display.  If the item is a file, the file size and a preview will be displayed.
-- `bb-file-item-delete` A function to call when an item's delete button is clicked.  The deleted item will be passed
-to the function.
- */
 (function () {
     'use strict';
 
@@ -102083,16 +102164,6 @@ to the function.
         .filter('bbFileSize', bbFileSize);
 }());
 /*global angular */
-
-/** @module Format
-@icon paragraph
-@summary The format service provides functions to format text with a format string and to escape HTML characters.
-@description The format service gives you the following functions:
-
-  - `formatText(formatString, args)` Formats the args with a given format string.
-  - `escape(text)` Replaces the `<`, `>`, and `&` tags with `&lt;`, `&gt;`, and `&amp;`.
-
-*/
 
 (function () {
     'use strict';
@@ -102546,95 +102617,6 @@ to the function.
 /*jslint plusplus: true */
 /*global angular, jQuery */
 
-/** @module Grid
-@icon table
-@summary The grid builds a full-featured grid with a search box, column picker, and filter form.
- @description The grid directive allows you to build a full-featured grid with a search box, column picker, and filter form.
-
- ### Dependencies ###
-
-- **[jqGrid](https://github.com/free-jqgrid/jqGrid) (4.7.0 or higher)**
-- **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
----
-
-The grid directive allows you to build a full-featured grid with a search box, column picker and filter form.
-
-### Grid Settings ###
-- `bb-grid-filters` A directive you can use inside the bb-grid directive to create a filter flyout menu.
-  - `bb-options` An options object for bb-grid-filters that contains the following:
-      - `applyFilters` A function that is called when you click the apply filters button. You can pass updated filters to `bb-grid` by setting `args.filters`.
-      - `clearFilters` A function that is called when you click the clear filters button. You can pass updated filters to `bb-grid` by setting `args.filters`.
-  - `bb-grid-filters-group` A directive you can use inside of `bb-grid-filters` that creates labels (with the `bb-grid-filters-group-label` option) and collapsible areas.
-- `bb-grid-filters-summary` A directive you can use inside the bb-grid directive to create a summary toolbar for your applied filters.
-  - `bb-options` An options object for `bb-grid-filters-summary` that contains the following:
-      - `clearFilters` A function that is called when you click the clear filters (x) icon. You can pass updated filters to `bb-grid` by setting `args.filters`.
-
-- `bb-grid-options` An object with the following properties:
-  - `columns` An array of available columns.  Each column can have these properties:
-        - `allow_see_more` Allows the column to have a see more link to view overflow content.
-        - `caption` The text to display in the column header and column chooser.
-        - `category` A category for the column, can be used to filter in the column chooser.
-        - `center_align` True if the column header and contents should be center aligned.
-        - `controller` The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data. You can access row data from the grid in the column template controller using `$scope.rowData`.
-        - `description` A description for the column, seen in the column chooser.
-        - `exclude_from_search` If true, then the column does not highlight text on search.
-        - `id` A unique identifier for the column.  The ID is referenced by the option object's `selectedColumnIds` property.
-        - `jsonmap` The name of the property that maps to the column's data.
-        - `name` The name of the column.
-        - `right_align` True if the column header and contents should be right aligned.
-        - `template_url` The url for the column template to show formatted or complex data in a cell. The properties of the cell data object can be accessed using the format `data.property_name`.
-        - `width_all` The default width (in pixels) for a column if no breakpoint specific column is specified (`width_xs`, `width_sm`, `width_md`, `width_lg`). If no value is specified, columns will default to 150px, and if the columns do not take up the available room in the grid, the last column will be extended.
-        - `width_xs` The width of the column for screen sizes less than 768px.
-        - `width_sm` The width of the column for screen sizes from 768px to 991px.
-        - `width_md` The width of the column for screen sizes from 992px to 1199px.
-        - `width_lg` The width of the column for screen sizes greater than 1199px.
-  - `data` An array of objects representing the rows in the grid.  Each row should have properties that correspond to the `columns` `jsonmap` properties.
-  - `fixedToolbar` Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.
-  - `filtersAreActive` If true, the filter button highlights to indicate that filters are active.
-  - `filtersOpen` If set to true, opens filters. If set to false, closes filters.
-  - `getContextMenuItems` If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
-      - `id` A unique string identifier for the option.
-      - `title` The title shown for the dropdown option.
-      - `cmd` A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.
-  - `hasInlineFilters` If true, toggles hide/show on the transcluded content in the `bb-grid` directive when the filter button is pressed.
-  - `hasMoreRows` If set to true, then the `See more` button will appear below the grid when the grid does not use pagination.
-  - `hideColPicker` If true, hides the grid column picker in the toolbar.
-  - `hideFilters` If true, hides the filters button in the toolbar.
-  - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
-  - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
-  - `onAddClickLabel` Label for the add button.
-  - `searchText` The text entered in the grid search box, set by bbGrid.
-  - `selectedColumnIds` An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
-  - `sortOptions` Options around column sorting:
-      - `excludedColumns` An array of column names that should be excluded.
-      - `column` The name of the column that the data should be sorted by, set by bbGrid.
-      - `descending` Set to true by bbGrid if the sort should be in descending order.
-- `bb-grid-pagination` An object set when you intend to use pagination instead of infinite scrolling with your grid. It has the following properties:
-  - `itemsPerPage` The number of rows you wish to show in the grid per page, defaults to 5.
-  - `maxPages` The maximum number of pages to show in the pagination bar, defualts to 5.
-  - `recordCount` The total number of records available through pagination.
-- `bb-multiselect-actions` An array of actions that can be shown in the multiselect action bar. Each action can have the following:
-  - `actionCallback` A function that will be called when the action is clicked.
-  - `automationId` An identifier that will be placed in the `data-bbauto` attribute for automation purposes.
-  - `isPrimary` If true, this action will have the primary button color.
-  - `selections` The selected row objects from the list builder that are associated with this action, this can be updated through the `bb-selections-updated` function.
-  - `title` The text that will appear on the button for the action.
-- `bb-selected-rows` An object that has two way binding to the multiselected rows. It can be used to set the multiselected rows from the parent controller of the directive.
-- `bb-selections-updated` A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.
-
-### Custom Grid Toolbar ###
-If you need more content in the grid toolbar beyond the add button, search input, column chooser, and filter button, then you can add custom content between the add button and search input.
-
-To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid` directive. Then, place a `bb-grid-toolbar` directive with your custom controls inside of the `bb-grid` directive.
-
-### Grid Events ###
-
-  - `includedColumnsChanged` Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
-to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
-reloading the grid with the current data after the event has fired.
-  - `loadMoreRows` Fires when a page changes (when using pagination) or a user clicks the 'Load more' button. When a user clicks the 'Load more' button, the event provides a promise. The consumer of the event should resolve the promise with the new data that the grid appends to the existing data. When the event is raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
-
-*/
 (function ($) {
     'use strict';
 
@@ -103068,20 +103050,24 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setColumnSize(columnName, columnSize, totalWidth) {
+                                var gridHeaders,
+                                    colSizePx = columnSize + 'px',
+                                    bodyScrollLeft,
+                                    tableGrid = tableEl[0].grid;
 
+                                gridHeaders = tableGrid.headers;
+                                bodyScrollLeft = tableGrid.bDiv.scrollLeft;
                                 /* jqGrid does not provide a function to change a single column column size.
                                    This code snippet mirrors how jqGrid changes column size in their own dragEnd
                                    function.
                                 */
                                 tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
-                                tableEl[0].grid.headers[extendedColumnIndex].width = columnSize;
-                                tableEl[0].grid.headers[extendedColumnIndex].el.style.width = columnSize + 'px';
-                                tableEl[0].grid.cols[extendedColumnIndex].style.width = columnSize + 'px';
+                                gridHeaders[extendedColumnIndex].width = columnSize;
+                                gridHeaders[extendedColumnIndex].el.style.width = colSizePx;
+                                tableGrid.cols[extendedColumnIndex].style.width = colSizePx;
                                 /* istanbul ignore next: sanity check */
                                 tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
-                                $('table:first', tableEl[0].bDiv).css("width", tableEl[0].p.tblwidth + 'px');
-                                $('table:first', tableEl[0].hDiv).css("width", tableEl[0].p.tblwidth + 'px');
-                                tableEl[0].grid.hDiv.scrollLeft = tableEl[0].grid.bDiv.scrollLeft;
+                                tableGrid.hDiv.scrollLeft = bodyScrollLeft;
                             }
 
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
@@ -104205,54 +104191,6 @@ reloading the grid with the current data after the event has fired.
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
 
-/** @module Help
-@icon question
-@summary The help service allows Angular components to open and close the help panel programmatically.
- @description The help service allows other Angular components to open or close the help panel programmatically. When the widget opens, it interrogates the page to identify the current help topic and display the relevant help content. Settings for this service are controlled with the `bbHelpConfig` object.
-
- ### Dependencies ###
-
- - **[easyXDM](http://easyxdm.net/wp/) (2.4.19 or higher)** Used to make cross-domain requests to the help server
-
----
-
-### bbHelp Methods ###
-
-- `init()` Adds a global help button to the top-right corner of the page.  The appropriate `bbHelpConfig` options should be supplied before calling `init()`.
-- `open()` Opens help using the specified help key.  If `init()` has not yet been called then the global add button will be added to the page before opening the help topic.
-- `close()` Closes the current help topic.
-
-### bbHelpConfig Settings ###
-
- - `caseCentral` Optional. Can customize the Case Central URL if needed, or set to empty string to remove this link.
- - `clientId` Optional. Used to pass the client / site id to the chat session.
- - `communityUrl` Optional. Can be provided in order for a link to Community to appear.
- - `customLocales` Optional.  An array of additional locales for which the product has help content other than the default help content locale.  This array should contain strings like 'en-gb' or 'fr'.
- - `getChatData` Optional. Function that returns the appropriate chat key and website id to use for the product based on the user's locale. e.g.
-   ```
-   getChatData: function(userLocale) {
-            if (locale === 'en-gb') {
-                return {
-                    key: '3674699029499270000',
-                    websiteId: ' 3506212574036402816'
-                };
-            }
-            return {
-                key: ' 171147028994005462',
-                websiteId: '2766361919244160000'
-            };
-        }
-    ```
- - `getCurrentHelpKey` A function that returns the page's current help URL. This way, if a user navigates around your app, at any point clicking the help panel can call this to determine the appropriate help file to show. e.g. `function() { return 'myHelpFile.html'}`
- - `helpBaseUrl` Optional. Provide the base URL to your help files. If omitted, the productId will be inserted into the URL https://www.blackbaud.com/files/support/helpfiles/{ProductId}/content/ to construct the base URL.  This parameter override is available if help content must exist at some other path instead.
- - `knowledgebaseUrl` Optional. Can customize the knowledgebase URL if needed, or set to empty string to remove this link.
- - `onHelpLoaded` Optional. An callback function after the help panel is loaded.
- - `productId` The current product identifier used to build the URL to the product's help content.
- - `url` The URL to the Help Widget that will be included.
- - `userData` Optional. Object used to pass information about the current user to the chat session. e.g `{ emailAddress: '', firstName: '', lastName: ''}`
-
- */
-
 (function () {
     'use strict';
 
@@ -104349,18 +104287,6 @@ reloading the grid with the current data after the event has fired.
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
-/** @module Help Button
-@icon question-circle
-@summary The help button creates a help icon to launch a help key that is different than the default help based on page context.
- @description The help button directive creates a help icon that can be clicked to launch a specific help key that is different than the default help based on page context. Optionally, it can override the page help context throughout the duration that the help button exists on the page.
-
-### Help Button Settings ###
-
- - `bb-help-key` Specifies the help key that will be opened when the help button is clicked.
- - `bb-set-help-key-override` *(Default: `false`)* If `true`, then this button will override the current page help context, so clicking on the help ear will open to this help key while this button exists.
-
- */
-
 (function () {
     'use strict';
 
@@ -104402,16 +104328,6 @@ reloading the grid with the current data after the event has fired.
 
 /*jslint browser: true, plusplus: true */
 /*global angular */
-
-/** @module Highlight
-@icon paint-brush
-@summary The highlight component highlights portions of text inside DOM elements.
- @description The highlight directive allows you to highlight portions of text inside DOM elements. Set the `bb-highlight` attribute to the text you want to highlight, and all matching text within the element will be highlighted.
-
-### Highlight Options ###
-
-- `bb-highlight-beacon` A property on your scope that will cause highlighting to occur when its value changes. This is needed when the highlight directive can't tell that the contents of the element to be highlighted has changed. For instance, if the element with the `bb-highlight` attribute also has the `ng-bind` attribute, the highlight directive can detect this and update highlighting whenever this value changes. However if you use a different directive to update the element's contents or the `bb-highlight` attribute is specified on a parent element of the element to be highlighted, you will need to use `bb-highlight-beacon` to notify the highlight directive to update the highlighted text.
- */
 
 (function () {
     'use strict';
@@ -104481,14 +104397,14 @@ reloading the grid with the current data after the event has fired.
                 link: function (scope, el, attrs) {
                     function highlight() {
                         var highlightText = scope.$eval(attrs.bbHighlight);
-                        
+
                         bbHighlight.clear(el);
 
                         if (highlightText) {
                             bbHighlight(el, highlightText);
                         }
                     }
-                    
+
                     scope.$watch(attrs.bbHighlight, function () {
                         highlight();
                     });
@@ -104500,7 +104416,7 @@ reloading the grid with the current data after the event has fired.
                             }
                         }, true);
                     }
-                    
+
                     if (attrs.ngBind) {
                         scope.$watch(attrs.ngBind, function (newValue, oldValue) {
                             if (newValue !== oldValue) {
@@ -104516,25 +104432,6 @@ reloading the grid with the current data after the event has fired.
 }());
 
 /*global angular, define, enquire, require */
-
-/** @module Media Breakpoints
-@icon mobile
-@summary The media breakpoints service calls callback functions when a Bootstrap grid system breakpoint is hit to manipulate the user interface programmatically when CSS media queries are not sufficient.
- @description The media breakpoints service can call one or more callback functions whenever a [Bootstrap grid system breakpoint](http://getbootstrap.com/css/#grid-media-queries) is hit. This allows for manipulating the UI programmatically in cases where CSS media queries are not sufficient.
-
-### Dependencies ##
-
- - **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
-
----
-
-### Media Breakpoint Methods ###
-
- - `register(callback)` Registers a callback method with the service that will be called any time a media breakpoint is hit. The callback function will be called with the following arguments:
-  - `breakpoint` An object with `xs`, `sm`, `md` and `lg` properties. The property corresponding with the current breakpoint will be set to `true` and the rest set to `false`.
- - `unregister(callback)` Unregisters the specified callback method. This should be called whenever the controller's `$scope` is destroyed.
- - `getCurrent()` Gets the current media breakpoint object.
- */
 
 (function () {
     'use strict';
@@ -104638,27 +104535,6 @@ reloading the grid with the current data after the event has fired.
 
 /*jshint browser: true */
 /*global angular, jQuery */
-
-/** @module Modal
-@icon list-alt
-@summary The modal component launches modals in a way that is consistent with Sky UX applications.
- @description The modal directive and service can be used to launch modals in a consistent way in a Sky UX application. Rather than using the ui-bootstrap `$uibModal.open`, use `bbModal.open` instead. This takes the same options object but allows for some custom default behaviors in Sky UX.
-
-In addition to the `bbModal` service for lauching modals, a `bb-modal` directive should be used to have common look-and-feel for modal content. Within `bb-modal`, use `bb-modal-header` to include a common modal header, `bb-modal-footer` to include a common modal footer and buttons, and `bb-modal-body` to wrap the modal's body content.
-
-### Modal Header Settings ###
-
- - `bb-modal-help-key` Specifies the help key for the modal. This will be be linked from a help button included in the modal header.
-
-### Modal Footer Buttons ##
-
- - `bb-modal-footer-button` Generic button for the modal footer. HTML included in this tag will be included in the contents of the button. You must register events for the button manually.
-
- - `bb-modal-footer-button-primary` Primary button for the modal footer which will have a custom look.  Default content is 'Save', but HTML included in this tag will be included as the contents of the button if provided. You must register events for the button manually.
-
- - `bb-modal-footer-button-cancel` Cancel button for the modal footer. Default content is 'Cancel', but HTML included in this tag will be included as the contents of the button if provided. This button automatically cancels the modal form.
-
- */
 
 (function ($) {
     'use strict';
@@ -104871,12 +104747,6 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
 /*global angular, define, require */
 
-/** @module Moment
-@icon clock-o
-@summary The moment module use the moment.js library to parse, validate, manipulate, or display dates.
-@description The moment module allows you to use the [moment](http://momentjs.com/) library.
-*/
-
 (function () {
     'use strict';
 
@@ -104907,12 +104777,6 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 }());
 
 /*global angular, jQuery */
-
-/** @module Navbar
-@icon compass
-@summary The navbar creates a Bootstrap `nav` element and applies Sky UX classes to it.
- @description The navbar directive creates a Bootstrap `nav` element with the appropriate Sky UX classes applied to it and its children, and also adds behavior such as showing sub-navigation items when the user hovers over the dropdown. If you do not wish to use the omnibar for collapsing the navbar into a mobile menu on small screens, then place the `bb-navbar-showmobile` class on the `bb-navbar` directive.
- */
 
 (function ($) {
     'use strict';
@@ -105102,21 +104966,6 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
 /*global angular */
 
-/** @module Page
-@icon file-o
-@summary The page component handles functionality around loading pages.
- @description The page directive provides functionality around loading pages.
-
-### Page Settings ###
-
- - `bb-page-status` The status of the page.
-    - `LOADING` Denotes the page is currently loading.
-    - `LOADED` Denotes the page has successfully finished loading.
-    - `NOT_AUTHORIZED` Denotes the page has finished loading and should show the unauthorized content.
-    - `NOT_FOUND` Denotes the page is has finished loading and should redirect to the not found page.
- - `bb-page-uses-load-manager` Allow the page to use the bb-data load manager.
- */
-
 (function () {
     'use strict';
 
@@ -105214,29 +105063,171 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
 /*global angular */
 
-/** @module Pagination
-@icon files-o
-@summary The pagination component displays data across multiple pages and inserts a pagination control to page through the data.
- @description The pagination directive allows list data to be displayed across multiple pages. When the number of items in the list exceeds the page size, a pagination control is displayed.
+(function () {
+    'use strict';
 
-The `bb-pagination-content` directive and the `bbPaging` service are used in conjunction with this directive. The `bb-pagination-content` is used to wrap the paged content so that the height of the wrapper can be kept as a constant height across pages regardless of contents. When the list data is bound, the height of the largest page will be used for the wrapper so that the height of the list will not fluctuate as the user pages through it.
-The `bbPaging` service is used to create the paged data and responds to changes in the pagination directive.
+    var components = [{
+        name: 'Alert',
+        cls: 'alert'
+    }, {
+        name: 'Content',
+        cls: 'content'
+    }, {
+        name: 'KeyInfo',
+        cls: 'key-info'
+    }, {
+        name: 'Image',
+        cls: 'image'
+    }, {
+        name: 'Status',
+        cls: 'status'
+    }, {
+        name: 'Title',
+        cls: 'title'
+    }, {
+        name: 'Subtitle',
+        cls: 'subtitle'
+    }, {
+        name: 'ActionBar',
+        cls: 'action-bar'
+    }],
+    pageSummaryModule = angular.module('sky.pagesummary');
 
-### Pagination Settings ###
+    function makePageSummaryComponent(component) {
+        var controllerName,
+            name = component.name;
 
- - `bb-pagination` The paged data initialized by the `bbPaging` service.
- - `bb-pagination-disabled` Determines whether the use can interact with the pagination control.
+        function Controller($scope) {
+            var vm = this;
 
-### Pagination Content Settings ##
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
 
- - `bb-pagination-content` The paged data initialized by the `bbPaging` service.
+        Controller.$inject = ['$scope'];
 
-### Paging Settings ##
-These are optional properties of the object passed to `bbPaging.init()`
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbPageSummary = ctrls[1];
 
- - `currentPage` *(Default: `1`)* The initial page to display.
- - `itemsPerPage` *(Default: `5`)* The number of items to display per page.
- */
+                vm.el = el;
+
+                bbPageSummary['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbPageSummary' + name, '^bbPageSummary'],
+                controller: controllerName,
+                controllerAs: 'bbPageSummary' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBPageSummary' + name + 'Controller';
+
+        pageSummaryModule
+            .controller(controllerName, Controller)
+            .directive('bbPageSummary' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBPageSummaryController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
+            var name = component.name;
+
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
+
+                vm[propName] = ctrl;
+
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
+                };
+            };
+        }
+
+        components.forEach(addComponentSetter);
+
+        vm.getPageSummaryLeftCls = function () {
+            return {
+                'col-sm-9': !!vm.keyInfoCtrl
+            };
+        };
+    }
+
+    function bbPageSummary(bbMediaBreakpoints) {
+        function link(scope, el, attrs, vm) {
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-page-summary-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            function mediaBreakpointHandler(breakpoint) {
+                var keyInfoEl = el.find('.bb-page-summary-key-info'),
+                    toEl;
+
+                if (breakpoint.xs) {
+                    toEl = el.find('.bb-page-summary-key-info-xs');
+                } else {
+                    toEl = el.find('.bb-page-summary-key-info-sm');
+                }
+
+                if (!keyInfoEl.parent().is(toEl)) {
+                    toEl.append(keyInfoEl);
+                }
+            }
+
+            components.forEach(watchForComponent);
+
+            bbMediaBreakpoints.register(mediaBreakpointHandler);
+
+            scope.$on('$destroy', function () {
+                bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+            });
+        }
+
+        return {
+            restrict: 'E',
+            controller: 'BBPageSummaryController',
+            controllerAs: 'bbPageSummary',
+            bindToController: true,
+            link: link,
+            scope: {},
+            templateUrl: 'sky/templates/pagesummary/pagesummary.directive.html',
+            transclude: true
+        };
+    }
+
+    bbPageSummary.$inject = ['bbMediaBreakpoints'];
+
+    pageSummaryModule
+        .controller('BBPageSummaryController', BBPageSummaryController)
+        .directive('bbPageSummary', bbPageSummary);
+
+    components.forEach(makePageSummaryComponent);
+}());
+
+/*global angular */
 
 (function () {
     'use strict';
@@ -105473,20 +105464,6 @@ angular.module('sky.palette.config', [])
 
 /*global angular */
 
-/** @module Palette
-@icon paint-brush
-@summary The palette service provides methods for consistently producing a sequence of colors for Sky.
-@description The palette service gives you the following functions:
-
-  - `getColorByIndex(index, paletteType)` Get a specific color by it's index in the palette.
-    - 'index' A required integer for the index of the color.
-    - 'paletteType' An optional string representing either `mono` or the default `multi`.
-  - `getColorSequence(requestedLength, paletteType)` Returns an array of colors for the requested length.  When using with `ng-repeat`, be sure to use the `track by` syntax since we return duplicates.
-    - 'requestedLength' A required integer for the size of the array of colors you want returned.
-    - 'paletteType' An optional string representing either `mono` or the default `multi`.
-
-*/
-
 (function () {
     'use strict';
 
@@ -105523,17 +105500,6 @@ angular.module('sky.palette.config', [])
 }());
 
 /*global angular, jQuery */
-
-/** @module Popover
-@icon newspaper-o
-@summary The popover component wraps the Angular UI Bootstrap popover directive to create an HTML-formatted popover that is displayed by a trigger element.
- @description The `bb-popover-template` directive enables an HTML-formatted popover to be displayed via a trigger element. This directive is an alternative to the `popover` directive from Angular UI Bootstrap, making it easier to define markup in a template rather than directly in the view's controller.
-
-The `bb-popover-template` attribute should specify a URL for a template in the `$templateCache` that will be used as the popover content. The scope applied to this template inherits the current scope. A `hide` function is also
-provided on the scope to dismiss the popover.
-
-The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](http://angular-ui.github.io/bootstrap/) directive and supports all of it's optional properties.
- */
 
 (function ($) {
     'use strict';
@@ -105594,7 +105560,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 
                     /* Set the popover is open attribute this way to account for
                        both variables directly on scope as well as using 'controller
-                       as' 
+                       as'
                     */
                     /* istanbul ignore else: sanity check */
                     if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
@@ -105658,17 +105624,6 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 }());
 /*jshint browser: true */
 /*global angular */
-
-/** @module Scroll into View
-@icon eye
-@summary The scroll-into-view component causes an element to scroll into the viewport when its bound value changes.
- @description The scroll-into-view directive causes an element to scroll into the viewport whenever its bound value changes.
-
-### Scroll-into-view Settings ###
-
- - `bb-scroll-into-view` The value that triggers the scroll.
- - `bb-scroll-into-view-highlight` A Boolean indicating whether the element should be highlighted when scrolling completes.
-*/
 
 (function () {
     'use strict';
@@ -105882,46 +105837,6 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 /*jslint browser: true */
 /*global angular, jQuery */
 
-/** @module Search Field
-@icon search
-@summary The search field builds single- and multi-search fields for local searches or for remote searches of larger datasets on a server.
- @description The search field directive allows you to easily build single- and multi-search fields that can be filtered as the user types. This directive uses all the syntax and settings of the `ui-select` third party control (see the `ui-select` documentation for more information, options, and settings).
-
-The search field can be used for a local search (i.e. dropdown box where you have all the data already loaded), or it can be used for a remote search to search larger datasets on a server.  Both types support single- and multi-search capabilities.
-
-### Dependencies ###
-
- - **[ui-select](https://github.com/angular-ui/ui-select) (0.11.0 or higher - .js and .css files needed)**
-
----
-
-### Local Search Settings ###
-
- - `ui-select-choices`
-   - `repeat` Required. An expression that defines the array of choices.  If a `filter` is included, then the choices will be filtered by what the user types, otherwise it will behave just a like a normal dropdown box.  See the `ui-select` documentation for more information.
-
-### Remote Search Settings ###
-
- - `ui-select-choices`
-   - `repeat` Required. An expression that defines the array of choices that will be populated from a remote server.  See the `ui-select` documentation for more information.
-   - `refresh` Required. A function call to load the results from a remote server. The function should at least take `$select.search` as a parameter, and it should guard against calling the remote server with an empty search value.
-     - ***NOTE:** The search control needs to know when you get results back from the server in order to properly display a "no results" message when necessary.  In your refresh function, after you receive and store the results, then you MUST fire the `bbSearchFinished` event like this:  `$scope.$broadcast('bbSearchFinished');`.*
-   - `refresh-delay` Optional. The delay in milliseconds after the last keystroke before kicking off the remote search. Default from `ui-select` is 1000 ms.
-
-### Single Search Settings ###
-
- - `ui-select-match` The text of the selection to display in the search field. Note: The value should use the `$select.selected` syntax.
-   - `allow-clear` Optional. Allows you to clear the current value by rendering an "X" button.
-   - `placeholder` Optional. Default text when no selection is present.
-
-### Multiple Search Settings ###
-
- - `ui-select`
-   - `multiple` Required. Styles the search to accept multiple search values.
- - `ui-select-match` The text of the selection to display in the search field. Note: The value should use the `$item` syntax.
-   - `placeholder` Optional. Default text when no selection is present.
- */
-
 (function ($) {
     'use strict';
 
@@ -106076,19 +105991,6 @@ The search field can be used for a local search (i.e. dropdown box where you hav
 
 /*jslint nomen: true, plusplus: true */
 /*global angular, jQuery */
-
-/** @module Tab Scroll
-@icon arrows-h
-@summary The tab scroll component makes a row of tabs horizontally scrollable when the row is wider than its container.
- @description ### Dependencies ###
-
-The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollable when the width of the tabs exceeds the width of its container.  The tabs are also animated to indicate to the user that they can be scrolled.
-
-### Tab Scroll Settings ###
-
- - `bb-tab-scroll-ready` Used to indicate the tabs are ready to be animated.  This should be used when the tabs are loaded dynamically based on some asynchronous logic like loading data from a web server.
-
- */
 
 (function ($) {
     'use strict';
@@ -106246,27 +106148,6 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
 /*jslint nomen: true, plusplus: true */
 /*global angular, jQuery */
 
-/** @module Tabset
-@icon folder-open-o
-@summary The tabset module contains directives for enhancing ui-bootstrap tabs.
- @description ### Additional Dependencies ###
-
-### Tabset Options ###
-
-The `bb-tabset-add` attribute creates an add button in the tab area and takes a callback that will be executed when the add button is clicked.
-
-The `bb-tabset-open` attribute creates an open button in the tab area and takes a callback that will be executed when the open button is clicked.
-
-### Collapsing Tabs ###
-
-To make tabs collapse into a dropdown on a small (mobile device) screen, use the `bb-tabset-collapsible` attribute on a ui-bootstrap `tabset`.
-You must then use the `bb-tab-collapse-header` attribute on your ui-bootstrap `tab` to specify a title for the dropdown that will display when a tab is active.
-
-### Tab Close Icon ###
-
-If you wish to add a close icon to a tab, just add the `bb-tab-close` class to the ui-bootstrap `tab` element, and add an `i` element with the `bb-tab-close-icon` class inside of the ui-bootstrap `tab-heading` directive.
-
- */
 (function ($) {
     'use strict';
 
@@ -106318,6 +106199,13 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
         };
 
         self.tabAdded = function () {
+            if (!$scope.bbTabsetOptions) {
+                $scope.bbTabsetOptions = {
+                    isSmallScreen: false,
+                    tabCount: 0
+                };
+            }
+
             if ($scope.bbTabsetOptions.isSmallScreen) {
                 $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
             }
@@ -106414,11 +106302,12 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                     $scope.bbTabsetOptions.isSmallScreen = newBreakpoints.xs;
                     setupCollapsibleTabs(newBreakpoints.xs && ($scope.bbTabsetOptions.tabCount > 1));
                 }
-
-                $scope.bbTabsetOptions = {
-                    isSmallScreen: false,
-                    tabCount: 0
-                };
+                if (!$scope.bbTabsetOptions) {
+                    $scope.bbTabsetOptions = {
+                        isSmallScreen: false,
+                        tabCount: 0
+                    };
+                }
 
                 el.prepend($compile(getDropdownEl())($scope));
 
@@ -106524,22 +106413,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
 /*global angular */
 
-/** @module Tab Sref
-@icon link
-@summary The tab sref component provides tab info in page URLs so that hyperlinks can point to specific tabs.
- @description The tab sref directive adds the ability to change the page's URL when the user clicks a tab. This also allows for users to navigate straight to a selected tab from a hyperlink.
-
-### Dependencies ###
-
- - **[Angular UI Router](https://github.com/angular-ui/ui-router) (0.2.13 or higher)**
-
----
-
-### Tab Sref Settings ###
-
- - `bb-tab-sref` The name of the state where the application should navigate when the tab is selected.
- */
-
 (function () {
     'use strict';
 
@@ -106554,7 +106427,7 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
                         tabsetCtrl;
 
                     tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
-                    
+
 
                     function checkCurrentState() {
                         if ($state.is(sref)) {
@@ -106593,18 +106466,6 @@ If you wish to add a close icon to a tab, just add the `bb-tab-close` class to t
 
 /*jslint nomen: true, plusplus: true */
 /*global angular */
-
-/** @module Template
-@icon building-o
-@summary The template component places formatted text inside a tokenized string template.
- @description The template directives allow you to place formatted text inside a tokenized string template. This avoids the need to build HTML manually on the server or in a custom directive where HTML injection bugs are common.
-The string template is specified with the `bb-template` attribute, and child elements with the `bb-template-item` attribute are the elements that contain the formatted text.
-
-### Template Settings ###
-
- - `bb-template` The tokenized string that represents the template. Tokens use the {n} notation where n is the ordinal of the item to replace the token.
-  - `bb-template-item` 
- */
 
 (function () {
     'use strict';
@@ -106688,31 +106549,7 @@ The string template is specified with the `bb-template` attribute, and child ele
 }());
 
 /*jslint plusplus: true */
-
 /*global angular */
-
-/** @module Text Expand
-@icon text-height
-@summary The text expand component truncates long text with an ellipsis and a link that users can click to expand the text.
- @description The texteExpand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold then no action is taken. The 'See more' link will expand the text inline if the length of the text is below the specified expanded length limit and if the number of newlines in the text is below the specified expanded newline limit, otherwise the link will open the text in a modal view.
-
-Note that collapsed text will have newlines removed. Also, if one or more newlines are detected, the text is automatically collapsed regardless of the total length of the text.
-
-### Text Expand Settings ###
-
- - `bb-text-expand` The text to truncate.
- - `bb-text-expand-max-length` *(Default: 200)* The number of characters to show before truncating the text. The directive will attempt to look back up to 10 characters for a space and truncate there in order to avoid truncating in the middle of a word.
- - `bb-text-expand-max-expanded-length` *(Default: 600)* The maximum number of characters to show in the inline expanded view. If there are more characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked.
- - `bb-text-expand-max-expanded-newlines` *(Default: 2)* The maximum number of newline characters to show in the inline expanded view. If there are more newline characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked.
- - `bb-text-expand-modal-title` The title to display in the modal expanded view.
-
-The Text Expand Repeater directive truncates a list of repeater items and will initially display a set number of items. Any items over the set maximum limit are hidden until the user elects to expand the list.
-
-### Text Expand Repeater Settings ###
-
-- `bb-text-expand-repeater-max` The maximum number of items to show before truncating the repeater list.
-- `bb-text-expand-repeater-data` The name of the property containing the repeater data.
- */
 
 (function () {
     'use strict';
@@ -106737,13 +106574,14 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
         return angular.element($templateCache.get('sky/templates/textexpand/' + templateName + '.html'));
     }
 
-    function BBTextExpandController(textExpandContent, headerContent) {
+    function BBTextExpandController(textExpandContent, headerContent, closeText) {
         var self = this;
         self.textExpandContent = textExpandContent;
         self.headerContent = headerContent;
+        self.closeText = closeText;
     }
 
-    BBTextExpandController.$inject = ['textExpandContent', 'headerContent'];
+    BBTextExpandController.$inject = ['textExpandContent', 'headerContent', 'closeText'];
 
     angular.module('sky.textexpand', modules)
         .directive('bbTextExpandRepeater', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
@@ -106891,11 +106729,14 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                             },
                                             headerContent: function () {
                                                 return scope.$eval(attrs.bbTextExpandModalTitle) || bbResources.text_expand_modal_title;
+                                            },
+                                            closeText: function () {
+                                                return bbResources.text_expand_close_text;
                                             }
                                         }
                                     });
                                 });
-                                
+
                             } else {
                                 expandEl.on('click', function () {
                                     if (isExpanded) {
@@ -106937,37 +106778,6 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
 
 /*jslint browser: true, plusplus: true */
 /*global angular */
-
-/** @module Tile
-@icon th-large
-@summary The tile provides a collapsible container that is the building block for pages and forms in Sky UX applications.
- @description The `bb-tile` directive creates a collapsible container and is the bulding block for pages and forms in a Sky UX application. The `bb-tile-section` directive is used to create padded sections inside a `bb-tile` element. Additionally, the `bb-tile-header-content` directive may be placed inside the `bb-tile` directive to add summary information to the tile. If you simply need to show a check mark indicating the tile has data, you can add a `bb-tile-header-check` element to the `bb-tile-header-content` element.
-
-When used on forms, it automatically adjusts the background color on the form and shrinks the tile header.
-
-### Tile Settings ###
-
- - `bb-tile-header` The header text for the tile.
- - `bb-tile-settings-click` A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header.  If not specified, the settings button is not displayed.
- - `bb-tile-collapsed` (optional) binds to the collapsed state of the tile so that the tile can respond to user setting collapsed state.
-
-### Tile Dashboard Directive ###
-
-The `bb-tile-dashboard` directive allows you to have a set of tiles within a page which have controllable layouts and collapsed states. It depends on [angular-ui router](https://github.com/angular-ui/ui-router/wiki) to define states that map to tile controllers and templates.
-
-### Tile Dashboard Settings ###
-
-- `bb-tiles` An array of tile objects to be contained in the dashboard. Contains the following object:
-    - `id` Unique ID for the tile.
-    - `view_name` The name of the view for the tile defined in the ui-router `$stateProvider`.
-    - `collapsed` True if the tile should be collapsed, false otherwise.
-    - `collapsed_small` True if the tile should be collapsed in small screen state, false otherwise.
-- `bb-layout` An object containing information about how the tiles should be organized within the tile dashboard. Contains the following:
-    - `one_column_layout` Array of tile ids that correspond with how the tiles should be ordered in a one column layout (small screen) ex: `layout.one_column_layout = ['Tile1', 'Tile2'];`.
-    - `two_column_layout` Array that corresponds with how tiles should be ordered in a two column layout. ex: `layout.two_column_layout = [['Tile1'], ['Tile2']];` where `Tile1` is in the left hand column and `Tile2` is in the right hand column.
-- `bb-tile-dashboard-all-collapsed` If set to true, then collapses all tiles in the dashboard, if set to false, expands all tiles in the dashboard.
-
- */
 
 (function () {
     'use strict';
@@ -107371,26 +107181,6 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
-/** @module Toast
-@icon envelop-o
-@summary The toast service launches toast messages basic string messages or complex toast messages that use HTML templates.
- @description The toast service can be used to launch toast in a consistent way in a Sky UX application. The service has a single method, `bbToast.open` used to launch a toast. Optionally include the `ngAnimate` module in the application for toasts to fade in and out.
-
-### Dependencies ###
-
- - **[angular-toastr](https://github.com/Foxandxss/angular-toastr) (1.0.0-beta.2 or higher)**
- - **[ng-animate](https://docs.angularjs.org/api/ngAnimate) (optional, 1.3 or higher)**
-
----
-
-### Toast Settings ##
-
- - `message` Used to provide a basic string message for simple toasts.
- - `templateUrl` Url for a template in the `$templateCache`. Used to provide an HTML template when displaying complex toasts.  Cannot be combined with the `message` option.
- - `controller` Used in conjunction with `templateUrl`. Specifies the name of a controller to apply to the template's scope.
- - `resolve` Items that will be resolved and passed to the controller as locals.
- */
-
 (function () {
     'use strict';
 
@@ -107510,23 +107300,6 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
 
 /*global angular */
 
-/** @module Tooltip
-@deprecated
-@icon info
-@summary This directive is no longer being maintained. For adding templated tooltips, use the Angular UI Bootstrap Tooltip uib-tooltip-template attribute.
- @description ### *Deprecated* ###
-
- This directive is no longer being maintained. For adding templated tooltips, use the [Angular UI Bootstrap Tooltip](http://angular-ui.github.io/bootstrap/) uib-tooltip-template attribute.
-
-### Tooltip Settings ##
-
-In addition to all the properties from the [Angular UI Bootstrap Tooltip](http://angular-ui.github.io/bootstrap/) directive, these properties may also be specified:
-
- - `bb-tooltip` URL for a template in the `$templateCache`. The template HTML may contain bindings to properties in the current scope.
-
- - `tooltip-updater` Optional. A property on the scope that can be watched by the directive so that when this property's value changes, the contents of the tooltip are refreshed.
- */
-
 (function () {
     'use strict';
 
@@ -107557,16 +107330,6 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 
 /*global angular */
 
-/** @module Utilities
-@icon gear
-@summary The utilities module provides methods to encode URI components and format arguments.
-@description The Sky UX utilities module gives you the following angular filters:
-
-  - `encodeURIComponent` Uses the $window.encodeURIComponent function on your string.
-  - `format` Formats the args with a given format string.
-
-*/
-
 (function () {
     'use strict';
 
@@ -107584,17 +107347,6 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 }());
 
 /*global angular */
-
-/** @module Email Validation
-@icon check
-@summary The email validation directive allows you to validate email strings in input fields.
- @description The email validation provides the ability to validate email strings in input fields.
-
-### Email Validation Settings ###
-
-- `ng-model` An object to bind the email value to on the input.
-- `type=email` indicates that email validation can be used.
- */
 
 (function () {
     'use strict';
@@ -108097,52 +107849,6 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 /*jslint browser: true */
 /*global angular, jQuery */
 
-/** @module Wait
-@icon spinner
-@summary The wait component disables an element in a waiting state and visually indicates that it is in a waiting state.
- @description The wait directive allows you to disable and visually indicate that an element is in a waiting state.
-When `bb-wait` is set to true, the element will initially be blocked with a clear mask, but after 300ms a visual indicator will cover the element as well.
-This will allow for the element to immediately be disabled but not cause visual disturbances for very brief waits.
-
-### Dependencies ###
-
- - **[jquery.blockUI.js](http://malsup.com/jquery/block/) (2.66.0-2013.10.09 or higher)**
-
----
-
-If the value bound to `bb-wait` is truthy, then the element will begin waiting until the value becomes falsey.
-
-### Multiple Waits ###
-You can set the value of `bb-wait` to a numeric value to track a count of simultaneous waits.
-When waits are added, increment the wait count and when they are removed then decrement the count.
-This will cause the wait UI to only clear once all waits are removed.
-
-### Full-page Waits ###
-If bb-wait is added to the `<body>` tag, then a full-page version of the wait UI will be created.
-
-### Raising Wait Events ###
-Wait events can be raised from one controller to another by calling `$scope.$emit("bbBeginWait");` and `$scope.$emit("bbEndWait");` respectively.
-A controller can capture that event and begin waiting its element by listening for the event and updating its own bb-wait directive.
-When doing so, itshould call `stopPropagation()` on the event so that other parents won't catch it as well.
-Uncaught events will raise all the way to the main controller of the application which can cause the entire page to wait.
-
-    $scope.$on("bbBeginWait", function (event) {
-        event.stopPropagation();
-        $scope.myElementWaitCount += 1;
-    });
-
-### Wait Service ###
-In addition to the `bb-wait` directive, a `bbWait` service exists to allow functional access to adding and removing waits on elements or the page as a whole.
-This service supports the following functions
-
- - `beginElWait(element)` - Adds a wait for the specified element. Implicitly tracks a wait count for the element.
- - `endElWait(element)` - Removes a wait for the specified element. Implicitly tracks a wait count for the element and clears the wait UI when the count is 0.
- - `clearElWait(element)` - Removes all waits for the specified element and will clear any wait UI.
- - `beginPageWait()` - Adds a wait for the whole page (same as body element). Implicitly tracks a wait count for the element.
- - `endPageWait()` - Removes a wait for the whole page (same as body element). Implicitly tracks a wait count for the element and clears the wait UI when the count is 0.
- - `clearPageWait()` - Removes all waits for the whole page (same as body element) and will clear any wait UI.
- */
-
 (function ($) {
     'use strict';
 
@@ -108418,16 +108124,6 @@ This service supports the following functions
 
 /*global angular*/
 
-/** @module Window
-@icon desktop
-@summary The window services provides helper methods to edit the browser’s window title and to obtain the browser’s scrollbar width.
-@description An angular service with the following functions:
-
-  - `setWindowTitle(title)` Changes the browser window's title. If a product name is specified in `bbWindowConfig`, then the product name will be appended to the passed title.
-  - `getScrollbarWidth` Calculates and returns the width of the scrollbar for the current browser.
-  - `isIosUserAgent` Uses window navigator user agent to determine if current user agent is an iPod, iPad, or iPhone.
-*/
-
 (function () {
     'use strict';
 
@@ -108511,34 +108207,6 @@ This service supports the following functions
 
 /*jslint browser: true, plusplus: true */
 /*global angular */
-
-/** @module Wizard
-@icon magic
-@summary The wizard adjusts a modal form to guide users through a set of pre-defined steps in a particular order.
- @description Wizards are used on a modal form when the user needs to perform a set of pre-defined steps in a particular order. The Sky UX Wizard works in conjunction with the [Angular UI Bootstrap](http://angular-ui.github.io/bootstrap/) tabs component.  Placing the `bb-wizard` directive on a UI Bootstrap `tabset` element will cause the tabs to look and behave like a Sky wizard.
-
-Sky Wizards also have the concept of a completed step which is denoted by the `bb-wizard-step-complete` directive. When present on a `tab` and bound to a truthy value, the step's tab will be displayed as completed.
-
-Finally there is a `bbWizardNavigator` service that provides some convenience methods for navigating through the wizard's steps. This will typically be used by wiring the navigator up to your modal's previous and next buttons.
-
-The `bbWizardNavigator` service has an `init()` function that takes an `options` object with the following properties:
-
-- `steps` An array of steps. Each step should have the following properties:
-
-
- - `active` Indicates whether the step is the currently active step. This should be the same property that is bound to the UI Bootstrap `tab` directive's `active` property.
- - `disabled()` A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `tab` directive's `disable` property.
- - `complete()` A function that returns a boolean indicating whether the tab is complete. This should be the same function that is bound to the tab's `bb-wizard-step-complete` property.
-
-The `bbWizardNavigator` also exposes the following methods:
-
-- `previousText()` Returns the text for the modal's Previous button. This usually doesn't change while the user interacts with the widget.
-- `nextText()` Returns the text for the modal's Next button. This changes to "Finish" when the user is on the last step.
-- `goToPrevious()` Navigates the user to the previous step.
-- `goToNext()` Navigates the user to the next step.
-- `previousDisabled()` Indicates whether the previous step is disabled. This should be bound to the `ng-disabled` property of the modal's Previous button.
-- `nextDisabled()` Indicates whether the next step is disabled. This should be bound to the `ng-disabled` property of the modal's Next button.
- */
 
 (function () {
     'use strict';
@@ -108673,8 +108341,10 @@ The `bbWizardNavigator` also exposes the following methods:
 
     var modules = [
         'sky.actionbar',
+        'sky.alert',
         'sky.autofocus',
         'sky.autonumeric',
+        'sky.avatar',
         'sky.check',
         'sky.checklist',
         'sky.contextmenu',
@@ -108693,6 +108363,7 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.omnibar',
         'sky.palette',
         'sky.page',
+        'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
         'sky.resources',
@@ -108740,7 +108411,7 @@ The `bbWizardNavigator` also exposes the following methods:
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"text for ui-select search control when no records are found,","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -108777,8 +108448,39 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</span>\n' +
         '');
+    $templateCache.put('sky/templates/alert/alert.html',
+        '<div class="alert" ng-class="[\'alert-\' + (bbAlert.bbAlertType || \'warning\'), bbAlert.bbAlertCloseable === \'true\' ? \'alert-dismissible\' : null]" ng-show="!bbAlert.bbAlertClosed" role="alert">\n' +
+        '    <button ng-show="bbAlert.bbAlertCloseable === \'true\'" type="button" class="close" ng-click="bbAlert.close({$event: $event})">\n' +
+        '        <span aria-hidden="true">&times;</span>\n' +
+        '        <span class="sr-only">{{\'alert_close\' | bbResources}}</span>\n' +
+        '    </button>\n' +
+        '    <div ng-transclude></div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/avatar/avatar.directive.html',
+        '<div class="bb-avatar" ng-switch="bbAvatar.canChange">\n' +
+        '  <div ng-switch-when="true">\n' +
+        '    <div\n' +
+        '       bb-file-drop\n' +
+        '       bb-file-drop-change="bbAvatar.photoDrop(files, rejectedFiles)"\n' +
+        '       bb-file-drop-accept="\'image/*\'"\n' +
+        '       >\n' +
+        '      <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '  <div ng-switch-default>\n' +
+        '    <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '  </div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/avatar/avatarinner.include.html',
+        '<div class="bb-avatar-wrapper">\n' +
+        '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
+        '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/check/styled.html',
-        '<span></span>\n' +
+        '<span role="input"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
@@ -108902,12 +108604,28 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
-        '<div>\n' +
-        '    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"\n' +
-        '            class="form-control"\n' +
-        '            ng-options="locals.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerOptions.availableDateRangeTypes || locals.bbDateRangePicker.defaultDateRangeOptions)"\n' +
-        '            ng-model="bbDateRangePickerValue.dateRangeType" />\n' +
-        '</div>');
+        '<div class="form-inline" ng-form="bbDateRangePickerCtrl.dateRangeForm">\n' +
+        '    <div class="form-group bb-date-range-picker-form-group">\n' +
+        '      <label class="bb-date-range-picker-label" ng-if="bbDateRangePickerCtrl.pickerLabel && !bbDateRangePickerCtrl.noLabels">{{bbDateRangePickerCtrl.pickerLabel}}</label>\n' +
+        '      <select data-bbauto-field="{{bbDateRangePickerCtrl.bbDateRangePickerAutomationId}}_DateRangeType"\n' +
+        '        class="form-control"\n' +
+        '        ng-options="bbDateRangePickerCtrl.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerCtrl.bbDateRangePickerOptions.availableDateRangeTypes || bbDateRangePickerCtrl.bbDateRangePicker.defaultDateRangeOptions)"\n' +
+        '        ng-model="bbDateRangePickerCtrl.bbDateRangePickerValue.dateRangeType" />\n' +
+        '    </div>\n' +
+        '    <div class="form-group bb-date-range-picker-form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">\n' +
+        '      <label class="bb-date-range-picker-label" ng-if="!bbDateRangePickerCtrl.noLabels">{{::bbDateRangePickerCtrl.resources.date_range_picker_from_date}}</label>\n' +
+        '      <bb-datepicker ng-model="bbDateRangePickerCtrl.fromDate" max-date="bbDateRangePickerCtrl.maxDate" bb-datepicker-name="fromDate" datepicker-append-to-body="true" placeholder="bbDateRangePickerCtrl.fromPlaceholder"></bb-datepicker>\n' +
+        '      <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.fromDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>\n' +
+        '      <label class="bb-date-range-picker-date-max-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.fromDate.$error.maxDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_max_date_error}}</label>\n' +
+        '    </div>\n' +
+        '    <div class="form-group bb-date-range-picker-form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">\n' +
+        '      <label class="bb-date-range-picker-label" ng-if="!bbDateRangePickerCtrl.noLabels">{{::bbDateRangePickerCtrl.resources.date_range_picker_to_date}}</label>\n' +
+        '      <bb-datepicker ng-model="bbDateRangePickerCtrl.toDate" min-date="bbDateRangePickerCtrl.minDate" bb-datepicker-name="toDate" datepicker-append-to-body="true" placeholder="bbDateRangePickerCtrl.toPlaceholder"></bb-datepicker>\n' +
+        '      <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>\n' +
+        '      <label class="bb-date-range-picker-date-min-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.minDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_min_date_error}}</label>\n' +
+        '    </div>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/fileattachments/filedrop.html',
         '<div class="row bb-file-drop-row">\n' +
         '    <div class="col-xs-12 bb-file-drop-col" ng-class="{\'col-sm-6\': bbFileDrop.allowLinks}">\n' +
@@ -109222,6 +108940,30 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</section>\n' +
         '');
+    $templateCache.put('sky/templates/pagesummary/pagesummary.directive.html',
+        '<div class="bb-page-header">\n' +
+        '  <div class="container-fluid">\n' +
+        '    <div class="bb-page-summary-alert"></div>\n' +
+        '    <div class="row">\n' +
+        '      <div class="bb-page-summary-left col-xs-12" ng-class="bbPageSummary.getPageSummaryLeftCls()">\n' +
+        '        <div class="bb-page-summary-image" ng-show="bbPageSummary.imageCtrl"></div>\n' +
+        '        <div>\n' +
+        '          <h1 class="bb-page-summary-title" ng-show="bbPageSummary.titleCtrl"></h1>\n' +
+        '          <h2 class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></h2>\n' +
+        '          <div class="bb-page-summary-status" ng-show="bbPageSummary.statusCtrl"></div>\n' +
+        '          <div class="bb-page-summary-key-info-xs"></div>\n' +
+        '          <div class="bb-page-summary-content"></div>\n' +
+        '        </div>\n' +
+        '      </div>\n' +
+        '      <div class="bb-page-summary-key-info-sm col-sm-3 hidden-xs" ng-class="bbPageSummary.getKeyInfoCls()">\n' +
+        '        <div class="bb-page-summary-key-info"></div>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</div>\n' +
+        '<div class="bb-page-summary-action-bar"></div>\n' +
+        '');
     $templateCache.put('sky/templates/popover/popup.html',
         '<div class="popover {{placement}}"\n' +
         '    tooltip-animation-class="fade"\n' +
@@ -109284,13 +109026,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      </div>\n' +
         '    </div>\n' +
         '    <bb-modal-footer>\n' +
-        '      <bb-modal-footer-button-cancel>Close</bb-modal-footer-button-cancel>\n' +
+        '      <bb-modal-footer-button-cancel>{{::expandCtrl.closeText}}</bb-modal-footer-button-cancel>\n' +
         '    </bb-modal-footer>\n' +
         '  </div>\n' +
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/seemore.html',
-        '<a href="#" class="bb-text-expand-see-more"></a>\n' +
+        '<button class="btn bb-btn-link-inline bb-text-expand-see-more"></button>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/space.html',
         '<span class="bb-text-expand-space"> </span>\n' +
@@ -109307,8 +109049,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            </div>\n' +
         '            <div class="bb-tile-header-column-tools">\n' +
         '                <div class="bb-tile-tools">\n' +
-        '                    <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
-        '                    <i ng-if="hasSettings" class="bb-tile-settings fa fa-cog" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                    <button ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></button>\n' +
+        '                    <button ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></button>\n' +
         '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                </div>\n' +
         '            </div>\n' +

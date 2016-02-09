@@ -1,5 +1,5 @@
 /// <vs BeforeBuild='default' SolutionOpened='watchandtest' />
-/*global module,process */
+/*global module,process,require */
 
 module.exports = function (grunt) {
     'use strict';
@@ -15,6 +15,7 @@ module.exports = function (grunt) {
         skyLocalesPath = 'js/sky/locales/',
         skySrcPath = 'js/sky/src/',
         src = [
+            '<%= skySrcPath %>*/*.module.js',
             '<%= skySrcPath %>*/*.js',
             '<%= skySrcPath %>module.js'
         ],
@@ -218,9 +219,13 @@ module.exports = function (grunt) {
         },
         // Renamed the original grunt-contrib-watch task
         watchNoConflict: {
+            docs: {
+                files: ['js/sky/src/*/docs/*.*'],
+                tasks: ['docs']
+            },
             scripts: {
                 files: src.concat(['<%= skyLocalesPath %>**/*.*', '<%= skyTemplatesPath %>**/*.html']),
-                tasks: ['scripts', 'karma:watch:run']
+                tasks: ['scripts', 'karma:watch:run', 'copy:demo']
             },
             skylint: {
                 files: ['js/sky/linter/skylint.js'],
@@ -240,7 +245,7 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: ['**/*.scss'],
-                tasks: ['styles', 'karma:watch:run']
+                tasks: ['styles', 'karma:watch:run', 'copy:demo']
             }
         },
         sass: {
@@ -345,19 +350,6 @@ module.exports = function (grunt) {
             },
             all: jsHintFiles
         },
-        stache: {
-            pages: [{
-                url: '<%= stacheConfig.data %>sky.json',
-                dest: 'components/',
-                type: 'jsdoc'
-            }]
-        },
-        stache_jsdoc: {
-            options: {
-                src: '<%= skySrcPath %>*/*.js',
-                dest: '<%= stacheConfig.data %>sky.json'
-            }
-        },
         connect: {
             webdrivertest: {
                 options: {
@@ -391,7 +383,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('blackbaud-stache');
-    grunt.loadNpmTasks('blackbaud-stache-jsdoc');
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-exec');
 
@@ -400,11 +391,11 @@ module.exports = function (grunt) {
     grunt.task.renameTask('watch', 'watchNoConflict');
 
     grunt.registerTask('lint', ['jshint', 'jscs']);
-    grunt.registerTask('docs', ['stache_jsdoc', 'status:demo/build', 'stache', 'copy:demo']);
+    grunt.registerTask('docs', ['prepareDocs', 'status:demo/build', 'stache', 'copy:demo']);
     grunt.registerTask('scripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
-    grunt.registerTask('watch', ['build', 'karma:watch:start', 'watchNoConflict']);
+    grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
     grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
     // Generate our JS config for each supported locale
@@ -535,6 +526,66 @@ module.exports = function (grunt) {
         cleanupWorkingScreenshots(screenshotRoot);
     });
 
+    // Convert our documentation into standard JSDOC format JSON
+    grunt.registerTask('prepareDocs', function () {
+        var json = [],
+            options = {
+                filter: 'isFile',
+                cwd: skySrcPath
+            },
+            pages = {},
+            pattern = '/docs/demo.',
+            yfm = require('assemble-yaml');
+
+        function addDemo(fm, component, ext) {
+            var demo = skySrcPath + component + pattern + ext;
+            if (grunt.file.exists(demo)) {
+                fm['example-' + ext] = grunt.file.read(demo);
+            }
+        }
+
+        // Find all the demo.md files
+        grunt.file.expand(options, '*' + pattern + 'md').forEach(function (filename) {
+            var content,
+                component,
+                frontmatter,
+                frontmatterProperty,
+                jsonItem,
+                pathMarkdown;
+
+            component = filename.substr(0, filename.indexOf('/'));
+            pathMarkdown = skySrcPath + filename;
+            frontmatter = yfm.extractJSON(pathMarkdown) || {};
+            content = grunt.file.read(pathMarkdown);
+            jsonItem = {};
+
+            addDemo(frontmatter, component, 'html');
+            addDemo(frontmatter, component, 'js');
+
+            // Copy over properties shared
+            for (frontmatterProperty in frontmatter) {
+                if (frontmatter.hasOwnProperty(frontmatterProperty)) {
+                    jsonItem[frontmatterProperty] = frontmatter[frontmatterProperty];
+                }
+            }
+
+            // Add legacy jsdoc properties
+            jsonItem.key = component;
+            jsonItem.description = yfm.stripYFM(pathMarkdown).replace(/^\s+|\s+$/g, '');
+            json.push(jsonItem);
+
+            // Layout does not need to be in legacy JSON
+            frontmatter.layout = '../../../../demo/layouts/layout-skyux';
+            pages['components/' + component + '/index.md'] = {
+                content: content,
+                data: frontmatter
+            };
+        });
+
+        grunt.file.write('demo/data/sky.json', JSON.stringify(json, null, 2));
+        grunt.config.set('assemble.custom.options.pages', pages);
+    });
+
     // Generate our JS config for the bbPalette service
     grunt.registerTask('buildpaletteservice', function () {
         var template = grunt.file.read(grunt.config('paletteTemplatesPath') + 'template.js'),
@@ -629,7 +680,7 @@ module.exports = function (grunt) {
             break;
         case 'travis-push':
             checkSkipTest('internal', true);
-            tasks.push('stache_jsdoc');
+            tasks.push('docs');
             break;
         }
 
@@ -639,6 +690,4 @@ module.exports = function (grunt) {
             grunt.task.run(tasks);
         }
     });
-
-
 };

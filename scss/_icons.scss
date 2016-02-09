@@ -190,3 +190,11 @@
 .sky-icon-multi-action:before {
   content: "\e646";
 }
+
+.bb-icon {
+  @extend .fa;
+}
+
+.bb-icon-config {
+  @extend .fa-cog;
+}

@@ -18,7 +18,8 @@ describe('actionbar', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-actionbar'
+                    elem: '#screenshot-actionbar',
+                    screenWidth: [480, 1280]
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);

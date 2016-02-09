@@ -1,18 +1,6 @@
 /*jslint nomen: true, plusplus: true */
 /*global angular */
 
-/** @module Template
-@icon building-o
-@summary The template component places formatted text inside a tokenized string template.
- @description The template directives allow you to place formatted text inside a tokenized string template. This avoids the need to build HTML manually on the server or in a custom directive where HTML injection bugs are common.
-The string template is specified with the `bb-template` attribute, and child elements with the `bb-template-item` attribute are the elements that contain the formatted text.
-
-### Template Settings ###
-
- - `bb-template` The tokenized string that represents the template. Tokens use the {n} notation where n is the ordinal of the item to replace the token.
-  - `bb-template-item` 
- */
-
 (function () {
     'use strict';
 
