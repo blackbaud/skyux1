@@ -6,8 +6,8 @@
             </div>
             <div class="bb-tile-header-column-tools">
                 <div class="bb-tile-tools">
-                    <button ng-class="'fa-chevron-' + (isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></button>
-                    <button ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></button>
+                    <button type="button" ng-class="'fa-chevron-' + (isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></button>
+                    <button type="button" ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></button>
                     <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>
                 </div>
             </div>
