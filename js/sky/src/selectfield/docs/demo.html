@@ -1,25 +1,21 @@
 <div ng-controller="SelectFieldTestController as selectFieldCtrl">
-  <bb-select-field bb-select-field-selected-items="selectFieldCtrl.selectedItems" bb-select-field-click="selectFieldCtrl.fieldClick()">
-    
+  <bb-select-field bb-select-field-selected-items="selectFieldCtrl.selectedItems">
+    <bb-select-field-picker
+      bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html"
+      bb-select-field-picker-style="single">
+    </bb-select-field-picker>
   </bb-select-field>
 </div>
 <script type="text/ng-template" id="demo/selectfield/selectfieldpicker.html">
-    <bb-modal>
-        <div class="modal-form">
-            <bb-modal-header>Pick a value</bb-modal-header>
-            <div bb-modal-body>
-            <bb-checklist
-              bb-checklist-items="pickerCtrl.listItems"
-              bb-checklist-selected-items="pickerCtrl.selectedListItems"
-              bb-checklist-include-search="true"
-              bb-checklist-search-placeholder="Search for a value"
-              bb-checklist-no-items-message="No values found"
-              bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
-              bb-checklist-mode="list"
-              bb-checklist-select-style="single"
-              bb-checklist-filter-local>
-              </bb-checklist>
-            </div>
-        </div>
-    </bb-modal>
+  <bb-checklist
+    bb-checklist-items="selectFieldCtrl.listItems"
+    bb-checklist-selected-items="selectFieldCtrl.selectedItems"
+    bb-checklist-include-search="true"
+    bb-checklist-search-placeholder="Search for a value"
+    bb-checklist-no-items-message="No values found"
+    bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+    bb-checklist-mode="list"
+    bb-checklist-select-style="single"
+    bb-checklist-filter-local>
+  </bb-checklist>
 </script>

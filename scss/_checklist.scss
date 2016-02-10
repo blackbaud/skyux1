@@ -93,11 +93,15 @@
 }
 
 .bb-checklist-list-row {
+    background-color: transparent;
+    border: none;
     border-bottom: dotted 1px $gray-lighter;
     cursor: pointer;
     display: table;
     margin-bottom: 0;
     padding: $padding;
+    outline-offset: -5px;
+    text-align: left;
     width: 100%;
 
     &:last-child {
@@ -126,6 +130,6 @@
     }
 
     .bb-checklist-list-col-checkbox {
-        display: none;
+        //display: none;
     }
 }

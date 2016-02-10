@@ -128,6 +128,11 @@
             };
         };
 
+        vm.singleSelectRowClick = function (item) {
+            vm.bbChecklistSelectedItems = [item];
+            $scope.$emit('bbPickerSelected');
+        };
+
         vm.setColumns = function (columns) {
             vm.columns = columns;
         };

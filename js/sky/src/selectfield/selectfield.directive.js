@@ -1,17 +1,20 @@
 /*global angular */
 
-/** @module Select Field
- @icon question
- @summary Select field description.
- @description Select field description.
-
- */
-
 (function () {
     'use strict';
 
     function BBSelectFieldController() {
+        var vm = this;
 
+        vm.setPicker = function (picker) {
+            vm.picker = picker;
+        };
+
+        vm.selectFieldClick = function () {
+            if (vm.picker) {
+                vm.picker.open();
+            }
+        };
     }
 
     function bbSelectField() {
@@ -24,8 +27,9 @@
             },
             controller: BBSelectFieldController,
             controllerAs: 'bbSelectField',
-            scope: {},
-            templateUrl: 'sky/templates/selectfield/selectfield.directive.html'
+            scope: true,
+            templateUrl: 'sky/templates/selectfield/selectfield.directive.html',
+            transclude: true
         };
     }
 

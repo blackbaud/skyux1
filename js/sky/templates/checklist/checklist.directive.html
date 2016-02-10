@@ -19,15 +19,21 @@
   </div>
   <div class="bb-checklist-wrapper" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">
     <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
-      <label ng-repeat="item in bbChecklist.filteredItems" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}">
-        <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">
-          <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
+      <div ng-switch="bbChecklist.isSingleSelect()">
+        <div ng-switch-when="true">
+          <button ng-repeat="item in bbChecklist.filteredItems" type="button" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}" ng-click="bbChecklist.singleSelectRowClick(item)">
+            <ng-include src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
+          </button>
         </div>
-        <div class="bb-checklist-list-col">
-          <div class="bb-checklist-list-title" bb-highlight="bbChecklist.searchText" ng-bind="item.title"></div>
-          <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>
+        <div ng-switch-default>
+          <label ng-repeat="item in bbChecklist.filteredItems" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}">
+            <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">
+              <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
+            </div>
+            <ng-include src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
+          </label>
         </div>
-      </label>
+      </div>
     </div>
     <table class="table bb-checklist-table" ng-switch-default>
       <thead>
