@@ -2,21 +2,21 @@
 
     <div id="screenshot-tabset-all">
         <div id="screenshot-tabset-open-add">
-            <tabset bb-tabset-open="tabsetCtrl.open()" bb-tabset-add="tabsetCtrl.add()">
-                <tab class="bb-tab-close">
-                    <tab-heading>
-                        Tab 1
-                        <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
-                    Content 1
-                </tab>
-                <tab class="bb-tab-close">
-                    <tab-heading>
-                        Tab 2
-                        <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
-                    Content 2
-                </tab>
+            <tabset bb-tabset-open="tabsetCtrl.open()" bb-tabset-add="tabsetCtrl.add()" bb-tabset-collapsible>
+              <tab class="bb-tab-close" bb-tab-collapse-header="'Tab 1'">
+                  <tab-heading>
+                      Tab 1
+                      <i class="bb-tab-close-icon"></i>
+                  </tab-heading>
+                  Content 1
+              </tab>
+              <tab class="bb-tab-close">
+                  <tab-heading>
+                      Tab 2
+                      <i class="bb-tab-close-icon"></i>
+                  </tab-heading>
+                  Content 2
+              </tab>
             </tabset>
         </div>
 

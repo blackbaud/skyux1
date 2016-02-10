@@ -24,6 +24,9 @@
 
     .ui-jqgrid-view {
         font-size: $font-size-base;
+        button.bb-btn-link-inline {
+            font-size: inherit;
+        }
     }
 
     .ui-jqgrid-htable th, tr.jqgrow td {

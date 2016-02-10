@@ -6,6 +6,7 @@ describe('Avatar directive', function () {
 
     var $compile,
         $rootScope,
+        defaultCanvasSize = 100,
         fakeWindow,
         imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAAFElEQVR42gEJAPb/AP//////////I+UH+Rtap+gAAAAASUVORK5CYII=';
 
@@ -78,7 +79,7 @@ describe('Avatar directive', function () {
             placeholderEl,
             $scope = $rootScope.$new();
 
-        expectedValue = ((pixelRatio || 1) * 100).toString();
+        expectedValue = ((pixelRatio || 1) * defaultCanvasSize).toString();
 
         fakeWindow.devicePixelRatio = pixelRatio;
 
@@ -125,7 +126,7 @@ describe('Avatar directive', function () {
         el.remove();
     });
 
-    it('should display a simple colored circle if no image or name is specified', function () {
+    it('should display nothing if no image or name is specified', function () {
         var el,
             $scope = $rootScope.$new();
 
@@ -134,9 +135,37 @@ describe('Avatar directive', function () {
 
         $scope.$digest();
 
-        validateImageVisible(el, false);
+        expect(getPhotoEl(el)).not.toBeVisible();
+        expect(getPlaceholderEl(el)).not.toBeVisible();
 
         el.remove();
+    });
+
+    it('should display initials any time the name is updated', function () {
+        var el,
+            fillTextSpy,
+            $scope = $rootScope.$new();
+
+        function validateDraw(expectedInitials) {
+            expect(fillTextSpy.calls.mostRecent().args[0]).toBe(expectedInitials);
+        }
+
+        el = $compile('<bb-avatar bb-avatar-name="name"></bb-avatar>')($scope);
+
+        // There's not a great way to check whether the initials have been rendered since it's drawn
+        // using canvas; just look to see if the expected function was called with the expected parameters.
+        fillTextSpy = spyOn(CanvasRenderingContext2D.prototype, 'fillText').and.callThrough();
+
+        $scope.name = 'Patrick O\'Friel';
+        $scope.$digest();
+
+        validateDraw('PO');
+
+        // Make sure the initials change when the name changes.
+        $scope.name = 'Bobby Earl';
+        $scope.$digest();
+
+        validateDraw('BE');
     });
 
     it('should display a HiDPI placeholder image on high-density pixel displays', function () {

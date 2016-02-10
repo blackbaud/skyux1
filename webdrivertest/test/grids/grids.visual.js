@@ -99,7 +99,8 @@ describe('grids', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '#screenshot-grid'
+                    elem: '#screenshot-grid',
+                    screenWidth: [480, 1280]
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
