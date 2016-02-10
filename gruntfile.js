@@ -399,6 +399,18 @@ module.exports = function (grunt) {
     grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
     grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
+
+    grunt.registerTask('scriptsrapid', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap']);
+    grunt.registerTask('stylesrapid', ['sass:dist', 'sass:palette', 'skybundlecss', 'copy:dist']);
+    grunt.registerTask('buildrapid', ['stylesrapid', 'scriptsrapid']);
+
+    grunt.registerTask('watchrapid', function () {
+        grunt.config('watchNoConflict.scripts.tasks', ['scriptsrapid', 'docs']);
+        grunt.config('watchNoConflict.sass.tasks', ['stylesrapid', 'docs']);
+
+        grunt.task.run('watchNoConflict');
+    });
+    
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
         var RESOURCES_PREFIX = 'resources_',
