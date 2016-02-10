@@ -1,6 +1,6 @@
 ---
 name: Toast
-icon: envelop-o
+icon: envelope-o
 summary: The toast service launches toast messages basic string messages or complex toast messages that use HTML templates.
 ---
 
