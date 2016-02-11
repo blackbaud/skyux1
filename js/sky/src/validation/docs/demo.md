@@ -8,5 +8,5 @@ The email validation directive validates email address strings in input fields.
 
 ### Email Validation Settings ###
 
-- `ng-model` &mdash; Specifies an object to bind the email value to on the input.
+- `ng-model` &mdash; Specifies an object to bind the email address value to on the input field.
 - `type=email` &mdash; Indicates that email validation can be used.
