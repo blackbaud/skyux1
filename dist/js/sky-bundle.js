@@ -109209,9 +109209,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '    <div class="clearfix"></div>\n' +
         '\n' +
-        '    <div class="table-responsive">\n' +
-        '\n' +
-        '        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
+        '    <div class="table-responsive" bb-wait="options.loading">\n' +
+        '        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()" bb-wait="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
