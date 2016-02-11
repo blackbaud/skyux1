@@ -9281,9 +9281,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '    <div class="clearfix"></div>\n' +
         '\n' +
-        '    <div class="table-responsive">\n' +
-        '\n' +
-        '        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
+        '    <div class="table-responsive" bb-wait="options.loading">\n' +
+        '        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()" bb-wait="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
@@ -9485,7 +9484,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/seemore.html',
-        '<button class="btn bb-btn-link-inline bb-text-expand-see-more"></button>\n' +
+        '<button type="button" class="btn bb-btn-link-inline bb-text-expand-see-more"></button>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/space.html',
         '<span class="bb-text-expand-space"> </span>\n' +
@@ -9502,8 +9501,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            </div>\n' +
         '            <div class="bb-tile-header-column-tools">\n' +
         '                <div class="bb-tile-tools">\n' +
-        '                    <button ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></button>\n' +
-        '                    <button ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></button>\n' +
+        '                    <button type="button" ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></button>\n' +
+        '                    <button type="button" ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></button>\n' +
         '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                </div>\n' +
         '            </div>\n' +
