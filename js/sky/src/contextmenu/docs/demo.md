@@ -6,7 +6,7 @@ summary: The context menu creates simple or complicated dropdown menus that you 
 
 The context menu directives allow you to create SKY UX-themed [UI Bootstrap dropdowns](https://angular-ui.github.io/bootstrap/#/dropdown). The context menu module includes multiple directives.
 
-## Context Menu Settings
+### Context Menu Settings
     - `bb-context-menu` &mdash; Creates a dropdown menu with the context menu button.
         - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu.
             - `bb-context-menu-action` &mdash; Specifies a function to be called when users click the menu item.
