@@ -19,9 +19,8 @@
 
     <div class="clearfix"></div>
 
-    <div class="table-responsive">
-
-        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
+    <div class="table-responsive" bb-wait="options.loading">
+        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
         <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()" bb-wait="locals.hasWaitAndEmpty()"></div>
     </div>
 
