@@ -1,14 +1,14 @@
 ---
 name: Error
 icon: exclamation-circle
-summary: The error component allows a component to show indication of a degraded state.
+summary: The error component provides a template that allows other components to display error messages when errors occur.
 ---
 
-The error directive shows indication of a degraded state. The parent `bb-error` directive can contain multiple directives, and each one is optional.
+The error directive provides a template that allows other components to display error messages when errors occur. The parent `bb-error` directive can contain multiple directives, and each one is optional.
 
 ### Error Settings
-  - `bb-error` &mdash; Wraps the content in a Sky UX-themed error container.
-    - `bb-error-image` &mdash; Place an image in this directive to display it above the error.
-    - `bb-error-title` &mdash; Place content for the title for the error in this directive.
-    - `bb-error-description` &mdash; Place content for the description of an error in this directive to give the user additional details.
-    - `bb-error-action` &mdash; Place an action associated with the error in this directive. This might include a button that reloads the page or attempts to refresh data.
+  - `bb-error` &mdash; Wraps the error message in a SKY UX-themed container.
+    - `bb-error-image` &mdash; Specifies an image to display in the error message.
+    - `bb-error-title` &mdash; Specifies a title to display in the error message.
+    - `bb-error-description` &mdash; Specifies a description to provide additional details in the error message.
+    - `bb-error-action` &mdash; Specifies an action to include in the error message. For example, you can include a button to reload the page or to refresh data.

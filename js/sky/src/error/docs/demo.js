@@ -4,7 +4,7 @@
     function ErrorTestController() {
         var vm = this;
         vm.errorHeader = 'Sorry, something went wrong.';
-        vm.errorDescription = 'Try to refresh this page or come back later.';
+        vm.errorDescription = 'Try to refresh this page, or come back later.';
         vm.action = function () {
             alert('action clicked!');
         };
