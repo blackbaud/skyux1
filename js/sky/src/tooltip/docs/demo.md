@@ -2,6 +2,7 @@
 name: Tooltip
 icon: info
 summary: This directive is no longer being maintained. For adding templated tooltips, use the Angular UI Bootstrap Tooltip uib-tooltip-template attribute.
+deprecated: true
 ---
 
 ### *Deprecated* ###
