@@ -45,7 +45,7 @@
     "free-jqgrid": "4.7.0",
     "angular-toastr": "1.6.0",
     "blockui": "*",
-    "angular-ui-router": "0.2.13",
+    "angular-ui-router": "0.2.15",
     "ng-file-upload": "5.0.6",
     "bootstrap": "3.3.5",
     "angular-ui-select": "0.11.2",
