@@ -23,7 +23,7 @@ The datepicker directive wraps the [Angular UI Bootstrap datepicker directive](h
         - `placeholder` &mdash; Overrides the default placeholder text that appears in the datepicker input.
         - `required` &mdash; Indicates whether the datepicker text box is a required field.
         - `show-button-bar` &mdash; Indicates whether to display a button bar under the datepicker. *(Default: `false`)*
-    - `bbDatepickerConfig' &mdash; A global configuration object that applies options to datepickers throughout an application.
+    - `bbDatepickerConfig` &mdash; A global configuration object that applies options to datepickers throughout an application.
 
 ### Validation
 The `bb-datepicker` directive sets validation on the datepicker input using `bb-datepicker-name` for the input name. To check whether a date value is valid, you can access the `dateFormat` validator through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date is in `$scope.myFormName.inputName.invalidFormatMessage`.
