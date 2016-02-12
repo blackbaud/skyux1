@@ -2,6 +2,7 @@
 name: Autofocus
 icon: camera
 summary: The autofocus component specifies the input item on a form that should get focus when the form loads.
+deprecated: true
 ---
 
 ### *Deprecated* ###
