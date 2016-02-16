@@ -33,14 +33,20 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]
     # Update "dev" in skyux-releases
     if [[ "$IS_RELEASE" == "false" ]]; then
 
+      echo -e "Starting to update skyux-releases dev folder.\n"
       cd ../
       git clone --quiet https://${GH_TOKEN}@github.com/blackbaud/skyux-releases.git skyux-releases-repo > /dev/null
       cp -rf dist/. skyux-releases-repo/releases/skyux/dev/
       cd skyux-releases-repo
       git add -f .
-      git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed to skyux-releases"
-      git push -fq origin master > /dev/null
-      echo -e "skyux-releases dev successfully updated.\n"
+
+      if [ -z "$(git status --porcelain)" ]; then
+        echo -e "No changes to commit to skyux-releases dev folder."
+      else
+        git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed to skyux-releases"
+        git push -fq origin master > /dev/null
+        echo -e "skyux-releases dev folder successfully updated.\n"
+      fi
 
     fi
 
