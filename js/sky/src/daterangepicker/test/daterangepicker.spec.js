@@ -27,6 +27,10 @@ describe('Date range picker', function () {
         bbResources = _bbResources_;
     }));
 
+    function getSpecificDateOption(el) {
+        return el.find('option[value="number:19"]');
+    }
+
     describe('directive', function () {
         it('should have the expected default options', function () {
             var $scope = $rootScope.$new(),
@@ -69,15 +73,22 @@ describe('Date range picker', function () {
 
             for (p in dateRangeTypes) {
                 if (dateRangeTypes.hasOwnProperty(p)) {
-                    $scope.pickerValue = {dateRangeType: dateRangeTypes[p]};
-                    $scope.$apply();
+                    if (p !== 'SPECIFIC_RANGE') {
+                        $scope.pickerValue = {dateRangeType: dateRangeTypes[p]};
+                        $scope.$apply();
 
-                    expect(selectEl.find('option:selected')).toHaveText(
-                        bbDateRangePicker.getDateRangeTypeCaption(bbDateRangePicker.dateRangeTypes[p])
-                    );
+                        expect(selectEl.find('option:selected')).toHaveText(
+                            bbDateRangePicker.getDateRangeTypeCaption(bbDateRangePicker.dateRangeTypes[p])
+                        );
+                    }
+
                 }
             }
+
+            expect(getSpecificDateOption(el).length).toBe(0);
         });
+
+
 
         function getFormatErrEl(el) {
             return el.find('.bb-date-range-picker-date-format-error');
@@ -107,6 +118,7 @@ describe('Date range picker', function () {
                 minDateErrorEl,
                 maxDateErrorEl;
 
+
             $scope.dateRangePickerOptions = {};
 
             $scope.dateRangePickerOptions.availableDateRangeTypes = bbDateRangePicker.specificDateRangeOptions;
@@ -128,6 +140,10 @@ describe('Date range picker', function () {
 
             $scope.$digest();
             $timeout.flush();
+            expect(getSpecificDateOption(el).length).toBe(1);
+            expect(getSpecificDateOption(el)).toHaveText(
+                bbDateRangePicker.getDateRangeTypeCaption(bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE));
+
 
             //verify presence of datepickers and labels and no placeholder text
             labelsEl = el.find('div.bb-date-range-picker-form-group > .bb-date-range-picker-label');
