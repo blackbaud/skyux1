@@ -5,10 +5,10 @@
                 <form name="validationCtrl.validationTest">
                     <div class="form-group">
                         <div class="input-group">
-                            <label for="testField1">Type in email here: </label>
+                            <label for="testField1">Email address </label>
                             <input class="form-control" type="email" name="testField1" ng-model="validationCtrl.email" bb-email-validation />
                             <label class="error" ng-show="validationCtrl.validationTest.testField1.$dirty && validationCtrl.validationTest.testField1.$error.email">
-                            Invalid Email format!
+                            Invalid email address format!
                             </label>
                         </div>
                     </div>
