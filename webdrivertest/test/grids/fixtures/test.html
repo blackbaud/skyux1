@@ -38,6 +38,14 @@
             </bb-grid>
         </div>
         <div class="clearfix"></div>
+        <div id="screenshot-grid-wait">
+          <div ng-controller="GridTestController as gridCtrl" style="width: 300px">
+            <bb-tile bb-tile-header="'Tile with waiting grid'">
+              <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-wait="{{true}}">
+              </bb-grid>
+            </bb-tile>
+          </div>
+      </div>
     </div>
     <!--<div style="height: 5000px"></div>-->
 </div>
