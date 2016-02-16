@@ -16,6 +16,7 @@
         'sky.data',
         'sky.datepicker',
         'sky.daterangepicker',
+        'sky.error',
         'sky.format',
         'sky.grids',
         'sky.help',

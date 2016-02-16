@@ -19,6 +19,14 @@
 (function () {
     'use strict';
 
+    angular.module('sky.error', ['sky.error.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module('sky.pagesummary', []);
 }());
 
@@ -2345,6 +2353,130 @@
     angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])
         .factory('bbDateRangePicker', bbDateRangePickerFactory)
         .directive('bbDateRangePicker', bbDateRangePickerDirective);
+}());
+
+/*global angular */
+(function () {
+    'use strict';
+
+    var components = [{
+        name: 'Image',
+        cls: 'image'
+    }, {
+        name: 'Title',
+        cls: 'title'
+    }, {
+        name: 'Description',
+        cls: 'description'
+    }, {
+        name: 'Action',
+        cls: 'action'
+    }];
+
+    function makeErrorComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbError = ctrls[1];
+
+                vm.el = el;
+
+                bbError['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbError' + name, '^bbError'],
+                controller: controllerName,
+                controllerAs: 'bbError' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBError' + name + 'Controller';
+
+        angular.module('sky.error.directive')
+            .controller(controllerName, Controller)
+            .directive('bbError' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBErrorController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
+            var name = component.name;
+
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
+
+                vm[propName] = ctrl;
+
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
+                };
+            };
+        }
+
+        components.forEach(addComponentSetter);
+    }
+
+    function bbError() {
+        function link(scope, el, attrs, vm) {
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-error-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            components.forEach(watchForComponent);
+        }
+
+        return {
+            restrict: 'E',
+            controller: 'BBErrorController',
+            controllerAs: 'bbError',
+            bindToController: true,
+            link: link,
+            scope: {},
+            templateUrl: 'sky/templates/error/error.directive.html',
+            transclude: true
+        };
+    }
+
+    angular.module('sky.error.directive', [])
+        .controller('BBErrorController', BBErrorController)
+        .directive('bbError', bbError);
+
+    components.forEach(makeErrorComponent);
+
 }());
 
 /*jshint browser: true */
@@ -8804,6 +8936,7 @@ angular.module('sky.palette.config', [])
         'sky.data',
         'sky.datepicker',
         'sky.daterangepicker',
+        'sky.error',
         'sky.format',
         'sky.grids',
         'sky.help',
@@ -9079,6 +9212,17 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/error/error.directive.html',
+        '<div class="row">\n' +
+        '  <section class="col-xs-12 text-center">\n' +
+        '    <div class="bb-error-image" ng-show="bbError.imageCtrl"></div>\n' +
+        '    <div class="bb-error-title" ng-show="bbError.titleCtrl"></div>\n' +
+        '    <div class="bb-error-description" ng-show="bbError.descriptionCtrl"></div>\n' +
+        '    <div class="bb-error-action" ng-show="bbError.actionCtrl"></div>\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '  </section>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/fileattachments/filedrop.html',
         '<div class="row bb-file-drop-row">\n' +
         '    <div class="col-xs-12 bb-file-drop-col" ng-class="{\'col-sm-6\': bbFileDrop.allowLinks}">\n' +
@@ -9281,9 +9425,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '    <div class="clearfix"></div>\n' +
         '\n' +
-        '    <div class="table-responsive">\n' +
-        '\n' +
-        '        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
+        '    <div class="table-responsive" bb-wait="options.loading">\n' +
+        '        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()" bb-wait="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
