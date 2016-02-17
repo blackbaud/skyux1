@@ -4,9 +4,11 @@
 describe('Select field directive', function () {
     'use strict';
 
-    var bbResources,
+    var bbFormat,
+        bbResources,
         $animate,
         $compile,
+        $filter,
         $rootScope,
         $templateCache;
 
@@ -18,16 +20,20 @@ describe('Select field directive', function () {
         $animate.flush();
     }
 
-    beforeEach(module('ngMock'));
-    beforeEach(module('ngAnimateMock'));
-    beforeEach(module('sky.selectfield'));
-    beforeEach(module('sky.templates'));
+    beforeEach(module(
+        'ngMock',
+        'ngAnimateMock',
+        'sky.selectfield',
+        'sky.templates'
+    ));
 
-    beforeEach(inject(function (_$animate_, _$compile_, _$rootScope_, _$templateCache_, _bbResources_) {
+    beforeEach(inject(function (_$animate_, _$compile_, _$filter_, _$rootScope_, _$templateCache_, _bbFormat_, _bbResources_) {
         $animate = _$animate_;
         $compile = _$compile_;
+        $filter = _$filter_;
         $rootScope = _$rootScope_;
         $templateCache = _$templateCache_;
+        bbFormat = _bbFormat_;
         bbResources = _bbResources_;
     }));
 
@@ -83,15 +89,105 @@ describe('Select field directive', function () {
 
             el.remove();
         });
+
+        it('should not cause an error if the user clicks the field and no picker is defined', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            el = $compile('<bb-select-field bb-select-field-style="single"></bb-select-field>')($scope);
+
+            $scope.$digest();
+
+            el.find('.bb-select-field-single').click();
+        });
     });
 
     describe('multi-select', function () {
-        it('should display up to 5 selected values as individual items', function () {
+        function createItems(count) {
+            var i,
+                items = [];
 
+            for (i = 0; i < count; i++) {
+                items.push({
+                    title: 'Title ' + (i + 1)
+                });
+            }
+
+            return items;
+        }
+
+        it('should display up to 5 selected values as individual items', function () {
+            var $scope = $rootScope.$new(),
+                el,
+                i,
+                itemEls,
+                totalItems = 5;
+
+            el = $compile('<bb-select-field bb-select-field-selected-items="selectedItems"></bb-select-field')($scope);
+
+            $scope.selectedItems = createItems(totalItems);
+
+            $scope.$digest();
+
+            itemEls = el.find('.bb-select-field-multiple-item');
+
+            expect(itemEls.length).toBe(totalItems);
+
+            for (i = 0; i < totalItems; i++) {
+                expect(itemEls.eq(i).find('.bb-select-field-multiple-item-title')).toHaveText($scope.selectedItems[i].title);
+            }
         });
 
-        it('should display 6 or more selected values as one summary item', function () {
+        it('should display 6 or more selected values as one localizable summary item', function () {
+            var $scope = $rootScope.$new(),
+                el,
+                title,
+                totalItems = 1000, // Using 1,000 items so that we can test that the count is formatted properly.
+                totalItemsFormatted;
 
+            bbResources.selectfield_summary_text = '{0} #BD#N%#%#()HB&DSFRHW$#@';
+
+            el = $compile('<bb-select-field bb-select-field-selected-items="selectedItems"></bb-select-field')($scope);
+
+            $scope.selectedItems = createItems(totalItems);
+
+            $scope.$digest();
+
+            totalItemsFormatted = $filter('bbAutonumeric', totalItems);
+
+            title = bbFormat.formatText(bbResources.selectfield_summary_text, totalItemsFormatted);
+
+            expect(el.find('.bb-select-field-multiple-summary')).toHaveText(title);
+        });
+
+        it('should remove a selected item when its corresponding delete button is clicked', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            el = $compile('<bb-select-field bb-select-field-selected-items="selectedItems"></bb-select-field')($scope);
+
+            $scope.selectedItems = createItems(2);
+
+            $scope.$digest();
+
+            el.find('.bb-select-field-multiple-item').eq(1).find('button.bb-select-field-multiple-item-delete').click();
+
+            expect($scope.selectedItems).toEqual([$scope.selectedItems[0]]);
+        });
+
+        it('should remove all selected items when the summary item\'s delete button is clicked', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            el = $compile('<bb-select-field bb-select-field-selected-items="selectedItems"></bb-select-field')($scope);
+
+            $scope.selectedItems = createItems(6);
+
+            $scope.$digest();
+
+            el.find('.bb-select-field-multiple-item').eq(0).find('button.bb-select-field-multiple-item-delete').click();
+
+            expect($scope.selectedItems).toEqual([]);
         });
     });
 

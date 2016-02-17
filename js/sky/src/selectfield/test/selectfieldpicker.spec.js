@@ -25,11 +25,13 @@ describe('Select field picker directive', function () {
         afterModalClose();
     }
 
-    beforeEach(module('ngMock'));
-    beforeEach(module('ngAnimateMock'));
-    beforeEach(module('sky.checklist'));
-    beforeEach(module('sky.selectfield'));
-    beforeEach(module('sky.templates'));
+    beforeEach(module(
+        'ngMock',
+        'ngAnimateMock',
+        'sky.checklist',
+        'sky.selectfield',
+        'sky.templates'
+    ));
 
     beforeEach(inject(function (_$animate_, _$compile_, _$rootScope_, _$templateCache_, _bbResources_) {
         $animate = _$animate_;
@@ -92,6 +94,10 @@ describe('Select field picker directive', function () {
         el.remove();
     }
 
+    function getCurrentModalPrimaryButton() {
+        return $('.bb-modal .modal-footer .btn-primary');
+    }
+
     it('should display localizable default dialog header text', function () {
         bbResources.selectfieldpicker_select_value = '#@%&#%)(#@%&@#%()&@#%)';
         bbResources.selectfieldpicker_select_values = 'BEOI#)(W(BHFWKDVJNLWQKERU%#))';
@@ -142,6 +148,35 @@ describe('Select field picker directive', function () {
     });
 
     describe('multi-select', function () {
+        it('should display a localizable select button', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            bbResources.selectfieldpicker_select = 'g20529tgvdfsds#@%#@()B';
+
+            el = $(
+                '<bb-select-field bb-select-field-style="multiple">' +
+                    '<bb-select-field-picker bb-select-field-picker-template="bbSelectFieldPicker/multiple/test.html"></bb-select-field-picker>' +
+                '</bb-select-field>'
+            );
+
+            el = $compile(el)($scope);
+
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-select-field-multiple').click();
+
+            afterModalOpen();
+
+            expect(getCurrentModalPrimaryButton()).toHaveText(bbResources.selectfieldpicker_select);
+
+            closeCurrentModal();
+
+            el.remove();
+        });
+
         it('should set selected items when the user confirms the dialog by clicking the Select button', function () {
             var $scope = $rootScope.$new(),
                 el;
@@ -172,7 +207,7 @@ describe('Select field picker directive', function () {
             afterModalOpen();
 
             $('.bb-modal .bb-checklist-list-row').eq(1).find('.bb-check-wrapper input').click();
-            $('.bb-modal .modal-footer .btn-primary').click();
+            getCurrentModalPrimaryButton().click();
 
             afterModalClose();
 
