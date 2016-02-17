@@ -52,6 +52,13 @@
         };
 
         self.tabAdded = function () {
+            if (!$scope.bbTabsetOptions) {
+                $scope.bbTabsetOptions = {
+                    isSmallScreen: false,
+                    tabCount: 0
+                };
+            }
+
             if ($scope.bbTabsetOptions.isSmallScreen) {
                 $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
             }
@@ -148,11 +155,12 @@
                     $scope.bbTabsetOptions.isSmallScreen = newBreakpoints.xs;
                     setupCollapsibleTabs(newBreakpoints.xs && ($scope.bbTabsetOptions.tabCount > 1));
                 }
-
-                $scope.bbTabsetOptions = {
-                    isSmallScreen: false,
-                    tabCount: 0
-                };
+                if (!$scope.bbTabsetOptions) {
+                    $scope.bbTabsetOptions = {
+                        isSmallScreen: false,
+                        tabCount: 0
+                    };
+                }
 
                 el.prepend($compile(getDropdownEl())($scope));
 

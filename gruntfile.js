@@ -38,6 +38,7 @@ module.exports = function (grunt) {
         'bower_components/enquire/dist/enquire.js',
         'bower_components/angular/angular.js',
         'bower_components/angular-animate/angular-animate.js',
+        'bower_components/angular-messages/angular-messages.js',
         'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
         'bower_components/angular-ui-router/release/angular-ui-router.js',
         'bower_components/moment/moment.js',
@@ -245,7 +246,7 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: ['**/*.scss'],
-                tasks: ['styles', 'karma:watch:run']
+                tasks: ['styles', 'karma:watch:run', 'copy:demo']
             }
         },
         sass: {
@@ -398,6 +399,18 @@ module.exports = function (grunt) {
     grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
     grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
+
+    grunt.registerTask('scriptsrapid', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap']);
+    grunt.registerTask('stylesrapid', ['sass:dist', 'sass:palette', 'skybundlecss', 'copy:dist']);
+    grunt.registerTask('buildrapid', ['stylesrapid', 'scriptsrapid']);
+
+    grunt.registerTask('watchrapid', function () {
+        grunt.config('watchNoConflict.scripts.tasks', ['scriptsrapid', 'docs']);
+        grunt.config('watchNoConflict.sass.tasks', ['stylesrapid', 'docs']);
+
+        grunt.task.run('watchNoConflict');
+    });
+    
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
         var RESOURCES_PREFIX = 'resources_',
@@ -680,7 +693,7 @@ module.exports = function (grunt) {
             break;
         case 'travis-push':
             checkSkipTest('internal', true);
-            tasks.push('stache_jsdoc');
+            tasks.push('docs');
             break;
         }
 
