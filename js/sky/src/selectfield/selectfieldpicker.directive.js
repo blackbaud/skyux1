@@ -7,23 +7,55 @@
 
     }
 
-    function bbSelectFieldPicker(bbModal) {
+    function bbSelectFieldPicker(bbModal, bbResources) {
         function link(scope, el, attrs, ctrls) {
             var bbSelectField = ctrls[1],
+                modalInstance,
+                selectedItems,
                 vm = ctrls[0];
 
-            vm.open = function () {
-                var modalInstance,
-                    pickerSelectedOff;
+            vm.isSingleStyle = function () {
+                return bbSelectField.bbSelectFieldStyle === 'single';
+            };
 
-                function onPickerSelected() {
-                    modalInstance.close();
+            vm.getDialogHeaderText = function () {
+                var header = vm.bbSelectFieldPickerHeader;
+
+                if (!header) {
+                    header = vm.isSingleStyle() ? bbResources.selectfieldpicker_select_value : bbResources.selectfieldpicker_select_values;
                 }
 
-                function onModalClosed() {
+                return header;
+            };
+
+            vm.open = function () {
+                var pickerSelectedOff;
+
+                function cleanup() {
                     if (pickerSelectedOff) {
                         pickerSelectedOff();
                     }
+
+                    modalInstance = null;
+                }
+
+                function onPickerSelected(e, args) {
+                    selectedItems = args.selectedItems;
+                    bbSelectField.setSelectedItems(selectedItems);
+
+                    modalInstance.close();
+                }
+
+                function onModalClosed(reason) {
+                    if (reason === 'save') {
+                        bbSelectField.setSelectedItems(selectedItems);
+                    }
+
+                    cleanup();
+                }
+
+                function onModalDismissed() {
+                    cleanup();
                 }
 
                 modalInstance = bbModal.open({
@@ -31,12 +63,25 @@
                     templateUrl: 'sky/templates/selectfield/selectfieldpicker.directive.html'
                 });
 
-                if (vm.bbSelectFieldPickerStyle === 'single') {
+                if (vm.isSingleStyle()) {
                     pickerSelectedOff = scope.$on('bbPickerSelected', onPickerSelected);
                 }
 
-                modalInstance.result.then(onModalClosed, onModalClosed);
+                modalInstance.result.then(onModalClosed, onModalDismissed);
             };
+
+            vm.okClick = function () {
+                /*istanbul ignore else sanity check */
+                if (modalInstance) {
+                    modalInstance.close('save');
+                }
+            };
+
+            scope.$on('bbPickerReady', function (e, args) {
+                selectedItems = bbSelectField.getSelectedItems();
+
+                args.setSelectedItems(selectedItems);
+            });
 
             bbSelectField.setPicker(vm);
         }
@@ -46,7 +91,7 @@
             restrict: 'E',
             bindToController: {
                 bbSelectFieldPickerTemplate: '@',
-                bbSelectFieldPickerStyle: '@'
+                bbSelectFieldPickerHeader: '@'
             },
             controller: BBSelectFieldPickerController,
             controllerAs: 'bbSelectFieldPicker',
@@ -55,8 +100,8 @@
         };
     }
 
-    bbSelectFieldPicker.$inject = ['bbModal'];
+    bbSelectFieldPicker.$inject = ['bbModal', 'bbResources'];
 
-    angular.module('sky.selectfieldpicker.directive', [])
+    angular.module('sky.selectfieldpicker.directive', ['sky.modal', 'sky.resources'])
         .directive('bbSelectFieldPicker', bbSelectFieldPicker);
 }());

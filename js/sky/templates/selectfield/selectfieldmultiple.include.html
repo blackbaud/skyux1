@@ -1,0 +1,25 @@
+<button type="button" class="btn btn-link bb-select-field-multiple" ng-click="bbSelectField.selectFieldClick()">
+  <i class="fa fa-plus-circle"></i> {{bbSelectField.bbSelectFieldText}}
+</button>
+<div>
+  <ul class="list-unstyled bb-select-field-multiple-items">
+    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">
+      <div class="bb-select-field-multiple-item-title">
+        {{selectedItem.title}}
+      </div>
+      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.remove(selectedItem)">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{'selectfield_remove' | bbResources}}</span>
+      </button>
+    </li>
+    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">
+      <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">
+        {{bbSelectField.getSummaryCountText()}}
+      </div>
+      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.removeAll()">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{'selectfield_remove' | bbResources}}</span>
+      </button>
+    </li>
+  </ul>
+</div>

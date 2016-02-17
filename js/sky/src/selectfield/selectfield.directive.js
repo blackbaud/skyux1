@@ -3,29 +3,17 @@
 (function () {
     'use strict';
 
-    function BBSelectFieldController() {
-        var vm = this;
-
-        vm.setPicker = function (picker) {
-            vm.picker = picker;
-        };
-
-        vm.selectFieldClick = function () {
-            if (vm.picker) {
-                vm.picker.open();
-            }
-        };
-    }
-
     function bbSelectField() {
         return {
             require: ['bbSelectField', 'ngModel'],
             restrict: 'E',
             bindToController: {
                 bbSelectFieldClick: '&',
-                bbSelectFieldSelectedItems: '='
+                bbSelectFieldSelectedItems: '=',
+                bbSelectFieldStyle: '@',
+                bbSelectFieldText: '@'
             },
-            controller: BBSelectFieldController,
+            controller: 'BBSelectFieldController',
             controllerAs: 'bbSelectField',
             scope: true,
             templateUrl: 'sky/templates/selectfield/selectfield.directive.html',
@@ -33,6 +21,6 @@
         };
     }
 
-    angular.module('sky.selectfield.directive', [])
+    angular.module('sky.selectfield.directive', ['sky.format', 'sky.resources', 'sky.selectfield.controller'])
         .directive('bbSelectField', bbSelectField);
 }());

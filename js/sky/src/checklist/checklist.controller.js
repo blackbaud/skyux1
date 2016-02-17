@@ -130,7 +130,10 @@
 
         vm.singleSelectRowClick = function (item) {
             vm.bbChecklistSelectedItems = [item];
-            $scope.$emit('bbPickerSelected');
+
+            $scope.$emit('bbPickerSelected', {
+                selectedItems: vm.bbChecklistSelectedItems
+            });
         };
 
         vm.setColumns = function (columns) {
@@ -149,6 +152,12 @@
         }, function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 invokeFilter();
+            }
+        });
+
+        $scope.$emit('bbPickerReady', {
+            setSelectedItems: function (selectedItems) {
+                vm.bbChecklistSelectedItems = selectedItems;
             }
         });
     }

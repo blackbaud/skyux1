@@ -26,12 +26,23 @@
                 title: 'Sweatshirt',
                 description: 'This column has nothing to do with the other ones',
                 category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 2',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
             }
         ];
 
-        vm.selectedItems = [vm.listItems[1]];
+        vm.selectedItems = vm.listItems.slice(0, 2);
+        vm.selectedSingleItems = [vm.listItems[1]];
     }
-    
+
     angular.module('stache')
         .controller('SelectFieldTestController', SelectFieldTestController);
 }());

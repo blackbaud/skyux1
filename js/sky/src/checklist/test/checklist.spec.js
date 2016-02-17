@@ -575,7 +575,17 @@ describe('Checklist directive', function () {
                 'bb-checklist-no-items-message="\'No items found\'" ' +
                 'bb-checklist-include-search="useSearch" ' +
                 'bb-checklist-mode="list">' +
-            '</bb-checklist>';
+            '</bb-checklist>',
+            testItems = [
+                {
+                    title: 'Title 1',
+                    description: 'Description 1'
+                },
+                {
+                    title: 'Title 2',
+                    description: 'Description 2'
+                }
+            ];
 
         it('should display items in a list', function () {
             var el,
@@ -589,16 +599,7 @@ describe('Checklist directive', function () {
                 return rowEls.eq(rowIndex).find('.bb-checklist-list-description');
             }
 
-            $scope.items = [
-                {
-                    title: 'Title 1',
-                    description: 'Description 1'
-                },
-                {
-                    title: 'Title 2',
-                    description: 'Description 2'
-                }
-            ];
+            $scope.items = testItems;
 
             el = $compile(checklistHtml)($scope);
 
@@ -619,16 +620,7 @@ describe('Checklist directive', function () {
             var el,
                 checkEl;
 
-            $scope.items = [
-                {
-                    title: 'Title 1',
-                    description: 'Description 1'
-                },
-                {
-                    title: 'Title 2',
-                    description: 'Description 2'
-                }
-            ];
+            $scope.items = testItems;
 
             el = $compile(checklistHtml)($scope);
             el.appendTo(document.body);
@@ -724,6 +716,94 @@ describe('Checklist directive', function () {
             //expect(rowEl.find('td').eq(1)).toHaveText('Constituent summary');
 
             el.remove();
+        });
+
+        describe('picker interface', function () {
+            it('should emit an event when the control is ready so selected items can be set by a parent directive', function () {
+                var $childScope,
+                    el;
+
+                function getRowCheckbox(index) {
+                    return el
+                        .find('.bb-checklist-list-row')
+                        .eq(index)
+                        .find('.bb-checklist-list-col-checkbox input');
+                }
+
+                $childScope = $scope.$new();
+
+                $childScope.items = testItems;
+
+                $scope.$on('bbPickerReady', function (e, args) {
+                    args.setSelectedItems([testItems[1]]);
+                });
+
+                el = $compile(checklistHtml)($childScope);
+
+                $childScope.$digest();
+
+                expect(getRowCheckbox(0)).not.toBeChecked();
+                expect(getRowCheckbox(1)).toBeChecked();
+            });
+        });
+
+        describe('single-select style', function () {
+            it('should display a series of options without checkboxes', function () {
+                var el,
+                    firstRowEl,
+                    rowEls;
+
+                $scope.items = testItems;
+
+                el = $(checklistHtml);
+                el.attr('bb-checklist-select-style', 'single');
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+
+                rowEls = el.find('button.bb-checklist-list-row');
+
+                expect(rowEls.length).toBe(2);
+
+                firstRowEl = rowEls.eq(0);
+
+                expect(firstRowEl.find('.bb-checklist-list-title')).toHaveText('Title 1');
+                expect(firstRowEl.find('.bb-checklist-list-description')).toHaveText('Description 1');
+            });
+
+            describe('picker interface', function () {
+                it('should emit an event when an item is selected so parent scopes can respond', function () {
+                    var $childScope,
+                        el,
+                        eventEmitted;
+
+                    $childScope = $scope.$new();
+
+                    $childScope.items = testItems;
+
+                    el = $(checklistHtml);
+                    el.attr('bb-checklist-select-style', 'single');
+
+                    $compile(el)($childScope);
+
+                    el.appendTo(document.body);
+
+                    $childScope.$digest();
+
+                    $scope.$on('bbPickerSelected', function (e, args) {
+                        eventEmitted = true;
+
+                        expect(args.selectedItems).toEqual([$childScope.items[1]]);
+                    });
+
+                    el.find('button.bb-checklist-list-row').eq(1).click();
+
+                    expect(eventEmitted).toBe(true);
+
+                    el.remove();
+                });
+            });
         });
     });
 });

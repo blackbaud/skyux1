@@ -1,8 +1,14 @@
 <bb-modal>
-    <div class="modal-form">
-        <bb-modal-header>Pick a value</bb-modal-header>
-        <div bb-modal-body>
-          <ng-include src="bbSelectFieldPicker.bbSelectFieldPickerTemplate"></ng-include>
-        </div>
+  <div class="modal-form">
+    <bb-modal-header>{{bbSelectFieldPicker.getDialogHeaderText()}}</bb-modal-header>
+    <div bb-modal-body>
+      <ng-include src="bbSelectFieldPicker.bbSelectFieldPickerTemplate"></ng-include>
     </div>
+  </div>
+  <bb-modal-footer ng-if="!bbSelectFieldPicker.isSingleStyle()">
+    <bb-modal-footer-button-primary ng-click="bbSelectFieldPicker.okClick()">
+      {{'selectfieldpicker_select' | bbResources}}
+    </bb-modal-footer-button-primary>
+    <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+  </bb-modal-footer>
 </bb-modal>
