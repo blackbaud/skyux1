@@ -375,6 +375,18 @@ describe('Tabset module', function () {
 
         });
 
+        function verifyNoAddOpenButtons(el) {
+            addButtonEl = getLargeScreenAddButton(el);
+            expect(addButtonEl.length).toBe(0);
+            addButtonEl = getSmallScreenAddButton(el);
+            expect(addButtonEl.length).toBe(0);
+
+            openButtonEl = getLargeScreenOpenButton(el);
+            expect(openButtonEl.length).toBe(0);
+            openButtonEl = getSmallScreenOpenButton(el);
+            expect(openButtonEl.length).toBe(0);
+        }
+
         it('collapses in xs when there are no add or open buttons', function () {
             var collapsibleNoAddOpenTabsHtml = '<tabset bb-tabset-collapsible>' +
             '<tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
@@ -387,28 +399,56 @@ describe('Tabset module', function () {
             '</tabset>',
                 el;
 
-            function verifyNoAddOpenButtons() {
-                addButtonEl = getLargeScreenAddButton(el);
-                expect(addButtonEl.length).toBe(0);
-                addButtonEl = getSmallScreenAddButton(el);
-                expect(addButtonEl.length).toBe(0);
-
-                openButtonEl = getLargeScreenOpenButton(el);
-                expect(openButtonEl.length).toBe(0);
-                openButtonEl = getSmallScreenOpenButton(el);
-                expect(openButtonEl.length).toBe(0);
-            }
-
             el = setupCollapsibleTest(collapsibleNoAddOpenTabsHtml);
             callback({xs: true});
             $scope.$digest();
 
-            verifyNoAddOpenButtons();
+            verifyNoAddOpenButtons(el);
 
             callback({xs: false});
             $scope.$digest();
 
-            verifyNoAddOpenButtons();
+            verifyNoAddOpenButtons(el);
+
+            el.remove();
+
+        });
+
+        it('collapses in xs when tabs are specifically defined', function () {
+            var collapsibleNoAddOpenTabsHtml = '<tabset bb-tabset-collapsible>' +
+            '<tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
+                '<tab-heading>' +
+                    'Tab 1' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</tab-heading>' +
+                '1 content' +
+            '</tab>' +
+            '<tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
+                '<tab-heading>' +
+                    'Tab 2' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</tab-heading>' +
+                '2 content' +
+            '</tab>' +
+            '<tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
+                '<tab-heading>' +
+                    'Tab 3' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</tab-heading>' +
+                '3 content' +
+            '</tab>' +
+            '</tabset>',
+                el;
+            el = setupCollapsibleTest(collapsibleNoAddOpenTabsHtml);
+            callback({xs: true});
+            $scope.$digest();
+
+            verifyNoAddOpenButtons(el);
+
+            callback({xs: false});
+            $scope.$digest();
+
+            verifyNoAddOpenButtons(el);
 
             el.remove();
 

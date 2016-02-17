@@ -3,7 +3,7 @@
 
         <div class="row">
             <div class="col-md-6 col-xs-12">
-                <label>Date Field</label>
+                <label>Date field</label>
                 <bb-datepicker min-date="datepickerCtrl.minDate" max-date="datepickerCtrl.maxDate" bb-datepicker-name="date2" ng-model="datepickerCtrl.date2" placeholder="datepickerCtrl.placeholder"></bb-datepicker>
                 <label class="error" ng-show="datepickerCtrl.testform.date2.$error.dateFormat">{{datepickerCtrl.testform.date2.invalidFormatMessage}}</label>
                 <label class="error" ng-show="datepickerCtrl.testform.date2.$error.minDate">Date is prior to minimum date range</label>
@@ -11,7 +11,7 @@
                 <label class="error" ng-show="datepickerCtrl.testform.date2.$error.required && datepickerCtrl.testform.date2.$touched">Date is required</label>
             </div>
             <div class="col-md-6 col-xs-12">
-                <label>Date Value</label>
+                <label>Date value</label>
                 <div>{{datepickerCtrl.date2}}</div>
             </div>
         </div>
@@ -23,20 +23,20 @@
 
         <div class="row">
             <div class="col-md-6 col-xs-12">
-                <label>Date Field - Custom Formatting</label>
+                <label>Date field - custom formatting</label>
                 <bb-datepicker bb-datepicker-name="date1" ng-model="datepickerCtrl.date1" ng-required="true" bb-custom-validation="datepickerCtrl.customFormat"></bb-datepicker>
                 <label class="error" ng-show="datepickerCtrl.testform.date1.$error.dateFormat">{{datepickerCtrl.testform.date1.invalidFormatMessage}}</label>
                 <label class="error" ng-show="datepickerCtrl.testform.date1.$error.required && datepickerCtrl.testform.date1.$touched">Date is required</label>
             </div>
             <div class="col-md-6 col-xs-12">
-                <label>Date Value</label>
+                <label>Date value</label>
                 <div>{{datepickerCtrl.date1}}</div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md6 col-xs-12">
-                <button class="btn btn-primary" style="margin-top: 5px; margin-bottom: 5px;" type="button" ng-click="datepickerCtrl.openModal()">Open Datepicker Modal</button>
+                <button class="btn btn-primary" style="margin-top: 5px; margin-bottom: 5px;" type="button" ng-click="datepickerCtrl.openModal()">Open date picker modal</button>
             </div>
         </div>
     </form>
@@ -45,18 +45,18 @@
 <script type="text/ng-template" id="demo/datepicker/datepickermodal.html">
     <bb-modal>
         <div class="modal-form">
-            <bb-modal-header >Modal Datepicker</bb-modal-header>
+            <bb-modal-header >Date picker modal</bb-modal-header>
             <div bb-modal-body>
                 <form name="dateModalCtrl.datepickerModal" novalidate>
                     <div class="row">
                         <div class="col-md-6 col-xs-12">
-                            <label>Date Field</label>
+                            <label>Date field</label>
                                 <bb-datepicker bb-datepicker-name="date2" ng-model="dateModalCtrl.date" ng-required="true" bb-date-format="'dd/MM/yyyy'" datepicker-append-to-body="true"></bb-datepicker>
                                 <label class="error" ng-show="dateModalCtrl.datepickerModal.date2.$error.dateFormat">{{dateModalCtrl.datepickerModal.date2.invalidFormatMessage}}</label>
                                 <label class="error" ng-show="dateModalCtrl.datepickerModal.date2.$error.required && dateModalCtrl.datepickerModal.date2.$touched">Date is required</label>
                         </div>
                         <div class="col-md-6 col-xs-12">
-                            <label>Date Value</label>
+                            <label>Date value</label>
                             <div>{{dateModalCtrl.date}}</div>
                         </div>
                     </div>
