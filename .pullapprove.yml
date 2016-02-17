@@ -2,6 +2,8 @@
 # http://docs.pullapprove.com/yaml/
 approve_by_comment: true
 reset_on_reopened: true
+approve_regex: '^Approve'
+reject_regex: '^Needs Change'
 reviewers:
     required: 1
     members:
