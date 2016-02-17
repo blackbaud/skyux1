@@ -54,6 +54,7 @@ The grid directive allows you to build a full-featured grid with a search box, c
   - `hasInlineFilters` If true, toggles hide/show on the transcluded content in the `bb-grid` directive when the filter button is pressed.
   - `hasMoreRows` If set to true, then the `See more` button will appear below the grid when the grid does not use pagination.
   - `hideColPicker` If true, hides the grid column picker in the toolbar.
+  - `colPickerSearchProperties` An array of column properties that you want the column picker search bar to use for search criteria. If not supplied, the search will do the basic search on all pertantent properties (id, name, caption, description).  
   - `hideFilters` If true, hides the filters button in the toolbar.
   - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
   - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.

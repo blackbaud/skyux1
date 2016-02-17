@@ -1,6 +1,6 @@
 <bb-modal data-bbauto-view="ColumnPicker">
   <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{'grid_column_picker_header' | bbResources}}</bb-modal-header>
-  <div bb-modal-body>
+  <div bb-modal-body ng-if="!searchCallback">
     <bb-checklist
                   bb-checklist-items="columns" 
                   bb-checklist-selected-items="locals.selectedColumns" 
@@ -10,6 +10,19 @@
                   bb-checklist-categories="categories" 
                   bb-checklist-mode="list" 
                   bb-checklist-filter-local
+                  >
+    </bb-checklist>
+  </div>
+  <div bb-modal-body ng-if="searchCallback">
+    <bb-checklist
+                  bb-checklist-items="columns" 
+                  bb-checklist-selected-items="locals.selectedColumns" 
+                  bb-checklist-include-search="'true'" 
+                  bb-checklist-search-placeholder="{{'grid_column_picker_search_placeholder' | bbResources}}" 
+                  bb-checklist-no-items-message="{{'grid_column_picker_search_no_columns' | bbResources}}"
+                  bb-checklist-categories="categories" 
+                  bb-checklist-mode="list" 
+                  bb-checklist-filter-callback="searchCallback"
                   >
     </bb-checklist>
   </div>
