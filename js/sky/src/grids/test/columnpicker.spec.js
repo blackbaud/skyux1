@@ -300,6 +300,131 @@ describe('Grid column picker', function () {
         expect(getChecklistItemTitleEl(modalRowsEl, 2)).toHaveText('Name');
         closeModal(modalEl.eq(0));
     });
+    
+    it('applies search and category filters with colPickerSearchProperties', function () {
+        var modalEl,
+            modalRowsEl,
+            categoryEl,
+            columnChooserButtonEl,
+            searchEl;
+
+        locals.gridOptions.columns[0].category = 'Nonesense';
+        locals.gridOptions.columns[1].category = 'Specialness';
+        locals.gridOptions.columns[2].category = 'Specialness';
+        locals.gridOptions.columns[2].description = 'Description';
+        
+        locals.gridOptions.colPickerSearchProperties = ['caption'];
+        el = setUpGrid(basicGridHtml, locals);
+
+        columnChooserButtonEl = getColumnChooserButton(el);
+        columnChooserButtonEl.click();
+
+        $scope.$digest();
+
+        modalEl = getModal();
+
+        //get categories
+        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar button');
+
+        categoryEl.eq(1).click();
+
+        $scope.$digest();
+
+        //make sure the expected check boxes are here
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(modalRowsEl.length).toBe(2);
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+
+        searchEl = modalEl.eq(0).find('.bb-checklist-filter-bar input');
+
+        searchEl.eq(0).val('In').trigger('change');
+
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(modalRowsEl.length).toBe(1);
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Instrument');
+
+        searchEl.eq(0).val('Des').trigger('change');
+
+        modalRowsEl = getColumnChooserRows(modalEl);
+        
+        //it no longer finds Biography since it doesn't search off of description, only caption
+        expect(modalRowsEl.length).toBe(0);
+
+        searchEl.eq(0).val('').trigger('change');
+        categoryEl.eq(0).click();
+
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+        expect(getChecklistItemTitleEl(modalRowsEl, 2)).toHaveText('Name');
+        closeModal(modalEl.eq(0));
+    });
+
+    it('applies search and category filters with colPickerSearchProperties even when one of the properties doesn\'t exist', function () {
+        var modalEl,
+            modalRowsEl,
+            categoryEl,
+            columnChooserButtonEl,
+            searchEl;
+
+        locals.gridOptions.columns[0].category = 'Nonesense';
+        locals.gridOptions.columns[1].category = 'Specialness';
+        locals.gridOptions.columns[2].category = 'Specialness';
+        locals.gridOptions.columns[2].description = 'Description';
+        
+        locals.gridOptions.colPickerSearchProperties = ['caption', 'nonExistent'];
+        el = setUpGrid(basicGridHtml, locals);
+
+        columnChooserButtonEl = getColumnChooserButton(el);
+        columnChooserButtonEl.click();
+
+        $scope.$digest();
+
+        modalEl = getModal();
+
+        //get categories
+        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar button');
+
+        categoryEl.eq(1).click();
+
+        $scope.$digest();
+
+        //make sure the expected check boxes are here
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(modalRowsEl.length).toBe(2);
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+
+        searchEl = modalEl.eq(0).find('.bb-checklist-filter-bar input');
+
+        searchEl.eq(0).val('In').trigger('change');
+
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(modalRowsEl.length).toBe(1);
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Instrument');
+
+        searchEl.eq(0).val('Des').trigger('change');
+
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(modalRowsEl.length).toBe(0);
+
+        searchEl.eq(0).val('').trigger('change');
+        categoryEl.eq(0).click();
+
+        modalRowsEl = getColumnChooserRows(modalEl);
+
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+        expect(getChecklistItemTitleEl(modalRowsEl, 2)).toHaveText('Name');
+        closeModal(modalEl.eq(0));
+    });
 
     it('applies the correct column picker ids on confirmation', function () {
         var columnChooserButtonEl,
