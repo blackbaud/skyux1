@@ -78,7 +78,7 @@
     function CustomDateRangePickerDemoController($scope, bbDateRangePicker) {
         var self = this,
             availableTypes,
-            everyFourYearsType = 9000;
+            everyFourYearsType = 1001;
 
         self.options = {};
 

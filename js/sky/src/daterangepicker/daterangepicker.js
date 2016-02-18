@@ -35,6 +35,8 @@
             SPECIFIC_RANGE: 19
         };
 
+
+        // Deprecated
         defaultDateRangeOptions = [
             dateRangeTypes.AT_ANY_TIME,
             dateRangeTypes.YESTERDAY,
@@ -57,8 +59,10 @@
             dateRangeTypes.NEXT_FISCAL_YEAR
         ];
 
+        // Deprecated
         specificDateRangeOptions = defaultDateRangeOptions.concat([dateRangeTypes.SPECIFIC_RANGE]);
 
+        // Deprecated
         pastDateRangeOptions = [
             dateRangeTypes.AT_ANY_TIME,
             dateRangeTypes.YESTERDAY,
@@ -254,10 +258,6 @@
                 dateRangeOptions.push(dateRangeTypes.NEXT_FISCAL_YEAR);
             }
 
-            if (optionTypes.includeSpecific) {
-                dateRangeOptions.push(dateRangeTypes.SPECIFIC_RANGE);
-            }
-
             if (optionTypes.includePast && !optionTypes.includeDefault) {
                 dateRangeOptions.push(dateRangeTypes.YESTERDAY);
                 dateRangeOptions.push(dateRangeTypes.TODAY);
@@ -272,15 +272,21 @@
                 dateRangeOptions.push(dateRangeTypes.LAST_FISCAL_YEAR);
                 dateRangeOptions.push(dateRangeTypes.THIS_FISCAL_YEAR);
             }
+
+            if (optionTypes.includeSpecific) {
+                dateRangeOptions.push(dateRangeTypes.SPECIFIC_RANGE);
+            }
+
             return dateRangeOptions;
         }
 
         return {
-            dateRangeTypes: dateRangeTypes,
+            
             defaultDateRangeOptions: defaultDateRangeOptions,
             pastDateRangeOptions: pastDateRangeOptions,
             specificDateRangeOptions: specificDateRangeOptions,
 
+            dateRangeTypes: dateRangeTypes,
             getDateRangeOptions: getDateRangeOptions,
             getDateRangeTypeCaption: getDateRangeTypeCaption,
             getDateRangeFilterDescription: getDateRangeFilterDescription
@@ -290,9 +296,6 @@
     bbDateRangePickerFactory.$inject = ['bbResources'];
 
     function bbDateRangePickerDirective(bbDateRangePicker, bbResources) {
-        /// <summary>
-        /// This directive provides a date range filter control
-        /// </summary>
 
         return {
             replace: true,
@@ -311,9 +314,9 @@
             },
             controller: ['$scope', function ($scope) {
                 var vm = this;
-
-                vm.bbDateRangePicker = bbDateRangePicker;
                 vm.resources = bbResources;
+
+                vm.defaultDateRangeOptions = bbDateRangePicker.getDateRangeOptions({includeDefault: true});
 
                 vm.getDateRangeTypeCaption = function (dateRangeTypeValue) {
                     var infoFunction;
