@@ -1,6 +1,7 @@
 <div class="bb-avatar" ng-switch="bbAvatar.canChange">
   <div ng-switch-when="true">
     <div
+       class="bb-avatar-file-drop"
        bb-file-drop
        bb-file-drop-change="bbAvatar.photoDrop(files, rejectedFiles)"
        bb-file-drop-accept="'image/*'"

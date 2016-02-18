@@ -19,6 +19,22 @@
         "_description": "The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)",
         "message": "k"
     },
+    "avatar_error_not_image_description": {
+        "_description": "Message description displayed when the user attempts to upload an avatar file that is not a valid image",
+        "message": "Please choose a file that is a valid image."
+    },
+    "avatar_error_not_image_title": {
+        "_description": "Message title displayed when the user attempts to upload an avatar file that is not a valid image",
+        "message": "File is not an image."
+    },
+    "avatar_error_too_large_description": {
+        "_description": "Message description displayed when the user attempts to upload an avatar image with a file size that is too large",
+        "message": "Please choose an image that is less than {0}."
+    },
+    "avatar_error_too_large_title": {
+        "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
+        "message": "File is too large."
+    },
     "checklist_select_all": {
         "_description": "Text for the link in a checklist to select all items.",
         "message": "Select all"
@@ -374,6 +390,10 @@
     "date_range_picker_max_date_error": {
       "_description": "error message for date range picker",
       "message": "Start date must be before end date"
+    },
+    "errormodal_ok": {
+      "_description": "Text used on the primary button to dismiss the error modal",
+      "message": "OK"
     },
     "file_size_b_plural": {
         "_description": "",
