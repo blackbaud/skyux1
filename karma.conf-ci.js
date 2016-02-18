@@ -51,13 +51,16 @@ module.exports = function (config) {
                 browser: 'firefox',
                 os: 'OS X',
                 os_version: 'Yosemite'
-            },
-            bs_android_samsung_galaxy_s5_4_4: {
-                base: base,
-                device: 'Samsung Galaxy S5',
-                os: 'android',
-                os_version: '4.4'
             }
+            // This is too flaky.  Since we have never seen a test fail here that passed in a desktop
+            // browser we're disabling this for now.
+            //,
+            // bs_android_samsung_galaxy_s5_4_4: {
+            //     base: base,
+            //     device: 'Samsung Galaxy S5',
+            //     os: 'android',
+            //     os_version: '4.4'
+            // }
         },
         shared = require('./karma.conf-shared.js');
 
