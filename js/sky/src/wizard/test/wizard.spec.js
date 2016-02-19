@@ -12,8 +12,8 @@ describe('Wizard', function () {
         'ngMock',
         'sky.templates',
         'sky.wizard',
-        'template/tabs/tabset.html',
-        'template/tabs/tab.html'
+        'uib/template/tabs/tabset.html',
+        'uib/template/tabs/tab.html'
     ));
 
     beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_) {
@@ -21,10 +21,10 @@ describe('Wizard', function () {
         $scope = _$rootScope_;
         bbResources = _bbResources_;
     }));
-    
+
     describe('directive', function () {
         it('should add the expected CSS class to the associated tabset', function () {
-            var el = $compile('<tabset bb-wizard></tabset>')($scope);
+            var el = $compile('<uib-tabset bb-wizard></uib-tabset>')($scope);
 
             $scope.$digest();
 
@@ -34,9 +34,9 @@ describe('Wizard', function () {
         it('should change the style of a step when it is complete', function () {
             /*jslint white: true */
             var el = $compile(
-                '<tabset bb-wizard>' +
-                    '<tab bb-wizard-step-complete="tabComplete"></tab>' +
-                '</tabset>')($scope);
+                '<uib-tabset bb-wizard>' +
+                    '<uib-tab bb-wizard-step-complete="tabComplete"></uib-tab>' +
+                '</uib-tabset>')($scope);
             /*jslint white: false */
 
             $scope.tabComplete = true;
@@ -59,9 +59,9 @@ describe('Wizard', function () {
 
             /*jslint white: true */
             $compile(
-                '<tabset bb-wizard>' +
-                    '<tab ng-repeat="step in steps" active="step.active"></tab>' +
-                '</tabset>')($scope);
+                '<uib-tabset bb-wizard>' +
+                    '<uib-tab ng-repeat="step in steps" active="step.active"></uib-tab>' +
+                '</uib-tabset>')($scope);
             /*jslint white: false */
         }));
 
@@ -250,7 +250,7 @@ describe('Wizard', function () {
             $scope.$digest();
 
             expect(wizardNav.nextText()).toBe(bbResources.wizard_navigator_next);
-            
+
             wizardNav.goToNext();
             $scope.$digest();
 

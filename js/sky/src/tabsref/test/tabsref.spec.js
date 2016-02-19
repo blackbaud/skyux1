@@ -4,8 +4,7 @@
 describe('Tab Sref directive', function () {
     'use strict';
 
-    var tabHtml,
-        uibTabHtml,
+    var uibTabHtml,
         $compile,
         $provide,
         $rootScope,
@@ -16,8 +15,8 @@ describe('Tab Sref directive', function () {
         'ngMock',
         'ui.router',
         'sky.tabsref',
-        'template/tabs/tabset.html',
-        'template/tabs/tab.html'
+        'uib/template/tabs/tabset.html',
+        'uib/template/tabs/tab.html'
     ));
 
     beforeEach(module(function (_$provide_) {
@@ -37,14 +36,6 @@ describe('Tab Sref directive', function () {
         $timeout = _$timeout_;
 
         /*jslint white: true */
-        tabHtml =
-            '<tabset>' +
-                '<tab heading="1" bb-tab-sref="tabstate.a" active="locals.activeTabA"></tab>' +
-                '<tab heading="2" bb-tab-sref="tabstate.b" active="locals.activeTabB" select="tabSelectB()"></tab>' +
-            '</tabset>';
-        /*jslint white: false */
-
-        /*jslint white: true */
         uibTabHtml =
             '<uib-tabset>' +
                 '<uib-tab heading="1" bb-tab-sref="tabstate.a" active="locals.activeTabA"></uib-tab>' +
@@ -53,39 +44,8 @@ describe('Tab Sref directive', function () {
         /*jslint white: false */
     }));
 
+
     it('should select the corresponding tab on state change', function () {
-        var el,
-            tabSelectCalled,
-            $scope = $rootScope.$new();
-
-        $state.is = function (sref) {
-            return sref === 'tabstate.b';
-        };
-
-        $scope.tabSelectB = function () {
-            tabSelectCalled = true;
-        };
-
-        $scope.locals = {
-            activeTabA: true,
-            activeTabB: false
-        };
-
-        /*jslint white: true */
-        el = $compile(tabHtml)($scope);
-        /*jslint white: false */
-        $scope.$digest();
-        $timeout.flush();
-
-        $rootScope.$broadcast('$stateChangeSuccess');
-
-        $scope.$digest();
-
-
-        expect(tabSelectCalled).toBe(true);
-    });
-
-    it('should select the corresponding tab on state change using prefixed directives', function () {
         var el,
             tabSelectCalled,
             $scope = $rootScope.$new();
@@ -137,7 +97,7 @@ describe('Tab Sref directive', function () {
         };
 
         /*jslint white: true */
-        el = $compile(tabHtml)($scope);
+        el = $compile(uibTabHtml)($scope);
         /*jslint white: false */
 
         $timeout.flush();
@@ -171,7 +131,7 @@ describe('Tab Sref directive', function () {
         };
 
         /*jslint white: true */
-        el = $compile(tabHtml)($scope);
+        el = $compile(uibTabHtml)($scope);
         /*jslint white: false */
 
         $scope.$digest();

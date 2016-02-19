@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module, $ */
+/*global angular, inject, module*/
 
 describe('Datepicker directive', function () {
     'use strict';
@@ -17,6 +17,7 @@ describe('Datepicker directive', function () {
     beforeEach(module('ui.bootstrap'));
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.datepicker'));
+
 
     beforeEach(inject(function (_$rootScope_, _$compile_, _$q_, _$timeout_, bbResources, bbDatepickerConfig) {
         $compile = _$compile_;
@@ -757,7 +758,7 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toBe('5/17/1985');
+            expect($scope.testdate1).toEqual(new Date('5/17/1985'));
 
             inputEl = el.find('input');
 
@@ -809,7 +810,7 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toBe('5/17/1985');
+            expect($scope.testdate1).toEqual(new Date('5/17/1985'));
 
             inputEl = el.find('input');
 
@@ -941,61 +942,6 @@ describe('Datepicker directive', function () {
 
             expect($scope.testform.$valid).toBe(true);
 
-        });
-    });
-
-    describe('datepicker append to body', function () {
-        it('adds the appropriate class when appended to body and positions intelligently on open', function () {
-            var el,
-                expectedWidth,
-                nestedCalendarEl,
-                bodyCalendarEl,
-                inputEl,
-                spanEl,
-                appendToBodyHtml = '<div>' +
-                '<form name="testform" novalidate>' +
-                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" datepicker-append-to-body="true"></bb-datepicker>' +
-                '</form>' +
-                '</div>';
-
-            el = setupDatepicker(appendToBodyHtml, '5/17/1985', true);
-
-            inputEl = el.find('input');
-
-            spanEl = el.find('span.bb-datepicker-button-container');
-
-            nestedCalendarEl = el.find('ul.dropdown-menu');
-            expect(nestedCalendarEl.length).toBe(0);
-
-            openCalendar(el);
-            $timeout.flush();
-
-            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
-
-            expect(bodyCalendarEl.length).toBe(1);
-
-            expect(bodyCalendarEl).toHaveClass('bb-datefield');
-
-            expectedWidth = inputEl.offset().left + inputEl.innerWidth() + spanEl.innerWidth() - bodyCalendarEl.innerWidth();
-
-            expect(bodyCalendarEl[0].style.left).toBe(expectedWidth.toString() + 'px');
-
-            openCalendar(el);
-            $timeout.flush();
-
-            inputEl.width(10);
-
-            openCalendar(el);
-            $timeout.flush();
-
-            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
-            expect(bodyCalendarEl[0].style.left).not.toBe(expectedWidth.toString() + 'px');
-            expect(bodyCalendarEl).toHaveClass('bb-datefield');
-
-            openCalendar(el);
-            $timeout.flush();
-
-            el.remove();
         });
     });
 

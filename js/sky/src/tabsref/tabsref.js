@@ -6,14 +6,11 @@
     angular.module('sky.tabsref', ['ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
-                require: ['^?tabset', '^?uibTabset'],
-                link: function (scope, el, attrs, controllers) {
+                require: '^uibTabset',
+                link: function (scope, el, attrs, tabsetCtrl) {
                     var active = attrs.active,
                         sref = attrs.bbTabSref,
-                        stateChangeDeregistration,
-                        tabsetCtrl;
-
-                    tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
+                        stateChangeDeregistration;
 
 
                     function checkCurrentState() {

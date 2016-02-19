@@ -29,8 +29,8 @@ describe('Modal', function () {
         'sky.helpbutton',
         'sky.modal',
         'sky.templates',
-        'template/modal/backdrop.html',
-        'template/modal/window.html'
+        'uib/template/modal/backdrop.html',
+        'uib/template/modal/window.html'
     ));
 
     beforeEach(module(function ($compileProvider) {
@@ -49,7 +49,7 @@ describe('Modal', function () {
         });
     }));
 
-    beforeEach(inject(function (_$animate_, _$compile_, _$document_, _$modal_, _$rootScope_, _$templateCache_, _$timeout_, _$window_, _bbModal_, _bbResources_) {
+    beforeEach(inject(function (_$animate_, _$compile_, _$document_, _$rootScope_, _$templateCache_, _$timeout_, _$window_, _bbModal_, _bbResources_) {
         $animate = _$animate_;
         $compile = _$compile_;
         $document = _$document_;
