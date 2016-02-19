@@ -41,6 +41,9 @@
                     expect(err).toBe(undefined);
                     expect(res[options.screenshotName][0].isWithinMisMatchTolerance).toBe(true);
                 }).call(options.done);
+        },
+        moveCursorOffScreen: function (browser) {
+            return browser.moveToObject('body', 0, 0);
         }
     };
 }());
