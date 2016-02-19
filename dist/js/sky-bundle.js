@@ -100691,7 +100691,7 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
 
-    var PROP_CATEGORY = 'category';
+    var SEARCH_PROPS = ['title', 'description'];
 
     function bbChecklist(bbChecklistUtility) {
         return {
@@ -100728,6 +100728,8 @@ global.easyXDM = easyXDM;
 
                 function itemMatchesFilter(item, category, searchTextUpper) {
                     var p,
+                        i,
+                        len,
                         val;
 
                     if (itemMatchesCategory(item, category)) {
@@ -100735,8 +100737,9 @@ global.easyXDM = easyXDM;
                             return true;
                         }
 
-                        for (p in item) {
-                            if (item.hasOwnProperty(p) && p !== PROP_CATEGORY) {
+                        for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
+                            p = SEARCH_PROPS[i];
+                            if (item.hasOwnProperty(p)) {
                                 val = item[p];
 
                                 if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {

@@ -1,4 +1,5 @@
 # Many of the defaults are fine for our use.
+# Members are case-sensitive
 # http://docs.pullapprove.com/yaml/
 approve_by_comment: true
 reset_on_reopened: true
@@ -7,8 +8,8 @@ reject_regex: '^Needs Change'
 reviewers:
     required: 1
     members:
-      - blackbaud-bobbyearl
+      - Blackbaud-BobbyEarl
       - blackbaud-johnly
-      - blackbaud-patrickofriel
-      - blackbaud-paulcrowder
-      - blackbaud-toddroberts
+      - Blackbaud-PatrickOFriel
+      - Blackbaud-PaulCrowder
+      - Blackbaud-ToddRoberts

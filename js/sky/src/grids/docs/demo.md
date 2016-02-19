@@ -56,6 +56,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
   - `multiselect` &mdash; If true, adds a multiselect checkbox column to the listbuilder.
   - `onAddClick` &mdash; If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
   - `onAddClickLabel` &mdash; Label for the add button.
+  - `resources` &mdash; Resource dictionary made available in the scope of each `columns`'s `template_url` and `controller`.
   - `searchText` &mdash; The text entered in the grid search box, set by bbGrid.
   - `selectedColumnIds` &mdash; An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
   - `sortOptions` &mdash; Options around column sorting:
