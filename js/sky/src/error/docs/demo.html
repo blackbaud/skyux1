@@ -5,7 +5,7 @@
       </img>
     </bb-error-image>
     <bb-error-title>
-      {{errorCtrl.errorHeader}}
+      {{errorCtrl.errorTitle}}
     </bb-error-title>
     <bb-error-description>
       {{errorCtrl.errorDescription}}
@@ -14,4 +14,6 @@
       <button type="button" class="btn-primary btn" ng-click="errorCtrl.action()">{{errorCtrl.actionName}}</button>
     </bb-error-action>
   </bb-error>
+  <hr />
+  <button type="button" class="btn btn-primary" ng-click="errorCtrl.openModal()">Open modal</button>
 </div>

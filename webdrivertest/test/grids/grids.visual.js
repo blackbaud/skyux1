@@ -3,17 +3,24 @@
 describe('grids', function () {
     'use strict';
 
-    var options = {};
+    var common,
+        options = {};
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        common = require('../common');
+
+        common.initWebdriverCss(browser, options, done);
     });
 
     it('should take screenshot of all grids', function (done) {
-        var screenshotName = 'grids_all',
+        var browserResult,
+            screenshotName = 'grids_all',
             pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/grids/fixtures/test.full.html')
+
+        browserResult = browser
+            .url('/grids/fixtures/test.full.html');
+
+        common.moveCursorOffScreen(browserResult)
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
             .webdrivercss(pageName, [
                 {

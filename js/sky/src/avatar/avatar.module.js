@@ -3,5 +3,5 @@
 (function () {
     'use strict';
 
-    angular.module('sky.avatar', ['sky.avatar.directive']);
+    angular.module('sky.avatar', ['sky.avatar.config', 'sky.avatar.directive']);
 }());
