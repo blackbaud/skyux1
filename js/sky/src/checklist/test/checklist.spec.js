@@ -385,12 +385,12 @@ describe('Checklist directive', function () {
 
         searchTextItems = [
             {
-                column: 'a',
+                title: 'a',
                 description: 'b',
                 category: 'z'
             },
             {
-                column: 'z',
+                title: 'z',
                 description: 'x',
                 category: 'y'
             }
@@ -416,6 +416,58 @@ describe('Checklist directive', function () {
         rowEl = el.find('.bb-checklist-row');
 
         // The first item should be filtered out even though the category would match the search text.
+        expect(rowEl.length).toBe(1);
+
+        el.remove();
+    });
+    
+    it('should not match search text to anything other than title and description', function () {
+        var el,
+            rowEl,
+            searchTextItems;
+
+        searchTextItems = [
+            {
+                title: 'a',
+                description: 'b',
+                category: 'z',
+                hidden: 'z'
+            },
+            {
+                title: 'z',
+                description: 'x',
+                category: 'y',
+                hidden: 'b'
+            }
+        ];
+
+        $scope.locals = {
+            items: searchTextItems,
+            includeSearch: true
+        };
+
+        el = $(checklistHtml);
+
+        el.attr('bb-checklist-filter-local', '');
+
+        $compile(el)($scope);
+
+        el.appendTo(document.body);
+
+        $scope.$digest();
+
+        el.find('.bb-checklist-search-box').val('z').change();
+
+        rowEl = el.find('.bb-checklist-row');
+
+        // The first item should be filtered out even though the category would match the search text.
+        expect(rowEl.length).toBe(1);
+        
+        el.find('.bb-checklist-search-box').val('b').change();
+        
+        rowEl = el.find('.bb-checklist-row');
+        
+        // The second item should be filtered out even though the hidden property would match the search text.
         expect(rowEl.length).toBe(1);
 
         el.remove();
