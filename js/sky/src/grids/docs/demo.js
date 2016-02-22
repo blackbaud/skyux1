@@ -1,3 +1,5 @@
+
+
 /*global angular, alert*/
 //A comment
 
@@ -215,7 +217,49 @@
                         name: 'mydate',
                         width_all: 200,
                         template_url: 'bbGrid/samples/date.html'
+                    },
+                    {
+                        caption: 'Date2',
+                        jsonmap: 'mydate2',
+                        id: 6,
+                        name: 'mydate2',
+                        width_all: 200,
+                        template_url: 'bbGrid/samples/date.html'
+                    },
+                    {
+                        caption: 'Date3',
+                        jsonmap: 'mydate3',
+                        id: 7,
+                        name: 'mydate3',
+                        width_all: 200,
+                        template_url: 'bbGrid/samples/date.html'
+                    },
+                    {
+                        caption: 'Date4',
+                        jsonmap: 'mydate4',
+                        id: 7,
+                        name: 'mydate3',
+                        width_all: 200,
+                        template_url: 'bbGrid/samples/date.html'
+                    },
+                    {
+                        caption: 'Date5',
+                        jsonmap: 'mydate5',
+                        id: 7,
+                        name: 'mydate5',
+                        width_all: 200,
+                        template_url: 'bbGrid/samples/date.html'
+                    },
+                    {
+                        caption: 'Date6',
+                        description: '66666666666666666666666666666666666666666666666666666666666666',
+                        jsonmap: 'mydate6',
+                        id: 8,
+                        name: 'mydate',
+                        width_all: 200,
+                        template_url: 'bbGrid/samples/date.html'
                     }
+
                 ],
                 data: dataSetBand,
                 getContextMenuItems: function (rowid, rowObject) {

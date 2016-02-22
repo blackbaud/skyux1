@@ -1,25 +1,4 @@
-<div>
-    <div class="bb-omnibar-height-margin"></div>
-    <div ng-controller="PaginationGridTestController as pagedCtrl">
-      <bb-tile bb-tile-header="'Grid with pagination in tile'">
-          <bb-grid bb-grid-options="pagedCtrl.gridOptions2" bb-grid-pagination="pagedCtrl.paginationOptions">
-              <div class="bb-filters-inline">
-                  <select ng-model="pagedCtrl.gridOptions2.filters.selectFilter">
-                      <option value="">All Values</option>
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                  </select>
-                  <label><input type="checkbox" ng-model="pagedCtrl.gridOptions2.filters.checkFilter"/>Check 1 Really long Labelll</label>
-              </div>
-          </bb-grid>
-      </bb-tile>
-      <div class="clearfix"></div>
-
-    </div>
-
-
-
-    <div ng-controller="GridTestController as gridCtrl">
+<div ng-controller="GridTestController as gridCtrl">
       <button class="btn btn-primary" style="margin-bottom: 10px;" ng-click="gridCtrl.setSelections()">Set Drum Selection</button>
 
       <div style="margin-top: 10px; margin-bottom: 10px;">
@@ -48,5 +27,3 @@
 
       <div class="clearfix"></div>
     </div>
-
-</div>
