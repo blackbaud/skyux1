@@ -278,7 +278,6 @@
             }
         };
     }
-
     bbDateRangePickerDirective.$inject = ['bbDateRangePicker', 'bbResources'];
 
     angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])

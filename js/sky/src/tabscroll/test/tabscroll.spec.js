@@ -18,8 +18,8 @@ describe('Tabscroll directive', function () {
     beforeEach(module(
         'ngMock',
         'sky.tabscroll',
-        'template/tabs/tabset.html',
-        'template/tabs/tab.html'
+        'uib/template/tabs/tabset.html',
+        'uib/template/tabs/tab.html'
     ));
 
     beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
@@ -27,18 +27,18 @@ describe('Tabscroll directive', function () {
         $scope = _$rootScope_;
         $timeout = _$timeout_;
 
-        wideTabHtml = '<tabset bb-tab-scroll bb-tab-scroll-ready="ready">' +
-                '<tab style="width: 100px" heading="1"></tab>' +
-                '<tab style="width: 100px" heading="2"></tab>' +
-                '<tab style="width: 100px" heading="3"></tab>' +
-                '<tab style="width: 100px" heading="4"></tab>' +
-                '<tab style="width: 100px" heading="5"></tab>' +
-                '<tab style="width: 100px" heading="6"></tab>' +
-                '<tab style="width: 100px" heading="7"></tab>' +
-                '<tab style="width: 100px" heading="8"></tab>' +
-                '<tab style="width: 100px" heading="9"></tab>' +
-                '<tab style="width: 100px" heading="10"></tab>' +
-            '</tabset>';
+        wideTabHtml = '<uib-tabset bb-tab-scroll bb-tab-scroll-ready="ready">' +
+                '<uib-tab style="width: 100px" heading="1"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="2"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="3"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="4"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="5"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="6"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="7"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="8"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="9"></uib-tab>' +
+                '<uib-tab style="width: 100px" heading="10"></uib-tab>' +
+            '</uib-tabset>';
 
         // Remove animation delay so tests don't have to be asynchronous.
         fxOff = $.fx.off;
@@ -50,7 +50,7 @@ describe('Tabscroll directive', function () {
     });
 
     it('should add the bb-tab-scroll class to the tabset element', function () {
-        var el = $compile('<tabset bb-tab-scroll></tabset>')($scope);
+        var el = $compile('<uib-tabset bb-tab-scroll></uib-tabset>')($scope);
 
         $scope.$digest();
 
@@ -58,7 +58,7 @@ describe('Tabscroll directive', function () {
     });
 
     it('should add a resize listener on window and remove it when the element is destroyed', function () {
-        var el1 = $compile('<tabset bb-tab-scroll></tabset>')($scope),
+        var el1 = $compile('<uib-tabset bb-tab-scroll></uib-tabset>')($scope),
             resizeListenerCount;
 
         function getResizeListenerCount() {
@@ -128,7 +128,7 @@ describe('Tabscroll directive', function () {
 
             /*jlsint white: true */
             el = $compile(
-                '<tabset bb-tab-scroll></tabset>'
+                '<uib-tabset bb-tab-scroll></uib-tabset>'
             )($scope);
             /*jslint white: false */
 
@@ -163,11 +163,11 @@ describe('Tabscroll directive', function () {
 
             /*jslint white: true */
             el = $compile(
-                '<tabset bb-tab-scroll>' +
-                    '<tab style="width: 100px">A</tab>' +
-                    '<tab style="width: 100px">B</tab>' +
-                    '<tab style="width: 100px">C</tab>' +
-                '</tabset>'
+                '<uib-tabset bb-tab-scroll>' +
+                    '<uib-tab style="width: 100px">A</uib-tab>' +
+                    '<uib-tab style="width: 100px">B</ui-tab>' +
+                    '<uib-tab style="width: 100px">C</uib-tab>' +
+                '</uib-tabset>'
             )($scope);
             /*jslint white: false */
 
@@ -204,11 +204,11 @@ describe('Tabscroll directive', function () {
 
             /*jslint white: true */
             el = $compile(
-                '<tabset bb-tab-scroll>' +
-                    '<tab style="width: 100px">A</tab>' +
-                    '<tab style="width: 100px">B</tab>' +
-                    '<tab style="width: 100px" active="tabCActive">C</tab>' +
-                '</tabset>'
+                '<uib-tabset bb-tab-scroll>' +
+                    '<uib-tab style="width: 100px">A</uib-tab>' +
+                    '<uib-tab style="width: 100px">B</uib-tab>' +
+                    '<uib-tab style="width: 100px" active="tabCActive">C</uib-tab>' +
+                '</uib-tabset>'
             )($scope);
             /*jslint white: false */
 
@@ -260,11 +260,11 @@ describe('Tabscroll directive', function () {
 
             /*jslint white: true */
             el = $compile(
-                '<tabset bb-tab-scroll>' +
-                    '<tab style="width: 100px">A</tab>' +
-                    '<tab style="width: 100px">B</tab>' +
-                    '<tab style="width: 100px">C</tab>' +
-                '</tabset>'
+                '<uib-tabset bb-tab-scroll>' +
+                    '<uib-tab style="width: 100px">A</uib-tab>' +
+                    '<uib-tab style="width: 100px">B</uib-tab>' +
+                    '<uib-tab style="width: 100px">C</uib-tab>' +
+                '</uib-tabset>'
             )($scope);
             /*jslint white: false */
 
@@ -303,7 +303,7 @@ describe('Tabscroll directive', function () {
             var animateSpy,
                 widthSpy;
 
-            $compile('<tabset bb-tab-scroll></tabset>')($scope);
+            $compile('<uib-tabset bb-tab-scroll></uib-tabset>')($scope);
 
             $scope.$digest();
 

@@ -1,7 +1,7 @@
 /*jshint browser: true */
-/*global angular, jQuery */
+/*global angular */
 
-(function ($) {
+(function () {
     'use strict';
     angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
         .constant('bbDatepickerConfig', {
@@ -11,7 +11,8 @@
             minDate: '',
             maxDate: ''
         })
-        .directive('bbDatepicker', ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q', function (bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q) {
+        .directive('bbDatepicker', ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q',
+        function (bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q) {
             return {
                 replace: true,
                 restrict: 'E',
@@ -44,39 +45,9 @@
                         skipValidation = false,
                         dateChangeInternal = false;
 
-                    function getBodyDatepicker() {
-                        return $('body > ul[uib-datepicker-popup-wrap]');
-                    }
-
-                    function positionAbsoluteDatepicker() {
-                        var calendarButtonEl = el.find('span.bb-datepicker-button-container'),
-                            inputEl = el.find('input'),
-                            datepickerScope = el.find('input').isolateScope(),
-                            datepickerEl = getBodyDatepicker(),
-                            inputWidth,
-                            buttonWidth,
-                            datepickerWidth;
-
-                        inputWidth = inputEl.innerWidth();
-                        buttonWidth = calendarButtonEl.innerWidth();
-                        datepickerWidth = datepickerEl.innerWidth();
-
-                        if (datepickerWidth < (inputWidth + buttonWidth)) {
-                            datepickerScope.position.left = datepickerScope.position.left + inputWidth + buttonWidth - datepickerWidth;
-                        }
-                    }
-
                     function open($event) {
                         $event.preventDefault();
                         $event.stopPropagation();
-
-                        //add syle class when datepicker appended to body because necessary bb-datefield class will no longer be wrapping it.
-                        if ($scope.locals.appendToBody) {
-                            $timeout(function () {
-                                getBodyDatepicker().addClass('bb-datefield');
-                                positionAbsoluteDatepicker();
-                            });
-                        }
 
                         $scope.locals.opened = !$scope.locals.opened;
                     }
@@ -85,27 +56,30 @@
                         var inputNgModel;
                         if (angular.isDate($scope.date)) {
                             $scope.locals.date = $scope.date;
-                        } else if (!$scope.locals.hasCustomValidation) {
+                        } else {
                             parsedDate = bbDatepickerParser.runParsers($scope.date, $scope.format);
                             if (angular.isDate(parsedDate)) {
                                 $scope.date = parsedDate;
                                 $scope.locals.date = parsedDate;
-                            } else {
+                            } else if (!$scope.locals.hasCustomValidation) {
                                 $scope.locals.date = $scope.date;
                                 inputNgModel = $scope.getInputNgModel();
                                 if (inputNgModel && !inputNgModel.$validators.date($scope.date)) {
                                     inputNgModel.invalidFormatMessage = bbResources.date_field_invalid_date_message;
                                     inputNgModel.$setValidity('dateFormat', false);
                                 }
+                            } else {
+                                $scope.locals.date = new Date();
                             }
-                        } else {
-                            $scope.locals.date = $scope.date;
                         }
                     }
 
                     $scope.locals = {
                         showButtonBar: false,
                         appendToBody: false,
+                        //modelOptions: {
+                        //    allowInvalid: angular.isDefined($scope.customValidation)
+                        //},
                         date: '',
                         opened: false,
                         open: open,
@@ -247,7 +221,10 @@
                                 skipValidation = true;
                                 dateChangeInternal = true;
                                 $scope.date = result.formattedValue;
-                                $scope.locals.date = result.formattedValue;
+                                if (angular.isDate(result.formattedValue)) {
+                                    $scope.locals.date = result.formattedValue;
+                                }
+
                             }
 
                         }
@@ -539,4 +516,4 @@
     }]);
 
 
-}(jQuery));
+}());

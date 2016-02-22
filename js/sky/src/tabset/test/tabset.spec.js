@@ -14,8 +14,8 @@ describe('Tabset module', function () {
         'ngMock',
         'sky.tabset',
         'sky.templates',
-        'template/tabs/tabset.html',
-        'template/tabs/tab.html'
+        'uib/template/tabs/tabset.html',
+        'uib/template/tabs/tab.html'
     ));
 
     beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_) {
@@ -24,20 +24,20 @@ describe('Tabset module', function () {
         $document = _$document_;
         bbMediaBreakpoints = _bbMediaBreakpoints_;
 
-        dynamicTabsHtml = '<tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()">' +
-                '<tab>' +
-                    '<tab-heading>' +
+        dynamicTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()">' +
+                '<uib-tab>' +
+                    '<uib-tab-heading>' +
                         'Tab 1' +
-                    '</tab-heading>' +
+                    '</uib-tab-heading>' +
                     'Yo' +
-                '</tab>' +
-                '<tab>' +
-                    '<tab-heading>' +
+                '</uib-tab>' +
+                '<uib-tab>' +
+                    '<uib-tab-heading>' +
                         'Tab 2' +
-                    '</tab-heading>' +
+                    '</uib-tab-heading>' +
                     'Hey' +
-                '</tab>' +
-            '</tabset>';
+                '</uib-tab>' +
+            '</uib-tabset>';
     }));
 
     function getLargeScreenAddButton(el) {
@@ -84,20 +84,20 @@ describe('Tabset module', function () {
     });
     describe('no add open', function () {
         it('adds no buttons if add and open are not defined', function () {
-            var noButtonsHtml = '<tabset>' +
-                    '<tab>' +
-                        '<tab-heading>' +
+            var noButtonsHtml = '<uib-tabset>' +
+                    '<uib-tab>' +
+                        '<uib-tab-heading>' +
                             'Tab 1' +
-                        '</tab-heading>' +
+                        '</uib-tab-heading>' +
                         'Yo' +
-                    '</tab>' +
-                    '<tab>' +
-                        '<tab-heading>' +
+                    '</uib-tab>' +
+                    '<uib-tab>' +
+                        '<uib-tab-heading>' +
                             'Tab 2' +
-                        '</tab-heading>' +
+                        '</uib-tab-heading>' +
                         'Hey' +
-                    '</tab>' +
-                '</tabset>',
+                    '</uib-tab>' +
+                '</uib-tabset>',
                 el,
                 addButtonEl,
                 openButtonEl;
@@ -113,20 +113,20 @@ describe('Tabset module', function () {
         });
 
         it('adds only the add button if only the add button is defined', function () {
-            var addOnlyHtml = '<tabset bb-tabset-add="addTab()">' +
-                    '<tab>' +
-                        '<tab-heading>' +
+            var addOnlyHtml = '<uib-tabset bb-tabset-add="addTab()">' +
+                    '<uib-tab>' +
+                        '<uib-tab-heading>' +
                             'Tab 1' +
-                        '</tab-heading>' +
+                        '</uib-tab-heading>' +
                         'Yo' +
-                    '</tab>' +
-                    '<tab>' +
-                        '<tab-heading>' +
+                    '</uib-tab>' +
+                    '<uib-tab>' +
+                        '<uib-tab-heading>' +
                             'Tab 2' +
-                        '</tab-heading>' +
+                        '</uib-tab-heading>' +
                         'Hey' +
-                    '</tab>' +
-                '</tabset>',
+                    '</uib-tab>' +
+                '</uib-tabset>',
                 el,
                 openButtonEl,
                 tabAdded = false;
@@ -147,20 +147,20 @@ describe('Tabset module', function () {
         });
 
         it('adds only the open button if only the open button is defined', function () {
-            var openOnlyHtml = '<tabset bb-tabset-open="openTab()">' +
-                    '<tab>' +
-                        '<tab-heading>' +
+            var openOnlyHtml = '<uib-tabset bb-tabset-open="openTab()">' +
+                    '<uib-tab>' +
+                        '<uib-tab-heading>' +
                             'Tab 1' +
-                        '</tab-heading>' +
+                        '</uib-tab-heading>' +
                         'Yo' +
-                    '</tab>' +
-                    '<tab>' +
-                        '<tab-heading>' +
+                    '</uib-tab>' +
+                    '<uib-tab>' +
+                        '<uib-tab-heading>' +
                             'Tab 2' +
-                        '</tab-heading>' +
+                        '</uib-tab-heading>' +
                         'Hey' +
-                    '</tab>' +
-                '</tabset>',
+                    '</uib-tab>' +
+                '</uib-tabset>',
                 el,
                 addButtonEl,
                 tabOpened = false;
@@ -192,15 +192,15 @@ describe('Tabset module', function () {
             tabsEl;
 
         beforeEach(function () {
-            collapsibleTabsHtml = '<tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
-            '<tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
-                '<tab-heading>' +
+            collapsibleTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
+            '<uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
                     '{{t.title}}' +
                     '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</tab-heading>' +
+                '</uib-tab-heading>' +
                 '{{t.content}}' +
-            '</tab>' +
-            '</tabset>';
+            '</uib-tab>' +
+            '</uib-tabset>';
 
             $scope.myTabs = [
                 {
@@ -388,15 +388,15 @@ describe('Tabset module', function () {
         }
 
         it('collapses in xs when there are no add or open buttons', function () {
-            var collapsibleNoAddOpenTabsHtml = '<tabset bb-tabset-collapsible>' +
-            '<tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
-                '<tab-heading>' +
+            var collapsibleNoAddOpenTabsHtml = '<uib-tabset bb-tabset-collapsible>' +
+            '<uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
                     '{{t.title}}' +
                     '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</tab-heading>' +
+                '</uib-tab-heading>' +
                 '{{t.content}}' +
-            '</tab>' +
-            '</tabset>',
+            '</uib-tab>' +
+            '</uib-tabset>',
                 el;
 
             el = setupCollapsibleTest(collapsibleNoAddOpenTabsHtml);
@@ -415,29 +415,29 @@ describe('Tabset module', function () {
         });
 
         it('collapses in xs when tabs are specifically defined', function () {
-            var collapsibleNoAddOpenTabsHtml = '<tabset bb-tabset-collapsible>' +
-            '<tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
-                '<tab-heading>' +
+            var collapsibleNoAddOpenTabsHtml = '<uib-tabset bb-tabset-collapsible>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
                     'Tab 1' +
                     '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</tab-heading>' +
+                '</uib-tab-heading>' +
                 '1 content' +
-            '</tab>' +
-            '<tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
-                '<tab-heading>' +
+            '</uib-tab>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
                     'Tab 2' +
                     '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</tab-heading>' +
+                '</uib-tab-heading>' +
                 '2 content' +
-            '</tab>' +
-            '<tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
-                '<tab-heading>' +
+            '</uib-tab>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
                     'Tab 3' +
                     '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</tab-heading>' +
+                '</uib-tab-heading>' +
                 '3 content' +
-            '</tab>' +
-            '</tabset>',
+            '</uib-tab>' +
+            '</uib-tabset>',
                 el;
             el = setupCollapsibleTest(collapsibleNoAddOpenTabsHtml);
             callback({xs: true});
@@ -495,11 +495,11 @@ describe('Tabset module', function () {
 
         it('has the correct dropdown title in extra small mode when title changes using heading', function () {
             var el,
-                headingTabsHtml = '<tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
-            '<tab heading="{{t.title}}" ng-repeat="t in myTabs" class="bb-tab-close">' +
+                headingTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
+            '<uib-tab heading="{{t.title}}" ng-repeat="t in myTabs" class="bb-tab-close">' +
                 '{{t.content}}' +
-            '</tab>' +
-            '</tabset>';
+            '</uib-tab>' +
+            '</uib-tabset>';
 
             el = setupCollapsibleTest(headingTabsHtml);
 
@@ -537,7 +537,7 @@ describe('Tabset module', function () {
             $scope.$digest();
             tabsEl = getSmallScreenTabs(el);
             expect(tabsEl.length).toBe(3);
-            expect(tabsEl.eq(0).find('tab-heading')).toHaveText($scope.myTabs[0].title);
+            expect(tabsEl.eq(0).find('uib-tab-heading')).toHaveText($scope.myTabs[0].title);
 
             callback({xs: false});
             $scope.$digest();
@@ -545,7 +545,7 @@ describe('Tabset module', function () {
             tabsEl = getLargeScreenTabs(el);
             expect(tabsEl.length).toBe(3);
             expect(getActiveTabContent(el)).toHaveText($scope.myTabs[2].content);
-            expect(tabsEl.eq(0).find('tab-heading')).toHaveText($scope.myTabs[0].title);
+            expect(tabsEl.eq(0).find('uib-tab-heading')).toHaveText($scope.myTabs[0].title);
 
             el.remove();
 
@@ -650,7 +650,6 @@ describe('Tabset module', function () {
                 dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
 
                 verifyMaxWidths(el, dropdownTextEl, dropdownMenuItemEl);
-
                 el.width(600);
 
                 spyWindowWidth = 200;
