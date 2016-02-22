@@ -128,6 +128,24 @@
             }
             ];
 
+        self.showGrid = false;
+        self.showWait = false;
+        self.showPaged = false;
+
+        function showGridClicked(showOptions) {
+            if (showOptions.screenshot_grid) {
+                self.showGrid = !self.showGrid;
+            }
+            if (showOptions.screenshot_grid_page) {
+                self.showPaged = !self.showPaged;
+            }
+            if (showOptions.screenshot_grid_wait) {
+                self.showWait = !self.showWait;
+            }
+        }
+
+        self.showGridClicked = showGridClicked;
+
         function applyFilters() {
             self.appliedFilters.instruments = [];
             if (self.guitarFilter) {

@@ -1,6 +1,7 @@
 <div class="container" ng-controller="GridTestController as gridCtrl">
     <div id="screenshot-grids-all">
-        <div id="screenshot-grid">
+        <button type="button" class="btn btn-primary show-grid" ng-click="gridCtrl.showGridClicked({screenshot_grid: true})">Show Grid</button>
+        <div id="screenshot-grid" ng-if="gridCtrl.showGrid">
             <div style="height: 50px;"></div>
             <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-multiselect-actions="gridCtrl.gridActions" bb-selections-updated="gridCtrl.updateActions(selections)" bb-grid-custom-toolbar>
                 <bb-grid-filters-summary ng-show="gridCtrl.appliedFilters.instruments.length > 0" bb-options="gridCtrl.filterOptions">
@@ -22,7 +23,8 @@
             </bb-grid>
         </div>
         <div class="clearfix"></div>
-        <div id="screenshot-grid-pagination">
+        <button type="button" class="btn btn-primary show-grid-page" ng-click="gridCtrl.showGridClicked({screenshot_grid_page: true})">Show paged grid</button>
+        <div id="screenshot-grid-pagination" ng-if="gridCtrl.showPaged">
             <bb-grid bb-grid-options="gridCtrl.gridOptions2" bb-grid-pagination="gridCtrl.paginationOptions" bb-grid-custom-toolbar>
                 <div class="bb-filters-inline">
                     <select ng-model="gridCtrl.gridOptions2.filters.selectFilter">
@@ -38,7 +40,8 @@
             </bb-grid>
         </div>
         <div class="clearfix"></div>
-        <div id="screenshot-grid-wait">
+        <button type="button" class="btn btn-primary show-grid-wait" ng-click="gridCtrl.showGridClicked({screenshot_grid_wait: true})">Show wait grid</button>
+        <div id="screenshot-grid-wait" ng-if="gridCtrl.showWait">
           <div ng-controller="GridTestController as gridCtrl" style="width: 300px">
             <bb-tile bb-tile-header="'Tile with waiting grid'">
               <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-wait="{{true}}">
@@ -47,5 +50,4 @@
           </div>
       </div>
     </div>
-    <!--<div style="height: 5000px"></div>-->
 </div>
