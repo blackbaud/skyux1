@@ -41,7 +41,7 @@
         </div>
         <div class="clearfix"></div>
         <button type="button" class="btn btn-primary show-grid-wait" ng-click="gridCtrl.showGridClicked({screenshot_grid_wait: true})">Show wait grid</button>
-        <div id="screenshot-grid-wait" ng-if="gridCtrl.showWait">
+        <div id="screenshot-grid-wait" ng-if="gridCtrl.showWait" class="bb-screenshot-noanim">
           <div ng-controller="GridTestController as gridCtrl" style="width: 300px">
             <bb-tile bb-tile-header="'Tile with waiting grid'">
               <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-wait="{{true}}">
@@ -49,5 +49,15 @@
             </bb-tile>
           </div>
       </div>
+      <div class="clearfix"></div>
+      <button type="button" class="btn btn-primary show-grid-loading" ng-click="gridCtrl.showGridClicked({screenshot_grid_loading: true})">Show loading grid</button>
+      <div id="screenshot-grid-loading" ng-if="gridCtrl.showLoading" class="bb-screenshot-noanim">
+        <div ng-controller="GridTestController as gridCtrl">
+          <bb-tile bb-tile-header="'Tile with loading grid'">
+            <bb-grid bb-grid-options="gridCtrl.gridOptions3">
+            </bb-grid>
+          </bb-tile>
+        </div>
+    </div>
     </div>
 </div>
