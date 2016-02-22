@@ -35,7 +35,8 @@
                 .webdrivercss(pageName, [
                     {
                         name: options.screenshotName,
-                        elem: options.selector
+                        elem: options.selector,
+                        screenWidth: options.screenWidth
                     }
                 ], function (err, res) {
                     expect(err).toBe(undefined);
