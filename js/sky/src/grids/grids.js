@@ -773,6 +773,10 @@
                             }
 
                             function getSortable() {
+                                /*  The clone option for jquery ui clones the element that is being dragged.
+                                    This prevents the click event from being invoked while users are reordering
+                                    columns http://api.jqueryui.com/sortable/#option-helper
+                                */
                                 var sortable = {
                                     update: gridColumnsReordered,
                                     options: {
