@@ -1312,6 +1312,8 @@ describe('Grid directive', function () {
             expect($scope.locals.gridOptions.selectedColumnIds[1]).toBe(1);
             expect($scope.locals.gridOptions.selectedColumnIds[2]).toBe(3);
 
+            expect(tableEl[0].p.sortable.options.helper).toBe('clone');
+
             headerEl = getHeaders(el);
 
             expect(headerEl[0].style.width).toBe('150px');
