@@ -101,6 +101,7 @@
     margin-bottom: 0;
     padding: $padding;
     outline-offset: -5px;
+    table-layout: fixed;
     text-align: left;
     width: 100%;
 
@@ -114,6 +115,7 @@
     font-weight: normal;
     padding-right: $padding;
     vertical-align: middle;
+    word-wrap: break-word;
 }
 
 .bb-checklist-list-col-checkbox {

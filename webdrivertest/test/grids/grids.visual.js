@@ -1,6 +1,6 @@
 /*global describe, it, browser, beforeEach, require */
 
-describe('grids', function () {
+describe('bb-grid component', function () {
     'use strict';
 
     var common,
@@ -12,7 +12,7 @@ describe('grids', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('should take screenshot of the standard grid', function (done) {
+    it('should match the baseline screenshot of the standard grid', function (done) {
         var browserResult,
             result;
 
@@ -32,7 +32,7 @@ describe('grids', function () {
         });
     });
 
-    it('should take a screenshot of the wait grid', function (done) {
+    it('should match the baseline screenshot of the grid while wait is invoked', function (done) {
         var browserResult,
             result;
 
@@ -52,7 +52,7 @@ describe('grids', function () {
         });
     });
 
-    it('should take a screenshot of the loading grid', function (done) {
+    it('should match the baseline screenshort of a loading grid', function (done) {
         var browserResult,
             result;
 
@@ -72,7 +72,7 @@ describe('grids', function () {
         });
     });
 
-    it('should take a screenshot of the paged grid', function (done) {
+    it('should match the baseline screenshot of a grid with pagination', function (done) {
         var browserResult,
             result;
 
@@ -92,7 +92,27 @@ describe('grids', function () {
         });
     });
 
-    it('should takes screenshot of all filters', function (done) {
+    it('should match the baseline screenshot of a grid with the column chooser open', function (done) {
+        var browserResult;
+
+        browserResult = browser
+            .url('/grids/fixtures/test.full.html')
+            .click('button.show-grid')
+            .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
+            .click('.bb-column-picker-btn')
+            .waitForVisible('.modal-content');
+
+        common.compareScreenshot({
+            browserResult: browserResult,
+            prefix: options.prefix,
+            screenshotName: 'grids_columnchooser',
+            selector: '.modal-content',
+            screenWidth: [1280, 480],
+            done: done
+        });
+    });
+
+    it('match a baseline screenshot of a grid with filters', function (done) {
         var browserResult;
 
         browserResult = browser
@@ -113,7 +133,7 @@ describe('grids', function () {
         });
     });
 
-    it('should scroll the screen with the filter open', function (done) {
+    it('match a baseline screenshot while a grid with filters open is scrolled', function (done) {
         var browserResult;
 
         browserResult = browser
@@ -133,7 +153,7 @@ describe('grids', function () {
         });
     });
 
-    it('should have active inline filters', function (done) {
+    it('should match a baseline screenshot with a grid that has active inline filters', function (done) {
         var browserResult;
 
         browserResult = browser
@@ -153,7 +173,7 @@ describe('grids', function () {
         });
     });
 
-    it('should have multiselect', function (done) {
+    it('should match a baseline screenshot of a grid with multiselect', function (done) {
         var browserResult;
 
         browserResult = browser
