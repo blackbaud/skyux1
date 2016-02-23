@@ -52,6 +52,26 @@ describe('grids', function () {
         });
     });
 
+    it('should take a screenshot of the loading grid', function (done) {
+        var browserResult,
+            result;
+
+        browserResult = browser
+            .url('/grids/fixtures/test.full.html')
+            .click('button.show-grid-loading');
+
+        result = common.moveCursorOffScreen(browserResult)
+            .waitForVisible('#screenshot-grid-loading .bb-filter-btn', 20000);
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: 'grids_loading',
+            selector: '#screenshot-grid-loading',
+            done: done
+        });
+    });
+
     it('should take a screenshot of the paged grid', function (done) {
         var browserResult,
             result;
