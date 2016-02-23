@@ -107,7 +107,7 @@ describe('bb-grid component', function () {
             prefix: options.prefix,
             screenshotName: 'grids_columnchooser',
             selector: '.modal-content',
-            screenWidth: [1280, 480],
+            screenWidth: [480],
             done: done
         });
     });
