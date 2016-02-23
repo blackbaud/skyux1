@@ -257,6 +257,13 @@
                     id: 5,
                     name: 'mydate',
                     width_all: 200
+                },
+                {
+                    caption: 'Caption with reaaaaaaaaaaly long name like reeeeediculous',
+                    jsonmap: 'long',
+                    name: 'long',
+                    id: 6,
+                    description: 'This description is long tooo like it is the longest thing I have ever seen.'
                 }
             ],
             data: dataSetBand,

@@ -98,6 +98,7 @@
     display: table;
     margin-bottom: 0;
     padding: $padding;
+    table-layout: fixed;
     width: 100%;
 
     &:last-child {
@@ -110,6 +111,7 @@
     font-weight: normal;
     padding-right: $padding;
     vertical-align: middle;
+    word-wrap: break-word;
 }
 
 .bb-checklist-list-col-checkbox {
