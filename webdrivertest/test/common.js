@@ -1,4 +1,6 @@
+/*jshint jasmine: true */
 /* global module, require */
+
 (function () {
     'use strict';
     var initWebdriverCss = function (browser, options, done) {
@@ -24,5 +26,25 @@
         }).call(done);
     };
 
-    module.exports.initWebdriverCss = initWebdriverCss;
+    module.exports = {
+        initWebdriverCss: initWebdriverCss,
+        compareScreenshot: function (options) {
+            var pageName = options.prefix + options.screenshotName + '_full';
+
+            options.browserResult
+                .webdrivercss(pageName, [
+                    {
+                        name: options.screenshotName,
+                        elem: options.selector,
+                        screenWidth: options.screenWidth
+                    }
+                ], function (err, res) {
+                    expect(err).toBe(undefined);
+                    expect(res[options.screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+                }).call(options.done);
+        },
+        moveCursorOffScreen: function (browser) {
+            return browser.moveToObject('body', 0, 0);
+        }
+    };
 }());

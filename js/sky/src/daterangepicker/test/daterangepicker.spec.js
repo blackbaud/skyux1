@@ -9,7 +9,10 @@ describe('Date range picker', function () {
         $rootScope,
         $timeout,
         bbDateRangePicker,
-        bbResources;
+        bbResources,
+        everyFourYearsType = 1001,
+        customCaption = 'Every four years',
+        customDescription = '{0} for every four years';
 
     beforeEach(module(
         'ngMock',
@@ -29,6 +32,15 @@ describe('Date range picker', function () {
 
     function getSpecificDateOption(el) {
         return el.find('option[value="number:19"]');
+    }
+
+    function getDateRangeTypeInfo(dateRangeType) {
+        if (dateRangeType === everyFourYearsType) {
+            return {
+                caption: customCaption,
+                description: customDescription
+            };
+        }
     }
 
     describe('directive', function () {
@@ -88,7 +100,57 @@ describe('Date range picker', function () {
             expect(getSpecificDateOption(el).length).toBe(0);
         });
 
+        it('should allow the use of custom date ranges', function () {
 
+            var $scope = $rootScope.$new(),
+                el,
+                availableTypes,
+                p,
+                selectEl,
+                customRangeHtml = '<bb-date-range-picker bb-date-range-picker-value="pickerValue" ' +
+                                  'bb-date-range-picker-options="dateRangePickerOptions"' +
+                                  '></bb-date-range-picker>';
+
+
+            el = $compile(customRangeHtml)($scope);
+            $scope.pickerValue = {
+                dateRangeType: everyFourYearsType
+            };
+            availableTypes = bbDateRangePicker.getDateRangeOptions(
+                {
+                    includeDefault: true
+                });
+
+            availableTypes.push(everyFourYearsType);
+
+
+
+            $scope.dateRangePickerOptions = {
+                availableDateRangeTypes: availableTypes,
+                getDateRangeTypeInfo: getDateRangeTypeInfo
+            };
+
+            $scope.$digest();
+
+            selectEl = el.find('select');
+
+            expect(selectEl.find('option:selected')).toHaveText(customCaption);
+
+            for (p in bbDateRangePicker.dateRangeTypes) {
+                if (bbDateRangePicker.dateRangeTypes.hasOwnProperty(p)) {
+                    if (p !== 'SPECIFIC_RANGE') {
+                        $scope.pickerValue = {dateRangeType: bbDateRangePicker.dateRangeTypes[p]};
+                        $scope.$apply();
+
+                        expect(selectEl.find('option:selected')).toHaveText(
+                            bbDateRangePicker.getDateRangeTypeCaption(bbDateRangePicker.dateRangeTypes[p])
+                        );
+                    }
+                }
+            }
+
+            expect(getSpecificDateOption(el).length).toBe(0);
+        });
 
         function getFormatErrEl(el) {
             return el.find('.bb-date-range-picker-date-format-error');
@@ -280,6 +342,15 @@ describe('Date range picker', function () {
                     }
                 }
             });
+
+            it('should return expected caption when custom date range type function is provided', function () {
+                expect(bbDateRangePicker.getDateRangeTypeCaption(everyFourYearsType, getDateRangeTypeInfo)).toBe(customCaption);
+                expect(bbDateRangePicker.getDateRangeTypeCaption({dateRangeType: everyFourYearsType}, getDateRangeTypeInfo)).toBe(customCaption);
+            });
+
+            it('should return empty string when a custom date range type does not have an associated caption', function () {
+                expect(bbDateRangePicker.getDateRangeTypeCaption(1005, getDateRangeTypeInfo)).toBe('');
+            });
         });
 
         describe('get filter description method', function () {
@@ -296,11 +367,98 @@ describe('Date range picker', function () {
                     if (dateRangeTypes.hasOwnProperty(p)) {
                         expectedDescription = bbResources['date_range_picker_filter_description_' + p.toLowerCase()];
 
-                        //expect(bbDateRangePicker.getDateRangeFilterDescription(dateRangeTypes[p])).toBe(expectedDescription);
+                        expect(bbDateRangePicker.getDateRangeFilterDescription(dateRangeTypes[p])).toBe(expectedDescription);
                         expect(bbDateRangePicker.getDateRangeFilterDescription({dateRangeType: dateRangeTypes[p]})).toBe(expectedDescription);
                     }
                 }
             });
+
+            it('should return expected description when custom date range type function is provided', function () {
+                expect(bbDateRangePicker.getDateRangeFilterDescription(everyFourYearsType, getDateRangeTypeInfo)).toBe(customDescription);
+                expect(bbDateRangePicker.getDateRangeFilterDescription({dateRangeType: everyFourYearsType}, getDateRangeTypeInfo)).toBe(customDescription);
+            });
+
+            it('should return empty string when a custom date range type does not have an associated description', function () {
+                expect(bbDateRangePicker.getDateRangeFilterDescription(1005, getDateRangeTypeInfo)).toBe('');
+            });
+        });
+
+        describe('getDateRangeOptions function', function () {
+            var defaultOptions,
+                pastOptions,
+                specificOption;
+            beforeEach(function () {
+                defaultOptions = [
+                    bbDateRangePicker.dateRangeTypes.AT_ANY_TIME,
+                    bbDateRangePicker.dateRangeTypes.YESTERDAY,
+                    bbDateRangePicker.dateRangeTypes.TODAY,
+                    bbDateRangePicker.dateRangeTypes.TOMORROW,
+                    bbDateRangePicker.dateRangeTypes.LAST_WEEK,
+                    bbDateRangePicker.dateRangeTypes.THIS_WEEK,
+                    bbDateRangePicker.dateRangeTypes.NEXT_WEEK,
+                    bbDateRangePicker.dateRangeTypes.LAST_MONTH,
+                    bbDateRangePicker.dateRangeTypes.THIS_MONTH,
+                    bbDateRangePicker.dateRangeTypes.NEXT_MONTH,
+                    bbDateRangePicker.dateRangeTypes.LAST_QUARTER,
+                    bbDateRangePicker.dateRangeTypes.THIS_QUARTER,
+                    bbDateRangePicker.dateRangeTypes.NEXT_QUARTER,
+                    bbDateRangePicker.dateRangeTypes.LAST_CALENDAR_YEAR,
+                    bbDateRangePicker.dateRangeTypes.THIS_CALENDAR_YEAR,
+                    bbDateRangePicker.dateRangeTypes.NEXT_CALENDAR_YEAR,
+                    bbDateRangePicker.dateRangeTypes.LAST_FISCAL_YEAR,
+                    bbDateRangePicker.dateRangeTypes.THIS_FISCAL_YEAR,
+                    bbDateRangePicker.dateRangeTypes.NEXT_FISCAL_YEAR
+                ];
+                pastOptions = [
+                    bbDateRangePicker.dateRangeTypes.AT_ANY_TIME,
+                    bbDateRangePicker.dateRangeTypes.YESTERDAY,
+                    bbDateRangePicker.dateRangeTypes.TODAY,
+                    bbDateRangePicker.dateRangeTypes.LAST_WEEK,
+                    bbDateRangePicker.dateRangeTypes.THIS_WEEK,
+                    bbDateRangePicker.dateRangeTypes.LAST_MONTH,
+                    bbDateRangePicker.dateRangeTypes.THIS_MONTH,
+                    bbDateRangePicker.dateRangeTypes.LAST_QUARTER,
+                    bbDateRangePicker.dateRangeTypes.THIS_QUARTER,
+                    bbDateRangePicker.dateRangeTypes.LAST_CALENDAR_YEAR,
+                    bbDateRangePicker.dateRangeTypes.THIS_CALENDAR_YEAR,
+                    bbDateRangePicker.dateRangeTypes.LAST_FISCAL_YEAR,
+                    bbDateRangePicker.dateRangeTypes.THIS_FISCAL_YEAR
+                ];
+                specificOption = [
+                    bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE
+                ];
+            });
+
+
+
+            it('should return default options when the include default flag is set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions({includeDefault: true})).toEqual(defaultOptions);
+            });
+
+            it('should return past options when the include past flag is set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions({includePast: true})).toEqual(pastOptions);
+            });
+
+            it('should return specific date option when the include specific flag is set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions({includeSpecific: true})).toEqual([bbDateRangePicker.dateRangeTypes.AT_ANY_TIME, bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE]);
+            });
+
+            it('should return default options when default and past flags are set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions({includeDefault: true, includePast: true})).toEqual(defaultOptions);
+            });
+
+            it('should return default and specific options when both flags are set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions({includeDefault: true, includeSpecific: true})).toEqual(defaultOptions.concat(specificOption));
+            });
+
+            it('should return past and specific options when both flags are set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions({includePast: true, includeSpecific: true})).toEqual(pastOptions.concat(specificOption));
+            });
+
+            it('should return at any time when no flags are set', function () {
+                expect(bbDateRangePicker.getDateRangeOptions()).toEqual([bbDateRangePicker.dateRangeTypes.AT_ANY_TIME]);
+            });
+            
         });
     });
 });
