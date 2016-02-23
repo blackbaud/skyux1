@@ -1,6 +1,6 @@
 ---
 name: Select Field
-icon: question
+icon: sort
 summary: Select field description.
 ---
 
