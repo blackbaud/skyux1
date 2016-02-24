@@ -22,9 +22,10 @@
   <bb-checklist
     bb-checklist-items="selectFieldCtrl.listItems"
     bb-checklist-include-search="true"
-    bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
     bb-checklist-mode="list"
-    bb-checklist-filter-local>
+    bb-checklist-filter-callback="selectFieldCtrl.onSearch"
+    bb-checklist-is-loading="selectFieldCtrl.loadingSearch"
+    bb-checklist-selected-items="selectFieldCtrl.selectedItems">
   </bb-checklist>
 </script>
 <script type="text/ng-template" id="demo/selectfield/selectfieldpickersingle.html">

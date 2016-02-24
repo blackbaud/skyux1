@@ -17,7 +17,7 @@
       <button type="button" class="btn btn-link" data-bbauto-field="ChecklistClear" ng-click="bbChecklist.clear()">{{'checklist_clear_all' | bbResources}}</button>
     </div>
   </div>
-  <div class="bb-checklist-wrapper" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">
+  <div class="bb-checklist-wrapper" bb-wait="bbChecklist.bbChecklistIsLoading" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">
     <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
       <div ng-switch="bbChecklist.isSingleSelect()">
         <div ng-switch-when="true">

@@ -21,7 +21,8 @@
                 bbChecklistAutomationField: '=',
                 bbChecklistCategories: '=',
                 bbChecklistMode: '@',
-                bbChecklistSelectStyle: '@'
+                bbChecklistSelectStyle: '@',
+                bbChecklistIsLoading: '='
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',

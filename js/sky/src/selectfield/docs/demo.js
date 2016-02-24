@@ -3,10 +3,40 @@
 (function () {
     'use strict';
 
-    function SelectFieldTestController() {
-        var vm = this;
+    function SelectFieldTestController($timeout) {
+        var vm = this,
+            searchableItems;
 
-        vm.listItems = [
+        function loadInitialValues() {
+            vm.listItems = searchableItems.slice(0, 6);
+        }
+
+        function loadItems(searchText) {
+            var filteredItems = [],
+                i;
+
+            if (!searchText) {
+                loadInitialValues();
+            } else {
+                for (i = 0; i < searchableItems.length; i++) {
+                    if (!searchText || searchableItems[i].title.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 || searchableItems[i].description.toLowerCase().indexOf(searchText.toLowerCase()) >= 0) {
+                        filteredItems.push({ title: searchableItems[i].title, description: searchableItems[i].description });
+                    }
+                }
+
+                vm.listItems = filteredItems;
+            }
+        }
+
+        vm.onSearch = function (args) {
+            vm.loadingSearch = true;
+            $timeout(function () {
+                loadItems(args.searchText);
+                vm.loadingSearch = false;
+            }, 2000);
+        };
+
+        searchableItems = [
             {
                 title: 'Constituent summary',
                 description: 'Summary information about the constituent who gave the gift',
@@ -36,12 +66,77 @@
                 title: 'Item 2',
                 description: 'This makes the list longer',
                 category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1a',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1b',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1c',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1d',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1e',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1f',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1g',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1h',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1i',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1j',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
+            },
+            {
+                title: 'Item 1k',
+                description: 'This makes the list longer',
+                category: 'Miscellaneous'
             }
+
         ];
+
+        loadInitialValues();
 
         vm.selectedItems = vm.listItems.slice(0, 2);
         vm.selectedSingleItems = [vm.listItems[1]];
     }
+
+    SelectFieldTestController.$inject = ['$timeout'];
 
     angular.module('stache')
         .controller('SelectFieldTestController', SelectFieldTestController);
