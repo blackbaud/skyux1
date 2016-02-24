@@ -1,6 +1,6 @@
 <button type="button" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">
   <div class="bb-select-field-single-inner">
-    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}</div>
+    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>
     <div class="bb-select-field-single-icon"><i class="fa fa-sort"></i></div>
   </div>
 </button>

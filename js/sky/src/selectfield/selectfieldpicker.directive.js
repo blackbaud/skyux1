@@ -58,6 +58,10 @@
                     cleanup();
                 }
 
+                if (angular.isFunction(bbSelectField.bbSelectFieldClick)) {
+                    bbSelectField.bbSelectFieldClick();
+                }
+
                 modalInstance = bbModal.open({
                     scope: scope,
                     templateUrl: 'sky/templates/selectfield/selectfieldpicker.directive.html'

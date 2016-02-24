@@ -20,7 +20,7 @@
             } else {
                 for (i = 0; i < searchableItems.length; i++) {
                     if (!searchText || searchableItems[i].title.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 || searchableItems[i].description.toLowerCase().indexOf(searchText.toLowerCase()) >= 0) {
-                        filteredItems.push({ title: searchableItems[i].title, description: searchableItems[i].description });
+                        filteredItems.push({ title: searchableItems[i].title, description: searchableItems[i].description, category: searchableItems[i].category });
                     }
                 }
 
@@ -35,6 +35,8 @@
                 vm.loadingSearch = false;
             }, 2000);
         };
+
+        vm.loadInitialValues = loadInitialValues;
 
         searchableItems = [
             {
@@ -133,7 +135,7 @@
         loadInitialValues();
 
         vm.selectedItems = vm.listItems.slice(0, 2);
-        vm.selectedSingleItems = [vm.listItems[1]];
+        //vm.selectedSingleItems = [vm.listItems[1]];
     }
 
     SelectFieldTestController.$inject = ['$timeout'];

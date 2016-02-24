@@ -3,8 +3,11 @@
     <h3>Multi-select mode</h3>
     <bb-select-field
         bb-select-field-selected-items="selectFieldCtrl.selectedItems"
-        bb-select-field-text="Pick some values">
-      <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
+        bb-select-field-text="Pick some values"
+        bb-select-field-click="selectFieldCtrl.loadInitialValues()">
+      <bb-select-field-picker
+      bb-select-field-picker-header="Select multiple values"
+      bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
       </bb-select-field-picker>
     </bb-select-field>
   </div>
@@ -12,6 +15,7 @@
     <h3>Single-select mode</h3>
     <bb-select-field
         bb-select-field-selected-items="selectFieldCtrl.selectedSingleItems"
+        bb-select-field-text="Pick a value"
         bb-select-field-style="single">
       <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
       </bb-select-field-picker>
@@ -24,8 +28,7 @@
     bb-checklist-include-search="true"
     bb-checklist-mode="list"
     bb-checklist-filter-callback="selectFieldCtrl.onSearch"
-    bb-checklist-is-loading="selectFieldCtrl.loadingSearch"
-    bb-checklist-selected-items="selectFieldCtrl.selectedItems">
+    bb-checklist-is-loading="selectFieldCtrl.loadingSearch">
   </bb-checklist>
 </script>
 <script type="text/ng-template" id="demo/selectfield/selectfieldpickersingle.html">
