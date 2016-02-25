@@ -4,12 +4,29 @@
     'use strict';
 
     function bbSelectField() {
+        function link($scope, el, attrs, ctrls) {
+            if (ctrls[0] && ctrls[1] && attrs.required) {
+                ctrls[1].$validators.required = function () {
+                    return angular.isDefined(ctrls[0].bbSelectFieldSelectedItems) && ctrls[0].bbSelectFieldSelectedItems.length > 0;
+                };
+
+                $scope.$watchCollection(
+                    function () {
+                        return ctrls[0].bbSelectFieldSelectedItems;
+                    },
+                    function () {
+                        ctrls[1].$validate();
+                    }
+                );
+            }
+        }
+
         return {
             require: ['bbSelectField', 'ngModel'],
             restrict: 'E',
             bindToController: {
                 bbSelectFieldClick: '&',
-                bbSelectFieldSelectedItems: '=',
+                bbSelectFieldSelectedItems: '=ngModel',
                 bbSelectFieldStyle: '@',
                 bbSelectFieldText: '@'
             },
@@ -17,7 +34,8 @@
             controllerAs: 'bbSelectField',
             scope: true,
             templateUrl: 'sky/templates/selectfield/selectfield.directive.html',
-            transclude: true
+            transclude: true,
+            link: link
         };
     }
 

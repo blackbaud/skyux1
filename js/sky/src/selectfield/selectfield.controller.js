@@ -45,7 +45,7 @@
 
             /*istanbul ignore else sanity check */
             if (angular.isArray(selectedItems)) {
-                countFormatted = $filter('bbAutonumeric', selectedItems.length);
+                countFormatted = $filter('bbAutonumeric')(selectedItems.length);
 
                 return bbFormat.formatText(bbResources.selectfield_summary_text, countFormatted);
             }

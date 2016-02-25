@@ -1,26 +1,46 @@
-<div ng-controller="SelectFieldTestController as selectFieldCtrl" class="row">
-  <div class="col-xs-12 col-md-6 col-lg-4">
-    <h3>Multi-select mode</h3>
-    <bb-select-field
-        bb-select-field-selected-items="selectFieldCtrl.selectedItems"
-        bb-select-field-text="Pick some values"
-        bb-select-field-click="selectFieldCtrl.loadInitialValues()">
-      <bb-select-field-picker
-      bb-select-field-picker-header="Select multiple values"
-      bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
-      </bb-select-field-picker>
-    </bb-select-field>
-  </div>
-  <div class="col-xs-12 col-md-6 col-lg-4">
-    <h3>Single-select mode</h3>
-    <bb-select-field
-        bb-select-field-selected-items="selectFieldCtrl.selectedSingleItems"
-        bb-select-field-text="Pick a value"
-        bb-select-field-style="single">
-      <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
-      </bb-select-field-picker>
-    </bb-select-field>
-  </div>
+<div ng-controller="SelectFieldTestController as selectFieldCtrl">
+  <form name="selectFieldCtrl.selectForm">
+    <div class="row">
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <label for="mutliSelect" class="control-label required">
+          Multi-select mode
+        </label>
+        <bb-select-field
+          ng-model="selectFieldCtrl.selectedItems"
+          name="multiSelect"
+          bb-select-field-text="Pick some values"
+          bb-select-field-click="selectFieldCtrl.loadInitialValues()"
+          required>
+          <bb-select-field-picker
+          bb-select-field-picker-header="Select multiple values"
+          bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
+          </bb-select-field-picker>
+        </bb-select-field>
+        <ng-messages for="selectFieldCtrl.selectForm.multiSelect.$error" class="text-danger">
+          <ng-message when="required">Multi select field is required</ng-message>
+        </ng-messages>
+      </div>
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <label for="singleSelect" class="control-label required">
+          Single-select mode
+        </label>
+        <bb-select-field
+          ng-model="selectFieldCtrl.selectedSingleItems"
+          name="singleSelect"
+          bb-select-field-text="Pick a value"
+          bb-select-field-style="single"
+          required>
+          <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
+          </bb-select-field-picker>
+        </bb-select-field>
+        <ng-messages for="selectFieldCtrl.selectForm.singleSelect.$error" class="text-danger">
+          <ng-message when="required">Single select field is required</ng-message>
+        </ng-messages>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" ng-disabled="!selectFieldCtrl.selectForm.$valid">Submit select field</button>
+  </form>
+
 </div>
 <script type="text/ng-template" id="demo/selectfield/selectfieldpicker.html">
   <bb-checklist

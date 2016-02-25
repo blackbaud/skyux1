@@ -15,6 +15,7 @@ partial_sky_js: <%= stache.config.includes %>partial-sky-js.hbs
 modules:
   - stache
   - skyuxDemo
+  - ngMessages
 files:
   js:
     - /js/KitchenSink.js

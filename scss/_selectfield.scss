@@ -4,6 +4,10 @@
     width: 100%;
 }
 
+bb-select-field.ng-invalid .bb-select-field-single {
+  @include field-invalid;
+}
+
 .bb-select-field-multiple-item,
 .bb-select-field-single-inner {
     // The select field "inner" class is needed because setting display: flex on a button element doesn't work
@@ -32,6 +36,7 @@
 }
 
 .bb-select-field-multiple {
+  display: block;
     &:hover,
     &:active,
     &:focus {
