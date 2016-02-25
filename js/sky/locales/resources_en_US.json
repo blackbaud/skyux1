@@ -471,6 +471,10 @@
         "_description": "The default header text for the select field picker directive when the user is allowed to select more than one value (plural)",
         "message": "Select values"
     },
+    "selectfieldpicker_clear": {
+      "_description": "Text displayed on the button in single select mode to clear selection and close form",
+      "message": "Clear selection"
+    },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",
         "message": "Finish"

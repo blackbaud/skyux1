@@ -81,6 +81,14 @@
                 }
             };
 
+            vm.clearClick = function () {
+                /*istanbul ignore else sanity check */
+                if (modalInstance) {
+                    selectedItems = [];
+                    modalInstance.close('save');
+                }
+            };
+
             scope.$on('bbPickerReady', function (e, args) {
                 selectedItems = bbSelectField.getSelectedItems();
 
