@@ -16,7 +16,7 @@
           bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
           </bb-select-field-picker>
         </bb-select-field>
-        <ng-messages for="selectFieldCtrl.selectForm.multiSelect.$error" class="text-danger">
+        <ng-messages for="selectFieldCtrl.selectForm.multiSelect.$error" class="text-danger" ng-show="selectFieldCtrl.selectForm.multiSelect.$touched">
           <ng-message when="required">Multi select field is required</ng-message>
         </ng-messages>
       </div>
@@ -33,7 +33,7 @@
           <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
           </bb-select-field-picker>
         </bb-select-field>
-        <ng-messages for="selectFieldCtrl.selectForm.singleSelect.$error" class="text-danger">
+        <ng-messages for="selectFieldCtrl.selectForm.singleSelect.$error" class="text-danger" ng-show="selectFieldCtrl.selectForm.singleSelect.$touched">
           <ng-message when="required">Single select field is required</ng-message>
         </ng-messages>
       </div>

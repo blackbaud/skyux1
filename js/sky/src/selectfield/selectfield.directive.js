@@ -18,6 +18,10 @@
                         ctrls[1].$validate();
                     }
                 );
+
+                ctrls[0].setModelTouched = function () {
+                    ctrls[1].$setTouched();
+                };
             }
         }
 

@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-link bb-select-field-multiple" ng-click="bbSelectField.selectFieldClick()">
+<button type="button" class="btn btn-link bb-select-field-multiple" ng-blur="bbSelectField.setModelTouched()" ng-click="bbSelectField.selectFieldClick();">
   <i class="fa fa-plus-circle"></i> {{bbSelectField.bbSelectFieldText}}
 </button>
 <div>
@@ -7,7 +7,7 @@
       <div class="bb-select-field-multiple-item-title">
         {{selectedItem.title}}
       </div>
-      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.remove(selectedItem)">
+      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.remove(selectedItem); bbSelectField.setModelTouched()">
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">{{'selectfield_remove' | bbResources}}</span>
       </button>
@@ -16,7 +16,7 @@
       <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">
         {{bbSelectField.getSummaryCountText()}}
       </div>
-      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.removeAll()">
+      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.removeAll(); bbSelectField.setModelTouched()">
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">{{'selectfield_remove' | bbResources}}</span>
       </button>

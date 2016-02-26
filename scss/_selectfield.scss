@@ -4,7 +4,7 @@
     width: 100%;
 }
 
-bb-select-field.ng-invalid .bb-select-field-single {
+bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
   @include field-invalid;
 }
 
