@@ -11,16 +11,18 @@ describe('Checklist directive', function () {
         checklistHtml,
         items,
         locals,
-        resources;
+        resources,
+        bbWait;
 
     beforeEach(module('ngMock'));
     beforeEach(module('sky.checklist', 'sky.highlight', 'sky.templates'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$parse_, _$timeout_, bbResources) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$parse_, _$timeout_, bbResources, _bbWait_) {
         $compile = _$compile_;
         $scope = _$rootScope_;
         $parse = _$parse_;
         $timeout = _$timeout_;
+        bbWait = _bbWait_;
 
         resources = bbResources;
         items = [
@@ -420,7 +422,7 @@ describe('Checklist directive', function () {
 
         el.remove();
     });
-    
+
     it('should not match search text to anything other than title and description', function () {
         var el,
             rowEl,
@@ -462,11 +464,11 @@ describe('Checklist directive', function () {
 
         // The first item should be filtered out even though the category would match the search text.
         expect(rowEl.length).toBe(1);
-        
+
         el.find('.bb-checklist-search-box').val('b').change();
-        
+
         rowEl = el.find('.bb-checklist-row');
-        
+
         // The second item should be filtered out even though the hidden property would match the search text.
         expect(rowEl.length).toBe(1);
 
@@ -626,7 +628,9 @@ describe('Checklist directive', function () {
                 'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
                 'bb-checklist-no-items-message="\'No items found\'" ' +
                 'bb-checklist-include-search="useSearch" ' +
-                'bb-checklist-mode="list">' +
+                'bb-checklist-mode="list" ' +
+                'bb-checklist-is-loading="loading" ' +
+                '>' +
             '</bb-checklist>',
             testItems = [
                 {
@@ -723,6 +727,30 @@ describe('Checklist directive', function () {
 
             validateRow(0, 'title1');
             validateRow(1, 'title2');
+        });
+
+        it('should show wait indication when bbChecklistIsLoading is set to true', function () {
+            var el,
+                beginSpy,
+                endSpy;
+
+            $scope.items = testItems;
+            beginSpy = spyOn(bbWait, 'beginElWait').and.callThrough();
+
+            el = $compile(checklistHtml)($scope);
+            $scope.$digest();
+
+            $scope.loading = true;
+            $scope.$digest();
+
+            expect(beginSpy).toHaveBeenCalled();
+
+            endSpy = spyOn(bbWait, 'endElWait').and.callThrough();
+
+            $scope.loading = false;
+            $scope.$digest();
+
+            expect(endSpy).toHaveBeenCalled();
         });
 
         it('should not mangle the list item text when the Angular bindings contain search text', function () {

@@ -26,13 +26,13 @@
         }
 
         return {
-            require: ['bbSelectField', 'ngModel'],
+            require: ['bbSelectField', '?ngModel'],
             restrict: 'E',
             bindToController: {
-                bbSelectFieldClick: '&',
-                bbSelectFieldSelectedItems: '=ngModel',
-                bbSelectFieldStyle: '@',
-                bbSelectFieldText: '@'
+                bbSelectFieldClick: '&?',
+                bbSelectFieldSelectedItems: '=?ngModel',
+                bbSelectFieldStyle: '@?',
+                bbSelectFieldText: '@?'
             },
             controller: 'BBSelectFieldController',
             controllerAs: 'bbSelectField',

@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global inject, module, $ */
+/*global inject, module, angular, $ */
 
 describe('Select field picker directive', function () {
     'use strict';
@@ -8,7 +8,8 @@ describe('Select field picker directive', function () {
         $animate,
         $compile,
         $rootScope,
-        $templateCache;
+        $templateCache,
+        selectFieldSingleHtml;
 
     function afterModalOpen() {
         $animate.flush();
@@ -111,15 +112,16 @@ describe('Select field picker directive', function () {
     });
 
     describe('single-select', function () {
+
+        selectFieldSingleHtml = '<bb-select-field bb-select-field-style="single" ng-model="selectedItems">' +
+            '<bb-select-field-picker bb-select-field-picker-template="bbSelectFieldPicker/single/test.html"></bb-select-field-picker>' +
+        '</bb-select-field>';
+
         it('should close and set selected items when a value is selected', function () {
             var $scope = $rootScope.$new(),
                 el;
 
-            el = $(
-                '<bb-select-field bb-select-field-style="single">' +
-                    '<bb-select-field-picker bb-select-field-picker-template="bbSelectFieldPicker/single/test.html"></bb-select-field-picker>' +
-                '</bb-select-field>'
-            );
+            el = angular.element(selectFieldSingleHtml);
 
             $scope.items = [
                 {
@@ -143,6 +145,38 @@ describe('Select field picker directive', function () {
 
             expect('.bb-modal').not.toExist();
 
+            el.remove();
+        });
+
+        it('should clear the selection when the clear selection button on the modal is clicked', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            el = angular.element(selectFieldSingleHtml);
+
+            $scope.items = [
+                {
+                    title: 'Title 1'
+                }
+            ];
+
+            el = $compile(el)($scope);
+
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-select-field-single').click();
+
+            afterModalOpen();
+
+            $('.bb-modal button.bb-btn-secondary').click();
+
+            afterModalClose();
+
+            $scope.$digest();
+
+            expect($scope.selectedItems).toEqual([]);
             el.remove();
         });
     });
@@ -182,7 +216,7 @@ describe('Select field picker directive', function () {
                 el;
 
             el = $(
-                '<bb-select-field bb-select-field-style="multiple" bb-select-field-selected-items="selectedItems">' +
+                '<bb-select-field bb-select-field-style="multiple" ng-model="selectedItems">' +
                     '<bb-select-field-picker bb-select-field-picker-template="bbSelectFieldPicker/multiple/test.html"></bb-select-field-picker>' +
                 '</bb-select-field>'
             );

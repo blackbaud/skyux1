@@ -38,7 +38,8 @@
         [
             'sky.check',
             'sky.checklist.controller',
-            'sky.resources'
+            'sky.resources',
+            'sky.wait'
         ]
     )
         .directive('bbChecklist', bbChecklist);

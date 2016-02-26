@@ -29,7 +29,7 @@
         }
 
         /*  If you do not wish to retrieve all the records for the select field at once,
-            you can provide a search function that can fetch items remotely */ 
+            you can provide a search function that can fetch items remotely */
         vm.onSearch = function (args) {
             vm.loadingSearch = true;
             $timeout(function () {
@@ -68,11 +68,6 @@
             },
             {
                 title: 'Item 2',
-                description: 'This makes the list longer',
-                category: 'Miscellaneous'
-            },
-            {
-                title: 'Item 1',
                 description: 'This makes the list longer',
                 category: 'Miscellaneous'
             },
@@ -137,7 +132,7 @@
         loadInitialValues();
 
         vm.selectedItems = vm.listItems.slice(0, 2);
-        //vm.selectedSingleItems = [vm.listItems[1]];
+        vm.selectedSingleItems = [vm.listItems[1]];
     }
 
     SelectFieldTestController.$inject = ['$timeout'];

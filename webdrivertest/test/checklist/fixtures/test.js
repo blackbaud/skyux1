@@ -5,14 +5,15 @@
     angular.module('screenshots', ['sky'])
     .controller('ChecklistTestController', ['$scope', function ($scope) {
         var items,
-            listItems;
-        
+            listItems,
+            listItemsSingle;
+
         items = [
             { column: 'Constituent summary', description: 'Summary information about the constituent who gave the gift' },
             { column: 'Soft credits', description: 'Soft credits for the gift' },
             { column: 'Amount', description: 'Amount of the gift' }
         ];
-        
+
         listItems = [
             {
                 title: 'Constituent summary',
@@ -35,14 +36,18 @@
                 category: 'Miscellaneous'
             }
         ];
-        
+
+        listItemsSingle = listItems.slice();
+
         $scope.locals = {
             selectedListItems: [listItems[1]],
             selectedItems: [items[0]],
+            selectedSingleItem: [listItems[0]],
             onSearch: function () {
                 angular.noop();
             },
             listItems: listItems,
+            listItemsSingle: listItemsSingle,
             items: items
         };
     }]);

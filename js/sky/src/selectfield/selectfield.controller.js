@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    function BBSelectFieldController($scope, bbChecklistUtility, bbFormat, bbResources) {
+    function BBSelectFieldController($scope, bbChecklistUtility, bbFormat, bbResources, $filter) {
         var vm = this;
 
         vm.getFieldInclude = function () {
@@ -40,12 +40,14 @@
         };
 
         vm.getSummaryCountText = function () {
-            var selectedItems = vm.bbSelectFieldSelectedItems;
+            var selectedItems = vm.bbSelectFieldSelectedItems,
+                formattedCount;
 
             /*istanbul ignore else sanity check */
             if (angular.isArray(selectedItems)) {
 
-                return bbFormat.formatText(bbResources.selectfield_summary_text, selectedItems.length);
+                formattedCount = $filter('bbAutonumeric')(selectedItems.length, 'number', true);
+                return bbFormat.formatText(bbResources.selectfield_summary_text, formattedCount);
             }
         };
 
@@ -59,7 +61,7 @@
         /* End "public" API methods (called by child directives) */
     }
 
-    BBSelectFieldController.$inject = ['$scope', 'bbChecklistUtility', 'bbFormat', 'bbResources'];
+    BBSelectFieldController.$inject = ['$scope', 'bbChecklistUtility', 'bbFormat', 'bbResources', '$filter'];
 
     angular.module('sky.selectfield.controller', ['sky.autonumeric', 'sky.checklist.utility'])
         .controller('BBSelectFieldController', BBSelectFieldController);
