@@ -2,23 +2,18 @@
   <form name="selectFieldCtrl.selectForm">
     <div class="row">
       <div class="col-xs-12 col-md-6 col-lg-4">
-        <label for="mutliSelect" class="control-label required">
+        <label for="mutliSelect" class="control-label">
           Multi-select mode
         </label>
         <bb-select-field
           ng-model="selectFieldCtrl.selectedItems"
-          name="multiSelect"
           bb-select-field-text="Pick some values"
-          bb-select-field-click="selectFieldCtrl.loadInitialValues()"
-          required>
+          bb-select-field-click="selectFieldCtrl.loadInitialValues()">
           <bb-select-field-picker
           bb-select-field-picker-header="Select multiple values"
           bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
           </bb-select-field-picker>
         </bb-select-field>
-        <ng-messages for="selectFieldCtrl.selectForm.multiSelect.$error" class="text-danger" ng-show="selectFieldCtrl.selectForm.multiSelect.$touched">
-          <ng-message when="required">Multi select field is required</ng-message>
-        </ng-messages>
       </div>
       <div class="col-xs-12 col-md-6 col-lg-4">
         <label for="singleSelect" class="control-label required">
@@ -38,7 +33,6 @@
         </ng-messages>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary" ng-disabled="!selectFieldCtrl.selectForm.$valid">Submit select field</button>
   </form>
 
 </div>

@@ -32,6 +32,10 @@
                 var pickerSelectedOff;
 
                 function cleanup() {
+                    if (angular.isFunction(bbSelectField.setModelTouched)) {
+                        bbSelectField.setModelTouched();
+                    }
+
                     if (pickerSelectedOff) {
                         pickerSelectedOff();
                     }

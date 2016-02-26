@@ -28,6 +28,8 @@
             }
         }
 
+        /*  If you do not wish to retrieve all the records for the select field at once,
+            you can provide a search function that can fetch items remotely */ 
         vm.onSearch = function (args) {
             vm.loadingSearch = true;
             $timeout(function () {
