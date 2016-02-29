@@ -31,7 +31,7 @@ describe('daterangepicker', function () {
     it('should match the baseline screenshot when the daterangepicker is using specific dates', function (done) {
         var result;
 
-        result = browser.url('/datepicker/fixtures/test.full.html');
+        result = browser.url('/daterangepicker/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,

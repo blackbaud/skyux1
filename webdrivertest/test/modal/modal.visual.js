@@ -1,29 +1,29 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeEach, require */
 
 describe('modals', function () {
     'use strict';
 
-    var options = {};
+    var options = {},
+        common;
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        common = require('../common');
+        common.initWebdriverCss(browser, options, done);
     });
 
 
     it('should take modal screenshots', function (done) {
-        var screenshotName = 'modal',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/modal/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-modal'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        var result;
+
+        result = browser.url('/modal/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: 'modal',
+            selector: '#screenshot-modal',
+            done: done
+        });
     });
 });
