@@ -1,31 +1,30 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeEach, require */
 
 describe('Page summary', function () {
     'use strict';
 
-    var options = {};
+    var options = {},
+        common;
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        common = require('../common');
+        common.initWebdriverCss(browser, options, done);
     });
 
     function clickTest(screenshotName, visibleComponents, done) {
-        var pageName = options.prefix + 'pagesummary_' + screenshotName;
+        var result;
 
-        browser
-            .url('/pagesummary/fixtures/test.full.html')
-            .setValue('#screenshots-pagesummary-items', visibleComponents.join(','))
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: ('#screenshots-pagesummary')
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
-            .call(done);
+        result = browser.url('/pagesummary/fixtures/test.full.html')
+            .setValue('#screenshots-pagesummary-items', visibleComponents.join(','));
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: ('pagesummary_' + screenshotName),
+            selector: '#screenshots-pagesummary',
+            done: done
+        });
     }
 
     it('should match previous screenshot when all components are present', function (done) {
