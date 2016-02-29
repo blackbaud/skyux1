@@ -11,7 +11,7 @@ describe('buttons', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline buttons screenshot', function (done) {
         var result;
 
         result = browser.url('/buttons/fixtures/test.full.html');

@@ -11,7 +11,7 @@ describe('check', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline check screenshot', function (done) {
         var result;
 
         result = browser.url('/check/fixtures/test.full.html');

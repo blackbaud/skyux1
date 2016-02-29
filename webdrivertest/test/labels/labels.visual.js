@@ -12,7 +12,7 @@ describe('labels', function () {
     });
 
 
-    it('should take label screenshots', function (done) {
+    it('match the baseline label screenshot', function (done) {
         var result;
 
         result = browser.url('/labels/fixtures/test.full.html');

@@ -12,7 +12,7 @@ describe('Alert', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('should match previous screenshot', function (done) {
+    it('should match previous alert screenshot', function (done) {
         var result;
 
         result = browser.url('/alert/fixtures/test.full.html');

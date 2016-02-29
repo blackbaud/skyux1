@@ -12,7 +12,7 @@ describe('file attachments', function () {
     });
 
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline fileattachment screenshot', function (done) {
         var result;
 
         result = browser.url('/fileattachments/fixtures/test.full.html');

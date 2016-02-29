@@ -12,7 +12,7 @@ describe('headers', function () {
     });
 
 
-    it('should take header screenshots', function (done) {
+    it('match the baseline header screenshot', function (done) {
         var result;
 
         result = browser.url('/headers/fixtures/test.full.html');

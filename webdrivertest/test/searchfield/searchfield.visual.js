@@ -11,7 +11,7 @@ describe('searchfield', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('match the baseline screenshot', function (done) {
+    it('match the baseline searchfield screenshot', function (done) {
 
         var result;
 

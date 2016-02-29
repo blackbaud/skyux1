@@ -12,7 +12,7 @@ describe('navbar', function () {
     });
 
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline navbar screenshot', function (done) {
         var result;
 
         result = browser.url('/navbar/fixtures/test.full.html');

@@ -12,7 +12,7 @@ describe('badges', function () {
     });
 
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline badges screenshot', function (done) {
         var result;
 
         result = browser.url('/badges/fixtures/test.full.html');

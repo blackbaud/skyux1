@@ -13,7 +13,7 @@ describe('modals', function () {
     });
 
 
-    it('should take modal screenshots', function (done) {
+    it('match the baseline modal screenshot', function (done) {
         var result;
 
         result = browser.url('/modal/fixtures/test.full.html');

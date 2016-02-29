@@ -1,4 +1,4 @@
-/* global describe, it, browser, beforeEach,  expect, require */
+/* global describe, it, browser, beforeEach, require */
 
 
 describe('Avatar', function () {
@@ -26,15 +26,15 @@ describe('Avatar', function () {
         });
     }
 
-    it('should match previous screenshot where image is available', function (done) {
+    it('should match previous avatar screenshot where image is available', function (done) {
         takeScreenshot('image', done);
     });
 
-    it('should match previous screenshot where image is not available', function (done) {
+    it('should match previous avatar screenshot where image is not available', function (done) {
         takeScreenshot('placeholder', done);
     });
 
-    it('should match previous screenshot where image is not available and the name has only one initial', function (done) {
+    it('should match previous avatarscreenshot where image is not available and the name has only one initial', function (done) {
         takeScreenshot('placeholder-one-initial', done);
     });
 });

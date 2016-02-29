@@ -12,7 +12,7 @@ describe('actionbar', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline actionbar screenshot', function (done) {
         var browserResult;
 
         browserResult = browser

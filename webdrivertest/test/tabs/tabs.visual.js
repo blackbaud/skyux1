@@ -12,7 +12,7 @@ describe('tabs', function () {
     });
 
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline tab screenshot', function (done) {
         var result;
 
         result = browser.url('/tabs/fixtures/test.full.html');

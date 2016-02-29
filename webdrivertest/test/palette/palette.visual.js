@@ -12,7 +12,7 @@ describe('palette', function () {
     });
 
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline palette screenshot', function (done) {
         var result;
 
         result = browser.url('/palette/fixtures/test.full.html');

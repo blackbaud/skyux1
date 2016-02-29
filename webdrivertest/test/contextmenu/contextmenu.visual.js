@@ -12,7 +12,7 @@ describe('contextmenu', function () {
     });
 
     describe('context menu', function () {
-        it('should match the baseline screenshot when closed', function (done) {
+        it('should match the baseline context menu screenshot when closed', function (done) {
             var result;
 
             result = browser.url('/contextmenu/fixtures/test.full.html');
@@ -27,7 +27,7 @@ describe('contextmenu', function () {
 
         });
 
-        it('should match the baseline screenshot when open', function (done) {
+        it('should match the baseline context menu sscreenshot when open', function (done) {
             var result;
 
             result = browser.url('/contextmenu/fixtures/test.full.html')

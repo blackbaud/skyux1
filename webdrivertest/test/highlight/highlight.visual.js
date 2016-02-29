@@ -13,7 +13,7 @@ describe('highlight', function () {
     });
 
 
-    it('should take highlight screenshots', function (done) {
+    it('match the baseline highlight screenshot', function (done) {
         var result;
 
         result = browser.url('/highlight/fixtures/test.full.html');

@@ -27,7 +27,7 @@ describe('Page summary', function () {
         });
     }
 
-    it('should match previous screenshot when all components are present', function (done) {
+    it('should match previous pagesummary screenshot when all components are present', function (done) {
         clickTest(
             'all',
             [
@@ -43,7 +43,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no image is present', function (done) {
+    it('should match previous pagesummary screenshot when no image is present', function (done) {
         clickTest(
             'noimage',
             [
@@ -58,7 +58,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no subtitle is present', function (done) {
+    it('should match previous pagesummary screenshot when no subtitle is present', function (done) {
         clickTest(
             'nosubtitle',
             [
@@ -73,7 +73,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no status is present', function (done) {
+    it('should match previous pagesummary screenshot when no status is present', function (done) {
         clickTest(
             'nostatus',
             [
@@ -88,7 +88,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no key info is present', function (done) {
+    it('should match previous pagesummary screenshot when no key info is present', function (done) {
         clickTest(
             'nokeyinfo',
             [
@@ -103,7 +103,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no additional content is present', function (done) {
+    it('should match previous pagesummary screenshot when no additional content is present', function (done) {
         clickTest(
             'nocontent',
             [
@@ -118,7 +118,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no alert is present', function (done) {
+    it('should match previous pagesummary screenshot when no alert is present', function (done) {
         clickTest(
             'noalert',
             [

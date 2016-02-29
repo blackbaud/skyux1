@@ -12,7 +12,7 @@ describe('pagination', function () {
     });
 
 
-    it('match the baseline screenshot', function (done) {
+    it('match the baseline pagination screenshot', function (done) {
         var result;
 
         result = browser.url('/pagination/fixtures/test.full.html');
@@ -27,7 +27,7 @@ describe('pagination', function () {
 
     });
 
-    it('should match the baseline screenshot when clicked', function (done) {
+    it('should match the baseline pagination screenshot when clicked', function (done) {
         var result;
 
         result = browser.url('/pagination/fixtures/test.full.html')

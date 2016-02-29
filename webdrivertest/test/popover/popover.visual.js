@@ -11,7 +11,7 @@ describe('popover', function () {
         common.initWebdriverCss(browser, options, done);
     });
 
-    it('should match the baseline screenshot when it has a title', function (done) {
+    it('should match the baseline popover screenshot when it has a title', function (done) {
         var result;
 
         result = browser.url('/popover/fixtures/test.full.html')
@@ -26,7 +26,7 @@ describe('popover', function () {
         });
     });
 
-    it('should match the baseline screenshot when it does not have a title', function (done) {
+    it('should match the baseline popover screenshot when it does not have a title', function (done) {
         var result;
 
         result = browser.url('/popover/fixtures/test.full.html')
@@ -42,7 +42,7 @@ describe('popover', function () {
 
     });
 
-    it('should match the baseline screenshot with position top', function (done) {
+    it('should match the baseline popover screenshot with position top', function (done) {
         var result;
 
         result = browser.url('/popover/fixtures/test.full.html')
@@ -57,7 +57,7 @@ describe('popover', function () {
         });
     });
 
-    it('should match the baseline screenshot with position bottom', function (done) {
+    it('should match the baseline popover screenshot with position bottom', function (done) {
         var result;
 
         result = browser.url('/popover/fixtures/test.full.html')
@@ -73,7 +73,7 @@ describe('popover', function () {
 
     });
 
-    it('should match the baseline screenshot with position left', function (done) {
+    it('should match the baseline popover screenshot with position left', function (done) {
         var result;
 
         result = browser.url('/popover/fixtures/test.full.html')
@@ -89,7 +89,7 @@ describe('popover', function () {
 
     });
 
-    it('should match the baseline screenshot with position right', function (done) {
+    it('should match the baseline popover screenshot with position right', function (done) {
         var result;
 
         result = browser.url('/popover/fixtures/test.full.html')

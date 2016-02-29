@@ -12,7 +12,7 @@ describe('repeaters', function () {
     });
 
 
-    it('should match the baseline screenshot', function (done) {
+    it('should match the baseline repeater screenshot', function (done) {
         var result;
 
         result = browser.url('/repeaters/fixtures/test.full.html');
