@@ -1,30 +1,29 @@
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeEach, require */
 
 describe('badges', function () {
     'use strict';
 
-    var options = {};
+    var options = {},
+        common;
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        common = require('../common');
+        common.initWebdriverCss(browser, options, done);
     });
 
 
-    it('should take badge screenshots', function (done) {
-        var screenshotName = 'badges',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/badges/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-badges'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
-            .call(done);
+    it('should match the baseline screenshot', function (done) {
+        var result;
+
+        result = browser.url('/badges/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: 'badges',
+            selector: '#screenshot-badges',
+            done: done
+        });
+
     });
 });
