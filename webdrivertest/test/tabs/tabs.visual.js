@@ -15,7 +15,8 @@ describe('tabs', function () {
     it('should match the baseline tab screenshot', function (done) {
         var result;
 
-        result = browser.url('/tabs/fixtures/test.full.html');
+        result = browser.url('/tabs/fixtures/test.full.html')
+            .moveToObject('#screenshot-tab-2');
 
         common.compareScreenshot({
             browserResult: result,
