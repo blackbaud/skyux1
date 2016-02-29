@@ -57,7 +57,6 @@ describe('Tile', function () {
                 };
             });
         }
-
         function initializeTile($scope, tileId) {
             var el = $compile(
                 '<bb-tile bb-tile-collapsed="tileCollapsed">a</bb-tile>'
