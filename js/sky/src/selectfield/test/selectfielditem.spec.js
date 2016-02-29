@@ -89,8 +89,7 @@ describe('Select field item animation', function () {
     });
 
     it('should remove focus on close button when animating out', function () {
-        var el = $('<div class="bb-select-field-multiple-item">Test <button class="close"></button></div>').appendTo($rootElement);
-
+        var el = $('<div class="bb-select-field-multiple-item">Test <input class="close"></input></div>').appendTo($rootElement);
         $rootScope.$digest();
 
         el.find('.close').focus();
