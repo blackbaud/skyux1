@@ -22,7 +22,7 @@
       <div ng-switch="bbChecklist.isSingleSelect()">
         <div ng-switch-when="true">
           <button ng-repeat="item in bbChecklist.filteredItems" type="button" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}" ng-click="bbChecklist.singleSelectRowClick(item)">
-            <ng-include src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
+            <ng-include class="bb-checklist-list-col" src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
           </button>
         </div>
         <div ng-switch-default>
@@ -30,7 +30,7 @@
             <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">
               <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
             </div>
-            <ng-include src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
+            <ng-include class="bb-checklist-list-col" src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
           </label>
         </div>
       </div>
