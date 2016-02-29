@@ -31,13 +31,17 @@ describe('buttons', function () {
     }
 
     function clickTest(type, done, prefix) {
-        var result = browser.url('/buttons/fixtures/test.full.html');
+        var result,
+            selector = getSelector(type, prefix);
+
+        result = browser.url('/buttons/fixtures/test.full.html').
+                    click(selector);
 
         common.compareScreenshot({
             browserResult: result,
             prefix: options.prefix,
             screenshotName: ('button_' + type + '_click'),
-            selector: getSelector(type, prefix),
+            selector: selector,
             done: done
         });
     }
