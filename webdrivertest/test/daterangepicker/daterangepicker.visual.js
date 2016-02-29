@@ -1,44 +1,44 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, beforeEach, require */
 
 describe('daterangepicker', function () {
     'use strict';
 
-    var options = {};
+    var options = {},
+        common;
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        common = require('../common');
+        common.initWebdriverCss(browser, options, done);
     });
 
 
-    it('should take daterangepickers screenshots', function (done) {
-        var screenshotName = 'daterangepicker',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/daterangepicker/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-daterangepicker'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+    it('should match the baseline screenshot of the daterangepicker', function (done) {
+
+        var result;
+
+        result = browser.url('/daterangepicker/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: 'daterangepicker',
+            selector: '#screenshot-daterangepicker',
+            done: done
+        });
+
     });
 
-    it('should take daterangepicker specific date screenshots', function (done) {
-        var screenshotName = 'daterangepicker_specific',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/daterangepicker/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-daterangepicker-specific'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+    it('should match the baseline screenshot when the daterangepicker is using specific dates', function (done) {
+        var result;
+
+        result = browser.url('/datepicker/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: 'daterangepicker_specific',
+            selector: '#screenshot-daterangepicker-specific',
+            done: done
+        });
     });
 });
