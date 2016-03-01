@@ -1174,6 +1174,32 @@ describe('Grid directive', function () {
             tableEl[0].p.resizeStop(200, 4);
         });
     });
+    
+    it('will emit a `columnsResized` event when columns are resized', function () {
+        var tableEl,
+            resizeHappened = false,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function () {
+            resizeHappened = true;
+        });
+        
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 0);
+        tableEl[0].p.resizeStop(50, 0);
+        
+        expect(resizeHappened).toBe(true);
+
+    });
 
     describe('media breakpoint column resizing', function () {
         it('can have xs, sm, md, and lg breakpoints set', function () {

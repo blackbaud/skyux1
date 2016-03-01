@@ -584,7 +584,8 @@
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-
+                                $scope.$emit("columnsResized");
+                                
                                 return;
                             }
 
