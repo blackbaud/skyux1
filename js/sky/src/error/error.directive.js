@@ -29,8 +29,6 @@
             });
         }
 
-        Controller.$inject = ['$scope'];
-
         function componentFn() {
             function link(scope, el, attrs, ctrls) {
                 var vm = ctrls[0],
@@ -52,11 +50,17 @@
             };
         }
 
-        controllerName = 'BBError' + name + 'Controller';
+        //For now to mess with images
+        if (name !== 'Image') {
 
-        angular.module('sky.error.directive')
-            .controller(controllerName, Controller)
-            .directive('bbError' + name, componentFn);
+            Controller.$inject = ['$scope'];
+
+            controllerName = 'BBError' + name + 'Controller';
+
+            angular.module('sky.error.directive')
+                .controller(controllerName, Controller)
+                .directive('bbError' + name, componentFn);
+        }
     }
 
     function getCtrlPropName(component) {
@@ -114,7 +118,7 @@
         };
     }
 
-    angular.module('sky.error.directive', [])
+    angular.module('sky.error.directive', ['sky.error.image.directive'])
         .controller('BBErrorController', BBErrorController)
         .directive('bbError', bbError);
 
