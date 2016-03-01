@@ -560,6 +560,8 @@
 
                             function resizeStop(newWidth, index) {
                                 var changedWidth;
+                                
+                                $scope.$emit("columnsResized", { newWidth: newWidth, index: index });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
 
@@ -584,7 +586,6 @@
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-                                $scope.$emit("columnsResized");
                                 
                                 return;
                             }
@@ -1365,7 +1366,7 @@
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
-
+                            
                             bbMediaBreakpoints.register(mediaBreakpointHandler);
 
                             tableWrapper.on('scroll', function () {
