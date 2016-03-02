@@ -1511,7 +1511,7 @@ describe('Grid directive', function () {
             expect(topScrollbarDivEl[0].style.width).toBe('600px');
 
         });
-    
+
         it('sets the total column width when no extended column and totalcolumn width exactly the same as the tablewrapperwidth', function () {
             var tableWrapperEl,
                 topScrollbarEl,
