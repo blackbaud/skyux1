@@ -1200,6 +1200,63 @@ describe('Grid directive', function () {
         expect(resizeHappened).toBe(true);
 
     });
+    
+    it('will adjust the column index in the `columnsResized` event when there is a contextmenu', function () {
+        var tableEl,
+            colIndex,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function (event, data) {
+            colIndex = data.index;
+        });
+        
+        locals.gridOptions.getContextMenuItems = getContextMenuItems;
+        
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 2);
+        tableEl[0].p.resizeStop(50, 2);
+        
+        expect(colIndex).toBe(1);
+
+    });
+    
+    it('will adjust the column index in the `columnsResized` event when multiselect and contextmenu is present', function () {
+        var tableEl,
+            colIndex,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function (event, data) {
+            colIndex = data.index;
+        });
+        
+        locals.gridOptions.getContextMenuItems = getContextMenuItems;
+        locals.gridOptions.multiselect = true;
+        
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 2);
+        tableEl[0].p.resizeStop(50, 2);
+        
+        expect(colIndex).toBe(0);
+
+    });
 
     describe('media breakpoint column resizing', function () {
         it('can have xs, sm, md, and lg breakpoints set', function () {
