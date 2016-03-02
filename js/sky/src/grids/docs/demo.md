@@ -87,4 +87,4 @@ To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid
 to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
 reloading the grid with the current data after the event has fired.
   - `loadMoreRows` Fires when a page changes (when using pagination) or a user clicks the 'Load more' button. When a user clicks the 'Load more' button, the event provides a promise. The consumer of the event should resolve the promise with the new data that the grid appends to the existing data. When the event is raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
-  - `reInitGrid` Fire this event within a controller to manually reinitialize of the grid
+  - `reInitGrid` The grid reinitializes itself when it receives this event
