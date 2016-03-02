@@ -51,7 +51,7 @@
         }
 
         //For now to mess with images
-        if (name !== 'Image') {
+        if (name === 'Action') {
 
             Controller.$inject = ['$scope'];
 
@@ -118,7 +118,7 @@
         };
     }
 
-    angular.module('sky.error.directive', ['sky.error.image.directive'])
+    angular.module('sky.error.directive', ['sky.error.image.directive', 'sky.error.title.directive', 'sky.error.description.directive'])
         .controller('BBErrorController', BBErrorController)
         .directive('bbError', bbError);
 

@@ -395,6 +395,14 @@
         "_description": "Text used on the primary button to dismiss the error modal",
         "message": "OK"
     },
+    "error_description_refresh": {
+        "_description": "Text used for the error description to recommend refreshing the page",
+        "message": "Try to refresh this page or come back later."
+    },
+    "error_title_broken": {
+        "_description": "Text used for the error title when something is broken",
+        "message": "Sorry, something went wrong."
+    },
     "file_size_b_plural": {
         "_description": "",
         "message": "{0} bytes"

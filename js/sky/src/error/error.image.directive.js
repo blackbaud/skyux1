@@ -23,6 +23,7 @@
             if (bbError !== null) {
                 bbError.setImage(vm);
             }
+
         }
 
         return {
@@ -31,7 +32,7 @@
             controller: BBErrorImageController,
             controllerAs: 'bbErrorImage',
             bindToController: {
-                errorType: '?@'
+                errorType: '@'
             },
             link: link,
             scope: {},
