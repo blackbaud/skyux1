@@ -320,6 +320,25 @@ describe('Grid directive', function () {
         expect(cellEl.eq(2)).toHaveText('');
 
     });
+    
+    it('reinitializes the grid in response to a reInitGrid event', function () {
+        var gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        locals.gridOptions.columns[0].width_all = 200;
+        locals.gridOptions.columns[1].width_all = 200;
+        locals.gridOptions.columns[2].width_all = 200;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+        
+        expect(el.find("td").eq(0).outerWidth()).toEqual(200);
+
+        locals.gridOptions.columns[0].width_all = 100;
+
+        $scope.$broadcast("reInitGrid");
+        
+        expect(el.find("td").eq(0).outerWidth()).toEqual(100);
+        
+    });
 
     describe('fixed headers', function () {
         it('has the option to fix header and toolbar', function () {
@@ -1492,7 +1511,7 @@ describe('Grid directive', function () {
             expect(topScrollbarDivEl[0].style.width).toBe('600px');
 
         });
-
+    
         it('sets the total column width when no extended column and totalcolumn width exactly the same as the tablewrapperwidth', function () {
             var tableWrapperEl,
                 topScrollbarEl,
