@@ -4768,6 +4768,10 @@
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
+                            
+                            $scope.$on("reInitGrid", function () {
+                                reInitGrid();
+                            });
 
                             bbMediaBreakpoints.register(mediaBreakpointHandler);
 
