@@ -90,3 +90,4 @@ reloading the grid with the current data after the event has fired.
   - `columnsResized` Fires when the columns have finished resizing on the page. You can use this event to listen for column size changes and save them for subsequent visits to the grid. Event contains an object with the following properties:
     - `index` — the index of the resized column
     - `newWidth` — the new width of the resized column
+  - `reInitGrid` The grid reinitializes itself when it receives this event

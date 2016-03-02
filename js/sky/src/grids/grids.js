@@ -1376,6 +1376,10 @@
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
                             
+                            $scope.$on("reInitGrid", function () {
+                                reInitGrid();
+                            });
+
                             bbMediaBreakpoints.register(mediaBreakpointHandler);
 
                             tableWrapper.on('scroll', function () {
