@@ -13,12 +13,14 @@
 </div>
 
 <script type="text/ng-template" id="demo/tile/tile1.html">
-    <bb-tile bb-tile-header="tile1Ctrl.resources.tile_header" bb-tile-collapsed="tile1Ctrl.is_collapsed" bb-tile-settings-click="tile1Ctrl.openSettings()">
+    <bb-tile ng-if="tile1Ctrl.is_visible" bb-tile-header="tile1Ctrl.resources.tile_header" bb-tile-collapsed="tile1Ctrl.is_collapsed" bb-tile-settings-click="tile1Ctrl.openSettings()">
         <bb-tile-header-content>
             {{123456789 | bbAutonumeric:'money':true}}
         </bb-tile-header-content>
         <div bb-tile-section>
-            Test.
+            <div ng-if="tile1Ctrl.is_visible">
+              LLLLAALALALALALLALALALALAL
+            </div>
         </div>
     </bb-tile>
 </script>

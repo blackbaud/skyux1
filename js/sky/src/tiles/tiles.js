@@ -22,161 +22,179 @@
         return tiles;
     }
 
+    function BBTileController($scope, $timeout) {
+        var vm = this,
+            displayModeChanging = false;
+
+        vm.setHeaderContentEl = function (el) {
+            vm.headerContentEl = el;
+        };
+
+        //determines whether or not a tile is collapsed
+        function tileIsCollapsed(tileId, tiles) {
+            var i,
+                len = tiles.length,
+                tile;
+
+            for (i = 0; i < len; i++) {
+                tile = tiles[i];
+
+                if (tile.id === tileId) {
+                    return vm.smallTileDisplayMode ? tile.collapsed_small : tile.collapsed;
+                }
+            }
+
+            return !!vm.smallTileDisplayMode;
+        }
+
+        //sets the collapsed state of the tile based on the tile settings and the display mode
+        function updateTileState(tiles) {
+            var collapsed,
+                oldCollapsed;
+
+            tiles = tiles || /*istanbul ignore next: default value */ [];
+
+            oldCollapsed = vm.isCollapsed;
+
+            collapsed = tileIsCollapsed(vm.tileId, tiles);
+
+            if (oldCollapsed === collapsed) {
+                displayModeChanging = false;
+            }
+
+            vm.isCollapsed = collapsed;
+
+        }
+
+        vm.updateTileState = updateTileState;
+
+        vm.isCollapsed = vm.bbTileCollapsed || false;
+        vm.smallTileDisplayMode = false;
+        vm.tileId = '';
+
+        vm.titleClick = function () {
+            vm.isCollapsed = !vm.isCollapsed;
+            vm.scrollIntoView = !vm.isCollapsed;
+        };
+
+        //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
+        $scope.$on('tileDisplayModeChanged', function (event, data) {
+            /*jslint unparam: true */
+            vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
+
+            if (vm.tileInitialized) {
+                displayModeChanging = true;
+                vm.updateTileState(data.tiles);
+            }
+        });
+
+        //if the collapsed state changes, notify the tileDashboard
+        $scope.$watch(function () {
+            return vm.isCollapsed;
+        }, function () {
+            if (vm.tileInitialized && !displayModeChanging) {
+                $timeout(function () {
+                    $scope.$emit('tileStateChanged', {
+                        tileId: vm.tileId,
+                        collapsed: vm.isCollapsed
+                    });
+                });
+            }
+            displayModeChanging = false;
+
+            if (!vm.isCollapsed) {
+                $timeout(function () {
+                    $scope.$broadcast('tileRepaint');
+                });
+            }
+
+        });
+    }
+
+    BBTileController.$inject = ['$scope', '$timeout'];
+
+    function bbTile($timeout) {
+        function link($scope, el, attrs, ctrls) {
+            var dashboardCtrl = ctrls[1],
+                vm = ctrls[0],
+                dashboardState = {};
+
+            function updateHeaderContent() {
+                var wrapperEl;
+
+                vm.hasHeaderContent = !!vm.headerContentEl;
+
+                if (vm.headerContentEl) {
+                    wrapperEl = el.find('.bb-tile-header-with-content:first');
+
+                    wrapperEl.append(vm.headerContentEl);
+                }
+            }
+
+            function initializeTile(data) {
+                $timeout(function () {
+                    var tiles = data.tiles || /*istanbul ignore next: default value */ [];
+
+                    if (!vm.tileInitialized) {
+                        //retrieve the tile id from the parent container
+                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
+                        vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
+                    }
+
+                    vm.updateTileState(tiles);
+
+                    vm.tileInitialized = true;
+                });
+            }
+
+            //listens for the tilesInitialized event from the tileDashboard and updates the initial collapsed state of the tiles
+            $scope.$on('tilesInitialized', function (event, data) {
+                /*jslint unparam: true */
+
+                initializeTile(data);
+            });
+
+            if (attrs.bbTileCollapsed) {
+                $scope.$watch(function () {
+                    return vm.bbTileCollapsed;
+                }, function (newValue) {
+                    vm.isCollapsed = newValue;
+                });
+            }
+
+            vm.hasSettings = !!attrs.bbTileSettingsClick;
+
+            updateHeaderContent();
+
+            //If the dashboard has already been initialized and this tile hasn't, initialize tile.
+            if (dashboardCtrl !== null) {
+                if (dashboardCtrl.dashboardInitialized() && !vm.tileInitialized) {
+                    dashboardState = dashboardCtrl.getDashboardState();
+                    initializeTile(dashboardState);
+                    dashboardCtrl.layoutTiles();
+                }
+            }
+        }
+        return {
+            link: link,
+            replace: true,
+            restrict: 'E',
+            require: ['bbTile', '?^^bbTileDashboard'],
+            scope: {},
+            controller: BBTileController,
+            controllerAs: 'bbTile',
+            bindToController: {
+                bbTileCollapsed: '=?',
+                bbTileSettingsClick: '&?',
+                tileHeader: '=bbTileHeader'
+            },
+            templateUrl: 'sky/templates/tiles/tile.html',
+            transclude: true
+        };
+    }
+
     angular.module('sky.tiles', ['sky.mediabreakpoints'])
-        .directive('bbTile', ['$timeout', function ($timeout) {
-            return {
-                link: function (scope, el, attrs, dashboardCtrl) {
-                    var dashboardState = {},
-                        displayModeChanging = false,
-                        tileInitialized = false;
-
-                    //determines whether or not a tile is collapsed
-                    function tileIsCollapsed(tileId, tiles) {
-                        var i,
-                            len = tiles.length,
-                            tile;
-
-                        for (i = 0; i < len; i++) {
-                            tile = tiles[i];
-
-                            if (tile.id === tileId) {
-                                return scope.smallTileDisplayMode ? tile.collapsed_small : tile.collapsed;
-                            }
-                        }
-
-                        return !!scope.smallTileDisplayMode;
-                    }
-
-                    //sets the collapsed state of the tile based on the tile settings and the display mode
-                    function updateTileState(tiles) {
-                        var collapsed,
-                            oldCollapsed;
-
-                        tiles = tiles || /*istanbul ignore next: default value */ [];
-
-                        oldCollapsed = scope.isCollapsed;
-
-                        collapsed = tileIsCollapsed(scope.tileId, tiles);
-
-                        if (oldCollapsed === collapsed) {
-                            displayModeChanging = false;
-                        }
-
-                        scope.isCollapsed = collapsed;
-                    }
-
-                    function updateHeaderContent() {
-                        var wrapperEl;
-
-                        scope.hasHeaderContent = !!scope.headerContentEl;
-
-                        if (scope.headerContentEl) {
-                            wrapperEl = el.find('.bb-tile-header-with-content:first');
-
-                            wrapperEl.append(scope.headerContentEl);
-                        }
-                    }
-
-                    function initializeTile(data) {
-                        $timeout(function () {
-                            var tiles = data.tiles || /*istanbul ignore next: default value */ [];
-
-                            if (!tileInitialized) {
-                                //retrieve the tile id from the parent container
-                                scope.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
-                                scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
-                            }
-
-                            updateTileState(tiles);
-
-                            tileInitialized = true;
-                        });
-                    }
-
-                    scope.isCollapsed = scope.bbTileCollapsed || false;
-                    scope.smallTileDisplayMode = false;
-                    scope.tileId = '';
-
-                    scope.titleClick = function () {
-                        scope.isCollapsed = !scope.isCollapsed;
-                        scope.scrollIntoView = !scope.isCollapsed;
-                    };
-
-                    //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
-                    scope.$on('tileDisplayModeChanged', function (event, data) {
-                        /*jslint unparam: true */
-                        scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
-
-                        if (tileInitialized) {
-                            displayModeChanging = true;
-                            updateTileState(data.tiles);
-                        }
-                    });
-
-                    //listens for the tilesInitialized event from the tileDashboard and updates the initial collapsed state of the tiles
-                    scope.$on('tilesInitialized', function (event, data) {
-                        /*jslint unparam: true */
-
-                        initializeTile(data);
-                    });
-
-                    //if the collapsed state changes, notify the tileDashboard
-                    scope.$watch('isCollapsed', function () {
-                        if (tileInitialized && !displayModeChanging) {
-                            $timeout(function () {
-                                scope.$emit('tileStateChanged', {
-                                    tileId: scope.tileId,
-                                    collapsed: scope.isCollapsed
-                                });
-                            });
-                        }
-                        displayModeChanging = false;
-
-                        if (!scope.isCollapsed) {
-                            $timeout(function () {
-                                scope.$broadcast('tileRepaint');
-                            });
-                        }
-
-                        scope.bbTileCollapsed = scope.isCollapsed;
-                    });
-
-                    if (attrs.bbTileCollapsed) {
-                        scope.$watch('bbTileCollapsed', function (newValue) {
-                            scope.isCollapsed = newValue;
-                        });
-                    }
-
-                    scope.hasSettings = !!attrs.bbTileSettingsClick;
-
-                    updateHeaderContent();
-
-                    //If the dashboard has already been initialized and this tile hasn't, initialize tile.
-                    if (dashboardCtrl !== null) {
-                        if (dashboardCtrl.dashboardInitialized() && !tileInitialized) {
-                            dashboardState = dashboardCtrl.getDashboardState();
-                            initializeTile(dashboardState);
-                            dashboardCtrl.layoutTiles();
-                        }
-                    }
-                },
-                replace: true,
-                restrict: 'E',
-                require: '?^^bbTileDashboard',
-                scope: {
-                    bbTileCollapsed: '=?',
-                    bbTileSettingsClick: '&?',
-                    tileHeader: '=bbTileHeader'
-                },
-                controller: ['$scope', function ($scope) {
-                    this.setHeaderContentEl = function (el) {
-                        $scope.headerContentEl = el;
-                    };
-                }],
-                templateUrl: 'sky/templates/tiles/tile.html',
-                transclude: true
-            };
-        }])
+        .directive('bbTile', bbTile)
         .directive('bbTileHeaderContent', function () {
             return {
                 replace: true,

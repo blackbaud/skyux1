@@ -19,7 +19,7 @@
         });
     }
 
-    function Tile1Controller() {
+    function Tile1Controller($timeout) {
         var self = this;
 
         self.resources = {
@@ -29,7 +29,13 @@
         self.openSettings = function () {
             alert('Settings invoked!');
         };
+
+        $timeout(function () {
+            self.is_visible = true;
+        }, 500);
     }
+
+    Tile1Controller.$inject = ['$timeout'];
 
     function TileTestController(bbModal) {
         var self = this;
@@ -72,7 +78,7 @@
             {
                 id: 'Tile1',
                 view_name: 'tile1',
-                collapsed: false,
+                collapsed: true,
                 collapsed_small: true
             },
             {

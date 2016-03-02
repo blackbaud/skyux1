@@ -1,18 +1,18 @@
-<section ng-class="isCollapsed ? 'collapsed' : 'collapsible'" class="bb-tile">
-    <div bb-scroll-into-view="scrollIntoView">
-        <div class="bb-tile-title" ng-click="titleClick()">
+<section ng-class="{'collapsed': bbTile.isCollapsed, 'collapsible': !bbTile.isCollapsed}" class="bb-tile">
+    <div bb-scroll-into-view="bbTile.scrollIntoView">
+        <div class="bb-tile-title" ng-click="bbTile.titleClick()">
             <div class="bb-tile-header-with-content">
-                <h2 class="bb-tile-header">{{tileHeader}}</h2>
+                <h2 class="bb-tile-header">{{bbTile.tileHeader}}</h2>
             </div>
             <div class="bb-tile-header-column-tools">
                 <div class="bb-tile-tools">
-                    <button type="button" ng-class="'fa-chevron-' + (isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></button>
-                    <button type="button" ng-if="hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTileSettingsClick();"></button>
+                    <button type="button" ng-class="'fa-chevron-' + (bbTile.isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></button>
+                    <button type="button" ng-if="bbTile.hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTile.bbTileSettingsClick();"></button>
                     <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>
                 </div>
             </div>
         </div>
-        <div uib-collapse="isCollapsed" class="bb-tile-content" ng-transclude>
+        <div uib-collapse="bbTile.isCollapsed" class="bb-tile-content in collapse" ng-transclude>
         </div>
     </div>
 </section>
