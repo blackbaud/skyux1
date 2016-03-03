@@ -24,6 +24,7 @@ describe('Avatar', function () {
             selector: ('#screenshot-avatar-' + type),
             done: done
         });
+        
     }
 
     it('should match previous avatar screenshot where image is available', function (done) {

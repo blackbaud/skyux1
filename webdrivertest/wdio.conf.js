@@ -6,7 +6,6 @@
     var capabilities = [
         {
             browser: 'chrome',
-            browser_version: '47.0.2526',
             'browserstack.local': 'true',
             os: 'OS X',
             os_version: 'Yosemite',
