@@ -3,8 +3,17 @@
 
 (function () {
     'use strict';
-    var initWebdriverCss = function (browser, options, done) {
-        browser.session().then(function (res) {
+    var initWebdriverCss = function (browser, options) {
+        var browserName = browser.desiredCapabilities.browserName,
+            platform;
+
+        if (browser.desiredCapabilities.os === 'OS X') {
+            platform = 'MAC';
+        }
+
+        options.prefix = platform + '_' + browserName;
+
+        /*browser.session().then(function (res) {
             var browserName = res.value.browserName.replace(/\s+/g, ''),
                 platform = res.value.platform,
                 prefix,
@@ -23,13 +32,25 @@
                 screenWidth: [1280]
             });
 
-        }).call(done);
+        }).call(done);*/
     };
 
+    function getPrefix(browser) {
+        var browserName = browser.desiredCapabilities.browserName,
+            platform;
+
+        if (browser.desiredCapabilities.os === 'OS X') {
+            platform = 'MAC';
+        }
+
+        return platform + '_' + browserName;
+    }
+
     module.exports = {
+        getPrefix: getPrefix,
         initWebdriverCss: initWebdriverCss,
         compareScreenshot: function (options) {
-            var pageName = options.prefix + options.screenshotName + '_full';
+            var pageName = options.prefix + '/' + options.prefix + '_' + options.screenshotName + '_full';
 
             options.browserResult
                 .webdrivercss(pageName, [

@@ -5,8 +5,7 @@
 
     var capabilities = [
         {
-            browser: 'chrome',
-            browser_version: '47.0.2526',
+            browserName: 'chrome',
             'browserstack.local': 'true',
             os: 'OS X',
             os_version: 'Yosemite',
@@ -57,7 +56,7 @@
     config = {
 
         specs: [
-            'webdrivertest/test/**/*.visual.js'
+            'webdrivertest/test/**/actionbar.visual.js'
         ],
         logLevel: 'silent',
         baseUrl: 'http://localhost:8000/webdrivertest/test',
@@ -88,14 +87,29 @@
         config.capabilities = capabilities;
         config.host = 'hub.browserstack.com';
         config.port = 80;
-        exports.environment = '';
+        config.plugins = {
+            webdrivercss: {
+                screenshotRoot: 'webdriver-screenshots',
+                failedComparisonsRoot: 'webdriver-screenshots-diffs/',
+                mismatchTolerance: 0.05,
+                screenWidth: [1280]
+            }
+        };
+
     } else {
         config.capabilities = [
             {
                 browserName: 'chrome'
             }
         ];
-        exports.environment = 'local';
+        config.plugins = {
+            webdrivercss: {
+                screenshotRoot: 'webdriver-screenshotslocal',
+                failedComparisonsRoot: 'webdriver-screenshotslocal-diffs/',
+                mismatchTolerance: 0.05,
+                screenWidth: [1280]
+            }
+        };
     }
 
     exports.config = config;

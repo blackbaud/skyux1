@@ -1,26 +1,19 @@
-/* global describe, it, browser, beforeEach, require */
+/* global describe, it, browser, beforeEach, require, console */
 
 
 describe('actionbar', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
     it('should match the baseline actionbar screenshot', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/actionbar/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'actionbar',
             selector: '#screenshot-actionbar',
             done: done,
