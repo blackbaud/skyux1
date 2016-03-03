@@ -7,60 +7,45 @@
 module.exports = function (config) {
     'use strict';
 
-    var base = 'BrowserStack',
+    var base = 'SauceLabs',
         customLaunchers = {
-            bs_windows_ie_11: {
+            sl_windows_ie_11: {
                 base: base,
-                browser: 'ie',
-                browser_version: '11.0',
-                os: 'Windows',
-                os_version: '10'
+                browserName: 'internet explorer',
+                version: '11.0',
+                platform: 'Windows 10'
             },
-            bs_windows_edge: {
+            sl_windows_edge: {
                 base: base,
-                browser: 'edge',
-                os: 'Windows',
-                os_version: '10'
+                browserName: 'internet explorer',
+                version: '20',
+                platform: 'Windows 10'
             },
-            bs_windows_chrome_latest: {
+            sl_windows_chrome_latest: {
                 base: base,
-                browser: 'chrome',
-                os: 'Windows',
-                os_version: '8.1'
+                browserName: 'chrome',
+                platform: 'Windows 8.1'
             },
-            bs_windows_firefox_latest: {
+            sl_windows_firefox_latest: {
                 base: base,
-                browser: 'firefox',
-                os: 'Windows',
-                os_version: '8.1'
+                browserName: 'firefox',
+                platform: 'Windows 8.1'
             },
-            bs_osx_safari_latest: {
+            sl_osx_safari_latest: {
                 base: base,
-                browser: 'safari',
-                os: 'OS X',
-                os_version: 'Yosemite'
+                browserName: 'safari',
+                platform: 'OS X 10.11'
             },
-            bs_osx_chrome_latest: {
+            sl_osx_chrome_latest: {
                 base: base,
-                browser: 'chrome',
-                os: 'OS X',
-                os_version: 'Yosemite'
+                browserName: 'chrome',
+                platform: 'OS X 10.11'
             },
-            bs_osx_firefox_latest: {
+            sl_osx_firefox_latest: {
                 base: base,
-                browser: 'firefox',
-                os: 'OS X',
-                os_version: 'Yosemite'
+                browserName: 'firefox',
+                platform: 'OS X 10.11'
             }
-            // This is too flaky.  Since we have never seen a test fail here that passed in a desktop
-            // browser we're disabling this for now.
-            //,
-            // bs_android_samsung_galaxy_s5_4_4: {
-            //     base: base,
-            //     device: 'Samsung Galaxy S5',
-            //     os: 'android',
-            //     os_version: '4.4'
-            // }
         },
         shared = require('./karma.conf-shared.js');
 
@@ -76,6 +61,7 @@ module.exports = function (config) {
 
     // Add new reporters
     shared.reporters.push('coveralls');
+    shared.reporters.push('saucelabs');
 
     // Coveralls needs lcov
     shared.coverageReporter.reporters.push({
@@ -91,10 +77,6 @@ module.exports = function (config) {
         browserDisconnectTimeout: 3e5,
         browserDisconnectTolerance: 3,
         browserNoActivityTimeout: 3e5,
-        captureTimeout: 3e5,
-        browserStack: {
-            port: 9876,
-            pollingTimeout: 10000
-        }
+        captureTimeout: 3e5
     });
 };
