@@ -7,10 +7,10 @@
         </label>
         <bb-select-field
           ng-model="selectFieldCtrl.selectedItems"
-          bb-select-field-text="Pick some values"
+          bb-select-field-text="Select some values"
           bb-select-field-click="selectFieldCtrl.loadInitialValues()">
           <bb-select-field-picker
-          bb-select-field-picker-header="Select multiple values"
+          bb-select-field-picker-header="Select values"
           bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
           </bb-select-field-picker>
         </bb-select-field>
@@ -22,14 +22,14 @@
         <bb-select-field
           ng-model="selectFieldCtrl.selectedSingleItems"
           name="singleSelect"
-          bb-select-field-text="Pick a value"
+          bb-select-field-text="Select a value"
           bb-select-field-style="single"
           required>
           <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
           </bb-select-field-picker>
         </bb-select-field>
         <ng-messages for="selectFieldCtrl.selectForm.singleSelect.$error" class="text-danger" ng-show="selectFieldCtrl.selectForm.singleSelect.$touched">
-          <ng-message when="required">Single select field is required</ng-message>
+          <ng-message when="required">A selection is required in this field.</ng-message>
         </ng-messages>
       </div>
     </div>

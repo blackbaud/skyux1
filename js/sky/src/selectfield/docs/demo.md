@@ -1,17 +1,17 @@
 ---
 name: Select Field
 icon: search-plus
-summary: The select field control launches a modal with items available for selection.
+summary: The select field directive launches a modal that displays items for users to select.
 ---
 
-The select field control launches a modal with items available for selection. The select field can be set to use either single or multi select mode depending on whether the field permits multiple selections. In multi-select mode, the selected items appear below the select field, while in single-select mode, the selected item appears within the select field.
+The select field directive launches a modal that displays items for users to select. By default, the modal allows users to select multiple items. To limit users to a single selection, you can specify single-select mode. In multi-select mode, user selections appear below the select field. In single-selct mode, the selection appears within the field.
 
 ### Select Field Settings ###
-  - `bb-select-field` &mdash; Creates a control which launches a modal with items available for selection.
-    - `ng-model` &mdash; The array of items selected by the control.
-    - `bb-select-field-text` &mdash; The text that appears in the select field. For the single-select field, it will be used as placeholder text.
-    - `bb-select-field-style` &mdash; When set to `single`, single-select styling will be used for the select field. Otherwise, multi-select styling will be used for the select field.
-    - `bb-select-field-click` &mdash; *(Optional.)* A function provided by the user that will be called when the user clicks the select field. Useful when initial items for the picker must be fetched remotely each time the picker is launched.
-    - `bb-select-field-picker` &mdash; The directive that defines the contents of the select field picker modal.
-      - `bb-select-field-picker-template` &mdash; The template for the contents of the select field picker modal. Generally includes a `bb-checklist-control`.
-      - `bb-select-field-picker-header` &mdash; *(Optional.)* The header text for the select field picker modal. If not defined, it will be set to 'Select value'.
+  - `bb-select-field` &mdash; Creates a field that launches a modal with items for users to select.
+    - `ng-model` &mdash; The array of items that users select on the modal.
+    - `bb-select-field-text` &mdash; For multi-select mode, specifies the text to display in the link that opens the modal. For single-select mode, specifies the placeholder text to display in the field until users make selections.
+    - `bb-select-field-style` &mdash; *(Optional.)* Indicates whether to display the select field in single- or multi-select mode. By default, the select field uses multi-select mode and you do not need this property. To limit users to a single selection, include this property and set it to `single`.
+    - `bb-select-field-click` &mdash; *(Optional.)* Specifies a function to be called when users click the select field. This function is useful when you must fetch the initial items on the modal remotely each time the modal launches.
+    - `bb-select-field-picker` &mdash; Defines the content to display in the select field modal.
+      - `bb-select-field-picker-template` &mdash; Specifies a template for the content of the modal. The modal generally includes [a `bb-checklist` directive ](../checklist) to create a filterable checkbox list for users to select items.
+      - `bb-select-field-picker-header` &mdash; *(Optional.)* Specifies a header for the select field modal. *(Default: 'Select value')*
