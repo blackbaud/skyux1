@@ -1,30 +1,28 @@
-/* global describe, it, browser, beforeEach,  expect, require */
+/* global describe, it, browser, beforeEach, require */
 
 
 describe('Alert', function () {
     'use strict';
 
-    var options = {};
+    var options = {},
+        common;
 
     beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        common = require('../common');
+        common.initWebdriverCss(browser, options, done);
     });
 
-    it('should match previous screenshot', function (done) {
-        var screenshotName = 'alert',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match previous alert screenshot', function (done) {
+        var result;
 
-        browser
-            .url('/alert/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-alert'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
-            .call(done);
+        result = browser.url('/alert/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: options.prefix,
+            screenshotName: 'alert',
+            selector: '#screenshot-alert',
+            done: done
+        });
     });
 });
