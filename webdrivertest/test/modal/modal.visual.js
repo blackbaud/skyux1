@@ -1,26 +1,17 @@
-
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, require */
 
 describe('modals', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
-
     it('match the baseline modal screenshot', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/modal/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'modal',
             selector: '#screenshot-modal',
             done: done

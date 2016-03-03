@@ -1,25 +1,18 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser,require */
 
 describe('tabset', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
     it('should match the baseline tabset screenshot', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/tabset/fixtures/test.full.html')
             .moveToObject('#screenshot-tabset-open-add li:nth-child(2) a');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'tabset',
             selector: '#screenshot-tabset-all',
             done: done,

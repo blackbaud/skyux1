@@ -3,24 +3,17 @@
 describe('daterangepicker', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
 
     it('should match the baseline screenshot of the daterangepicker', function (done) {
 
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/daterangepicker/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'daterangepicker',
             selector: '#screenshot-daterangepicker',
             done: done
@@ -29,13 +22,14 @@ describe('daterangepicker', function () {
     });
 
     it('should match the baseline screenshot when the daterangepicker is using specific dates', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/daterangepicker/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'daterangepicker_specific',
             selector: '#screenshot-daterangepicker-specific',
             done: done

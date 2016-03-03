@@ -1,24 +1,18 @@
-/*global describe, it, browser, beforeAll, require */
+/*global describe, it, browser, require */
 
 describe('textstate', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeAll(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
 
     it('should match the baseline text state screenshot', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/textstate/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'textstate',
             selector: '#screenshot-textstate',
             done: done

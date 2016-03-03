@@ -1,25 +1,17 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, require */
 
 describe('pagination', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
-
     it('match the baseline pagination screenshot', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/pagination/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'pagination',
             selector: '#screenshot-pagination',
             done: done
@@ -28,14 +20,15 @@ describe('pagination', function () {
     });
 
     it('should match the baseline pagination screenshot when clicked', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/pagination/fixtures/test.full.html')
             .click('#screenshot-pagination li:nth-child(3) a');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'pagination_click',
             selector: '#screenshot-pagination',
             done: done

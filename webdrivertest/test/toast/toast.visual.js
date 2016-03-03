@@ -1,19 +1,11 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, require */
 
 describe('toast', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
-
     it('should match the baseline toast screenshot', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
@@ -21,7 +13,7 @@ describe('toast', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'toast',
             selector: '#screenshot-toast',
             done: done
@@ -29,7 +21,8 @@ describe('toast', function () {
     });
 
     it('should match the baseline screenshot when the mouse is over the toast', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
@@ -38,7 +31,7 @@ describe('toast', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'toast_mouseover',
             selector: '#screenshot-toast',
             done: done
@@ -46,7 +39,8 @@ describe('toast', function () {
     });
 
     it('should match the baseline screenshot when the mouse is over the toast close button', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
@@ -55,7 +49,7 @@ describe('toast', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'toast_mouseover_close',
             selector: '#screenshot-toast',
             done: done
