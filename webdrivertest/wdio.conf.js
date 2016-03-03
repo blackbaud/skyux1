@@ -90,7 +90,7 @@
         config.plugins = {
             webdrivercss: {
                 screenshotRoot: 'webdriver-screenshots',
-                failedComparisonsRoot: 'webdriver-screenshots-diffs/',
+                failedComparisonsRoot: 'webdriver-screenshots-diffs',
                 mismatchTolerance: 0.05,
                 screenWidth: [1280]
             }
@@ -99,13 +99,14 @@
     } else {
         config.capabilities = [
             {
-                browserName: 'chrome'
+                browserName: 'chrome',
+                os: 'OS X'
             }
         ];
         config.plugins = {
             webdrivercss: {
                 screenshotRoot: 'webdriver-screenshotslocal',
-                failedComparisonsRoot: 'webdriver-screenshotslocal-diffs/',
+                failedComparisonsRoot: 'webdriver-screenshotslocal-diffs',
                 mismatchTolerance: 0.05,
                 screenWidth: [1280]
             }

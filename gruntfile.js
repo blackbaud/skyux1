@@ -22,7 +22,19 @@ module.exports = function (grunt) {
         target = 'local',
         screenshotBasePath = 'screenshots/',
         skipTest,
-        webdriverTestPort = 8000;
+        webdriverTestPort = 8000,
+        webdriverScreenshotRoot;
+
+    function getScreenshotRoot() {
+        var screenshotRoot;
+        if (process.env.TRAVIS === 'true') {
+            screenshotRoot = 'webdriver-screenshots';
+        } else {
+            screenshotRoot = 'webdriver-screenshotslocal';
+        }
+        return screenshotRoot;
+    }
+    webdriverScreenshotRoot = getScreenshotRoot();
 
     libsCss = [
         'bower_components/free-jqgrid/css/ui.jqgrid.css',
@@ -358,6 +370,18 @@ module.exports = function (grunt) {
                 }
             }
         },
+        mkdir: {
+            webdriver: {
+                options: {
+                    create: [
+                        webdriverScreenshotRoot + '/MAC_chrome',
+                        webdriverScreenshotRoot + '/MAC_firefox',
+                        webdriverScreenshotRoot + '-diffs/MAC_chrome',
+                        webdriverScreenshotRoot + '-diffs/MAC_firefox'
+                    ]
+                }
+            }
+        },
         webdriver: {
             test: {
                 configFile: './webdrivertest/wdio.conf.js'
@@ -386,6 +410,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-mkdir');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -397,7 +422,7 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
+    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'mkdir:webdriver', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
     grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
 
     grunt.registerTask('scriptsrapid', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap']);
@@ -410,7 +435,7 @@ module.exports = function (grunt) {
 
         grunt.task.run('watchNoConflict');
     });
-    
+
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
         var RESOURCES_PREFIX = 'resources_',
@@ -529,14 +554,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('cleanupworkingscreenshots', function () {
-        var screenshotRoot;
-        if (process.env.TRAVIS === 'true') {
-            screenshotRoot = 'webdriver-screenshots';
-        } else {
-            screenshotRoot = 'webdriver-screenshotslocal';
-        }
 
-        cleanupWorkingScreenshots(screenshotRoot);
+        cleanupWorkingScreenshots(webdriverScreenshotRoot);
     });
 
     // Convert our documentation into standard JSDOC format JSON

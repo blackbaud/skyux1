@@ -1,4 +1,4 @@
-/* global describe, it, browser, beforeEach, require, console */
+/* global describe, it, browser, require */
 
 
 describe('actionbar', function () {
