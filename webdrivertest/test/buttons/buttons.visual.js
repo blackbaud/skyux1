@@ -41,7 +41,7 @@ describe('buttons', function () {
             browserResult: result,
             prefix: options.prefix,
             screenshotName: ('button_' + type + '_click'),
-            selector: selector,
+            selector: ('#screenshots-buttons-' + type),
             done: done
         });
     }
