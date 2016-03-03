@@ -19,6 +19,7 @@
         {
             browserName: 'firefox',
             'browserstack.local': 'true',
+            'browserstack.debug': 'true',
             os: 'OS X',
             os_version: 'Yosemite',
             browserDisconnectTimeout: 3e5,
