@@ -1,25 +1,18 @@
-/* global describe, it, browser, beforeEach, require */
+/* global describe, it, browser, require */
 
 
 describe('Alert', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
     it('should match previous alert screenshot', function (done) {
-        var result;
+        var result,
+            common = require('../common');
 
         result = browser.url('/alert/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'alert',
             selector: '#screenshot-alert',
             done: done
