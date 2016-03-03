@@ -58,7 +58,7 @@
         specs: [
             'webdrivertest/test/**/*.visual.js'
         ],
-        logLevel: 'verbose',
+        logLevel: 'silent',
         baseUrl: 'http://localhost:8000/webdrivertest/test',
         framework: 'jasmine',
         jasmineNodeOpts: {
