@@ -14,7 +14,7 @@ describe('error', function () {
     });
 
 
-    it('should match the baseline error image', function (done) {
+    it('should match the baseline image', function (done) {
         var result = browser.url('/error/fixtures/test.full.html');
 
         common.compareScreenshot({
@@ -27,7 +27,7 @@ describe('error', function () {
     });
 
     describe('modal', function () {
-        it('should match the baseline error modal image', function (done) {
+        it('should match the baseline image', function (done) {
             var result = browser
                 .url('/error/fixtures/test.full.html')
                 .click('#screenshot-error-show-modal');
