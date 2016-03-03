@@ -1,65 +1,69 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, beforeEach, expect, require */
 
 describe('toast', function () {
     'use strict';
 
-    var options = {},
-        common;
+    var options = {};
 
     beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
-    it('should match the baseline toast screenshot', function (done) {
-        var result;
-
-        result = browser.url('/toast/fixtures/test.full.html')
-            .click('#screenshot-toast-open')
-            .waitForVisible('#toast-container');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'toast',
-            selector: '#screenshot-toast',
-            done: done
-        });
-    });
-
-    it('should match the baseline screenshot when the mouse is over the toast', function (done) {
-        var result;
-
-        result = browser.url('/toast/fixtures/test.full.html')
+    it('should take toast screenshots', function (done) {
+        var screenshotName = 'toast',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
             .waitForVisible('#toast-container')
-            .moveToObject('#toast-container');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'toast_mouseover',
-            selector: '#screenshot-toast',
-            done: done
-        });
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-toast'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 
-    it('should match the baseline screenshot when the mouse is over the toast close button', function (done) {
-        var result;
-
-        result = browser.url('/toast/fixtures/test.full.html')
+    it('should take toast mouseover screenshots', function (done) {
+        var screenshotName = 'toast_mouseover',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
             .waitForVisible('#toast-container')
-            .moveToObject('#toast-container .toast-close-button');
+            .moveToObject('#toast-container')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-toast'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
+    });
 
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'toast_mouseover_close',
-            selector: '#screenshot-toast',
-            done: done
-        });
+    it('should take toast close mouseover screenshots', function (done) {
+        var screenshotName = 'toast_mouseover_close',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/toast/fixtures/test.full.html')
+            .click('#screenshot-toast-open')
+            .waitForVisible('#toast-container')
+            .moveToObject('#toast-container .toast-close-button')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-toast'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 
 });

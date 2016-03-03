@@ -1,35 +1,36 @@
 
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, beforeEach, expect, require */
 
 describe('tiles', function () {
     'use strict';
 
-    var options = {},
-        common;
+    var options = {};
 
     beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
-    it('should match the baseline screenshot when tile is expanded', function (done) {
-        var result;
-
-        result = browser.url('/tiles/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'tile_expanded',
-            selector: '#screenshot-tiles-all',
-            done: done
-        });
+    it('should take tile expanded screenshots', function (done) {
+        var screenshotName = 'tile_expanded',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/tiles/fixtures/test.full.html')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-tiles-all'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 
-    it('should match the baseline screenshot whe tiles are collapsed', function (done) {
-        var result;
-
-        result = browser.url('/tiles/fixtures/test.full.html')
+    it('should take tile collapsed screenshots', function (done) {
+        var screenshotName = 'tile_collapsed',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/tiles/fixtures/test.full.html')
             .click('#screenshot-tile-minimal .bb-tile-title')
             .click('#screenshot-tile-with-settings .bb-tile-title')
             .click('#screenshot-tile-with-header-content .bb-tile-title')
@@ -37,29 +38,31 @@ describe('tiles', function () {
             .click('#screenshot-tile-with-settings-overflow .bb-tile-title')
             .click('#screenshot-tile-with-header-content-overflow .bb-tile-title')
             .click('#screenshot-tile-with-overflow-header-content-overflow .bb-tile-title')
-            .click('#screenshot-tile-with-overflow-header-content .bb-tile-title');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'tile_collapsed',
-            selector: '#screenshot-tiles-all',
-            done: done
-        });
-
+            .click('#screenshot-tile-with-overflow-header-content .bb-tile-title')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-tiles-all'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 
-    it('should match the baseline screenshot when the tile has a config icon', function (done) {
-        var result;
-
-        result = browser.url('/tiles/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'tile_config',
-            selector: '#screenshot-tile-with-settings',
-            done: done
-        });
+    it('should take tile with configuration screenshot', function (done) {
+        var screenshotName = 'tile_config',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/tiles/fixtures/test.full.html')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-tile-with-settings'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 });

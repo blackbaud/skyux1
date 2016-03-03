@@ -1,28 +1,28 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, beforeEach, expect, require */
 
 describe('palette', function () {
     'use strict';
 
-    var options = {},
-        common;
+    var options = {};
 
     beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
+        require('../common').initWebdriverCss(browser, options, done);
     });
 
 
-    it('should match the baseline palette screenshot', function (done) {
-        var result;
-
-        result = browser.url('/palette/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: options.prefix,
-            screenshotName: 'palette',
-            selector: '#screenshot-palette',
-            done: done
-        });
+    it('should take palette screenshots', function (done) {
+        var screenshotName = 'palette',
+            pageName = options.prefix + screenshotName + '_full';
+        browser
+            .url('/palette/fixtures/test.full.html')
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-palette'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            }).call(done);
     });
 });
