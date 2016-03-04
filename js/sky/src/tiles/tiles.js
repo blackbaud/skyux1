@@ -108,6 +108,8 @@
                 });
             }
 
+            vm.bbTileCollapsed = vm.isCollapsed;
+
         });
     }
 
@@ -192,6 +194,8 @@
             transclude: true
         };
     }
+
+    bbTile.$inject = ['$timeout'];
 
     function bbTileHeaderContent() {
         return {
