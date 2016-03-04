@@ -174,7 +174,8 @@ describe('bb-grid component', function () {
 
     it('should match a baseline screenshot of a grid with multiselect', function (done) {
         var common = require('../common'),
-            browserResult;
+            browserResult,
+            result;
 
         browserResult = browser
             .url('/grids/fixtures/test.full.html')
@@ -183,8 +184,10 @@ describe('bb-grid component', function () {
             .click('#screenshot-grid td label.bb-check-wrapper')
             .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)');
 
+        result = common.moveCursorOffScreen(browserResult);
+
         common.compareScreenshot({
-            browserResult: browserResult,
+            browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'grids_multiselect',
             selector: '#screenshot-grid',

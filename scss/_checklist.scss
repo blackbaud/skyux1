@@ -2,6 +2,7 @@
 
 .bb-checklist-wrapper {
     overflow-y: auto;
+    min-height: 75px;
 
     table {
         margin: 0;
@@ -93,12 +94,16 @@
 }
 
 .bb-checklist-list-row {
+    background-color: transparent;
+    border: none;
     border-bottom: dotted 1px $gray-lighter;
     cursor: pointer;
     display: table;
     margin-bottom: 0;
     padding: $padding;
+    outline-offset: -5px;
     table-layout: fixed;
+    text-align: left;
     width: 100%;
 
     &:last-child {
@@ -120,4 +125,14 @@
 
 .bb-checklist-list-title {
     font-weight: 700;
+}
+
+.bb-checklist-single {
+    .bb-checklist-row-selected {
+        background-color:#eeeffb; //TODO: Figure out if this needs to go into a variable
+    }
+
+    .bb-checklist-list-col-checkbox {
+        //display: none;
+    }
 }
