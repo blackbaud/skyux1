@@ -16,10 +16,10 @@ http://skyux.developer.blackbaud.com/
 You have three options for consuming Sky UX.  The first and easiest is to point your site to our CDN:
 
     <!-- Put this in your page's HEAD element -->
-    <link rel="stylesheet" type="text/css" href="https://sky.blackbaudcdn.net/skyux/1.5.8/css/sky-bundle.css" />
+    <link rel="stylesheet" type="text/css" href="https://sky.blackbaudcdn.net/skyux/1.5.9/css/sky-bundle.css" />
 
     <!-- Put this at the bottom of your page's BODY element -->
-    <script src="https://sky.blackbaudcdn.net/skyux/1.5.8/js/sky-bundle.min.js"></script>
+    <script src="https://sky.blackbaudcdn.net/skyux/1.5.9/js/sky-bundle.min.js"></script>
 
 The second option is to install Sky UX via [Bower](http://bower.io/search/?q=blackbaud-skyux):
 

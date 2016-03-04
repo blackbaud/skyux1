@@ -1,116 +1,108 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('searchfield', function () {
     'use strict';
 
-    var options = {};
+    it('match the baseline searchfield screenshot', function (done) {
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        var result,
+            common = require('../common');
+
+        result = browser.url('/searchfield/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'searchfields',
+            selector: '#screenshot-searchfield-full',
+            done: done
+        });
     });
 
-    it('should take searchfield screenshots', function (done) {
-        var screenshotName = 'searchfields',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/searchfield/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-searchfield-full'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
-    });
+    it('should match the baseline of a single select searchfield when active', function (done) {
+        var result,
+            common = require('../common');
 
-    it('should take searchfield single active screenshots', function (done) {
-        var screenshotName = 'searchfield_single_active',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/searchfield/fixtures/test.full.html')
+        result = browser.url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-single .ui-select-toggle')
-            .waitForVisible('#screenshot-searchfield-single')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-searchfield-single'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .waitForVisible('#screenshot-searchfield-single');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'searchfield_single_active',
+            selector: '#screenshot-searchfield-single',
+            done: done
+        });
     });
 
-    it('should take searchfield single dropdown screenshots', function (done) {
-        var screenshotName = 'searchfield_single_dropdown',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/searchfield/fixtures/test.full.html')
+    it('should match the baseline of a single select searchfield dropdown', function (done) {
+
+        var result,
+            common = require('../common');
+
+        result = browser.url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-single .ui-select-toggle')
-            .moveToObject('#screenshot-searchfield-single-choices .ui-select-choices-row-inner')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-searchfield-single-choices'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .moveToObject('#screenshot-searchfield-single-choices .ui-select-choices-row-inner');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'searchfield_single_dropdown',
+            selector: '#screenshot-searchfield-single-choices',
+            done: done
+        });
+
     });
 
-    it('should take searchfield multiple active screenshots', function (done) {
-        var screenshotName = 'searchfield_multiple_active',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/searchfield/fixtures/test.full.html')
+    it('should match the baseline of a multi select searchfield when active', function (done) {
+        var result,
+            common = require('../common');
+
+        result = browser.url('/searchfield/fixtures/test.full.html')
+            .click('#screenshot-searchfield-multiple .ui-select-search');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'searchfield_multiple_active',
+            selector: '#screenshot-searchfield-multiple',
+            done: done
+        });
+    });
+
+    it('should match the baseline of a multi select searchfield dropdown', function (done) {
+        var result,
+            common = require('../common');
+
+        result = browser.url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-multiple .ui-select-search')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-searchfield-multiple'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .moveToObject('#screenshot-searchfield-multiple-choices .ui-select-choices-row-inner');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'searchfield_multiple_dropdown',
+            selector: '#screenshot-searchfield-multiple-choices',
+            done: done
+        });
     });
 
-    it('should take searchfield multiple dropdown screenshots', function (done) {
-        var screenshotName = 'searchfield_multiple_dropdown',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/searchfield/fixtures/test.full.html')
-            .click('#screenshot-searchfield-multiple .ui-select-search')
-            .moveToObject('#screenshot-searchfield-multiple-choices .ui-select-choices-row-inner')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-searchfield-multiple-choices'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
-    });
+    it('should match the baseline of the multi select searchfield when hovering over the close button', function (done) {
+        var result,
+            common = require('../common');
 
-    it('should take searchfield multiple close hover screenshots', function (done) {
-        var screenshotName = 'searchfield_multiple_close_hover',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/searchfield/fixtures/test.full.html')
-            .moveToObject('.ui-select-match-item .ui-select-match-close')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '.ui-select-match-item'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        result = browser.url('/searchfield/fixtures/test.full.html')
+            .moveToObject('.ui-select-match-item .ui-select-match-close');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'searchfield_multiple_close_hover',
+            selector: '.ui-select-match-item',
+            done: done
+        });
+
     });
 
 });

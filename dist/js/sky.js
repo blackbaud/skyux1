@@ -3963,7 +3963,18 @@
                             }
 
                             function resizeStop(newWidth, index) {
-                                var changedWidth;
+                                var changedWidth,
+                                    resizedColumnIndex = index;
+                                
+                                //If multiselect and/or contextmenu exist, then the resized column index is shifted.
+                                if (locals.multiselect) {
+                                    resizedColumnIndex =  resizedColumnIndex - 1;
+                                }
+                                if (getContextMenuItems) {
+                                    resizedColumnIndex =  resizedColumnIndex - 1;
+                                }
+                                
+                                $scope.$emit("columnsResized", { newWidth: newWidth, index: resizedColumnIndex });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
 
@@ -3988,7 +3999,7 @@
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-
+                                
                                 return;
                             }
 
@@ -4767,6 +4778,10 @@
 
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
+                            });
+                            
+                            $scope.$on("reInitGrid", function () {
+                                reInitGrid();
                             });
 
                             bbMediaBreakpoints.register(mediaBreakpointHandler);
@@ -7636,16 +7651,6 @@ angular.module('sky.palette.config', [])
                         }
 
                         scope.isCollapsed = collapsed;
-
-                        if (collapsed && !tileInitialized) {
-                            //in some cases the tile-content div is left in a partially collapsed state.
-                            //   this will ensure that the tile is styled corretly and the tile is completely collapsed
-                            $timeout(function () {
-                                var contentEl;
-                                contentEl = el.find('.bb-tile-content');
-                                contentEl.removeClass('collapsing').addClass('collapse');
-                            }, 1);
-                        }
                     }
 
                     function updateHeaderContent() {

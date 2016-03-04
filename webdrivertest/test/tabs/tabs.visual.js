@@ -1,30 +1,21 @@
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('tabs', function () {
     'use strict';
 
-    var options = {};
+    it('should match the baseline tab screenshot', function (done) {
+        var result,
+            common = require('../common');
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
+        result = browser.url('/tabs/fixtures/test.full.html')
+            .moveToObject('#screenshot-tab-2');
 
-
-    it('should take tab screenshots', function (done) {
-        var screenshotName = 'tabs',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/tabs/fixtures/test.full.html')
-            .moveToObject('#screenshot-tab-2')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-tabs'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'tabs',
+            selector: '#screenshot-tabs',
+            done: done
+        });
     });
 });

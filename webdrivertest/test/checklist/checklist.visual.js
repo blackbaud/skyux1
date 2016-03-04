@@ -1,19 +1,13 @@
-/*global describe, it, browser, beforeEach, require */
+
+/*global describe, it, browser, require */
 
 describe('checklist', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
 
     it('match the baseline screenshot for the checklist in grid mode', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/checklist/fixtures/test.full.html')
@@ -21,7 +15,7 @@ describe('checklist', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'checklist_grid',
             selector: '#screenshot-checklist-grid',
             done: done
@@ -29,7 +23,8 @@ describe('checklist', function () {
     });
 
     it('match the baseline screenshot for the checklist in list mode', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/checklist/fixtures/test.full.html')
@@ -37,7 +32,7 @@ describe('checklist', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'checklist_list',
             selector: '#screenshot-checklist-list',
             done: done
@@ -45,7 +40,8 @@ describe('checklist', function () {
     });
 
     it('match the baseline screenshot for the checklist in single select mode', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/checklist/fixtures/test.full.html')
@@ -53,7 +49,7 @@ describe('checklist', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'checklist_single',
             selector: '#screenshot-checklist-single',
             done: done
