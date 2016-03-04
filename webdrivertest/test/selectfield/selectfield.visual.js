@@ -1,25 +1,18 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, require */
 
 describe('selectfield', function () {
     'use strict';
 
-    var options = {},
-        common;
-
-    beforeEach(function (done) {
-        common = require('../common');
-        common.initWebdriverCss(browser, options, done);
-    });
-
     it('should match the baseline screenshot of the multiple select field', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/selectfield/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'selectfield_multiple',
             selector: '#screenshot-selectfield-multiple',
             done: done
@@ -27,14 +20,15 @@ describe('selectfield', function () {
     });
 
     it('should match the baseline screenshot of the single select field', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/selectfield/fixtures/test.full.html');
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'selectfield_single',
             selector: '#screenshot-selectfield-single',
             done: done

@@ -181,7 +181,8 @@ describe('bb-grid component', function () {
             .click('button.show-grid')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid td label.bb-check-wrapper')
-            .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)');
+            .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)')
+            .moveCursorOffScreen(browserResult);
 
         common.compareScreenshot({
             browserResult: browserResult,
