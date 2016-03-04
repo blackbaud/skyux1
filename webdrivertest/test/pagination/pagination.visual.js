@@ -1,45 +1,38 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('pagination', function () {
     'use strict';
 
-    var options = {};
+    it('match the baseline pagination screenshot', function (done) {
+        var result,
+            common = require('../common');
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+        result = browser.url('/pagination/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'pagination',
+            selector: '#screenshot-pagination',
+            done: done
+        });
+
     });
 
+    it('should match the baseline pagination screenshot when clicked', function (done) {
+        var result,
+            common = require('../common');
 
-    it('should take pagination screenshot', function (done) {
-        var screenshotName = 'pagination',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/pagination/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-pagination'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
-    });
+        result = browser.url('/pagination/fixtures/test.full.html')
+            .click('#screenshot-pagination li:nth-child(3) a');
 
-    it('should take pagination clicked screenshot', function (done) {
-        var screenshotName = 'pagination_click',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/pagination/fixtures/test.full.html')
-            .click('#screenshot-pagination li:nth-child(3) a')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-pagination'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'pagination_click',
+            selector: '#screenshot-pagination',
+            done: done
+        });
+
     });
 });

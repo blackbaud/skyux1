@@ -1,29 +1,21 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser,require */
 
 describe('highlight', function () {
     'use strict';
 
-    var options = {};
+    it('match the baseline highlight screenshot', function (done) {
+        var result,
+            common = require('../common');
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
+        result = browser.url('/highlight/fixtures/test.full.html');
 
-
-    it('should take highlight screenshots', function (done) {
-        var screenshotName = 'highlight',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/highlight/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-highlight'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'highlight',
+            selector: '#screenshot-highlight',
+            done: done
+        });
     });
 });
