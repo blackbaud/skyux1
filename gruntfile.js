@@ -722,4 +722,10 @@ module.exports = function (grunt) {
             grunt.task.run(tasks);
         }
     });
+
+    grunt.registerTask('bobby', function () {
+        var KarmaBrowserStackLauncher = require('karma-browserstack-launcher'),
+            test = 'asdf';
+        console.log(KarmaBrowserStackLauncher.browserStackTunnel);
+    });
 };
