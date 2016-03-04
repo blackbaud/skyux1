@@ -19,6 +19,22 @@
 (function () {
     'use strict';
 
+    angular.module(
+        'sky.checklist',
+        [
+            'sky.checklist.directive',
+            'sky.checklist.column.directive',
+            'sky.checklist.columns.directive',
+            'sky.checklist.model.directive'
+        ]
+    );
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module('sky.error', ['sky.error.directive', 'sky.errormodal.service']);
 }());
 
@@ -28,6 +44,22 @@
     'use strict';
 
     angular.module('sky.pagesummary', []);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
+        'sky.selectfield',
+        [
+            'sky.selectfield.directive',
+            'sky.selectfieldpicker.directive',
+            'sky.selectfield.item.animation'
+        ]
+    );
+
 }());
 
 /*global angular */
@@ -669,7 +701,6 @@
         }]);
 }());
 
-/*jslint browser: true */
 /*global angular */
 
 (function () {
@@ -677,13 +708,185 @@
 
     var SEARCH_PROPS = ['title', 'description'];
 
-    function bbChecklist(bbChecklistUtility) {
+    function BBChecklistController($scope, bbChecklistUtility) {
+        var vm = this;
+
+        function itemMatchesCategory(item, category) {
+            return !category || item.category === category;
+        }
+
+        function itemMatchesFilter(item, category, searchTextUpper) {
+            var i,
+                p,
+                len,
+                val;
+
+            if (itemMatchesCategory(item, category)) {
+                if (!searchTextUpper) {
+                    return true;
+                }
+
+                for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
+                    p = SEARCH_PROPS[i];
+                    if (item.hasOwnProperty(p)) {
+                        val = item[p];
+
+                        if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function invokeFilterLocal() {
+            var filteredItems,
+                i,
+                item,
+                items = vm.bbChecklistItems,
+                n,
+                searchTextUpper = (vm.searchText || '').toUpperCase(),
+                selectedCategory = vm.selectedCategory;
+
+            if (!searchTextUpper && !selectedCategory) {
+                filteredItems = items.slice(0);
+            } else {
+                filteredItems = [];
+
+                for (i = 0, n = items.length; i < n; i++) {
+                    item = items[i];
+
+                    if (itemMatchesFilter(item, selectedCategory, searchTextUpper)) {
+                        filteredItems.push(item);
+                    }
+                }
+            }
+
+            vm.filteredItems = filteredItems;
+        }
+
+        function invokeFilter() {
+            if (vm.filterLocal) {
+                invokeFilterLocal();
+            } else if (vm.bbChecklistFilterCallback) {
+                vm.bbChecklistFilterCallback({
+                    searchText: vm.searchText,
+                    category: vm.selectedCategory
+                });
+            }
+        }
+
+        function itemIsSelected(item) {
+            return bbChecklistUtility.contains(vm.bbChecklistSelectedItems, item);
+        }
+
+        function eachFilteredItem(callback) {
+            vm.filteredItems.forEach(callback);
+        }
+
+        function selectItem(item) {
+            bbChecklistUtility.add(vm.bbChecklistSelectedItems, item);
+        }
+
+        function unselectItem(item) {
+            bbChecklistUtility.remove(vm.bbChecklistSelectedItems, item);
+        }
+
+        vm.bbChecklistSelectedItems = vm.bbChecklistSelectedItems || [];
+        vm.itemIsSelected = itemIsSelected;
+
+        vm.selectAll = function () {
+            eachFilteredItem(selectItem);
+        };
+
+        vm.clear = function () {
+            eachFilteredItem(unselectItem);
+        };
+
+        vm.rowClicked = function (item) {
+            if (!itemIsSelected(item)) {
+                selectItem(item);
+            } else {
+                unselectItem(item);
+            }
+        };
+
+        vm.filterByCategory = function (selectedCategory) {
+            vm.selectedCategory = selectedCategory;
+            invokeFilter();
+        };
+
+        vm.isSingleSelect = function () {
+            return vm.bbChecklistSelectStyle === 'single';
+        };
+
+        vm.getChecklistCls = function () {
+            return {
+                'bb-checklist-single': vm.isSingleSelect()
+            };
+        };
+
+        vm.getRowCls = function (item) {
+            return {
+                'bb-checklist-row-selected': itemIsSelected(item)
+            };
+        };
+
+        vm.singleSelectRowClick = function (item) {
+            vm.bbChecklistSelectedItems = [item];
+
+            $scope.$emit('bbPickerSelected', {
+                selectedItems: vm.bbChecklistSelectedItems
+            });
+        };
+
+        vm.setColumns = function (columns) {
+            vm.columns = columns;
+        };
+
+        $scope.$watch(function () {
+            return vm.bbChecklistItems;
+        }, function () {
+            vm.filteredItems = vm.bbChecklistItems;
+            vm.highlightRefresh = new Date().getTime();
+        });
+
+        $scope.$watch(function () {
+            return vm.searchText;
+        }, function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                invokeFilter();
+            }
+        });
+
+        $scope.$emit('bbPickerReady', {
+            setSelectedItems: function (selectedItems) {
+                vm.bbChecklistSelectedItems = selectedItems;
+            }
+        });
+    }
+
+    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];
+
+    angular.module('sky.checklist.controller', ['sky.checklist.utility'])
+        .controller('BBChecklistController', BBChecklistController);
+}());
+
+/*jslint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbChecklist() {
         return {
             replace: true,
             restrict: 'E',
             transclude: true,
-            templateUrl: 'sky/templates/checklist/checklist.html',
-            scope: {
+            templateUrl: 'sky/templates/checklist/checklist.directive.html',
+            bindToController: {
                 bbChecklistItems: '=',
                 bbChecklistSelectedItems: '=',
                 bbChecklistFilterCallback: '=',
@@ -693,146 +896,28 @@
                 bbChecklistNoItemsMessage: '@',
                 bbChecklistAutomationField: '=',
                 bbChecklistCategories: '=',
-                bbChecklistMode: '@'
+                bbChecklistMode: '@',
+                bbChecklistSelectStyle: '@',
+                bbChecklistIsLoading: '='
             },
-            controller: ['$scope', function ($scope) {
-                var locals = $scope.locals = {};
-
-                this.setColumns = function (columns) {
-                    locals.columns = columns;
-                };
-            }],
-            link: function ($scope, el, attrs) {
-                var filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal),
-                    locals = $scope.locals;
-
-                function itemMatchesCategory(item, category) {
-                    return !category || item.category === category;
-                }
-
-                function itemMatchesFilter(item, category, searchTextUpper) {
-                    var p,
-                        i,
-                        len,
-                        val;
-
-                    if (itemMatchesCategory(item, category)) {
-                        if (!searchTextUpper) {
-                            return true;
-                        }
-
-                        for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
-                            p = SEARCH_PROPS[i];
-                            if (item.hasOwnProperty(p)) {
-                                val = item[p];
-
-                                if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-
-                    return false;
-                }
-
-                function invokeFilterLocal() {
-                    var filteredItems,
-                        i,
-                        item,
-                        items = $scope.bbChecklistItems,
-                        n,
-                        searchTextUpper = (locals.searchText || '').toUpperCase(),
-                        selectedCategory = locals.selectedCategory;
-
-                    if (!searchTextUpper && !selectedCategory) {
-                        filteredItems = items.slice(0);
-                    } else {
-                        filteredItems = [];
-
-                        for (i = 0, n = items.length; i < n; i++) {
-                            item = items[i];
-
-                            if (itemMatchesFilter(item, selectedCategory, searchTextUpper)) {
-                                filteredItems.push(item);
-                            }
-                        }
-                    }
-
-                    locals.filteredItems = filteredItems;
-                }
-
-                function invokeFilter() {
-                    if (filterLocal) {
-                        invokeFilterLocal();
-                    } else if ($scope.bbChecklistFilterCallback) {
-                        $scope.bbChecklistFilterCallback({
-                            searchText: locals.searchText,
-                            category: locals.selectedCategory
-                        });
-                    }
-                }
-
-                $scope.bbChecklistSelectedItems = $scope.bbChecklistSelectedItems || [];
-
-                locals.selectAll = function () {
-                    var i,
-                        item,
-                        items = locals.filteredItems,
-                        selected = $scope.bbChecklistSelectedItems;
-
-                    for (i = 0; i < items.length; i += 1) {
-                        item = items[i];
-                        if (!bbChecklistUtility.contains(selected, item)) {
-                            bbChecklistUtility.add(selected, item);
-                        }
-                    }
-                };
-
-                locals.clear = function () {
-                    var i,
-                        item,
-                        items = locals.filteredItems,
-                        selected = $scope.bbChecklistSelectedItems;
-
-                    for (i = 0; i < items.length; i += 1) {
-                        item = items[i];
-                        bbChecklistUtility.remove(selected, item);
-                    }
-                };
-
-                locals.rowClicked = function (item) {
-                    var selected = $scope.bbChecklistSelectedItems;
-
-                    if (!bbChecklistUtility.contains(selected, item)) {
-                        bbChecklistUtility.add(selected, item);
-                    } else {
-                        bbChecklistUtility.remove(selected, item);
-                    }
-                };
-
-                locals.filterByCategory = function (selectedCategory) {
-                    locals.selectedCategory = selectedCategory;
-                    invokeFilter();
-                };
-
-                $scope.$watch('bbChecklistItems', function () {
-                    locals.filteredItems = $scope.bbChecklistItems;
-                    locals.highlightRefresh = new Date().getTime();
-                });
-
-                $scope.$watch('locals.searchText', function (newValue, oldValue) {
-                    if (newValue !== oldValue) {
-                        invokeFilter();
-                    }
-                });
+            controller: 'BBChecklistController',
+            controllerAs: 'bbChecklist',
+            scope: {},
+            link: function (scope, el, attrs, vm) {
+                vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
             }
         };
     }
 
-    bbChecklist.$inject = ['bbChecklistUtility'];
-
-    angular.module('sky.checklist', ['sky.check', 'sky.checklist.column', 'sky.checklist.columns', 'sky.checklist.model', 'sky.checklist.utility', 'sky.resources'])
+    angular.module(
+        'sky.checklist.directive',
+        [
+            'sky.check',
+            'sky.checklist.controller',
+            'sky.resources',
+            'sky.wait'
+        ]
+    )
         .directive('bbChecklist', bbChecklist);
 }());
 
@@ -843,66 +928,92 @@
 
     function bbChecklistColumn() {
         return {
-            require: '^bbChecklistColumns',
+            require: ['bbChecklistColumn', '^bbChecklistColumns'],
             restrict: 'E',
-            scope: {
+            bindToController: {
                 bbChecklistColumnCaption: "=",
                 bbChecklistColumnField: "=",
                 bbChecklistColumnClass: "=",
                 bbChecklistColumnWidth: "=",
                 bbChecklistColumnAutomationId: "="
             },
-            link: function ($scope, element, attrs, bbChecklistColumns) {
-                /*jslint unparam: true */
-                var column = {
-                    caption: $scope.bbChecklistColumnCaption,
-                    field: $scope.bbChecklistColumnField,
-                    'class': $scope.bbChecklistColumnClass,
-                    width: $scope.bbChecklistColumnWidth,
-                    automationId: $scope.bbChecklistColumnAutomationId
+            controller: function () {},
+            controllerAs: 'bbChecklistColumn',
+            scope: {},
+            link: function ($scope, element, attrs, ctrls) {
+                var bbChecklistColumns = ctrls[1],
+                    column,
+                    vm = ctrls[0];
+
+                column = {
+                    caption: vm.bbChecklistColumnCaption,
+                    field: vm.bbChecklistColumnField,
+                    'class': vm.bbChecklistColumnClass,
+                    width: vm.bbChecklistColumnWidth,
+                    automationId: vm.bbChecklistColumnAutomationId
                 };
 
                 bbChecklistColumns.addColumn(column);
             }
         };
     }
-    
-    angular.module('sky.checklist.column', ['sky.checklist.columns'])
+
+    angular.module('sky.checklist.column.directive', ['sky.checklist.columns.directive'])
         .directive('bbChecklistColumn', bbChecklistColumn);
 }());
+
 /*global angular */
 
 (function () {
     'use strict';
-    
-    function bbChecklistColumns() {
-        return {
-            require: '^bbChecklist',
-            restrict: 'E',
-            scope: {
-            },
-            controller: ['$scope', function ($scope) {
-                $scope.columns = [];
 
-                this.addColumn = function (column) {
-                    $scope.columns.push(column);
-                };
-            }],
-            link: function ($scope, element, attrs, bbChecklist) {
-                /*jslint unparam: true */
-                bbChecklist.setColumns($scope.columns);
-            }
+    function BBChecklistColumnsController() {
+        var vm = this;
+
+        vm.columns = [];
+
+        vm.addColumn = function (column) {
+            vm.columns.push(column);
         };
     }
-    
-    angular.module('sky.checklist.columns', [])
-        .directive('bbChecklistColumns', bbChecklistColumns);
+
+    angular.module('sky.checklist.columns.controller', [])
+        .controller('BBChecklistColumnsController', BBChecklistColumnsController);
 }());
+
 /*global angular */
 
 (function () {
     'use strict';
-    
+
+    function bbChecklistColumns() {
+        function link($scope, element, attrs, ctrls) {
+            var bbChecklist = ctrls[1],
+                vm = ctrls[0];
+
+            bbChecklist.setColumns(vm.columns);
+        }
+
+        return {
+            require: ['bbChecklistColumns', '^bbChecklist'],
+            restrict: 'E',
+            scope: {},
+            bindToController: {},
+            controller: 'BBChecklistColumnsController',
+            controllerAs: 'bbChecklistColumns',
+            link: link
+        };
+    }
+
+    angular.module('sky.checklist.columns.directive', ['sky.checklist.columns.controller'])
+        .directive('bbChecklistColumns', bbChecklistColumns);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     function checklistModel($compile, $parse, bbChecklistUtility) {
         // http://stackoverflow.com/a/19228302/1458162
         function postLinkFn(scope, elem, attrs) {
@@ -967,21 +1078,22 @@
             }
         };
     }
-    
+
     checklistModel.$inject = ['$compile', '$parse', 'bbChecklistUtility'];
-    
-    angular.module('sky.checklist.model', ['sky.checklist.utility'])
+
+    angular.module('sky.checklist.model.directive', ['sky.checklist.utility'])
         .directive('checklistModel', checklistModel);
 }());
+
 /*global angular */
 
 (function () {
     'use strict';
-    
+
     angular.module('sky.checklist.utility', [])
         .factory('bbChecklistUtility', function () {
             return {
-                
+
                 contains: function (arr, item) {
                     var i;
 
@@ -996,10 +1108,10 @@
                 },
 
                 // add
-                add: function (arr, item) {
+                add: function (arr, item, isSingleSelect) {
                     var i;
 
-                    arr = angular.isArray(arr) ? arr : [];
+                    arr = !isSingleSelect && angular.isArray(arr) ? arr : [];
                     for (i = 0; i < arr.length; i += 1) {
                         if (angular.equals(arr[i], item)) {
                             return arr;
@@ -1027,6 +1139,7 @@
             };
         });
 }());
+
 /* global angular */
 
 (function () {
@@ -6799,6 +6912,298 @@ angular.module('sky.palette.config', [])
         }]);
 }(jQuery));
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBSelectFieldController($scope, bbChecklistUtility, bbFormat, bbResources, $filter) {
+        var vm = this;
+
+        vm.getFieldInclude = function () {
+            var fieldStyle = vm.bbSelectFieldStyle;
+
+            if (fieldStyle !== 'single') {
+                fieldStyle = 'multiple';
+            }
+
+            return 'sky/templates/selectfield/selectfield' + fieldStyle + '.include.html';
+        };
+
+        /* Begin "public" API methods (called by child directives) */
+        vm.setPicker = function (picker) {
+            vm.picker = picker;
+        };
+
+        vm.getSelectedItems = function () {
+            var selectedItems = vm.bbSelectFieldSelectedItems;
+
+            // Make a copy of the array so that changes the user makes before confirming the dialog
+            // don't make their way back up to the parent scope.
+            return angular.isArray(selectedItems) ? selectedItems.slice() : [];
+        };
+
+        vm.setSelectedItems = function (selectedItems) {
+            vm.bbSelectFieldSelectedItems = selectedItems;
+        };
+
+        vm.selectFieldClick = function () {
+            if (vm.picker) {
+                vm.picker.open();
+            }
+        };
+
+        vm.getSummaryCountText = function () {
+            var selectedItems = vm.bbSelectFieldSelectedItems,
+                formattedCount;
+
+            /*istanbul ignore else sanity check */
+            if (angular.isArray(selectedItems)) {
+
+                formattedCount = $filter('bbAutonumeric')(selectedItems.length, 'number', true);
+                return bbFormat.formatText(bbResources.selectfield_summary_text, formattedCount);
+            }
+        };
+
+        vm.removeAll = function () {
+            vm.bbSelectFieldSelectedItems = [];
+        };
+
+        vm.remove = function (item) {
+            bbChecklistUtility.remove(vm.bbSelectFieldSelectedItems, item);
+        };
+        /* End "public" API methods (called by child directives) */
+    }
+
+    BBSelectFieldController.$inject = ['$scope', 'bbChecklistUtility', 'bbFormat', 'bbResources', '$filter'];
+
+    angular.module('sky.selectfield.controller', ['sky.autonumeric', 'sky.checklist.utility'])
+        .controller('BBSelectFieldController', BBSelectFieldController);
+
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbSelectField() {
+        function link($scope, el, attrs, ctrls) {
+            if (ctrls[0] && ctrls[1] && attrs.required) {
+                ctrls[1].$validators.required = function () {
+                    return angular.isDefined(ctrls[0].bbSelectFieldSelectedItems) && ctrls[0].bbSelectFieldSelectedItems.length > 0;
+                };
+
+                $scope.$watchCollection(
+                    function () {
+                        return ctrls[0].bbSelectFieldSelectedItems;
+                    },
+                    function () {
+                        ctrls[1].$validate();
+                    }
+                );
+
+                ctrls[0].setModelTouched = function () {
+                    ctrls[1].$setTouched();
+                };
+            }
+        }
+
+        return {
+            require: ['bbSelectField', '?ngModel'],
+            restrict: 'E',
+            bindToController: {
+                bbSelectFieldClick: '&?',
+                bbSelectFieldSelectedItems: '=?ngModel',
+                bbSelectFieldStyle: '@?',
+                bbSelectFieldText: '@?'
+            },
+            controller: 'BBSelectFieldController',
+            controllerAs: 'bbSelectField',
+            scope: true,
+            templateUrl: 'sky/templates/selectfield/selectfield.directive.html',
+            transclude: true,
+            link: link
+        };
+    }
+
+    angular.module('sky.selectfield.directive', ['sky.format', 'sky.resources', 'sky.selectfield.controller'])
+        .directive('bbSelectField', bbSelectField);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbSelectFieldMultipleItemAnimation() {
+        var duration = 250,
+            slideOptions;
+
+        function getFadeOptions(doneFn) {
+            return {
+                duration: duration,
+                always: doneFn,
+                queue: false
+            };
+        }
+
+        slideOptions = {
+            duration: duration,
+            queue: false
+        };
+
+        return {
+            enter: function (el, doneFn) {
+                el
+                    .css({
+                        display: 'none',
+                        opacity: 0
+                    })
+                    .slideDown(slideOptions)
+                    .animate({
+                        opacity: 1
+                    }, getFadeOptions(doneFn));
+            },
+            leave: function (el, doneFn) {
+                // Take focus off the close button
+                el.find('.close').blur();
+
+                el
+                    .slideUp(slideOptions)
+                    .fadeOut(getFadeOptions(doneFn));
+            }
+        };
+    }
+
+    angular.module('sky.selectfield.item.animation', [])
+        .animation('.bb-select-field-multiple-item', bbSelectFieldMultipleItemAnimation);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBSelectFieldPickerController() {
+
+    }
+
+    function bbSelectFieldPicker(bbModal, bbResources) {
+        function link(scope, el, attrs, ctrls) {
+            var bbSelectField = ctrls[1],
+                modalInstance,
+                selectedItems,
+                vm = ctrls[0];
+
+            vm.isSingleStyle = function () {
+                return bbSelectField.bbSelectFieldStyle === 'single';
+            };
+
+            vm.getDialogHeaderText = function () {
+                var header = vm.bbSelectFieldPickerHeader;
+
+                if (!header) {
+                    header = vm.isSingleStyle() ? bbResources.selectfieldpicker_select_value : bbResources.selectfieldpicker_select_values;
+                }
+
+                return header;
+            };
+
+            vm.open = function () {
+                var pickerSelectedOff;
+
+                function cleanup() {
+                    if (angular.isFunction(bbSelectField.setModelTouched)) {
+                        bbSelectField.setModelTouched();
+                    }
+
+                    if (pickerSelectedOff) {
+                        pickerSelectedOff();
+                    }
+
+                    modalInstance = null;
+                }
+
+                function onPickerSelected(e, args) {
+                    selectedItems = args.selectedItems;
+                    bbSelectField.setSelectedItems(selectedItems);
+
+                    modalInstance.close();
+                }
+
+                function onModalClosed(reason) {
+                    if (reason === 'save') {
+                        bbSelectField.setSelectedItems(selectedItems);
+                    }
+
+                    cleanup();
+                }
+
+                function onModalDismissed() {
+                    cleanup();
+                }
+
+                if (angular.isFunction(bbSelectField.bbSelectFieldClick)) {
+                    bbSelectField.bbSelectFieldClick();
+                }
+
+                modalInstance = bbModal.open({
+                    scope: scope,
+                    templateUrl: 'sky/templates/selectfield/selectfieldpicker.directive.html'
+                });
+
+                if (vm.isSingleStyle()) {
+                    pickerSelectedOff = scope.$on('bbPickerSelected', onPickerSelected);
+                }
+
+                modalInstance.result.then(onModalClosed, onModalDismissed);
+            };
+
+            vm.okClick = function () {
+                /*istanbul ignore else sanity check */
+                if (modalInstance) {
+                    modalInstance.close('save');
+                }
+            };
+
+            vm.clearClick = function () {
+                /*istanbul ignore else sanity check */
+                if (modalInstance) {
+                    selectedItems = [];
+                    modalInstance.close('save');
+                }
+            };
+
+            scope.$on('bbPickerReady', function (e, args) {
+                selectedItems = bbSelectField.getSelectedItems();
+
+                args.setSelectedItems(selectedItems);
+            });
+
+            bbSelectField.setPicker(vm);
+        }
+
+        return {
+            require: ['bbSelectFieldPicker', '^bbSelectField'],
+            restrict: 'E',
+            bindToController: {
+                bbSelectFieldPickerTemplate: '@',
+                bbSelectFieldPickerHeader: '@'
+            },
+            controller: BBSelectFieldPickerController,
+            controllerAs: 'bbSelectFieldPicker',
+            link: link,
+            scope: true
+        };
+    }
+
+    bbSelectFieldPicker.$inject = ['bbModal', 'bbResources'];
+
+    angular.module('sky.selectfieldpicker.directive', ['sky.modal', 'sky.resources'])
+        .directive('bbSelectFieldPicker', bbSelectFieldPicker);
+}());
+
 /*jslint nomen: true, plusplus: true */
 /*global angular, jQuery */
 
@@ -9170,6 +9575,7 @@ angular.module('sky.palette.config', [])
         'sky.resources',
         'sky.scrollintoview',
         'sky.searchfield',
+        'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
         'sky.tabsref',
@@ -9212,7 +9618,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -9287,62 +9693,69 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
         '');
-    $templateCache.put('sky/templates/checklist/checklist.html',
+    $templateCache.put('sky/templates/checklist/checklist.directive.html',
         '<div>\n' +
-        '    <div>\n' +
-        '        <div ng-if="bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
-        '            <div class="bb-checklist-search">\n' +
-        '                <input type="text" class="bb-checklist-search-box" maxlength="255" placeholder="{{bbChecklistSearchPlaceholder}}" ng-model="locals.searchText" ng-model-options="{debounce: bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
-        '                <div class="bb-checklist-search-icon">\n' +
-        '                    <i class="fa fa-search"></i>\n' +
-        '                </div>\n' +
+        '  <div>\n' +
+        '    <div ng-if="bbChecklist.bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
+        '      <div class="bb-checklist-search">\n' +
+        '        <input type="text" class="bb-checklist-search-box" maxlength="255" placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}" ng-model="bbChecklist.searchText" ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
+        '        <div class="bb-checklist-search-icon">\n' +
+        '          <i class="fa fa-search"></i>\n' +
+        '        </div>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar">\n' +
+        '      <button type="button" class="btn btn-sm" ng-click="bbChecklist.filterByCategory()" ng-class="bbChecklist.selectedCategory ? \'btn-default\' : \'btn-primary\'">{{\'grid_column_picker_all_categories\' | bbResources}}</button>\n' +
+        '      <button ng-repeat="category in bbChecklist.bbChecklistCategories" type="button" class="btn btn-sm" ng-click="bbChecklist.filterByCategory(category)" ng-class="bbChecklist.selectedCategory === category ? \'btn-primary\' : \'btn-default\'">{{category}}</button>\n' +
+        '    </div>\n' +
+        '    <div class="bb-checklist-filter-bar bb-checklist-select-all-bar" ng-show="!bbChecklist.isSingleSelect()">\n' +
+        '      <button type="button" class="btn btn-link" data-bbauto-field="ChecklistSelectAll" ng-click="bbChecklist.selectAll()">{{\'checklist_select_all\' | bbResources}}</button>\n' +
+        '      <button type="button" class="btn btn-link" data-bbauto-field="ChecklistClear" ng-click="bbChecklist.clear()">{{\'checklist_clear_all\' | bbResources}}</button>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '  <div class="bb-checklist-wrapper" bb-wait="bbChecklist.bbChecklistIsLoading" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">\n' +
+        '    <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">\n' +
+        '      <div ng-switch="bbChecklist.isSingleSelect()">\n' +
+        '        <div ng-switch-when="true">\n' +
+        '          <button ng-repeat="item in bbChecklist.filteredItems" type="button" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}" ng-click="bbChecklist.singleSelectRowClick(item)">\n' +
+        '            <ng-include class="bb-checklist-list-col" src="\'sky/templates/checklist/checklistlistrow.include.html\'"></ng-include>\n' +
+        '          </button>\n' +
+        '        </div>\n' +
+        '        <div ng-switch-default>\n' +
+        '          <label ng-repeat="item in bbChecklist.filteredItems" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}">\n' +
+        '            <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">\n' +
+        '              <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />\n' +
         '            </div>\n' +
+        '            <ng-include class="bb-checklist-list-col" src="\'sky/templates/checklist/checklistlistrow.include.html\'"></ng-include>\n' +
+        '          </label>\n' +
         '        </div>\n' +
-        '        <div ng-if="bbChecklistCategories && bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar">\n' +
-        '            <button type="button" class="btn btn-sm" ng-click="locals.filterByCategory()" ng-class="locals.selectedCategory ? \'btn-default\' : \'btn-primary\'">{{\'grid_column_picker_all_categories\' | bbResources}}</button>\n' +
-        '            <button ng-repeat="category in bbChecklistCategories" type="button" class="btn btn-sm" ng-click="locals.filterByCategory(category)" ng-class="locals.selectedCategory === category ? \'btn-primary\' : \'btn-default\'">{{category}}</button>\n' +
-        '        </div>\n' +
-        '        <div class="bb-checklist-filter-bar bb-checklist-select-all-bar">\n' +
-        '            <button type="button" class="btn btn-link" data-bbauto-field="ChecklistSelectAll" ng-click="locals.selectAll()">{{\'checklist_select_all\' | bbResources}}</button>\n' +
-        '            <button type="button" class="btn btn-link" data-bbauto-field="ChecklistClear" ng-click="locals.clear()">{{\'checklist_clear_all\' | bbResources}}</button>\n' +
-        '        </div>\n' +
+        '      </div>\n' +
         '    </div>\n' +
-        '    <div class="bb-checklist-wrapper" ng-switch="bbChecklistMode">\n' +
-        '        <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{locals.filteredItems.length}}">\n' +
-        '            <label class="bb-checklist-list-row" ng-repeat="item in locals.filteredItems" data-bbauto-field="{{item.name}}">\n' +
-        '                <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">\n' +
-        '                    <input\n' +
-        '                           bb-check\n' +
-        '                           type="checkbox"\n' +
-        '                           checklist-model="bbChecklistSelectedItems"\n' +
-        '                           checklist-value="item"\n' +
-        '                           />\n' +
-        '                </div>\n' +
-        '                <div class="bb-checklist-list-col">\n' +
-        '                    <div class="bb-checklist-list-title" bb-highlight="locals.searchText" ng-bind="item.title"></div>\n' +
-        '                    <div class="bb-checklist-list-description" bb-highlight="locals.searchText" ng-bind="item.description"></div>\n' +
-        '                </div>\n' +
-        '            </label>\n' +
-        '        </div>\n' +
-        '        <table class="table bb-checklist-table" ng-switch-default>\n' +
-        '            <thead>\n' +
-        '                <tr>\n' +
-        '                    <th class="bb-checklist-checkbox-column"></th>\n' +
-        '                    <th ng-repeat="column in locals.columns" class="{{column.class}}" ng-style="{\'width\': column.width}">{{column.caption}}</th>\n' +
-        '                </tr>\n' +
-        '            </thead>\n' +
-        '            <tbody bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{locals.filteredItems.length}}">\n' +
-        '                <tr ng-repeat="item in locals.filteredItems" ng-click="locals.rowClicked(item);" class="bb-checklist-row">\n' +
-        '                    <td>\n' +
-        '                        <input bb-check type="checkbox" checklist-model="bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklistAutomationField]}}" />\n' +
-        '                    </td>\n' +
-        '                    <td ng-repeat="column in locals.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
-        '                </tr>\n' +
-        '            </tbody>\n' +
-        '        </table>\n' +
-        '        <div class="bb-checklist-no-items" ng-if="!locals.filteredItems.length">{{bbChecklistNoItemsMessage || (\'checklist_no_items\' | bbResources)}}</div>\n' +
-        '    </div>\n' +
-        '    <div ng-transclude></div>\n' +
+        '    <table class="table bb-checklist-table" ng-switch-default>\n' +
+        '      <thead>\n' +
+        '        <tr>\n' +
+        '          <th class="bb-checklist-checkbox-column"></th>\n' +
+        '          <th ng-repeat="column in bbChecklist.columns" class="{{column.class}}" ng-style="{\'width\': column.width}">{{column.caption}}</th>\n' +
+        '        </tr>\n' +
+        '      </thead>\n' +
+        '      <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">\n' +
+        '        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">\n' +
+        '          <td>\n' +
+        '            <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />\n' +
+        '          </td>\n' +
+        '          <td ng-repeat="column in bbChecklist.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
+        '        </tr>\n' +
+        '      </tbody>\n' +
+        '    </table>\n' +
+        '    <div class="bb-checklist-no-items" ng-if="!bbChecklist.filteredItems.length">{{bbChecklist.bbChecklistNoItemsMessage || (\'checklist_no_items\' | bbResources)}}</div>\n' +
+        '  </div>\n' +
+        '  <div ng-transclude></div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/checklist/checklistlistrow.include.html',
+        '<div>\n' +
+        '  <div class="bb-checklist-list-title" bb-highlight="bbChecklist.searchText" ng-bind="item.title"></div>\n' +
+        '  <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
@@ -9814,6 +10227,66 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<ul class="ui-select-choices ui-select-choices-content dropdown-menu">\n' +
         '  <li class="bb-searchfield-no-records"></li>\n' +
         '</ul>\n' +
+        '');
+    $templateCache.put('sky/templates/selectfield/selectfield.directive.html',
+        '<ng-include src="bbSelectField.getFieldInclude()"></ng-include>\n' +
+        '<div ng-transclude></div>\n' +
+        '');
+    $templateCache.put('sky/templates/selectfield/selectfieldmultiple.include.html',
+        '<button type="button" class="btn btn-link bb-select-field-multiple" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '  <i class="fa fa-plus-circle"></i> <span class="bb-select-field-multiple-title">{{bbSelectField.bbSelectFieldText}}</span>\n' +
+        '</button>\n' +
+        '<div>\n' +
+        '  <ul class="list-unstyled bb-select-field-multiple-items">\n' +
+        '    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">\n' +
+        '      <div class="bb-select-field-multiple-item-title">\n' +
+        '        {{selectedItem.title}}\n' +
+        '      </div>\n' +
+        '      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.remove(selectedItem); bbSelectField.setModelTouched()">\n' +
+        '        <span aria-hidden="true">&times;</span>\n' +
+        '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
+        '      </button>\n' +
+        '    </li>\n' +
+        '    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">\n' +
+        '      <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">\n' +
+        '        {{bbSelectField.getSummaryCountText()}}\n' +
+        '      </div>\n' +
+        '      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.removeAll(); bbSelectField.setModelTouched()">\n' +
+        '        <span aria-hidden="true">&times;</span>\n' +
+        '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
+        '      </button>\n' +
+        '    </li>\n' +
+        '  </ul>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/selectfield/selectfieldpicker.directive.html',
+        '<bb-modal>\n' +
+        '  <div class="modal-form">\n' +
+        '    <bb-modal-header>{{bbSelectFieldPicker.getDialogHeaderText()}}</bb-modal-header>\n' +
+        '    <div bb-modal-body>\n' +
+        '      <ng-include src="bbSelectFieldPicker.bbSelectFieldPickerTemplate"></ng-include>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '  <bb-modal-footer ng-if="!bbSelectFieldPicker.isSingleStyle()">\n' +
+        '    <bb-modal-footer-button-primary ng-click="bbSelectFieldPicker.okClick()">\n' +
+        '      {{\'selectfieldpicker_select\' | bbResources}}\n' +
+        '    </bb-modal-footer-button-primary>\n' +
+        '    <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>\n' +
+        '  </bb-modal-footer>\n' +
+        '  <bb-modal-footer ng-if="bbSelectFieldPicker.isSingleStyle()">\n' +
+        '    <bb-modal-footer-button ng-click="bbSelectFieldPicker.clearClick()">\n' +
+        '      {{\'selectfieldpicker_clear\' | bbResources}}\n' +
+        '    </bb-modal-footer-button>\n' +
+        '  </bb-modal-footer>\n' +
+        '</bb-modal>\n' +
+        '');
+    $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
+        '<button type="button" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '  <div class="bb-select-field-single-inner">\n' +
+        '    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>\n' +
+        '    <div class="bb-select-field-single-icon"><i class="fa fa-sort"></i></div>\n' +
+        '  </div>\n' +
+        '</button>\n' +
         '');
     $templateCache.put('sky/templates/tabs/tab.html',
         '<div ng-hide="!tabsInitialized" data-bbauto-field="{{bbTabAutomationId}}" class="responsiveTabControl">\n' +
