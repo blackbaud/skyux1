@@ -1,27 +1,21 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('type', function () {
     'use strict';
 
-    var options = {};
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
+    it('should match the baseline type sceenshot', function (done) {
+        var result,
+            common = require('../common');
 
-    it('should take type screenshots', function (done) {
-        var screenshotName = 'type',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/type/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-type .bb-text-block'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        result = browser.url('/type/fixtures/test.full.html');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'type',
+            selector: '#screenshot-type .bb-text-block',
+            done: done
+        });
     });
 });

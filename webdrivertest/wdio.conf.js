@@ -5,9 +5,9 @@
 
     var capabilities = [
         {
-            browser: 'chrome',
-            browser_version: '47.0.2526',
+            browserName: 'chrome',
             'browserstack.local': 'true',
+            'browserstack.debug': 'true',
             os: 'OS X',
             os_version: 'Yosemite',
             browserDisconnectTimeout: 3e5,
@@ -19,6 +19,7 @@
         {
             browserName: 'firefox',
             'browserstack.local': 'true',
+            'browserstack.debug': 'true',
             os: 'OS X',
             os_version: 'Yosemite',
             browserDisconnectTimeout: 3e5,
@@ -88,14 +89,30 @@
         config.capabilities = capabilities;
         config.host = 'hub.browserstack.com';
         config.port = 80;
-        exports.environment = '';
+        config.plugins = {
+            webdrivercss: {
+                screenshotRoot: 'webdriver-screenshots',
+                failedComparisonsRoot: 'webdriver-screenshots-diffs',
+                mismatchTolerance: 0.05,
+                screenWidth: [1280]
+            }
+        };
+
     } else {
         config.capabilities = [
             {
-                browserName: 'chrome'
+                browserName: 'chrome',
+                os: 'OS X'
             }
         ];
-        exports.environment = 'local';
+        config.plugins = {
+            webdrivercss: {
+                screenshotRoot: 'webdriver-screenshotslocal',
+                failedComparisonsRoot: 'webdriver-screenshotslocal-diffs',
+                mismatchTolerance: 0.05,
+                screenWidth: [1280]
+            }
+        };
     }
 
     exports.config = config;
