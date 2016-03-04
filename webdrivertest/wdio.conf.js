@@ -3,59 +3,7 @@
 (function () {
     'use strict';
 
-    var capabilities = [
-        {
-            browser: 'chrome',
-            browser_version: '47.0.2526',
-            'browserstack.local': 'true',
-            os: 'OS X',
-            os_version: 'Yosemite',
-            browserDisconnectTimeout: 3e5,
-            browserDisconnectTolerance: 3,
-            browserNoActivityTimeout: 3e5,
-            captureTimeout: 3e5,
-            build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-        },
-        {
-            browserName: 'firefox',
-            'browserstack.local': 'true',
-            os: 'OS X',
-            os_version: 'Yosemite',
-            browserDisconnectTimeout: 3e5,
-            browserDisconnectTolerance: 3,
-            browserNoActivityTimeout: 3e5,
-            captureTimeout: 3e5,
-            build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-        }/*,
-        {
-            'browserstack.local': 'true',
-            browserDisconnectTimeout: 3e5,
-            browserDisconnectTolerance: 3,
-            browserNoActivityTimeout: 3e5,
-            captureTimeout: 3e5,
-            browser: 'ie',
-            browser_version: '11.0',
-            'browserstack.ie.driver': '2.48',
-            os: 'Windows',
-            os_version: '8.1',
-            build: 'win81-ie11-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-        },
-        {
-            'browserstack.local': 'true',
-            browserDisconnectTimeout: 3e5,
-            browserDisconnectTolerance: 3,
-            browserNoActivityTimeout: 3e5,
-            captureTimeout: 3e5,
-            browser: 'ie',
-            browser_version: '10.0',
-            'browserstack.ie.driver': '2.48',
-            os: 'Windows',
-            os_version: '8',
-            build: 'win8-ie10-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
-        }*/
-    ],
-    config = {
-
+    var config = {
         specs: [
             'webdrivertest/test/**/*.visual.js'
         ],
@@ -83,19 +31,35 @@
     };
 
     if (process.env.TRAVIS) {
-        config.user = process.env.BROWSER_STACK_USERNAME;
-        config.key = process.env.BROWSER_STACK_ACCESS_KEY;
-        config.capabilities = capabilities;
-        config.host = 'hub.browserstack.com';
-        config.port = 80;
         exports.environment = '';
-    } else {
         config.capabilities = [
             {
+                browserName: 'chrome',
+                platform: 'OS X 10.11',
+                browserDisconnectTimeout: 3e5,
+                browserDisconnectTolerance: 3,
+                browserNoActivityTimeout: 3e5,
+                captureTimeout: 3e5,
+                build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
+                'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER
+            },
+            {
+                browserName: 'firefox',
+                platform: 'OS X 10.11',
+                browserDisconnectTimeout: 3e5,
+                browserDisconnectTolerance: 3,
+                browserNoActivityTimeout: 3e5,
+                captureTimeout: 3e5,
+                build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
+                'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER
+            }
+        ];
+    } else {
+        exports.environment = 'local';
+        config.capabilities = [{
                 browserName: 'chrome'
             }
         ];
-        exports.environment = 'local';
     }
 
     exports.config = config;
