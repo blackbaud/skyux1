@@ -31,11 +31,11 @@ module.exports = function (config) {
                 browserName: 'firefox',
                 platform: 'Windows 8.1'
             },
-            sl_osx_safari_latest: {
-                base: base,
-                browserName: 'safari',
-                platform: 'OS X 10.11'
-            },
+            // sl_osx_safari_latest: {
+            //     base: base,
+            //     browserName: 'safari',
+            //     platform: 'OS X 10.11'
+            // },
             sl_osx_chrome_latest: {
                 base: base,
                 browserName: 'chrome',
