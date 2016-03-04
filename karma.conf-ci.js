@@ -17,8 +17,8 @@ module.exports = function (config) {
             },
             sl_windows_edge: {
                 base: base,
-                browserName: 'internet explorer',
-                version: '20',
+                browserName: 'microsoftedge',
+                version: '20.10240',
                 platform: 'Windows 10'
             },
             sl_windows_chrome_latest: {
