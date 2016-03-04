@@ -10,7 +10,7 @@
 @import "FontAwesome/font-awesome";
 
 // Google Fonts
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Oswald:300,400,700");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,400italic|Oswald:300,400,700");
 
 //Load Sky styles
 @import "jqgrid";
@@ -21,6 +21,8 @@
 @import "checklist";
 @import "datefield";
 @import "dropdowns";
+@import "daterangepicker";
+@import "error";
 @import "filters";
 @import "grid";
 @import "tables";
@@ -46,6 +48,10 @@
 @import "wizard";
 @import "fileattachments";
 @import "repeaters";
+@import "keyinfo";
+@import "pagesummary";
+@import "avatar";
+@import "selectfield";
 
 // Default Sky Theme
 @import "theme";

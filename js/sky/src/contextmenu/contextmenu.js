@@ -1,26 +1,23 @@
 /* global angular */
 
-/** @module Context Menu
-
-@icon ellipsis-h
-@summary The context menu creates simple or complicated dropdown menus that you can incorporate into buttons.
-@description The context menu directives allow you to easily create Sky-styled  [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. There are 3 directives in the context menu module:
-  - `bb-context-menu` creates a dropdown with the context menu button.
-  - `bb-context-menu-item` creates dropdown menu items within a dropdown that execute `bb-context-menu-action` on click.
-  - `bb-context-menu-button` creates a button with the Sky context menu styles.
-  - `bb-submenu` creates an accordion style submenu in a dropdown, you can place it in a dropdown list element.
-    - `bb-submenu-heading` Can be either an attribute on `bb-submenu` that can be set equal to static header text, or can be used as a directive inside of `bb-submenu` to place arbitrary content in an accordion heading.
-*/
-
 (function () {
     'use strict';
+
+    function getTemplateUrl(name) {
+        return 'sky/templates/contextmenu/' + name + '.html';
+    }
 
     function bbContextMenu() {
         return {
             replace: true,
             restrict: 'E',
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
+            templateUrl: getTemplateUrl('contextmenu'),
+            link: function ($scope) {
+                $scope.contextButtonStopPropagation = function ($event) {
+                    $event.stopPropagation();
+                };
+            }
         };
     }
 
@@ -32,14 +29,15 @@
             scope: {
                 clickItem: '&bbContextMenuAction'
             },
-            template: '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>'
+            templateUrl: getTemplateUrl('menuitem')
         };
     }
+
     function bbContextMenuButton() {
         return {
             restrict: 'E',
             replace: true,
-            template: '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>'
+            templateUrl: getTemplateUrl('menubutton')
         };
     }
 
@@ -55,7 +53,6 @@
         self.toggleAccordion = function ($event) {
             toggleAccordion($event, $scope);
         };
-
     }
 
     BBSubmenuController.$inject = ['$scope'];
@@ -68,7 +65,6 @@
                 heading: '=?bbSubmenuHeading'
             },
             link: function ($scope, el, attrs) {
-
                 $scope.accordionLocals = {
                     accordionOpen: false,
                     staticHeader: false
@@ -81,10 +77,9 @@
                 $scope.toggleAccordion = function ($event) {
                     toggleAccordion($event, $scope);
                 };
-
             },
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/submenu.html'
+            templateUrl: getTemplateUrl('submenu')
         };
     }
 
@@ -99,7 +94,7 @@
                 };
             },
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/submenuheading.html'
+            templateUrl: getTemplateUrl('submenuheading')
         };
     }
 

@@ -241,12 +241,9 @@
         ['icon', null, MSG_LEGACY_CLASS],
         ['icons-box', null, MSG_LEGACY_CLASS],
         ['image', null, MSG_LEGACY_CLASS],
-        ['img-circle', null, MSG_LEGACY_CLASS],
         ['inbox', null, MSG_LEGACY_CLASS],
         ['infont', null, MSG_LEGACY_CLASS],
         ['inline', null, MSG_LEGACY_CLASS],
-        ['input-group-addon', null, MSG_LEGACY_CLASS],
-        ['input-group-btn', null, MSG_LEGACY_CLASS],
         ['input-s', null, MSG_LEGACY_CLASS],
         ['input-s-lg', null, MSG_LEGACY_CLASS],
         ['input-s-sm', null, MSG_LEGACY_CLASS],
@@ -466,11 +463,40 @@
     ];
 
     deprecatedDirectives = [
+        ['bb-autofocus'],
         ['bb-chart-scatterplot'],
         ['bb-date-field', 'bb-datepicker'],
         ['bb-helpwidget', null, 'Use the "bbHelp" service instead to show the help panel from a controller.'],
         ['bb-money-input', 'bb-autonumeric'],
-        ['bb-tab', null, 'Use the Angular UI Bootstrap "tabset" directive along with the "bb-tab-scroll" and "bb-tab-sref" directives if needed.']
+        ['bb-tab', null, 'Use the Angular UI Bootstrap "tabset" directive along with the "bb-tab-scroll" and "bb-tab-sref" directives if needed.'],
+        ['bb-tooltip', null, 'Use the Angular UI Bootstrap uib-tooltip-template directive and add quotes around the template URI to make it a string literal'],
+        ['dropdown', 'uib-dropdown'],
+        ['dropdown-toggle', 'uib-dropdown-toggle'],
+        ['accordion', 'uib-accordion'],
+        ['accordion-group', 'uib-accordion-group'],
+        ['accordion-heading', 'uib-accordion-heading'],
+        ['datepicker-popup', 'uib-datepicker-popup'],
+        ['collapse', 'uib-collapse'],
+        ['pagination', 'uib-pagination'],
+        ['tabset', 'uib-tabset'],
+        ['tab', 'uib-tab'],
+        ['tab-heading', 'uib-tab-heading'],
+        ['alert', 'uib-alert'],
+        ['datepicker', 'uib-datepicker'],
+        ['popover-template', 'uib-popover-template'],
+        ['popover-html', 'uib-popover-html'],
+        ['popover', 'uib-popover'],
+        ['progress', 'uib-progress'],
+        ['bar', 'uib-bar'],
+        ['progressbar', 'uib-progressbar'],
+        ['rating', 'uib-rating'],
+        ['timepicker', 'uib-timepicker'],
+        ['tooltip', 'uib-tooltip'],
+        ['tooltip-html', 'uib-tooltip-html'],
+        ['typeahead', 'uib-typeahead'],
+        ['typeahead-popup', 'uib-typeahead-popup'],
+        ['typeahead-match', 'uib-typeahead-match']
+
     ];
 
     function getElText(el) {
@@ -523,6 +549,7 @@
 
     function findDeprecatedClasses(el, msgs) {
         var deprecatedClass,
+            deprecatedClassName,
             deprecatedEls,
             msg,
             i,
@@ -530,11 +557,12 @@
 
         for (i = 0, n = deprecatedClasses.length; i < n; i++) {
             deprecatedClass = deprecatedClasses[i];
+            deprecatedClassName = deprecatedClass[0];
 
-            deprecatedEls = el.find('.' + deprecatedClass[0]);
+            deprecatedEls = el.find('.' + deprecatedClassName + ', [ng-class*=\'\\\'' + deprecatedClassName + '\\\'\']');
 
             if (deprecatedEls.length > 0) {
-                msg = 'The class "' + deprecatedClass[0] + '" is deprecated.';
+                msg = 'The class "' + deprecatedClassName + '" is deprecated.';
 
                 switch (deprecatedClass.length) {
                     case 3:

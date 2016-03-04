@@ -2,6 +2,10 @@
 
 
 /* FORMS START */
+.has-error {
+  @include form-control-validation($state-danger-text, $bb-color-red, $state-danger-bg);
+}
+
 .tile-form {
     background: $tile-form-background;
     border-top: 1px solid $form-border-color;
@@ -40,15 +44,6 @@
         font-size: $font-size-base;
         height: 10em;
         padding: 5px;
-    }
-
-    input[type=freeform]{
-        width: 100%;
-        margin: 5px 0 10px 0;
-        border: 1px solid $form-textarea-color;
-        font-size: $font-size-base;
-        padding: 5px;
-        -webkit-appearance: none;
     }
 
     div.textarea-container {
@@ -155,6 +150,12 @@ select.ng-invalid.submitted,
   padding: 6px 12px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
   width: 100%;
+}
+
+.control-label.required:after {
+    content: "*";
+    color: $bb-error-color;
+    padding-left: 5px;
 }
 
 /* FORMS END */

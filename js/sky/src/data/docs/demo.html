@@ -1,5 +1,6 @@
 <div ng-controller="DataTestController as dataCtrl">
   <button type="button" class="btn btn-primary" ng-click="dataCtrl.getFoo()">Get Foo</button>
-  <div>Returned foo data is {{dataCtrl.data.foo}}</div>
-  <div>Returned resource data is {{dataCtrl.resources.name}}</div>
+  <div>Returned Foo data: <strong>{{dataCtrl.result.data.foo}}</strong></div>
+  <div>Returned resource data: <strong>{{dataCtrl.result.resources.name}}</strong></div>
+  <div>Returned resource dtatus code: <strong>{{dataCtrl.result.httpResults.resources.status}}</strong></div>
 </div>

@@ -1,0 +1,14 @@
+{
+    "autonumeric_abbr_billions": {
+        "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
+        "message": "B"
+    },
+    "autonumeric_abbr_millions": {
+        "_description": "The suffix to show after an abbreviated value in the millions (e.g. $1.2m)",
+        "message": "M"
+    },
+    "autonumeric_abbr_thousands": {
+        "_description": "The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)",
+        "message": "K"
+    }
+}

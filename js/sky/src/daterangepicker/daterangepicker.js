@@ -1,285 +1,389 @@
 /*jshint browser: true */
 /*global angular */
 
-/** @module Date Range Picker
-@icon calendar
-@summary The date range picker creates an input text box that includes a dropdown for selecting date ranges from a well-known set of options.
- @description The date range picker directive allows you to easily choose a date range from a well-known set of options. A date range picker service also exists to work hand-in-hand with the directive to provide more service-oriented functionality.
-
-### Date Range Picker Settings ###
-
- - `bb-date-range-picker-value` An object tracking the value of the date range picker control.  Right now, the only proeprty of the object is `.dateRangeType` gives you the integer (ENUM) value of the date range typ that was selected in the picker. See the date range picker service for details of this ENUM.
- - `bb-date-range-picker-automation-id` A string to use when creating the bb-auto-field attribute on elements in the date range picker
- - `bb-date-range-picker-options` Optional. An options object that can be provided to customize the behavior of the date range picker.
-
-### Date Range Picker Options Settings ###
-
- - `availableDateRangeTypes` Optional. An array of integers (`dateRangeTypes` ENUM) to specify the ordered list of date range types to be included in the dropdown.  Common variations can be found in the date range picker service.
-
-### Date Range Picker Service ###
-This service provides additional functionality that works closely with the directive.  Below are a list of members provided by the service.
-
- - `dateRangeTypes` An ENUM of all types of date ranges that are understood by the date range picker and can be available in the dropdown.
- - `defaultDateRangeOptions` An array of `dateRangeTypes` providing the default order and set of date range types that are included in the dropdown.
- - `pastDateRangeOptions` An array of `dateRangeTypes` that are appropriate for filtering for things that have occurred in the past.  For example, you wouldn't want to be able to search for items created 'next month'.
- - `getDateRangeTypeCaption` A function for getting the caption of the dropdown item selected for a given `bb-date-range-picker-value`.
- - `getDateRangeFilterDescription` A function for getting an appropriate description string explaining the meaning of a given `bb-date-range-picker-value`.
- */
-
 (function () {
     'use strict';
-    angular.module('sky.daterangepicker', ['sky.resources'])
-        .factory('bbDateRangePicker', ['bbResources', function (bbResources) {
 
-            var dateRangeTypes,
-                defaultDateRangeOptions,
-                pastDateRangeOptions;
 
-            dateRangeTypes = {
-                AT_ANY_TIME: 0,
-                NEXT_WEEK: 1,
-                THIS_MONTH: 2,
-                NEXT_MONTH: 3,
-                THIS_QUARTER: 4,
-                NEXT_QUARTER: 5,
-                THIS_FISCAL_YEAR: 6,
-                NEXT_FISCAL_YEAR: 7,
-                THIS_CALENDAR_YEAR: 8,
-                NEXT_CALENDAR_YEAR: 9,
-                LAST_WEEK: 10,
-                LAST_MONTH: 11,
-                LAST_QUARTER: 12,
-                LAST_FISCAL_YEAR: 13,
-                LAST_CALENDAR_YEAR: 14,
-                TODAY: 15,
-                YESTERDAY: 16,
-                TOMORROW: 17,
-                THIS_WEEK: 18
-            };
+    function bbDateRangePickerFactory(bbResources) {
+        var dateRangeTypes,
+            defaultDateRangeOptions,
+            specificDateRangeOptions,
+            pastDateRangeOptions,
+            dateRangeMap;
 
-            defaultDateRangeOptions = [
-                dateRangeTypes.AT_ANY_TIME,
-                dateRangeTypes.YESTERDAY,
-                dateRangeTypes.TODAY,
-                dateRangeTypes.TOMORROW,
-                dateRangeTypes.LAST_WEEK,
-                dateRangeTypes.THIS_WEEK,
-                dateRangeTypes.NEXT_WEEK,
-                dateRangeTypes.LAST_MONTH,
-                dateRangeTypes.THIS_MONTH,
-                dateRangeTypes.NEXT_MONTH,
-                dateRangeTypes.LAST_QUARTER,
-                dateRangeTypes.THIS_QUARTER,
-                dateRangeTypes.NEXT_QUARTER,
-                dateRangeTypes.LAST_CALENDAR_YEAR,
-                dateRangeTypes.THIS_CALENDAR_YEAR,
-                dateRangeTypes.NEXT_CALENDAR_YEAR,
-                dateRangeTypes.LAST_FISCAL_YEAR,
-                dateRangeTypes.THIS_FISCAL_YEAR,
-                dateRangeTypes.NEXT_FISCAL_YEAR
-            ];
+        dateRangeTypes = {
+            AT_ANY_TIME: 0,
+            NEXT_WEEK: 1,
+            THIS_MONTH: 2,
+            NEXT_MONTH: 3,
+            THIS_QUARTER: 4,
+            NEXT_QUARTER: 5,
+            THIS_FISCAL_YEAR: 6,
+            NEXT_FISCAL_YEAR: 7,
+            THIS_CALENDAR_YEAR: 8,
+            NEXT_CALENDAR_YEAR: 9,
+            LAST_WEEK: 10,
+            LAST_MONTH: 11,
+            LAST_QUARTER: 12,
+            LAST_FISCAL_YEAR: 13,
+            LAST_CALENDAR_YEAR: 14,
+            TODAY: 15,
+            YESTERDAY: 16,
+            TOMORROW: 17,
+            THIS_WEEK: 18,
+            SPECIFIC_RANGE: 19
+        };
 
-            pastDateRangeOptions = [
-                dateRangeTypes.AT_ANY_TIME,
-                dateRangeTypes.YESTERDAY,
-                dateRangeTypes.TODAY,
-                dateRangeTypes.LAST_WEEK,
-                dateRangeTypes.THIS_WEEK,
-                dateRangeTypes.LAST_MONTH,
-                dateRangeTypes.THIS_MONTH,
-                dateRangeTypes.LAST_QUARTER,
-                dateRangeTypes.THIS_QUARTER,
-                dateRangeTypes.LAST_CALENDAR_YEAR,
-                dateRangeTypes.THIS_CALENDAR_YEAR,
-                dateRangeTypes.LAST_FISCAL_YEAR,
-                dateRangeTypes.THIS_FISCAL_YEAR
-            ];
 
-            function getDateRangeTypeCaption(dateRangePickerValue) {
-                if (angular.isNumber(dateRangePickerValue)) {
-                    // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
-                    dateRangePickerValue = { dateRangeType: dateRangePickerValue };
-                } else {
-                    // If the value is undefiend, then map it to a null object.
-                    dateRangePickerValue = dateRangePickerValue || {};
-                }
+        // Deprecated
+        defaultDateRangeOptions = [
+            dateRangeTypes.AT_ANY_TIME,
+            dateRangeTypes.YESTERDAY,
+            dateRangeTypes.TODAY,
+            dateRangeTypes.TOMORROW,
+            dateRangeTypes.LAST_WEEK,
+            dateRangeTypes.THIS_WEEK,
+            dateRangeTypes.NEXT_WEEK,
+            dateRangeTypes.LAST_MONTH,
+            dateRangeTypes.THIS_MONTH,
+            dateRangeTypes.NEXT_MONTH,
+            dateRangeTypes.LAST_QUARTER,
+            dateRangeTypes.THIS_QUARTER,
+            dateRangeTypes.NEXT_QUARTER,
+            dateRangeTypes.LAST_CALENDAR_YEAR,
+            dateRangeTypes.THIS_CALENDAR_YEAR,
+            dateRangeTypes.NEXT_CALENDAR_YEAR,
+            dateRangeTypes.LAST_FISCAL_YEAR,
+            dateRangeTypes.THIS_FISCAL_YEAR,
+            dateRangeTypes.NEXT_FISCAL_YEAR
+        ];
 
-                if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
-                    // If the enum value is undefined, then it represents any time.
-                    dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
-                }
+        // Deprecated
+        specificDateRangeOptions = defaultDateRangeOptions.concat([dateRangeTypes.SPECIFIC_RANGE]);
 
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_at_any_time;
+        // Deprecated
+        pastDateRangeOptions = [
+            dateRangeTypes.AT_ANY_TIME,
+            dateRangeTypes.YESTERDAY,
+            dateRangeTypes.TODAY,
+            dateRangeTypes.LAST_WEEK,
+            dateRangeTypes.THIS_WEEK,
+            dateRangeTypes.LAST_MONTH,
+            dateRangeTypes.THIS_MONTH,
+            dateRangeTypes.LAST_QUARTER,
+            dateRangeTypes.THIS_QUARTER,
+            dateRangeTypes.LAST_CALENDAR_YEAR,
+            dateRangeTypes.THIS_CALENDAR_YEAR,
+            dateRangeTypes.LAST_FISCAL_YEAR,
+            dateRangeTypes.THIS_FISCAL_YEAR
+        ];
 
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_this_week;
+        dateRangeMap = {};
+        dateRangeMap[dateRangeTypes.AT_ANY_TIME] = {
+            caption: bbResources.date_range_picker_at_any_time,
+            description: bbResources.date_range_picker_filter_description_at_any_time
+        };
+        dateRangeMap[dateRangeTypes.YESTERDAY] = {
+            caption: bbResources.date_range_picker_yesterday,
+            description: bbResources.date_range_picker_filter_description_yesterday
+        };
+        dateRangeMap[dateRangeTypes.TODAY] = {
+            caption: bbResources.date_range_picker_today,
+            description: bbResources.date_range_picker_filter_description_today
+        };
+        dateRangeMap[dateRangeTypes.TOMORROW] = {
+            caption: bbResources.date_range_picker_tomorrow,
+            description: bbResources.date_range_picker_filter_description_tomorrow
+        };
+        dateRangeMap[dateRangeTypes.LAST_WEEK] = {
+            caption: bbResources.date_range_picker_last_week,
+            description: bbResources.date_range_picker_filter_description_last_week
+        };
+        dateRangeMap[dateRangeTypes.THIS_WEEK] = {
+            caption: bbResources.date_range_picker_this_week,
+            description: bbResources.date_range_picker_filter_description_this_week
+        };
+        dateRangeMap[dateRangeTypes.NEXT_WEEK] = {
+            caption: bbResources.date_range_picker_next_week,
+            description: bbResources.date_range_picker_filter_description_next_week
+        };
+        dateRangeMap[dateRangeTypes.LAST_QUARTER] = {
+            caption: bbResources.date_range_picker_last_quarter,
+            description: bbResources.date_range_picker_filter_description_last_quarter
+        };
+        dateRangeMap[dateRangeTypes.THIS_QUARTER] = {
+            caption: bbResources.date_range_picker_this_quarter,
+            description: bbResources.date_range_picker_filter_description_this_quarter
+        };
+        dateRangeMap[dateRangeTypes.NEXT_QUARTER] = {
+            caption: bbResources.date_range_picker_next_quarter,
+            description: bbResources.date_range_picker_filter_description_next_quarter
+        };
+        dateRangeMap[dateRangeTypes.LAST_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_last_calendar_year,
+            description: bbResources.date_range_picker_filter_description_last_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_this_calendar_year,
+            description: bbResources.date_range_picker_filter_description_this_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_CALENDAR_YEAR] = {
+            caption: bbResources.date_range_picker_next_calendar_year,
+            description: bbResources.date_range_picker_filter_description_next_calendar_year
+        };
+        dateRangeMap[dateRangeTypes.LAST_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_last_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_last_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_this_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_this_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.NEXT_FISCAL_YEAR] = {
+            caption: bbResources.date_range_picker_next_fiscal_year,
+            description: bbResources.date_range_picker_filter_description_next_fiscal_year
+        };
+        dateRangeMap[dateRangeTypes.THIS_MONTH] = {
+            caption: bbResources.date_range_picker_this_month,
+            description: bbResources.date_range_picker_filter_description_this_month
+        };
+        dateRangeMap[dateRangeTypes.NEXT_MONTH] = {
+            caption: bbResources.date_range_picker_next_month,
+            description: bbResources.date_range_picker_filter_description_next_month
+        };
+        dateRangeMap[dateRangeTypes.LAST_MONTH] = {
+            caption: bbResources.date_range_picker_last_month,
+            description: bbResources.date_range_picker_filter_description_last_month
+        };
+        dateRangeMap[dateRangeTypes.SPECIFIC_RANGE] = {
+            caption: bbResources.date_range_picker_specific_range,
+            description: bbResources.date_range_picker_filter_description_specific_range
+        };
 
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_next_week;
+        function getTypeInfoFromDateRangePickerValue(dateRangePickerValue, getDateRangeTypeInfo) {
+            var info;
+            if (dateRangePickerValue && dateRangePickerValue.dateRangeType) {
+                info = getDateRangeTypeInfo(dateRangePickerValue.dateRangeType);
+            } else {
+                info = getDateRangeTypeInfo(dateRangePickerValue);
+            }
+            return info;
+        }
 
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_this_month;
 
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_next_month;
+        function getDateRangeTypeCaption(dateRangePickerValue, getDateRangeTypeInfo) {
+            var info;
 
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_this_quarter;
+            if (angular.isFunction(getDateRangeTypeInfo)) {
 
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_next_quarter;
+                info = getTypeInfoFromDateRangePickerValue(dateRangePickerValue, getDateRangeTypeInfo);
 
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_tomorrow;
-
+                if (info && info.caption) {
+                    return info.caption;
                 }
             }
 
-            function getDateRangeFilterDescription(dateRangePickerValue) {
+            if (angular.isNumber(dateRangePickerValue)) {
+                // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
+                dateRangePickerValue = { dateRangeType: dateRangePickerValue };
+            } else {
                 // If the value is undefiend, then map it to a null object.
                 dateRangePickerValue = dateRangePickerValue || {};
+            }
 
-                if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
-                    // If the enum value is undefined, then it represents any time.
-                    dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
-                }
+            if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
+                // If the enum value is undefined, then it represents any time.
+                dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
+            }
 
-                switch (dateRangePickerValue.dateRangeType) {
-                case dateRangeTypes.AT_ANY_TIME:
-                    return bbResources.date_range_picker_filter_description_at_any_time;
+            if (angular.isDefined(dateRangeMap[dateRangePickerValue.dateRangeType])) {
+                return dateRangeMap[dateRangePickerValue.dateRangeType].caption;
+            } else {
+                return '';
+            }
 
-                case dateRangeTypes.THIS_WEEK:
-                    return bbResources.date_range_picker_filter_description_this_week;
+        }
 
-                case dateRangeTypes.NEXT_WEEK:
-                    return bbResources.date_range_picker_filter_description_next_week;
-
-                case dateRangeTypes.THIS_MONTH:
-                    return bbResources.date_range_picker_filter_description_this_month;
-
-                case dateRangeTypes.NEXT_MONTH:
-                    return bbResources.date_range_picker_filter_description_next_month;
-
-                case dateRangeTypes.THIS_QUARTER:
-                    return bbResources.date_range_picker_filter_description_this_quarter;
-
-                case dateRangeTypes.NEXT_QUARTER:
-                    return bbResources.date_range_picker_filter_description_next_quarter;
-
-                case dateRangeTypes.THIS_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_fiscal_year;
-
-                case dateRangeTypes.NEXT_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_fiscal_year;
-
-                case dateRangeTypes.THIS_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_this_calendar_year;
-
-                case dateRangeTypes.NEXT_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_next_calendar_year;
-
-                case dateRangeTypes.LAST_WEEK:
-                    return bbResources.date_range_picker_filter_description_last_week;
-
-                case dateRangeTypes.LAST_MONTH:
-                    return bbResources.date_range_picker_filter_description_last_month;
-
-                case dateRangeTypes.LAST_QUARTER:
-                    return bbResources.date_range_picker_filter_description_last_quarter;
-
-                case dateRangeTypes.LAST_FISCAL_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_fiscal_year;
-
-                case dateRangeTypes.LAST_CALENDAR_YEAR:
-                    return bbResources.date_range_picker_filter_description_last_calendar_year;
-
-                case dateRangeTypes.TODAY:
-                    return bbResources.date_range_picker_filter_description_today;
-
-                case dateRangeTypes.YESTERDAY:
-                    return bbResources.date_range_picker_filter_description_yesterday;
-
-                case dateRangeTypes.TOMORROW:
-                    return bbResources.date_range_picker_filter_description_tomorrow;
-
+        function getDateRangeFilterDescription(dateRangePickerValue, getDateRangeTypeInfo) {
+            var info;
+            if (angular.isFunction(getDateRangeTypeInfo)) {
+                info = getTypeInfoFromDateRangePickerValue(dateRangePickerValue, getDateRangeTypeInfo);
+                if (info && info.description) {
+                    return info.description;
                 }
             }
 
-            return {
-                dateRangeTypes: dateRangeTypes,
-                defaultDateRangeOptions: defaultDateRangeOptions,
-                pastDateRangeOptions: pastDateRangeOptions,
-                getDateRangeTypeCaption: getDateRangeTypeCaption,
-                getDateRangeFilterDescription: getDateRangeFilterDescription
-            };
+            if (angular.isNumber(dateRangePickerValue)) {
+                // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
+                dateRangePickerValue = { dateRangeType: dateRangePickerValue };
+            } else {
+                // If the value is undefiend, then map it to a null object.
+                dateRangePickerValue = dateRangePickerValue || {};
+            }
 
-        }])
-        .directive('bbDateRangePicker', ['bbDateRangePicker', function (bbDateRangePicker) {
-            /// <summary>
-            /// This directive provides a date range filter control
-            /// </summary>
+            if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
+                // If the enum value is undefined, then it represents any time.
+                dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
+            }
+            if (angular.isDefined(dateRangeMap[dateRangePickerValue.dateRangeType])) {
+                return dateRangeMap[dateRangePickerValue.dateRangeType].description;
+            } else {
+                return '';
+            }
+        }
 
-            return {
-                replace: true,
-                restrict: 'E',
-                templateUrl: 'sky/templates/daterangepicker/daterangepicker.html',
-                scope: {
-                    bbDateRangePickerValue: "=",
-                    bbDateRangePickerAutomationId: "=",
-                    bbDateRangePickerOptions: '='
-                },
-                controller: ['$scope', function ($scope) {
+        function getDateRangeOptions(optionTypes) {
+            var dateRangeOptions = [dateRangeTypes.AT_ANY_TIME];
+            optionTypes = optionTypes || {};
 
-                    $scope.locals = {
-                        bbDateRangePicker: bbDateRangePicker
-                    };
+            if (optionTypes.includeDefault) {
+                dateRangeOptions.push(dateRangeTypes.YESTERDAY);
+                dateRangeOptions.push(dateRangeTypes.TODAY);
+                dateRangeOptions.push(dateRangeTypes.TOMORROW);
+                dateRangeOptions.push(dateRangeTypes.LAST_WEEK);
+                dateRangeOptions.push(dateRangeTypes.THIS_WEEK);
+                dateRangeOptions.push(dateRangeTypes.NEXT_WEEK);
+                dateRangeOptions.push(dateRangeTypes.LAST_MONTH);
+                dateRangeOptions.push(dateRangeTypes.THIS_MONTH);
+                dateRangeOptions.push(dateRangeTypes.NEXT_MONTH);
+                dateRangeOptions.push(dateRangeTypes.LAST_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.THIS_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.NEXT_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.LAST_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.NEXT_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.LAST_FISCAL_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_FISCAL_YEAR);
+                dateRangeOptions.push(dateRangeTypes.NEXT_FISCAL_YEAR);
+            }
 
-                    $scope.$watch("bbDateRangePickerValue", function (newVal) {
-                        if (!newVal) {
-                            $scope.bbDateRangePickerValue = {
-                                dateRangeType: bbDateRangePicker.dateRangeTypes.AT_ANY_TIME
-                            };
-                            return;
-                        }
-                        newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
-                    }, true);
-                }]
-            };
-        }]);
+            if (optionTypes.includePast && !optionTypes.includeDefault) {
+                dateRangeOptions.push(dateRangeTypes.YESTERDAY);
+                dateRangeOptions.push(dateRangeTypes.TODAY);
+                dateRangeOptions.push(dateRangeTypes.LAST_WEEK);
+                dateRangeOptions.push(dateRangeTypes.THIS_WEEK);
+                dateRangeOptions.push(dateRangeTypes.LAST_MONTH);
+                dateRangeOptions.push(dateRangeTypes.THIS_MONTH);
+                dateRangeOptions.push(dateRangeTypes.LAST_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.THIS_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.LAST_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.LAST_FISCAL_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_FISCAL_YEAR);
+            }
 
+            if (optionTypes.includeSpecific) {
+                dateRangeOptions.push(dateRangeTypes.SPECIFIC_RANGE);
+            }
+
+            return dateRangeOptions;
+        }
+
+        return {
+            
+            defaultDateRangeOptions: defaultDateRangeOptions,
+            pastDateRangeOptions: pastDateRangeOptions,
+            specificDateRangeOptions: specificDateRangeOptions,
+
+            dateRangeTypes: dateRangeTypes,
+            getDateRangeOptions: getDateRangeOptions,
+            getDateRangeTypeCaption: getDateRangeTypeCaption,
+            getDateRangeFilterDescription: getDateRangeFilterDescription
+        };
+    }
+
+    bbDateRangePickerFactory.$inject = ['bbResources'];
+
+    function bbDateRangePickerDirective(bbDateRangePicker, bbResources) {
+
+        return {
+            replace: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/daterangepicker/daterangepicker.html',
+            scope: {},
+            controllerAs: 'bbDateRangePickerCtrl',
+            bindToController: {
+                bbDateRangePickerValue: "=",
+                bbDateRangePickerAutomationId: "=",
+                bbDateRangePickerOptions: '=',
+                fromDate: '=?bbDateRangePickerFromDate',
+                toDate: '=?bbDateRangePickerToDate',
+                pickerLabel: '=?bbDateRangePickerLabel',
+                isValid: '=?bbDateRangePickerValid'
+            },
+            controller: ['$scope', function ($scope) {
+                var vm = this;
+                vm.resources = bbResources;
+
+                vm.defaultDateRangeOptions = bbDateRangePicker.getDateRangeOptions({includeDefault: true});
+
+                vm.getDateRangeTypeCaption = function (dateRangeTypeValue) {
+                    var infoFunction;
+                    if (vm.bbDateRangePickerOptions && angular.isFunction(vm.bbDateRangePickerOptions.getDateRangeTypeInfo)) {
+                        infoFunction = vm.bbDateRangePickerOptions.getDateRangeTypeInfo;
+                    }
+                    return bbDateRangePicker.getDateRangeTypeCaption(dateRangeTypeValue, infoFunction);
+                };
+
+                $scope.$watch(
+                    function () {
+                        return vm.dateRangeForm.$valid;
+                    }, function (newVal) {
+                        vm.isValid = newVal;
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.fromDate;
+                    }, function (newVal) {
+                        /* This prevents minDate from having a reference
+                           to fromDate and changing it */
+                        vm.minDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.toDate;
+                    }, function (newVal) {
+                        /* This prevents maxDate from having a reference
+                           to toDate and changing it */
+                        vm.maxDate = angular.copy(newVal);
+                    }
+                );
+
+                $scope.$watch(
+                    function () {
+                        return vm.bbDateRangePickerValue;
+                    }, function (newVal) {
+                    if (!newVal) {
+                        vm.bbDateRangePickerValue = {
+                            dateRangeType: bbDateRangePicker.dateRangeTypes.AT_ANY_TIME
+                        };
+                        return;
+                    }
+                    vm.specificRangeIsVisible = vm.bbDateRangePickerValue.dateRangeType === bbDateRangePicker.dateRangeTypes.SPECIFIC_RANGE;
+                    newVal.dateRangeType = newVal.dateRangeType || bbDateRangePicker.dateRangeTypes.AT_ANY_TIME;
+                }, true);
+            }],
+            link: function ($scope, el, attr, vm) {
+                vm.noLabels = attr.bbDateRangePickerNoLabels;
+                if (vm.noLabels) {
+                    vm.toPlaceholder = bbResources.date_range_picker_to_date;
+                    vm.fromPlaceholder = bbResources.date_range_picker_from_date;
+                } else {
+                    vm.toPlaceholder = '';
+                    vm.fromPlaceholder = '';
+                }
+            }
+        };
+    }
+
+    bbDateRangePickerDirective.$inject = ['bbDateRangePicker', 'bbResources'];
+
+    angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])
+        .factory('bbDateRangePicker', bbDateRangePickerFactory)
+        .directive('bbDateRangePicker', bbDateRangePickerDirective);
 }());

@@ -1,33 +1,13 @@
 /*jslint plusplus: true */
-
 /*global angular */
-
-/** @module Text Expand
-@icon text-height
-@summary The text expand component truncates long text with an ellipsis and a link that users can click to expand the text.
- @description The texteExpand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold then no action is taken.
-
-Note that collapsed text will have newlines removed. Also, if one or more newlines are detected, the text is automatically collapsed regardless of the total length of the text.
-
-### Text Expand Settings ###
-
- - `bb-text-expand` The text to truncate.
- - `bb-text-expand-max-length` *(Default: 200)* The number of characters to show before truncating the text. The directive will attempt to look back up to 10 characters for a space and truncate there in order to avoid truncating in the middle of a word.
-
-The Text Expand Repeater directive truncates a list of repeater items and will initially display a set number of items. Any items over the set maximum limit are hidden until the user elects to expand the list.
-
-### Text Expand Repeater Settings ###
-
-- `bb-text-expand-repeater-max` The maximum number of items to show before truncating the repeater list.
-- `bb-text-expand-repeater-data` The name of the property containing the repeater data.
- */
 
 (function () {
     'use strict';
 
     var modules = [
             'sky.resources',
-            'sky.scrollintoview'
+            'sky.scrollintoview',
+            'sky.modal'
         ];
 
     function getNewlineCount(value) {
@@ -40,8 +20,21 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
         return 0;
     }
 
+    function createEl($templateCache, templateName) {
+        return angular.element($templateCache.get('sky/templates/textexpand/' + templateName + '.html'));
+    }
+
+    function BBTextExpandController(textExpandContent, headerContent, closeText) {
+        var self = this;
+        self.textExpandContent = textExpandContent;
+        self.headerContent = headerContent;
+        self.closeText = closeText;
+    }
+
+    BBTextExpandController.$inject = ['textExpandContent', 'headerContent', 'closeText'];
+
     angular.module('sky.textexpand', modules)
-        .directive('bbTextExpandRepeater', ['bbResources', function (bbResources) {
+        .directive('bbTextExpandRepeater', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
             function link(scope, el, attrs) {
                 scope.$watch(attrs.bbTextExpandRepeaterData, function (data) {
                     var length,
@@ -53,7 +46,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                     if (data) {
                         length = data.length;
                         maxToShow = +attrs.bbTextExpandRepeaterMax;
-                        seeMoreEl = angular.element('<a class="bb-text-expand-see-more">' + seeMoreText + '</a>');
+                        seeMoreEl = createEl($templateCache, 'seemore').text(seeMoreText);
 
                         if (length > maxToShow) {
                             el.find('li:gt(' + (maxToShow - 1) + ')').addClass('bb-text-expand-toggle-li').hide().end().append(
@@ -66,6 +59,8 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                     }
 
                                     seeMoreEl.toggleClass('bb-text-expand-see-more');
+
+                                    return false;
                                 })
                             );
                         }
@@ -77,13 +72,13 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                 link: link
             };
         }])
-        .directive('bbTextExpand', ['bbResources', 'bbScrollIntoView', function (bbResources, bbScrollIntoView) {
+        .directive('bbTextExpand', ['$templateCache', 'bbResources', 'bbScrollIntoView', 'bbModal', function ($templateCache, bbResources, bbScrollIntoView, bbModal) {
             function link(scope, el, attrs) {
                 var isExpanded,
                     maxLength = +attrs.bbTextExpandMaxLength || 200,
-                    maxExpandedLength = +attrs.bbTextExpandMaxExpandedLength || 6500,
+                    maxExpandedLength = +attrs.bbTextExpandMaxExpandedLength || 600,
                     maxNewlines = 1,
-                    maxExpandedNewlines = 50;
+                    maxExpandedNewlines = +attrs.bbTexExpandMaxExpandedNewlines || 3;
 
                 function getTruncatedText(value, length, newlines) {
                     var i;
@@ -149,7 +144,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                             );
                     }
 
-                    containerEl = angular.element('<div></div>');
+                    containerEl = createEl($templateCache, 'container');
 
                     /* istanbul ignore else: nothing happens when there's no value, so there's nothing to test. */
                     if (newValue) {
@@ -159,15 +154,11 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                         if (collapsedText !== newValue) {
                             isExpanded = true;
 
-                            textEl = angular.element('<span class="bb-text-expand-text"></span>');
-                            textEl.text(collapsedText);
+                            textEl = createEl($templateCache, 'text').text(collapsedText);
+                            ellipsisEl = createEl($templateCache, 'ellipsis');
+                            spaceEl = createEl($templateCache, 'space');
+                            expandEl = createEl($templateCache, 'seemore').text(bbResources.text_expand_see_more);
 
-                            ellipsisEl = angular.element('<span class="bb-text-expand-ellipsis">...</span>');
-
-                            spaceEl = angular.element('<span class="bb-text-expand-space"> </span>');
-
-                            expandEl = angular.element('<a href="#" class="bb-text-expand-see-more"></a>');
-                            expandEl.text(bbResources.text_expand_see_more);
 
                             containerEl
                                 .empty()
@@ -176,18 +167,42 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                 .append(spaceEl)
                                 .append(expandEl);
 
-                            expandEl.on('click', function () {
-                                if (isExpanded) {
-                                    animateText(collapsedText, expandedText, bbResources.text_expand_see_less, (expandedText !== newValue));
-                                } else {
-                                    animateText(expandedText, collapsedText, bbResources.text_expand_see_more, true);
-                                }
+                            if (getNewlineCount(newValue) >= maxExpandedNewlines || newValue.length > maxExpandedLength) {
+                                expandEl.on('click', function () {
+                                    bbModal.open({
+                                        templateUrl: 'sky/templates/textexpand/expandmodal.html',
+                                        controller: BBTextExpandController,
+                                        controllerAs: 'expandCtrl',
+                                        resolve: {
+                                            textExpandContent: function () {
+                                                return newValue;
+                                            },
+                                            headerContent: function () {
+                                                return scope.$eval(attrs.bbTextExpandModalTitle) || bbResources.text_expand_modal_title;
+                                            },
+                                            closeText: function () {
+                                                return bbResources.text_expand_close_text;
+                                            }
+                                        }
+                                    });
+                                });
 
-                                bbScrollIntoView(expandEl);
-                                isExpanded = !isExpanded;
+                            } else {
+                                expandEl.on('click', function () {
+                                    if (isExpanded) {
+                                        animateText(collapsedText, expandedText, bbResources.text_expand_see_less, (expandedText !== newValue));
+                                    } else {
+                                        animateText(expandedText, collapsedText, bbResources.text_expand_see_more, true);
+                                    }
 
-                                return false;
-                            });
+                                    bbScrollIntoView(expandEl);
+                                    isExpanded = !isExpanded;
+
+                                    return false;
+                                });
+                            }
+
+
                         } else {
                             containerEl.text(newValue);
                         }

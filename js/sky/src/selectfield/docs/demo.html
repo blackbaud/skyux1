@@ -1,0 +1,57 @@
+<div ng-controller="SelectFieldTestController as selectFieldCtrl">
+  <form name="selectFieldCtrl.selectForm">
+    <div class="row">
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <label for="mutliSelect" class="control-label">
+          Multi-select mode
+        </label>
+        <bb-select-field
+          ng-model="selectFieldCtrl.selectedItems"
+          bb-select-field-text="Select some values"
+          bb-select-field-click="selectFieldCtrl.loadInitialValues()">
+          <bb-select-field-picker
+          bb-select-field-picker-header="Select values"
+          bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
+          </bb-select-field-picker>
+        </bb-select-field>
+      </div>
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <label for="singleSelect" class="control-label required">
+          Single-select mode
+        </label>
+        <bb-select-field
+          ng-model="selectFieldCtrl.selectedSingleItems"
+          name="singleSelect"
+          bb-select-field-text="Select a value"
+          bb-select-field-style="single"
+          required>
+          <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
+          </bb-select-field-picker>
+        </bb-select-field>
+        <ng-messages for="selectFieldCtrl.selectForm.singleSelect.$error" class="text-danger" ng-show="selectFieldCtrl.selectForm.singleSelect.$touched">
+          <ng-message when="required">A selection is required in this field.</ng-message>
+        </ng-messages>
+      </div>
+    </div>
+  </form>
+
+</div>
+<script type="text/ng-template" id="demo/selectfield/selectfieldpicker.html">
+  <bb-checklist
+    bb-checklist-items="selectFieldCtrl.listItems"
+    bb-checklist-include-search="true"
+    bb-checklist-mode="list"
+    bb-checklist-filter-callback="selectFieldCtrl.onSearch"
+    bb-checklist-is-loading="selectFieldCtrl.loadingSearch">
+  </bb-checklist>
+</script>
+<script type="text/ng-template" id="demo/selectfield/selectfieldpickersingle.html">
+  <bb-checklist
+    bb-checklist-items="selectFieldCtrl.listItems"
+    bb-checklist-include-search="true"
+    bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+    bb-checklist-mode="list"
+    bb-checklist-select-style="single"
+    bb-checklist-filter-local>
+  </bb-checklist>
+</script>

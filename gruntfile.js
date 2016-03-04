@@ -1,5 +1,5 @@
 /// <vs BeforeBuild='default' SolutionOpened='watchandtest' />
-/*global module,process */
+/*global module,process,require */
 
 module.exports = function (grunt) {
     'use strict';
@@ -7,19 +7,67 @@ module.exports = function (grunt) {
     // Variables defined here are at least needed throughout the method, and possibly in grunt config.
     var fontFiles = ['**/*.eot', '**/*.svg', '**/*.ttf', '**/*.woff', '**/*.woff2'],
         jsHintFiles = ['gruntfile.js', 'js/**/*.js'],
+        libsCss,
+        libsJs,
         neutralLocale = 'en-US',
         skyDistPath,
+        skyJs,
         skyLocalesPath = 'js/sky/locales/',
         skySrcPath = 'js/sky/src/',
         src = [
+            '<%= skySrcPath %>*/*.module.js',
             '<%= skySrcPath %>*/*.js',
             '<%= skySrcPath %>module.js'
         ],
         target = 'local',
         screenshotBasePath = 'screenshots/',
         skipTest,
-        visualTestsPath,
-        visualTestPort = 8000;
+        webdriverTestPort = 8000,
+        webdriverScreenshotRoot;
+
+    function getScreenshotRoot() {
+        var screenshotRoot;
+        if (process.env.TRAVIS === 'true') {
+            screenshotRoot = 'webdriver-screenshots';
+        } else {
+            screenshotRoot = 'webdriver-screenshotslocal';
+        }
+        return screenshotRoot;
+    }
+    webdriverScreenshotRoot = getScreenshotRoot();
+
+    libsCss = [
+        'bower_components/free-jqgrid/css/ui.jqgrid.css',
+        'bower_components/angular-toastr/dist/angular-toastr.min.css',
+        'bower_components/angular-ui-select/dist/select.min.css'
+    ];
+
+    libsJs = [
+        'bower_components/jquery/dist/jquery.js',
+        'bower_components/jquery-ui/jquery-ui.js',
+        'bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
+        'bower_components/bootstrap/dist/js/bootstrap.js',
+        'bower_components/enquire/dist/enquire.js',
+        'bower_components/angular/angular.js',
+        'bower_components/angular-animate/angular-animate.js',
+        'bower_components/angular-messages/angular-messages.js',
+        'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
+        'bower_components/angular-ui-router/release/angular-ui-router.js',
+        'bower_components/moment/moment.js',
+        'bower_components/autoNumeric/autoNumeric.js',
+        'bower_components/free-jqgrid/js/jquery.jqGrid.js',
+        'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
+        'bower_components/blockui/jquery.blockUI.js',
+        'bower_components/angular-ui-select/dist/select.js',
+        'bower_components/fastclick/lib/fastclick.js',
+        'bower_components/ng-file-upload/ng-file-upload.js',
+        'libs/easyXDM.js'
+    ];
+
+    skyJs = src.concat([
+        '<%= skyDistPath %>js/locales/sky-locale-<%= neutralLocale %>.js',
+        '<%= skyTemplatesPath %>templates.js.tmp'
+    ]);
 
     // Logging some TRAVIS environment variables
     (function () {
@@ -42,17 +90,6 @@ module.exports = function (grunt) {
                 grunt.log.writeln(prop + ': ' + process.env[prop] + ' (' + typeof process.env[prop] + ')');
             });
         }
-    }());
-
-    // Determine which visual tests to run
-    (function () {
-        var visualTestsToRun = (grunt.option('visualtests') || '');
-
-        if (visualTestsToRun && visualTestsToRun.indexOf(',') >= 0) {
-            visualTestsToRun = '{' + visualTestsToRun + '}';
-        }
-
-        visualTestsPath = 'visualtest/test/' + (visualTestsToRun || '**') + '/*.visual.js';
     }());
 
     // Determine which environment we're running in.
@@ -80,18 +117,42 @@ module.exports = function (grunt) {
         }
 
         grunt.log.writeln('Building for target: ' + target);
-        switch (target) {
-        case 'travis-push':
-            skyDistPath = 'dist/';
-            break;
-        default:
+
+        if (target === 'local') {
             skyDistPath = 'bin/';
+            screenshotBasePath += '_local/';
+        } else {
+            skyDistPath = 'dist/';
+        }
+    }());
 
-            if (target === 'local') {
-                screenshotBasePath += '_local/';
+    // Temporary.  Deprecating some original tasks.
+    (function () {
+        var task,
+            tasks = {
+                'buildall': 'build',
+                'compilescripts': 'scripts',
+                'compilestyles': 'styles',
+                'generatedocs': 'docs',
+                'watchandtest': 'watch'
+            };
+        function register(deprecated, replacement) {
+            grunt.registerTask(deprecated, function () {
+                grunt.log.writeln('');
+                grunt.log.warn([
+                    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+                    '`grunt ' + deprecated + '` is deprecated and will be removed in the future.',
+                    'Please use `grunt ' + replacement + '` instead, which I will run now.',
+                    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+                ].join('\n'));
+                grunt.log.writeln('');
+                grunt.task.run(replacement);
+            });
+        }
+        for (task in tasks) {
+            if (tasks.hasOwnProperty(task)) {
+                register(task, tasks[task]);
             }
-
-            break;
         }
     }());
 
@@ -105,7 +166,6 @@ module.exports = function (grunt) {
         skyTemplatesPath: 'js/sky/templates/',
         paletteTemplatesPath: 'js/sky/palette/',
         paletteCssPath: '.tmp/palette/palette.css',
-        visualTestPort: visualTestPort,
         html2js: {
             options: {
                 base: 'js/',
@@ -127,34 +187,13 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= skyDistPath %>css/libs.css': [
-                        'bower_components/free-jqgrid/css/ui.jqgrid.css',
-                        'bower_components/angular-toastr/dist/angular-toastr.min.css',
-                        'bower_components/angular-ui-select/dist/select.min.css'
-                    ],
-                    '<%= skyDistPath %>js/libs.js': [
-                        'bower_components/jquery/dist/jquery.js',
-                        'bower_components/jquery-ui/jquery-ui.js',
-                        'bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
-                        'bower_components/bootstrap/dist/js/bootstrap.js',
-                        'bower_components/enquire/dist/enquire.js',
-                        'bower_components/angular/angular.js',
-                        'bower_components/angular-animate/angular-animate.js',
-                        'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-                        'bower_components/angular-ui-router/release/angular-ui-router.js',
-                        'bower_components/moment/moment.js',
-                        'bower_components/autoNumeric/autoNumeric.js',
-                        'bower_components/free-jqgrid/js/jquery.jqGrid.js',
-                        'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
-                        'bower_components/blockui/jquery.blockUI.js',
-                        'bower_components/angular-ui-select/dist/select.js',
-                        'bower_components/fastclick/lib/fastclick.js',
-                        'bower_components/ng-file-upload/ng-file-upload.js'
-                    ],
-                    '<%= skyDistPath %>js/sky.js': src.concat([
-                        '<%= skyDistPath %>js/locales/sky-locale-<%= neutralLocale %>.js',
-                        '<%= skyTemplatesPath %>templates.js.tmp'
-                    ])
+                    '<%= skyDistPath %>js/libs.js': libsJs,
+                    '<%= skyDistPath %>js/sky.js': skyJs
+                }
+            },
+            skybundle: {
+                files: {
+                    '<%= skyDistPath %>js/sky-bundle.js': libsJs.concat(skyJs)
                 }
             }
         },
@@ -179,15 +218,27 @@ module.exports = function (grunt) {
                 src: ['<%= skyDistPath %>js/sky.js'],
                 dest: '<%= skyDistPath %>js/sky.min.js'
             },
+            skybundle: {
+                options: {
+                    sourceMapIn: '<%= skyDistPath %>js/sky-bundle.js.map'
+                },
+                src: ['<%= skyDistPath %>js/sky-bundle.js'],
+                dest: '<%= skyDistPath %>js/sky-bundle.min.js'
+            },
             skylint: {
                 src: ['js/sky/linter/skylint.js'],
                 dest: '<%= skyDistPath %>js/skylint.min.js'
             }
         },
-        watch: {
+        // Renamed the original grunt-contrib-watch task
+        watchNoConflict: {
+            docs: {
+                files: ['js/sky/src/*/docs/*.*'],
+                tasks: ['docs']
+            },
             scripts: {
                 files: src.concat(['<%= skyLocalesPath %>**/*.*', '<%= skyTemplatesPath %>**/*.html']),
-                tasks: ['compilescripts', 'karma:watch:run']
+                tasks: ['scripts', 'karma:watch:run', 'copy:demo']
             },
             skylint: {
                 files: ['js/sky/linter/skylint.js'],
@@ -203,11 +254,11 @@ module.exports = function (grunt) {
             },
             demo: {
                 files: ['<%= skySrcPath %>*/docs/*.js', '<%= skySrcPath %>*/docs/*.html'],
-                tasks: ['generatedocs']
+                tasks: ['docs']
             },
             sass: {
                 files: ['**/*.scss'],
-                tasks: ['compilestyles', 'karma:watch:run']
+                tasks: ['styles', 'karma:watch:run', 'copy:demo']
             }
         },
         sass: {
@@ -226,6 +277,26 @@ module.exports = function (grunt) {
                 },
                 files: {
                     '<%= paletteCssPath %>': '<%= paletteTemplatesPath %>template.scss'
+                }
+            },
+            skybundle: {
+                options: {
+                    style: 'compressed'
+                },
+                files: {
+                    '<%= skyDistPath %>/css/sky-bundle.css': '.tmp/sky-bundle.scss'
+                }
+            }
+        },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1,
+                sourceMap: true
+            },
+            dist: {
+                files: {
+                    '<%= skyDistPath %>css/libs.css': libsCss
                 }
             }
         },
@@ -247,10 +318,10 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                configFile: 'karma.conf.js'
+                configFile: 'karma.conf-local.js'
             },
             internal: {
-                configFile: 'karma.conf-internal.js'
+                configFile: 'karma.conf-ci.js'
             },
             unit: {
                 singleRun: true
@@ -292,42 +363,40 @@ module.exports = function (grunt) {
             },
             all: jsHintFiles
         },
-        stache: {
-            pages: [{
-                url: '<%= stacheConfig.data %>sky.json',
-                dest: 'directives/',
-                type: 'jsdoc'
-            }]
-        },
-        stache_jsdoc: {
-            options: {
-                src: '<%= skySrcPath %>*/*.js',
-                dest: '<%= stacheConfig.data %>sky.json'
+        connect: {
+            webdrivertest: {
+                options: {
+                    port: webdriverTestPort
+                }
             }
         },
-        phantomcss: {
-            options: {
-                screenshots: screenshotBasePath + 'baseline',
-                results: screenshotBasePath + 'results',
-                viewportSize: [1280, 800],
-                mismatchTolerance: 0.05,
-                rootUrl: 'http://localhost:<%= visualTestPort %>/visualtest/test/'
-            },
-            src: [
-                visualTestsPath
-            ]
-        },
-        connect: {
-            visualtest: {
+        mkdir: {
+            webdriver: {
                 options: {
-                    port: visualTestPort
+                    create: [
+                        webdriverScreenshotRoot + '/MAC_chrome',
+                        webdriverScreenshotRoot + '/MAC_firefox',
+                        webdriverScreenshotRoot + '-diffs/MAC_chrome',
+                        webdriverScreenshotRoot + '-diffs/MAC_firefox'
+                    ]
                 }
+            }
+        },
+        webdriver: {
+            test: {
+                configFile: './webdrivertest/wdio.conf.js'
+            }
+        },
+        exec: {
+            browserstackTunnel: {
+                cmd: './run-browserstack-local.sh'
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ngdocs');
@@ -339,36 +408,72 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('blackbaud-stache');
-    grunt.loadNpmTasks('blackbaud-stache-jsdoc');
-    grunt.loadNpmTasks('@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs');
+    grunt.loadNpmTasks('grunt-webdriver');
+    grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-mkdir');
+
+    // We like clean task names too, rename a few of the defaults.
+    grunt.task.renameTask('build', 'stache');
+    grunt.task.renameTask('watch', 'watchNoConflict');
 
     grunt.registerTask('lint', ['jshint', 'jscs']);
-    grunt.registerTask('generatedocs', ['stache_jsdoc', 'status:demo/build', 'build', 'copy:demo']);
-    grunt.registerTask('compilescripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
-    grunt.registerTask('compilestyles', ['sass:dist', 'sass:palette', 'copy:dist']);
-    grunt.registerTask('buildall', ['compilestyles', 'compilescripts']);
-    grunt.registerTask('watchandtest', ['buildall', 'karma:watch:start', 'watch']);
-    grunt.registerTask('visualtest', ['cleanupvisualtestfixtures', 'buildvisualtestfixtures', 'connect:visualtest', 'phantomcss', 'cleanupvisualtestfixtures']);
+    grunt.registerTask('docs', ['prepareDocs', 'status:demo/build', 'stache', 'copy:demo']);
+    grunt.registerTask('scripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
+    grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
+    grunt.registerTask('build', ['styles', 'scripts']);
+    grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
+    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'mkdir:webdriver', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
+    grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
+
+    grunt.registerTask('scriptsrapid', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap']);
+    grunt.registerTask('stylesrapid', ['sass:dist', 'sass:palette', 'skybundlecss', 'copy:dist']);
+    grunt.registerTask('buildrapid', ['stylesrapid', 'scriptsrapid']);
+
+    grunt.registerTask('watchrapid', function () {
+        grunt.config('watchNoConflict.scripts.tasks', ['scriptsrapid', 'docs']);
+        grunt.config('watchNoConflict.sass.tasks', ['stylesrapid', 'docs']);
+
+        grunt.task.run('watchNoConflict');
+    });
 
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
-        var template = grunt.file.read(skyLocalesPath + 'template.js');
+        var RESOURCES_PREFIX = 'resources_',
+            template = grunt.file.read(skyLocalesPath + 'template.js');
 
         grunt.file.expand(
             {
-                filter: 'isDirectory',
+                filter: 'isFile',
                 cwd: '.'
             },
-            skyLocalesPath + '*'
-        ).forEach(function (dir) {
+            skyLocalesPath + RESOURCES_PREFIX + '*'
+        ).forEach(function (path) {
             var destFile,
+                fileName,
                 js,
                 locale,
-                parts = dir.split('/');
+                p,
+                parts = path.split('/'),
+                stringsIn,
+                stringsOut = {};
 
-            locale = parts[parts.length - 1];
+            fileName = parts[parts.length - 1];
 
-            js = 'bbResourcesOverrides = ' + grunt.file.read(dir + '/strings.json') + ';';
+            // Before restructuring the resource files we used a different file name format, so we are jumping
+            // through some hoops here to maintain the previous file name format for backwards compatibility.
+            locale = fileName
+                .substring(RESOURCES_PREFIX.length, fileName.length - 5) // Remove resources_ prefix and file extension ('.json')
+                .replace(/_/g, '-');
+
+            stringsIn = grunt.file.readJSON(path);
+
+            for (p in stringsIn) {
+                if (stringsIn.hasOwnProperty(p)) {
+                    stringsOut[p] = stringsIn[p].message;
+                }
+            }
+
+            js = 'bbResourcesOverrides = ' + JSON.stringify(stringsOut) + ';';
             js = template.replace('/*LOCALEJSON*/', js);
 
             destFile = skyDistPath + 'js/locales/sky-locale-' + locale + '.js';
@@ -379,16 +484,16 @@ module.exports = function (grunt) {
         });
     });
 
-    // Generate the files needed for visual tests
-    grunt.registerTask('buildvisualtestfixtures', function () {
-        var template = grunt.file.read('visualtest/fixtures/template.html');
+    function buildTestFixtures(root) {
+        var template = grunt.file.read((root + '/fixtures/template.html')),
+            pattern = root + '/test/**/fixtures/*.html';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            'visualtest/test/**/fixtures/*.html'
+            pattern
         ).forEach(function (file) {
             var destFile,
                 html;
@@ -398,29 +503,119 @@ module.exports = function (grunt) {
                 html = grunt.file.read(file);
                 html = template.replace(/##TEST_HTML##/gi, html);
                 html = html.replace(/##DIST_PATH##/gi, skyDistPath);
-
                 destFile = file.replace('.html', '.full.html');
-
                 grunt.file.write(destFile, html);
 
                 grunt.log.writeln('File "' + destFile + '" created.');
             }
         });
-    });
+    }
 
-    // Remove the temporary files needed for visual tests
-    grunt.registerTask('cleanupvisualtestfixtures', function () {
+    function cleanupWorkingScreenshots(root) {
+        var pattern = root + '/**/*px.png';
+
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            'visualtest/test/**/fixtures/*.full.html'
+            pattern
+        ).forEach(function (file) {
+            grunt.file.delete(file);
+        });
+
+        grunt.log.writeln('Visual test working screenshots deleted.');
+    }
+
+    function cleanupTestFixtures(root) {
+        var pattern = root + '/test/**/fixtures/*.full.html';
+
+        grunt.file.expand(
+            {
+                filter: 'isFile',
+                cwd: '.'
+            },
+            pattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });
 
         grunt.log.writeln('Visual test fixture temp files deleted.');
+    }
+
+    // Generate the files needed for visual tests
+    grunt.registerTask('buildwebdrivertestfixtures', function () {
+        buildTestFixtures('webdrivertest');
+    });
+
+    // Remove the temporary files needed for visual tests
+    grunt.registerTask('cleanupwebdrivertestfixtures', function () {
+        cleanupTestFixtures('webdrivertest');
+    });
+
+    grunt.registerTask('cleanupworkingscreenshots', function () {
+
+        cleanupWorkingScreenshots(webdriverScreenshotRoot);
+    });
+
+    // Convert our documentation into standard JSDOC format JSON
+    grunt.registerTask('prepareDocs', function () {
+        var json = [],
+            options = {
+                filter: 'isFile',
+                cwd: skySrcPath
+            },
+            pages = {},
+            pattern = '/docs/demo.',
+            yfm = require('assemble-yaml');
+
+        function addDemo(fm, component, ext) {
+            var demo = skySrcPath + component + pattern + ext;
+            if (grunt.file.exists(demo)) {
+                fm['example-' + ext] = grunt.file.read(demo);
+            }
+        }
+
+        // Find all the demo.md files
+        grunt.file.expand(options, '*' + pattern + 'md').forEach(function (filename) {
+            var content,
+                component,
+                frontmatter,
+                frontmatterProperty,
+                jsonItem,
+                pathMarkdown;
+
+            component = filename.substr(0, filename.indexOf('/'));
+            pathMarkdown = skySrcPath + filename;
+            frontmatter = yfm.extractJSON(pathMarkdown) || {};
+            content = grunt.file.read(pathMarkdown);
+            jsonItem = {};
+
+            addDemo(frontmatter, component, 'html');
+            addDemo(frontmatter, component, 'js');
+
+            // Copy over properties shared
+            for (frontmatterProperty in frontmatter) {
+                if (frontmatter.hasOwnProperty(frontmatterProperty)) {
+                    jsonItem[frontmatterProperty] = frontmatter[frontmatterProperty];
+                }
+            }
+
+            // Add legacy jsdoc properties
+            jsonItem.key = component;
+            jsonItem.description = yfm.stripYFM(pathMarkdown).replace(/^\s+|\s+$/g, '');
+            json.push(jsonItem);
+
+            // Layout does not need to be in legacy JSON
+            frontmatter.layout = '../../../../demo/layouts/layout-skyux';
+            pages['components/' + component + '/index.md'] = {
+                content: content,
+                data: frontmatter
+            };
+        });
+
+        grunt.file.write('demo/data/sky.json', JSON.stringify(json, null, 2));
+        grunt.config.set('assemble.custom.options.pages', pages);
     });
 
     // Generate our JS config for the bbPalette service
@@ -447,18 +642,62 @@ module.exports = function (grunt) {
         grunt.file.write(configPath, template);
     });
 
+    (function () {
+        function getDestFile(libCss) {
+            return libCss.substr(libCss.lastIndexOf('/') + 1).replace('.css', '.scss');
+        }
+
+        grunt.registerTask('skybundlecss', function () {
+            var destFile,
+                i,
+                libCss,
+                skyBundleScss = '',
+                n;
+
+            for (i = 0, n = libsCss.length; i < n; i++) {
+                libCss = libsCss[i];
+                destFile = getDestFile(libCss);
+
+                grunt.file.copy(libCss, '.tmp/' + destFile);
+
+                skyBundleScss += '@import "' + destFile + '";\n';
+            }
+
+            skyBundleScss += '@import "../scss/sky-all";';
+
+            grunt.file.write('.tmp/sky-bundle.scss', skyBundleScss);
+
+            grunt.task.run('sass:skybundle');
+            grunt.task.run('cleanupskybundlecss');
+        });
+
+        grunt.registerTask('cleanupskybundlecss', function () {
+            var i,
+                n;
+
+            grunt.file.delete('.tmp/sky-bundle.scss');
+
+            for (i = 0, n = libsCss.length; i < n; i++) {
+                grunt.file.delete('.tmp/' + getDestFile(libsCss[i]));
+            }
+        });
+    }());
+
     // This is the main entry point for testing sky, supporting 4 scenarios:
     // local, Travis PR (from fork), Travis PR (from branch), Travis Push
     // It expects the target variable to be correctly set.
     grunt.registerTask('test', function () {
         var tasks = [
                 'lint',
-                'buildall'
+                'build'
             ];
 
-        function checkSkipTest(karmaTarget) {
+        function checkSkipTest(karmaTarget, browserstackTunnel) {
             if (!skipTest) {
                 tasks.push('karma:' + karmaTarget);
+                if (browserstackTunnel) {
+                    tasks.push('browserstackTunnel');
+                }
                 tasks.push('visualtest');
             }
         }
@@ -466,14 +705,14 @@ module.exports = function (grunt) {
         switch (target) {
         case 'local':
             checkSkipTest('unit');
-            tasks.push('generatedocs');
+            tasks.push('docs');
             break;
         case 'travis-pr-branch':
-            checkSkipTest('internal');
+            checkSkipTest('internal', true);
             break;
         case 'travis-push':
-            checkSkipTest('internal');
-            tasks.push('stache_jsdoc');
+            checkSkipTest('internal', true);
+            tasks.push('docs');
             break;
         }
 

@@ -1,31 +1,6 @@
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
 
-/** @module Autonumeric
-@icon calculator
-@summary The autonumeric component wraps up the autoNumeric jQuery plugin to format any type of number, including currency.
- @description The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format any type of number, including currency. You must use this directive in conjunction with the `ngModel` directive where the property bound to `ngModel` is the raw numeric value on your model.
-
- ### Dependencies ###
-
- - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Used to format money values
-
----
-
-### Autonumeric Settings ###
-
- - `bb-autonumeric` This  can optionally be assigned the name of a property from the `bbAutonumericConfig` object.  If none is specified, it defaults to `number`.
- - `bb-autonumeric-settings` This can be assigned a value that represents a settings object that can be passed to autoNumeric.  These options will override any default options specified in the `bb-autonumeric` attribute.  A complete list of options is available [here](http://www.decorplanit.com/plugin/).
-
-### Autonumeric Filter ###
-
-In addition to the directive, there is also a filter that can be used to format numbers.  The filter has the added feature of optionally abbreviating a number according to Sky patterns.  For instance,
-numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,000,000 as 1b.  The filter takes three arguments:
-
- - `input` The value to format.
- - `configType` The name of the configuration (`number` or `money`) to apply to the value.
- - `abbreviate` A Boolean value indicating whether to abbreviate large numbers.
- */
 (function ($) {
     'use strict';
 
@@ -81,6 +56,18 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                         }
                     }
 
+                    function autonumericChange() {
+                        return $scope.$apply(function () {
+
+                            var value = parseFloat(el.autoNumeric('get'));
+
+                            if (isNaN(value)) {
+                                value = null;
+                            }
+                            return ngModel.$setViewValue(value);
+                        });
+                    }
+
                     if (attrs.bbAutonumericSettings) {
                         $scope.$watch(attrs.bbAutonumericSettings, function (newValue) {
                             customSettings = newValue || {};
@@ -91,37 +78,43 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     el.autoNumeric(getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric));
                     applyCssSettings(el);
 
-                    $scope.$watch(attrs.ngModel, function (newValue) {
+                    // If a valid number, update the autoNumeric value.
+                    // Also handles the model being updated, but being in correct (usually a paste).
+                    // In that case, updates the model to what the autoNumeric plugin's value.
+                    $scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                        var getValue,
+                            selectionStart;
                         if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
-                            el.autoNumeric('set', newValue);
-                        } else if (isNaN(newValue)) {
-                            return;
-                        } else {
-                            el.val(null);
-                        }
-                    });
 
-                    function autonumericChange() {
-                        return $scope.$apply(function () {
-                            var value = parseFloat(el.autoNumeric('get'));
+                            if (parseFloat(newValue) !== parseFloat(oldValue)) {
 
-                            if (isNaN(value)) {
-                                value = null;
+                                selectionStart = el[0].selectionStart;
                             }
 
-                            return ngModel.$setViewValue(value);
-                        });
-                    }
+                            el.autoNumeric('set', newValue);
+                            getValue = el.autoNumeric('get');
+                            if (parseFloat(getValue) !== parseFloat(newValue)) {
+                                $timeout(autonumericChange);
+                            } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
+                                $timeout(function () {
+                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                });
+                            }
+                        } else if (newValue === null) {
+                            el.val(null);
 
-                    //Setup on change handler to update scope value
-                    el.on('change', function () {
-                        autonumericChange();
+                        }
                     });
 
                     el.on('keydown', function (event) {
                         if (event.which === 13) {
                             autonumericChange();
                         }
+                    });
+
+                    el.on('change paste onpaste', function () {
+                        autonumericChange();
+
                     });
 
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
@@ -131,13 +124,16 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     */
                     el.on('focusin.bbAutonumeric', function () {
                         $timeout(function () {
-                            if (!isIosUserAgent) {
-                                el.select();
-                            } else {
-                                //use setSelectionRange instead of select because select in a timeout does not work with iOS
-                                el[0].setSelectionRange(0, 9999);
+                            // Check to ensure the field still has focus once the $timeout callback is executed.
+                            // https://github.com/blackbaud/skyux/issues/64
+                            if (el.is(':focus')) {
+                                if (!isIosUserAgent) {
+                                    el.select();
+                                } else {
+                                    //use setSelectionRange instead of select because select in a timeout does not work with iOS
+                                    el[0].setSelectionRange(0, 9999);
+                                }
                             }
-
                         });
                     });
 

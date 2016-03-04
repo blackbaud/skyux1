@@ -2,6 +2,7 @@
 
 .bb-checklist-wrapper {
     overflow-y: auto;
+    min-height: 75px;
 
     table {
         margin: 0;
@@ -30,7 +31,7 @@
     background-color: $gray-lightest;
     border-bottom: 1px solid $gray-lighter;
     padding: $padding;
-    
+
     &:last-child {
         border: none;
     }
@@ -38,14 +39,14 @@
     .btn {
         margin: 0 $margin-half;
         min-width: 65px;
-    
+
         &.btn-link {
             margin: 0 $margin-half 0 0;
             min-width: 0;
             outline: none;
         }
     }
-    
+
     .btn-primary {
         font-size: 12px;
         font-weight: normal;
@@ -53,7 +54,6 @@
 
     input {
         background-color: #fff;
-        height: 26px;
         width: 100%;
         outline: none;
         border: none;
@@ -72,17 +72,14 @@
 }
 
 .bb-checklist-search {
-    display: table;
+    display: flex;
+    display: -ms-flex;
     width: 100%;
-}
-
-.bb-checklist-search-box {
-    display: table-cell;
+    height: 26px;
 }
 
 .bb-checklist-search-icon {
     background-color: #fff;
-    display: table-cell;
     width: 22px;
 }
 
@@ -97,13 +94,18 @@
 }
 
 .bb-checklist-list-row {
+    background-color: transparent;
+    border: none;
     border-bottom: dotted 1px $gray-lighter;
     cursor: pointer;
     display: table;
     margin-bottom: 0;
     padding: $padding;
+    outline-offset: -5px;
+    table-layout: fixed;
+    text-align: left;
     width: 100%;
-    
+
     &:last-child {
         border: none;
     }
@@ -114,6 +116,7 @@
     font-weight: normal;
     padding-right: $padding;
     vertical-align: middle;
+    word-wrap: break-word;
 }
 
 .bb-checklist-list-col-checkbox {
@@ -122,4 +125,14 @@
 
 .bb-checklist-list-title {
     font-weight: 700;
+}
+
+.bb-checklist-single {
+    .bb-checklist-row-selected {
+        background-color:#eeeffb; //TODO: Figure out if this needs to go into a variable
+    }
+
+    .bb-checklist-list-col-checkbox {
+        //display: none;
+    }
 }

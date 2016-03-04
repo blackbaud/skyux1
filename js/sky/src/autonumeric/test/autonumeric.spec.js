@@ -14,10 +14,13 @@ describe('Autonumeric', function () {
     describe('directive', function () {
         beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
             $compile = _$compile_;
-            $scope = _$rootScope_;
+            $scope = _$rootScope_.$new();
             $timeout = _$timeout_;
         }));
 
+        afterEach(function () {
+            $scope.$destroy();
+        });
         function compileEl() {
             return $compile('<input type="text" ng-model="numericValue" bb-autonumeric />')($scope);
         }
@@ -98,6 +101,36 @@ describe('Autonumeric', function () {
             expect(el.val()).toBe('123,456.78');
         });
 
+        //This is a test for IE11
+        it('should set selection in the correct location', function () {
+            var el = $compile('<input type="text" ng-model="numericValue" bb-autonumeric />')($scope);
+            el.appendTo(document.body);
+
+            $scope.numericValue = 123456.78;
+
+            $scope.$digest();
+
+            $scope.numericValue = 3;
+            el[0].selectionStart = 1;
+
+            $scope.$digest();
+
+
+            if (angular.isFunction(el[0].setSelectionRange)) {
+                $timeout.flush();
+                //setSelectionRange does not impact firefox sets to 0
+                if (el[0].selectionStart !== 0) {
+                    expect(el[0].selectionStart).toBe(1);
+                    expect(el[0].selectionEnd).toBe(1);
+                }
+
+            }
+
+            expect(el.val()).toBe('3.00');
+            el.remove();
+
+        });
+
         describe('money option', function () {
             it('should have bb-autonumeric-money class', function () {
                 var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" />')($scope);
@@ -118,6 +151,24 @@ describe('Autonumeric', function () {
                 el.change();
 
                 expect($scope.moneyValue).toBe(7654321);
+            });
+
+            it('should set scope value based on default configuration on paste events', function () {
+                var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" />')($scope);
+
+                $scope.moneyValue = 123456.78;
+
+                $scope.$digest();
+
+                el.val('$7,654,321.00');
+                el.trigger('paste');
+
+                expect($scope.moneyValue).toBe(7654321);
+
+                el.val('$8,654,321.00');
+                el.trigger('onpaste');
+
+                expect($scope.moneyValue).toBe(8654321);
             });
 
             it('should set scope value based on default configuration on enter press', function () {
@@ -165,6 +216,48 @@ describe('Autonumeric', function () {
 
                 expect(el.val()).toBe('^123,456.78');
             });
+
+            it('should keep the model in sync with a pasted value that does not meet the requirements', function () {
+                var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />')($scope);
+                el.appendTo(document.body);
+                $scope.moneyOptions = {
+                    vMin: 0
+                };
+
+                $scope.moneyValue = -1.00;
+
+                $scope.$digest();
+                $timeout.flush();
+                expect(el.val()).toBe('$0.00');
+                expect($scope.moneyValue).toBe(0);
+                el.remove();
+            });
+
+            it('should keep the model in sync when starting as undefined', function () {
+                var el = $compile([
+                    '<bb-tile>',
+                    '<div bb-tile-section>',
+                    '<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />',
+                    '</div>',
+                    '</bb-tile>'
+                ].join(''))($scope);
+                el.appendTo(document.body);
+                $scope.moneyOptions = {
+                    vMin: 0
+                };
+
+                $scope.$digest();
+
+                $scope.moneyValue = -1.00;
+
+                $scope.$digest();
+                $timeout.flush();
+                expect($scope.moneyValue).toBe(0);
+                expect(el.find('input').val()).toBe('$0.00');
+                el.remove();
+
+            });
+
         });
 
         describe('global configuration', function () {

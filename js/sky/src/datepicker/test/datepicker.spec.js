@@ -13,7 +13,6 @@ describe('Datepicker directive', function () {
         resources,
         datepickerScope;
 
-
     beforeEach(module('ngMock'));
     beforeEach(module('ui.bootstrap'));
     beforeEach(module('sky.templates'));
@@ -96,7 +95,6 @@ describe('Datepicker directive', function () {
 
         $scope.$digest();
     }
-
 
     it('sets up everything correctly with a valid date', function () {
         var el,
@@ -299,6 +297,58 @@ describe('Datepicker directive', function () {
         expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
         expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
         expect($scope.testform.$valid).toBe(true);
+    });
+
+    it('handles invalid and then empty date', function () {
+        var el,
+            inputEl,
+            dateHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+        el = setupDatepicker(dateHtml, '');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, 'a');
+
+        expect($scope.testdate1).toBe('a');
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+        expect($scope.testform.$valid).toBe(false);
+
+        setInput(inputEl, null);
+        expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
+        expect($scope.testform.$valid).toBe(true);
+    });
+
+    it('handles invalid and then max date', function () {
+        var el,
+            inputEl,
+            dateHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-datepicker-name="testDate1" max-date="maxDate" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+
+        $scope.maxDate = new Date('5/18/2015');
+        el = setupDatepicker(dateHtml, '');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, 'a');
+
+        expect($scope.testdate1).toBe('a');
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+        expect($scope.testform.$valid).toBe(false);
+
+        setInput(inputEl, '5/19/2015');
+        expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
+        expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(true);
     });
 
     it('handles MMddyyy translations', function () {
@@ -920,7 +970,7 @@ describe('Datepicker directive', function () {
             openCalendar(el);
             $timeout.flush();
 
-            bodyCalendarEl = $('body > ul[datepicker-popup-wrap]');
+            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
 
             expect(bodyCalendarEl.length).toBe(1);
 
@@ -938,7 +988,7 @@ describe('Datepicker directive', function () {
             openCalendar(el);
             $timeout.flush();
 
-            bodyCalendarEl = $('body > ul[datepicker-popup-wrap]');
+            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
             expect(bodyCalendarEl[0].style.left).not.toBe(expectedWidth.toString() + 'px');
             expect(bodyCalendarEl).toHaveClass('bb-datefield');
 
@@ -1017,13 +1067,13 @@ describe('Datepicker directive', function () {
             var el,
                 minMaxDatepickerHtml = '<div>' +
                 '<form name="testform" novalidate>' +
-                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" min-date="minDate" max-date="maxDate"></bb-datepicker>' +
+                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" min-date="myMinDate" max-date="myMaxDate"></bb-datepicker>' +
                 '</form>' +
                 '</div>';
 
-            $scope.minDate = new Date('5/15/2015');
+            $scope.myMinDate = new Date('5/15/2015');
 
-            $scope.maxDate = new Date('5/18/2015');
+            $scope.myMaxDate = new Date('5/18/2015');
 
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
 
@@ -1045,6 +1095,8 @@ describe('Datepicker directive', function () {
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
 
             runMinAndMaxDateFullTest(el, '5/3/2015', '5/19/2015', '5/16/2015', 3, 19, 16);
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
         });
 
         it('only does min and max date validation if they are Javascript Date objects', function () {
@@ -1076,6 +1128,9 @@ describe('Datepicker directive', function () {
             expect(angular.isDefined($scope.testform.testDate1.$error.minDate)).toBe(false);
             expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(false);
 
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
+
         });
 
         it('can have the min and max date changed after initialization', function () {
@@ -1104,6 +1159,8 @@ describe('Datepicker directive', function () {
             $scope.$digest();
 
             runMinAndMaxDateFullTest(el, '5/19/2015', '5/26/2015', '5/23/2015', 19, 26, 23);
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
         });
 
         it('does max date validation without a min date', function () {

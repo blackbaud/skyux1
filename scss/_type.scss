@@ -2,3 +2,14 @@
     font-size: $bb-font-size-lg;
     line-height: 1.6em;
 }
+
+/*
+We are overriding the default .text-success, .text-info, .text-warning, and .text-danger
+here instead of through the $state-*-text variables because we want to keep the default
+Bootstrap colors for alert text, panel text and others.
+*/
+@include text-emphasis-variant('.text-success', $bb-text-color-success);
+
+@include text-emphasis-variant('.text-info', $bb-text-color-info);
+
+@include text-emphasis-variant('.text-warning', $bb-text-color-warning);

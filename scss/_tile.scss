@@ -44,11 +44,13 @@
         @include ellipsis();
         display: flex;
         align-items: baseline;
+        width: 100%;
+        max-width: calc(100% - 90px);
 
         .bb-tile-header {
             float: none;
             padding-right: $tile-header-tool-padding * (2 / 3);
-            max-width: 80%;
+            max-width: calc(100% - 15px);
         }
     }
 
@@ -105,14 +107,13 @@
     max-width: 50%;
 }
 
- .bb-tile.collapsed .bb-tile-header-content {
-     @include transition(opacity 0.5s);
+.bb-tile.collapsed .bb-tile-header-content {
      opacity: 1;
 }
 
-.bb-tile.collapsible .bb-tile-header-content {
-    @include transition(opacity 0.5s);
+.bb-tile-header-content {
     opacity: 0;
+    transition: 0.5s linear all;
 }
 
 .bb-tile-header-check {
@@ -192,14 +193,18 @@ tiles behave within a column of tiles.*/
 .bb-tile-settings {
     color: #D1DADE;
     float: left;
-    margin: 1px 0;
-    padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
+    margin: 16px $tile-header-tool-padding 16px 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
 }
 
 .modal-body {
     .bb-tile-chevron {
         padding-top: 0;
         padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 

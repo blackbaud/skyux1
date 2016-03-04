@@ -1,52 +1,6 @@
 /*jslint browser: true */
 /*global angular, jQuery */
 
-/** @module Wait
-@icon spinner
-@summary The wait component disables an element in a waiting state and visually indicates that it is in a waiting state.
- @description The wait directive allows you to disable and visually indicate that an element is in a waiting state.
-When `bb-wait` is set to true, the element will initially be blocked with a clear mask, but after 300ms a visual indicator will cover the element as well.
-This will allow for the element to immediately be disabled but not cause visual disturbances for very brief waits.
-
-### Dependencies ###
-
- - **[jquery.blockUI.js](http://malsup.com/jquery/block/) (2.66.0-2013.10.09 or higher)**
-
----
-
-If the value bound to `bb-wait` is truthy, then the element will begin waiting until the value becomes falsey.
-
-### Multiple Waits ###
-You can set the value of `bb-wait` to a numeric value to track a count of simultaneous waits.
-When waits are added, increment the wait count and when they are removed then decrement the count.
-This will cause the wait UI to only clear once all waits are removed.
-
-### Full-page Waits ###
-If bb-wait is added to the `<body>` tag, then a full-page version of the wait UI will be created.
-
-### Raising Wait Events ###
-Wait events can be raised from one controller to another by calling `$scope.$emit("bbBeginWait");` and `$scope.$emit("bbEndWait");` respectively.
-A controller can capture that event and begin waiting its element by listening for the event and updating its own bb-wait directive.
-When doing so, itshould call `stopPropagation()` on the event so that other parents won't catch it as well.
-Uncaught events will raise all the way to the main controller of the application which can cause the entire page to wait.
-
-    $scope.$on("bbBeginWait", function (event) {
-        event.stopPropagation();
-        $scope.myElementWaitCount += 1;
-    });
-
-### Wait Service ###
-In addition to the `bb-wait` directive, a `bbWait` service exists to allow functional access to adding and removing waits on elements or the page as a whole.
-This service supports the following functions
-
- - `beginElWait(element)` - Adds a wait for the specified element. Implicitly tracks a wait count for the element.
- - `endElWait(element)` - Removes a wait for the specified element. Implicitly tracks a wait count for the element and clears the wait UI when the count is 0.
- - `clearElWait(element)` - Removes all waits for the specified element and will clear any wait UI.
- - `beginPageWait()` - Adds a wait for the whole page (same as body element). Implicitly tracks a wait count for the element.
- - `endPageWait()` - Removes a wait for the whole page (same as body element). Implicitly tracks a wait count for the element and clears the wait UI when the count is 0.
- - `clearPageWait()` - Removes all waits for the whole page (same as body element) and will clear any wait UI.
- */
-
 (function ($) {
     'use strict';
 
@@ -204,9 +158,11 @@ This service supports the following functions
                 // A set timeout of 0 handles blocks added without async operations before starting another, which
                 // would indicate that the block should have been maintained anyways.
                 $timeout(function () {
+                    var $el;
+
                     /* istanbul ignore else: sanity check */
                     if (getWaitCount(el) === 0) {
-                        var $el = $(el);
+                        $el = $(el);
 
                         if (!isBlockUISupported()) {
                             return;
@@ -217,16 +173,17 @@ This service supports the following functions
                         } else {
                             $el.unblock();
                         }
-                        $(el).removeData(showingWaitAttr);
+                        $el.removeData(showingWaitAttr);
                     }
                 }, 0);
             }
 
             addWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Increases the element wait count and shows the wait if the count is above 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 count += 1;
 
                 setWaitCount(el, count, options.nonblocking);
@@ -240,10 +197,11 @@ This service supports the following functions
             };
 
             removeWait = function (el, options) {
+                var count;
                 options = options || {};
 
                 // Decreases the element wait count and hides the wait if the count is at 0.
-                var count = getWaitCount(el, options.nonblocking);
+                count = getWaitCount(el, options.nonblocking);
                 if (count > 0) {
                     count -= 1;
 

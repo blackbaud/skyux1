@@ -1,27 +1,5 @@
 /*global angular, jQuery, require */
 
-/** @module Data
-
-@summary The data service provides access to convenience functions that allow you to manipulate data.
-@icon database
-@description The data service provides methods for loading data from and saving data to web service endpoints.
-
-### bbData Functions ###
-
-  - `load(loadObj)` Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request.
-    - `data` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`.  The requests to the specified URLs will be made with credentials.
-    - `resources` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.resources`. The requests to the specified URLs will be made without credentials.
-    - `text` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.text`.  The requests to the specified URLs will be made without credentials and the result will be returned as a string rather than an object.
-    - `loadManager` An object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data.
-  - `query(url, queryParams)` Creates a URL with a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
-  - `post(url, data)` For use within `bbData.load`, creates a post request from a URL and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});`.
-  - `save(saveObj)` A function that issues an HTTP post for the purpose of storing data on the remote server. Takes an argument with the following properties:
-    - `url` The URL to which to send the request.
-    - `data` The object to be POSTed to the URL.
-    - `type` (*default: `POST`) The HTTP verb to use along with the request.
-  - `cancel(promise)` Takes a promise returned by `bbData.load` or `bbData.save` and cancels the underlying HTTP request.  The promise will be rejected after cancelling.
-*/
-
 (function ($) {
     'use strict';
 
@@ -330,25 +308,34 @@
 
                     function success(args) {
                         var argIndex = 0,
-                            result = {};
+                            result = {
+                                httpResults: {}
+                            };
 
                         function addResult(name, props) {
                             var resultData,
+                                httpResult,
                                 i,
                                 n,
                                 p,
-                                resultItem;
+                                resultItem,
+                                resultItemHttpResults;
 
                             if (props) {
                                 for (i = 0, n = props.length; i < n; i++) {
                                     p = props[i];
-                                    resultData = args[argIndex].data;
+                                    httpResult = args[argIndex];
+                                    resultData = httpResult.data;
 
                                     if (p === DEFAULT_PROP) {
                                         resultItem = resultData;
+                                        resultItemHttpResults = httpResult;
                                     } else {
                                         resultItem = resultItem || {};
                                         resultItem[p] = resultData;
+
+                                        resultItemHttpResults = resultItemHttpResults || {};
+                                        resultItemHttpResults[p] = httpResult;
                                     }
 
                                     argIndex++;
@@ -357,6 +344,10 @@
 
                             if (angular.isDefined(resultItem)) {
                                 result[name] = resultItem;
+                            }
+
+                            if (angular.isDefined(resultItemHttpResults)) {
+                                result.httpResults[name] = resultItemHttpResults;
                             }
                         }
 

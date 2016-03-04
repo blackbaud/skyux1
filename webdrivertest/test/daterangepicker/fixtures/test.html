@@ -1,0 +1,15 @@
+<div class="container" ng-controller="DateRangePickerTestController as rangeCtrl">
+    <div id="screenshot-daterangepicker">
+        <bb-date-range-picker bb-date-range-picker-value="rangeCtrl.dateRangePickerValue" bb-date-range-picker-options="rangeCtrl.dateRangePickerOptions"></bb-date-range-picker>
+    </div>
+    <div id="screenshot-daterangepicker-specific">
+      <bb-date-range-picker bb-date-range-picker-value="rangeCtrl.specificRangePickerValue"
+                              bb-date-range-picker-options="rangeCtrl.specificRangePickerOptions"
+                              bb-date-range-picker-automation-id="'DirectiveDemo'"
+                              bb-date-range-picker-from-date="rangeCtrl.fromDate"
+                              bb-date-range-picker-to-date="rangeCtrl.toDate"
+                              bb-date-range-picker-label="'Date Range Picker'"
+                              bb-date-range-picker-valid="rangeCtrl.isValid"
+                              ></bb-date-range-picker>
+    </div>
+</div>

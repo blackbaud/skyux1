@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="row" id="screenshot-checklist" ng-controller="ChecklistTestController">
+      <div class="col-xs-12">
+        <button style="margin-bottom: 15px;"type="button" class="btn btn-primary show-grid" ng-click="locals.showChecklistGrid = true">Show Grid</button>
+        <div id="screenshot-checklist-grid" ng-if="locals.showChecklistGrid">
+          <bb-checklist
+                    bb-checklist-items="locals.items"
+                    bb-checklist-selected-items="locals.selectedItems"
+                    bb-checklist-filter-callback="locals.onSearch"
+                    bb-checklist-include-search="true"
+                    bb-checklist-search-placeholder="Search for columns"
+                    bb-checklist-no-items-message="'No columns found'"
+                    >
+              <bb-checklist-columns>
+                  <bb-checklist-column
+                                   bb-checklist-column-caption="'Column Name'"
+                                   bb-checklist-column-field="'column'"
+                                   bb-checklist-column-width="'30%'"
+                                   >
+                  </bb-checklist-column>
+                  <bb-checklist-column
+                                   bb-checklist-column-caption="'Column Description'"
+                                   bb-checklist-column-field="'description'"
+                                   bb-checklist-column-width="'70%'"
+                                   >
+                  </bb-checklist-column>
+              </bb-checklist-columns>
+          </bb-checklist>
+        </div>
+        <button style="margin-bottom: 15px;" type="button" class="btn btn-primary show-list" ng-click="locals.showChecklistList = true">Show List</button>
+        <div id="screenshot-checklist-list" ng-if="locals.showChecklistList">
+          <bb-checklist
+                    bb-checklist-items="locals.listItems"
+                    bb-checklist-selected-items="locals.selectedListItems"
+                    bb-checklist-include-search="false"
+                    bb-checklist-search-placeholder="Search for columns"
+                    bb-checklist-no-items-message="No columns found"
+                    bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+                    bb-checklist-mode="list"
+                    bb-checklist-filter-local
+                    >
+          </bb-checklist>
+        </div>
+        <button style="margin-bottom: 15px;" type="button" class="btn btn-primary show-single" ng-click="locals.showChecklistSingle = true">Show Single</button>
+        <div id="screenshot-checklist-single" ng-if="locals.showChecklistSingle" >
+          <bb-checklist
+                        bb-checklist-items="locals.listItemsSingle"
+                        bb-checklist-selected-items="locals.selectedSingleItem"
+                        bb-checklist-include-search="locals.includeSearch"
+                        bb-checklist-search-placeholder="Search for columns"
+                        bb-checklist-no-items-message="No columns found"
+                        bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+                        bb-checklist-mode="list"
+                        bb-checklist-select-style="single"
+                        bb-checklist-filter-local>
+          </bb-checklist>
+        </div>
+      </div>
+    </div>
+</div>

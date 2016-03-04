@@ -85,7 +85,6 @@
                 border: 1px solid $alert-warning-border;
                 border-radius: 4px;
                 float: left;
-                cursor: pointer;
                 padding: 3px;
                 height: 26px;
                 max-width: calc(100% - 60px);
@@ -96,6 +95,7 @@
                     display: block;
                     padding-right: $padding;
                     float: left;
+                    cursor: pointer;
                     max-width: 99%;
                     @media (max-width: ($screen-md-max)) {
                         max-width: 98%;

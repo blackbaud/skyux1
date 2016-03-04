@@ -95,6 +95,10 @@ a {
         text-decoration: none;
     }
 }
+
+a.alert-link:hover, a.alert-link:focus {
+  text-decoration: underline;
+}
 /* End Links */
 
 /* Placeholder Text */
@@ -121,14 +125,9 @@ input:-moz-placeholder { /* Firefox 18- */
     font-weight: normal;
 }
 
-.form-control:focus {
+.form-control:focus, .form-control:focus.ng-invalid {
     box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
     border: 1px solid #1f90d8;
-}
-
-.form-control:focus.ng-invalid {
-    box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
-    border: 1px solid #ed5565;
 }
 
 .checkbox {

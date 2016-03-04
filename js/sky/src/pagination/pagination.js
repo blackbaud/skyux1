@@ -1,36 +1,12 @@
 /*global angular */
 
-/** @module Pagination
-@icon files-o
-@summary The pagination component displays data across multiple pages and inserts a pagination control to page through the data.
- @description The pagination directive allows list data to be displayed across multiple pages. When the number of items in the list exceeds the page size, a pagination control is displayed.
-
-The `bb-pagination-content` directive and the `bbPaging` service are used in conjunction with this directive. The `bb-pagination-content` is used to wrap the paged content so that the height of the wrapper can be kept as a constant height across pages regardless of contents. When the list data is bound, the height of the largest page will be used for the wrapper so that the height of the list will not fluctuate as the user pages through it.
-The `bbPaging` service is used to create the paged data and responds to changes in the pagination directive.
-
-### Pagination Settings ###
-
- - `bb-pagination` The paged data initialized by the `bbPaging` service.
- - `bb-pagination-disabled` Determines whether the use can interact with the pagination control.
-
-### Pagination Content Settings ##
-
- - `bb-pagination-content` The paged data initialized by the `bbPaging` service.
-
-### Paging Settings ##
-These are optional properties of the object passed to `bbPaging.init()`
-
- - `currentPage` *(Default: `1`)* The initial page to display.
- - `itemsPerPage` *(Default: `5`)* The number of items to display per page.
- */
-
 (function () {
     'use strict';
 
     var evtNsPos = 0;
 
     angular.module('sky.pagination', ['ui.bootstrap.pagination'])
-        .config(['paginationConfig', function (paginationConfig) {
+        .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
 
@@ -49,6 +25,7 @@ These are optional properties of the object passed to `bbPaging.init()`
                             currentPage = paging.currentPage - 1; // 1-based
 
                             startingIndex = currentPage * paging.itemsPerPage;
+
                             paging.items = sourceData.slice(startingIndex, startingIndex + paging.itemsPerPage);
                         }
                     }
@@ -79,7 +56,7 @@ These are optional properties of the object passed to `bbPaging.init()`
 
                     /*jslint white: true */
                     el.html(
-                        '<pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></pagination>' +
+                        '<uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></uib-pagination>' +
                         '<div class="clearfix"></div>'
                     );
                     /*jslint white: false */
@@ -115,7 +92,7 @@ These are optional properties of the object passed to `bbPaging.init()`
                 }
             };
         })
-        .directive('bbPaginationContent', ['$timeout', '$window', function ($timeout, $window) {
+        .directive('bbPaginationContent', ['$timeout', '$window', '$animate', function ($timeout, $window, $animate) {
             return {
                 link: function (scope, el) {
                     var evtNs;
@@ -144,10 +121,16 @@ These are optional properties of the object passed to `bbPaging.init()`
                                     maxHeight = 0;
 
                                 function changePage(pageNumber) {
+                                    /* Disable animation for the page change
+                                       to prevent issues with ng-repeat
+                                       that impact min-height measurements */
+                                    $animate.enabled(false, el);
                                     pagedData.currentPage = pageNumber;
-                                    pagedData.pageChanged();
 
+                                    pagedData.pageChanged();
                                     scope.$apply();
+                                    $animate.enabled(true, el);
+
                                 }
 
                                 if (height === 0 && tries < 5) {

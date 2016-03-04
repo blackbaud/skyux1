@@ -4,6 +4,10 @@
     background-color: $bb-color-white;
 }
 
+.nav.nav-tabs {
+    padding-left: 15px;
+}
+
 .nav-tabs > li > a {
     padding: 7px 15px;
 }
@@ -112,6 +116,8 @@
 
             .bb-tab-close-icon {
                 padding-left: 10px;
+                padding-top: 2px;
+                padding-bottom: 3px;
                 cursor: pointer;
                 -webkit-appearance: none;
                 background-color: transparent;
@@ -119,6 +125,8 @@
                 outline: none;
                 @extend .fa;
                 @extend .fa-times;
+                position: absolute;
+                right: 0;
             }
 
             .bb-tab-close-icon:active,
@@ -171,6 +179,19 @@
     }
 }
 
+.bb-tab-close {
+    > a {
+        tab-heading, uib-tab-heading {
+            position: relative;
+            padding-right: 30px;
+            display: block;
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+}
+
 .bb-tab-header-count {
     color: $bb-color-blue;
     font-size: 13px;
@@ -190,19 +211,23 @@
     visibility: hidden;
 }
 
-.bb-tab-scroll {
-    > .nav-tabs {
-        overflow-x: auto;
-        overflow-y: hidden;
-        position: relative;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-
-        li {
-            display: inline-block;
-            float: none;
-        }
+.bb-tab-scroll > .nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    li {
+        display: inline-block;
+        float: none;
     }
+}
+
+.bb-tab-header-text {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
 }
 
 @media (min-width: 768px) {

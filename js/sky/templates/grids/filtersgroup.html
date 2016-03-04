@@ -3,5 +3,5 @@
         <i ng-class="'glyphicon-chevron-' + (isCollapsed ? 'down' : 'up')" class="bb-grid-filters-body-group-header-icon glyphicon"></i>
         <label>{{bbGridFiltersGroupLabel}}</label>
     </div>
-    <div class="bb-grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>
+    <div class="bb-grid-filters-body-group-content" uib-collapse="!!isCollapsed" ng-transclude></div>
 </div>

@@ -7,13 +7,15 @@ data: <%= stache.config.demo %>data/
 
 markdown: false
 showOmnibar: false
-partial_header_search: <%= stache.config.includes %>partial-header-search.hbs
-partial_jsdoc_header: <%= stache.config.includes %>partial-jsdoc-header.hbs
-partial_jsdoc_body: <%= stache.config.includes %>partial-jsdoc-body.hbs
-partial_jsdoc_footer: <%= stache.config.includes %>partial-jsdoc-footer.hbs
+showHeader: false
+showFooter: false
+
 partial_sky_css: <%= stache.config.includes %>partial-sky-css.hbs
 partial_sky_js: <%= stache.config.includes %>partial-sky-js.hbs
-
+modules:
+  - stache
+  - skyuxDemo
+  - ngMessages
 files:
   js:
     - /js/KitchenSink.js

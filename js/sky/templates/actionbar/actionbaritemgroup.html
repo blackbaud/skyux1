@@ -3,12 +3,12 @@
         <ng-transclude />
     </div>
     <div class="bb-action-bar-dropdown hidden-sm hidden-md hidden-lg">
-        <div class="dropdown">
-             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" href="javascript:void(0)">
-            {{title}}<span class="caret"/>
+        <div uib-dropdown>
+             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+            {{bbActionBarItemGroup.title}}<span class="caret"/>
             </button>
 
-            <ul class="dropdown-menu">
+            <ul uib-dropdown-menu>
 
             </ul>
         </div>

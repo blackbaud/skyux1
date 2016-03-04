@@ -19,9 +19,9 @@
 
     <div class="clearfix"></div>
 
-    <div class="table-responsive">
-
-        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
+    <div class="table-responsive" bb-wait="options.loading">
+        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
+        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>
     </div>
 
     <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">
@@ -30,7 +30,7 @@
     </div>
 
     <div ng-if="paginationOptions" class="bb-grid-pagination-container">
-        <pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></pagination>
+        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>
         <div class="clearfix"></div>
     </div>
 

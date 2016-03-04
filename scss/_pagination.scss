@@ -55,8 +55,6 @@
         span,
         span:hover,
         span:focus {
-            background-color: #f4f4f4;
-            border-color: #ddd;
             color: inherit;
             cursor: default;
             z-index: 2;
@@ -100,6 +98,15 @@
             }
         }
     }
+}
+.bb-pagination-content {
+  margin-bottom: 15px;
+}
+.bb-pagination-content > table {
+  margin-bottom: 0;
+}
+.bb-pagination-content-calculating {
+  visibility: hidden;
 }
 
 /* PAGINATION END */

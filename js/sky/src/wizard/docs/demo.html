@@ -8,11 +8,11 @@
       <bb-modal-header>Wizard example</bb-modal-header>
       <form ng-submit="wizardModalCtrl.save()">
         <div bb-modal-body>
-          <tabset bb-wizard>
-            <tab ng-repeat="step in wizardModalCtrl.steps" heading="{{step.heading}}" active="step.active" disabled="step.disabled()" bb-wizard-step-complete="step.complete()">
+          <uib-tabset bb-wizard>
+            <uib-tab ng-repeat="step in wizardModalCtrl.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
               <ng-include src="step.templateUrl"></ng-include>
-            </tab>
-          </tabset>
+            </uib-tab>
+          </uib-tabset>
         </div>
         <bb-modal-footer>
           <bb-modal-footer-button ng-click="wizardModalCtrl.wizardNav.goToPrevious()" ng-disabled="wizardModalCtrl.wizardNav.previousDisabled()">{{wizardModalCtrl.wizardNav.previousText()}}</bb-modal-footer-button>

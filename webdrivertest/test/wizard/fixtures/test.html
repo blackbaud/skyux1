@@ -1,0 +1,51 @@
+<div class="container">
+    <div ng-controller="WizardTestController">
+      <button id="screenshots-wizard-open" class="btn btn-primary" ng-click="locals.openForm()">Open wizard</button>
+      <div style="height: 500px;"></div>
+    </div>
+
+    <script type="text/ng-template" id="demo/wizard/wizardform.html">
+      <bb-modal>
+        <div class="modal-form" ng-controller="WizardTestModalController">
+          <bb-modal-header bb-modal-help-key="'helpkey.html'">Wizard example</bb-modal-header>
+          <form ng-submit="locals.save()">
+            <div bb-modal-body>
+              <uib-tabset bb-wizard>
+                <uib-tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
+                  <ng-include src="step.templateUrl"></ng-include>
+                </uib-tab>
+              </uib-tabset>
+            </div>
+            <bb-modal-footer>
+              <bb-modal-footer-button ng-click="locals.wizardNav.goToPrevious()" ng-disabled="locals.wizardNav.previousDisabled()">{{locals.wizardNav.previousText()}}</bb-modal-footer-button>
+              <bb-modal-footer-button-primary ng-click="locals.wizardNav.goToNext()" ng-disabled="locals.wizardNav.nextDisabled()">{{locals.wizardNav.nextText()}}</bb-modal-footer-button-primary>
+              <bb-modal-footer-button>Save and Close</bb-modal-footer-button>
+              <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
+          </form>
+        </div>
+      </bb-modal>
+    </script>
+
+    <script type="text/ng-template" id="demo/wizard/step1.html">
+      <div class=" form-group">
+        <label>Enter text here to continue.</label>
+        <input type="text" id="screenshots-text1" class="form-control" ng-model="locals.requiredValue1" />
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="demo/wizard/step2.html">
+      <div class=" form-group">
+        <label>
+          <input type="checkbox" id="screenshots-checkbox1" bb-check ng-model="locals.requiredValue2" />
+          Check this box to enable step 3.
+        </label>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="demo/wizard/step3.html">
+      <div class=" form-group">
+        Some other content.
+      </div>
+    </script>
+</div>

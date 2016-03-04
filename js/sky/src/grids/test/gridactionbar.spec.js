@@ -186,11 +186,18 @@ describe('Grid actionbar', function () {
     it('watches the selected rows in the grid, passes them to the selections updated function, and shows the action bar if actions are available', function () {
         var actionBarEl,
             actionEl,
-            rowEl;
+            rowEl,
+            callback;
+
+        spyOn(bbMediaBreakpoints, 'register').and.callFake(function (gridCallback) {
+            callback = gridCallback;
+        });
 
         el = setUpGrid(actionbarGridHtml);
 
         setGridData(dataSet1);
+
+        callback({xs: false});
 
         rowEl = getGridRows(el);
 
@@ -294,13 +301,21 @@ describe('Grid actionbar', function () {
 
     it('calls the action function when the action button is pressed', function () {
         var rowEl,
-            actionEl;
+            actionEl,
+            callback;
+
+        spyOn(bbMediaBreakpoints, 'register').and.callFake(function (gridCallback) {
+            callback = gridCallback;
+        });
+
 
         el = setUpGrid(actionbarGridHtml);
 
         setGridData(dataSet1);
 
         rowEl = getGridRows(el);
+
+        callback({xs: false});
 
         clickRowMultiselect(rowEl, 0);
         $scope.$digest();

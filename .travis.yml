@@ -1,6 +1,12 @@
 language: node_js
 node_js:
-  - '0.10'
+  - '4'
+
+addons:
+  apt:
+    packages:
+      - graphicsmagick
+      - libcairo2-dev
 
 before_install:
   # Used throughout the bash scripts
@@ -8,8 +14,10 @@ before_install:
   - export RELEASE_VERSION="${LAST_COMMIT_MESSAGE#Release v}"
   - export RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
   - export RELEASE_BRANCH="^(master|rc-)"
+  - export PRERELEASE_BRANCH="^rc-"
   - export SAVAGE_BRANCH="^savage-"
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
+  - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
 
   # The following enable xvfbs so that SlimerJS (a non-headless browser) can be run.
   # They also enable pull requests from forks to use Firefox.
@@ -25,6 +33,10 @@ before_install:
   - chmod +x update-skyux-docs.sh
   - chmod +x update-skyux-releases.sh
   - chmod +x update-skyux-visualtest-results.sh
+  - chmod +x run-browserstack-local.sh
+
+  # https://github.com/npm/npm/issues/11283
+  - npm set progress=false
 
 # Install a few additional things outside those listed in package.json
 before_script:
@@ -35,7 +47,6 @@ before_script:
 # We want deployment failures to fail the build
 script: npm test && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
 
-# Store our visual test results if there was an build error
 after_failure: ./update-skyux-visualtest-results.sh
 
 # When a push, only care about the master, rc-, and savage- branches.

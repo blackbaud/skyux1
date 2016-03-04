@@ -1,0 +1,63 @@
+<div class="container" ng-controller="TabsetVisualController as tabsetCtrl">
+
+    <div id="screenshot-tabset-all">
+        <div id="screenshot-tabset-open-add">
+            <uib-tabset bb-tabset-open="tabsetCtrl.open()" bb-tabset-add="tabsetCtrl.add()" bb-tabset-collapsible>
+              <uib-tab class="bb-tab-close" bb-tab-collapse-header="'Tab 1'">
+                  <uib-tab-heading>
+                      Tab 1
+                      <i class="bb-tab-close-icon"></i>
+                  </uib-tab-heading>
+                  Content 1
+              </uib-tab>
+              <uib-tab class="bb-tab-close">
+                  <uib-tab-heading>
+                      Tab 2
+                      <i class="bb-tab-close-icon"></i>
+                  </uib-tab-heading>
+                  Content 2
+              </uib-tab>
+            </uib-tabset>
+        </div>
+
+        <div id="screenshot-tabset-open">
+            <uib-tabset bb-tabset-open="tabsetCtrl.open()">
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
+                        Tab 1
+                        <i class="bb-tab-close-icon"></i>
+                    </uib-tab-heading>
+                    Content 1
+                </uib-tab>
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
+                        Tab 2
+                        <i class="bb-tab-close-icon"></i>
+                    </uib-tab-heading>
+                    Content 2
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+        <div id="screenshot-tabset-add">
+            <uib-tabset bb-tabset-add="tabsetCtrl.add()">
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
+                        Tab 1
+                        <i class="bb-tab-close-icon"></i>
+                    </uib-tab-heading>
+                    Content 1
+                </uib-tab>
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
+                        Tab 2
+                        <i class="bb-tab-close-icon"></i>
+                    </uib-tab-heading>
+                    Content 2
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+    </div>
+
+</div>

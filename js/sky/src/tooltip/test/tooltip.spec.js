@@ -12,9 +12,8 @@ describe('Tooltip', function () {
     beforeEach(module(
         'ngMock',
         'sky.tooltip',
-        'ui.bootstrap.tooltip',
         'sky.templates',
-        'template/tooltip/tooltip-html-unsafe-popup.html'
+        'template/tooltip/tooltip-template-popup.html'
     ));
 
     beforeEach(inject(function (_$compile_, _$rootScope_, _$templateCache_, _$timeout_, _$window_) {
@@ -34,6 +33,7 @@ describe('Tooltip', function () {
         var myEvent = document.createEvent('Event');
         myEvent.initEvent(evt, true, false);
         element[0].dispatchEvent(myEvent);
+        $rootScope.$digest();
     }
 
     describe('directive', function () {
@@ -44,15 +44,11 @@ describe('Tooltip', function () {
         function testTooltip($scope, el, message, expectedText, updater) {
             $scope.message = message;
             $scope.updater = updater;
-            $scope.$digest();
-            $timeout.flush();
+            $rootScope.$digest();
 
             trigger(el, 'click');
             expect($('#messageWrapper')).toHaveText(expectedText || message);
             trigger(el, 'click');
-
-            removeTooltips();
-
         }
 
         it('should bind scope data into the template', function () {
@@ -64,10 +60,10 @@ describe('Tooltip', function () {
             )($scope);
 
             el.appendTo(document.body);
+            $scope.$digest();
 
             testTooltip($scope, el, 'Hello World');
-            $timeout.flush();
-
+            removeTooltips();
             el.remove();
         });
 
@@ -80,13 +76,11 @@ describe('Tooltip', function () {
             )($scope);
 
             el.appendTo(document.body);
+            $scope.$digest();
 
             testTooltip($scope, el, 'Hello World');
-
-            testTooltip($scope, el, 'Hello World2', 'Hello World');
-            $timeout.flush();
-            testTooltip($scope, el, 'Hello World2', 'Hello World2', 1);
-            $timeout.flush();
+            testTooltip($scope, el, 'Hello World2');
+            removeTooltips();
 
             el.remove();
         });

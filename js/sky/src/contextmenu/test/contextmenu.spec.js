@@ -4,21 +4,24 @@
 describe('Context menu', function () {
     'use strict';
 
-    var $compile,
+    var $animate,
+        $compile,
         $document,
         $scope;
 
     beforeEach(module(
-                'sky.contextmenu',
-                'sky.templates',
-                'template/accordion/accordion.html',
-                'template/accordion/accordion-group.html'));
+        'ngAnimateMock',
+        'sky.contextmenu',
+        'sky.templates',
+        'template/accordion/accordion.html',
+        'template/accordion/accordion-group.html'
+    ));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$animate_) {
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
-
         $document = _$document_;
+        $animate = _$animate_;
 
         $scope.locals = {
             items: [
@@ -54,9 +57,11 @@ describe('Context menu', function () {
 
         $compile(el)($scope);
         $scope.$digest();
-
         expect(el.find('div.bb-context-menu.dropdown').length).toBe(1);
         expect(el.find('button.btn.bb-btn-secondary.bb-context-menu-btn.dropdown-toggle i.fa.fa-ellipsis-h').length).toBe(1);
+
+        el.find('.bb-context-menu-btn').click();
+        $scope.$digest();
 
         itemsEl = el.find('ul li a');
         expect(itemsEl.length).toBe(3);
@@ -79,6 +84,8 @@ describe('Context menu', function () {
             '</bb-context-menu>',
             '</div>'
         ].join(''));
+
+
 
         verifyContextMenuDropdown(el);
 
@@ -167,6 +174,7 @@ describe('Context menu', function () {
             expect(getAccordionPanel(el)).not.toHaveClass('in');
 
             getAccordionHeading(el).click();
+            $animate.flush();
             $scope.$digest();
 
             submenuItems = getAccordionItems(el);

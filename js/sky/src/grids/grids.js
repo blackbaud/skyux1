@@ -1,95 +1,6 @@
 /*jslint plusplus: true */
 /*global angular, jQuery */
 
-/** @module Grid
-@icon table
-@summary The grid builds a full-featured grid with a search box, column picker, and filter form.
- @description The grid directive allows you to build a full-featured grid with a search box, column picker, and filter form.
-
- ### Dependencies ###
-
-- **[jqGrid](https://github.com/free-jqgrid/jqGrid) (4.7.0 or higher)**
-- **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
----
-
-The grid directive allows you to build a full-featured grid with a search box, column picker and filter form.
-
-### Grid Settings ###
-- `bb-grid-filters` A directive you can use inside the bb-grid directive to create a filter flyout menu.
-  - `bb-options` An options object for bb-grid-filters that contains the following:
-      - `applyFilters` A function that is called when you click the apply filters button. You can pass updated filters to `bb-grid` by setting `args.filters`.
-      - `clearFilters` A function that is called when you click the clear filters button. You can pass updated filters to `bb-grid` by setting `args.filters`.
-  - `bb-grid-filters-group` A directive you can use inside of `bb-grid-filters` that creates labels (with the `bb-grid-filters-group-label` option) and collapsible areas.
-- `bb-grid-filters-summary` A directive you can use inside the bb-grid directive to create a summary toolbar for your applied filters.
-  - `bb-options` An options object for `bb-grid-filters-summary` that contains the following:
-      - `clearFilters` A function that is called when you click the clear filters (x) icon. You can pass updated filters to `bb-grid` by setting `args.filters`.
-
-- `bb-grid-options` An object with the following properties:
-  - `columns` An array of available columns.  Each column can have these properties:
-        - `allow_see_more` Allows the column to have a see more link to view overflow content.
-        - `caption` The text to display in the column header and column chooser.
-        - `category` A category for the column, can be used to filter in the column chooser.
-        - `center_align` True if the column header and contents should be center aligned.
-        - `controller` The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data. You can access row data from the grid in the column template controller using `$scope.rowData`.
-        - `description` A description for the column, seen in the column chooser.
-        - `exclude_from_search` If true, then the column does not highlight text on search.
-        - `id` A unique identifier for the column.  The ID is referenced by the option object's `selectedColumnIds` property.
-        - `jsonmap` The name of the property that maps to the column's data.
-        - `name` The name of the column.
-        - `right_align` True if the column header and contents should be right aligned.
-        - `template_url` The url for the column template to show formatted or complex data in a cell. The properties of the cell data object can be accessed using the format `data.property_name`.
-        - `width_all` The default width (in pixels) for a column if no breakpoint specific column is specified (`width_xs`, `width_sm`, `width_md`, `width_lg`). If no value is specified, columns will default to 150px, and if the columns do not take up the available room in the grid, the last column will be extended.
-        - `width_xs` The width of the column for screen sizes less than 768px.
-        - `width_sm` The width of the column for screen sizes from 768px to 991px.
-        - `width_md` The width of the column for screen sizes from 992px to 1199px.
-        - `width_lg` The width of the column for screen sizes greater than 1199px.
-  - `data` An array of objects representing the rows in the grid.  Each row should have properties that correspond to the `columns` `jsonmap` properties.
-  - `fixedToolbar` Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.
-  - `filtersAreActive` If true, the filter button highlights to indicate that filters are active.
-  - `filtersOpen` If set to true, opens filters. If set to false, closes filters.
-  - `getContextMenuItems` If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
-      - `id` A unique string identifier for the option.
-      - `title` The title shown for the dropdown option.
-      - `cmd` A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.
-  - `hasInlineFilters` If true, toggles hide/show on the transcluded content in the `bb-grid` directive when the filter button is pressed.
-  - `hasMoreRows` If set to true, then the `See more` button will appear below the grid when the grid does not use pagination.
-  - `hideColPicker` If true, hides the grid column picker in the toolbar.
-  - `hideFilters` If true, hides the filters button in the toolbar.
-  - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
-  - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
-  - `onAddClickLabel` Label for the add button.
-  - `searchText` The text entered in the grid search box, set by bbGrid.
-  - `selectedColumnIds` An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
-  - `sortOptions` Options around column sorting:
-      - `excludedColumns` An array of column names that should be excluded.
-      - `column` The name of the column that the data should be sorted by, set by bbGrid.
-      - `descending` Set to true by bbGrid if the sort should be in descending order.
-- `bb-grid-pagination` An object set when you intend to use pagination instead of infinite scrolling with your grid. It has the following properties:
-  - `itemsPerPage` The number of rows you wish to show in the grid per page, defaults to 5.
-  - `maxPages` The maximum number of pages to show in the pagination bar, defualts to 5.
-  - `recordCount` The total number of records available through pagination.
-- `bb-multiselect-actions` An array of actions that can be shown in the multiselect action bar. Each action can have the following:
-  - `actionCallback` A function that will be called when the action is clicked.
-  - `automationId` An identifier that will be placed in the `data-bbauto` attribute for automation purposes.
-  - `isPrimary` If true, this action will have the primary button color.
-  - `selections` The selected row objects from the list builder that are associated with this action, this can be updated through the `bb-selections-updated` function.
-  - `title` The text that will appear on the button for the action.
-- `bb-selected-rows` An object that has two way binding to the multiselected rows. It can be used to set the multiselected rows from the parent controller of the directive.
-- `bb-selections-updated` A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.
-
-### Custom Grid Toolbar ###
-If you need more content in the grid toolbar beyond the add button, search input, column chooser, and filter button, then you can add custom content between the add button and search input.
-
-To do this, the `bb-grid-custom-toolbar` attribute must be added to the `bb-grid` directive. Then, place a `bb-grid-toolbar` directive with your custom controls inside of the `bb-grid` directive.
-
-### Grid Events ###
-
-  - `includedColumnsChanged` Fires when the user has changed the grid columns.  If you plan to handle reloading the grid after this change (e.g. you need
-to reload data from the server as a result of the column change), set the event handler's `data` parameter's `willResetData` property to `true` to avoid
-reloading the grid with the current data after the event has fired.
-  - `loadMoreRows` Fires when a page changes (when using pagination) or when the 'See more' button is clicked. When raised from a page change, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data.
-
-*/
 (function ($) {
     'use strict';
 
@@ -133,9 +44,9 @@ reloading the grid with the current data after the event has fired.
         }])
 
 
-        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
+        .directive('bbGrid', ['$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow', '$q',
 
-            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
+            function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
                     transclude: true,
@@ -221,9 +132,6 @@ reloading the grid with the current data after the event has fired.
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
-                            },
-                            loadMore: function () {
-                                $scope.$emit('loadMoreRows');
                             }
                         };
 
@@ -278,7 +186,8 @@ reloading the grid with the current data after the event has fired.
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth;
+                                scrollbarWidth,
+                                doNotResetRows = false;
 
                             function getTopScrollbar() {
                                 return element.find('.bb-grid-top-scrollbar');
@@ -293,8 +202,7 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.rowcount = count;
                             }
 
-                            function mediaBreakpointHandler(newBreakpoints) {
-                                breakpoints = newBreakpoints;
+                            function reInitGrid() {
                                 if ($scope.options && $scope.options.selectedColumnIds && $scope.options.selectedColumnIds.length > 0 && tableEl[0].grid) {
 
                                     initGrid();
@@ -303,6 +211,11 @@ reloading the grid with the current data after the event has fired.
                                         setRows($scope.options.data);
                                     }
                                 }
+                            }
+
+                            function mediaBreakpointHandler(newBreakpoints) {
+                                breakpoints = newBreakpoints;
+                                reInitGrid();
                             }
 
                             function buildColumnClasses(column) {
@@ -324,7 +237,6 @@ reloading the grid with the current data after the event has fired.
                                 /*jslint unparam: true*/
                                 return "data-grid-field='" + column.name + "'" + "data-bbauto-field='" + column.name + "'" + "data-bbauto-index='" + (tableEl.getInd(rowId) - 1) + "'";
                             }
-
 
                             function getColumnById(columns, id) {
                                 var column,
@@ -521,13 +433,34 @@ reloading the grid with the current data after the event has fired.
                                 setScrollbarHeight();
                             }
 
+                            function setColumnSize(columnName, columnSize, totalWidth) {
+                                var gridHeaders,
+                                    colSizePx = columnSize + 'px',
+                                    bodyScrollLeft,
+                                    tableGrid = tableEl[0].grid;
+
+                                gridHeaders = tableGrid.headers;
+                                bodyScrollLeft = tableGrid.bDiv.scrollLeft;
+                                /* jqGrid does not provide a function to change a single column column size.
+                                   This code snippet mirrors how jqGrid changes column size in their own dragEnd
+                                   function.
+                                */
+                                tableEl[0].p.colModel[extendedColumnIndex].width = columnSize;
+                                gridHeaders[extendedColumnIndex].width = columnSize;
+                                gridHeaders[extendedColumnIndex].el.style.width = colSizePx;
+                                tableGrid.cols[extendedColumnIndex].style.width = colSizePx;
+                                /* istanbul ignore next: sanity check */
+                                tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
+                                tableGrid.hDiv.scrollLeft = bodyScrollLeft;
+                            }
+
                             function resizeExtendedColumn(changedWidth, isIncreasing) {
                                 var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
 
                                 //If the extended portion of the last column is less than the amount resized
                                 if (extendedShrinkWidth <= changedWidth) {
                                     //decrease extended column to original size
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+
 
                                     //increase grid width by remainder and wipe out all the extended stuff
                                     if (isIncreasing) {
@@ -535,19 +468,23 @@ reloading the grid with the current data after the event has fired.
                                     } else {
                                         totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
                                     }
+                                    setColumnSize(extendedColumnName, originalExtendedColumnWidth, totalColumnWidth);
 
                                     tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                                     resetExtendedColumn();
+
                                 } else {
                                     //decrease extended column width by changedWidth
                                     currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                    tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+
 
                                     if (!isIncreasing) {
                                         totalColumnWidth = totalColumnWidth - changedWidth;
                                     }
+                                    setColumnSize(extendedColumnName, currentExtendedColumnWidth, totalColumnWidth);
+
                                 }
-                                tableEl.setGridWidth(totalColumnWidth, true);
+                                tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                             }
 
@@ -622,7 +559,18 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function resizeStop(newWidth, index) {
-                                var changedWidth;
+                                var changedWidth,
+                                    resizedColumnIndex = index;
+                                
+                                //If multiselect and/or contextmenu exist, then the resized column index is shifted.
+                                if (locals.multiselect) {
+                                    resizedColumnIndex =  resizedColumnIndex - 1;
+                                }
+                                if (getContextMenuItems) {
+                                    resizedColumnIndex =  resizedColumnIndex - 1;
+                                }
+                                
+                                $scope.$emit("columnsResized", { newWidth: newWidth, index: resizedColumnIndex });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
 
@@ -647,7 +595,7 @@ reloading the grid with the current data after the event has fired.
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-
+                                
                                 return;
                             }
 
@@ -836,14 +784,21 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function getSortable() {
+                                /*  The clone option for jquery ui clones the element that is being dragged.
+                                    This prevents the click event from being invoked while users are reordering
+                                    columns http://api.jqueryui.com/sortable/#option-helper
+                                */
                                 var sortable = {
-                                    update: gridColumnsReordered
+                                    update: gridColumnsReordered,
+                                    options: {
+                                        helper: 'clone'
+                                    }
+
                                 };
 
                                 if (getContextMenuItems) {
                                     sortable.exclude = "#" + $scope.locals.gridId + "_" + DROPDOWN_TOGGLE_COLUMN_NAME;
                                 }
-
                                 return sortable;
                             }
 
@@ -1000,7 +955,7 @@ reloading the grid with the current data after the event has fired.
                             }
 
                             function setUpFancyCheckCell() {
-                                var checkCellEl = element.find('td .cbox');
+                                var checkCellEl = element.find('td > .cbox');
                                 wrapCheckboxEl(checkCellEl);
                                 element.find('td .bb-check-checkbox').on('click', function (event) {
                                     event.preventDefault();
@@ -1298,6 +1253,25 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.applySearchText();
                             };
 
+                            function loadMore() {
+                                var deferred = $q.defer(),
+                                    loadMorePromise = deferred.promise;
+
+                                loadMorePromise.then(function (moreRows) {
+                                    tableEl.addRowData('', moreRows);
+                                    $scope.options.data = $scope.options.data.concat(moreRows);
+                                    setUpFancyCheckCell();
+                                    doNotResetRows = true;
+                                });
+
+                                $scope.$emit('loadMoreRows', {
+                                    promise: deferred
+                                });
+
+                            }
+
+                            $scope.locals.loadMore = loadMore;
+
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
@@ -1370,7 +1344,13 @@ reloading the grid with the current data after the event has fired.
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', setRows);
+                            $scope.$watchCollection('options.data', function (newValue) {
+                                if (doNotResetRows) {
+                                    doNotResetRows = false;
+                                } else {
+                                    setRows(newValue);
+                                }
+                            });
 
                             $scope.syncViewKeepers = function () {
                                 /*istanbul ignore else: sanity check */
@@ -1395,6 +1375,10 @@ reloading the grid with the current data after the event has fired.
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
+                            
+                            $scope.$on("reInitGrid", function () {
+                                reInitGrid();
+                            });
 
                             bbMediaBreakpoints.register(mediaBreakpointHandler);
 
@@ -1418,6 +1402,15 @@ reloading the grid with the current data after the event has fired.
                                 handleTableWrapperResize();
                             });
 
+                            // Reinitialize grid when grid element resizes from 0
+                            $scope.$watch(function () {
+                                return element.width();
+                            }, function (newValue, oldValue) {
+                                if (newValue !== oldValue && oldValue === 0) {
+                                    reInitGrid();
+                                }
+                            });
+
                             $scope.locals.topScrollbarScroll = function () {
                                 var topScrollbar = getTopScrollbar();
                                 tableWrapper.scrollLeft(topScrollbar.scrollLeft());
@@ -1425,6 +1418,11 @@ reloading the grid with the current data after the event has fired.
                                     header.scrollLeft(topScrollbar.scrollLeft());
                                 }
                             };
+
+                            $scope.locals.hasWaitAndEmpty = function () {
+                                return $scope.options && $scope.options.loading && (!$scope.options.data || $scope.options.data.length < 1);
+                            };
+
 
                             element.on('$destroy', function () {
 

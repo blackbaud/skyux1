@@ -1,33 +1,9 @@
 /*jshint browser: true */
 /*global angular, jQuery */
 
-/** @module Date Picker
-@icon calendar-o
-@summary The date picker wraps the ui.bootstrap.datepicker directive from Angular UI Bootstrap to create an input text box that includes a calendar for selecting dates.
-@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/). It creates an input text box with a calendar picker for selecting dates.
-
-## Date Picker Settings
-  - `bb-custom-validation` an object containing the following:
-    - `formatValue` A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
-  - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDatepickerConfig` `currentCultureDateFormatString` property. The default format in sky is set as `MM/dd/yyyy`. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
-  - `bb-date-options` Options object for customizing the date picker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap date picker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDatepickerConfig`.
-  - `bb-datepicker-name` This value gets bound to the `name` attribute of the date picker input for use in validation and form submission.
-  - `close-on-date-selection` *(Default: true):*  Whether to close calendar when a date is chosen.
-  - `datepicker-append-to-body` *(Default: false):*  Append the date picker popup element to `body`, rather than inserting after the date picker input.
-  - `max-date` A Javascript Date object that can set a maximum date for the date picker control and input. Input validation will be bound to `$scope.myFormName.inputName.$error.maxDate`. This value can also be set globally in the `bbDatepickerConfig` object property `maxDate`.
-  - `min-date` A Javascript Date object that can set a minimum date for the date picker control and input. Input validation will be bound to `$scope.myFormName.inputName.$error.minDate`. This value can also be set globally in the `bbDatepickerConfig` object property `minDate`.
-  - `ng-model` An object to bind the date value in and out of the date picker. This will be set to a Javascript Date object when set or parsed from the bootstrap date picker.
-  - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
-  - `required` Attribute present if the `bb-datepicker` value is required.
-  - `show-button-bar` *(Default: false):*  Whether to display a button bar underneath the date picker. (see angular ui bootstrap date picker)
-
-## Validation
-`bb-datepicker` sets validation on the date picker input using `bb-datepicker-name` for the input name, and the validity of the date entered in the input is in the `dateFormat` validator. So if you want to see if the date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date will be in `$scope.myFormName.inputName.invalidFormatMessage`.
-
-*/
 (function ($) {
     'use strict';
-    angular.module('sky.datepicker', ['sky.resources', 'sky.moment'])
+    angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
         .constant('bbDatepickerConfig', {
             currentCultureDateFormatString: 'MM/dd/yyyy',
             showWeeks: false,
@@ -69,7 +45,7 @@
                         dateChangeInternal = false;
 
                     function getBodyDatepicker() {
-                        return $('body > ul[datepicker-popup-wrap]');
+                        return $('body > ul[uib-datepicker-popup-wrap]');
                     }
 
                     function positionAbsoluteDatepicker() {
@@ -208,10 +184,32 @@
 
                     });
 
+                    function runValidators() {
+                        var inputNgModel = $scope.getInputNgModel();
+                        /*istanbul ignore else: sanity check */
+                        if (inputNgModel) {
+                            inputNgModel.$validate();
+                        }
+                    }
+
+                    $scope.$watch('maxDate', function () {
+                        runValidators();
+                    });
+
+                    $scope.$watch('minDate', function () {
+                        runValidators();
+                    });
+
                     function hasRequiredError() {
                         var inputNgModel = $scope.getInputNgModel();
 
                         return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
+                    }
+
+                    function hasMinMaxError() {
+                        var inputNgModel = $scope.getInputNgModel();
+
+                        return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
                     }
 
 
@@ -266,7 +264,7 @@
 
                         deferred = $q.defer();
 
-                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || datepickerIsPristine()) {
+                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || hasMinMaxError() || (!$scope.locals.required && $scope.locals.date === null) || datepickerIsPristine()) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
@@ -279,7 +277,7 @@
                             }
                         } else {
                             inputNgModel = $scope.getInputNgModel();
-
+                            /* istanbul ignore else: sanity check */
                             if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
                                 setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                             }
@@ -333,7 +331,7 @@
                 require: ['ngModel', '^bbDatepicker'],
                 link: function ($scope, el, attr, controllers) {
                     var ngModel = controllers[0],
-                        format = attr.datepickerPopup;
+                        format = attr.uibDatepickerPopup;
 
                     if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
                         ngModel.$parsers = [];
