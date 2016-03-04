@@ -77,6 +77,8 @@ module.exports = function (config) {
         browserDisconnectTimeout: 3e5,
         browserDisconnectTolerance: 3,
         browserNoActivityTimeout: 3e5,
-        captureTimeout: 3e5
+        captureTimeout: 3e5,
+        logLevel: config.LOG_DEBUG,
+        port: 9876
     });
 };
