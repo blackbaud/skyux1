@@ -181,10 +181,10 @@ describe('bb-grid component', function () {
             .click('button.show-grid')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
             .click('#screenshot-grid td label.bb-check-wrapper')
-            .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)')
-            .moveCursorOffScreen(browserResult);
+            .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)');
 
-        common.compareScreenshot({
+        common.moveCursorOffScreen(browserResult)
+        .compareScreenshot({
             browserResult: browserResult,
             prefix: common.getPrefix(browser),
             screenshotName: 'grids_multiselect',
