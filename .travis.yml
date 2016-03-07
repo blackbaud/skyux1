@@ -33,10 +33,13 @@ before_install:
   # https://github.com/npm/npm/issues/11283
   - npm set progress=false
 
-# Utilize the cached versions when appropriate
-install:
+# These are needed first since npm test calls grunt
+before_script:
   - npm install -g grunt-cli
   - npm install -g bower
+
+# Utilize the cached versions when appropriate
+install:
   - ./scripts/install-cache.sh npm
   - ./scripts/install-cache.sh bower
 
