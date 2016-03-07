@@ -363,7 +363,7 @@ module.exports = function (grunt) {
         },
         exec: {
             browserstackTunnel: {
-                cmd: './run-browserstack-local.sh'
+                cmd: './scripts/run-browserstack-local.sh'
             }
         }
     });
