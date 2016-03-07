@@ -7,4 +7,4 @@ summary: The format service provides access to functions that allow you to forma
 The format service provides access to the following functions:
 
   - `formatText(formatString, args)` &mdash; Formats the args with a given format string.
-  - `escape(text)` &mdash; Replaces the `<`, `>`, and `&` characters with `&lt;`, `&gt;`, and `&amp;`.
+  - `escape(text)` &mdash; Replaces the `<`, `>`, and `&` HTLM characters with `&lt;`, `&gt;`, and `&amp;`.
