@@ -1,0 +1,78 @@
+@import "mixins";
+
+.bb-select-field-single {
+    width: 100%;
+}
+
+bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
+  @include field-invalid;
+}
+
+.bb-select-field-multiple-item,
+.bb-select-field-single-inner {
+    // The select field "inner" class is needed because setting display: flex on a button element doesn't work
+    // as expected in Firefox.  Therefore we need a div inside the button that has this attribute.
+    // http://stackoverflow.com/questions/24289251/flexbox-not-working-in-buttons-in-firefox
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.bb-select-field-single-title {
+    flex: 1;
+    text-align: left;
+    white-space: normal;
+}
+
+.bb-select-field-single-title-placeholder {
+  font-style: italic;
+  color: $gray-light;
+}
+
+.bb-select-field-single-icon {
+    width: 18px;
+    flex: 0 0 18px;
+    text-align: right;
+}
+
+.bb-select-field-multiple {
+  display: block;
+    &:hover,
+    &:active,
+    &:focus {
+        text-decoration: none;
+    }
+}
+
+.bb-select-field-multiple-items {
+    margin-left: $margin-plus-half;
+}
+
+.bb-select-field-multiple-item {
+    background-color: #ffecd9;
+    border: solid 1px #fc6;
+    border-radius: 4px;
+    padding: 0 0 0 $padding;
+    margin-top: $margin;
+}
+
+.bb-select-field-multiple-item-title {
+    flex: 1;
+}
+
+.bb-select-field-multiple-item-delete {
+    color: $bb-color-red;
+    height: 34px;
+    width: 34px;
+    flex: 0 0 34px;
+    opacity: 1;
+}
+
+.bb-select-field-multiple-item-delete:hover {
+    opacity: 1;
+    color: darken($bb-color-red, 10%);
+}
+
+.bb-select-field-multiple-summary {
+    font-style: italic;
+}

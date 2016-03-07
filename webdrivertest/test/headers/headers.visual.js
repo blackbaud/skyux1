@@ -1,29 +1,20 @@
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('headers', function () {
     'use strict';
 
-    var options = {};
+    it('match the baseline header screenshot', function (done) {
+        var result,
+            common = require('../common');
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
+        result = browser.url('/headers/fixtures/test.full.html');
 
-
-    it('should take header screenshots', function (done) {
-        var screenshotName = 'header',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/headers/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-headers'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'header',
+            selector: '#screenshot-headers',
+            done: done
+        });
     });
 });

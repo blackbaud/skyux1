@@ -20,6 +20,8 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
             - `list` &mdash; Displays items in a list with titles and descriptions. Items are expected to have `title`, `description`, and `category` properties. This view is preferred to grid mode because it is mobile-responsive.
             - `grid` &mdash; Displays items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this view is the default, but list mode is preferred because it is mobile-responsive.
         - `bb-checklist-categories` &mdash; An array of category names to build category filters at the top of the list.
+        - `bb-checklist-select-style` &mdash; *(Optional.)* When set to `single`, the checklist will only allow selection of one item in the checklist.
+        - `bb-checklist-is-loading` &mdash; *(Optional.)* User can set to true to give indication that the checklist is loading items. Useful for when using remote search.
 
 ### Checklist Column Settings ###
     - `bb-checklist-columns` &mdash; Allows you to specify multiple columns of data for the checkbox list.

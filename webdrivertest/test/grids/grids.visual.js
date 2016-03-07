@@ -1,19 +1,11 @@
-/*global describe, it, browser, beforeEach, require */
+/*global describe, it, browser, require */
 
 describe('bb-grid component', function () {
     'use strict';
 
-    var common,
-        options = {};
-
-    beforeEach(function (done) {
-        common = require('../common');
-
-        common.initWebdriverCss(browser, options, done);
-    });
-
     it('should match the baseline screenshot of the standard grid', function (done) {
         var browserResult,
+            common = require('../common'),
             result;
 
         browserResult = browser
@@ -25,7 +17,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_standard',
             selector: '#screenshot-grid',
             done: done
@@ -34,6 +26,7 @@ describe('bb-grid component', function () {
 
     it('should match the baseline screenshot of the grid while wait is invoked', function (done) {
         var browserResult,
+            common = require('../common'),
             result;
 
         browserResult = browser
@@ -45,7 +38,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_wait',
             selector: '#screenshot-grid-wait',
             done: done
@@ -54,6 +47,7 @@ describe('bb-grid component', function () {
 
     it('should match the baseline screenshort of a loading grid', function (done) {
         var browserResult,
+            common = require('../common'),
             result;
 
         browserResult = browser
@@ -65,7 +59,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_loading',
             selector: '#screenshot-grid-loading',
             done: done
@@ -74,6 +68,7 @@ describe('bb-grid component', function () {
 
     it('should match the baseline screenshot of a grid with pagination', function (done) {
         var browserResult,
+            common = require('../common'),
             result;
 
         browserResult = browser
@@ -85,7 +80,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: result,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_paged',
             selector: '#screenshot-grid-pagination',
             done: done
@@ -93,7 +88,8 @@ describe('bb-grid component', function () {
     });
 
     it('should match the baseline screenshot of a grid with the column chooser open', function (done) {
-        var browserResult;
+        var browserResult,
+            common = require('../common');
 
         browserResult = browser
             .url('/grids/fixtures/test.full.html')
@@ -104,7 +100,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_columnchooser',
             selector: '.modal-content',
             screenWidth: [480],
@@ -113,7 +109,8 @@ describe('bb-grid component', function () {
     });
 
     it('match a baseline screenshot of a grid with filters', function (done) {
-        var browserResult;
+        var common = require('../common'),
+            browserResult;
 
         browserResult = browser
             .url('/grids/fixtures/test.full.html')
@@ -126,7 +123,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_filters',
             selector: '#screenshot-grid',
             done: done
@@ -134,7 +131,8 @@ describe('bb-grid component', function () {
     });
 
     it('match a baseline screenshot while a grid with filters open is scrolled', function (done) {
-        var browserResult;
+        var common = require('../common'),
+            browserResult;
 
         browserResult = browser
             .url('/grids/fixtures/test.full.html')
@@ -146,7 +144,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_filter_viewkeeper',
             selector: '#screenshot-grid',
             done: done
@@ -154,7 +152,8 @@ describe('bb-grid component', function () {
     });
 
     it('should match a baseline screenshot with a grid that has active inline filters', function (done) {
-        var browserResult;
+        var common = require('../common'),
+            browserResult;
 
         browserResult = browser
             .url('/grids/fixtures/test.full.html')
@@ -166,7 +165,7 @@ describe('bb-grid component', function () {
 
         common.compareScreenshot({
             browserResult: browserResult,
-            prefix: options.prefix,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_filter_inline',
             selector: '#screenshot-grid-pagination',
             done: done
@@ -174,7 +173,9 @@ describe('bb-grid component', function () {
     });
 
     it('should match a baseline screenshot of a grid with multiselect', function (done) {
-        var browserResult;
+        var common = require('../common'),
+            browserResult,
+            result;
 
         browserResult = browser
             .url('/grids/fixtures/test.full.html')
@@ -183,9 +184,11 @@ describe('bb-grid component', function () {
             .click('#screenshot-grid td label.bb-check-wrapper')
             .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)');
 
+        result = common.moveCursorOffScreen(browserResult);
+
         common.compareScreenshot({
-            browserResult: browserResult,
-            prefix: options.prefix,
+            browserResult: result,
+            prefix: common.getPrefix(browser),
             screenshotName: 'grids_multiselect',
             selector: '#screenshot-grid',
             screenWidth: [1280, 480],

@@ -459,6 +459,30 @@
         "_description": "text for ui-select search control when no records are found.",
         "message": "Sorry, no matching records found"
     },
+    "selectfield_summary_text": {
+        "_description": "Text displayed when the user has more than 5 items selected",
+        "message": "{0} items selected"
+    },
+    "selectfield_remove": {
+        "_description": "Text for screen readers to convey the meaning of the remove icon button on select field values",
+        "message": "Remove"
+    },
+    "selectfieldpicker_select": {
+        "_description": "Text displayed on the primary dialog button to confirm selection of multiple items",
+        "message": "Select"
+    },
+    "selectfieldpicker_select_value": {
+        "_description": "The default header text for the select field picker directive when the user is allowed to select one value (singular)",
+        "message": "Select value"
+    },
+    "selectfieldpicker_select_values": {
+        "_description": "The default header text for the select field picker directive when the user is allowed to select more than one value (plural)",
+        "message": "Select values"
+    },
+    "selectfieldpicker_clear": {
+      "_description": "Text displayed on the button in single select mode to clear selection and close form",
+      "message": "Clear selection"
+    },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",
         "message": "Finish"

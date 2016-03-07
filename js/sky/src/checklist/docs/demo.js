@@ -6,6 +6,7 @@
     function ChecklistTestController() {
         var items,
             listItems,
+            listItemsSingle,
             self = this;
 
         function loadItems(searchText) {
@@ -50,9 +51,13 @@
             }
         ];
 
+        listItemsSingle = listItems.slice();
+
         self.selectedItems = [];
         self.includeSearch = true;
         self.listItems = listItems;
+        self.listItemsSingle = listItemsSingle;
+
         self.onSearch = function (args) {
             loadItems(args.searchText);
         };

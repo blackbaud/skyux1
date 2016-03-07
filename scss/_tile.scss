@@ -107,14 +107,13 @@
     max-width: 50%;
 }
 
- .bb-tile.collapsed .bb-tile-header-content {
-     @include transition(opacity 0.5s);
+.bb-tile.collapsed .bb-tile-header-content {
      opacity: 1;
 }
 
-.bb-tile.collapsible .bb-tile-header-content {
-    @include transition(opacity 0.5s);
+.bb-tile-header-content {
     opacity: 0;
+    transition: 0.5s linear all;
 }
 
 .bb-tile-header-check {
