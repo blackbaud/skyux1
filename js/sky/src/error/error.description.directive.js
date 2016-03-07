@@ -10,11 +10,15 @@
             vm = null;
         });
 
-        switch (vm.errorType) {
-            case 'broken':
-                vm.description = bbResources.error_description_refresh;
-                break;
-        }
+        $scope.$watch(function () {
+            return vm.errorType;
+        }, function (newValue) {
+            switch (newValue) {
+                case 'broken':
+                    vm.description = bbResources.error_description_refresh;
+                    break;
+            }
+        });
     }
 
     BBErrorDescriptionController.$inject = ['$scope', 'bbResources'];
@@ -27,7 +31,7 @@
             vm.el = el;
 
             if (bbError !== null) {
-                bbError.setDescription(vm);
+                bbError.setDescription(vm, 'errorDefault' in attrs);
             }
 
         }

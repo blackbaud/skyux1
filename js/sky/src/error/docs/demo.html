@@ -1,11 +1,8 @@
 <div ng-controller="ErrorTestController as errorCtrl">
-  <bb-error>
-    <bb-error-image error-type="broken">
-    </bb-error-image>
-    <bb-error-title error-type="broken">
+  <bb-error error-type="broken">
+    <bb-error-title>
+      {{errorCtrl.errorTitle}}
     </bb-error-title>
-    <bb-error-description error-type="broken">
-    </bb-error-description>
     <bb-error-action>
       <button type="button" class="btn-primary btn" ng-click="errorCtrl.action()">{{errorCtrl.actionName}}</button>
     </bb-error-action>

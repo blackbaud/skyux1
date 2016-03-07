@@ -21,7 +21,7 @@
             vm.el = el;
 
             if (bbError !== null) {
-                bbError.setImage(vm);
+                bbError.setImage(vm, 'errorDefault' in attrs);
             }
 
         }

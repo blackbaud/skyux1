@@ -4,7 +4,7 @@
     function ErrorTestController(bbErrorModal) {
         var vm = this;
 
-        vm.errorTitle = 'Sorry, something went wrong.';
+        vm.errorTitle = 'A title thing.';
         vm.errorDescription = 'Try to refresh this page, or come back later.';
 
         vm.action = function () {

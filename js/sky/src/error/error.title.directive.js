@@ -9,12 +9,16 @@
             vm.onDestroy();
             vm = null;
         });
+        $scope.$watch(function () {
+            return vm.errorType;
+        }, function (newValue) {
+            switch (newValue) {
+                case 'broken':
+                    vm.title = bbResources.error_title_broken;
+                    break;
+            }
+        });
 
-        switch (vm.errorType) {
-            case 'broken':
-                vm.title = bbResources.error_title_broken;
-                break;
-        }
     }
 
     BBErrorTitleController.$inject = ['$scope', 'bbResources'];
@@ -27,7 +31,7 @@
             vm.el = el;
 
             if (bbError !== null) {
-                bbError.setTitle(vm);
+                bbError.setTitle(vm, 'errorDefault' in attrs);
             }
 
         }
