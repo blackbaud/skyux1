@@ -19,21 +19,15 @@ before_install:
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
   - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
 
-  # The following enable xvfbs so that SlimerJS (a non-headless browser) can be run.
-  # They also enable pull requests from forks to use Firefox.
-  # http://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-GUI-(e.g.-a-Web-browser)
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
   - gem install sass
 
   # Make our three scripts executable
-  - chmod +x update-skyux.sh
-  - chmod +x update-skyux-docs.sh
-  - chmod +x update-skyux-releases.sh
-  - chmod +x update-skyux-visualtest-results.sh
-  - chmod +x run-browserstack-local.sh
+  - chmod +x ./scripts/update-skyux.sh
+  - chmod +x ./scripts/update-skyux-docs.sh
+  - chmod +x ./scripts/update-skyux-releases.sh
+  - chmod +x ./scripts/update-skyux-visualtest-results.sh
+  - chmod +x ./scripts/run-browserstack-local.sh
 
   # https://github.com/npm/npm/issues/11283
   - npm set progress=false
@@ -45,9 +39,9 @@ before_script:
   - bower install
 
 # We want deployment failures to fail the build
-script: npm test && ./update-skyux.sh && ./update-skyux-releases.sh && ./update-skyux-docs.sh
+script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases.sh && ./scripts/update-skyux-docs.sh
 
-after_failure: ./update-skyux-visualtest-results.sh
+after_failure: ./scripts/update-skyux-visualtest-results.sh
 
 # When a push, only care about the master, rc-, and savage- branches.
 # Otherwise anytime we commit to internal branches this would run.
@@ -62,12 +56,7 @@ cache:
   directories:
     - $HOME/node_modules
     - $HOME/bower_components
-    - $HOME/.slimerjs-cache
-
-# Remove some folders from the cache since they arbitrarily change everytime
-before_cache:
-  - rm -rf $TMPDIR/npm-*
-  - find node_modules/\@Blackbaud-PaulCrowder/grunt-phantomcss-slimerjs/node_modules/ -type f -name 'package.json' -delete
+    - $BROWSER_STACK_BINARY_BASE_PATH
 
 notifications:
   slack:
@@ -77,4 +66,4 @@ notifications:
 
 env:
   global:
-    - TMPDIR=$HOME/.slimerjs-cache
+    - BROWSER_STACK_BINARY_BASE_PATH=$HOME/browserstack-binary

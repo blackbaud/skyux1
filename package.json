@@ -23,6 +23,7 @@
   "devDependencies": {
     "assemble-yaml": "^0.2.1",
     "blackbaud-stache": "latest",
+    "browserstacktunnel-wrapper": "^1.4.2",
     "grunt": "^0.4.5",
     "grunt-bump": "~0.3.0",
     "grunt-concat-sourcemap": "~0.4.3",
