@@ -26,4 +26,6 @@ if [[ -d "$HOME/$cache_dir" ]] && [[ -d "$CONFIG_CACHE" ]] && cmp --silent $json
 else
   echo "Unable to use cache for $mode.  Beginning install now."
   $mode install
+  echo "Caching $json_file for future builds."
+  cp $json_file $CONFIG_CACHE
 fi
