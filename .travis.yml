@@ -23,6 +23,7 @@ before_install:
   - gem install sass
 
   # Make our three scripts executable
+  - chmod +x ./scripts/install-cache.sh
   - chmod +x ./scripts/update-skyux.sh
   - chmod +x ./scripts/update-skyux-docs.sh
   - chmod +x ./scripts/update-skyux-releases.sh
@@ -32,11 +33,12 @@ before_install:
   # https://github.com/npm/npm/issues/11283
   - npm set progress=false
 
-# Install a few additional things outside those listed in package.json
-before_script:
+# Utilize the cached versions when appropriate
+install:
   - npm install -g grunt-cli
   - npm install -g bower
-  - bower install
+  - ./scripts/install-cache.sh npm
+  - ./scripts/install-cache.sh bower
 
 # We want deployment failures to fail the build
 script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases.sh && ./scripts/update-skyux-docs.sh
@@ -57,6 +59,7 @@ cache:
     - $HOME/node_modules
     - $HOME/bower_components
     - $BROWSER_STACK_BINARY_BASE_PATH
+    - $CONFIG_CACHE
 
 notifications:
   slack:
@@ -67,3 +70,4 @@ notifications:
 env:
   global:
     - BROWSER_STACK_BINARY_BASE_PATH=$HOME/browserstack-binary
+    - CONFIG_CACHE=$HOME/config-cache
