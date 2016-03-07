@@ -32,9 +32,6 @@ before_install:
 
   # https://github.com/npm/npm/issues/11283
   - npm set progress=false
-
-# These are needed first since npm test calls grunt
-before_script:
   - npm install -g grunt-cli
   - npm install -g bower
 
