@@ -27,7 +27,6 @@ describe('Actionbar directive', function () {
             '   </bb-action-bar>',
             '</div>'
         ].join(''));
-
         $compile(el)($scope);
         $scope.$digest();
         expect(el.find('.bb-action-bar').length).toBe(1);
