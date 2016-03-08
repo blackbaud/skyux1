@@ -27,7 +27,8 @@ before_install:
   - chmod +x ./scripts/update-skyux-docs.sh
   - chmod +x ./scripts/update-skyux-releases.sh
   - chmod +x ./scripts/update-skyux-visualtest-results.sh
-  - chmod +x ./scripts/run-browserstack-local.sh
+  - chmod +x ./scripts/browserstack-local-start.sh
+  - chmod +x ./scripts/browserstack-local-stop.sh
 
   # https://github.com/npm/npm/issues/11283
   - npm set progress=false
@@ -40,6 +41,13 @@ before_script:
 
 # We want deployment failures to fail the build
 script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases.sh && ./scripts/update-skyux-docs.sh
+
+# Kill any remaining sessions.
+after_script:
+  - ./scripts/browserstack-local-stop.sh
+
+# Make sure we kill any browser stack connections
+after_script: kill $BROWSER_STACK_PID
 
 after_failure: ./scripts/update-skyux-visualtest-results.sh
 
@@ -54,8 +62,8 @@ branches:
 # Cache a few things
 cache:
   directories:
-    - $HOME/node_modules
-    - $HOME/bower_components
+    - node_modules
+    - bower_components
     - $BROWSER_STACK_BINARY_BASE_PATH
 
 notifications:
@@ -67,3 +75,4 @@ notifications:
 env:
   global:
     - BROWSER_STACK_BINARY_BASE_PATH=$HOME/browserstack-binary
+    - BROWSER_STACK_BINARY_PID=0

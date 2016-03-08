@@ -363,7 +363,9 @@ module.exports = function (grunt) {
         },
         exec: {
             browserstackTunnel: {
-                cmd: './scripts/run-browserstack-local.sh'
+                // The preceeding dot + space allows the script to run in the same shell.
+                // We need this in order to set the BROWSER_STACK_BINARY_PID.
+                cmd: '. ./scripts/browserstack-local-start.sh'
             }
         }
     });
