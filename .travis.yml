@@ -43,9 +43,9 @@ before_script:
 script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases.sh && ./scripts/update-skyux-docs.sh
 
 # Kill any remaining BrowserStack sessions.
-after_script:
-  - ./scripts/browserstack-local-stop.sh
+after_script: ./scripts/browserstack-local-stop.sh
 
+# Store any visual regressions
 after_failure: ./scripts/update-skyux-visualtest-results.sh
 
 # When a push, only care about the master, rc-, and savage- branches.
@@ -72,4 +72,3 @@ notifications:
 env:
   global:
     - BROWSER_STACK_BINARY_BASE_PATH=$HOME/browserstack-binary
-    - BROWSER_STACK_BINARY_PID=0

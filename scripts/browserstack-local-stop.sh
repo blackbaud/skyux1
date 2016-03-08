@@ -1,4 +1,4 @@
-if [[ $BROWSER_STACK_BINARY_PID -ne 0 ]]; then
-  echo "Killing BrowserStack PID $BROWSER_STACK_BINARY_PID."
-  kill $BROWSER_STACK_BINARY_PID
-fi
+# Kill any remaining BrowserStack tunnels
+echo "Killing any rogue BrowserStack tunnels."
+ps -ef | grep BrowserStackLocal
+pkill BrowserStackLocal
