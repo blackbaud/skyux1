@@ -2,7 +2,7 @@
 echo "Cleaning up BrowerStack instances"
 echo "--- Before ---"
 ps -ef | grep BrowserStackLocal
-pkill BrowserStackLocal
+pkill -f BrowserStackLocal
 
 echo "--- After ---"
 ps -ef | grep BrowserStackLocal
