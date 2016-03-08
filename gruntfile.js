@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     'use strict';
 
     // Variables defined here are at least needed throughout the method, and possibly in grunt config.
+    // ARBITRARY CHANGE - TESTING SAVAGE
     var fontFiles = ['**/*.eot', '**/*.svg', '**/*.ttf', '**/*.woff', '**/*.woff2'],
         jsHintFiles = ['gruntfile.js', 'js/**/*.js'],
         libsCss,
