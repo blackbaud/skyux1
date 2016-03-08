@@ -54,8 +54,8 @@ branches:
 # Cache a few things
 cache:
   directories:
-    - $HOME/node_modules
-    - $HOME/bower_components
+    - node_modules
+    - bower_components
     - $BROWSER_STACK_BINARY_BASE_PATH
 
 notifications:
