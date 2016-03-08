@@ -42,12 +42,9 @@ before_script:
 # We want deployment failures to fail the build
 script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases.sh && ./scripts/update-skyux-docs.sh
 
-# Kill any remaining sessions.
+# Kill any remaining BrowserStack sessions.
 after_script:
   - ./scripts/browserstack-local-stop.sh
-
-# Make sure we kill any browser stack connections
-after_script: kill $BROWSER_STACK_PID
 
 after_failure: ./scripts/update-skyux-visualtest-results.sh
 
