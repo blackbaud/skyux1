@@ -6,7 +6,7 @@
 module.exports = {
     singleRun: false,
     autoWatch: false,
-    basePath: '',
+    basePath: '../',
     frameworks: [
         'jasmine'
     ],

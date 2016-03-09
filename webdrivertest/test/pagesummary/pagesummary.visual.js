@@ -4,7 +4,7 @@
 describe('Page summary', function () {
     'use strict';
 
-    function clickTest(screenshotName, visibleComponents, done) {
+    function clickTest(screenshotName, visibleComponents, done, screenWidth) {
         var result,
             common = require('../common');
 
@@ -16,7 +16,8 @@ describe('Page summary', function () {
             prefix: common.getPrefix(browser),
             screenshotName: ('pagesummary_' + screenshotName),
             selector: '#screenshots-pagesummary',
-            done: done
+            done: done,
+            screenWidth: screenWidth
         });
     }
 
@@ -125,4 +126,18 @@ describe('Page summary', function () {
             done
         );
     });
+
+    it('should match previous pagesummary screenshot when only image, title, and subtitle are present', function (done) {
+        clickTest(
+            'image_title_subtitle',
+            [
+                'Title',
+                'Subtitle',
+                'Image'
+            ],
+            done,
+            [480, 1280]
+        );
+    });
+
 });
