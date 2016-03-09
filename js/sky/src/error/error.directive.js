@@ -57,12 +57,9 @@
         $scope.$watch(function () {
             return vm.errorType;
         }, function (newValue) {
-            switch (newValue) {
-                case 'broken':
-                    vm.imageType = newValue;
-                    vm.titleType =  newValue;
-                    vm.descriptionType =  newValue;
-            }
+            vm.imageType = newValue;
+            vm.titleType =  newValue;
+            vm.descriptionType =  newValue;
         });
 
         components.forEach(addComponentSetter);

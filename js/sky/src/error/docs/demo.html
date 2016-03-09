@@ -1,12 +1,17 @@
 <div ng-controller="ErrorTestController as errorCtrl">
   <bb-error error-type="broken">
-    <bb-error-title>
-      {{errorCtrl.errorTitle}}
-    </bb-error-title>
     <bb-error-action>
       <button type="button" class="btn-primary btn" ng-click="errorCtrl.action()">{{errorCtrl.actionName}}</button>
     </bb-error-action>
   </bb-error>
+
+  <bb-error error-type="construction">
+    <bb-error-action>
+      <button type="button" class="btn-primary btn" ng-click="errorCtrl.action()">{{errorCtrl.actionName}}</button>
+    </bb-error-action>
+  </bb-error>
+
+
   <hr />
   <button type="button" class="btn btn-primary" ng-click="errorCtrl.openModal()">Open modal</button>
 </div>

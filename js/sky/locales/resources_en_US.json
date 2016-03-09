@@ -392,16 +392,24 @@
         "message": "Start date must be before end date"
     },
     "errormodal_ok": {
-        "_description": "Text used on the primary button to dismiss the error modal",
+        "_description": "Text used on the primary button to dismiss the error modal.",
         "message": "OK"
     },
-    "error_description_refresh": {
-        "_description": "Text used for the error description to recommend refreshing the page",
+    "error_description_broken": {
+        "_description": "Text used for the error description to when page is broken.",
         "message": "Try to refresh this page or come back later."
+    },
+    "error_description_construction": {
+        "_description": "Text used for the error description when page is under construction.",
+        "message": "Thanks for your patience while improvements are made!\nPlease check back in a little while."
     },
     "error_title_broken": {
         "_description": "Text used for the error title when something is broken",
         "message": "Sorry, something went wrong."
+    },
+    "error_title_construction": {
+        "_description": "Text used for the error title when page is under construction.",
+        "message": "This page will return soon."
     },
     "file_size_b_plural": {
         "_description": "",

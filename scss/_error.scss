@@ -1,8 +1,25 @@
-.bb-error-description {
-  margin-bottom: $margin;
+.bb-error-description-container span {
+  white-space: pre-wrap;
 }
 
-.bb-error-title {
-  margin-top: $margin-half;
+.bb-error-title-container {
   font-weight: bold;
+}
+
+.bb-error-image-container {
+  height: 189px;
+  width: 182px;
+  display: inline-block;
+}
+
+.bb-error-image {
+  margin-bottom: $margin-half;
+}
+
+.bb-error-action {
+  margin-top: $margin;
+}
+
+.bb-error {
+  padding-bottom: $padding;
 }

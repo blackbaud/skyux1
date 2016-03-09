@@ -16,6 +16,8 @@
                 case 'broken':
                     vm.title = bbResources.error_title_broken;
                     break;
+                case 'construction':
+                    vm.title = bbResources.error_title_construction;
             }
         });
 

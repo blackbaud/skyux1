@@ -15,7 +15,10 @@
         }, function (newValue) {
             switch (newValue) {
                 case 'broken':
-                    vm.description = bbResources.error_description_refresh;
+                    vm.description = bbResources.error_description_broken;
+                    break;
+                case 'construction':
+                    vm.description = bbResources.error_description_construction;
                     break;
             }
         });
