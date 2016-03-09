@@ -486,14 +486,16 @@ module.exports = function (grunt) {
     }
 
     function cleanupWorkingScreenshots(root) {
-        var pattern = root + '/**/*px.png';
+        var pattern = root + '/**/*px.png',
+            regressionPattern = root + '/**/*.regression.png';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            pattern
+            pattern,
+            regressionPattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });
