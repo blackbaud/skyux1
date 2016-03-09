@@ -46,7 +46,9 @@ script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases
 after_script: ./scripts/browserstack-local-stop.sh
 
 # Store any visual regressions
-after_failure: ./scripts/update-skyux-visualtest-results.sh
+after_failure:
+  - ./scripts/update-skyux-visualtest-results.sh
+  - if [ -e ./npm-debug.log ]; then cat ./npm-debug.log; fi
 
 # When a push, only care about the master, rc-, and savage- branches.
 # Otherwise anytime we commit to internal branches this would run.
