@@ -357,13 +357,25 @@ module.exports = function (grunt) {
             }
         },
         webdriver: {
-            test: {
-                configFile: './webdrivertest/wdio.conf.js'
+            ci: {
+                configFile: './webdrivertest/wdio.conf-ci.js'
+            },
+            local: {
+                configFile: './webdrivertest/wdio.conf-local.js'
+            },
+            localBrowserStack: {
+                configFile: './webdrivertest/wdio.conf-local-browserstack.js'
             }
         },
         exec: {
-            browserstackTunnel: {
+            ciBrowserStackTunnel: {
                 cmd: './scripts/browserstack-local-start.sh'
+            },
+            localBrowserStackTunnelStart: {
+                cmd: './scripts/browserstack-local-dev.sh'
+            },
+            localBrowserStackTunnelStop: {
+                cmd: './scripts/browserstack-local-stop.sh'
             }
         }
     });
@@ -385,6 +397,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-mkdir');
+    grunt.loadNpmTasks('grunt-browserstack-tunnel');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -396,8 +409,6 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'mkdir:webdriver', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
-    grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
 
     grunt.registerTask('scriptsrapid', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap']);
     grunt.registerTask('stylesrapid', ['sass:dist', 'sass:palette', 'skybundlecss', 'copy:dist']);
@@ -666,26 +677,23 @@ module.exports = function (grunt) {
                 'build'
             ];
 
-        function checkSkipTest(karmaTarget, browserstackTunnel) {
+        function checkSkipTest(karmaTarget, visualTarget) {
             if (!skipTest) {
                 tasks.push('karma:' + karmaTarget);
-                if (browserstackTunnel) {
-                    tasks.push('browserstackTunnel');
-                }
-                tasks.push('visualtest');
+                tasks.push('visualtest:' + visualTarget);
             }
         }
 
         switch (target) {
         case 'local':
-            checkSkipTest('unit', false);
+            checkSkipTest('unit', 'local');
             tasks.push('docs');
             break;
         case 'travis-pr-branch':
-            checkSkipTest('internal', true);
+            checkSkipTest('internal', 'ci');
             break;
         case 'travis-push':
-            checkSkipTest('internal', true);
+            checkSkipTest('internal', 'ci');
             tasks.push('docs');
             break;
         }
@@ -695,5 +703,33 @@ module.exports = function (grunt) {
         } else {
             grunt.task.run(tasks);
         }
+    });
+
+    // visualtest task supports an optional target.
+    // defaults to local
+    grunt.registerTask('visualtest', function (target) {
+        var tasks = [
+            'cleanupwebdrivertestfixtures',
+            'cleanupworkingscreenshots',
+            'buildwebdrivertestfixtures',
+            'connect:webdrivertest',
+            'mkdir:webdriver'
+        ];
+
+
+        if (target === 'ci') {
+            tasks.push('exec:ciBrowserStackTunnel');
+            tasks.push('webdriver:' + target);
+        } else if (target === 'localBrowserStack') {
+            tasks.push('exec:localBrowserStackTunnelStart');
+            tasks.push('webdriver:' + target);
+            tasks.push('exec:localBrowserStackTunnelStop');
+        } else {
+            tasks.push('webdriver:local');
+        }
+
+        tasks.push('cleanupwebdrivertestfixtures');
+        tasks.push('cleanupworkingscreenshots');
+        grunt.task.run(tasks);
     });
 };
