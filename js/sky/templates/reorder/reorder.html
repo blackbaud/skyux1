@@ -1,0 +1,18 @@
+<div style="position:relative">
+ <div ng-repeat="item in items track by $index" class="bb-reorder-list-row" data-index={{$index}}>
+   <div class="bb-reorder-list-col bb-reorder-list-col-icon">
+     <i class="fa fa-arrows-v"></i>
+   </div>
+   <div class="bb-reorder-list-col bb-reorder-list-col-content">
+     <div class="bb-reorder-list-title">{{item.title}}</div>
+     <div>{{item.description}}</div>
+   </div>
+   <div ng-show="!$first && !sorting" ng-click="pushToTop($index)" class="bb-reorder-list-col bb-reorder-list-col-top">
+     <i class="fa fa-arrow-circle-up"></i>
+     <span>Top</span>
+   </div>
+   <div ng-show="sorting" class="bb-reorder-list-col">
+     <span class="bb-reorder-list-sorting-number"></span>
+   </div>
+ </div>
+</div>

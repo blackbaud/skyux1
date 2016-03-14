@@ -1,0 +1,49 @@
+
+.bb-reorder-list-col-icon {
+  font-size: 1.5em;
+  font-color: $gray;
+}
+
+.bb-reorder-list-col-content {
+  margin-left: 10px;
+  margin-right: 10px;
+  flex-grow: 1;
+}
+
+.bb-reorder-list-col-top {
+  color: $bb-color-blue;
+  cursor:pointer;
+}
+
+.bb-reorder-list-row {
+    background-color: transparent;
+    border: none;
+    border-bottom: dotted 1px $gray-lighter;
+    cursor: pointer;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $padding;
+    outline-offset: -5px;
+    width: 100%;
+    height: 50px;
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+
+    &:last-child {
+        border: none;
+    }
+}
+
+.bb-reorder-list-row-placeholder {
+  background-color: $gray-lighter;
+}
+
+.bb-reorder-list-sorting-item {
+  box-shadow: 5px 5px 5px #888888
+}
+
+.bb-reorder-list-title {
+    font-weight: 700;
+}
