@@ -1,0 +1,13 @@
+<div ng-controller="ReorderTestController as reorderCtrl">
+  <div style="width: 300px">
+    <bb-reorder items="reorderCtrl.itemsToSort"></bb-reorder>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <h4>Current order:</h4>
+
+    <ul ng-repeat="item in reorderCtrl.itemsToSort">
+      <li>{{item.title}}</li>
+    </ul>
+  </div>
+</div>

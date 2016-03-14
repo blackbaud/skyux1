@@ -7,7 +7,7 @@
         return {
             replace: true,
             restrict: 'E',
-            scope: { items: '=' },
+            scope: { bbReorderItems: '=' },
             link: function ($scope, element) {
                 var sortableOptions, // jQuery sortable widget options
                     currentSortPosition, // the current top offset of the the item being sorted
@@ -35,9 +35,9 @@
                   // create a clone of the element being send to the top so we can animate it
                   animateCloneEl = document.createElement("div");
                   animateCloneEl.style.position = 'absolute';
-                  animateCloneEl.style.top = toTheTopElOffset.top;
-                  animateCloneEl.style.left = toTheTopElOffset.left;
-                  animateCloneEl.style.width = toTheTopEl.outerWidth();
+                  animateCloneEl.style.top = toTheTopElOffset.top + "px";
+                  animateCloneEl.style.left = toTheTopElOffset.left + "px";
+                  animateCloneEl.style.width = toTheTopEl.outerWidth() + "px";
                   animateCloneEl.style.background = 'white';
                   animateCloneEl.innerHTML = toTheTopEl.html();
                   animateCloneEl.className = 'bb-reorder-list-row bb-reorder-list-sorting-item';
@@ -53,9 +53,9 @@
                     $scope.$apply(function () {
 
                       // perform the swap moving the item to the 0 index in the list
-                      $scope.items.splice(
+                      $scope.bbReorderItems.splice(
                         0, 0,
-                        $scope.items.splice(index, 1)[0]);
+                        $scope.bbReorderItems.splice(index, 1)[0]);
 
                       toTheTopEl.children().css('visibility', '');
                       toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
@@ -114,9 +114,9 @@
 
                         $scope.$apply(function () {
                           // perform the swap in the that the user just performed
-                          $scope.items.splice(
+                          $scope.bbReorderItems.splice(
                             index , 0,
-                            $scope.items.splice(originalSortItemIndex, 1)[0]);
+                            $scope.bbReorderItems.splice(originalSortItemIndex, 1)[0]);
                         });
                     },
                     change: function(e, ui) {
@@ -161,6 +161,6 @@
 
     bbReorder.$inject = [];
 
-    angular.module('sky.reorder', [])
+    angular.module('sky.reorder', ['sky.resources'])
         .directive('bbReorder', bbReorder);
 }(jQuery));
