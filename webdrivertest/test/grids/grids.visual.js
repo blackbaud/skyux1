@@ -87,27 +87,6 @@ describe('bb-grid component', function () {
         });
     });
 
-    it('should match the baseline screenshot of a grid with the column chooser open', function (done) {
-        var browserResult,
-            common = require('../common');
-
-        browserResult = browser
-            .url('/grids/fixtures/test.full.html')
-            .click('button.show-grid')
-            .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
-            .click('.bb-column-picker-btn')
-            .waitForVisible('.modal-content');
-
-        common.compareScreenshot({
-            browserResult: browserResult,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'grids_columnchooser',
-            selector: '.modal-content',
-            screenWidth: [480],
-            done: done
-        });
-    });
-
     it('match a baseline screenshot of a grid with filters', function (done) {
         var common = require('../common'),
             browserResult;
