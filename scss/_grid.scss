@@ -273,3 +273,7 @@ body:not(.bb-viewkeeper-ignore-fixed) {
     font-size: 12px;
     display: inline-block;
 }
+
+.bb-grid-no-search span {
+  background-color: transparent;
+}
