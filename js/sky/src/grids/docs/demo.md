@@ -42,7 +42,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `width_sm` &mdash; *(Optional.)* Sets the column width for screen sizes from 768px to 991px.
             - `width_md` &mdash; *(Optional.)* Sets the column width for screen sizes from 992px to 1199px.
             - `width_lg` &mdash; *(Optional.)* Sets the column width for screen sizes greater than 1199px.
-        - `data` &mdash; An array of objects that represents the rows in the grid. Each row should have properties that correspond to the `columns` and `jsonmap` properties.
+        - `data` &mdash; An array of objects that represents the rows in the grid. Each row should have properties that correspond to the `jsonmap` properties within the `columns` property.
         - `fixedToolbar` &mdash; *(Optional.)* Indicates whether to prevent the toolbar and grid headers from scrolling with the window. To prevent them from scrolling, set this property to `true`. *(Default = `false`)*
         - `filtersAreActive` &mdash; *(Optional.)* Indicates whether to highlight the filter button to indicate that the grid is filtered. To highlight the button, set this property to `true`.
         - `filtersOpen` &mdash; *(Optional.)* Indicates whether to open the flyout filter menu. To open the flyout, set this property to `true`.
@@ -58,23 +58,23 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `onAddClick` &mdash; *(Optional.)* Specifies a function to be called when users click the add button in the toolbar. The add button only appears if the `onAddClick` property specifies a function.
         - `onAddClickLabel` &mdash; *(Optional.)* Specifies a label for the add button.
         - `resources` &mdash; *(Optional.)* Specifies the resource dictionary available in the scope of each `columns` property's `template_url` and `controller` properties.
-        - `searchText` &mdash; The text entered in the grid search box. Set by bbGrid.
+        - `searchText` &mdash; The text that users enter in the grid search box. Set by the `bb-grid` directive.
         - `selectedColumnIds` &mdash; An array of unique identifiers that indicates the visible columns in their display order.
         - `sortOptions` &mdash; Specifies options for column sorting.
-            - `excludedColumns` &mdash; *(Optional.)* Specifies an array of the names of columns to exclude from the grid.
-            - `column` &mdash; Specifies the name of the column to sort data by. Set by bbGrid.
-            - `descending` &mdash; Indicates whether to sort in descending order. To sort in descending order, set this property to `true`.
+            - `excludedColumns` &mdash; *(Optional.)* Specifies an array of the names of columns that users cannot use to sort the grid.
+            - `column` &mdash; Specifies the name of the column to sort data by. Set by the `bb-grid` directive.
+            - `descending` &mdash; Indicates whether to sort in descending order. Set to `true' by the `bb-grid` directive to sort in descending order.
     - `bb-grid-pagination` &mdash; *(Optional.)* Specifies an object with the following properties to indicate that the grid uses pagination instead of infinite scrolling.
         - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default = 5)*
-        - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar *(Default = 5)*
+        - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar. *(Default = 5)*
         - `recordCount` &mdash; Specifies the total number of records available through pagination.
-    - `bb-multiselect-actions` &mdash; *(Optional.)* Specifies an array of actions to display in the multi-select action bar. Each action can have the following properties:
+    - `bb-multiselect-actions` &mdash; *(Optional.)* Specifies an array of actions with the following properties to display in the multi-select action bar.
         - `actionCallback` &mdash; Specifies a function to be called when users click the action.
-        - `automationId` &mdash; *(Optional.)* Specifies an identifier to place in the `data-bbauto` attribute for automation purposes.
+        - `automationId` &mdash; *(Optional.)* Specifies a unique identifier to place in the `data-bbauto` attribute for automation purposes.
         - `isPrimary` &mdash; *(Optional.)* Indicates whether to use the primary button color for the action. To use the primary button color, set this property to `true`.
         - `selections` &mdash; Specifies the row objects from the grid to associate with the action. You can update this through the `bb-selections-updated` function.
         - `title` &mdash; Specifies the text to display on the button for the action.
-    - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the directive's parent controller.
+    - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.
     - `bb-selections-updated` &mdash; *(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.
 
 ### Custom Grid Toolbar ###
@@ -83,8 +83,20 @@ You can display custom content in the grid toolbar alongside the add button, sea
 To display custom content, add the `bb-grid-custom-toolbar` attribute to the `bb-grid` directive. Then place a `bb-grid-toolbar` directive with your custom controls in the `bb-grid` directive.
 
 ### Grid Events ###
-    - `includedColumnsChanged` &mdash; Fires when users change the grid columns. To reload the grid with data from the server after column changes, set the event handler's `data` parameter's `willResetData` property to `true`. This avoids reloading the grid with the existing data after the event fires.
-    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, a data object with top and skip parameters is included so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides a promise, and the consumer of the event should resolve the promise with new data that the grid appends to the existing data.
+    - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid. To reload the grid with data from the server after column changes, set the event handler's `data` parameter's `willResetData` property to `true`. This avoids reloading the grid with the existing data after the event fires.
+    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, a data object with `top` and `skip` parameters is included in the event so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides a promise, and the consumer of the event should resolve the promise with new data that the grid appends to the existing data.
+    - `columnsResized` &mdash; Fires after users resize the columns in the grid. You can use this event to listen for column size changes and save them for subsequent visits to the grid. The event contains an object with the following properties:
+        - `index` &mdash; The index of the resized column.
+        - `newWidth` &mdash; The width of the resized column.
+    - `reInitGrid` &mdash; The grid reinitializes itself when it receives this event.
+
+### Grid Events ###
+    - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.
+        - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires. 
+    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides the `promise` property to add new data to the grid.
+        - `top` &mdash; Indicates how many records to retrieve and display in the grid. The value is the same as the `itemsPerPage` property in the `bb-grid-pagination` directive.
+        - `skip` &mdash; Indicates how many records to skip before the first record displayed in the grid. The value equals the number of pages skipped multiplied by the number of items per page.
+        - `promise` &mdash; Provides a promise that the consumer of the event can resolve with new data that the grid appends to the existing data.
     - `columnsResized` &mdash; Fires after users resize the columns in the grid. You can use this event to listen for column size changes and save them for subsequent visits to the grid. The event contains an object with the following properties:
         - `index` &mdash; The index of the resized column.
         - `newWidth` &mdash; The width of the resized column.

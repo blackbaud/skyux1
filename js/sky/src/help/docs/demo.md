@@ -21,7 +21,7 @@ The help service allows Angular components to open and close the help panel prog
 - `caseCentral` &mdash; *(Optional.)* Customizes the Case Central URL. To remove the link, set this to an empty string.
 - `clientId` &mdash; *(Optional.)* Pass the client/site ID to the chat session.
 - `communityUrl` &mdash; *(Optional.)* Displays a link to Community.
-- `customLocales` &mdash; *(Optional.)* Specifies an array of locales that the product has help content for in addition to the default help content locale. This array contain strings such as "en-gb" and "fr".
+- `customLocales` &mdash; *(Optional.)* Specifies an array of locales that the product has help content for in addition to the default help content locale. This array contain strings such as `en-gb` and `fr`.
 - `getChatData` &mdash; *(Optional.)* Specifies a function that returns the chat key and website ID to use for the product based on the user's locale. For example:
    ```
    getChatData: function(userLocale) {
