@@ -19,6 +19,8 @@
                 errorDescription: vm.errorDescription
             });
         };
+
+        vm.errorType = 'broken';
     }
 
     ErrorTestController.$inject = ['bbErrorModal'];

@@ -20,6 +20,8 @@
                 case 'construction':
                     vm.description = bbResources.error_description_construction;
                     break;
+                case 'notFound':
+                    vm.description = '';
             }
         });
     }

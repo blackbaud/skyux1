@@ -411,6 +411,10 @@
         "_description": "Text used for the error title when page is under construction.",
         "message": "This page will return soon."
     },
+    "error_title_notfound": {
+        "_description": "Text used for the error title when page is not found.",
+        "message": "Sorry, we can't reach that page."
+    },
     "file_size_b_plural": {
         "_description": "",
         "message": "{0} bytes"

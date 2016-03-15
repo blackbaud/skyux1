@@ -18,6 +18,10 @@
                     break;
                 case 'construction':
                     vm.title = bbResources.error_title_construction;
+                    break;
+                case 'notFound':
+                    vm.title = bbResources.error_title_notfound;
+                    break;
             }
         });
 
