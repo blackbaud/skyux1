@@ -16,8 +16,8 @@
 
         listItems = [
             {
-                title: 'Constituent summary',
-                description: 'Summary information about the constituent who gave the gift',
+                title: 'Constituent summary and a really long title that can be seen through the lense of everyone in the world it does not make sense, but it does not have to make sense it merely is and shall be',
+                description: 'Summary information about the constituent who gave the gift and a really really reeeeeeeealy long description. As long as a winding river in the great outdoor expanse of life. Longer even, because I needed some new words to get another line break.',
                 category: 'Constituent'
             },
             {
