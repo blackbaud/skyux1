@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function BBErrorActionController($scope, bbResources) {
+    function BBErrorActionController($scope) {
         var vm = this;
 
         $scope.$on('$destroy', function () {
@@ -11,7 +11,7 @@
         });
     }
 
-    BBErrorActionController.$inject = ['$scope', 'bbResources'];
+    BBErrorActionController.$inject = ['$scope'];
 
     function bbErrorAction() {
         function link(scope, el, attrs, ctrls) {
