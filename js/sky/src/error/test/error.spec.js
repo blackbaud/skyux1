@@ -379,6 +379,91 @@ describe('Error', function () {
             $scope.$destroy();
             el.remove();
         });
+
+        describe('child directives', function () {
+            it('should be able to use bb-error-image without bb-error', function () {
+                var imageEl,
+                    el = angular.element('<bb-error-image error-type="broken">' +
+                        '</bb-error-image>');
+
+                el.appendTo(document.body);
+
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+                imageEl = el.find('.bb-error-image-container img');
+                expect(imageEl).toBeVisible();
+                expect(imageEl).toHaveClass('bb-error-image-broken');
+
+                el.remove();
+            });
+
+            it('should be able to use bb-error-title without bb-error', function () {
+                var headerEl,
+                    el = angular.element('<bb-error-title error-type="notFound">' +
+                        '</bb-error-title>');
+
+                el.appendTo(document.body);
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+
+                headerEl = el.find('.bb-error-title-container');
+                expect(headerEl).toHaveText(bbResources.error_title_notfound);
+                expect(headerEl).toBeVisible();
+
+                el.remove();
+            });
+
+            it('should be able to use bb-error-description without bb-error', function () {
+                var descriptionEl,
+                    el = angular.element('<bb-error-description error-type="construction">' +
+                        '</bb-error-description>');
+
+                el.appendTo(document.body);
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+
+                descriptionEl = el.find('.bb-error-description-container');
+                expect(descriptionEl).toHaveText(bbResources.error_description_construction);
+                expect(descriptionEl).toBeVisible();
+
+                el.remove();
+            });
+
+            it('should be able to use bb-error-action without bb-error', function () {
+                var actionEl,
+                    actionClicked,
+                    el = angular.element('<bb-error-action>' +
+                            '<button type="button" class="btn-primary btn" ng-click="action()">{{actionName}}</button>' +
+                        '</bb-error-action>');
+
+                el.appendTo(document.body);
+
+                $scope.action = function () {
+                    actionClicked = true;
+                };
+                $scope.actionName = 'My Action';
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+                actionEl = el.find('button');
+                expect(actionEl).toHaveText('My Action');
+                expect(actionEl).toHaveClass('btn-primary');
+                expect(actionEl).toBeVisible();
+                actionEl.click();
+                expect(actionClicked).toBe(true);
+
+                el.remove();
+            });
+        });
     });
+
+
 
 });
