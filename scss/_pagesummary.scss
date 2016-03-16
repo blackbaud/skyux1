@@ -31,7 +31,9 @@
 }
 
 .bb-page-summary-image {
-    margin-bottom: $margin-double;
+  .bb-file-drop-col {
+      margin-bottom: 0;
+  }
 }
 
 @media (min-width: $screen-sm-min) {
@@ -51,6 +53,8 @@
         width: $bb-avatar-width;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: $margin;
+
     }
 
     .bb-page-summary-key-info {
