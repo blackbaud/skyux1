@@ -70,7 +70,6 @@ describe('Error', function () {
         $scope.$digest();
 
         imageEl = getErrorImage(el);
-        expect(imageEl).toBeVisible();
         expect(imageEl).toHaveAttr('src', imgUrl);
 
         headerEl = getErrorHeader(el);
@@ -114,7 +113,7 @@ describe('Error', function () {
 
         $scope.$digest();
         imageEl = getErrorImage(el);
-        expect(imageEl).not.toBeVisible();
+        expect(imageEl.length).toBe(0);
 
         headerEl = getErrorHeader(el);
         expect(headerEl).toHaveText('My Header');
@@ -147,7 +146,6 @@ describe('Error', function () {
 
             $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).toHaveClass('bb-error-image-broken');
 
             headerEl = getErrorHeader(el);
@@ -178,7 +176,6 @@ describe('Error', function () {
 
             $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).toHaveClass('bb-error-image-construction');
 
             headerEl = getErrorHeader(el);
@@ -200,7 +197,7 @@ describe('Error', function () {
                 imageEl,
                 descriptionEl,
                 headerEl,
-                el = angular.element('<bb-error error-type="notFound">' +
+                el = angular.element('<bb-error error-type="notFound"> ' +
                     '</bb-error>');
 
             el.appendTo(document.body);
@@ -209,7 +206,6 @@ describe('Error', function () {
 
             $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).toHaveClass('bb-error-image-notfound');
 
             headerEl = getErrorHeader(el);
@@ -244,9 +240,7 @@ describe('Error', function () {
             $compile(el)($scope);
 
             $scope.$digest();
-            $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).not.toHaveClass('bb-error-image-broken');
             expect(imageEl).toHaveAttr('src', imgUrl);
 
@@ -283,7 +277,6 @@ describe('Error', function () {
 
             $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).toHaveClass('bb-error-image-notfound');
 
             headerEl = getErrorHeader(el);
@@ -319,7 +312,6 @@ describe('Error', function () {
 
             $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).toHaveClass('bb-error-image-construction');
 
             headerEl = getErrorHeader(el);
@@ -359,7 +351,6 @@ describe('Error', function () {
 
             $scope.$digest();
             imageEl = getErrorImage(el);
-            expect(imageEl).toBeVisible();
             expect(imageEl).toHaveClass('bb-error-image-broken');
 
             headerEl = getErrorHeader(el);
@@ -463,7 +454,4 @@ describe('Error', function () {
             });
         });
     });
-
-
-
 });
