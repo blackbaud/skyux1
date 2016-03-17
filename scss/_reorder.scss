@@ -5,15 +5,17 @@
 }
 
 .bb-reorder-list-col-content {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: $margin;
+  margin-right: $margin;
   flex-grow: 1;
+  min-width: 0; // needed so flex will force shrink when ellipsis is present
 }
 
 .bb-reorder-list-col-top {
   color: $bb-color-blue;
   cursor:pointer;
-  padding: 10px; //increase click radius of icon
+  padding: $padding; //increase click radius of icon
+  white-space: nowrap;
 }
 
 .bb-reorder-list-row {
@@ -47,4 +49,17 @@
 
 .bb-reorder-list-title {
     font-weight: 700;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.bb-reorder-list-description {
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
