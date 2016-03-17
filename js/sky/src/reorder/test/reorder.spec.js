@@ -60,7 +60,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorderItems.length).toBe(4);
+            expect(elScope.bbReorder.bbReorderItems.length).toBe(4);
         });
 
         it('should set the data-index attribute on each row', function () {
@@ -134,7 +134,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            elScope.sorting = true;
+            elScope.bbReorder.sorting = true;
             $scope.$digest();
 
             secondRow = el.find('.bb-reorder-list-row')[1];
@@ -166,7 +166,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            elScope.sorting = true;
+            elScope.bbReorder.sorting = true;
             $scope.$digest();
 
             firstRow = el.find('.bb-reorder-list-row')[0];
@@ -246,7 +246,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.sorting).toBe(true);
+            expect(elScope.bbReorder.sorting).toBe(true);
 
             rows = el.find('.bb-reorder-list-row');
 
@@ -277,14 +277,13 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.sorting).toBe(false);
+            expect(elScope.bbReorder.sorting).toBe(false);
         });
 
         it('should handle the sortable update event', function () {
             var $scope = $rootScope.$new(),
                 updateEventCallback,
                 eventArg,
-                elScope,
                 el;
 
             spyOn($.fn, 'sortable');
@@ -300,8 +299,6 @@ describe('Reorder', function () {
 
             updateEventCallback = $.fn.sortable.calls.argsFor(0)[0].update;
             updateEventCallback(null, eventArg);
-
-            elScope = el.isolateScope();
 
             expect($scope.items[0].title).toBe('test2');
             expect($.fn.sortable).toHaveBeenCalledWith('cancel');
@@ -319,13 +316,15 @@ describe('Reorder', function () {
                 el;
 
             spyOn($.fn, 'sortable');
-            spyOn($.fn, 'offset').and.returnValue({top: 1000});
+            spyOn($.fn, 'offset').and.returnValue({top: 1000}); // fake out that the element is at the bottom to begin with
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
 
+            // we are going to move the bottom item to the top of the list
             rowBeingMoved = $(el.find('.bb-reorder-list-row')[3]);
 
+            // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
             $(el.find('.bb-reorder-list-row')[0]).before(placeholder);
 
@@ -337,12 +336,15 @@ describe('Reorder', function () {
                 placeholder: placeholder
             };
 
+            // call start as if the user started sorting
             startEventCallback = $.fn.sortable.calls.argsFor(0)[0].start;
             startEventCallback(null, eventArg);
 
+            // call change as if the user changed the position of the element being sorted
             changeEventCallback = $.fn.sortable.calls.argsFor(0)[0].change;
             changeEventCallback(null, eventArg);
 
+            // valdiate that items are ordered as we would expect
             rows = el.find('.bb-reorder-list-row');
 
             $.each(rows, function (i, item) {
@@ -362,13 +364,15 @@ describe('Reorder', function () {
                 el;
 
             spyOn($.fn, 'sortable');
-            spyOn($.fn, 'offset').and.returnValue({top: 1});
+            spyOn($.fn, 'offset').and.returnValue({top: 1}); // fake out that the element is at the top to begin with
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
 
+            // we are going to move the top element to the bottom of the list
             rowBeingMoved = $(el.find('.bb-reorder-list-row')[0]);
 
+            // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
             $(el.find('.bb-reorder-list-row')[3]).after(placeholder);
 
@@ -380,12 +384,15 @@ describe('Reorder', function () {
                 placeholder: placeholder
             };
 
+            // call start as if the user started sorting
             startEventCallback = $.fn.sortable.calls.argsFor(0)[0].start;
             startEventCallback(null, eventArg);
 
+            // call change as if the user changed the position of the element being sorted
             changeEventCallback = $.fn.sortable.calls.argsFor(0)[0].change;
             changeEventCallback(null, eventArg);
 
+            // valdiate that items are ordered as we would expect
             rows = el.find('.bb-reorder-list-row');
 
             $.each(rows, function (i, item) {
