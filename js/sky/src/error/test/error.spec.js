@@ -384,7 +384,6 @@ describe('Error', function () {
 
                 $scope.$digest();
                 imageEl = el.find('.bb-error-image-container img');
-                expect(imageEl).toBeVisible();
                 expect(imageEl).toHaveClass('bb-error-image-broken');
 
                 el.remove();
