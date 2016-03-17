@@ -7,11 +7,15 @@
         vm.errorTitle = 'A title thing.';
         vm.errorDescription = 'Try to refresh this page, or come back later.';
 
+        vm.customErrorTitle = 'Custom error title';
+        vm.customErrorDescription = 'Custom error description';
+
         vm.action = function () {
             alert('action clicked!');
         };
 
         vm.actionName = 'Refresh';
+        vm.customActionName = 'Custom action';
 
         vm.openModal = function () {
             bbErrorModal.open({

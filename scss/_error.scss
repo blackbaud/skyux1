@@ -7,9 +7,23 @@
 }
 
 .bb-error-image-container {
-  height: 189px;
-  width: 182px;
   display: inline-block;
+
+  .bb-error-image-broken-container {
+    max-width: 182px;
+    display: inline-block;
+  }
+
+  .bb-error-image-construction-container {
+    width: 182px;
+    height: 189px;
+    display: inline-block;
+  }
+
+  .bb-error-image-notfound-container {
+    max-width: 328px;
+    display: inline-block;
+  }
 }
 
 .bb-error-image {
@@ -22,4 +36,8 @@
 
 .bb-error {
   padding-bottom: $padding;
+}
+
+.bb-error-image-broken, .bb-error-image-construction, .bb-error-image-notfound {
+  max-width: 100%;
 }
