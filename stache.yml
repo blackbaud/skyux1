@@ -4,7 +4,8 @@ content: <%= stache.config.demo %>content/
 static: <%= stache.config.demo %>static/
 includes: <%= stache.config.demo %>includes/
 data: <%= stache.config.demo %>data/
-
+paths:
+    custom: <%= stache.config.demo %>
 markdown: false
 showOmnibar: false
 showHeader: false
