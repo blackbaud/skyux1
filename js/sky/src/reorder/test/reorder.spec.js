@@ -190,7 +190,7 @@ describe('Reorder', function () {
 
             expect(secondRow).toHaveClass('bb-reorder-list-row-placeholder');
             expect(secondRow.children()).toHaveCss({visibility: 'hidden'});
-            expect($.find('.bb-reorder-list-sorting-item')).toExist();
+            expect(el.find('.bb-reorder-list-sorting-item')).toExist();
 
             animateCallback = $.fn.animate.calls.argsFor(0)[3];
             animateCallback();
@@ -200,7 +200,7 @@ describe('Reorder', function () {
 
             expect(secondRow.children()).not.toHaveCss({visibility: 'hidden'});
             expect(secondRow).not.toHaveClass('bb-reorder-list-row-placeholder');
-            expect($.find('.bb-reorder-list-sorting-item')).not.toExist();
+            expect(el.find('.bb-reorder-list-sorting-item')).not.toExist();
         });
 
         it('should not send an item to the top if there is already another item being sent to the top', function () {
@@ -316,7 +316,6 @@ describe('Reorder', function () {
                 el;
 
             spyOn($.fn, 'sortable');
-            spyOn($.fn, 'offset').and.returnValue({top: 1000}); // fake out that the element is at the bottom to begin with
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
@@ -326,12 +325,9 @@ describe('Reorder', function () {
 
             // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
-            $(el.find('.bb-reorder-list-row')[0]).before(placeholder);
+            el.append(placeholder);
 
             eventArg = {
-                offset: {
-                    top: 1
-                },
                 item: rowBeingMoved,
                 placeholder: placeholder
             };
@@ -339,6 +335,17 @@ describe('Reorder', function () {
             // call start as if the user started sorting
             startEventCallback = $.fn.sortable.calls.argsFor(0)[0].start;
             startEventCallback(null, eventArg);
+
+            // move the placeholder as if the user has moved the sort element
+            el.find('#placeholder').remove();
+
+            placeholder = $('<div id="placeholder"></div>');
+            el.prepend(placeholder);
+
+            eventArg = {
+                item: rowBeingMoved,
+                placeholder: placeholder
+            };
 
             // call change as if the user changed the position of the element being sorted
             changeEventCallback = $.fn.sortable.calls.argsFor(0)[0].change;
@@ -364,7 +371,6 @@ describe('Reorder', function () {
                 el;
 
             spyOn($.fn, 'sortable');
-            spyOn($.fn, 'offset').and.returnValue({top: 1}); // fake out that the element is at the top to begin with
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
@@ -374,12 +380,63 @@ describe('Reorder', function () {
 
             // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
-            $(el.find('.bb-reorder-list-row')[3]).after(placeholder);
+            el.prepend(placeholder);
 
             eventArg = {
-                offset: {
-                    top: 1000
-                },
+                item: rowBeingMoved,
+                placeholder: placeholder
+            };
+
+            // call start as if the user started sorting
+            startEventCallback = $.fn.sortable.calls.argsFor(0)[0].start;
+            startEventCallback(null, eventArg);
+
+            // move the placeholder as if the user has moved the sort element
+            el.find('#placeholder').remove();
+
+            placeholder = $('<div id="placeholder"></div>');
+            el.append(placeholder);
+
+            eventArg = {
+                item: rowBeingMoved,
+                placeholder: placeholder
+            };
+
+            // call change as if the user changed the position of the element being sorted
+            changeEventCallback = $.fn.sortable.calls.argsFor(0)[0].change;
+            changeEventCallback(null, eventArg);
+
+            // valdiate that items are ordered as we would expect
+            rows = el.find('.bb-reorder-list-row');
+
+            $.each(rows, function (i, item) {
+                expect($(item).find('.bb-reorder-list-sorting-number')).toContainText(newOrder[i]);
+            });
+        });
+
+        it('should handle the sortable change event that can fire if no change was actually made', function () {
+            var $scope = $rootScope.$new(),
+                changeEventCallback,
+                startEventCallback,
+                eventArg,
+                rows,
+                placeholder,
+                rowBeingMoved,
+                el;
+
+            spyOn($.fn, 'sortable');
+
+            $scope.items = createTestItems();
+            el = initializeDirective($scope);
+
+            // we are going to move the top element to the bottom of the list
+            rowBeingMoved = $(el.find('.bb-reorder-list-row')[0]);
+
+            // put the placeholder in the right position as if the user was currently sorting
+            placeholder = $('<div id="placeholder"></div>');
+            el.prepend(placeholder);
+
+            eventArg = {
                 item: rowBeingMoved,
                 placeholder: placeholder
             };
@@ -396,7 +453,7 @@ describe('Reorder', function () {
             rows = el.find('.bb-reorder-list-row');
 
             $.each(rows, function (i, item) {
-                expect($(item).find('.bb-reorder-list-sorting-number')).toContainText(newOrder[i]);
+                expect($(item).find('.bb-reorder-list-sorting-number')).toContainText((i + 1).toString());
             });
         });
     });
