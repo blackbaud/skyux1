@@ -1,4 +1,9 @@
 
+.bb-reorder-container {
+  overflow:hidden;
+  position:relative
+}
+
 .bb-reorder-list-col-icon {
   font-size: 1.5em;
   font-color: $gray;
@@ -44,7 +49,8 @@
 }
 
 .bb-reorder-list-sorting-item {
-  box-shadow: 5px 5px 5px #888888
+  box-shadow: 5px 5px 5px #888888;
+  background-color: white;
 }
 
 .bb-reorder-list-title {
