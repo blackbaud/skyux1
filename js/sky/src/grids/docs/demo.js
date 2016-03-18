@@ -131,7 +131,7 @@
             automationId: 'Action1Button',
             isPrimary: true,
             selections: [],
-            title: 'Guitar Action'
+            title: 'Guitar action'
         };
 
         action2 = {
@@ -139,7 +139,7 @@
             automationId: 'Action2Button',
             isPrimary: false,
             selections: [],
-            title: 'Drum Action'
+            title: 'Drum action'
         };
 
         self.appliedFilters = {
