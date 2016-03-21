@@ -59,8 +59,8 @@ describe('Wizard', function () {
 
             /*jslint white: true */
             $compile(
-                '<uib-tabset bb-wizard>' +
-                    '<uib-tab ng-repeat="step in steps" active="step.active"></uib-tab>' +
+                '<uib-tabset bb-wizard active="options.active">' +
+                    '<uib-tab ng-repeat="step in steps"></uib-tab>' +
                 '</uib-tabset>')($scope);
             /*jslint white: false */
         }));
@@ -71,36 +71,40 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: true
+                    heading: '1'
                 },
                 {
-                    active: false
+                    heading: '2'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
+            $scope.options = {
+                active: 0,
                 steps: steps
-            });
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
+
+            $scope.$digest();
 
             $scope.steps = steps;
             wizardNav.goToNext();
             $scope.$digest();
 
-            expect(steps[0].active).toBe(false);
-            expect(steps[1].active).toBe(true);
+            expect($scope.options.active).toBe(1);
         });
 
-        it('should go to next step', function () {
+        it('should go to next step with finish function', function () {
             var finished,
                 steps,
                 wizardNav;
 
             steps = [
                 {
-                    active: false
+                    heading: '1'
                 },
                 {
-                    active: true
+                    heading: '2'
                 }
             ];
 
@@ -126,16 +130,19 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: false
+                    heading: '1'
                 },
                 {
-                    active: true
+                    heading: '2'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
-            });
+            $scope.options = {
+                steps: steps,
+                active: 1
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             $scope.steps = steps;
             $scope.$digest();
@@ -143,7 +150,7 @@ describe('Wizard', function () {
             wizardNav.goToNext();
             $scope.$digest();
 
-            expect(steps[1].active).toBe(true);
+            expect($scope.options.active).toBe(1);
         });
 
         it('should go to previous step', function () {
@@ -152,16 +159,19 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: false
+                    heading: '1'
                 },
                 {
-                    active: true
+                    heading: '2'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
-            });
+            $scope.options = {
+                steps: steps,
+                active: 1
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             $scope.steps = steps;
             $scope.$digest();
@@ -169,8 +179,7 @@ describe('Wizard', function () {
             wizardNav.goToPrevious();
             $scope.$digest();
 
-            expect(steps[0].active).toBe(true);
-            expect(steps[1].active).toBe(false);
+            expect($scope.options.active).toBe(0);
         });
 
         it('should indicate that previous is disabled when the previous step is disabled', function () {
@@ -179,18 +188,22 @@ describe('Wizard', function () {
 
             steps = [
                 {
+                    heading: '1',
                     disabled: function () {
                         return true;
                     }
                 },
                 {
-                    active: true
+                    heading: '2'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
-            });
+            $scope.options = {
+                steps: steps,
+                active: 1
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             expect(wizardNav.previousDisabled()).toBe(true);
         });
@@ -201,16 +214,19 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: true
+                    heading: '1'
                 },
                 {
-                    active: false
+                    heading: '2'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
+            $scope.options = {
+                active: 0,
                 steps: steps
-            });
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             $scope.steps = steps;
             $scope.$digest();
@@ -218,8 +234,8 @@ describe('Wizard', function () {
             wizardNav.goToPrevious();
             $scope.$digest();
 
-            expect(steps[0].active).toBe(true);
-            expect(steps[1].active).toBe(false);
+            expect($scope.options.active).toBe(0);
+
         });
 
         it('should return expected previous text', function () {
@@ -235,16 +251,19 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: true
+                    heading: '1'
                 },
                 {
-                    active: false
+                    heading: '2'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
-            });
+            $scope.options = {
+                steps: steps,
+                active: 0
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             $scope.steps = steps;
             $scope.$digest();
@@ -264,13 +283,16 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: true
+                    heading: '1'
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
-            });
+            $scope.options = {
+                steps: steps,
+                active: 0
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             expect(wizardNav.previousDisabled()).toBe(true);
         });
@@ -281,9 +303,10 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: true
+                    heading: '1'
                 },
                 {
+                    heading: '2',
                     disabled: function () {
                         return false;
                     }
@@ -303,18 +326,22 @@ describe('Wizard', function () {
 
             steps = [
                 {
-                    active: true
+                    heading: '1'
                 },
                 {
+                    heading: '2',
                     disabled: function () {
                         return true;
                     }
                 }
             ];
 
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
-            });
+            $scope.options = {
+                steps: steps,
+                active: 0
+            };
+
+            wizardNav = bbWizardNavigator.init($scope.options);
 
             expect(wizardNav.nextDisabled()).toBe(true);
         });

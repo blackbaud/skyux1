@@ -23,8 +23,7 @@
                 templateUrl: 'demo/wizard/step1.html',
                 complete: function () {
                     return !!self.requiredValue1;
-                },
-                active: true
+                }
             },
             {
                 heading: '2. Step 2',
@@ -48,13 +47,16 @@
             }
         ];
 
+        self.options = {
+            steps: steps,
+            finish: function () {
+                $window.alert('Finished!');
+            },
+            active: 0
+        };
+
         wizardNav = bbWizardNavigator.init(
-            {
-                steps: steps,
-                finish: function () {
-                    $window.alert('Finished!');
-                }
-            }
+            self.options
         );
 
         self.steps = steps;
@@ -68,6 +70,7 @@
         self.secondStepComplete = function () {
             return !!self.requiredValue2;
         };
+
     }
 
     WizardTestController.$inject = ['bbModal'];

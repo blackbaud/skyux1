@@ -36,18 +36,20 @@
 
                     function getPreviousStep() {
                         var i,
+                            index,
                             n,
                             previousStep,
                             step;
 
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
+                            index = step.index || i;
 
-                            if (step.active && i > 0) {
+                            if (options.active === index && i > 0) {
                                 previousStep = steps[i - 1];
 
                                 if (!stepIsDisabled(previousStep)) {
-                                    return previousStep;
+                                    return previousStep.index || (i - 1);
                                 }
 
                                 break;
@@ -59,18 +61,20 @@
 
                     function getNextStep() {
                         var i,
+                            index,
                             n,
                             nextStep,
                             step;
 
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
+                            index = step.index || i;
 
-                            if (step.active && i + 1 < n) {
+                            if (options.active === index && i + 1 < n) {
                                 nextStep = steps[i + 1];
 
                                 if (!stepIsDisabled(nextStep)) {
-                                    return nextStep;
+                                    return nextStep.index || (i + 1); // There can be a custom index name, or the position of the tab
                                 }
 
                                 break;
@@ -81,13 +85,14 @@
                     }
 
                     function setActiveStep(step) {
-                        if (step) {
-                            step.active = true;
+                        if (step !== null) {
+                            options.active = step;
                         }
+                        
                     }
 
                     function lastStepIsActive() {
-                        return steps[steps.length - 1].active;
+                        return options.active === steps[steps.length - 1].index || options.active === steps.length - 1;
                     }
 
                     options = options || {};
@@ -107,12 +112,14 @@
                         },
                         goToNext: function () {
                             if (lastStepIsActive()) {
+
                                 if (angular.isFunction(finish)) {
                                     finish();
                                 }
                             } else {
                                 setActiveStep(getNextStep());
                             }
+
                         },
                         previousDisabled: function () {
                             return !getPreviousStep();

@@ -73,13 +73,9 @@
                             }
                         }
                     }
-
                     $scope.locals = {
                         showButtonBar: false,
                         appendToBody: false,
-                        //modelOptions: {
-                        //    allowInvalid: angular.isDefined($scope.customValidation)
-                        //},
                         date: '',
                         opened: false,
                         open: open,
@@ -87,7 +83,9 @@
                         closeOnSelection: true,
                         dateOptions: {
                             showWeeks: bbDatepickerConfig.showWeeks,
-                            startingDay: bbDatepickerConfig.startingDay
+                            startingDay: bbDatepickerConfig.startingDay,
+                            maxDate: $scope.maxDate,
+                            minDate: $scope.minDate
                         },
                         hasCustomValidation: false,
                         inputName: attr.bbDatepickerName
@@ -95,10 +93,12 @@
 
                     if (!$scope.maxDate && bbDatepickerConfig.maxDate) {
                         $scope.maxDate = bbDatepickerConfig.maxDate;
+                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
                     }
 
                     if (!$scope.minDate && bbDatepickerConfig.minDate) {
                         $scope.minDate = bbDatepickerConfig.minDate;
+                        $scope.locals.dateOptions.minDate = $scope.minDate;
                     }
 
                     $scope.resources = bbResources;
@@ -168,10 +168,12 @@
 
                     $scope.$watch('maxDate', function () {
                         runValidators();
+                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
                     });
 
                     $scope.$watch('minDate', function () {
                         runValidators();
+                        $scope.locals.dateOptions.minDate = $scope.minDate;
                     });
 
                     function hasRequiredError() {
@@ -467,8 +469,6 @@
 
             return false;
         }
-
-
 
         function parseMoment(value, format) {
             var date = null,

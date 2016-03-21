@@ -37,9 +37,9 @@ describe('Tab Sref directive', function () {
 
         /*jslint white: true */
         uibTabHtml =
-            '<uib-tabset>' +
-                '<uib-tab heading="1" bb-tab-sref="tabstate.a" active="locals.activeTabA"></uib-tab>' +
-                '<uib-tab heading="2" bb-tab-sref="tabstate.b" active="locals.activeTabB" select="tabSelectB()"></uib-tab>' +
+            '<uib-tabset active="locals.active">' +
+                '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+                '<uib-tab heading="2" bb-tab-sref="tabstate.b" select="tabSelectB()"></uib-tab>' +
             '</uib-tabset>';
         /*jslint white: false */
     }));
@@ -56,11 +56,6 @@ describe('Tab Sref directive', function () {
 
         $scope.tabSelectB = function () {
             tabSelectCalled = true;
-        };
-
-        $scope.locals = {
-            activeTabA: true,
-            activeTabB: false
         };
 
         /*jslint white: true */
@@ -91,22 +86,13 @@ describe('Tab Sref directive', function () {
             return sref === "tabstate.a";
         };
 
-        $scope.locals = {
-            activeTabA: true,
-            activeTabB: false
-        };
-
         /*jslint white: true */
         el = $compile(uibTabHtml)($scope);
         /*jslint white: false */
 
         $timeout.flush();
 
-        $scope.locals.activeTabA = true;
-
-        $scope.$digest();
-
-        $scope.locals.activeTabB = true;
+        $scope.locals.active = 1;
         $scope.$digest();
 
         $timeout.flush();
