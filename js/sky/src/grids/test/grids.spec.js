@@ -320,6 +320,25 @@ describe('Grid directive', function () {
         expect(cellEl.eq(2)).toHaveText('');
 
     });
+    
+    it('reinitializes the grid in response to a reInitGrid event', function () {
+        var gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        locals.gridOptions.columns[0].width_all = 200;
+        locals.gridOptions.columns[1].width_all = 200;
+        locals.gridOptions.columns[2].width_all = 200;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+        
+        expect(el.find("td").eq(0).outerWidth()).toEqual(200);
+
+        locals.gridOptions.columns[0].width_all = 100;
+
+        $scope.$broadcast("reInitGrid");
+        
+        expect(el.find("td").eq(0).outerWidth()).toEqual(100);
+        
+    });
 
     describe('fixed headers', function () {
         it('has the option to fix header and toolbar', function () {
@@ -1174,6 +1193,89 @@ describe('Grid directive', function () {
             tableEl[0].p.resizeStop(200, 4);
         });
     });
+    
+    it('will emit a `columnsResized` event when columns are resized', function () {
+        var tableEl,
+            resizeHappened = false,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function () {
+            resizeHappened = true;
+        });
+        
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 0);
+        tableEl[0].p.resizeStop(50, 0);
+        
+        expect(resizeHappened).toBe(true);
+
+    });
+    
+    it('will adjust the column index in the `columnsResized` event when there is a contextmenu', function () {
+        var tableEl,
+            colIndex,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function (event, data) {
+            colIndex = data.index;
+        });
+        
+        locals.gridOptions.getContextMenuItems = getContextMenuItems;
+        
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 2);
+        tableEl[0].p.resizeStop(50, 2);
+        
+        expect(colIndex).toBe(1);
+
+    });
+    
+    it('will adjust the column index in the `columnsResized` event when multiselect and contextmenu is present', function () {
+        var tableEl,
+            colIndex,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function (event, data) {
+            colIndex = data.index;
+        });
+        
+        locals.gridOptions.getContextMenuItems = getContextMenuItems;
+        locals.gridOptions.multiselect = true;
+        
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 2);
+        tableEl[0].p.resizeStop(50, 2);
+        
+        expect(colIndex).toBe(0);
+
+    });
 
     describe('media breakpoint column resizing', function () {
         it('can have xs, sm, md, and lg breakpoints set', function () {
@@ -1311,6 +1413,8 @@ describe('Grid directive', function () {
             expect($scope.locals.gridOptions.selectedColumnIds[0]).toBe(2);
             expect($scope.locals.gridOptions.selectedColumnIds[1]).toBe(1);
             expect($scope.locals.gridOptions.selectedColumnIds[2]).toBe(3);
+
+            expect(tableEl[0].p.sortable.options.helper).toBe('clone');
 
             headerEl = getHeaders(el);
 

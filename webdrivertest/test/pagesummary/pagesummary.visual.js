@@ -1,34 +1,27 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser,require */
 
 describe('Page summary', function () {
     'use strict';
 
-    var options = {};
+    function clickTest(screenshotName, visibleComponents, done, screenWidth) {
+        var result,
+            common = require('../common');
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
+        result = browser.url('/pagesummary/fixtures/test.full.html')
+            .setValue('#screenshots-pagesummary-items', visibleComponents.join(','));
 
-    function clickTest(screenshotName, visibleComponents, done) {
-        var pageName = options.prefix + 'pagesummary_' + screenshotName;
-
-        browser
-            .url('/pagesummary/fixtures/test.full.html')
-            .setValue('#screenshots-pagesummary-items', visibleComponents.join(','))
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: ('#screenshots-pagesummary')
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
-            .call(done);
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: ('pagesummary_' + screenshotName),
+            selector: '#screenshots-pagesummary',
+            done: done,
+            screenWidth: screenWidth
+        });
     }
 
-    it('should match previous screenshot when all components are present', function (done) {
+    it('should match previous pagesummary screenshot when all components are present', function (done) {
         clickTest(
             'all',
             [
@@ -44,7 +37,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no image is present', function (done) {
+    it('should match previous pagesummary screenshot when no image is present', function (done) {
         clickTest(
             'noimage',
             [
@@ -59,7 +52,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no subtitle is present', function (done) {
+    it('should match previous pagesummary screenshot when no subtitle is present', function (done) {
         clickTest(
             'nosubtitle',
             [
@@ -74,7 +67,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no status is present', function (done) {
+    it('should match previous pagesummary screenshot when no status is present', function (done) {
         clickTest(
             'nostatus',
             [
@@ -89,7 +82,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no key info is present', function (done) {
+    it('should match previous pagesummary screenshot when no key info is present', function (done) {
         clickTest(
             'nokeyinfo',
             [
@@ -104,7 +97,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no additional content is present', function (done) {
+    it('should match previous pagesummary screenshot when no additional content is present', function (done) {
         clickTest(
             'nocontent',
             [
@@ -119,7 +112,7 @@ describe('Page summary', function () {
         );
     });
 
-    it('should match previous screenshot when no alert is present', function (done) {
+    it('should match previous pagesummary screenshot when no alert is present', function (done) {
         clickTest(
             'noalert',
             [
@@ -133,4 +126,18 @@ describe('Page summary', function () {
             done
         );
     });
+
+    it('should match previous pagesummary screenshot when only image, title, and subtitle are present', function (done) {
+        clickTest(
+            'image_title_subtitle',
+            [
+                'Title',
+                'Subtitle',
+                'Image'
+            ],
+            done,
+            [480, 1280]
+        );
+    });
+
 });

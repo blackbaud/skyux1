@@ -19,6 +19,22 @@
         "_description": "The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)",
         "message": "k"
     },
+    "avatar_error_not_image_description": {
+        "_description": "Message description displayed when the user attempts to upload an avatar file that is not a valid image",
+        "message": "Please choose a file that is a valid image."
+    },
+    "avatar_error_not_image_title": {
+        "_description": "Message title displayed when the user attempts to upload an avatar file that is not a valid image",
+        "message": "File is not an image."
+    },
+    "avatar_error_too_large_description": {
+        "_description": "Message description displayed when the user attempts to upload an avatar image with a file size that is too large",
+        "message": "Please choose an image that is less than {0}."
+    },
+    "avatar_error_too_large_title": {
+        "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
+        "message": "File is too large."
+    },
     "checklist_select_all": {
         "_description": "Text for the link in a checklist to select all items.",
         "message": "Select all"
@@ -180,8 +196,8 @@
         "message": "Expanded view"
     },
     "text_expand_close_text": {
-      "_description": "Text for the close button on the text expand modal",
-      "message": "Close"
+        "_description": "Text for the close button on the text expand modal",
+        "message": "Close"
     },
     "grid_action_bar_clear_selection": {
         "_description": "Clear the selections in the grid.",
@@ -276,8 +292,8 @@
         "message": "Yesterday"
     },
     "date_range_picker_specific_range": {
-      "_description": "text for date range picker",
-      "message": "Specific range"
+        "_description": "text for date range picker",
+        "message": "Specific range"
     },
     "date_range_picker_filter_description_this_week": {
         "_description": "text for date range picker",
@@ -356,24 +372,48 @@
         "message": "{0} for tomorrow"
     },
     "date_range_picker_filter_description_specific_range": {
-      "_description": "text for date range picker",
-      "message": "{0} from {1} to {2}"
+        "_description": "text for date range picker",
+        "message": "{0} from {1} to {2}"
     },
     "date_range_picker_from_date": {
-      "_description": "label for date range picker",
-      "message": "From date"
+        "_description": "label for date range picker",
+        "message": "From date"
     },
     "date_range_picker_to_date": {
-      "_description": "label for date range picker",
-      "message": "To date"
+        "_description": "label for date range picker",
+        "message": "To date"
     },
     "date_range_picker_min_date_error": {
-      "_description": "error message for date range picker",
-      "message": "End date must be after start date"
+        "_description": "error message for date range picker",
+        "message": "End date must be after start date"
     },
     "date_range_picker_max_date_error": {
-      "_description": "error message for date range picker",
-      "message": "Start date must be before end date"
+        "_description": "error message for date range picker",
+        "message": "Start date must be before end date"
+    },
+    "errormodal_ok": {
+        "_description": "Text used on the primary button to dismiss the error modal.",
+        "message": "OK"
+    },
+    "error_description_broken": {
+        "_description": "Text used for the error description to when page is broken.",
+        "message": "Try to refresh this page or come back later."
+    },
+    "error_description_construction": {
+        "_description": "Text used for the error description when page is under construction.",
+        "message": "Thanks for your patience while improvements are made!\nPlease check back in a little while."
+    },
+    "error_title_broken": {
+        "_description": "Text used for the error title when something is broken",
+        "message": "Sorry, something went wrong."
+    },
+    "error_title_construction": {
+        "_description": "Text used for the error title when page is under construction.",
+        "message": "This page will return soon."
+    },
+    "error_title_notfound": {
+        "_description": "Text used for the error title when page is not found.",
+        "message": "Sorry, we can't reach that page."
     },
     "file_size_b_plural": {
         "_description": "",
@@ -430,6 +470,30 @@
     "searchfield_no_records": {
         "_description": "text for ui-select search control when no records are found.",
         "message": "Sorry, no matching records found"
+    },
+    "selectfield_summary_text": {
+        "_description": "Text displayed when the user has more than 5 items selected",
+        "message": "{0} items selected"
+    },
+    "selectfield_remove": {
+        "_description": "Text for screen readers to convey the meaning of the remove icon button on select field values",
+        "message": "Remove"
+    },
+    "selectfieldpicker_select": {
+        "_description": "Text displayed on the primary dialog button to confirm selection of multiple items",
+        "message": "Select"
+    },
+    "selectfieldpicker_select_value": {
+        "_description": "The default header text for the select field picker directive when the user is allowed to select one value (singular)",
+        "message": "Select value"
+    },
+    "selectfieldpicker_select_values": {
+        "_description": "The default header text for the select field picker directive when the user is allowed to select more than one value (plural)",
+        "message": "Select values"
+    },
+    "selectfieldpicker_clear": {
+      "_description": "Text displayed on the button in single select mode to clear selection and close form",
+      "message": "Clear selection"
     },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",

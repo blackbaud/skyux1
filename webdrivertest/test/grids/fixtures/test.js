@@ -128,6 +128,29 @@
             }
             ];
 
+        self.showGrid = false;
+        self.showWait = false;
+        self.showPaged = false;
+        self.showLoading = false;
+
+        function showGridClicked(showOptions) {
+            if (showOptions.screenshot_grid) {
+                self.showGrid = !self.showGrid;
+            }
+            if (showOptions.screenshot_grid_page) {
+                self.showPaged = !self.showPaged;
+            }
+            if (showOptions.screenshot_grid_wait) {
+                self.showWait = !self.showWait;
+            }
+            if (showOptions.screenshot_grid_loading) {
+
+                self.showLoading = !self.showLoading;
+            }
+        }
+
+        self.showGridClicked = showGridClicked;
+
         function applyFilters() {
             self.appliedFilters.instruments = [];
             if (self.guitarFilter) {
@@ -234,6 +257,13 @@
                     id: 5,
                     name: 'mydate',
                     width_all: 200
+                },
+                {
+                    caption: 'Caption with reaaaaaaaaaaly long name like reeeeediculous',
+                    jsonmap: 'long',
+                    name: 'long',
+                    id: 6,
+                    description: 'This description is long tooo like it is the longest thing I have ever seen.'
                 }
             ],
             data: dataSetBand,
@@ -297,6 +327,12 @@
             },
             hasInlineFilters: true,
             filters: {}
+        };
+
+        self.gridOptions3 = {
+            columns: self.gridOptions2.columns,
+            selectedColumnIds: self.gridOptions2.selectedColumnIds,
+            loading: true
         };
 
         self.paginationOptions = {

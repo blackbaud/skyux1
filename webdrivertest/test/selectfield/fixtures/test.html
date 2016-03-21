@@ -1,0 +1,56 @@
+<div class="container" ng-controller="SelectFieldTestController as selectFieldCtrl">
+  <form name="selectFieldCtrl.selectForm">
+    <div class="row">
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <div id="screenshot-selectfield-multiple" style="padding: 15px;">
+          <label for="mutliSelect" class="control-label">
+            Multi-select mode
+          </label>
+          <bb-select-field
+            ng-model="selectFieldCtrl.selectedItems"
+            bb-select-field-text="Pick some values">
+            <bb-select-field-picker
+            bb-select-field-picker-header="Select multiple values"
+            bb-select-field-picker-template="demo/selectfield/selectfieldpicker.html">
+            </bb-select-field-picker>
+          </bb-select-field>
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <div id="screenshot-selectfield-single" style="padding: 15px;">
+          <label for="singleSelect" class="control-label">
+            Single-select mode
+          </label>
+          <bb-select-field
+            ng-model="selectFieldCtrl.selectedSingleItems"
+            bb-select-field-text="Pick a value"
+            bb-select-field-style="single"
+            required>
+            <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
+            </bb-select-field-picker>
+          </bb-select-field>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<script type="text/ng-template" id="demo/selectfield/selectfieldpicker.html">
+  <bb-checklist
+    bb-checklist-items="selectFieldCtrl.listItems"
+    bb-checklist-include-search="true"
+    bb-checklist-mode="list"
+    bb-checklist-is-loading="selectFieldCtrl.loadingSearch"
+    bb-checklist-filter-local>
+  </bb-checklist>
+</script>
+<script type="text/ng-template" id="demo/selectfield/selectfieldpickersingle.html">
+  <bb-checklist
+    bb-checklist-items="selectFieldCtrl.listItems"
+    bb-checklist-include-search="true"
+    bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+    bb-checklist-mode="list"
+    bb-checklist-select-style="single"
+    bb-checklist-filter-local>
+  </bb-checklist>
+</script>

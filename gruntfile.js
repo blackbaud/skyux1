@@ -22,7 +22,19 @@ module.exports = function (grunt) {
         target = 'local',
         screenshotBasePath = 'screenshots/',
         skipTest,
-        webdriverTestPort = 8000;
+        webdriverTestPort = 8000,
+        webdriverScreenshotRoot;
+
+    function getScreenshotRoot() {
+        var screenshotRoot;
+        if (process.env.TRAVIS === 'true') {
+            screenshotRoot = 'webdriver-screenshots';
+        } else {
+            screenshotRoot = 'webdriver-screenshotslocal';
+        }
+        return screenshotRoot;
+    }
+    webdriverScreenshotRoot = getScreenshotRoot();
 
     libsCss = [
         'bower_components/free-jqgrid/css/ui.jqgrid.css',
@@ -57,6 +69,10 @@ module.exports = function (grunt) {
         '<%= skyTemplatesPath %>templates.js.tmp'
     ]);
 
+    function log(message) {
+        grunt.log.writeln('SKYUX '.blue + message);
+    }
+
     // Logging some TRAVIS environment variables
     (function () {
         var props = [
@@ -75,7 +91,7 @@ module.exports = function (grunt) {
 
         if (process.env.TRAVIS === 'true') {
             props.forEach(function (prop) {
-                grunt.log.writeln(prop + ': ' + process.env[prop] + ' (' + typeof process.env[prop] + ')');
+                log(prop + ': ' + process.env[prop] + ' (' + typeof process.env[prop] + ')');
             });
         }
     }());
@@ -104,43 +120,13 @@ module.exports = function (grunt) {
             }
         }
 
-        grunt.log.writeln('Building for target: ' + target);
+        log('Build environment interpreted as: ' + target);
 
         if (target === 'local') {
             skyDistPath = 'bin/';
             screenshotBasePath += '_local/';
         } else {
             skyDistPath = 'dist/';
-        }
-    }());
-
-    // Temporary.  Deprecating some original tasks.
-    (function () {
-        var task,
-            tasks = {
-                'buildall': 'build',
-                'compilescripts': 'scripts',
-                'compilestyles': 'styles',
-                'generatedocs': 'docs',
-                'watchandtest': 'watch'
-            };
-        function register(deprecated, replacement) {
-            grunt.registerTask(deprecated, function () {
-                grunt.log.writeln('');
-                grunt.log.warn([
-                    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
-                    '`grunt ' + deprecated + '` is deprecated and will be removed in the future.',
-                    'Please use `grunt ' + replacement + '` instead, which I will run now.',
-                    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-                ].join('\n'));
-                grunt.log.writeln('');
-                grunt.task.run(replacement);
-            });
-        }
-        for (task in tasks) {
-            if (tasks.hasOwnProperty(task)) {
-                register(task, tasks[task]);
-            }
         }
     }());
 
@@ -306,10 +292,10 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                configFile: 'karma.conf-local.js'
+                configFile: 'config/karma.conf-local.js'
             },
             internal: {
-                configFile: 'karma.conf-ci.js'
+                configFile: 'config/karma.conf-ci.js'
             },
             unit: {
                 singleRun: true
@@ -358,6 +344,18 @@ module.exports = function (grunt) {
                 }
             }
         },
+        mkdir: {
+            webdriver: {
+                options: {
+                    create: [
+                        webdriverScreenshotRoot + '/MAC_chrome',
+                        webdriverScreenshotRoot + '/MAC_firefox',
+                        webdriverScreenshotRoot + '-diffs/MAC_chrome',
+                        webdriverScreenshotRoot + '-diffs/MAC_firefox'
+                    ]
+                }
+            }
+        },
         webdriver: {
             test: {
                 configFile: './webdrivertest/wdio.conf.js'
@@ -365,7 +363,7 @@ module.exports = function (grunt) {
         },
         exec: {
             browserstackTunnel: {
-                cmd: './run-browserstack-local.sh'
+                cmd: './scripts/browserstack-local-start.sh'
             }
         }
     });
@@ -386,6 +384,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('blackbaud-stache');
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-mkdir');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -397,7 +396,7 @@ module.exports = function (grunt) {
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
     grunt.registerTask('build', ['styles', 'scripts']);
     grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
-    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
+    grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'mkdir:webdriver', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
     grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
 
     grunt.registerTask('scriptsrapid', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap']);
@@ -410,7 +409,7 @@ module.exports = function (grunt) {
 
         grunt.task.run('watchNoConflict');
     });
-    
+
     // Generate our JS config for each supported locale
     grunt.registerTask('l10n', function () {
         var RESOURCES_PREFIX = 'resources_',
@@ -455,7 +454,7 @@ module.exports = function (grunt) {
 
             grunt.file.write(destFile, js);
 
-            grunt.log.writeln('File "' + destFile + '" created.');
+            log('File "' + destFile + '" created.');
         });
     });
 
@@ -481,25 +480,27 @@ module.exports = function (grunt) {
                 destFile = file.replace('.html', '.full.html');
                 grunt.file.write(destFile, html);
 
-                grunt.log.writeln('File "' + destFile + '" created.');
+                log('File "' + destFile + '" created.');
             }
         });
     }
 
     function cleanupWorkingScreenshots(root) {
-        var pattern = root + '/**/*px.png';
+        var pattern = root + '/**/*px.png',
+            regressionPattern = root + '/**/*.regression.png';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            pattern
+            pattern,
+            regressionPattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });
 
-        grunt.log.writeln('Visual test working screenshots deleted.');
+        log('Visual test working screenshots deleted.');
     }
 
     function cleanupTestFixtures(root) {
@@ -515,7 +516,7 @@ module.exports = function (grunt) {
             grunt.file.delete(file);
         });
 
-        grunt.log.writeln('Visual test fixture temp files deleted.');
+        log('Visual test fixture temp files deleted.');
     }
 
     // Generate the files needed for visual tests
@@ -529,14 +530,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('cleanupworkingscreenshots', function () {
-        var screenshotRoot;
-        if (process.env.TRAVIS === 'true') {
-            screenshotRoot = 'webdriver-screenshots';
-        } else {
-            screenshotRoot = 'webdriver-screenshotslocal';
-        }
 
-        cleanupWorkingScreenshots(screenshotRoot);
+        cleanupWorkingScreenshots(webdriverScreenshotRoot);
     });
 
     // Convert our documentation into standard JSDOC format JSON
@@ -685,7 +680,7 @@ module.exports = function (grunt) {
 
         switch (target) {
         case 'local':
-            checkSkipTest('unit');
+            checkSkipTest('unit', false);
             tasks.push('docs');
             break;
         case 'travis-pr-branch':
@@ -698,7 +693,7 @@ module.exports = function (grunt) {
         }
 
         if (target === 'travis-pr-fork') {
-            grunt.log.writeln('Pull requests from forks are ran via blackbaud-sky-savage.');
+            log('Pull requests from forks are ran via blackbaud-sky-savage.');
         } else {
             grunt.task.run(tasks);
         }

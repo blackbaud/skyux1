@@ -35,6 +35,8 @@
             SPECIFIC_RANGE: 19
         };
 
+
+        // Deprecated
         defaultDateRangeOptions = [
             dateRangeTypes.AT_ANY_TIME,
             dateRangeTypes.YESTERDAY,
@@ -57,8 +59,10 @@
             dateRangeTypes.NEXT_FISCAL_YEAR
         ];
 
+        // Deprecated
         specificDateRangeOptions = defaultDateRangeOptions.concat([dateRangeTypes.SPECIFIC_RANGE]);
 
+        // Deprecated
         pastDateRangeOptions = [
             dateRangeTypes.AT_ANY_TIME,
             dateRangeTypes.YESTERDAY,
@@ -157,7 +161,29 @@
             description: bbResources.date_range_picker_filter_description_specific_range
         };
 
-        function getDateRangeTypeCaption(dateRangePickerValue) {
+        function getTypeInfoFromDateRangePickerValue(dateRangePickerValue, getDateRangeTypeInfo) {
+            var info;
+            if (dateRangePickerValue && dateRangePickerValue.dateRangeType) {
+                info = getDateRangeTypeInfo(dateRangePickerValue.dateRangeType);
+            } else {
+                info = getDateRangeTypeInfo(dateRangePickerValue);
+            }
+            return info;
+        }
+
+
+        function getDateRangeTypeCaption(dateRangePickerValue, getDateRangeTypeInfo) {
+            var info;
+
+            if (angular.isFunction(getDateRangeTypeInfo)) {
+
+                info = getTypeInfoFromDateRangePickerValue(dateRangePickerValue, getDateRangeTypeInfo);
+
+                if (info && info.caption) {
+                    return info.caption;
+                }
+            }
+
             if (angular.isNumber(dateRangePickerValue)) {
                 // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
                 dateRangePickerValue = { dateRangeType: dateRangePickerValue };
@@ -171,26 +197,97 @@
                 dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
             }
 
-            return dateRangeMap[dateRangePickerValue.dateRangeType].caption;
+            if (angular.isDefined(dateRangeMap[dateRangePickerValue.dateRangeType])) {
+                return dateRangeMap[dateRangePickerValue.dateRangeType].caption;
+            } else {
+                return '';
+            }
+
         }
 
-        function getDateRangeFilterDescription(dateRangePickerValue) {
-            // If the value is undefiend, then map it to a null object.
-            dateRangePickerValue = dateRangePickerValue || {};
+        function getDateRangeFilterDescription(dateRangePickerValue, getDateRangeTypeInfo) {
+            var info;
+            if (angular.isFunction(getDateRangeTypeInfo)) {
+                info = getTypeInfoFromDateRangePickerValue(dateRangePickerValue, getDateRangeTypeInfo);
+                if (info && info.description) {
+                    return info.description;
+                }
+            }
+
+            if (angular.isNumber(dateRangePickerValue)) {
+                // If the input is the enum value itself, then map it to the object structure we expect before proceeding.
+                dateRangePickerValue = { dateRangeType: dateRangePickerValue };
+            } else {
+                // If the value is undefiend, then map it to a null object.
+                dateRangePickerValue = dateRangePickerValue || {};
+            }
 
             if (!angular.isDefined(dateRangePickerValue.dateRangeType)) {
                 // If the enum value is undefined, then it represents any time.
                 dateRangePickerValue.dateRangeType = dateRangeTypes.AT_ANY_TIME;
             }
+            if (angular.isDefined(dateRangeMap[dateRangePickerValue.dateRangeType])) {
+                return dateRangeMap[dateRangePickerValue.dateRangeType].description;
+            } else {
+                return '';
+            }
+        }
 
-            return dateRangeMap[dateRangePickerValue.dateRangeType].description;
+        function getDateRangeOptions(optionTypes) {
+            var dateRangeOptions = [dateRangeTypes.AT_ANY_TIME];
+            optionTypes = optionTypes || {};
+
+            if (optionTypes.includeDefault) {
+                dateRangeOptions.push(dateRangeTypes.YESTERDAY);
+                dateRangeOptions.push(dateRangeTypes.TODAY);
+                dateRangeOptions.push(dateRangeTypes.TOMORROW);
+                dateRangeOptions.push(dateRangeTypes.LAST_WEEK);
+                dateRangeOptions.push(dateRangeTypes.THIS_WEEK);
+                dateRangeOptions.push(dateRangeTypes.NEXT_WEEK);
+                dateRangeOptions.push(dateRangeTypes.LAST_MONTH);
+                dateRangeOptions.push(dateRangeTypes.THIS_MONTH);
+                dateRangeOptions.push(dateRangeTypes.NEXT_MONTH);
+                dateRangeOptions.push(dateRangeTypes.LAST_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.THIS_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.NEXT_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.LAST_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.NEXT_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.LAST_FISCAL_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_FISCAL_YEAR);
+                dateRangeOptions.push(dateRangeTypes.NEXT_FISCAL_YEAR);
+            }
+
+            if (optionTypes.includePast && !optionTypes.includeDefault) {
+                dateRangeOptions.push(dateRangeTypes.YESTERDAY);
+                dateRangeOptions.push(dateRangeTypes.TODAY);
+                dateRangeOptions.push(dateRangeTypes.LAST_WEEK);
+                dateRangeOptions.push(dateRangeTypes.THIS_WEEK);
+                dateRangeOptions.push(dateRangeTypes.LAST_MONTH);
+                dateRangeOptions.push(dateRangeTypes.THIS_MONTH);
+                dateRangeOptions.push(dateRangeTypes.LAST_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.THIS_QUARTER);
+                dateRangeOptions.push(dateRangeTypes.LAST_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_CALENDAR_YEAR);
+                dateRangeOptions.push(dateRangeTypes.LAST_FISCAL_YEAR);
+                dateRangeOptions.push(dateRangeTypes.THIS_FISCAL_YEAR);
+            }
+
+            if (optionTypes.includeSpecific) {
+                dateRangeOptions.push(dateRangeTypes.SPECIFIC_RANGE);
+            }
+
+            return dateRangeOptions;
         }
 
         return {
-            dateRangeTypes: dateRangeTypes,
+            
             defaultDateRangeOptions: defaultDateRangeOptions,
             pastDateRangeOptions: pastDateRangeOptions,
             specificDateRangeOptions: specificDateRangeOptions,
+
+            dateRangeTypes: dateRangeTypes,
+            getDateRangeOptions: getDateRangeOptions,
             getDateRangeTypeCaption: getDateRangeTypeCaption,
             getDateRangeFilterDescription: getDateRangeFilterDescription
         };
@@ -199,9 +296,6 @@
     bbDateRangePickerFactory.$inject = ['bbResources'];
 
     function bbDateRangePickerDirective(bbDateRangePicker, bbResources) {
-        /// <summary>
-        /// This directive provides a date range filter control
-        /// </summary>
 
         return {
             replace: true,
@@ -220,9 +314,17 @@
             },
             controller: ['$scope', function ($scope) {
                 var vm = this;
-
-                vm.bbDateRangePicker = bbDateRangePicker;
                 vm.resources = bbResources;
+
+                vm.defaultDateRangeOptions = bbDateRangePicker.getDateRangeOptions({includeDefault: true});
+
+                vm.getDateRangeTypeCaption = function (dateRangeTypeValue) {
+                    var infoFunction;
+                    if (vm.bbDateRangePickerOptions && angular.isFunction(vm.bbDateRangePickerOptions.getDateRangeTypeInfo)) {
+                        infoFunction = vm.bbDateRangePickerOptions.getDateRangeTypeInfo;
+                    }
+                    return bbDateRangePicker.getDateRangeTypeCaption(dateRangeTypeValue, infoFunction);
+                };
 
                 $scope.$watch(
                     function () {

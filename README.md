@@ -16,10 +16,10 @@ http://skyux.developer.blackbaud.com/
 You have three options for consuming Sky UX.  The first and easiest is to point your site to our CDN:
 
     <!-- Put this in your page's HEAD element -->
-    <link rel="stylesheet" type="text/css" href="https://sky.blackbaudcdn.net/skyux/1.5.8/css/sky-bundle.css" />
+    <link rel="stylesheet" type="text/css" href="https://sky.blackbaudcdn.net/skyux/1.5.12/css/sky-bundle.css" />
 
     <!-- Put this at the bottom of your page's BODY element -->
-    <script src="https://sky.blackbaudcdn.net/skyux/1.5.8/js/sky-bundle.min.js"></script>
+    <script src="https://sky.blackbaudcdn.net/skyux/1.5.12/js/sky-bundle.min.js"></script>
 
 The second option is to install Sky UX via [Bower](http://bower.io/search/?q=blackbaud-skyux):
 
@@ -50,6 +50,7 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
   - You should include documentation for each Sky UX module you create within your source code. We use JSDoc-style comments at the top of our JavaScript files to generate Markdown documentation. You can generate the Markdown documentation by running the command `grunt docs` from the command line.
   - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watch` task will generate documentation which you can find under `demo/build`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
   - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watch` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
+  - We've also written a code analysis tool for validating SKYUX components.  Visit [grunt-skylint](https://github.com/blackbaud/grunt-skylint) to learn more.
 
 ### Visual regression tests
 

@@ -57,7 +57,6 @@ describe('Tile', function () {
                 };
             });
         }
-
         function initializeTile($scope, tileId) {
             var el = $compile(
                 '<bb-tile bb-tile-collapsed="tileCollapsed">a</bb-tile>'
@@ -115,10 +114,9 @@ describe('Tile', function () {
             $scope.tileHeader = 'Test header';
 
             $scope.$digest();
-
             headerEl = getHeaderEl(el);
 
-            expect(el).toHaveClass('collapsible');
+            expect(el).not.toHaveClass('collapsed');
             expect($scope.tileCollapsed).toBeFalsy();
 
             headerEl.click();
@@ -128,7 +126,7 @@ describe('Tile', function () {
 
             headerEl.click();
 
-            expect(el).toHaveClass('collapsible');
+            expect(el).not.toHaveClass('collapsed');
             expect($scope.tileCollapsed).toBe(false);
         });
 
@@ -145,20 +143,20 @@ describe('Tile', function () {
 
             elScope = el.isolateScope();
 
-            expect(el).toHaveClass('collapsible');
-            expect(elScope.isCollapsed).toBeFalsy();
+            expect(el).not.toHaveClass('collapsed');
+            expect(elScope.bbTile.isCollapsed).toBeFalsy();
 
             $scope.tileCollapsed = true;
             $scope.$digest();
 
             expect(el).toHaveClass('collapsed');
-            expect(elScope.isCollapsed).toBe(true);
+            expect(elScope.bbTile.isCollapsed).toBe(true);
 
             $scope.tileCollapsed = false;
             $scope.$digest();
 
-            expect(el).toHaveClass('collapsible');
-            expect(elScope.isCollapsed).toBe(false);
+            expect(el).not.toHaveClass('collapsed');
+            expect(elScope.bbTile.isCollapsed).toBe(false);
         });
 
         it('should update the tile state the tile dashboard is initialized', function () {
@@ -169,7 +167,7 @@ describe('Tile', function () {
             el = initializeTile($scope, 'Tile2');
             elScope = el.isolateScope();
 
-            expect(elScope.tileId).toBe('Tile2');
+            expect(elScope.bbTile.tileId).toBe('Tile2');
         });
 
         it('should notify the tile dashboard when the tile is collapsed', function () {
@@ -234,16 +232,16 @@ describe('Tile', function () {
                 tiles: testTiles
             });
 
-            expect(elScope.smallTileDisplayMode).toBe(true);
-            expect(elScope.isCollapsed).toBe(true);
+            expect(elScope.bbTile.smallTileDisplayMode).toBe(true);
+            expect(elScope.bbTile.isCollapsed).toBe(true);
 
             $rootScope.$broadcast('tileDisplayModeChanged', {
                 smallTileDisplayMode: false,
                 tiles: testTiles
             });
 
-            expect(elScope.smallTileDisplayMode).toBe(false);
-            expect(elScope.isCollapsed).toBe(false);
+            expect(elScope.bbTile.smallTileDisplayMode).toBe(false);
+            expect(elScope.bbTile.isCollapsed).toBe(false);
 
             // Missing tile should just return whatever the small tile display mode is.
             $rootScope.$broadcast('tileDisplayModeChanged', {
@@ -251,8 +249,8 @@ describe('Tile', function () {
                 tiles: []
             });
 
-            expect(elScope.smallTileDisplayMode).toBe(true);
-            expect(elScope.isCollapsed).toBe(true);
+            expect(elScope.bbTile.smallTileDisplayMode).toBe(true);
+            expect(elScope.bbTile.isCollapsed).toBe(true);
         });
 
         it('should not update tile state when display mode changed but the tile have not been initialized by the tile dashboard', function () {
@@ -274,7 +272,7 @@ describe('Tile', function () {
                 tiles: testTiles
             });
 
-            expect(elScope.isCollapsed).toBe(false);
+            expect(elScope.bbTile.isCollapsed).toBe(false);
         });
 
         it('should not update tile state when display mode changed but the tile have not been initialized by the tile dashboard', function () {
@@ -297,7 +295,7 @@ describe('Tile', function () {
 
             $timeout.flush();
 
-            expect(elScope.smallTileDisplayMode).toBe(true);
+            expect(elScope.bbTile.smallTileDisplayMode).toBe(true);
 
             // This should have no effect if the tile has already been initialized.
             $rootScope.$broadcast('tilesInitialized', {
@@ -305,7 +303,7 @@ describe('Tile', function () {
             });
             $timeout.flush();
 
-            expect(elScope.smallTileDisplayMode).toBe(true);
+            expect(elScope.bbTile.smallTileDisplayMode).toBe(true);
         });
 
         describe('settings button', function () {

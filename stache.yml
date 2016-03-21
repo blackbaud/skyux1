@@ -4,7 +4,8 @@ content: <%= stache.config.demo %>content/
 static: <%= stache.config.demo %>static/
 includes: <%= stache.config.demo %>includes/
 data: <%= stache.config.demo %>data/
-
+paths:
+    custom: <%= stache.config.demo %>
 markdown: false
 showOmnibar: false
 showHeader: false
@@ -15,6 +16,7 @@ partial_sky_js: <%= stache.config.includes %>partial-sky-js.hbs
 modules:
   - stache
   - skyuxDemo
+  - ngMessages
 files:
   js:
     - /js/KitchenSink.js

@@ -152,4 +152,10 @@ select.ng-invalid.submitted,
   width: 100%;
 }
 
+.control-label.required:after {
+    content: "*";
+    color: $bb-error-color;
+    padding-left: 5px;
+}
+
 /* FORMS END */

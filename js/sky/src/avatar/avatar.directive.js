@@ -3,7 +3,7 @@
 (function ($) {
     'use strict';
 
-    function bbAvatar($window, bbPalette) {
+    function bbAvatar($filter, $templateCache, $window, bbAvatarConfig, bbErrorModal, bbFormat, bbPalette, bbResources) {
         function link(scope, el, attrs, vm) {
             var blobUrl,
                 templateLoaded;
@@ -121,14 +121,39 @@
                 }
             }
 
+            function handleInvalidFileDrop(rejectedFile) {
+                var errorDescription,
+                    errorTitle,
+                    maxFileSizeFormatted;
+
+                if (rejectedFile.type.toUpperCase().indexOf('IMAGE/') !== 0) {
+                    errorDescription = bbResources.avatar_error_not_image_description;
+                    errorTitle = bbResources.avatar_error_not_image_title;
+                } else {
+                    maxFileSizeFormatted = $filter('bbFileSize')(bbAvatarConfig.maxFileSize);
+
+                    errorDescription = bbFormat.formatText(bbResources.avatar_error_too_large_description, maxFileSizeFormatted);
+                    errorTitle = bbResources.avatar_error_too_large_title;
+                }
+
+                bbErrorModal.open({
+                    errorDescription: errorDescription,
+                    errorTitle: errorTitle
+                });
+            }
+
             vm.onTemplateLoad = function () {
                 templateLoaded = true;
             };
 
-            vm.photoDrop = function (files) {
-                vm.bbAvatarChange({
-                    file: files[0]
-                });
+            vm.photoDrop = function (files, rejectedFiles) {
+                if (angular.isArray(rejectedFiles) && rejectedFiles.length > 0) {
+                    handleInvalidFileDrop(rejectedFiles[0]);
+                } else {
+                    vm.bbAvatarChange({
+                        file: files[0]
+                    });
+                }
             };
 
             vm.showInitials = function () {
@@ -154,6 +179,18 @@
             scope.$on('$destroy', function () {
                 revokeBlobUrl();
             });
+
+            vm.maxFileSize = bbAvatarConfig.maxFileSize;
+        }
+
+        function template(el) {
+            var dropEl;
+
+            el.html($templateCache.get('sky/templates/avatar/avatar.directive.html'));
+
+            dropEl = el.find('.bb-avatar-file-drop');
+
+            dropEl.attr('bb-file-drop-max-size', bbAvatarConfig.maxFileSize);
         }
 
         return {
@@ -166,12 +203,12 @@
             controller: angular.noop,
             controllerAs: 'bbAvatar',
             link: link,
-            templateUrl: 'sky/templates/avatar/avatar.directive.html'
+            template: template
         };
     }
 
-    bbAvatar.$inject = ['$window', 'bbPalette'];
+    bbAvatar.$inject = ['$filter', '$templateCache', '$window', 'bbAvatarConfig', 'bbErrorModal', 'bbFormat', 'bbPalette', 'bbResources'];
 
-    angular.module('sky.avatar.directive', ['sky.palette'])
+    angular.module('sky.avatar.directive', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
         .directive('bbAvatar', bbAvatar);
 }(jQuery));

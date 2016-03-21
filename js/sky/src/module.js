@@ -35,6 +35,7 @@
         'sky.resources',
         'sky.scrollintoview',
         'sky.searchfield',
+        'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
         'sky.tabsref',

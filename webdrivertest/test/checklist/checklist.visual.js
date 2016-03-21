@@ -1,28 +1,58 @@
-/*global describe, it, browser, beforeEach, expect, require */
+
+/*global describe, it, browser, require */
 
 describe('checklist', function () {
     'use strict';
 
-    var options = {};
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+    it('match the baseline screenshot for the checklist in grid mode', function (done) {
+        var browserResult,
+            common = require('../common');
+
+        browserResult = browser
+            .url('/checklist/fixtures/test.full.html')
+            .click('button.show-grid');
+
+        common.compareScreenshot({
+            browserResult: browserResult,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'checklist_grid',
+            selector: '#screenshot-checklist-grid',
+            done: done
+        });
     });
 
+    it('match the baseline screenshot for the checklist in list mode', function (done) {
+        var browserResult,
+            common = require('../common');
 
-    it('should take checklist screenshots', function (done) {
-        var screenshotName = 'checklist',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
+        browserResult = browser
             .url('/checklist/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-checklist'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .click('button.show-list');
+
+        common.compareScreenshot({
+            browserResult: browserResult,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'checklist_list',
+            selector: '#screenshot-checklist-list',
+            done: done
+        });
+    });
+
+    it('match the baseline screenshot for the checklist in single select mode', function (done) {
+        var browserResult,
+            common = require('../common');
+
+        browserResult = browser
+            .url('/checklist/fixtures/test.full.html')
+            .click('button.show-single');
+
+        common.compareScreenshot({
+            browserResult: browserResult,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'checklist_single',
+            selector: '#screenshot-checklist-single',
+            done: done
+        });
     });
 });

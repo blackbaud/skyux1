@@ -8,6 +8,10 @@ The avatar directive displays an image to identify a record.
 
  The directive also includes an option to let users change the image. To select a different image, users can click the image or drag another image on top of it. In addition, when images are missing, the avatar directive can display the initials of a name that you provide.
 
+ ### bbAvatarConfig Settings ###
+
+ - `maxFileSize` &mdash; The maximum allowed size of a file to be uploaded in bytes.  Default is 500000.
+
  ### Avatar Settings
     - `bb-avatar` &mdash; Displays an image to identify a record.
         - `bb-avatar-src` &mdash; Provides a reference to a URL or `File` object that represents the avatar.

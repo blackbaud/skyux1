@@ -5,14 +5,23 @@ describe('Avatar directive', function () {
     'use strict';
 
     var $compile,
+        $filter,
         $rootScope,
+        bbAvatarConfig,
+        bbFormat,
+        bbResources,
         defaultCanvasSize = 100,
+        fakeErrorModal,
         fakeWindow,
         imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAAFElEQVR42gEJAPb/AP//////////I+UH+Rtap+gAAAAASUVORK5CYII=';
 
-    beforeEach(module('ngMock'));
-    beforeEach(module('sky.avatar'));
-    beforeEach(module('sky.templates'));
+    beforeEach(module(
+        'ngMock',
+        'sky.avatar',
+        'sky.fileattachments.filesize',
+        'sky.format',
+        'sky.templates'
+    ));
 
     beforeEach(module(function ($provide) {
         fakeWindow = {
@@ -26,11 +35,21 @@ describe('Avatar directive', function () {
         };
 
         $provide.value('$window', fakeWindow);
+
+        fakeErrorModal = {
+            open: function () {}
+        };
+
+        $provide.value('bbErrorModal', fakeErrorModal);
     }));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
+    beforeEach(inject(function (_$compile_, _$filter_, _$rootScope_, _bbAvatarConfig_, _bbFormat_, _bbResources_) {
         $compile = _$compile_;
+        $filter = _$filter_;
         $rootScope = _$rootScope_;
+        bbAvatarConfig = _bbAvatarConfig_;
+        bbFormat = _bbFormat_;
+        bbResources = _bbResources_;
     }));
 
     function getPhotoEl(el) {
@@ -194,6 +213,58 @@ describe('Avatar directive', function () {
         el.isolateScope().bbAvatar.photoDrop([droppedFile]);
 
         expect(photoChangeSpy).toHaveBeenCalledWith(droppedFile);
+    });
+
+    function validateInvalidFileError(droppedFile, expectedErrorTitle, expectedErrorDescription) {
+        var el,
+            fakeErrorOpenSpy,
+            $scope = $rootScope.$new();
+
+        el = $compile('<bb-avatar bb-avatar-change="photoChange(file)"></bb-avatar>')($scope);
+
+        $scope.$digest();
+
+        fakeErrorOpenSpy = spyOn(fakeErrorModal, 'open');
+
+        el.isolateScope().bbAvatar.photoDrop([], [droppedFile]);
+
+        expect(fakeErrorOpenSpy).toHaveBeenCalledWith({
+            errorDescription: expectedErrorDescription,
+            errorTitle: expectedErrorTitle
+        });
+    }
+
+    it('should display an error if the user chooses a file that is not an image', function () {
+        var droppedFile;
+
+        droppedFile = new fakeWindow.File();
+        droppedFile.type = 'text/plain';
+
+        validateInvalidFileError(
+            droppedFile,
+            bbResources.avatar_error_not_image_title,
+            bbResources.avatar_error_not_image_description
+        );
+    });
+
+    it('should display an error if the user chooses an image whose file size is too large', function () {
+        var droppedFile,
+            errorDescription,
+            maxFileSizeFormatted;
+
+        droppedFile = new fakeWindow.File();
+        droppedFile.type = 'image/png';
+        droppedFile.size = bbAvatarConfig.maxFileSize + 1;
+
+        maxFileSizeFormatted = $filter('bbFileSize')(bbAvatarConfig.maxFileSize);
+
+        errorDescription = bbFormat.formatText(bbResources.avatar_error_too_large_description, maxFileSizeFormatted);
+
+        validateInvalidFileError(
+            droppedFile,
+            bbResources.avatar_error_too_large_title,
+            errorDescription
+        );
     });
 
     function createFileEl($scope) {

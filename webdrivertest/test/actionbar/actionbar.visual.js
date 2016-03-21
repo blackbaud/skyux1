@@ -1,30 +1,23 @@
-/* global describe, it, browser, beforeEach,  expect, require */
+/* global describe, it, browser, require */
 
 
 describe('actionbar', function () {
     'use strict';
 
-    var options = {};
+    it('should match the baseline actionbar screenshot', function (done) {
+        var browserResult,
+            common = require('../common');
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
+        browserResult = browser
+            .url('/actionbar/fixtures/test.full.html');
 
-    it('should take an actionbar screenshot', function (done) {
-        var screenshotName = 'actionbar',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/actionbar/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-actionbar',
-                    screenWidth: [480, 1280]
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
-            .call(done);
+        common.compareScreenshot({
+            browserResult: browserResult,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'actionbar',
+            selector: '#screenshot-actionbar',
+            done: done,
+            screenWidth: [480, 1280]
+        });
     });
 });
