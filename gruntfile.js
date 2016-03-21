@@ -365,6 +365,18 @@ module.exports = function (grunt) {
             browserstackTunnel: {
                 cmd: './scripts/browserstack-local-start.sh'
             }
+        },
+        sri: {
+            dist: {
+                options: {
+                    algorithms: ['sha384'],
+                    dest: '<%= skyDistPath %>sri.json'
+                },
+                src: [
+                    '<%= skyDistPath %>/**/*.js',
+                    '<%= skyDistPath %>/**/*.css'
+                ]
+            }
         }
     });
 
@@ -385,6 +397,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-mkdir');
+    grunt.loadNpmTasks('grunt-sri');
 
     // We like clean task names too, rename a few of the defaults.
     grunt.task.renameTask('build', 'stache');
@@ -394,7 +407,7 @@ module.exports = function (grunt) {
     grunt.registerTask('docs', ['prepareDocs', 'status:demo/build', 'stache', 'copy:demo']);
     grunt.registerTask('scripts', ['l10n', 'buildpaletteservice', 'html2js', 'concat_sourcemap', 'uglify']);
     grunt.registerTask('styles', ['sass:dist', 'sass:palette', 'cssmin:dist', 'skybundlecss', 'copy:dist']);
-    grunt.registerTask('build', ['styles', 'scripts']);
+    grunt.registerTask('build', ['styles', 'scripts', 'sri']);
     grunt.registerTask('watch', ['build', 'docs', 'karma:watch:start', 'watchNoConflict']);
     grunt.registerTask('visualtest', ['cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots', 'buildwebdrivertestfixtures', 'connect:webdrivertest', 'mkdir:webdriver', 'webdriver:test', 'cleanupwebdrivertestfixtures', 'cleanupworkingscreenshots']);
     grunt.registerTask('browserstackTunnel', ['exec:browserstackTunnel']);
