@@ -1,6 +1,6 @@
 ---
 name: Reorder
-icon: arrows-v
+icon: arrows
 summary: The reorder component provides an interface for allowing a user to position a set of items.
 ---
 

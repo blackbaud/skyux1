@@ -1,6 +1,5 @@
 
 .bb-reorder-container {
-  overflow:hidden;
   position:relative
 }
 
@@ -13,7 +12,6 @@
   margin-left: $margin;
   margin-right: $margin;
   flex-grow: 1;
-  min-width: 0; // needed so flex will force shrink when ellipsis is present
 }
 
 .bb-reorder-list-col-top {
@@ -24,7 +22,7 @@
 }
 
 .bb-reorder-list-row {
-    background-color: transparent;
+    background-color: white;
     border: none;
     border-bottom: dotted 1px $gray-lighter;
     cursor: pointer;
@@ -34,7 +32,7 @@
     padding: $padding;
     outline-offset: -5px;
     width: 100%;
-    height: 50px;
+    min-height: 50px;
     cursor: move;
     cursor: -webkit-grab;
     cursor: -moz-grab;
@@ -45,27 +43,24 @@
 }
 
 .bb-reorder-list-row-placeholder {
-  background-color: $gray-lighter;
+  background-color: $body-bg;
 }
 
 .bb-reorder-list-sorting-item {
   box-shadow: 5px 5px 5px #888888;
+  border: 1px solid $gray-light;
+}
+
+.bb-reorder-animate-element {
   background-color: white;
+  position: absolute;
 }
 
 .bb-reorder-list-title {
     font-weight: 700;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    word-wrap: break-word;
 }
 
 .bb-reorder-list-description {
-  -ms-text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+    word-wrap: break-word;
 }

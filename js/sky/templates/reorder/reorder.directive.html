@@ -1,16 +1,16 @@
 <div class="bb-reorder-container">
- <div ng-repeat="item in bbReorder.bbReorderItems track by $index" class="bb-reorder-list-row" data-index={{$index}}>
+ <div ng-repeat="item in bbReorder.bbReorderItems track by $index" class="bb-reorder-list-row" data-index="{{$index}}">
    <div class="bb-reorder-list-col bb-reorder-list-col-icon">
-     <i class="fa fa-arrows-v"></i>
+     <i class="fa fa-arrows"></i>
    </div>
    <div class="bb-reorder-list-col bb-reorder-list-col-content">
      <div class="bb-reorder-list-title">{{item.title}}</div>
      <div class="bb-reorder-list-description">{{item.description}}</div>
    </div>
-   <div ng-show="!$first && !bbReorder.sorting" ng-click="bbReorder.pushToTop($index)" class="bb-reorder-list-col bb-reorder-list-col-top">
+   <button type="button" ng-show="!$first &amp;&amp; !bbReorder.sorting" ng-click="bbReorder.pushToTop($index)" class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link">
      <i class="fa fa-arrow-circle-up"></i>
      <span>{{'reorder_top' | bbResources}}</span>
-   </div>
+   </button>
    <div ng-show="bbReorder.sorting" class="bb-reorder-list-col">
      <span class="bb-reorder-list-sorting-number"></span>
    </div>
