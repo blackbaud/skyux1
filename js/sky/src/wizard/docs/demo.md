@@ -4,20 +4,19 @@ icon: magic
 summary: The wizard adjusts a modal form to guide users through a set of pre-defined steps in a particular order.
 ---
 
-Wizards are used on a modal form when the user needs to perform a set of pre-defined steps in a particular order. The Sky UX Wizard works in conjunction with the [Angular UI Bootstrap](http://angular-ui.github.io/bootstrap/) tabs component.  Placing the `bb-wizard` directive on a UI Bootstrap `tabset` element will cause the tabs to look and behave like a Sky wizard.
+Wizards are used on a modal form when the user needs to perform a set of pre-defined steps in a particular order. The Sky UX Wizard works in conjunction with the [Angular UI Bootstrap](http://angular-ui.github.io/bootstrap/) tabs component.  Placing the `bb-wizard` directive on a UI Bootstrap `uib-tabset` element will cause the tabs to look and behave like a Sky wizard.
 
-Sky Wizards also have the concept of a completed step which is denoted by the `bb-wizard-step-complete` directive. When present on a `tab` and bound to a truthy value, the step's tab will be displayed as completed.
+Sky Wizards also have the concept of a completed step which is denoted by the `bb-wizard-step-complete` directive. When present on a `uib-tab` and bound to a truthy value, the step's tab will be displayed as completed.
 
 Finally there is a `bbWizardNavigator` service that provides some convenience methods for navigating through the wizard's steps. This will typically be used by wiring the navigator up to your modal's previous and next buttons.
 
 The `bbWizardNavigator` service has an `init()` function that takes an `options` object with the following properties:
-
-- `steps` An array of steps. Each step should have the following properties:
-
-
- - `active` Indicates whether the step is the currently active step. This should be the same property that is bound to the UI Bootstrap `tab` directive's `active` property.
- - `disabled()` A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `tab` directive's `disable` property.
- - `complete()` A function that returns a boolean indicating whether the tab is complete. This should be the same function that is bound to the tab's `bb-wizard-step-complete` property.
+- `active` &mdash; The index of the active tab, this should be the same property that is bound the the UI Bootstrap `uib-tabset` directive's `active` property.
+- `steps` &mdash; An array of steps. Each step should have the following properties:
+   - `active` &mdash; *(Deprecated.)* Use the UI Bootstrap `uib-tabset` directive's `active` property instead <s> Indicates whether the step is the currently active step. This should be the same property that is bound to the UI Bootstrap `uib-tab` directive's `active` property.</s>
+   - `disabled()` &mdash; A function that returns a boolean indicating whether the tab is disabled. This should be the same function that is bound to the UI Bootstrap `uib-tab` directive's `disable` property.
+   - `complete()` &mdash; A function that returns a boolean indicating whether the tab is complete. This should be the same function that is bound to the tab's `bb-wizard-step-complete` property.
+- `finish()` &mdash; A function that will execute when the user clicks finish on the last step of the wizard.
 
 The `bbWizardNavigator` also exposes the following methods:
 

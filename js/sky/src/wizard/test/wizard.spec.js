@@ -57,293 +57,443 @@ describe('Wizard', function () {
         beforeEach(inject(function (_bbWizardNavigator_) {
             bbWizardNavigator = _bbWizardNavigator_;
 
-            /*jslint white: true */
-            $compile(
-                '<uib-tabset bb-wizard active="options.active">' +
-                    '<uib-tab ng-repeat="step in steps"></uib-tab>' +
-                '</uib-tabset>')($scope);
-            /*jslint white: false */
+
         }));
 
-        it('should go to next step', function () {
-            var steps,
-                wizardNav;
+        describe('using tabset level active', function () {
 
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2'
-                }
-            ];
-
-            $scope.options = {
-                active: 0,
-                steps: steps
-            };
-
-            wizardNav = bbWizardNavigator.init($scope.options);
-
-            $scope.$digest();
-
-            $scope.steps = steps;
-            wizardNav.goToNext();
-            $scope.$digest();
-
-            expect($scope.options.active).toBe(1);
-        });
-
-        it('should go to next step with finish function', function () {
-            var finished,
-                steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2'
-                }
-            ];
-
-            wizardNav = bbWizardNavigator.init({
-                steps: steps,
-                finish: function () {
-                    finished = true;
-                }
+            beforeEach(function () {
+                /*jslint white: true */
+                $compile(
+                    '<uib-tabset bb-wizard active="options.active">' +
+                        '<uib-tab ng-repeat="step in options.steps"></uib-tab>' +
+                    '</uib-tabset>')($scope);
+                /*jslint white: false */
             });
 
-            $scope.steps = steps;
-            $scope.$digest();
+            it('should go to next step', function () {
+                var steps,
+                    wizardNav;
 
-            wizardNav.goToNext();
-            $scope.$digest();
-
-            expect(finished).toBe(true);
-        });
-
-        it('should stay on last step if no finish is specified', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2'
-                }
-            ];
-
-            $scope.options = {
-                steps: steps,
-                active: 1
-            };
-
-            wizardNav = bbWizardNavigator.init($scope.options);
-
-            $scope.steps = steps;
-            $scope.$digest();
-
-            wizardNav.goToNext();
-            $scope.$digest();
-
-            expect($scope.options.active).toBe(1);
-        });
-
-        it('should go to previous step', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2'
-                }
-            ];
-
-            $scope.options = {
-                steps: steps,
-                active: 1
-            };
-
-            wizardNav = bbWizardNavigator.init($scope.options);
-
-            $scope.steps = steps;
-            $scope.$digest();
-
-            wizardNav.goToPrevious();
-            $scope.$digest();
-
-            expect($scope.options.active).toBe(0);
-        });
-
-        it('should indicate that previous is disabled when the previous step is disabled', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1',
-                    disabled: function () {
-                        return true;
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
                     }
-                },
-                {
-                    heading: '2'
-                }
-            ];
+                ];
 
-            $scope.options = {
-                steps: steps,
-                active: 1
-            };
+                $scope.options = {
+                    active: 0,
+                    steps: steps
+                };
 
-            wizardNav = bbWizardNavigator.init($scope.options);
+                wizardNav = bbWizardNavigator.init($scope.options);
 
-            expect(wizardNav.previousDisabled()).toBe(true);
-        });
+                $scope.$digest();
 
-        it('should stay on current step if there is no previous step', function () {
-            var steps,
-                wizardNav;
+                $scope.steps = steps;
+                wizardNav.goToNext();
+                $scope.$digest();
 
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2'
-                }
-            ];
-
-            $scope.options = {
-                active: 0,
-                steps: steps
-            };
-
-            wizardNav = bbWizardNavigator.init($scope.options);
-
-            $scope.steps = steps;
-            $scope.$digest();
-
-            wizardNav.goToPrevious();
-            $scope.$digest();
-
-            expect($scope.options.active).toBe(0);
-
-        });
-
-        it('should return expected previous text', function () {
-            var wizardNav;
-
-            wizardNav = bbWizardNavigator.init();
-            expect(wizardNav.previousText()).toBe(bbResources.wizard_navigator_previous);
-        });
-
-        it('should change "next" text to "finish" text when the last step is active', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2'
-                }
-            ];
-
-            $scope.options = {
-                steps: steps,
-                active: 0
-            };
-
-            wizardNav = bbWizardNavigator.init($scope.options);
-
-            $scope.steps = steps;
-            $scope.$digest();
-
-            expect(wizardNav.nextText()).toBe(bbResources.wizard_navigator_next);
-
-            wizardNav.goToNext();
-            $scope.$digest();
-
-            expect(wizardNav.nextText()).toBe(bbResources.wizard_navigator_finish);
-            expect(wizardNav.nextDisabled()).toBe(false);
-        });
-
-        it('should indicate that previous is disabled when no previous step exists', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                }
-            ];
-
-            $scope.options = {
-                steps: steps,
-                active: 0
-            };
-
-            wizardNav = bbWizardNavigator.init($scope.options);
-
-            expect(wizardNav.previousDisabled()).toBe(true);
-        });
-
-        it('should indicate that next is not disabled when the next step is not disabled', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2',
-                    disabled: function () {
-                        return false;
-                    }
-                }
-            ];
-
-            wizardNav = bbWizardNavigator.init({
-                steps: steps
+                expect($scope.options.active).toBe(1);
             });
 
-            expect(wizardNav.nextDisabled()).toBe(false);
-        });
+            it('should go to next step with finish function', function () {
+                var finished,
+                    steps,
+                    wizardNav;
 
-        it('should indicate that next is disabled when the next step is disabled', function () {
-            var steps,
-                wizardNav;
-
-            steps = [
-                {
-                    heading: '1'
-                },
-                {
-                    heading: '2',
-                    disabled: function () {
-                        return true;
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
                     }
-                }
-            ];
+                ];
 
-            $scope.options = {
-                steps: steps,
-                active: 0
-            };
+                $scope.options = {
+                    steps: steps,
+                    finish: function () {
+                        finished = true;
+                    },
+                    active: 1
+                };
 
-            wizardNav = bbWizardNavigator.init($scope.options);
+                wizardNav = bbWizardNavigator.init($scope.options);
 
-            expect(wizardNav.nextDisabled()).toBe(true);
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToNext();
+                $scope.$digest();
+
+                expect(finished).toBe(true);
+            });
+
+            it('should stay on last step if no finish is specified', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 1
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToNext();
+                $scope.$digest();
+
+                expect($scope.options.active).toBe(1);
+            });
+
+            it('should go to previous step', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 1
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToPrevious();
+                $scope.$digest();
+
+                expect($scope.options.active).toBe(0);
+            });
+
+            it('should indicate that previous is disabled when the previous step is disabled', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1',
+                        disabled: function () {
+                            return true;
+                        }
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 1
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                expect(wizardNav.previousDisabled()).toBe(true);
+            });
+
+            it('should stay on current step if there is no previous step', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    active: 0,
+                    steps: steps
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToPrevious();
+                $scope.$digest();
+
+                expect($scope.options.active).toBe(0);
+
+            });
+
+            it('should return expected previous text', function () {
+                var wizardNav;
+
+                wizardNav = bbWizardNavigator.init();
+                expect(wizardNav.previousText()).toBe(bbResources.wizard_navigator_previous);
+            });
+
+            it('should change "next" text to "finish" text when the last step is active', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 0
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                expect(wizardNav.nextText()).toBe(bbResources.wizard_navigator_next);
+
+                wizardNav.goToNext();
+                $scope.$digest();
+
+                expect(wizardNav.nextText()).toBe(bbResources.wizard_navigator_finish);
+                expect(wizardNav.nextDisabled()).toBe(false);
+            });
+
+            it('should indicate that previous is disabled when no previous step exists', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 0
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                expect(wizardNav.previousDisabled()).toBe(true);
+            });
+
+            it('should indicate that next is not disabled when the next step is not disabled', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2',
+                        disabled: function () {
+                            return false;
+                        }
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 0
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                expect(wizardNav.nextDisabled()).toBe(false);
+            });
+
+            it('should indicate that next is disabled when the next step is disabled', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2',
+                        disabled: function () {
+                            return true;
+                        }
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 0
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                expect(wizardNav.nextDisabled()).toBe(true);
+            });
         });
+
+        describe('using tab level active', function () {
+
+            beforeEach(function () {
+                /*jslint white: true */
+                $compile(
+                    '<uib-tabset bb-wizard>' +
+                        '<uib-tab ng-repeat="step in options.steps" active="step.active"></uib-tab>' +
+                    '</uib-tabset>')($scope);
+                /*jslint white: false */
+            });
+
+            it('should go to the next step', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1',
+                        active: true
+                    },
+                    {
+                        heading: '2',
+                        active: false
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.$digest();
+
+                $scope.steps = steps;
+                wizardNav.goToNext();
+                $scope.$digest();
+
+
+                expect($scope.options.steps[1].active).toBe(true);
+                expect($scope.options.steps[0].active).toBe(false);
+            });
+
+            it('should stay on last step if no finish is specified', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+
+                        heading: '1'
+                    },
+                    {
+                        active: true,
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToNext();
+                $scope.$digest();
+
+                expect($scope.options.steps[1].active).toBe(true);
+                expect($scope.options.steps[0].active).toBe(false);
+            });
+
+            it('should go to previous step', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        active: true,
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToPrevious();
+                $scope.$digest();
+
+                expect($scope.options.steps[0].active).toBe(true);
+                expect($scope.options.steps[1].active).toBe(false);
+            });
+
+            it('should stay on current step if there is no previous step', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        active: true,
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                $scope.steps = steps;
+                $scope.$digest();
+
+                wizardNav.goToPrevious();
+                $scope.$digest();
+
+                expect($scope.options.steps[0].active).toBe(true);
+
+            });
+        });
+
+
     });
 });
