@@ -142,10 +142,10 @@
 
                         },
                         previousDisabled: function () {
-                            return !getPreviousStep();
+                            return getPreviousStep() === null;
                         },
                         nextDisabled: function () {
-                            return !getNextStep() && !lastStepIsActive();
+                            return (getNextStep() === null) && !lastStepIsActive();
                         }
                     };
                 }

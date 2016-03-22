@@ -217,6 +217,29 @@ describe('Wizard', function () {
                 expect(wizardNav.previousDisabled()).toBe(true);
             });
 
+            it('should indicate that previous is enabled when on the second step', function () {
+                var steps,
+                    wizardNav;
+
+                steps = [
+                    {
+                        heading: '1'
+                    },
+                    {
+                        heading: '2'
+                    }
+                ];
+
+                $scope.options = {
+                    steps: steps,
+                    active: 1
+                };
+
+                wizardNav = bbWizardNavigator.init($scope.options);
+
+                expect(wizardNav.previousDisabled()).toBe(false);
+            });
+
             it('should stay on current step if there is no previous step', function () {
                 var steps,
                     wizardNav;
