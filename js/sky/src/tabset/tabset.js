@@ -259,7 +259,7 @@
 
                     activeModel = $parse(attr.active);
 
-                    
+
                     $scope.$watch(function () {
                         return activeModel($scope);
                     }, function (newValue) {
@@ -275,8 +275,6 @@
                             activeModel.assign($scope, newValue);
                         }
                     });
-
-
                 }
             }
         };

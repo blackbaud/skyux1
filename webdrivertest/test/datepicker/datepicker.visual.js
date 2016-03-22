@@ -13,7 +13,7 @@ describe('datepicker', function () {
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_closed',
-            selector: '#screenshot-datepicker',
+            selector: '#screenshot-datepickers',
             done: done
         });
 
@@ -31,7 +31,7 @@ describe('datepicker', function () {
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_open',
-            selector: '#screenshot-datepickers',
+            selector: '#screenshot-datepicker',
             done: done
         });
 
