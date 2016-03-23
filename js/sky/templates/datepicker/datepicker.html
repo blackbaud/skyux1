@@ -4,6 +4,7 @@
                 type="text"
                 class="form-control"
                 ng-model="locals.date"
+                ng-model-options="{ allowInvalid: true }"
                 is-open="locals.opened"
                 datepicker-options="locals.dateOptions"
                 uib-datepicker-popup="{{format}}"

@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-6 col-xs-12">
                 <label>Date field - custom formatting</label>
-                <bb-datepicker bb-datepicker-name="date1" ng-model="datepickerCtrl.date1" ng-required="true" bb-custom-validation="datepickerCtrl.customFormat"></bb-datepicker>
+                <bb-datepicker debug bb-datepicker-name="date1" ng-required="true" ng-model="datepickerCtrl.date1" bb-custom-validation="datepickerCtrl.customFormat"></bb-datepicker>
                 <label class="error" ng-show="datepickerCtrl.testform.date1.$error.dateFormat">{{datepickerCtrl.testform.date1.invalidFormatMessage}}</label>
                 <label class="error" ng-show="datepickerCtrl.testform.date1.$error.required && datepickerCtrl.testform.date1.$touched">Date is required</label>
             </div>

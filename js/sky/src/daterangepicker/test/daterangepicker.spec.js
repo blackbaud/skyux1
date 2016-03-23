@@ -166,7 +166,6 @@ describe('Date range picker', function () {
 
         function setDatepickerInput(datepickerEl, value, $scope) {
             datepickerEl.val(value).trigger('change');
-
             $timeout.flush();
             $scope.$digest();
         }
@@ -458,7 +457,7 @@ describe('Date range picker', function () {
             it('should return at any time when no flags are set', function () {
                 expect(bbDateRangePicker.getDateRangeOptions()).toEqual([bbDateRangePicker.dateRangeTypes.AT_ANY_TIME]);
             });
-            
+
         });
     });
 });
