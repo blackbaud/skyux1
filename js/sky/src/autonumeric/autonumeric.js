@@ -15,16 +15,13 @@
         );
 
         if (configType) {
-            if (angular.isObject(configType)) {
-                angular.extend(baseSettings, configType);
-            } else {
-                configSettings = bbAutoNumericConfig[configType];
+            configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
-                if (configSettings) {
-                    angular.extend(baseSettings, configSettings);
-                }
+            if (configSettings) {
+                angular.extend(baseSettings, configSettings);
             }
         }
+        
         return baseSettings;
     }
 
