@@ -1,8 +1,43 @@
-.bb-error-description {
-  margin-bottom: $margin;
+.bb-error-description-container span {
+  white-space: pre-wrap;
 }
 
-.bb-error-title {
-  margin-top: $margin-half;
+.bb-error-title-container {
   font-weight: bold;
+}
+
+.bb-error-image-container {
+  display: inline-block;
+
+  .bb-error-image-broken-container {
+    max-width: 182px;
+    display: inline-block;
+  }
+
+  .bb-error-image-construction-container {
+    width: 182px;
+    height: 189px;
+    display: inline-block;
+  }
+
+  .bb-error-image-notfound-container {
+    max-width: 328px;
+    display: inline-block;
+  }
+}
+
+.bb-error-image {
+  margin-bottom: $margin-half;
+}
+
+.bb-error-action {
+  margin-top: $margin;
+}
+
+.bb-error {
+  padding-bottom: $padding;
+}
+
+.bb-error-image-broken, .bb-error-image-construction, .bb-error-image-notfound {
+  max-width: 100%;
 }

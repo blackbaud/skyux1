@@ -1,8 +1,17 @@
-<div class="row">
+<div class="row bb-error">
   <section class="col-xs-12 text-center">
-    <div class="bb-error-image" ng-show="bbError.imageCtrl"></div>
-    <div class="bb-error-title" ng-show="bbError.titleCtrl"></div>
-    <div class="bb-error-description" ng-show="bbError.descriptionCtrl"></div>
+    <div class="bb-error-image" ng-show="bbError.imageCtrl">
+      <bb-error-image error-default error-type="{{bbError.imageType}}" ng-if="bbError.imageType !== '' && !bbError.imageHasOverride">
+      </bb-error-image>
+    </div>
+    <div class="bb-error-title" ng-show="bbError.titleCtrl">
+      <bb-error-title error-default error-type="{{bbError.titleType}}" ng-if="bbError.titleType !== '' && !bbError.titleHasOverride">
+      </bb-error-title>
+    </div>
+    <div class="bb-error-description" ng-show="bbError.descriptionCtrl">
+      <bb-error-description error-default error-type="{{bbError.descriptionType}}" ng-if="bbError.descriptionType !== '' && !bbError.descriptionHasOverride">
+      </bb-error-description>
+    </div>
     <div class="bb-error-action" ng-show="bbError.actionCtrl"></div>
     <ng-transclude></ng-transclude>
   </section>

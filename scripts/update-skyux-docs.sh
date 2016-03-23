@@ -18,6 +18,9 @@ if [[ "$IS_RELEASE" == "true" && "$IS_PRERELEASE" == "false" ]]; then
   # Copy jsdoc output
   cp -f demo/data/sky.json docs/sky-jsdoc/sky-$RELEASE_VERSION.json
 
+  # Copy integrity hashes
+  cp -f dist/sri.json docs/sky-sri/sky-$RELEASE_VERSION.json
+
   # Updating this file will cause the documentation to be updated
   echo "$RELEASE_VERSION" > docs/includes/latest-release.txt
 
