@@ -240,7 +240,7 @@ describe('Datepicker directive', function () {
         var el,
             requiredHtml = '<div>' +
                 '<form name="testform" novalidate>' +
-                    '<bb-datepicker debug name="huh" bb-datepicker-name="testDate1" ng-model="testdate1" ng-required="{{true}}"></bb-datepicker>' +
+                    '<bb-datepicker debug bb-datepicker-name="testDate1" ng-model="testdate1" ng-required="{{true}}"></bb-datepicker>' +
                 '</form>' +
             '</div>';
         el = setupDatepicker(requiredHtml, '');
@@ -249,7 +249,6 @@ describe('Datepicker directive', function () {
         expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
         expect($scope.testform.$valid).toBe(false);
         expect($scope.testform.testDate1.$error.required).toBe(true);
-        expect($scope.testform.huh.$error.required).toBe(true);
     });
 
     it('handles invalid date and then required date', function () {
