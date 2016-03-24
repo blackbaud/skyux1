@@ -63,21 +63,6 @@ describe('Reorder', function () {
             expect(elScope.bbReorder.bbReorderItems.length).toBe(4);
         });
 
-        it('should set the data-index attribute on each row', function () {
-            var $scope = $rootScope.$new(),
-                rows,
-                el;
-
-            $scope.items = createTestItems();
-            el = initializeDirective($scope);
-
-            rows = el.find('.bb-reorder-list-row');
-
-            $.each(rows, function (i, item) {
-                expect($(item)).toHaveAttr('data-index', i.toString());
-            });
-        });
-
         it('should display title and description correctly', function () {
             var $scope = $rootScope.$new(),
                 rows,
@@ -180,7 +165,7 @@ describe('Reorder', function () {
                 secondRow,
                 el;
 
-            spyOn($.fn, 'animate');
+            spyOn($.fn, 'slideUp');
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
@@ -189,38 +174,16 @@ describe('Reorder', function () {
             secondRow.find('.bb-reorder-list-col-top').trigger('click');
 
             expect(secondRow).toHaveClass('bb-reorder-list-row-placeholder');
-            expect(secondRow.children()).toHaveCss({visibility: 'hidden'});
-            expect(el.find('.bb-reorder-list-sorting-item')).toExist();
+            expect(el.find('.bb-reorder-animate-element')).toExist();
 
-            animateCallback = $.fn.animate.calls.argsFor(0)[3];
-            animateCallback();
+            animateCallback = $.fn.slideUp.calls.argsFor(0)[0].always;
+            animateCallback(); // act as though the animation finished
 
             expect($(el.find('.bb-reorder-list-row')[0]).find('.bb-reorder-list-title')).toContainText('test2');
             expect($scope.items[0].title).toBe('test2');
 
-            expect(secondRow.children()).not.toHaveCss({visibility: 'hidden'});
             expect(secondRow).not.toHaveClass('bb-reorder-list-row-placeholder');
-            expect(el.find('.bb-reorder-list-sorting-item')).not.toExist();
-        });
-
-        it('should not send an item to the top if there is already another item being sent to the top', function () {
-            var $scope = $rootScope.$new(),
-                secondRow,
-                thirdRow,
-                el;
-
-            spyOn($.fn, 'animate');
-
-            $scope.items = createTestItems();
-            el = initializeDirective($scope);
-
-            secondRow = $(el.find('.bb-reorder-list-row')[1]);
-            thirdRow = $(el.find('.bb-reorder-list-row')[2]);
-
-            secondRow.find('.bb-reorder-list-col-top').trigger('click');
-            thirdRow.find('.bb-reorder-list-col-top').trigger('click');
-
-            expect($.fn.animate.calls.count()).toBe(1);
+            expect(el.find('.bb-reorder-animate-element')).not.toExist();
         });
 
         it('should handle the sortable start event', function () {
@@ -257,6 +220,7 @@ describe('Reorder', function () {
 
         it('should handle the sortable stop event', function () {
             var $scope = $rootScope.$new(),
+                startEventCallback,
                 stopEventCallback,
                 eventArg,
                 elScope,
@@ -266,6 +230,14 @@ describe('Reorder', function () {
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
+
+            eventArg = {
+                item: $(el),
+                placeholder: $(el)
+            };
+
+            startEventCallback = $.fn.sortable.calls.argsFor(0)[0].start;
+            startEventCallback(null, eventArg);
 
             eventArg = {
                 item: $(el),
@@ -300,11 +272,11 @@ describe('Reorder', function () {
             updateEventCallback = $.fn.sortable.calls.argsFor(0)[0].update;
             updateEventCallback(null, eventArg);
 
-            expect($scope.items[0].title).toBe('test2');
+            expect(eventArg.item.index).toHaveBeenCalled();
             expect($.fn.sortable).toHaveBeenCalledWith('cancel');
         });
 
-        it('should handle the sortable change event from bottom to top', function () {
+        it('should set the position numbers correctly when moving the sorting item from bottom to top', function () {
             var $scope = $rootScope.$new(),
                 changeEventCallback,
                 startEventCallback,
@@ -359,7 +331,7 @@ describe('Reorder', function () {
             });
         });
 
-        it('should handle the sortable change event from top to bottom', function () {
+        it('should set the position numbers correctly when moving the sorting item from top to bottom', function () {
             var $scope = $rootScope.$new(),
                 changeEventCallback,
                 startEventCallback,
@@ -455,6 +427,57 @@ describe('Reorder', function () {
             $.each(rows, function (i, item) {
                 expect($(item).find('.bb-reorder-list-sorting-number')).toContainText((i + 1).toString());
             });
+        });
+
+        it('should handle the sortable change event lifecyle from start to finish', function () {
+            var $scope = $rootScope.$new(),
+                startEventCallback,
+                updateEventCallback,
+                stopEventCallback,
+                eventArg,
+                placeholder,
+                rowBeingMoved,
+                el;
+
+            spyOn($.fn, 'sortable');
+
+            $scope.items = createTestItems();
+            el = initializeDirective($scope);
+
+            rowBeingMoved = $(el.find('.bb-reorder-list-row')[1]);
+
+            // put the placeholder in the right position as if the user was currently sorting
+            placeholder = $('<div id="placeholder"></div>');
+            rowBeingMoved.insertAfter(placeholder);
+
+            eventArg = {
+                item: rowBeingMoved,
+                placeholder: placeholder
+            };
+
+            // call start as if the user started sorting
+            startEventCallback = $.fn.sortable.calls.argsFor(0)[0].start;
+            startEventCallback(null, eventArg);
+
+            eventArg = {
+                item: {
+                    index: jasmine.createSpy().and.returnValue(2)
+                }
+            };
+
+            // call update as if the user has moved the item to a new index
+            updateEventCallback = $.fn.sortable.calls.argsFor(0)[0].update;
+            updateEventCallback(null, eventArg);
+
+            eventArg = {
+                item: rowBeingMoved
+            };
+
+            // call stop to validate that we correctly swap the item positions
+            stopEventCallback = $.fn.sortable.calls.argsFor(0)[0].stop;
+            stopEventCallback(null, eventArg);
+
+            expect($(el.find('.bb-reorder-list-row')[2])).toContainText('test2');
         });
     });
 });
