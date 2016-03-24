@@ -6,7 +6,8 @@ describe('Wizard', function () {
 
     var $compile,
         $scope,
-        bbResources;
+        bbResources,
+        $timeout;
 
     beforeEach(module(
         'ngMock',
@@ -16,10 +17,11 @@ describe('Wizard', function () {
         'uib/template/tabs/tab.html'
     ));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _bbResources_, _$timeout_) {
         $compile = _$compile_;
         $scope = _$rootScope_;
         bbResources = _bbResources_;
+        $timeout = _$timeout_;
     }));
 
     describe('directive', function () {
@@ -391,6 +393,8 @@ describe('Wizard', function () {
                         '<uib-tab ng-repeat="step in options.steps" active="step.active"></uib-tab>' +
                     '</uib-tabset>')($scope);
                 /*jslint white: false */
+
+
             });
 
             it('should go to the next step', function () {
@@ -412,17 +416,20 @@ describe('Wizard', function () {
                     steps: steps
                 };
 
+                $scope.$digest();
+                $timeout.flush();
+
+                expect($scope.options.steps[0].active).toBe(true);
+                expect($scope.options.steps[1].active).toBe(false);
+
                 wizardNav = bbWizardNavigator.init($scope.options);
 
-                $scope.$digest();
-
-                $scope.steps = steps;
                 wizardNav.goToNext();
                 $scope.$digest();
 
-
-                expect($scope.options.steps[1].active).toBe(true);
                 expect($scope.options.steps[0].active).toBe(false);
+                expect($scope.options.steps[1].active).toBe(true);
+
             });
 
             it('should stay on last step if no finish is specified', function () {
@@ -444,9 +451,14 @@ describe('Wizard', function () {
                     steps: steps
                 };
 
+                $scope.$digest();
+                $timeout.flush();
+
+                expect($scope.options.steps[1].active).toBe(true);
+                expect($scope.options.steps[0].active).toBe(false);
+
                 wizardNav = bbWizardNavigator.init($scope.options);
 
-                $scope.steps = steps;
                 $scope.$digest();
 
                 wizardNav.goToNext();
@@ -473,11 +485,13 @@ describe('Wizard', function () {
                 $scope.options = {
                     steps: steps
                 };
+                $scope.$digest();
+                $timeout.flush();
+
+                expect($scope.options.steps[0].active).toBe(false);
+                expect($scope.options.steps[1].active).toBe(true);
 
                 wizardNav = bbWizardNavigator.init($scope.options);
-
-                $scope.steps = steps;
-                $scope.$digest();
 
                 wizardNav.goToPrevious();
                 $scope.$digest();
@@ -503,6 +517,9 @@ describe('Wizard', function () {
                 $scope.options = {
                     steps: steps
                 };
+                $scope.$digest();
+                $timeout.flush();
+                expect($scope.options.steps[0].active).toBe(true);
 
                 wizardNav = bbWizardNavigator.init($scope.options);
 

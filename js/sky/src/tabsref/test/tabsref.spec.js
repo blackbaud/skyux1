@@ -111,11 +111,6 @@ describe('Tab Sref directive', function () {
 
         initialListenerCount = listenerCount();
 
-        $scope.locals = {
-            activeTabA: true,
-            activeTabB: false
-        };
-
         /*jslint white: true */
         el = $compile(uibTabHtml)($scope);
         /*jslint white: false */

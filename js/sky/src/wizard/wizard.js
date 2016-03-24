@@ -40,7 +40,6 @@
                             n,
                             previousStep,
                             step;
-
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
                             index = step.index || i;

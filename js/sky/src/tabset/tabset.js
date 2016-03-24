@@ -237,7 +237,7 @@
         };
     }
 
-    function tab($log, $parse) {
+    function tab($log, $parse, $timeout) {
         return {
             require: ['?^bbTabsetCollapsible', '^uibTabset'],
             link: function ($scope, el, attr, ctrls) {
@@ -255,32 +255,34 @@
                 }
 
                 if (angular.isDefined(attr.active)) {
-                    $log.warn('uibTab active attribute is deprecated, instead track active state on uibTabset');
+                    $timeout(function () {
+                        $log.warn('uibTab active attribute is deprecated, instead track active state on uibTabset');
 
-                    activeModel = $parse(attr.active);
+                        activeModel = $parse(attr.active);
 
 
-                    $scope.$watch(function () {
-                        return activeModel($scope);
-                    }, function (newValue) {
-                        if (newValue && uibTabsetCtrl.active !== tabScope.index) {
-                            uibTabsetCtrl.select(tabScope.index);
-                        }
-                    });
+                        $scope.$watch(function () {
+                            return activeModel($scope);
+                        }, function (newValue) {
+                            if (newValue === true && uibTabsetCtrl.active !== tabScope.index) {
+                                uibTabsetCtrl.select(tabScope.index);
+                            }
+                        });
 
-                    tabScope.$watch(function () {
-                        return tabScope.active;
-                    }, function (newValue) {
-                        if (newValue !== activeModel($scope)) {
-                            activeModel.assign($scope, newValue);
-                        }
+                        tabScope.$watch(function () {
+                            return tabScope.active;
+                        }, function (newValue) {
+                            if (angular.isDefined(newValue) && newValue !== activeModel($scope)) {
+                                activeModel.assign($scope, newValue);
+                            }
+                        });
                     });
                 }
             }
         };
     }
 
-    tab.$inject = ['$log', '$parse'];
+    tab.$inject = ['$log', '$parse', '$timeout'];
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)

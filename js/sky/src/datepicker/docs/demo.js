@@ -39,7 +39,7 @@
         self.openModal = openModal;
 
         self.setDate = function () {
-            self.date1 = 'aaa';
+            self.date1 = 'AAA';
         };
         self.customFormat = {
             formatValue: formatValue

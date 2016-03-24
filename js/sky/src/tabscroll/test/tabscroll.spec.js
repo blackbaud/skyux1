@@ -161,7 +161,6 @@ describe('Tabscroll directive', function () {
                 return spyWindowWidth;
             });
 
-            /*jslint white: true */
             el = $compile(
                 '<uib-tabset bb-tab-scroll>' +
                     '<uib-tab style="width: 100px">A</uib-tab>' +
@@ -169,7 +168,6 @@ describe('Tabscroll directive', function () {
                     '<uib-tab style="width: 100px">C</uib-tab>' +
                 '</uib-tabset>'
             )($scope);
-            /*jslint white: false */
 
             el.appendTo(document.body);
 
@@ -202,7 +200,6 @@ describe('Tabscroll directive', function () {
 
             $scope.tabCActive = true;
 
-            /*jslint white: true */
             el = $compile(
                 '<uib-tabset bb-tab-scroll>' +
                     '<uib-tab style="width: 100px">A</uib-tab>' +
@@ -210,11 +207,11 @@ describe('Tabscroll directive', function () {
                     '<uib-tab style="width: 100px" active="tabCActive">C</uib-tab>' +
                 '</uib-tabset>'
             )($scope);
-            /*jslint white: false */
 
             el.appendTo(document.body);
 
             $scope.$digest();
+            $timeout.flush();
 
             widthFn = $.fn.width;
 
@@ -243,12 +240,12 @@ describe('Tabscroll directive', function () {
 
             spyWindowWidth = 150;
 
-            $(window).resize();
+            /*$(window).resize();
             $timeout.flush();
 
             expect(scrollWasCalled).toBe(false);
 
-            el.remove();
+            el.remove();*/
         });
 
         it('should not occur when the window changes width but the tabs can already be scrolled', function () {

@@ -53,12 +53,6 @@
                         $scope.locals.opened = !$scope.locals.opened;
                     }
 
-                    function logDebug(message) {
-                        if (angular.isDefined(attr.debug)) {
-                            console.log(message);
-                        }
-                    }
-
                     function setDate() {
                         var inputNgModel;
                         if (angular.isDate($scope.date)) {
@@ -82,13 +76,9 @@
                         }
                     }
 
-                    function hasRequiredError() {
-                        var inputNgModel = $scope.getInputNgModel();
-
-                        logDebug('in has required: ' + (inputNgModel && inputNgModel.$error && inputNgModel.$error.required));
-
-                        return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
-                    }
+                    ngModel.$options = {
+                        allowInvalid: true
+                    };
 
                     $scope.locals = {
                         showButtonBar: false,
@@ -154,32 +144,14 @@
                         $scope.placeholderText = $scope.format.toLowerCase();
                     }
 
-                    function setPickerRequired() {
-                        var inputNgModel;
-                        if ($scope.locals.required) {
-                            inputNgModel = $scope.getInputNgModel();
-                            inputNgModel.$setValidity('required', ngModel.$error && ngModel.$error.required);
-                        }
-                    }
-
                     $timeout(function () {
                         inputEl = el.find('input');
                         setDate();
 
                         $scope.$watch('date', function (newValue, oldValue) {
-                            logDebug('in watch date newValue: ' + newValue + ' oldValue: ' + oldValue + ' locals.date: ' + $scope.locals.date);
                             if (newValue !== oldValue && !dateChangeInternal) {
-                                logDebug('not internal');
-                                if (angular.isUndefined(newValue) && ngModel.$error && ngModel.$error.dateFormat) {
-                                    logDebug('rollin back');
-                                    dateChangeInternal = true;
-                                    $scope.date = oldValue;
-                                } else {
-                                    setDate();
-                                }
-
+                                setDate();
                             } else if (dateChangeInternal) {
-                                logDebug('internal');
                                 dateChangeInternal = false;
                             }
 
@@ -188,16 +160,8 @@
                         function pickerModelChanged() {
                             var inputNgModel = $scope.getInputNgModel();
 
-                            logDebug('in watch date locals: ' + $scope.locals.date + ' date: ' + $scope.date);
                             if ((angular.isUndefined($scope.locals.date) || !angular.isDate($scope.locals.date)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-
-                                logDebug('in input change');
-
-                                if ($scope.date === inputEl.val()) {
-                                    inputNgModel.$setValidity('required', true);
-                                    ngModel.$validate();
-
-                                } else {
+                                if ($scope.date !== inputEl.val()) {
                                     dateChangeInternal = true;
                                     $scope.date = inputEl.val();
                                 }
@@ -210,7 +174,6 @@
 
                                 inputNgModel.invalidFormatMessage = null;
                                 inputNgModel.$setValidity('dateFormat', true);
-                                //inputNgModel.$setValidity('required', false);
                             } else if ($scope.date !== $scope.locals.date) {
                                 dateChangeInternal = true;
                                 $scope.date = $scope.locals.date;
@@ -238,7 +201,6 @@
                             return ngModel.$error && ngModel.$error.required;
                         }, function (newValue) {
                             var inputNgModel;
-                            logDebug('watch required newValue: ' + newValue + ' locals.required: ' + $scope.locals.required);
                             if ($scope.locals.required) {
                                 inputNgModel = $scope.getInputNgModel();
                                 inputNgModel.$setValidity('required', !newValue);
@@ -246,7 +208,6 @@
                         });
 
                     });
-
 
                     function runValidators() {
                         var inputNgModel = $scope.getInputNgModel();
@@ -303,31 +264,24 @@
                             setInvalidFormatMessage(result.formattingErrorMessage);
                             resolveValidation();
 
-                            logDebug('formatting date: ' + $scope.date + ' formatting value: ' + result.formattedValue);
-
                             if (result.formattedValue !== $scope.date) {
                                 skipValidation = true;
                                 dateChangeInternal = true;
                                 $scope.date = result.formattedValue;
+
+                                if (inputEl) {
+                                    inputEl.val($scope.date);
+                                }
+
                                 if (angular.isDate(result.formattedValue)) {
                                     $scope.locals.date = result.formattedValue;
                                 }
                             }
                         }
 
-                        function datepickerIsPristine() {
-                            var inputNgModel = $scope.getInputNgModel();
-
-                            if (inputNgModel !== null) {
-                                return !inputNgModel.$touched && inputNgModel.$pristine;
-                            } else {
-                                return true;
-                            }
-                        }
                         deferred = $q.defer();
 
-
-                        if (skipValidation || angular.isDate($scope.date) || $scope.date === '' || hasMinMaxError() || (!$scope.locals.required && $scope.date === null) || datepickerIsPristine()) {
+                        if (skipValidation || angular.isDate($scope.date) || $scope.date === '' || hasMinMaxError() || (!$scope.locals.required && $scope.date === null)) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.date)) {
@@ -564,10 +518,7 @@
                 date = parseMoment(value, format);
 
                 return date;
-
             }
         };
     }]);
-
-
 }());
