@@ -240,12 +240,11 @@ describe('Tabscroll directive', function () {
 
             spyWindowWidth = 150;
 
-            /*$(window).resize();
+            $(window).resize();
             $timeout.flush();
 
             expect(scrollWasCalled).toBe(false);
-
-            el.remove();*/
+            el.remove();
         });
 
         it('should not occur when the window changes width but the tabs can already be scrolled', function () {
