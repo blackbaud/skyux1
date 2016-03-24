@@ -26,9 +26,6 @@
     border: none;
     border-bottom: dotted 1px $gray-lighter;
     cursor: pointer;
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
     padding: $padding;
     outline-offset: -5px;
     width: 100%;
@@ -42,8 +39,18 @@
     }
 }
 
+.bb-reorder-list-row-container {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .bb-reorder-list-row-placeholder {
   background-color: $body-bg;
+}
+
+.bb-reorder-list-row-placeholder .bb-reorder-list-row-container {
+  visibility: hidden;
 }
 
 .bb-reorder-list-sorting-item {

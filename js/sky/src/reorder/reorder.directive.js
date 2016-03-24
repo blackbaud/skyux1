@@ -60,16 +60,14 @@
 
                 el.append(animateCloneEl);
 
-                // hide the contents of the element being sent to the top of the list and grey it out
-                toTheTopEl.children().css('visibility', 'hidden');
                 toTheTopEl.addClass('bb-reorder-list-row-placeholder');
 
                 // animate to the top of the directive
-                $(animateCloneEl).fadeOut('slow', function () {
+                $(animateCloneEl).fadeOut({duration: 500, queue: false}).slideUp({duration: 500, queue: false, always: function () {
                    toTheTopEl.children().css('visibility', '');
                    toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
 
-                   el.find('.bb-reorder-animate-element').remove();
+                   animateCloneEl.remove();
                    el.sortable("enable");
 
                    actionBeingDone = false;
@@ -80,7 +78,7 @@
                          0, 0,
                          vm.bbReorderItems.splice(index, 1)[0]);
                    });
-               });
+               }});
             };
 
             //Setup jQuery sortable options for the items being sorted
