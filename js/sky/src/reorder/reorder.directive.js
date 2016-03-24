@@ -5,21 +5,28 @@
 
     function bbReorder($filter) {
         var bbAutonumericConfig = {
-            mDec: 0
+            mDec: 0 // no decimals
         };
 
         function applyNumberFormatting(index) {
             return $filter('bbAutonumeric')(index, bbAutonumericConfig);
         }
 
-        function setSiblingNumbers(incrementStep, siblingTraversalFunc, displayIndex, startSibling) {
+        function setPositionNumberText(item, index) {
+            $(item).find('.bb-reorder-list-sorting-number').text(applyNumberFormatting(index));
+        }
+
+        function setPositionNumbers(incrementStep, siblingTraversalFunc, displayIndex, placeholder, item) {
             var curSibling;
 
-            curSibling = siblingTraversalFunc.call(startSibling).not('.bb-reorder-list-sorting-item');
+            // set the position number of the item being sorted to account for how the user moved it
+            setPositionNumberText(item, displayIndex);
+
+            curSibling = siblingTraversalFunc.call(placeholder).not(item);
             while (curSibling.length > 0) {
                 displayIndex = displayIndex + incrementStep;
-                curSibling.find('.bb-reorder-list-sorting-number').text(applyNumberFormatting(displayIndex));
-                curSibling = siblingTraversalFunc.call(curSibling).not('.bb-reorder-list-sorting-item');
+                setPositionNumberText(curSibling, displayIndex);
+                curSibling = siblingTraversalFunc.call(curSibling).not(item);
             }
         }
 
@@ -28,8 +35,7 @@
                 originalSortItemIndex, // the original index of th item being sorted before sorting starts
                 currentSortItemIndex, // the index where the sorting item is currently being placed
                 finalIndex = -1, // the final index of the element being sorting after sorting has ended
-                currentRepeaterItems, // the set of items from ng-repeat before sorting starts
-                actionBeingDone = false; // are we currently sorting or sending an item to the top
+                currentRepeaterItems; // the set of items from ng-repeat before sorting starts
 
             vm.sorting = false;
 
@@ -40,20 +46,19 @@
                     toTheTopElOffset,
                     animateCloneEl;
 
-                // if we are doing something already just ignore
-                if (actionBeingDone) {
+                // if the user is sorting and drops the sortable on the button don't perform the move to the top
+                if (vm.sorting) {
                     return;
                 }
 
                 index = vm.bbReorderItems.indexOf(item);
 
-                actionBeingDone = true;
                 el.sortable("disable"); // don't allow sorting during animation
 
                 toTheTopEl = $(el.children()[index]);
                 toTheTopElOffset = toTheTopEl.position();
 
-                // create a clone of the element being sent to the top so we can animate it
+                // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
                 animateCloneEl = toTheTopEl.clone();
                 animateCloneEl.addClass('bb-reorder-animate-element');
                 animateCloneEl.css({top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px"});
@@ -62,18 +67,15 @@
 
                 toTheTopEl.addClass('bb-reorder-list-row-placeholder');
 
-                // animate to the top of the directive
+                // animate that we are moving the item to the top of the list
                 $(animateCloneEl).fadeOut({duration: 500, queue: false}).slideUp({duration: 500, queue: false, always: function () {
-                   toTheTopEl.children().css('visibility', '');
                    toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
 
                    animateCloneEl.remove();
                    el.sortable("enable");
 
-                   actionBeingDone = false;
-
                    scope.$apply(function () {
-                       // perform the swap moving the item to the 0 index in the list
+                       // perform the swap moving the item to the top of the list
                        vm.bbReorderItems.splice(
                          0, 0,
                          vm.bbReorderItems.splice(index, 1)[0]);
@@ -96,8 +98,7 @@
 
                     ui.item.addClass('bb-reorder-list-sorting-item');
 
-                    actionBeingDone = true;
-                    originalSortItemIndex = el.children().not('.bb-reorder-list-sorting-item').index(ui.placeholder);
+                    originalSortItemIndex = ui.item.index();
                     currentSortItemIndex = originalSortItemIndex;
 
                     // need to set the height of the placeholder since we need to account for the padding on the row items
@@ -105,7 +106,7 @@
 
                     // set the current index of all rows for display purposes
                     $.each(el.children('.bb-reorder-list-row'), function (i, item) {
-                        $(item).find('.bb-reorder-list-sorting-number').text(applyNumberFormatting(i + 1));
+                        setPositionNumberText(item, i + 1);
                     });
                 },
                 stop: function (e, ui) {
@@ -127,40 +128,42 @@
                         vm.sorting = false;
                     });
 
-                    actionBeingDone = false;
                     originalSortItemIndex = null;
                     currentSortItemIndex = null;
                     finalIndex = -1;
                     currentRepeaterItems = null;
                 },
                 update: function (e, ui) {
+                    // grab the final index of the item being sorted before we cancel
+                    // the sort and its position gets reset.
                     finalIndex = ui.item.index();
+
                     // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
                     el.sortable('cancel');
                 },
                 change: function (e, ui) {
                     var displayIndex,
                         newIndex;
+
                     // Since the element being sorted is positioned absolute it remains in the
                     // same position so we can't use its index. Instead use the placeholder since
                     // that will be in the right position in the list.
-                    newIndex = el.children().not('.bb-reorder-list-sorting-item').index(ui.placeholder);
+                    newIndex = ui.item.siblings().index(ui.placeholder);
 
                     if (newIndex === currentSortItemIndex) {
                         return;
                     }
 
+                    // the display position shown to the user should start at 1, not 0
                     displayIndex = newIndex + 1;
-
-                    ui.item.find('.bb-reorder-list-sorting-number').text(applyNumberFormatting(displayIndex));
 
                     // when we are sorting, change the position numbers on the rows
                     if (newIndex > currentSortItemIndex) {
                         // set the text of all previous siblings to account for change
-                        setSiblingNumbers(-1, $.fn.prev, displayIndex, ui.placeholder);
+                        setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
                     } else {
                         // set the text of all next siblings to account for change
-                        setSiblingNumbers(1, $.fn.next, displayIndex, ui.placeholder);
+                        setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
                     }
 
                     currentSortItemIndex = newIndex;
