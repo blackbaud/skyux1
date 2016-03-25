@@ -247,6 +247,8 @@ describe('Reorder', function () {
             stopEventCallback = $.fn.sortable.calls.argsFor(0)[0].stop;
             stopEventCallback(null, eventArg);
 
+            $timeout.flush();
+
             elScope = el.isolateScope();
 
             expect(elScope.bbReorder.sorting).toBe(false);
@@ -406,7 +408,7 @@ describe('Reorder', function () {
 
             // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
-            el.prepend(placeholder);
+            rowBeingMoved.after(placeholder);
 
             eventArg = {
                 item: rowBeingMoved,
