@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.tabsref', ['ui.bootstrap.tabs'])
+    angular.module('sky.tabsref', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
                 require: '^uibTabset',

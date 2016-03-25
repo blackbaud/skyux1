@@ -247,6 +247,60 @@ describe('Tabscroll directive', function () {
             el.remove();
         });
 
+        it('should only scroll active tab into view when width changes but tabs can already be scrolled when using active on tabset', function () {
+            var animateSpy,
+                el,
+                scrollLeftSpy,
+                scrollWasCalled,
+                spyWindowWidth,
+                widthFn,
+                widthSpy;
+
+            el = $compile(
+                '<uib-tabset bb-tab-scroll active="2">' +
+                    '<uib-tab style="width: 100px">A</uib-tab>' +
+                    '<uib-tab style="width: 100px">B</uib-tab>' +
+                    '<uib-tab style="width: 100px">C</uib-tab>' +
+                '</uib-tabset>'
+            )($scope);
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            widthFn = $.fn.width;
+
+            spyWindowWidth = 200;
+
+            widthSpy = getWidthSpy(widthFn, function () {
+                return spyWindowWidth;
+            });
+
+            animateSpy = spyOn($.fn, 'animate');
+
+            scrollLeftSpy = spyOn($.fn, 'scrollLeft').and.callFake(function () {
+                if (this.hasClass('nav-tabs')) {
+                    scrollWasCalled = true;
+                }
+            });
+
+            $(window).resize();
+            $timeout.flush();
+
+            expect(scrollWasCalled).toBe(true);
+
+            validateSpyOnTabs(animateSpy);
+
+            scrollWasCalled = false;
+
+            spyWindowWidth = 150;
+
+            $(window).resize();
+            $timeout.flush();
+
+            expect(scrollWasCalled).toBe(false);
+            el.remove();
+        });
+
         it('should not occur when the window changes width but the tabs can already be scrolled', function () {
             var animateSpy,
                 el,

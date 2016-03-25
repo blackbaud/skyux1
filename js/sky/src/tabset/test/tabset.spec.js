@@ -8,7 +8,8 @@ describe('Tabset module', function () {
         $document,
         dynamicTabsHtml,
         $scope,
-        bbMediaBreakpoints;
+        bbMediaBreakpoints,
+        $timeout;
 
     beforeEach(module(
         'ngMock',
@@ -18,11 +19,12 @@ describe('Tabset module', function () {
         'uib/template/tabs/tab.html'
     ));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_, _$timeout_) {
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
         $document = _$document_;
         bbMediaBreakpoints = _bbMediaBreakpoints_;
+        $timeout = _$timeout_;
 
         dynamicTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()">' +
                 '<uib-tab>' +
@@ -47,6 +49,120 @@ describe('Tabset module', function () {
     function getLargeScreenOpenButton(el) {
         return el.find('li.bb-tab-button button.bb-tab-button-wrap.bb-tab-button-open');
     }
+
+    describe('tabs with active attribute', function () {
+        var tabsHtml,
+            el;
+        beforeEach(function () {
+            tabsHtml = '<uib-tabset>' +
+            '<uib-tab heading="t.title" ng-repeat="t in myTabs" active="t.active">' +
+                '{{t.content}}' +
+            '</uib-tab>' +
+            '</uib-tabset>';
+
+            $scope.myTabs = [
+                {
+                    title: 'Tab 1',
+                    content: '1 content',
+                    active: true
+                },
+                {
+                    title: 'Tab 2',
+                    content: '2 content'
+                },
+                {
+                    title: 'Tab 3',
+                    content: '3 content'
+                }
+            ];
+        });
+
+        function getTabs(el) {
+            return el.find('ul.nav-tabs > li');
+        }
+
+        it('should change the tab when tab active is set to true', function () {
+            var tabsEl;
+
+
+            el = $compile(tabsHtml)($scope);
+
+            $scope.$digest();
+            $timeout.flush();
+
+            $scope.myTabs[1].active = true;
+            $scope.$digest();
+
+            expect($scope.myTabs[0].active).not.toBe(true);
+            expect($scope.myTabs[1].active).toBe(true);
+            expect($scope.myTabs[2].active).not.toBe(true);
+
+            tabsEl = getTabs(el);
+
+            expect(tabsEl.eq(0)).not.toHaveClass('active');
+            expect(tabsEl.eq(1)).toHaveClass('active');
+            expect(tabsEl.eq(2)).not.toHaveClass('active');
+        });
+
+        it('should change the active when the tab is clicked manually', function () {
+            var tabsEl;
+
+            el = $compile(tabsHtml)($scope);
+            $scope.$digest();
+            $timeout.flush();
+
+            tabsEl = getTabs(el);
+
+            tabsEl.eq(1).find('a').click();
+            $scope.$digest();
+
+            expect($scope.myTabs[0].active).not.toBe(true);
+            expect($scope.myTabs[1].active).toBe(true);
+            expect($scope.myTabs[2].active).not.toBe(true);
+
+            tabsEl = getTabs(el);
+
+            expect(tabsEl.eq(0)).not.toHaveClass('active');
+            expect(tabsEl.eq(1)).toHaveClass('active');
+            expect(tabsEl.eq(2)).not.toHaveClass('active');
+        });
+
+        it('should initialize the tabs properly when active is set to true', function () {
+            var tabsEl;
+
+            $scope.myTabs[0].active = false;
+            $scope.myTabs[1].active = true;
+
+            el = $compile(tabsHtml)($scope);
+            $scope.$digest();
+            $timeout.flush();
+
+            expect($scope.myTabs[0].active).not.toBe(true);
+            expect($scope.myTabs[1].active).toBe(true);
+            expect($scope.myTabs[2].active).not.toBe(true);
+
+            tabsEl = getTabs(el);
+
+            expect(tabsEl.eq(0)).not.toHaveClass('active');
+            expect(tabsEl.eq(1)).toHaveClass('active');
+            expect(tabsEl.eq(2)).not.toHaveClass('active');
+
+            $scope.myTabs[0].active = true;
+
+            $scope.$digest();
+
+            expect($scope.myTabs[0].active).toBe(true);
+            expect($scope.myTabs[1].active).not.toBe(true);
+            expect($scope.myTabs[2].active).not.toBe(true);
+
+            tabsEl = getTabs(el);
+
+            expect(tabsEl.eq(0)).toHaveClass('active');
+            expect(tabsEl.eq(1)).not.toHaveClass('active');
+            expect(tabsEl.eq(2)).not.toHaveClass('active');
+
+        });
+    });
 
     describe('adding tabs', function () {
         it('adds tabs', function () {
