@@ -20,4 +20,4 @@ The toast service can be used to launch toast in a consistent way in a Sky UX ap
  - `controller` Used in conjunction with `templateUrl`. Specifies the name of a controller to apply to the template's scope.
  - `resolve` Items that will be resolved and passed to the controller as locals.
  - `toastType`  Specifies a style for the toast. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `info`)*
- - `timeout` Specifies the amount of time in milliseconds to display the toast message before it is automatically dismissed.  Specifying a value of `infinite` will show the toast message until the user clicks the close button.  *(Default: `10000`)
+ - `timeout` Specifies the amount of time in milliseconds to display the toast message before it is automatically dismissed.  Specifying a value of `infinite` will show the toast message until the user clicks the close button.  *(Default: `10000`)*
