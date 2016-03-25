@@ -312,10 +312,6 @@
                         $scope.locals.dateOptions.minDate = $scope.minDate;
                     });
 
-
-
-
-
                     $scope.locals.loaded = true;
 
                 }
