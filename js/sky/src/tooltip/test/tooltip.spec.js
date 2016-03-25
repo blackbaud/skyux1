@@ -13,7 +13,7 @@ describe('Tooltip', function () {
         'ngMock',
         'sky.tooltip',
         'sky.templates',
-        'template/tooltip/tooltip-template-popup.html'
+        'uib/template/tooltip/tooltip-template-popup.html'
     ));
 
     beforeEach(inject(function (_$compile_, _$rootScope_, _$templateCache_, _$timeout_, _$window_) {
@@ -28,6 +28,7 @@ describe('Tooltip', function () {
             '</div>'
         );
     }));
+    
 
     function trigger(element, evt) {
         var myEvent = document.createEvent('Event');

@@ -7,10 +7,10 @@ summary: The datepicker wraps the Angular UI Bootstrap datepicker directive to c
 The datepicker directive wraps the [Angular UI Bootstrap datepicker directive](https://angular-ui.github.io/bootstrap/#/datepicker). It creates a text box with a calendar picker to select dates.
 
 ### Datepicker Settings
-    - `bb-datepicker' &mdash; Creates a text box with a calendar picker.
+    - `bb-datepicker` &mdash; Creates a text box with a calendar picker.
         - `bb-custom-validation` &mdash; *(Optional.)* Specifies an object that contains a function to validate entries in the text box.
             - `formatValue` &mdash; A function to be called when users enter text in the textbox. The only parameter to pass to the function is the raw value of the text box. If a problem occurs when formatting value in the input, the function returns an object or a promise of an object with the following properties:
-                - `formattedValue` &mdash; The result after the validation formats the value in the input. For example, the validation can translate values such as "June 2015" into numerical dates. 
+                - `formattedValue` &mdash; The result after the validation formats the value in the input. For example, the validation can translate values such as "June 2015" into numerical dates.
                 - `formattingErrorMessage` &mdash; *(Optional.)* The response that displays if an error occurs during validations.
         - `bb-date-format` &mdash; Specifies the format string to use for dates in the text box. This overrides the SKY UX default of `MM/dd/yyyy` that is set by the `currentCultureDateFormatString` property in `bbDatepickerConfig`. You set up the format string just like format strings for the [Angular date filter](https://docs.angularjs.org/api/ng/filter/date).
         - `bb-date-options` &mdash; Specifies an options object to customize the datepicker. The options include all valid options for the Angular UI Bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the Angular UI Bootstrap datepicker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. The SKY UX defaults for `showWeeks` and `startingDay` are  `false` and `0`.

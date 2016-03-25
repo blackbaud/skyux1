@@ -10,7 +10,7 @@
           <bb-modal-header bb-modal-help-key="'helpkey.html'">Wizard example</bb-modal-header>
           <form ng-submit="locals.save()">
             <div bb-modal-body>
-              <uib-tabset bb-wizard>
+              <uib-tabset bb-wizard active="options.active">
                 <uib-tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
                   <ng-include src="step.templateUrl"></ng-include>
                 </uib-tab>

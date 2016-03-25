@@ -46,13 +46,16 @@
                 }
             ];
 
+            $scope.options = {
+                steps: steps,
+                finish: function () {
+                    $window.alert('Finished!');
+                },
+                active: 0
+            };
+
             wizardNav = bbWizardNavigator.init(
-                {
-                    steps: steps,
-                    finish: function () {
-                        $window.alert('Finished!');
-                    }
-                }
+                $scope.options
             );
 
             $scope.locals = {

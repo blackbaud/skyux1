@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.wizard', ['sky.resources', 'ui.bootstrap.tabs'])
+    angular.module('sky.wizard', ['sky.resources', 'sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbWizard', function () {
             return {
                 link: function (scope, el) {
@@ -36,18 +36,24 @@
 
                     function getPreviousStep() {
                         var i,
+                            index,
                             n,
                             previousStep,
                             step;
-
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
+                            index = step.index || i;
 
-                            if (step.active && i > 0) {
+                            if ((step.active || options.active === index) && i > 0) {
                                 previousStep = steps[i - 1];
 
                                 if (!stepIsDisabled(previousStep)) {
-                                    return previousStep;
+                                    if (angular.isDefined(options.active)) {
+                                        return previousStep.index || (i - 1);
+                                    } else {
+                                        return previousStep;
+                                    }
+
                                 }
 
                                 break;
@@ -59,18 +65,25 @@
 
                     function getNextStep() {
                         var i,
+                            index,
                             n,
                             nextStep,
                             step;
 
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
+                            index = step.index || i;
 
-                            if (step.active && i + 1 < n) {
+                            if ((step.active || options.active === index) && i + 1 < n) {
                                 nextStep = steps[i + 1];
 
                                 if (!stepIsDisabled(nextStep)) {
-                                    return nextStep;
+                                    if (angular.isDefined(options.active)) {
+                                        return nextStep.index || (i + 1); // There can be a custom index name, or the position of the tab
+                                    } else {
+                                        return nextStep;
+                                    }
+
                                 }
 
                                 break;
@@ -81,13 +94,24 @@
                     }
 
                     function setActiveStep(step) {
-                        if (step) {
-                            step.active = true;
+                        if (step !== null) {
+                            if (angular.isDefined(options.active)) {
+                                options.active = step;
+                            } else {
+                                step.active = true;
+                            }
+
                         }
+
                     }
 
                     function lastStepIsActive() {
-                        return steps[steps.length - 1].active;
+                        if (angular.isDefined(options.active)) {
+                            return options.active === steps[steps.length - 1].index || options.active === steps.length - 1;
+                        } else {
+                            return steps[steps.length - 1].active;
+                        }
+
                     }
 
                     options = options || {};
@@ -107,18 +131,20 @@
                         },
                         goToNext: function () {
                             if (lastStepIsActive()) {
+
                                 if (angular.isFunction(finish)) {
                                     finish();
                                 }
                             } else {
                                 setActiveStep(getNextStep());
                             }
+
                         },
                         previousDisabled: function () {
-                            return !getPreviousStep();
+                            return getPreviousStep() === null;
                         },
                         nextDisabled: function () {
-                            return !getNextStep() && !lastStepIsActive();
+                            return (getNextStep() === null) && !lastStepIsActive();
                         }
                     };
                 }

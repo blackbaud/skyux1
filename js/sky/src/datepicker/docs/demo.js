@@ -46,9 +46,10 @@
         };
 
         self.date1 = '2015-05-28T00:00:00';
+        self.date2 = '5/17/2015';
         self.placeholder = 'Your date here';
         self.minDate = new Date('5/21/2014');
-        self.maxDate = new Date('2/10/2016');
+        self.maxDate = new Date();
     }
 
     DatepickerDemoController.$inject = ['bbModal', '$q'];

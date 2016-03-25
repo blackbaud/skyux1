@@ -5,7 +5,7 @@
     'use strict';
 
     var tabScrollId = 0;
-    angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
+    angular.module('sky.tabscroll', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
                 link: function (scope, el, attrs) {
