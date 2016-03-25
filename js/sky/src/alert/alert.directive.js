@@ -21,7 +21,7 @@
             bindToController: {
                 bbAlertType: '@',
                 bbAlertCloseable: '@',
-                bbAlertClosed: '='
+                bbAlertClosed: '=?'
             },
             link: link,
             scope: {},

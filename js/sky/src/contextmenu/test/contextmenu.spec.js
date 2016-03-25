@@ -17,6 +17,7 @@ describe('Context menu', function () {
         'uib/template/accordion/accordion-group.html'
     ));
 
+
     beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$animate_) {
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
