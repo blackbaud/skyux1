@@ -239,13 +239,13 @@
         );
 
         if (configType) {
-            configSettings = bbAutoNumericConfig[configType];
-        }
+            configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
-        if (configSettings) {
-            angular.extend(baseSettings, configSettings);
+            if (configSettings) {
+                angular.extend(baseSettings, configSettings);
+            }
         }
-
+        
         return baseSettings;
     }
 
