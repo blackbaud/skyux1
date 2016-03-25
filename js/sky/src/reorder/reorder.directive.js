@@ -3,7 +3,7 @@
 (function ($) {
     'use strict';
 
-    function bbReorder($filter) {
+    function bbReorder($filter, $timeout) {
         var bbAutonumericConfig = {
             mDec: 0 // no decimals
         };
@@ -39,17 +39,12 @@
 
             vm.sorting = false;
 
-            // sends a item to the top of the list with a rising animation
+            // sends an item to the top of the list with a rising animation
             vm.pushToTop = function (item) {
                 var toTheTopEl,
                     index,
                     toTheTopElOffset,
                     animateCloneEl;
-
-                // if the user is sorting and drops the sortable on the button don't perform the move to the top
-                if (vm.sorting) {
-                    return;
-                }
 
                 index = vm.bbReorderItems.indexOf(item);
 
@@ -132,11 +127,19 @@
                     currentSortItemIndex = null;
                     finalIndex = -1;
                     currentRepeaterItems = null;
+
+                    // once the ng-repeat has finished rendering the move, re-enable animations
+                    $timeout(function () {
+                        el.children().removeClass('bb-reorder-list-no-animate');
+                    });
                 },
                 update: function (e, ui) {
                     // grab the final index of the item being sorted before we cancel
                     // the sort and its position gets reset.
                     finalIndex = ui.item.index();
+
+                    // don't animate the move when sorting
+                    el.children().addClass('bb-reorder-list-no-animate');
 
                     // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
                     el.sortable('cancel');
@@ -187,8 +190,8 @@
         };
     }
 
-    bbReorder.$inject = ['$filter'];
+    bbReorder.$inject = ['$filter', '$timeout'];
 
-    angular.module('sky.reorder.directive', ['sky.resources', 'sky.autonumeric'])
+    angular.module('sky.reorder.directive', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
         .directive('bbReorder', bbReorder);
 }(jQuery));
