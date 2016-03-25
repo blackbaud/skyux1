@@ -76,163 +76,11 @@
                         }
                     }
 
-                    ngModel.$options = {
-                        allowInvalid: true
-                    };
-
-                    $scope.locals = {
-                        showButtonBar: false,
-                        appendToBody: false,
-                        date: '',
-                        opened: false,
-                        open: open,
-                        loaded: false,
-                        closeOnSelection: true,
-                        dateOptions: {
-                            showWeeks: bbDatepickerConfig.showWeeks,
-                            startingDay: bbDatepickerConfig.startingDay,
-                            maxDate: $scope.maxDate,
-                            minDate: $scope.minDate
-                        },
-                        hasCustomValidation: false,
-                        inputName: attr.bbDatepickerName
-                    };
-
-                    if (!$scope.maxDate && bbDatepickerConfig.maxDate) {
-                        $scope.maxDate = bbDatepickerConfig.maxDate;
-                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
-                    }
-
-                    if (!$scope.minDate && bbDatepickerConfig.minDate) {
-                        $scope.minDate = bbDatepickerConfig.minDate;
-                        $scope.locals.dateOptions.minDate = $scope.minDate;
-                    }
-
-                    $scope.resources = bbResources;
-
-                    if (angular.isDefined(attr.showButtonBar)) {
-                        $scope.locals.showButtonBar = attr.showButtonBar;
-                    }
-
-                    if (angular.isDefined(attr.closeOnDateSelection)) {
-                        $scope.locals.closeOnSelection = attr.closeOnDateSelection;
-                    }
-
-                    if (angular.isDefined(attr.datepickerAppendToBody)) {
-                        $scope.locals.appendToBody = (attr.datepickerAppendToBody === 'true');
-                    }
-
-                    if (angular.isUndefined($scope.format)) {
-                        $scope.format = bbDatepickerConfig.currentCultureDateFormatString;
-                    }
-
-                    if (angular.isDefined($scope.dateOptions)) {
-                        angular.extend($scope.locals.dateOptions, $scope.dateOptions);
-
-                    }
-
-                    if (angular.isDefined($scope.customValidation)) {
-                        if (angular.isFunction($scope.customValidation.formatValue)) {
-                            $scope.locals.hasCustomValidation = true;
-                        }
-                    }
-
-                    $scope.locals.required = angular.isDefined(attr.required);
-
-
-                    if ($scope.placeholderText === null || angular.isUndefined($scope.placeholderText)) {
-                        $scope.placeholderText = $scope.format.toLowerCase();
-                    }
-
-                    $timeout(function () {
-                        inputEl = el.find('input');
-                        setDate();
-
-                        $scope.$watch('date', function (newValue, oldValue) {
-                            if (newValue !== oldValue && !dateChangeInternal) {
-                                setDate();
-                            } else if (dateChangeInternal) {
-                                dateChangeInternal = false;
-                            }
-
-                        });
-
-                        function pickerModelChanged() {
-                            var inputNgModel = $scope.getInputNgModel();
-
-                            if ((angular.isUndefined($scope.locals.date) || !angular.isDate($scope.locals.date)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                                if ($scope.date !== inputEl.val()) {
-                                    dateChangeInternal = true;
-                                    $scope.date = inputEl.val();
-                                }
-
-                            } else if ($scope.locals.required && inputEl.val() === '') {
-                                if ($scope.date !== '') {
-                                    dateChangeInternal = true;
-                                    $scope.date = '';
-                                }
-
-                                inputNgModel.invalidFormatMessage = null;
-                                inputNgModel.$setValidity('dateFormat', true);
-                            } else if ($scope.date !== $scope.locals.date) {
-                                dateChangeInternal = true;
-                                $scope.date = $scope.locals.date;
-                            }
-                        }
-
-                        inputEl.on('change blur', function () {
-                            $timeout(function () {
-                                pickerModelChanged();
-                            });
-                        });
-
-                        $scope.$watch('locals.date', function () {
-
-                            if ($scope.date !== $scope.locals.date) {
-                                if (angular.isDate($scope.locals.date)) {
-                                    dateChangeInternal = true;
-                                    $scope.date = $scope.locals.date;
-                                }
-                            }
-
-                        });
-
-                        $scope.$watch(function () {
-                            return ngModel.$error && ngModel.$error.required;
-                        }, function (newValue) {
-                            var inputNgModel;
-                            if ($scope.locals.required) {
-                                inputNgModel = $scope.getInputNgModel();
-                                inputNgModel.$setValidity('required', !newValue);
-                            }
-                        });
-
-                    });
-
-                    function runValidators() {
-                        var inputNgModel = $scope.getInputNgModel();
-                        /*istanbul ignore else: sanity check */
-                        if (inputNgModel) {
-                            inputNgModel.$validate();
-                        }
-                    }
-
-                    $scope.$watch('maxDate', function () {
-                        runValidators();
-                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
-                    });
-
-                    $scope.$watch('minDate', function () {
-                        runValidators();
-                        $scope.locals.dateOptions.minDate = $scope.minDate;
-                    });
-
                     function hasMinMaxError() {
                         var inputNgModel = $scope.getInputNgModel();
 
                         return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
                     }
-
 
                     function dateFormatValidator() {
                         var customFormattingResult,
@@ -305,7 +153,168 @@
                         return deferred.promise;
                     }
 
-                    ngModel.$asyncValidators.dateFormat = dateFormatValidator;
+                    ngModel.$options = {
+                        allowInvalid: true
+                    };
+
+                    $scope.locals = {
+                        showButtonBar: false,
+                        appendToBody: false,
+                        date: '',
+                        opened: false,
+                        open: open,
+                        loaded: false,
+                        closeOnSelection: true,
+                        dateOptions: {
+                            showWeeks: bbDatepickerConfig.showWeeks,
+                            startingDay: bbDatepickerConfig.startingDay,
+                            maxDate: $scope.maxDate,
+                            minDate: $scope.minDate
+                        },
+                        hasCustomValidation: false,
+                        inputName: attr.bbDatepickerName
+                    };
+
+                    if (!$scope.maxDate && bbDatepickerConfig.maxDate) {
+                        $scope.maxDate = bbDatepickerConfig.maxDate;
+                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
+                    }
+
+                    if (!$scope.minDate && bbDatepickerConfig.minDate) {
+                        $scope.minDate = bbDatepickerConfig.minDate;
+                        $scope.locals.dateOptions.minDate = $scope.minDate;
+                    }
+
+                    $scope.resources = bbResources;
+
+                    if (angular.isDefined(attr.showButtonBar)) {
+                        $scope.locals.showButtonBar = attr.showButtonBar;
+                    }
+
+                    if (angular.isDefined(attr.closeOnDateSelection)) {
+                        $scope.locals.closeOnSelection = attr.closeOnDateSelection;
+                    }
+
+                    if (angular.isDefined(attr.datepickerAppendToBody)) {
+                        $scope.locals.appendToBody = (attr.datepickerAppendToBody === 'true');
+                    }
+
+                    if (angular.isUndefined($scope.format)) {
+                        $scope.format = bbDatepickerConfig.currentCultureDateFormatString;
+                    }
+
+                    if (angular.isDefined($scope.dateOptions)) {
+                        angular.extend($scope.locals.dateOptions, $scope.dateOptions);
+
+                    }
+
+                    if (angular.isDefined($scope.customValidation)) {
+                        if (angular.isFunction($scope.customValidation.formatValue)) {
+                            $scope.locals.hasCustomValidation = true;
+                        }
+                    }
+
+                    $scope.locals.required = angular.isDefined(attr.required);
+
+
+                    if ($scope.placeholderText === null || angular.isUndefined($scope.placeholderText)) {
+                        $scope.placeholderText = $scope.format.toLowerCase();
+                    }
+
+                    $timeout(function () {
+                        inputEl = el.find('input');
+                        setDate();
+
+                        ngModel.$asyncValidators.dateFormat = dateFormatValidator;
+
+                        ngModel.$validate();
+
+
+                        $scope.$watch('date', function (newValue, oldValue) {
+                            if (newValue !== oldValue && !dateChangeInternal) {
+                                setDate();
+                            } else if (dateChangeInternal) {
+                                dateChangeInternal = false;
+                            }
+
+                        });
+
+                        function inputChanged() {
+                            var inputNgModel = $scope.getInputNgModel();
+
+                            if ((angular.isUndefined($scope.locals.date) || !angular.isDate($scope.locals.date)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
+                                if ($scope.date !== inputEl.val()) {
+                                    dateChangeInternal = true;
+                                    $scope.date = inputEl.val();
+                                }
+
+                            } else if ($scope.locals.required && inputEl.val() === '') {
+                                if ($scope.date !== '') {
+                                    dateChangeInternal = true;
+                                    $scope.date = '';
+                                }
+
+                                inputNgModel.invalidFormatMessage = null;
+                                inputNgModel.$setValidity('dateFormat', true);
+                            } else if ($scope.date !== $scope.locals.date) {
+                                dateChangeInternal = true;
+                                $scope.date = $scope.locals.date;
+                            }
+                        }
+
+                        /*  Need to handle input change instead of model change
+                            because ngModelOptions updateOn blur does not work
+                            correctly with the uib-datepicker */
+                        inputEl.on('change blur', function () {
+                            $timeout(function () {
+                                inputChanged();
+                            });
+                        });
+
+                        $scope.$watch('locals.date', function () {
+
+                            if ($scope.date !== $scope.locals.date) {
+                                if (angular.isDate($scope.locals.date)) {
+                                    dateChangeInternal = true;
+                                    $scope.date = $scope.locals.date;
+                                }
+                            }
+
+                        });
+
+                        $scope.$watch(function () {
+                            return ngModel.$error && ngModel.$error.required;
+                        }, function (newValue) {
+                            var inputNgModel;
+                            if ($scope.locals.required) {
+                                inputNgModel = $scope.getInputNgModel();
+                                inputNgModel.$setValidity('required', !newValue);
+                            }
+                        });
+
+                    });
+
+                    function runValidators() {
+                        var inputNgModel = $scope.getInputNgModel();
+                        /*istanbul ignore else: sanity check */
+                        if (inputNgModel) {
+                            inputNgModel.$validate();
+                        }
+                    }
+
+                    $scope.$watch('maxDate', function () {
+                        runValidators();
+                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
+                    });
+
+                    $scope.$watch('minDate', function () {
+                        runValidators();
+                        $scope.locals.dateOptions.minDate = $scope.minDate;
+                    });
+
+
+
+
 
                     $scope.locals.loaded = true;
 

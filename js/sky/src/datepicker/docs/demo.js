@@ -39,13 +39,13 @@
         self.openModal = openModal;
 
         self.setDate = function () {
-            self.date1 = 'AAA';
+            self.date2 = '5/22/2014';
         };
         self.customFormat = {
             formatValue: formatValue
         };
 
-        self.date1 = 'aaa';
+        self.date1 = '2015-05-28T00:00:00';
         self.date2 = '5/17/2015';
         self.placeholder = 'Your date here';
         self.minDate = new Date('5/21/2014');

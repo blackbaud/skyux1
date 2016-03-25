@@ -761,7 +761,7 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toEqual('[5/17/1985]');
+            expect($scope.testdate1).toEqual(new Date('5/17/1985'));
 
             inputEl = el.find('input');
 
@@ -811,11 +811,15 @@ describe('Datepicker directive', function () {
                 }
             };
 
-            el = setupDatepicker(customValidationEl, '5/17/1985');
+            el = setupDatepicker(customValidationEl, '');
+
+            inputEl = el.find('input');
+
+            setInput(inputEl, '5/17/1985');
 
             expect($scope.testdate1).toEqual(new Date('5/17/2016'));
 
-            inputEl = el.find('input');
+
 
             expect(inputEl.val()).toBe('05/17/2016');
 
@@ -963,7 +967,7 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toEqual('[5/17/1985]');
+            expect($scope.testdate1).toEqual(new Date('5/17/1985'));
 
             inputEl = el.find('input');
 
@@ -1105,9 +1109,9 @@ describe('Datepicker directive', function () {
 
             $scope.$digest();
 
-            expect(angular.isDefined($scope.testdate1)).toBe(false);
+            expect(angular.isDefined($scope.testdate1)).toBe(true);
 
-            expect($scope.testform.$valid).toBe(false);
+            expect($scope.testform.$valid).toBe(true);
 
         });
     });
