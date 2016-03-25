@@ -71,3 +71,16 @@
 .bb-reorder-list-description {
     word-wrap: break-word;
 }
+
+.bb-reorder-list-row.ng-move {
+    transition:0.5s linear all;
+    opacity:0;
+}
+
+.bb-reorder-list-row.ng-move.ng-move-active {
+    opacity:1;
+}
+
+.bb-reorder-list-no-animate {
+   transition: none !important;
+}
