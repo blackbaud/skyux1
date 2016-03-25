@@ -30,8 +30,8 @@
                 controller: ['$scope', function ($scope) {
                     var self = this;
 
-
                     $scope.getInputNgModel = function () {
+                        /* istanbul ignore else: sanity check */
                         if (angular.isFunction(self.getInputNgModel)) {
                             return self.getInputNgModel();
                         } else {
@@ -89,7 +89,7 @@
 
                         function resolveValidation() {
                             var inputNgModel = $scope.getInputNgModel();
-
+                            /* istanbul ignore else: sanity check */
                             if (inputNgModel !== null) {
                                 deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
                                 inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
@@ -100,7 +100,7 @@
 
                         function setInvalidFormatMessage(errorMessage) {
                             var inputNgModel = $scope.getInputNgModel();
-
+                            /* istanbul ignore else: sanity check */
                             if (inputNgModel !== null) {
                                 inputNgModel.invalidFormatMessage = errorMessage;
                             }
@@ -117,6 +117,7 @@
                                 dateChangeInternal = true;
                                 $scope.date = result.formattedValue;
 
+                                /* istanbul ignore else: sanity check */
                                 if (inputEl) {
                                     inputEl.val($scope.date);
                                 }
