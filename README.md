@@ -13,13 +13,7 @@ http://skyux.developer.blackbaud.com/
 
 ## Installation
 
-You have three options for consuming Sky UX.  The first and easiest is to point your site to our CDN:
-
-    <!-- Put this in your page's HEAD element -->
-    <link rel="stylesheet" type="text/css" href="https://sky.blackbaudcdn.net/skyux/1.5.10/css/sky-bundle.css" />
-
-    <!-- Put this at the bottom of your page's BODY element -->
-    <script src="https://sky.blackbaudcdn.net/skyux/1.5.10/js/sky-bundle.min.js"></script>
+You have three options for consuming Sky UX.  The first and easiest is to point your site to our CDN, which you can read about in our [Getting Started](http://skyux.developer.blackbaud.com/getting-started/start-a-project/#create-a-page) guide.
 
 The second option is to install Sky UX via [Bower](http://bower.io/search/?q=blackbaud-skyux):
 
@@ -29,7 +23,7 @@ The third option is to install Sky UX via [NPM](https://www.npmjs.com/package/bl
 
     npm install blackbaud-skyux
 
-If you install via Bower or NPM you will need to include the same files as above but with the URL pointing to your own server rather than the CDN.
+If you install via Bower or NPM you will need to include the same files as indicated in the [Getting Started](http://skyux.developer.blackbaud.com/getting-started/start-a-project/#create-a-page) guide but with the URL pointing to your own web server rather than the CDN.  You may also use a [hybrid approach](http://skyux.developer.blackbaud.com/blog/2016-01-06/) where you load SKY UX via the CDN and fall back to a version hosted by your web server if the CDN is unavailable.
 
 ## Contributing
 
@@ -50,6 +44,7 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
   - You should include documentation for each Sky UX module you create within your source code. We use JSDoc-style comments at the top of our JavaScript files to generate Markdown documentation. You can generate the Markdown documentation by running the command `grunt docs` from the command line.
   - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watch` task will generate documentation which you can find under `demo/build`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
   - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watch` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
+  - We've also written a code analysis tool for validating SKYUX components.  Visit [grunt-skylint](https://github.com/blackbaud/grunt-skylint) to learn more.
 
 ### Visual regression tests
 

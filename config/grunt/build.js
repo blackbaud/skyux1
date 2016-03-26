@@ -76,6 +76,18 @@ module.exports = function (grunt, env, utils) {
                 }]
             }
         },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1,
+                sourceMap: true
+            },
+            dist: {
+                files: {
+                    '<%= skyux.paths.dist %>css/libs.css': '<%= skyux.paths.libsCss %>'
+                }
+            }
+        },
         html2js: {
             options: {
                 base: 'js/',
@@ -116,16 +128,16 @@ module.exports = function (grunt, env, utils) {
                 }
             }
         },
-        cssmin: {
-            options: {
-                shorthandCompacting: false,
-                roundingPrecision: -1,
-                sourceMap: true
-            },
+        sri: {
             dist: {
-                files: {
-                    '<%= skyux.paths.dist %>css/libs.css': '<%= skyux.paths.libsCss %>'
-                }
+                options: {
+                    algorithms: ['sha384'],
+                    dest: '<%= skyux.paths.dist %>sri.json'
+                },
+                src: [
+                    '<%= skyux.paths.dist %>/**/*.js',
+                    '<%= skyux.paths.dist %>/**/*.css'
+                ]
             }
         },
         // Renamed the original grunt-contrib-watch task

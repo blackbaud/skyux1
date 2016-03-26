@@ -16,48 +16,6 @@
         cls: 'action'
     }];
 
-    function makeErrorComponent(component) {
-        var controllerName,
-            name = component.name;
-
-        function Controller($scope) {
-            var vm = this;
-
-            $scope.$on('$destroy', function () {
-                vm.onDestroy();
-                vm = null;
-            });
-        }
-
-        Controller.$inject = ['$scope'];
-
-        function componentFn() {
-            function link(scope, el, attrs, ctrls) {
-                var vm = ctrls[0],
-                    bbError = ctrls[1];
-
-                vm.el = el;
-
-                bbError['set' + name](vm);
-            }
-
-            return {
-                restrict: 'E',
-                require: ['bbError' + name, '^bbError'],
-                controller: controllerName,
-                controllerAs: 'bbError' + name,
-                bindToController: true,
-                link: link,
-                scope: {}
-            };
-        }
-
-        controllerName = 'BBError' + name + 'Controller';
-
-        angular.module('sky.error.directive')
-            .controller(controllerName, Controller)
-            .directive('bbError' + name, componentFn);
-    }
 
     function getCtrlPropName(component) {
         var name = component.name;
@@ -65,25 +23,49 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBErrorController() {
-        var vm = this;
+    function getOverridePropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'HasOverride';
+    }
+
+    function BBErrorController($scope) {
+        var vm = this,
+            errorType;
+
+        errorType = vm.errorType;
 
         function addComponentSetter(component) {
             var name = component.name;
 
-            vm['set' + name] = function (ctrl) {
-                var propName = getCtrlPropName(component);
+            vm['set' + name] = function (ctrl, isDefaultError) {
+                var ctrlName = getCtrlPropName(component),
+                    hasOverride = getOverridePropName(component);
 
-                vm[propName] = ctrl;
+                vm[ctrlName] = ctrl;
+
+                if (!isDefaultError) {
+                    vm[hasOverride] = true;
+                }
 
                 ctrl.onDestroy = function () {
-                    vm[propName] = null;
+                    vm[ctrlName] = null;
                 };
             };
         }
 
+        $scope.$watch(function () {
+            return vm.errorType;
+        }, function (newValue) {
+            vm.imageType = newValue;
+            vm.titleType =  newValue;
+            vm.descriptionType =  newValue;
+        });
+
         components.forEach(addComponentSetter);
     }
+
+    BBErrorController.$inject = ['$scope'];
 
     function bbError() {
         function link(scope, el, attrs, vm) {
@@ -91,7 +73,9 @@
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
                 }, function (newValue) {
+
                     if (newValue) {
+
                         el.find('.bb-error-' + component.cls)
                             .empty()
                             .append(newValue.el);
@@ -106,7 +90,9 @@
             restrict: 'E',
             controller: 'BBErrorController',
             controllerAs: 'bbError',
-            bindToController: true,
+            bindToController: {
+                errorType: '@'
+            },
             link: link,
             scope: {},
             templateUrl: 'sky/templates/error/error.directive.html',
@@ -114,10 +100,8 @@
         };
     }
 
-    angular.module('sky.error.directive', [])
+    angular.module('sky.error.directive', ['sky.error.image.directive', 'sky.error.title.directive', 'sky.error.description.directive', 'sky.error.action.directive'])
         .controller('BBErrorController', BBErrorController)
         .directive('bbError', bbError);
-
-    components.forEach(makeErrorComponent);
 
 }());
