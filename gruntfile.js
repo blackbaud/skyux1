@@ -25,7 +25,6 @@ module.exports = function (grunt) {
     require('./config/grunt/test')(grunt, env, utils);
 
     // Load required external modules
-    grunt.loadNpmTasks('grunt-browserstack-tunnel');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-concat-sourcemap');
     grunt.loadNpmTasks('grunt-contrib-connect');

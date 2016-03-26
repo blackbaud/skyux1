@@ -1,4 +1,4 @@
-/*global module,process*/
+/*global module,require,process*/
 module.exports = function (grunt, utils) {
     'use strict';
 
@@ -61,6 +61,11 @@ module.exports = function (grunt, utils) {
             environment = grunt.option('env');
         } else if (grunt.option('browserstack')) {
             environment = SUPPORTED.LOCAL_BS;
+            if (!grunt.file.exists('browserstack.env')) {
+                utils.fatal('Expected browserstack.env file to exist.');
+            } else {
+                require('dotenv').config();
+            }
         } else if (process.env.TRAVIS) {
             if (process.env.TRAVIS_SECURE_ENV_VARS === 'true') {
                 if (process.env.TRAVIS_PULL_REQUEST === 'false' && process.env.TRAVIS_REPO_SLUG === 'blackbaud/skyux') {
