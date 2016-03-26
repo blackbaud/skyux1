@@ -2,14 +2,16 @@
 
 /**
  * Karma configuration options shared between CI and local versions.
+ * Files array is set in grunt/test so we can use grunt.config.
  */
 module.exports = {
     singleRun: false,
     autoWatch: false,
-    basePath: '../',
+    basePath: '../../',
     frameworks: [
         'jasmine'
     ],
+    // Look into moving this grunt so skyux.paths.libsJs can be used
     files: [
         'bower_components/jquery/dist/jquery.js',
         'bower_components/jquery-ui/jquery-ui.js',
@@ -49,7 +51,7 @@ module.exports = {
         'coverage'
     ],
     coverageReporter: {
-        dir: 'coverage/',
+        dir: '../coverage/',
         reporters: [
             {
                 type: 'html'
