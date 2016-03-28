@@ -86,6 +86,7 @@
                     function updateUIForSearch(showSearchingMsg) {
                         var msg;
 
+
                         // Remove the no results message if it's currently displayed
                         if (msgEl) {
                             msgEl.remove();

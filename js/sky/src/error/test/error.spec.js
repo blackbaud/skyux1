@@ -19,6 +19,7 @@ describe('Error', function () {
         bbResources = _bbResources_;
     }));
 
+
     function getErrorImage(el) {
         return el.find('.bb-error-image img');
     }

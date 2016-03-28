@@ -6,8 +6,10 @@
         var vm = this;
 
         $scope.$on('$destroy', function () {
-            vm.onDestroy();
-            vm = null;
+            if (angular.isFunction(vm.onDestroy)) {
+                vm.onDestroy();
+                vm = null;
+            }
         });
         $scope.$watch(function () {
             return vm.errorType;
@@ -24,7 +26,6 @@
                     break;
             }
         });
-
     }
 
     BBErrorTitleController.$inject = ['$scope', 'bbResources'];
