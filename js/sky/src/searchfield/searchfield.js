@@ -4,7 +4,18 @@
 (function ($) {
     'use strict';
 
+    function uiSelect($animate) {
+        return {
+            link: function ($scope, el) {
+                $animate.enabled(el, false);
+            }
+        };
+    }
+
+    uiSelect.$inject = ['$animate'];
+
     angular.module('sky.searchfield', ['sky.resources'])
+        .directive('uiSelect', uiSelect)
         .directive('uiSelectMatch', ['$timeout', function ($timeout) {
             return {
                 restrict: 'EA',
