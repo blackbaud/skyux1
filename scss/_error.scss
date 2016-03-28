@@ -38,6 +38,34 @@
   padding-bottom: $padding;
 }
 
+.bb-error-image-broken {
+  background-image: url('images/broken.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-background-size: contain;
+  -o-background-size: contain;
+  -moz-background-size: contain;
+}
+
+.bb-error-image-construction {
+  background-image: url('images/construction.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-background-size: contain;
+  -o-background-size: contain;
+  -moz-background-size: contain;
+}
+
+.bb-error-image-notfound {
+  background-image: url('images/notFound.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-background-size: contain;
+  -o-background-size: contain;
+  -moz-background-size: contain;
+}
+
 .bb-error-image-broken, .bb-error-image-construction, .bb-error-image-notfound {
-  max-width: 100%;
+
+
 }

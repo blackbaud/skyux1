@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 
     // Variables defined here are at least needed throughout the method, and possibly in grunt config.
     var fontFiles = ['**/*.eot', '**/*.svg', '**/*.ttf', '**/*.woff', '**/*.woff2'],
+        imageFiles = ['images/*.png', 'images/*.svg'],
         jsHintFiles = ['gruntfile.js', 'js/**/*.js'],
         libsCss,
         libsJs,
@@ -282,7 +283,15 @@ module.exports = function (grunt) {
                     src: fontFiles,
                     cwd: 'scss',
                     dest: '<%= skyDistPath %>css/fonts'
-                }]
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: imageFiles,
+                    cwd: 'scss',
+                    dest: '<%= skyDistPath %>css/images'
+                }
+                ]
             },
             demo: {
                 expand: true,
