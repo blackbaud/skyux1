@@ -17,14 +17,13 @@
 .bb-reorder-list-col-top {
   color: $bb-color-blue;
   cursor:pointer;
-  padding: $padding; //increase click radius of icon
   white-space: nowrap;
 }
 
 .bb-reorder-list-row {
     background-color: white;
     border: none;
-    border-bottom: dotted 1px $gray-lighter;
+    border-top: dotted 1px $gray-lighter;
     cursor: pointer;
     padding: $padding;
     outline-offset: -5px;
@@ -34,8 +33,14 @@
     cursor: -webkit-grab;
     cursor: -moz-grab;
 
-    &:last-child {
-        border: none;
+    // we always want the sorting item to keep its border
+    &:not(.bb-reorder-list-sorting-item):first-child {
+      border: none;
+    }
+
+    // if we are sorting the first item, make sure the next sibling does not have a top border when it gets pushed up.
+    &:first-child.bb-reorder-list-sorting-item + .bb-reorder-list-row {
+      border: none;
     }
 }
 
