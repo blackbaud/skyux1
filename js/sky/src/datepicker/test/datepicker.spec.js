@@ -761,7 +761,9 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toEqual(new Date('5/17/1985'));
+            /*  Now validation is run on initialization of the datepicker, which
+                is how angular validation typically occurs */
+            expect($scope.testdate1).toEqual('[5/17/1985]');
 
             inputEl = el.find('input');
 
@@ -819,8 +821,6 @@ describe('Datepicker directive', function () {
 
             expect($scope.testdate1).toEqual(new Date('5/17/2016'));
 
-
-
             expect(inputEl.val()).toBe('05/17/2016');
 
         });
@@ -858,7 +858,6 @@ describe('Datepicker directive', function () {
                     });
                 }
             };
-
 
             el = setupDatepicker(customValidationEl, 'aaa');
 
@@ -967,7 +966,9 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toEqual(new Date('5/17/1985'));
+            /*  Now validation is run on initialization of the datepicker, which
+                is how angular validation typically occurs */
+            expect($scope.testdate1).toEqual('[5/17/1985]');
 
             inputEl = el.find('input');
 
@@ -1059,7 +1060,6 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-
             inputEl = el.find('input');
 
             setInput(inputEl, '5/22/1929');
@@ -1075,7 +1075,7 @@ describe('Datepicker directive', function () {
                 customValidationEl = '<div>' +
                 '<form name="testform" novalidate>' +
                     '<div class="form-group">' +
-                        '<bb-datepicker bb-datepicker-name="testDate1" ng-required="{{true}}" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
+                        '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
                     '</div>' +
                 '</form>' +
             '</div>';
@@ -1108,6 +1108,7 @@ describe('Datepicker directive', function () {
             setInput(inputEl, 'aaa');
 
             $scope.$digest();
+
 
             expect(angular.isDefined($scope.testdate1)).toBe(true);
 
