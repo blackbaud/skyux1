@@ -6,6 +6,7 @@ describe('Search field directive', function () {
     var $compile,
         $rootScope,
         $timeout,
+        $animate,
         bbResources;
 
     function createSingleSelectEl($scope) {
@@ -35,14 +36,34 @@ describe('Search field directive', function () {
     }
 
     beforeEach(module('ngMock'));
+    beforeEach(module('ngAnimateMock'));
     beforeEach(module('ui.select', 'sky.searchfield', 'sky.templates'));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _bbResources_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _bbResources_, _$animate_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $timeout = _$timeout_;
         bbResources = _bbResources_;
+        $animate = _$animate_;
     }));
+
+    it('should disable animation', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            animateSpy,
+            animateEl,
+            animateIsEnabled;
+        animateSpy = spyOn($animate, 'enabled').and.callFake(function (element, isEnabled) {
+            animateEl = element;
+            animateIsEnabled = isEnabled;
+        });
+
+        el = createSingleSelectEl($scope);
+        $scope.$digest();
+
+        expect(animateEl).toEqual(el);
+        expect(animateIsEnabled).toBe(false);
+    });
 
     it('should display a status message when the user is searching', function () {
         var $scope = $rootScope.$new(),
