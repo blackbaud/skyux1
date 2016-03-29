@@ -463,7 +463,7 @@
     ];
 
     deprecatedDirectives = [
-        ['ui-select'],
+        ['ui-select', 'bb-select-field'],
         ['bb-autofocus'],
         ['bb-chart-scatterplot'],
         ['bb-date-field', 'bb-datepicker'],

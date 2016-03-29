@@ -7,7 +7,7 @@ deprecated: true
 
 ### *Deprecated* ###
 
- This directive is no longer being maintained. Use the [bb-selectfield](../selectfield) directive to display items for users to select.
+ This directive is no longer being maintained. Use the [bb-select-field](../selectfield) directive to display items for users to select.
 
 <s>
 The search field directive allows you to easily build single- and multi-search fields that can be filtered as the user types. This directive uses all the syntax and settings of the `ui-select` third party control (see the `ui-select` documentation for more information, options, and settings).
