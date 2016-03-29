@@ -10,7 +10,8 @@
   display: inline-block;
 
   .bb-error-image-broken-container {
-    max-width: 182px;
+    width: 182px;
+    height: 189px;
     display: inline-block;
   }
 
@@ -21,8 +22,9 @@
   }
 
   .bb-error-image-notfound-container {
-    max-width: 328px;
     display: inline-block;
+    width: 328px;
+    height: 307px;
   }
 }
 
@@ -41,31 +43,19 @@
 .bb-error-image-broken {
   background-image: url('images/broken.png');
   background-repeat: no-repeat;
-  background-size: contain;
-  -webkit-background-size: contain;
-  -o-background-size: contain;
-  -moz-background-size: contain;
+  height: 100%;
 }
 
 .bb-error-image-construction {
   background-image: url('images/construction.svg');
   background-repeat: no-repeat;
-  background-size: contain;
-  -webkit-background-size: contain;
-  -o-background-size: contain;
-  -moz-background-size: contain;
+  height: 100%;
 }
 
 .bb-error-image-notfound {
   background-image: url('images/notFound.svg');
   background-repeat: no-repeat;
   background-size: contain;
-  -webkit-background-size: contain;
-  -o-background-size: contain;
-  -moz-background-size: contain;
-}
-
-.bb-error-image-broken, .bb-error-image-construction, .bb-error-image-notfound {
-
+  height: 100%;
 
 }
