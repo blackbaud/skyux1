@@ -196,12 +196,22 @@ describe('Datepicker directive', function () {
     });
 
     it('handles date change to invalid date from model', function () {
-        var el;
+        var el,
+            inputEl;
 
         el = setupDatepicker(datepickerHtml, '5/17/1985');
 
         $scope.testdate1 = 'blaaaaaaah';
         $scope.$digest();
+
+        inputEl = el.find('input');
+
+        $timeout.flush();
+
+        expect(inputEl).toHaveValue('blaaaaaaah');
+
+        inputEl.trigger('change');
+        expect(inputEl).toHaveValue('blaaaaaaah');
 
         expect(angular.isDefined($scope.testdate1)).toBe(true);
 
@@ -777,6 +787,22 @@ describe('Datepicker directive', function () {
 
             expect($scope.testdate1).toBe('May2009');
             expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe('Any letters should be capitalized.');
+
+            $scope.testdate1 = new Date('5/22/1929');
+            $scope.$digest();
+
+            expect($scope.testform.$valid).toBe(true);
+
+            $scope.testdate1 = 'aaa';
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(inputEl).toHaveValue('aaa');
+            expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe('Any letters should be capitalized.');
+            expect($scope.testform.$valid).toBe(false);
+
+            inputEl.trigger('change');
+            expect(inputEl).toHaveValue('aaa');
 
         });
 
