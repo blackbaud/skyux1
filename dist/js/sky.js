@@ -8632,6 +8632,8 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
+    var DEFAULT_TIMEOUT = 10000;
+
     function nextId() {
         nextId.index = nextId.index || 0;
         nextId.index++;
@@ -8644,16 +8646,31 @@ angular.module('sky.palette.config', [])
         } else if (!opts.message && !opts.templateUrl) {
             throw 'You must provide either a message or a templateUrl.';
         }
+
+        switch (opts.toastType) {
+        case 'info':
+        case 'warning':
+        case 'success':
+        case 'error':
+            break;
+        case 'danger':
+            opts.toastType = 'error';
+            break;
+        default:
+            opts.toastType = 'info';
+        }
     }
 
     angular.module('sky.toast', ['toastr'])
         .config(['toastrConfig', function (toastrConfig) {
             angular.extend(toastrConfig, {
                 closeButton: true,
+                extendedTimeOut: DEFAULT_TIMEOUT,
                 newestOnTop: true,
                 positionClass: 'toast-bottom-right',
                 tapToDismiss: false,
-                timeOut: 6000
+                timeOut: DEFAULT_TIMEOUT,
+                toastClass: 'toast bb-toast'
             });
         }])
         .factory('bbToast', ['toastr', '$templateCache', '$compile', '$controller', '$rootScope', '$q', '$injector', function (toastr, $templateCache, $compile, $controller, $rootScope, $q, $injector) {
@@ -8668,14 +8685,26 @@ angular.module('sky.palette.config', [])
                 return promisesArr;
             }
 
-            function open(message, config) {
+            function open(message, config, opts) {
                 config = config || {};
-                config.iconClass = 'bb-toast';
-                return toastr.info(message, '', config);
+
+                config.iconClass = 'bb-toast-' + opts.toastType;
+
+                switch (opts.timeout) {
+                case 'infinite':
+                    config.timeOut = config.extendedTimeOut = 0;
+                    break;
+                default:
+                    if (!isNaN(opts.timeout)) {
+                        config.timeOut = config.extendedTimeOut = +opts.timeout;
+                    }
+                }
+
+                return toastr[opts.toastType](message, '', config);
             }
 
             function openMessage(opts) {
-                return open(opts.message);
+                return open(opts.message, null, opts);
             }
 
             function openWithTemplate(opts) {
@@ -8716,7 +8745,7 @@ angular.module('sky.palette.config', [])
 
                     elId = nextId();
 
-                    toast = open("<div id='" + elId + "'></div>", { allowHtml: true });
+                    toast = open("<div id='" + elId + "'></div>", { allowHtml: true }, opts);
                     toastScope = toast.scope;
 
                     //We need to hook in after the toast element has been created and the temporary message
@@ -8733,7 +8762,10 @@ angular.module('sky.palette.config', [])
 
             return {
                 open: function (opts) {
-                    opts = opts || {};
+                    // Clone the options so as we make changes we don't alter the object
+                    // passed to us.
+                    opts = angular.extend({}, opts);
+
                     validateOptions(opts);
 
                     if (opts.templateUrl) {
