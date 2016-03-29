@@ -228,6 +228,8 @@ module.exports = function (grunt, env, utils) {
         ];
 
         switch (env.get()) {
+        case env.SUPPORTED.CI_PR_BRANCH:
+            break;
         case env.SUPPORTED.LOCAL:
         case env.SUPPORTED.LOCAL_BS:
         case env.SUPPORTED.CI_PUSH:
