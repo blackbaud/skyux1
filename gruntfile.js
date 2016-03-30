@@ -58,7 +58,6 @@ module.exports = function (grunt) {
         'bower_components/free-jqgrid/js/jquery.jqGrid.js',
         'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
         'bower_components/blockui/jquery.blockUI.js',
-        'bower_components/angular-ui-select/dist/select.js',
         'bower_components/fastclick/lib/fastclick.js',
         'bower_components/ng-file-upload/ng-file-upload.js',
         'libs/easyXDM.js'
