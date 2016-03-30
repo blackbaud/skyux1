@@ -63,7 +63,7 @@
                 toTheTopEl.addClass('bb-reorder-list-row-placeholder');
 
                 // animate that we are moving the item to the top of the list
-                $(animateCloneEl).fadeOut({duration: 500, queue: false}).slideUp({duration: 500, queue: false, always: function () {
+                $(animateCloneEl).fadeOut({duration: 500, queue: false, always: function () {
                    toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
 
                    animateCloneEl.remove();

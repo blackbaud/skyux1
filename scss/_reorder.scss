@@ -1,4 +1,6 @@
 
+@import "mixins";
+
 .bb-reorder-container {
   position:relative
 }
@@ -38,9 +40,9 @@
       border: none;
     }
 
-    // if we are sorting the first item, make sure the next sibling does not have a top border when it gets pushed up.
+    // if we are sorting the first item, make sure the next sibling does not have a visible top border when it gets pushed up.
     &:first-child.bb-reorder-list-sorting-item + .bb-reorder-list-row {
-      border: none;
+      border-top:1px solid transparent; // need it to keep its height otherwise we are 1px smaller and the list shifts.
     }
 }
 
@@ -52,6 +54,17 @@
 
 .bb-reorder-list-row-placeholder {
   background-color: $body-bg;
+
+  // when we are sorting the placeholder height is set directly on the element.
+  // if the item being sorted had a border, the placeholder is going to be 1 px larger than it should
+  // be when it is moved to the top since the top child in the reorder list should
+  // not have a border. Need to reduce size by 1 px so the list does not shift.
+  // Note: the placeholder can only ever be the first child if the first item in the list
+  // is not being sorted. The first item will not have a border so this rule is not
+  // necessary in that case as the placeholder will have the correct size.
+  &:first-child {
+    margin-bottom: -1px;
+  }
 }
 
 .bb-reorder-list-row-placeholder .bb-reorder-list-row-container {
@@ -59,7 +72,7 @@
 }
 
 .bb-reorder-list-sorting-item {
-  box-shadow: 5px 5px 5px #888888;
+  @include shadow();
   border: 1px solid $gray-light;
 }
 
