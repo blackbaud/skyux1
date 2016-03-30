@@ -464,6 +464,7 @@
 
     deprecatedDirectives = [
         ['error-type', 'bb-error-type'],
+        ['ui-select', 'bb-select-field'],
         ['bb-autofocus'],
         ['bb-chart-scatterplot'],
         ['bb-date-field', 'bb-datepicker'],
