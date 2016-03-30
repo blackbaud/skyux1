@@ -1,14 +1,11 @@
 <div ng-if="bbErrorImage.bbErrorType" class="bb-error-image-container">
-  <div class="bb-error-image-broken-container" ng-if="bbErrorImage.bbErrorType === 'broken'">
-    <div class="bb-error-image-broken" />
+  <div class="bb-error-image-broken" ng-if="bbErrorImage.bbErrorType === 'broken'">
   </div>
 
-  <div class="bb-error-image-construction-container" ng-if="bbErrorImage.bbErrorType === 'construction'">
-    <div class="bb-error-image-construction" />
+  <div class="bb-error-image-construction" ng-if="bbErrorImage.bbErrorType === 'construction'">
   </div>
 
-  <div class="bb-error-image-notfound-container" ng-if="bbErrorImage.bbErrorType === 'notFound'">
-    <div class="bb-error-image-notfound" />
+  <div class="bb-error-image-notfound" ng-if="bbErrorImage.bbErrorType === 'notFound'">
   </div>
 </div>
 <ng-transclude></ng-transclude>
