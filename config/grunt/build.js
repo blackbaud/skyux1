@@ -70,9 +70,16 @@ module.exports = function (grunt, env, utils) {
                 files: [{
                     expand: true,
                     flatten: true,
-                    src: ['**/*.eot', '**/*.svg', '**/*.ttf', '**/*.woff', '**/*.woff2'],
+                    src: ['**/*.eot', '**/*.svg', '**/*.ttf', '**/*.woff', '**/*.woff2', '!images/*.svg'],
                     cwd: 'scss',
                     dest: '<%= skyux.paths.dist %>css/fonts'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: ['images/*.svg', 'images/*.png'],
+                    cwd: 'scss',
+                    dest: '<%= skyux.paths.dist %>css/images'
                 }]
             }
         },

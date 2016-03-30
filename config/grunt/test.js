@@ -158,7 +158,7 @@ module.exports = function (grunt, env, utils) {
     });
 
     grunt.registerTask('cleanupworkingscreenshots', function () {
-        cleanupWorkingScreenshots(grunt.config.get('skyux.paths.paths.webdriver'));
+        cleanupWorkingScreenshots(grunt.config.get('skyux.paths.webdriver'));
     });
 
     grunt.registerTask('lint', ['jshint', 'jscs']);
