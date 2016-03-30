@@ -9,15 +9,8 @@
             <div bb-modal-body>
                 <form>
                     <div class="form-group">
-                        <label class="control-label">Sample text box</label>
+                        <label class="control-label">{{::contentCtrl.textLabel}}</label>
                         <input type="text" class="form-control" />
-                        <label class="control-label">Search</label>
-                        <ui-select ng-model="contentCtrl.color_id" append-to-body="true">
-                            <ui-select-match allow-clear placeholder="{{resources.watermark_single}}" >{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="color.id as color in contentCtrl.colors | filter: $select.search">
-                                <span>{{color.name}}</span>
-                            </ui-select-choices>
-                        </ui-select>
                     </div>
                 </form>
             </div>
