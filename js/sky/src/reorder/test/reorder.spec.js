@@ -165,7 +165,7 @@ describe('Reorder', function () {
                 secondRow,
                 el;
 
-            spyOn($.fn, 'slideUp');
+            spyOn($.fn, 'fadeOut');
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
@@ -176,7 +176,7 @@ describe('Reorder', function () {
             expect(secondRow).toHaveClass('bb-reorder-list-row-placeholder');
             expect(el.find('.bb-reorder-animate-element')).toExist();
 
-            animateCallback = $.fn.slideUp.calls.argsFor(0)[0].always;
+            animateCallback = $.fn.fadeOut.calls.argsFor(0)[0].always;
             animateCallback(); // act as though the animation finished
 
             expect($(el.find('.bb-reorder-list-row')[0]).find('.bb-reorder-list-title')).toContainText('test2');
