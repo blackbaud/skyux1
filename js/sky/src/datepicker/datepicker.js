@@ -43,8 +43,7 @@
                     var parsedDate,
                         inputEl,
                         skipValidation = false,
-                        dateChangeInternal = false,
-                        pickerDateChangeInternal;
+                        dateChangeInternal = false;
 
                     function open($event) {
                         $event.preventDefault();
@@ -53,26 +52,37 @@
                         $scope.locals.opened = !$scope.locals.opened;
                     }
 
+                    function setDatepickerInput(newValue) {
+                        /*  uib-datepicker does not allow setting model directly
+                            to anything but a JavaScript Date. However, we can clear
+                            the current model and set the input manually to get the
+                            correct value to display */
+                        $scope.locals.date = null;
+                        $timeout(function () {
+                            inputEl.val(newValue);
+                        });
+                    }
+
                     function setDate() {
                         var inputNgModel;
                         if (angular.isDate($scope.date)) {
                             $scope.locals.date = $scope.date;
-                        } else {
+                        } else if (!$scope.locals.hasCustomValidation) {
                             parsedDate = bbDatepickerParser.runParsers($scope.date, $scope.format);
                             if (angular.isDate(parsedDate)) {
                                 $scope.date = parsedDate;
                                 $scope.locals.date = parsedDate;
-                            } else if (!$scope.locals.hasCustomValidation) {
-                                $scope.locals.date = $scope.date;
-                                pickerDateChangeInternal = true;
+                            } else {
+                                setDatepickerInput($scope.date);
+
                                 inputNgModel = $scope.getInputNgModel();
                                 if (inputNgModel && !inputNgModel.$validators.date($scope.date)) {
                                     inputNgModel.invalidFormatMessage = bbResources.date_field_invalid_date_message;
                                     inputNgModel.$setValidity('dateFormat', false);
                                 }
-                            } else {
-                                inputEl.val($scope.date);
                             }
+                        } else {
+                            setDatepickerInput($scope.date);
                         }
                     }
 
@@ -90,7 +100,7 @@
                         function resolveValidation() {
                             var inputNgModel = $scope.getInputNgModel();
                             /* istanbul ignore else: sanity check */
-                            if (inputNgModel !== null) {
+                            if (inputNgModel) {
                                 deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
                                 inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
                             } else {
@@ -101,7 +111,7 @@
                         function setInvalidFormatMessage(errorMessage) {
                             var inputNgModel = $scope.getInputNgModel();
                             /* istanbul ignore else: sanity check */
-                            if (inputNgModel !== null) {
+                            if (inputNgModel) {
                                 inputNgModel.invalidFormatMessage = errorMessage;
                             }
                         }
@@ -112,7 +122,7 @@
                             setInvalidFormatMessage(result.formattingErrorMessage);
                             resolveValidation();
 
-                            if (result.formattedValue !== $scope.date) {
+                            if (angular.isDefined(result.formattedValue) && result.formattedValue !== $scope.date) {
                                 skipValidation = true;
                                 dateChangeInternal = true;
                                 $scope.date = result.formattedValue;
@@ -127,7 +137,7 @@
                                 }
                             }
                         }
-
+                        
                         deferred = $q.defer();
 
                         if (skipValidation || angular.isDate($scope.date) || $scope.date === '' || hasMinMaxError() || (!$scope.locals.required && $scope.date === null)) {
@@ -144,7 +154,7 @@
                         } else {
                             inputNgModel = $scope.getInputNgModel();
                             /* istanbul ignore else: sanity check */
-                            if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
+                            if (inputNgModel && inputNgModel.$error && inputNgModel.$error.date) {
                                 setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                             }
                             resolveValidation();
@@ -230,14 +240,12 @@
 
                         ngModel.$validate();
 
-
                         $scope.$watch('date', function (newValue, oldValue) {
                             if (newValue !== oldValue && !dateChangeInternal) {
                                 setDate();
                             } else if (dateChangeInternal) {
                                 dateChangeInternal = false;
                             }
-
                         });
 
                         function inputChanged() {
@@ -248,7 +256,6 @@
                                     dateChangeInternal = true;
                                     $scope.date = inputEl.val();
                                 }
-
                             } else if ($scope.locals.required && inputEl.val() === '') {
                                 if ($scope.date !== '') {
                                     dateChangeInternal = true;
