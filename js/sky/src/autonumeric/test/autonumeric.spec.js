@@ -294,6 +294,16 @@ describe('Autonumeric', function () {
 
                 expect(el.val()).toBe('$123*456.78');
             });
+
+            it('should cascade from "number" to "percent"', function () {
+                var el = $compile('<input type="text" ng-model="numericValue" bb-autonumeric="percent" />')($scope);
+
+                $scope.numericValue = 99.78;
+
+                $scope.$digest();
+
+                expect(el.val()).toBe('99.78%');
+            });
         });
     });
 
@@ -335,6 +345,12 @@ describe('Autonumeric', function () {
             var formattedValue = $filter('bbAutonumeric')(100, { mDec: 0 });
 
             expect(formattedValue).toBe('100');
+        });
+
+        it('should format value with percent sign when percent config type is specified', function () {
+            var formattedValue = $filter('bbAutonumeric')(100, 'percent');
+
+            expect(formattedValue).toBe('100.00%');
         });
 
         it('should not abbreviate values that round to less than 10,000', function () {

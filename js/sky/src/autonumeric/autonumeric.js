@@ -36,6 +36,10 @@
             },
             money: {
                 aSign: '$'
+            },
+            percent: {
+                aSign: '%',
+                pSign: 's'
             }
         })
         .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', function ($timeout, bbAutoNumericConfig, bbWindow) {
