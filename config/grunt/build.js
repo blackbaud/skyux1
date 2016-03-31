@@ -329,5 +329,5 @@ module.exports = function (grunt, env, utils) {
     });
 
     // Main build task
-    grunt.registerTask('build', ['styles', 'scripts']);
+    grunt.registerTask('build', ['styles', 'scripts', 'sri']);
 };
