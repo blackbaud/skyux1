@@ -13,8 +13,8 @@ describe('Context menu', function () {
         'ngAnimateMock',
         'sky.contextmenu',
         'sky.templates',
-        'template/accordion/accordion.html',
-        'template/accordion/accordion-group.html'
+        'uib/template/accordion/accordion.html',
+        'uib/template/accordion/accordion-group.html'
     ));
 
     beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$animate_) {
@@ -107,8 +107,8 @@ describe('Context menu', function () {
     it('can create a context menu dropdown using angular ui bootstrap dropdown and bb-context-menu-button', function () {
         var el = angular.element([
             '<div>',
-            '<div class="bb-context-menu" dropdown>',
-            '<bb-context-menu-button dropdown-toggle></bb-context-menu-button>',
+            '<div class="bb-context-menu" uib-dropdown>',
+            '<bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>',
             '<ul class="dropdown-menu" role="menu">',
             '   <li role="presentation" ng-repeat="item in locals.items">',
             '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></li>',

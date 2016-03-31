@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module, $ */
+/*global angular, inject, module*/
 
 describe('Datepicker directive', function () {
     'use strict';
@@ -70,7 +70,6 @@ describe('Datepicker directive', function () {
     function setInput(inputEl, value) {
 
         inputEl.val(value).trigger('change');
-
         $timeout.flush();
     }
 
@@ -180,6 +179,11 @@ describe('Datepicker directive', function () {
 
         el = setupDatepicker(datepickerHtml, '5/17/1985');
 
+        expect(angular.isDefined($scope.testdate1)).toBe(true);
+
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(undefined);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
+
         inputEl = el.find('input');
 
         setInput(inputEl, 'blaaaaaaah');
@@ -192,12 +196,22 @@ describe('Datepicker directive', function () {
     });
 
     it('handles date change to invalid date from model', function () {
-        var el;
+        var el,
+            inputEl;
 
         el = setupDatepicker(datepickerHtml, '5/17/1985');
 
         $scope.testdate1 = 'blaaaaaaah';
         $scope.$digest();
+
+        inputEl = el.find('input');
+
+        $timeout.flush();
+
+        expect(inputEl).toHaveValue('blaaaaaaah');
+
+        inputEl.trigger('change');
+        expect(inputEl).toHaveValue('blaaaaaaah');
 
         expect(angular.isDefined($scope.testdate1)).toBe(true);
 
@@ -757,7 +771,9 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toBe('5/17/1985');
+            /*  Now validation is run on initialization of the datepicker, which
+                is how angular validation typically occurs */
+            expect($scope.testdate1).toEqual('[5/17/1985]');
 
             inputEl = el.find('input');
 
@@ -771,6 +787,173 @@ describe('Datepicker directive', function () {
 
             expect($scope.testdate1).toBe('May2009');
             expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe('Any letters should be capitalized.');
+
+            $scope.testdate1 = new Date('5/22/1929');
+            $scope.$digest();
+
+            expect($scope.testform.$valid).toBe(true);
+
+            $scope.testdate1 = 'aaa';
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(inputEl).toHaveValue('aaa');
+            expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe('Any letters should be capitalized.');
+            expect($scope.testform.$valid).toBe(false);
+
+            inputEl.trigger('change');
+            expect(inputEl).toHaveValue('aaa');
+
+        });
+
+        it('accepts a custom validation formatter that returns a JavaScript date', function () {
+            var el,
+                inputEl,
+                customValidationEl = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<div class="form-group">' +
+                        '<bb-datepicker bb-datepicker-name="testDate1" ng-required="{{true}}" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
+                    '</div>' +
+                '</form>' +
+            '</div>';
+
+            // Custom date formatting method
+            $scope.dateOptions = {
+                formatValue: function (value) {
+
+                    return $q(function (resolve) {
+                        var formattedValue = value,
+                            formattingErrorMessage;
+
+                        if (value.toUpperCase() !== value) {
+                            formattingErrorMessage = 'Any letters should be capitalized.';
+                        } else {
+                            formattedValue = new Date('5/17/2016');
+                        }
+
+                        resolve({
+                            formattedValue: formattedValue,
+                            formattingErrorMessage: formattingErrorMessage
+                        });
+                    });
+                }
+            };
+
+            el = setupDatepicker(customValidationEl, '');
+
+            inputEl = el.find('input');
+
+            setInput(inputEl, '5/17/1985');
+
+            expect($scope.testdate1).toEqual(new Date('5/17/2016'));
+
+            expect(inputEl.val()).toBe('05/17/2016');
+
+        });
+
+        it('accepts a custom validation formatter with invalid date to start', function () {
+            var el,
+                inputEl,
+                customValidationEl = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<div class="form-group">' +
+                        '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
+                    '</div>' +
+                '</form>' +
+            '</div>';
+
+            // Custom date formatting method
+            $scope.dateOptions = {
+                formatValue: function (value) {
+
+                    return $q(function (resolve) {
+                        var formattedValue = value,
+                            formattingErrorMessage;
+
+
+                        if (value.toUpperCase() !== value) {
+                            formattingErrorMessage = 'Any letters should be capitalized.';
+                        } else {
+                            formattedValue = '[' + value.toUpperCase() + ']';
+                        }
+
+                        resolve({
+                            formattedValue: formattedValue,
+                            formattingErrorMessage: formattingErrorMessage
+                        });
+                    });
+                }
+            };
+
+            el = setupDatepicker(customValidationEl, 'aaa');
+
+            expect($scope.testdate1).toEqual('aaa');
+            inputEl = el.find('input');
+
+            expect(inputEl).toHaveValue('aaa');
+
+            inputEl.trigger('change');
+            $scope.$digest();
+            $timeout.flush();
+            expect(inputEl).toHaveValue('aaa');
+            expect($scope.testdate1).toEqual('aaa');
+            expect($scope.testform.$valid).toBe(false);
+            expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe('Any letters should be capitalized.');
+
+        });
+
+        it('accepts a custom validation formatter with invalid date to start when date is required', function () {
+            var el,
+                inputEl,
+                customValidationEl = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<div class="form-group">' +
+                        '<bb-datepicker ng-required="true" bb-datepicker-name="testDate1" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
+                    '</div>' +
+                '</form>' +
+            '</div>';
+
+            // Custom date formatting method
+            $scope.dateOptions = {
+                formatValue: function (value) {
+
+                    return $q(function (resolve) {
+                        var formattedValue = value,
+                            formattingErrorMessage;
+
+
+                        if (value.toUpperCase() !== value) {
+                            formattingErrorMessage = 'Any letters should be capitalized.';
+                        } else {
+                            formattedValue = '[' + value.toUpperCase() + ']';
+                        }
+
+                        resolve({
+                            formattedValue: formattedValue,
+                            formattingErrorMessage: formattingErrorMessage
+                        });
+                    });
+                }
+            };
+
+
+            el = setupDatepicker(customValidationEl, 'aaa');
+
+            expect($scope.testdate1).toEqual('aaa');
+            inputEl = el.find('input');
+
+            expect(inputEl).toHaveValue('aaa');
+            inputEl.trigger('change');
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(inputEl).toHaveValue('aaa');
+            expect($scope.testdate1).toEqual('aaa');
+            expect($scope.testform.$valid).toBe(false);
+            expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe('Any letters should be capitalized.');
+            expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(true);
+            expect(angular.isDefined($scope.testform.testDate1.$error.required)).toBe(false);
+
 
         });
 
@@ -809,7 +992,9 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-            expect($scope.testdate1).toBe('5/17/1985');
+            /*  Now validation is run on initialization of the datepicker, which
+                is how angular validation typically occurs */
+            expect($scope.testdate1).toEqual('[5/17/1985]');
 
             inputEl = el.find('input');
 
@@ -819,6 +1004,20 @@ describe('Datepicker directive', function () {
 
             expect($scope.testform.$valid).toBe(false);
             expect($scope.testform.testDate1.$error.required).toBe(true);
+
+            setInput(inputEl, '');
+
+            expect($scope.testdate1).toBe('');
+
+            expect($scope.testform.$valid).toBe(false);
+            expect($scope.testform.testDate1.$error.required).toBe(true);
+
+            $scope.testdate1 = 'AAA';
+            $scope.$digest();
+
+            expect($scope.testdate1).toBe('[AAA]');
+            expect($scope.testform.$valid).toBe(true);
+            expect(inputEl.val()).toBe('[AAA]');
 
         });
 
@@ -887,7 +1086,6 @@ describe('Datepicker directive', function () {
 
             el = setupDatepicker(customValidationEl, '5/17/1985');
 
-
             inputEl = el.find('input');
 
             setInput(inputEl, '5/22/1929');
@@ -903,7 +1101,7 @@ describe('Datepicker directive', function () {
                 customValidationEl = '<div>' +
                 '<form name="testform" novalidate>' +
                     '<div class="form-group">' +
-                        '<bb-datepicker bb-datepicker-name="testDate1" ng-required="{{true}}" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
+                        '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
                     '</div>' +
                 '</form>' +
             '</div>';
@@ -937,65 +1135,11 @@ describe('Datepicker directive', function () {
 
             $scope.$digest();
 
+
             expect(angular.isDefined($scope.testdate1)).toBe(true);
 
             expect($scope.testform.$valid).toBe(true);
 
-        });
-    });
-
-    describe('datepicker append to body', function () {
-        it('adds the appropriate class when appended to body and positions intelligently on open', function () {
-            var el,
-                expectedWidth,
-                nestedCalendarEl,
-                bodyCalendarEl,
-                inputEl,
-                spanEl,
-                appendToBodyHtml = '<div>' +
-                '<form name="testform" novalidate>' +
-                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" datepicker-append-to-body="true"></bb-datepicker>' +
-                '</form>' +
-                '</div>';
-
-            el = setupDatepicker(appendToBodyHtml, '5/17/1985', true);
-
-            inputEl = el.find('input');
-
-            spanEl = el.find('span.bb-datepicker-button-container');
-
-            nestedCalendarEl = el.find('ul.dropdown-menu');
-            expect(nestedCalendarEl.length).toBe(0);
-
-            openCalendar(el);
-            $timeout.flush();
-
-            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
-
-            expect(bodyCalendarEl.length).toBe(1);
-
-            expect(bodyCalendarEl).toHaveClass('bb-datefield');
-
-            expectedWidth = inputEl.offset().left + inputEl.innerWidth() + spanEl.innerWidth() - bodyCalendarEl.innerWidth();
-
-            expect(bodyCalendarEl[0].style.left).toBe(expectedWidth.toString() + 'px');
-
-            openCalendar(el);
-            $timeout.flush();
-
-            inputEl.width(10);
-
-            openCalendar(el);
-            $timeout.flush();
-
-            bodyCalendarEl = $('body > ul[uib-datepicker-popup-wrap]');
-            expect(bodyCalendarEl[0].style.left).not.toBe(expectedWidth.toString() + 'px');
-            expect(bodyCalendarEl).toHaveClass('bb-datefield');
-
-            openCalendar(el);
-            $timeout.flush();
-
-            el.remove();
         });
     });
 
