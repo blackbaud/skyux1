@@ -51,7 +51,7 @@ module.exports = {
         'coverage'
     ],
     coverageReporter: {
-        dir: '../coverage/',
+        dir: 'coverage/',
         reporters: [
             {
                 type: 'html'
