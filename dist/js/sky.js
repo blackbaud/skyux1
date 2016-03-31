@@ -1691,9 +1691,9 @@
 }(jQuery));
 
 /*jshint browser: true */
-/*global angular, jQuery */
+/*global angular */
 
-(function ($) {
+(function () {
     'use strict';
     angular.module('sky.datepicker', ['sky.resources', 'sky.moment', 'ui.bootstrap.datepicker'])
         .constant('bbDatepickerConfig', {
@@ -1703,7 +1703,8 @@
             minDate: '',
             maxDate: ''
         })
-        .directive('bbDatepicker', ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q', function (bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q) {
+        .directive('bbDatepicker', ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q',
+        function (bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q) {
             return {
                 replace: true,
                 restrict: 'E',
@@ -1721,8 +1722,8 @@
                 controller: ['$scope', function ($scope) {
                     var self = this;
 
-
                     $scope.getInputNgModel = function () {
+                        /* istanbul ignore else: sanity check */
                         if (angular.isFunction(self.getInputNgModel)) {
                             return self.getInputNgModel();
                         } else {
@@ -1736,41 +1737,22 @@
                         skipValidation = false,
                         dateChangeInternal = false;
 
-                    function getBodyDatepicker() {
-                        return $('body > ul[uib-datepicker-popup-wrap]');
-                    }
-
-                    function positionAbsoluteDatepicker() {
-                        var calendarButtonEl = el.find('span.bb-datepicker-button-container'),
-                            inputEl = el.find('input'),
-                            datepickerScope = el.find('input').isolateScope(),
-                            datepickerEl = getBodyDatepicker(),
-                            inputWidth,
-                            buttonWidth,
-                            datepickerWidth;
-
-                        inputWidth = inputEl.innerWidth();
-                        buttonWidth = calendarButtonEl.innerWidth();
-                        datepickerWidth = datepickerEl.innerWidth();
-
-                        if (datepickerWidth < (inputWidth + buttonWidth)) {
-                            datepickerScope.position.left = datepickerScope.position.left + inputWidth + buttonWidth - datepickerWidth;
-                        }
-                    }
-
                     function open($event) {
                         $event.preventDefault();
                         $event.stopPropagation();
 
-                        //add syle class when datepicker appended to body because necessary bb-datefield class will no longer be wrapping it.
-                        if ($scope.locals.appendToBody) {
-                            $timeout(function () {
-                                getBodyDatepicker().addClass('bb-datefield');
-                                positionAbsoluteDatepicker();
-                            });
-                        }
-
                         $scope.locals.opened = !$scope.locals.opened;
+                    }
+
+                    function setDatepickerInput(newValue) {
+                        /*  uib-datepicker does not allow setting model directly
+                            to anything but a JavaScript Date. However, we can clear
+                            the current model and set the input manually to get the
+                            correct value to display */
+                        $scope.locals.date = null;
+                        $timeout(function () {
+                            inputEl.val(newValue);
+                        });
                     }
 
                     function setDate() {
@@ -1783,7 +1765,8 @@
                                 $scope.date = parsedDate;
                                 $scope.locals.date = parsedDate;
                             } else {
-                                $scope.locals.date = $scope.date;
+                                setDatepickerInput($scope.date);
+
                                 inputNgModel = $scope.getInputNgModel();
                                 if (inputNgModel && !inputNgModel.$validators.date($scope.date)) {
                                     inputNgModel.invalidFormatMessage = bbResources.date_field_invalid_date_message;
@@ -1791,9 +1774,91 @@
                                 }
                             }
                         } else {
-                            $scope.locals.date = $scope.date;
+                            setDatepickerInput($scope.date);
                         }
                     }
+
+                    function hasMinMaxError() {
+                        var inputNgModel = $scope.getInputNgModel();
+
+                        return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
+                    }
+
+                    function dateFormatValidator() {
+                        var customFormattingResult,
+                            deferred,
+                            inputNgModel;
+
+                        function resolveValidation() {
+                            var inputNgModel = $scope.getInputNgModel();
+                            /* istanbul ignore else: sanity check */
+                            if (inputNgModel) {
+                                deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
+                                inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
+                            } else {
+                                deferred.resolve();
+                            }
+                        }
+
+                        function setInvalidFormatMessage(errorMessage) {
+                            var inputNgModel = $scope.getInputNgModel();
+                            /* istanbul ignore else: sanity check */
+                            if (inputNgModel) {
+                                inputNgModel.invalidFormatMessage = errorMessage;
+                            }
+                        }
+
+                        function handleCustomFormattingValidation(result) {
+                            result = result || {};
+
+                            setInvalidFormatMessage(result.formattingErrorMessage);
+                            resolveValidation();
+
+                            if (angular.isDefined(result.formattedValue) && result.formattedValue !== $scope.date) {
+                                skipValidation = true;
+                                dateChangeInternal = true;
+                                $scope.date = result.formattedValue;
+
+                                /* istanbul ignore else: sanity check */
+                                if (inputEl) {
+                                    inputEl.val($scope.date);
+                                }
+
+                                if (angular.isDate(result.formattedValue)) {
+                                    $scope.locals.date = result.formattedValue;
+                                }
+                            }
+                        }
+                        
+                        deferred = $q.defer();
+
+                        if (skipValidation || angular.isDate($scope.date) || $scope.date === '' || hasMinMaxError() || (!$scope.locals.required && $scope.date === null)) {
+                            setInvalidFormatMessage(null);
+                            resolveValidation();
+                        } else if ($scope.locals.hasCustomValidation && angular.isString($scope.date)) {
+                            customFormattingResult = $scope.customValidation.formatValue($scope.date);
+                            if (customFormattingResult.then) {
+                                customFormattingResult.then(handleCustomFormattingValidation);
+                            } else {
+                                handleCustomFormattingValidation(customFormattingResult);
+                                return deferred.promise;
+                            }
+                        } else {
+                            inputNgModel = $scope.getInputNgModel();
+                            /* istanbul ignore else: sanity check */
+                            if (inputNgModel && inputNgModel.$error && inputNgModel.$error.date) {
+                                setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
+                            }
+                            resolveValidation();
+                        }
+
+                        skipValidation = false;
+                        return deferred.promise;
+                    }
+
+                    ngModel.$options = {
+                        allowInvalid: true
+                    };
 
                     $scope.locals = {
                         showButtonBar: false,
@@ -1805,7 +1870,9 @@
                         closeOnSelection: true,
                         dateOptions: {
                             showWeeks: bbDatepickerConfig.showWeeks,
-                            startingDay: bbDatepickerConfig.startingDay
+                            startingDay: bbDatepickerConfig.startingDay,
+                            maxDate: $scope.maxDate,
+                            minDate: $scope.minDate
                         },
                         hasCustomValidation: false,
                         inputName: attr.bbDatepickerName
@@ -1813,10 +1880,12 @@
 
                     if (!$scope.maxDate && bbDatepickerConfig.maxDate) {
                         $scope.maxDate = bbDatepickerConfig.maxDate;
+                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
                     }
 
                     if (!$scope.minDate && bbDatepickerConfig.minDate) {
                         $scope.minDate = bbDatepickerConfig.minDate;
+                        $scope.locals.dateOptions.minDate = $scope.minDate;
                     }
 
                     $scope.resources = bbResources;
@@ -1855,24 +1924,73 @@
                         $scope.placeholderText = $scope.format.toLowerCase();
                     }
 
-                    setDate();
+                    $timeout(function () {
+                        inputEl = el.find('input');
+                        setDate();
 
-                    $scope.$watch('date', function (newValue, oldValue) {
-                        if (newValue !== oldValue && !dateChangeInternal) {
-                            setDate();
-                        } else if (dateChangeInternal) {
-                            dateChangeInternal = false;
-                        }
-                    });
+                        ngModel.$asyncValidators.dateFormat = dateFormatValidator;
 
-                    $scope.$watch('locals.date', function () {
+                        ngModel.$validate();
 
-                        if ($scope.date !== $scope.locals.date) {
-                            if (angular.isDate($scope.locals.date)) {
+                        $scope.$watch('date', function (newValue, oldValue) {
+                            if (newValue !== oldValue && !dateChangeInternal) {
+                                setDate();
+                            } else if (dateChangeInternal) {
+                                dateChangeInternal = false;
+                            }
+                        });
+
+                        function inputChanged() {
+                            var inputNgModel = $scope.getInputNgModel();
+
+                            if ((angular.isUndefined($scope.locals.date) || !angular.isDate($scope.locals.date)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
+                                if ($scope.date !== inputEl.val()) {
+                                    dateChangeInternal = true;
+                                    $scope.date = inputEl.val();
+                                }
+                            } else if ($scope.locals.required && inputEl.val() === '') {
+                                if ($scope.date !== '') {
+                                    dateChangeInternal = true;
+                                    $scope.date = '';
+                                }
+
+                                inputNgModel.invalidFormatMessage = null;
+                                inputNgModel.$setValidity('dateFormat', true);
+                            } else if ($scope.date !== $scope.locals.date) {
                                 dateChangeInternal = true;
                                 $scope.date = $scope.locals.date;
                             }
                         }
+
+                        /*  Need to handle input change instead of model change
+                            because ngModelOptions updateOn blur does not work
+                            correctly with the uib-datepicker */
+                        inputEl.on('change blur', function () {
+                            $timeout(function () {
+                                inputChanged();
+                            });
+                        });
+
+                        $scope.$watch('locals.date', function () {
+
+                            if ($scope.date !== $scope.locals.date) {
+                                if (angular.isDate($scope.locals.date)) {
+                                    dateChangeInternal = true;
+                                    $scope.date = $scope.locals.date;
+                                }
+                            }
+
+                        });
+
+                        $scope.$watch(function () {
+                            return ngModel.$error && ngModel.$error.required;
+                        }, function (newValue) {
+                            var inputNgModel;
+                            if ($scope.locals.required) {
+                                inputNgModel = $scope.getInputNgModel();
+                                inputNgModel.$setValidity('required', !newValue);
+                            }
+                        });
 
                     });
 
@@ -1886,133 +2004,15 @@
 
                     $scope.$watch('maxDate', function () {
                         runValidators();
+                        $scope.locals.dateOptions.maxDate = $scope.maxDate;
                     });
 
                     $scope.$watch('minDate', function () {
                         runValidators();
+                        $scope.locals.dateOptions.minDate = $scope.minDate;
                     });
-
-                    function hasRequiredError() {
-                        var inputNgModel = $scope.getInputNgModel();
-
-                        return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
-                    }
-
-                    function hasMinMaxError() {
-                        var inputNgModel = $scope.getInputNgModel();
-
-                        return inputNgModel && inputNgModel.$error && (inputNgModel.$error.minDate || inputNgModel.$error.maxDate);
-                    }
-
-
-                    function dateFormatValidator() {
-                        var customFormattingResult,
-                            deferred,
-                            inputNgModel;
-
-                        function resolveValidation() {
-                            var inputNgModel = $scope.getInputNgModel();
-
-                            if (inputNgModel !== null) {
-                                deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
-                                inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
-                            } else {
-                                deferred.resolve();
-                            }
-                        }
-
-                        function setInvalidFormatMessage(errorMessage) {
-                            var inputNgModel = $scope.getInputNgModel();
-
-                            if (inputNgModel !== null) {
-                                inputNgModel.invalidFormatMessage = errorMessage;
-                            }
-                        }
-
-                        function handleCustomFormattingValidation(result) {
-                            result = result || {};
-
-                            setInvalidFormatMessage(result.formattingErrorMessage);
-                            resolveValidation();
-
-                            if (result.formattedValue !== $scope.date) {
-                                skipValidation = true;
-                                dateChangeInternal = true;
-                                $scope.date = result.formattedValue;
-                                $scope.locals.date = result.formattedValue;
-                            }
-
-                        }
-
-                        function datepickerIsPristine() {
-                            var inputNgModel = $scope.getInputNgModel();
-
-                            if (inputNgModel !== null) {
-                                return inputNgModel.$pristine;
-                            } else {
-                                return true;
-                            }
-                        }
-
-                        deferred = $q.defer();
-
-                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || hasMinMaxError() || (!$scope.locals.required && $scope.locals.date === null) || datepickerIsPristine()) {
-                            setInvalidFormatMessage(null);
-                            resolveValidation();
-                        } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
-                            customFormattingResult = $scope.customValidation.formatValue($scope.locals.date);
-                            if (customFormattingResult.then) {
-                                customFormattingResult.then(handleCustomFormattingValidation);
-                            } else {
-                                handleCustomFormattingValidation(customFormattingResult);
-                                return deferred.promise;
-                            }
-                        } else {
-                            inputNgModel = $scope.getInputNgModel();
-                            /* istanbul ignore else: sanity check */
-                            if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
-                                setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
-                            }
-                            resolveValidation();
-                        }
-
-                        skipValidation = false;
-                        return deferred.promise;
-                    }
-
-                    ngModel.$asyncValidators.dateFormat = dateFormatValidator;
 
                     $scope.locals.loaded = true;
-
-                    //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
-                    $timeout(function () {
-                        inputEl = el.find('input');
-                        inputEl.on('change blur', function () {
-                            $timeout(function () {
-                                var inputNgModel;
-
-                                //allows validation to kick off for invalid dates
-                                if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                                    dateChangeInternal = true;
-                                    $scope.date = inputEl.val();
-
-
-                                } else if ($scope.locals.required && hasRequiredError()) {
-                                    dateChangeInternal = true;
-                                    $scope.date = '';
-                                    inputNgModel = $scope.getInputNgModel();
-                                    inputNgModel.invalidFormatMessage = null;
-                                    inputNgModel.$setValidity('dateFormat', true);
-                                } else if ($scope.date !== $scope.locals.date) {
-
-                                    dateChangeInternal = true;
-                                    $scope.date = $scope.locals.date;
-
-                                }
-
-                            });
-                        });
-                    });
 
                 }
             };
@@ -2183,8 +2183,6 @@
             return false;
         }
 
-
-
         function parseMoment(value, format) {
             var date = null,
                 momentDate;
@@ -2225,13 +2223,10 @@
                 date = parseMoment(value, format);
 
                 return date;
-
             }
         };
     }]);
-
-
-}(jQuery));
+}());
 
 /*jshint browser: true */
 /*global angular */
@@ -2615,7 +2610,6 @@
             }
         };
     }
-
     bbDateRangePickerDirective.$inject = ['bbDateRangePicker', 'bbResources'];
 
     angular.module('sky.daterangepicker', ['sky.resources', 'sky.datepicker'])
@@ -7409,7 +7403,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
     var tabScrollId = 0;
-    angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
+    angular.module('sky.tabscroll', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
                 link: function (scope, el, attrs) {
@@ -7797,11 +7791,14 @@ angular.module('sky.palette.config', [])
         };
     }
 
-    function tab() {
+    function tab($log, $parse, $timeout) {
         return {
-            require: '?^bbTabsetCollapsible',
-            link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
-                var tabScope = el.isolateScope();
+            require: ['?^bbTabsetCollapsible', '^uibTabset'],
+            link: function ($scope, el, attr, ctrls) {
+                var tabScope = el.isolateScope(),
+                    bbTabsetCollapsibleCtrl = ctrls[0],
+                    uibTabsetCtrl = ctrls[1],
+                    activeModel;
 
                 function getTabHeading() {
                     return tabScope.heading;
@@ -7810,16 +7807,41 @@ angular.module('sky.palette.config', [])
                 if (bbTabsetCollapsibleCtrl !== null && !angular.isDefined(attr.bbTabCollapseHeader)) {
                     collapsibleTabTitle($scope, el, bbTabsetCollapsibleCtrl, getTabHeading);
                 }
+
+                if (angular.isDefined(attr.active)) {
+                    $timeout(function () {
+                        $log.warn('uibTab active attribute is deprecated, instead track active state on uibTabset');
+
+                        activeModel = $parse(attr.active);
+
+
+                        $scope.$watch(function () {
+                            return activeModel($scope);
+                        }, function (newValue) {
+                            if (newValue === true && uibTabsetCtrl.active !== tabScope.index) {
+                                uibTabsetCtrl.select(tabScope.index);
+                            }
+                        });
+
+                        tabScope.$watch(function () {
+                            return tabScope.active;
+                        }, function (newValue) {
+                            if (angular.isDefined(newValue) && newValue !== activeModel($scope)) {
+                                activeModel.assign($scope, newValue);
+                            }
+                        });
+                    });
+                }
             }
         };
     }
 
+    tab.$inject = ['$log', '$parse', '$timeout'];
+
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
-        .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
-        .directive('tab', tab)
         .directive('uibTab', tab);
 
 }(jQuery));
@@ -7829,35 +7851,32 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
-    angular.module('sky.tabsref', ['ui.bootstrap.tabs'])
+    angular.module('sky.tabsref', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
-                require: ['^?tabset', '^?uibTabset'],
-                link: function (scope, el, attrs, controllers) {
-                    var active = attrs.active,
-                        sref = attrs.bbTabSref,
-                        stateChangeDeregistration,
-                        tabsetCtrl;
-
-                    tabsetCtrl = controllers[0] !== null ? controllers[0] : controllers[1];
-
+                require: '^uibTabset',
+                link: function (scope, el, attrs, tabsetCtrl) {
+                    var sref = attrs.bbTabSref,
+                        stateChangeDeregistration;
 
                     function checkCurrentState() {
                         if ($state.is(sref)) {
-                            tabsetCtrl.select(el.isolateScope());
+                            tabsetCtrl.select(el.isolateScope().index);
                         }
                     }
 
                     /*istanbul ignore else sanity check */
-                    if (active && sref) {
+                    if (sref) {
                         checkCurrentState();
 
                         stateChangeDeregistration = $rootScope.$on('$stateChangeSuccess', function () {
                             checkCurrentState();
                         });
 
-                        scope.$watch(active, function (newValue) {
-                            if (newValue && !$state.is(sref)) {
+                        scope.$watch(function () {
+                            return tabsetCtrl.active;
+                        }, function (newValue) {
+                            if (newValue === el.isolateScope().index && !$state.is(sref)) {
                                 // JPB - Delay calling state.go because the state change will fail
                                 // if it is triggered while in the middle of processing of another state change.
                                 // This can happen if you browse to the page without specifying the state of a particular tab
@@ -9659,7 +9678,7 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
-    angular.module('sky.wizard', ['sky.resources', 'ui.bootstrap.tabs'])
+    angular.module('sky.wizard', ['sky.resources', 'sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbWizard', function () {
             return {
                 link: function (scope, el) {
@@ -9691,18 +9710,24 @@ angular.module('sky.palette.config', [])
 
                     function getPreviousStep() {
                         var i,
+                            index,
                             n,
                             previousStep,
                             step;
-
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
+                            index = step.index || i;
 
-                            if (step.active && i > 0) {
+                            if ((step.active || options.active === index) && i > 0) {
                                 previousStep = steps[i - 1];
 
                                 if (!stepIsDisabled(previousStep)) {
-                                    return previousStep;
+                                    if (angular.isDefined(options.active)) {
+                                        return previousStep.index || (i - 1);
+                                    } else {
+                                        return previousStep;
+                                    }
+
                                 }
 
                                 break;
@@ -9714,18 +9739,25 @@ angular.module('sky.palette.config', [])
 
                     function getNextStep() {
                         var i,
+                            index,
                             n,
                             nextStep,
                             step;
 
                         for (i = 0, n = steps.length; i < n; i++) {
                             step = steps[i];
+                            index = step.index || i;
 
-                            if (step.active && i + 1 < n) {
+                            if ((step.active || options.active === index) && i + 1 < n) {
                                 nextStep = steps[i + 1];
 
                                 if (!stepIsDisabled(nextStep)) {
-                                    return nextStep;
+                                    if (angular.isDefined(options.active)) {
+                                        return nextStep.index || (i + 1); // There can be a custom index name, or the position of the tab
+                                    } else {
+                                        return nextStep;
+                                    }
+
                                 }
 
                                 break;
@@ -9736,13 +9768,24 @@ angular.module('sky.palette.config', [])
                     }
 
                     function setActiveStep(step) {
-                        if (step) {
-                            step.active = true;
+                        if (step !== null) {
+                            if (angular.isDefined(options.active)) {
+                                options.active = step;
+                            } else {
+                                step.active = true;
+                            }
+
                         }
+
                     }
 
                     function lastStepIsActive() {
-                        return steps[steps.length - 1].active;
+                        if (angular.isDefined(options.active)) {
+                            return options.active === steps[steps.length - 1].index || options.active === steps.length - 1;
+                        } else {
+                            return steps[steps.length - 1].active;
+                        }
+
                     }
 
                     options = options || {};
@@ -9762,18 +9805,20 @@ angular.module('sky.palette.config', [])
                         },
                         goToNext: function () {
                             if (lastStepIsActive()) {
+
                                 if (angular.isFunction(finish)) {
                                     finish();
                                 }
                             } else {
                                 setActiveStep(getNextStep());
                             }
+
                         },
                         previousDisabled: function () {
-                            return !getPreviousStep();
+                            return getPreviousStep() === null;
                         },
                         nextDisabled: function () {
-                            return !getNextStep() && !lastStepIsActive();
+                            return (getNextStep() === null) && !lastStepIsActive();
                         }
                     };
                 }
@@ -10052,7 +10097,24 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/datepicker/datepicker.html',
         '<div>\n' +
         '    <div ng-if="locals.loaded" class="input-group bb-datefield">\n' +
-        '        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" uib-datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" max-date="maxDate" min-date="minDate" ng-required="locals.required" bb-min-date bb-max-date />\n' +
+        '        <input name="{{locals.inputName}}"\n' +
+        '                type="text"\n' +
+        '                class="form-control"\n' +
+        '                ng-model="locals.date"\n' +
+        '                ng-model-options="{ allowInvalid: true }"\n' +
+        '                is-open="locals.opened"\n' +
+        '                datepicker-options="locals.dateOptions"\n' +
+        '                uib-datepicker-popup="{{format}}"\n' +
+        '                show-button-bar="locals.showButtonBar"\n' +
+        '                current-text="{{resources.datepicker_today}}"\n' +
+        '                clear-text="{{resources.datepicker_clear}}"\n' +
+        '                close-text="{{resources.datepicker_close}}"\n' +
+        '                datepicker-append-to-body="{{locals.appendToBody}}"\n' +
+        '                close-on-date-selection="{{locals.closeOnSelection}}"\n' +
+        '                bb-datepicker-custom-validate="{{locals.hasCustomValidation}}"\n' +
+        '                placeholder="{{placeholderText}}"\n' +
+        '                bb-min-date\n' +
+        '                bb-max-date />\n' +
         '        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{\'bb-datefield-open\': locals.opened}">\n' +
         '            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
@@ -10493,7 +10555,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="bb-page-summary-action-bar"></div>\n' +
         '');
     $templateCache.put('sky/templates/popover/popup.html',
-        '<div class="popover {{placement}}"\n' +
+        '<div class="popover"\n' +
         '    tooltip-animation-class="fade"\n' +
         '    uib-tooltip-classes\n' +
         '    ng-class="{ in: isOpen() }">\n' +
