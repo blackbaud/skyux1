@@ -8,22 +8,6 @@
 
 .bb-error-image-container {
   display: inline-block;
-
-  .bb-error-image-broken-container {
-    max-width: 182px;
-    display: inline-block;
-  }
-
-  .bb-error-image-construction-container {
-    width: 182px;
-    height: 189px;
-    display: inline-block;
-  }
-
-  .bb-error-image-notfound-container {
-    max-width: 328px;
-    display: inline-block;
-  }
 }
 
 .bb-error-image {
@@ -38,6 +22,24 @@
   padding-bottom: $padding;
 }
 
-.bb-error-image-broken, .bb-error-image-construction, .bb-error-image-notfound {
-  max-width: 100%;
+.bb-error-image-broken {
+  background-image: url('images/broken.svg');
+  background-repeat: no-repeat;
+  width: 182px;
+  height: 189px;
+}
+
+.bb-error-image-construction {
+  background-image: url('images/construction.svg');
+  background-repeat: no-repeat;
+  width: 182px;
+  height: 189px;
+}
+
+.bb-error-image-notfound {
+  background-image: url('images/notFound.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 328px;
+  height: 303px;
 }

@@ -9,8 +9,9 @@
             vm.onDestroy();
             vm = null;
         });
+
         $scope.$watch(function () {
-            return vm.errorType;
+            return vm.bbErrorType || vm.errorType;
         }, function (newValue) {
             switch (newValue) {
                 case 'broken':
@@ -48,7 +49,8 @@
             controller: BBErrorTitleController,
             controllerAs: 'bbErrorTitle',
             bindToController: {
-                errorType: '@'
+                errorType: '@',
+                bbErrorType: '@'
             },
             link: link,
             scope: {},

@@ -331,6 +331,12 @@ describe('Autonumeric', function () {
             expect(formattedValue).toBe('123,456.78');
         });
 
+        it('should allow a config object to be used', function () {
+            var formattedValue = $filter('bbAutonumeric')(100, { mDec: 0 });
+
+            expect(formattedValue).toBe('100');
+        });
+
         it('should not abbreviate values that round to less than 10,000', function () {
             validateMoneyAbbr(1.49, '$1');
             validateMoneyAbbr(1.5, '$2');

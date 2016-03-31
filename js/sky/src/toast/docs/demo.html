@@ -1,4 +1,16 @@
 ﻿<div ng-controller="ToastTestController as toastCtrl">
-  <button ng-click="toastCtrl.openMessage()">Open simple message</button>
-  <button ng-click="toastCtrl.openTemplate()">Open templated content</button>
+  <h4>
+    Default toast type (info)
+  </h4>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openMessage()">Open simple message</button>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openTemplate()">Open templated content</button>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openMessageInfinite()">Open persistent message</button>
+  <br />
+  <h4>
+    Specific toast types
+  </h4>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openWithType('info')">Open info message</button>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openWithType('success')">Open success message</button>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openWithType('warning')">Open warning message</button>
+  <button type="button" class="btn btn-default" ng-click="toastCtrl.openWithType('danger')">Open danger message</button>
 </div>
