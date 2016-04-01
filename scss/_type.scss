@@ -17,37 +17,37 @@ Bootstrap colors for alert text, panel text and others.
 /*
 Semantic font class styles are based on existing styling of analogous components. We will be testing out a new typographic scheme, and will update these values once that is finalized. The proposed scheme will have 15px base font, so the body- classes and field labels will change the most. It's possible that the current larger fonts will not change.
 */
-.bb-text-pageheading{
+.bb-text-heading-page {
     font: 300 32px $bb-font-family-narrow;
-    color: #292a2b;
+    color: $text-color;
 }
 
-.bb-text-subpageheading{
-    font: 300 24px $bb-font-family-narrow;
-    color: #292a2b;
+.bb-text-heading-subpage {
+    font: 300 22px $bb-font-family-narrow;
+    color: $text-color;
 }
 
-.bb-text-sectionheading{
+.bb-text-heading-section {
     font: 400 17px $font-family-sans-serif;
     color: #707374;
 }
 
-.bb-text-headline{
+.bb-text-headline {
     font: 400 20px $bb-font-family-narrow;
-    color: #292a2b;
+    color: $text-color;
 }
 
-.bb-text-body-emphasized{
+.bb-text-body-emphasized {
     font: 600 14px $font-family-sans-serif;
-    color: #292a2b;
+    color: $text-color;
 }
 
-.bb-text-body-deemphasized{
+.bb-text-body-deemphasized {
     font: 400 italic 13px $font-family-sans-serif;
     color: #707374;
 }
 
-.bb-text-fieldlabel{
+.bb-text-field-label {
     font: 400 13px $font-family-sans-serif;
     color: #707374;
 }
