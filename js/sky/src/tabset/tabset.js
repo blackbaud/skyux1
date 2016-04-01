@@ -52,12 +52,6 @@
         };
 
         self.tabAdded = function () {
-            if (!$scope.bbTabsetOptions) {
-                $scope.bbTabsetOptions = {
-                    isSmallScreen: false,
-                    tabCount: 0
-                };
-            }
 
             if ($scope.bbTabsetOptions.isSmallScreen) {
                 $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
@@ -155,12 +149,11 @@
                     $scope.bbTabsetOptions.isSmallScreen = newBreakpoints.xs;
                     setupCollapsibleTabs(newBreakpoints.xs && ($scope.bbTabsetOptions.tabCount > 1));
                 }
-                if (!$scope.bbTabsetOptions) {
-                    $scope.bbTabsetOptions = {
-                        isSmallScreen: false,
-                        tabCount: 0
-                    };
-                }
+
+                $scope.bbTabsetOptions = {
+                    isSmallScreen: false,
+                    tabCount: 0
+                };
 
                 el.prepend($compile(getDropdownEl())($scope));
 
@@ -177,10 +170,10 @@
 
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
 
-                // Show initial scroll animation whenever the window width changes.
                 $($window).on('resize.tabcollapse' + tabCollapseId, function () {
                     var windowWidth = $($window).width();
 
+                    /* istanbul ignore else: sanity check */
                     if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
                         setDropdownMaxWidth();
                     }

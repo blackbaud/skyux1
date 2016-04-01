@@ -28,10 +28,13 @@
 
         vm.setHeaderContentEl = function (el) {
             vm.headerContentEl = el;
+
+            /* istanbul ignore else: sanity check */
             if (angular.isFunction(vm.updateHeaderContent)) {
                 vm.updateHeaderContent();
             }
         };
+        
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
             var i,

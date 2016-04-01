@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "assemble-yaml": "0.2.1",
-    "blackbaud-stache": "0.7.15",
+    "blackbaud-stache": "0.7.16",
     "browserstacktunnel-wrapper": "1.4.2",
     "dotenv": "2.0.0",
     "grunt": "0.4.5",

@@ -14,7 +14,7 @@
 
 
     }
-    
+
     BBErrorImageController.$inject = ['$scope'];
 
     function bbErrorImage() {
@@ -32,6 +32,7 @@
                 scope.$watch(function () {
                     return vm.errorType;
                 }, function (newValue) {
+                    /* istanbul ignore else: sanity check */
                     if (newValue !== vm.bbErrorType) {
                         vm.bbErrorType = newValue;
                     }
