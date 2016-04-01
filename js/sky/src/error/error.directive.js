@@ -30,10 +30,7 @@
     }
 
     function BBErrorController($scope) {
-        var vm = this,
-            errorType;
-
-        errorType = vm.errorType;
+        var vm = this;
 
         function addComponentSetter(component) {
             var name = component.name;
@@ -55,7 +52,7 @@
         }
 
         $scope.$watch(function () {
-            return vm.errorType;
+            return vm.bbErrorType || vm.errorType;
         }, function (newValue) {
             vm.imageType = newValue;
             vm.titleType =  newValue;
@@ -91,7 +88,8 @@
             controller: 'BBErrorController',
             controllerAs: 'bbError',
             bindToController: {
-                errorType: '@'
+                errorType: '@',
+                bbErrorType: '@'
             },
             link: link,
             scope: {},
