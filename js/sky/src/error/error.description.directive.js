@@ -13,7 +13,7 @@
         });
 
         $scope.$watch(function () {
-            return vm.errorType;
+            return vm.bbErrorType || vm.errorType;
         }, function (newValue) {
             switch (newValue) {
                 case 'broken':
@@ -49,7 +49,8 @@
             controller: BBErrorDescriptionController,
             controllerAs: 'bbErrorDescription',
             bindToController: {
-                errorType: '@'
+                errorType: '@',
+                bbErrorType: '@'
             },
             link: link,
             scope: {},

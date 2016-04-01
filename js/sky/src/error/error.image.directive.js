@@ -11,6 +11,8 @@
                 vm = null;
             }
         });
+
+
     }
     
     BBErrorImageController.$inject = ['$scope'];
@@ -26,6 +28,15 @@
                 bbError.setImage(vm, 'errorDefault' in attrs);
             }
 
+            if (angular.isDefined(attrs.errorType)) {
+                scope.$watch(function () {
+                    return vm.errorType;
+                }, function (newValue) {
+                    if (newValue !== vm.bbErrorType) {
+                        vm.bbErrorType = newValue;
+                    }
+                });
+            }
         }
 
         return {
@@ -34,7 +45,8 @@
             controller: BBErrorImageController,
             controllerAs: 'bbErrorImage',
             bindToController: {
-                errorType: '@'
+                errorType: '@',
+                bbErrorType: '@'
             },
             link: link,
             scope: {},

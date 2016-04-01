@@ -24,6 +24,10 @@ describe('Error', function () {
         return el.find('.bb-error-image img');
     }
 
+    function getErrorImageDiv(el) {
+        return el.find('.bb-error-image div');
+    }
+
     function getErrorHeader(el) {
         return el.find('.bb-error-title');
     }
@@ -146,7 +150,7 @@ describe('Error', function () {
             $compile(el)($scope);
 
             $scope.$digest();
-            imageEl = getErrorImage(el);
+            imageEl = getErrorImageDiv(el);
             expect(imageEl).toHaveClass('bb-error-image-broken');
 
             headerEl = getErrorHeader(el);
@@ -176,7 +180,7 @@ describe('Error', function () {
             $compile(el)($scope);
 
             $scope.$digest();
-            imageEl = getErrorImage(el);
+            imageEl = getErrorImageDiv(el);
             expect(imageEl).toHaveClass('bb-error-image-construction');
 
             headerEl = getErrorHeader(el);
@@ -206,7 +210,7 @@ describe('Error', function () {
             $compile(el)($scope);
 
             $scope.$digest();
-            imageEl = getErrorImage(el);
+            imageEl = getErrorImageDiv(el);
             expect(imageEl).toHaveClass('bb-error-image-notfound');
 
             headerEl = getErrorHeader(el);
@@ -277,7 +281,7 @@ describe('Error', function () {
             $scope.errorHeader = 'New not found';
 
             $scope.$digest();
-            imageEl = getErrorImage(el);
+            imageEl = getErrorImageDiv(el);
             expect(imageEl).toHaveClass('bb-error-image-notfound');
 
             headerEl = getErrorHeader(el);
@@ -312,7 +316,7 @@ describe('Error', function () {
             $compile(el)($scope);
 
             $scope.$digest();
-            imageEl = getErrorImage(el);
+            imageEl = getErrorImageDiv(el);
             expect(imageEl).toHaveClass('bb-error-image-construction');
 
             headerEl = getErrorHeader(el);
@@ -351,7 +355,7 @@ describe('Error', function () {
             $compile(el)($scope);
 
             $scope.$digest();
-            imageEl = getErrorImage(el);
+            imageEl = getErrorImageDiv(el);
             expect(imageEl).toHaveClass('bb-error-image-broken');
 
             headerEl = getErrorHeader(el);
@@ -384,7 +388,7 @@ describe('Error', function () {
                 $compile(el)($scope);
 
                 $scope.$digest();
-                imageEl = el.find('.bb-error-image-container img');
+                imageEl = el.find('.bb-error-image-container div');
                 expect(imageEl).toHaveClass('bb-error-image-broken');
 
                 el.remove();
@@ -411,6 +415,330 @@ describe('Error', function () {
             it('should be able to use bb-error-description without bb-error', function () {
                 var descriptionEl,
                     el = angular.element('<bb-error-description error-type="construction">' +
+                        '</bb-error-description>');
+
+                el.appendTo(document.body);
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+
+                descriptionEl = el.find('.bb-error-description-container');
+                expect(descriptionEl).toHaveText(bbResources.error_description_construction);
+                expect(descriptionEl).toBeVisible();
+
+                el.remove();
+            });
+
+            it('should be able to use bb-error-action without bb-error', function () {
+                var actionEl,
+                    actionClicked,
+                    el = angular.element('<bb-error-action>' +
+                            '<button type="button" class="btn-primary btn" ng-click="action()">{{actionName}}</button>' +
+                        '</bb-error-action>');
+
+                el.appendTo(document.body);
+
+                $scope.action = function () {
+                    actionClicked = true;
+                };
+                $scope.actionName = 'My Action';
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+                actionEl = el.find('button');
+                expect(actionEl).toHaveText('My Action');
+                expect(actionEl).toHaveClass('btn-primary');
+                expect(actionEl).toBeVisible();
+                actionEl.click();
+                expect(actionClicked).toBe(true);
+
+                el.remove();
+            });
+        });
+    });
+
+    describe('bbErrorTypes', function () {
+
+        it('should show the default messaging and image for broken type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                el = angular.element('<bb-error bb-error-type="broken">' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $compile(el)($scope);
+
+            $scope.$digest();
+            imageEl = getErrorImageDiv(el);
+            expect(imageEl).toHaveClass('bb-error-image-broken');
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText(bbResources.error_title_broken);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText(bbResources.error_description_broken);
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).not.toBeVisible();
+
+            el.remove();
+        });
+
+        it('should show the default messageing and image for construction type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                el = angular.element('<bb-error bb-error-type="construction">' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $compile(el)($scope);
+
+            $scope.$digest();
+            imageEl = getErrorImageDiv(el);
+            expect(imageEl).toHaveClass('bb-error-image-construction');
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText(bbResources.error_title_construction);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText(bbResources.error_description_construction);
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).not.toBeVisible();
+
+            el.remove();
+        });
+
+        it('should show the default messaging and image for notFound type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                el = angular.element('<bb-error bb-error-type="notFound"> ' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $compile(el)($scope);
+
+            $scope.$digest();
+            imageEl = getErrorImageDiv(el);
+            expect(imageEl).toHaveClass('bb-error-image-notfound');
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText(bbResources.error_title_notfound);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText('');
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).not.toBeVisible();
+
+            el.remove();
+        });
+
+        it('should allow overriding an image when using an error type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                el = angular.element('<bb-error bb-error-type="broken">' +
+                    '<bb-error-image>' +
+                    '<img ng-src="{{imgUrl}}"/>' +
+                    '</bb-error-image>' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $scope.imgUrl = imgUrl;
+
+            $compile(el)($scope);
+
+            $scope.$digest();
+            imageEl = getErrorImage(el);
+            expect(imageEl).not.toHaveClass('bb-error-image-broken');
+            expect(imageEl).toHaveAttr('src', imgUrl);
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText(bbResources.error_title_broken);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText(bbResources.error_description_broken);
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).not.toBeVisible();
+
+            el.remove();
+        });
+
+        it('should allow overriding a title when using an error type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                el = angular.element('<bb-error bb-error-type="notFound">' +
+                    '<bb-error-title>' +
+                    '{{errorHeader}}' +
+                    '</bb-error-title>' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $compile(el)($scope);
+
+            $scope.errorHeader = 'New not found';
+
+            $scope.$digest();
+            imageEl = getErrorImageDiv(el);
+            expect(imageEl).toHaveClass('bb-error-image-notfound');
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText($scope.errorHeader);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText('');
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).not.toBeVisible();
+
+            el.remove();
+        });
+
+        it('should allow overriding a description when using an error type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                el = angular.element('<bb-error bb-error-type="construction">' +
+                    '<bb-error-description>' +
+                    '{{errorDescription}}' +
+                    '</bb-error-description>' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $scope.errorDescription = 'A different error description';
+
+            $compile(el)($scope);
+
+            $scope.$digest();
+            imageEl = getErrorImageDiv(el);
+            expect(imageEl).toHaveClass('bb-error-image-construction');
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText(bbResources.error_title_construction);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText($scope.errorDescription);
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).not.toBeVisible();
+
+            el.remove();
+        });
+
+        it('should allow adding an action when using an error type', function () {
+            var actionEl,
+                imageEl,
+                descriptionEl,
+                headerEl,
+                actionClicked,
+                el = angular.element('<bb-error bb-error-type="broken">' +
+                    '<bb-error-action>' +
+                        '<button type="button" class="btn-primary btn" ng-click="action()">{{actionName}}</button>' +
+                    '</bb-error-action>' +
+                    '</bb-error>');
+
+            el.appendTo(document.body);
+
+            $scope.action = function () {
+                actionClicked = true;
+            };
+            $scope.actionName = 'My Action';
+
+            $compile(el)($scope);
+
+            $scope.$digest();
+            imageEl = getErrorImageDiv(el);
+            expect(imageEl).toHaveClass('bb-error-image-broken');
+
+            headerEl = getErrorHeader(el);
+            expect(headerEl).toHaveText(bbResources.error_title_broken);
+            expect(headerEl).toBeVisible();
+
+            descriptionEl = getErrorDescription(el);
+            expect(descriptionEl).toHaveText(bbResources.error_description_broken);
+            expect(descriptionEl).toBeVisible();
+
+            actionEl = getErrorAction(el);
+            expect(actionEl).toHaveText('My Action');
+            expect(actionEl).toHaveClass('btn-primary');
+            expect(actionEl).toBeVisible();
+            actionEl.click();
+            expect(actionClicked).toBe(true);
+            $scope.$destroy();
+            el.remove();
+        });
+
+        describe('child directives', function () {
+            it('should be able to use bb-error-image without bb-error', function () {
+                var imageEl,
+                    el = angular.element('<bb-error-image bb-error-type="broken">' +
+                        '</bb-error-image>');
+
+                el.appendTo(document.body);
+
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+                imageEl = el.find('.bb-error-image-container div');
+                expect(imageEl).toHaveClass('bb-error-image-broken');
+
+                el.remove();
+            });
+
+            it('should be able to use bb-error-title without bb-error', function () {
+                var headerEl,
+                    el = angular.element('<bb-error-title bb-error-type="notFound">' +
+                        '</bb-error-title>');
+
+                el.appendTo(document.body);
+
+                $compile(el)($scope);
+
+                $scope.$digest();
+
+                headerEl = el.find('.bb-error-title-container');
+                expect(headerEl).toHaveText(bbResources.error_title_notfound);
+                expect(headerEl).toBeVisible();
+
+                el.remove();
+            });
+
+            it('should be able to use bb-error-description without bb-error', function () {
+                var descriptionEl,
+                    el = angular.element('<bb-error-description bb-error-type="construction">' +
                         '</bb-error-description>');
 
                 el.appendTo(document.body);

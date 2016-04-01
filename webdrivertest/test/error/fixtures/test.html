@@ -7,7 +7,7 @@
   </select>
 
   <div ng-if="errorCtrl.errorType !== 'custom'" id="screenshot-error-type">
-    <bb-error error-type="{{errorCtrl.errorType}}">
+    <bb-error bb-error-type="{{errorCtrl.errorType}}">
       <bb-error-action>
         <button type="button" class="btn-primary btn" ng-click="errorCtrl.action()">{{errorCtrl.actionName}}</button>
       </bb-error-action>
