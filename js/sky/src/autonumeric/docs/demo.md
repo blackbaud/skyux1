@@ -19,5 +19,5 @@ The `bb-autonumeric` directive wraps up the autoNumeric jQuery plugin to format 
 In addition to the directive, the autonumeric component includes a filter that can format numbers. The filter can optionally abbreviate numbers according to SKY UX patterns. For example, it can display 10,000 as 10k, 1,000,000 as 1m, and 1,000,000,000 as 1b. The filter takes three arguments:
 
  - `input` &mdash; Specifies the value to format.
- - `configType` &mdash; If a String, then it specifies the name of the configuration (`number` or `money`) to apply to the value. If an Object, then it represents a settings object to pass to the autoNumeric jQuery plugin. For more information, see the [complete list of options](http://www.decorplanit.com/plugin/).
+ - `configType` &mdash; If a String, then it specifies the name of the configuration (`number`, `money`, or `percent`) to apply to the value. If an Object, then it represents a settings object to pass to the autoNumeric jQuery plugin. For more information, see the [complete list of options](http://www.decorplanit.com/plugin/).
  - `abbreviate` &mdash; Provides a Boolean value to indicate whether to abbreviate large numbers.
