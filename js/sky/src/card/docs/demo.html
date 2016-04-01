@@ -1,0 +1,47 @@
+<div ng-controller="CardTestController as cardCtrl">
+  <bb-card bb-card-size="'large'" bb-card-selectable="cardCtrl.showCheckbox">
+      <bb-card-title ng-if="cardCtrl.showTitle">Large card</bb-card-title>
+      <bb-card-content ng-if="cardCtrl.showContent">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </bb-card-content>
+      <bb-card-actions ng-if="cardCtrl.showActions">
+        <button type="button" class="btn btn-default">Click me</button>
+      </bb-card-actions>
+  </bb-card>
+  <bb-card bb-card-size="'small'">
+      <bb-card-title>Small card</bb-card-title>
+      <bb-card-content>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </bb-card-content>
+      <bb-card-actions>
+        <bb-context-menu>
+          <bb-context-menu-item>Action 1</bb-context-menu-item>
+          <bb-context-menu-item>Action 2</bb-context-menu-item>
+        </bb-context-menu>
+      </bb-card-actions>
+  </bb-card>
+  <div>
+    <ul class="list-unstyled">
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="cardCtrl.showTitle" /> Show title
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="cardCtrl.showContent" /> Show content
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="cardCtrl.showActions" /> Show actions
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" bb-check ng-model="cardCtrl.showCheckbox" /> Show checkbox
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>

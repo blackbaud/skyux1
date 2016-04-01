@@ -1,0 +1,78 @@
+@import "mixins";
+
+.bb-card {
+    background-color: #fff;
+    border: solid 1px #ccc;
+    display: inline-flex;
+    flex-direction: column;
+    height: 350px;
+    margin: 0 $margin $margin 0;
+    transition: background-color $bb-transition-time-short;
+    width: 300px;
+    @include shadow();
+}
+
+.bb-card-small {
+    height: 250px;
+    width: 200px;
+}
+
+.bb-card-selectable {
+    .bb-card-header,
+    .bb-card-content {
+        cursor: pointer;
+    }
+}
+
+.bb-card-selected {
+    background-color: $bb-selected-color;
+    transition: background-color $bb-transition-time-short;
+}
+
+.bb-card-header {
+    display: flex;
+    flex-shrink: 0;
+    margin: 0;
+    min-height: 37px;
+    // Use padding so the area between the header and content is still clickable.
+    padding: $padding $padding 0 $padding;
+}
+
+.bb-card-middle {
+    flex-grow: 1;
+}
+
+.bb-card-title {
+    font-family: $bb-font-family-narrow;
+    font-size: $bb-alternate-font-size-sm;
+    margin: 0;
+}
+
+.bb-card-check {
+    flex-shrink: 0;
+
+    .bb-check-wrapper {
+        margin: 0;
+    }
+}
+
+.bb-card-content {
+    flex-grow: 1;
+    font-weight: normal;
+    margin: 0;
+    padding: $padding;
+    overflow: hidden;
+}
+
+.bb-card-actions {
+    border-top: solid 1px #ccc;
+    bottom: 0;
+    flex-shrink: 0;
+    padding: $padding-3_4 0;
+    text-align: center;
+
+    .bb-context-menu-btn {
+        height: 32px;
+        width: 32px;
+    }
+}

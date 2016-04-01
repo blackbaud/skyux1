@@ -1,0 +1,19 @@
+<section class="bb-card" ng-class="bbCard.getClass()" ng-style="bbCard.getStyle()">
+  <label class="bb-card-header">
+    <div class="bb-card-left" ng-if="bbCard.leftCtrl">
+
+    </div>
+    <div class="bb-card-middle">
+      <h1 class="bb-card-title"></h1>
+    </div>
+    <div class="bb-card-right" ng-if="bbCard.rightCtrl">
+
+    </div>
+    <div class="bb-card-check" ng-if="bbCard.bbCardSelectable">
+      <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />
+    </div>
+  </label>
+  <label class="bb-card-content" for="{{bbCard.cardCheckId}}"></label>
+  <div class="bb-card-actions" ng-if="bbCard.actionsCtrl"></div>
+  <ng-transclude></ng-transclude>
+</section>
