@@ -29,6 +29,9 @@ module.exports = function (grunt, env, utils) {
             },
             localBrowserStackTunnelStop: {
                 cmd: './scripts/browserstack-local-stop.sh'
+            },
+            uploadCoverage: {
+                cmd: 'cat coverage/*/lcov.info | codecov'
             }
         },
         jshint: {
@@ -229,6 +232,15 @@ module.exports = function (grunt, env, utils) {
             'visualtest'
         ];
 
+        // Environments that should upload code coverage
+        switch (env.get()) {
+        case env.SUPPORTED.CI_PR_BRANCH:
+        case env.SUPPORTED.CI_PUSH:
+            tasks.push('exec:uploadCoverage');
+            break;
+        }
+
+        // Handle all environents to avoid error message
         switch (env.get()) {
         case env.SUPPORTED.CI_PR_BRANCH:
             break;

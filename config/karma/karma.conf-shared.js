@@ -55,6 +55,9 @@ module.exports = {
         reporters: [
             {
                 type: 'html'
+            },
+            {
+                type: 'lcov'
             }
         ]
     }
