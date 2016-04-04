@@ -60,6 +60,6 @@
     "webdriverio": "3.2.6"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test docs"
   }
 }

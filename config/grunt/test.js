@@ -225,29 +225,28 @@ module.exports = function (grunt, env, utils) {
 
     // This is the main entry point for testing skyux.
     grunt.registerTask('test', function () {
-        var tasks = [
-            'lint',
-            'build',
-            'unittest',
-            'visualtest'
-        ];
-
-        // Environments that should upload code coverage
-        switch (env.get()) {
-        case env.SUPPORTED.CI_PR_BRANCH:
-        case env.SUPPORTED.CI_PUSH:
-            tasks.push('exec:uploadCoverage');
-            break;
-        }
+        var tasks;
 
         // Handle all environents to avoid error message
         switch (env.get()) {
         case env.SUPPORTED.CI_PR_BRANCH:
+        case env.SUPPORTED.CI_PUSH:
+            tasks = [
+                'lint',
+                'build',
+                'unittest',
+                'exec:uploadCoverage',
+                'visualtest'
+            ];
             break;
         case env.SUPPORTED.LOCAL:
         case env.SUPPORTED.LOCAL_BS:
-        case env.SUPPORTED.CI_PUSH:
-            tasks.push('docs');
+            tasks = [
+                'lint',
+                'build',
+                'unittest',
+                'visualtest'
+            ];
             break;
         case env.SUPPORTED.CI_PR_FORK:
             utils.log('Pull requests from forks are ran via blackbaud-sky-savage.');
