@@ -116,14 +116,16 @@ module.exports = function (grunt, env, utils) {
     }
 
     function cleanupWorkingScreenshots(root) {
-        var pattern = root + '/**/*px.png';
+        var pattern = root + '/**/*px.png',
+            regressionPattern = root + '/**/*.regresssion.png';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            pattern
+            pattern,
+            regressionPattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });
@@ -158,7 +160,7 @@ module.exports = function (grunt, env, utils) {
     });
 
     grunt.registerTask('cleanupworkingscreenshots', function () {
-        cleanupWorkingScreenshots(grunt.config.get('skyux.paths.paths.webdriver'));
+        cleanupWorkingScreenshots(grunt.config.get('skyux.paths.webdriver'));
     });
 
     grunt.registerTask('lint', ['jshint', 'jscs']);

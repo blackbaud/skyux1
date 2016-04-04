@@ -13,3 +13,41 @@ Bootstrap colors for alert text, panel text and others.
 @include text-emphasis-variant('.text-info', $bb-text-color-info);
 
 @include text-emphasis-variant('.text-warning', $bb-text-color-warning);
+
+/*
+Semantic font class styles are based on existing styling of analogous components. We will be testing out a new typographic scheme, and will update these values once that is finalized. The proposed scheme will have 15px base font, so the body- classes and field labels will change the most. It's possible that the current larger fonts will not change.
+*/
+.bb-page-heading {
+    font: 300 32px $bb-font-family-narrow;
+    color: $text-color;
+}
+
+.bb-section-heading {
+    font: 300 22px $bb-font-family-narrow;
+    color: $text-color;
+}
+
+.bb-subsection-heading {
+    font: 400 17px $font-family-sans-serif;
+    color: #707374;
+}
+
+.bb-headline {
+    font: 400 20px $bb-font-family-narrow;
+    color: $text-color;
+}
+
+.bb-emphasized {
+    font: 600 14px $font-family-sans-serif;
+    color: $text-color;
+}
+
+.bb-deemphasized {
+    font: 400 italic 13px $font-family-sans-serif;
+    color: #707374;
+}
+
+.bb-field-label {
+    font: 400 13px $font-family-sans-serif;
+    color: #707374;
+}
