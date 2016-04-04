@@ -19,7 +19,7 @@
             name: 'Actions',
             cls: 'actions'
         }],
-        cardModule = angular.module('sky.card.directive', []),
+        cardModule = angular.module('sky.card.directive', ['sky.check']),
         nextId = 0;
 
     function makeCardComponent(component) {
@@ -96,9 +96,6 @@
             switch (vm.bbCardSize) {
             case 'small':
                 cls.push('bb-card-small');
-                break;
-            case 'large':
-                cls.push('bb-card-large');
                 break;
             }
 
