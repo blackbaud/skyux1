@@ -57,7 +57,7 @@ module.exports = {
                 type: 'html'
             },
             {
-                type: 'lcov'
+                type: 'json'
             }
         ]
     }

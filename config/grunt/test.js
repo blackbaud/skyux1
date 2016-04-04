@@ -31,7 +31,7 @@ module.exports = function (grunt, env, utils) {
                 cmd: './scripts/browserstack-local-stop.sh'
             },
             uploadCoverage: {
-                cmd: 'cat coverage/*/lcov.info | codecov'
+                cmd: 'cat coverage/*/coverage-final.json | codecov'
             }
         },
         jshint: {
