@@ -20,7 +20,7 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-chrome-webdriver-local'
-        },
+        }/*,
         {
             browserName: 'firefox',
             'browserstack.local': 'true',
@@ -58,7 +58,7 @@
             os: 'Windows',
             os_version: '8',
             build: 'win8-ie10-webdriver-local'
-        }
+        }*/
     ];
     shared.host = 'hub.browserstack.com';
     shared.port = 80;
