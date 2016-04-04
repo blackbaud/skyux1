@@ -1,5 +1,5 @@
 
-/*global describe, it, browser,require */
+/*global describe, it, browser,require, expect */
 
 describe('Reorder', function () {
     'use strict';
@@ -22,7 +22,10 @@ describe('Reorder', function () {
 
     it('should match previous reorder screenshot when user is sorting', function (done) {
         var browserResult,
-            common = require('../common');
+            common = require('../common'),
+            prefix,
+            screenshotName,
+            pageName;
 
         browserResult = browser
             .url('/reorder/fixtures/test.full.html')
@@ -30,12 +33,22 @@ describe('Reorder', function () {
             .buttonDown()
             .moveToObject('#screenshot-reorder .bb-reorder-list-row:nth-child(2)', 0, -35);
 
-        common.compareScreenshot({
-            browserResult: browserResult,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'reorder_sorting',
-            selector: '#screenshot-reorder',
-            done: done
-        });
+        prefix = common.getPrefix(browser);
+        screenshotName = 'reorder_sorting';
+
+        pageName = prefix + '/' + prefix + '_' + screenshotName + '_full';
+
+        browserResult
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '#screenshot-reorder'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            })
+            .buttonUp()
+            .call(done);
     });
 });
