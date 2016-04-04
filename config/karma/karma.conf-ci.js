@@ -74,15 +74,6 @@ module.exports = function (config) {
         }
     );
 
-    // Add new reporters
-    shared.reporters.push('coveralls');
-
-    // Coveralls needs lcov
-    shared.coverageReporter.reporters.push({
-        type: 'lcov',
-        dir: 'coverage/'
-    });
-
     config.set(shared);
     config.set({
         singleRun: true,
