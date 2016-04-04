@@ -8,6 +8,10 @@
     height: 350px;
     margin: 0 $margin $margin 0;
     transition: background-color $bb-transition-time-short;
+    // This keeps cards with varying contents (such as one card with a header and another with no header)
+    // vertically aligned with one another.  Otherwise because of the inline nature of the card the browser
+    // will attempt to vertically align the cards based on the baselines of the text in each card.
+    vertical-align: top;
     width: 300px;
     @include shadow();
 }
@@ -33,13 +37,29 @@
     display: flex;
     flex-shrink: 0;
     margin: 0;
-    min-height: 37px;
     // Use padding so the area between the header and content is still clickable.
-    padding: $padding $padding 0 $padding;
+    padding: $padding 0 0 0;
 }
 
-.bb-card-middle {
+.bb-card-heading-left,
+.bb-card-heading-right {
+    @include ellipsis();
+    font-size: 20px;
+    font-weight: normal;
+    max-width: 34px;
+}
+
+.bb-card-heading-left {
+    padding-left: $padding;
+}
+
+.bb-card-heading-right {
+    padding-right: $padding;
+}
+
+.bb-card-heading-middle {
     flex-grow: 1;
+    padding: 0 $padding;
 }
 
 .bb-card-title {
@@ -50,9 +70,10 @@
 
 .bb-card-check {
     flex-shrink: 0;
+    padding-right: $padding;
 
     .bb-check-wrapper {
-        margin: 0;
+        margin-bottom: 2px;
     }
 }
 
