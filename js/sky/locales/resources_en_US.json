@@ -518,5 +518,9 @@
     "datepicker_close": {
         "_description": "Text displayed in the Close button of the datepicker",
         "message": "Done"
+    },
+    "reorder_top": {
+      "_description": "Text displayed to indicate that a row can be pushed to the top of the list",
+      "message": "Top"
     }
 }
