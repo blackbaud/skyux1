@@ -561,7 +561,7 @@
                             function resizeStop(newWidth, index) {
                                 var changedWidth,
                                     resizedColumnIndex = index;
-                                
+
                                 //If multiselect and/or contextmenu exist, then the resized column index is shifted.
                                 if (locals.multiselect) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
@@ -569,7 +569,7 @@
                                 if (getContextMenuItems) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
                                 }
-                                
+
                                 $scope.$emit("columnsResized", { newWidth: newWidth, index: resizedColumnIndex });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
@@ -595,7 +595,7 @@
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-                                
+
                                 return;
                             }
 
@@ -934,9 +934,15 @@
                                         $scope.paginationOptions.maxPages = DEFAULT_MAX_PAGES;
                                     }
 
+                                    if (!$scope.paginationOptions.currentPage) {
+                                        $scope.locals.currentPage = 1;
+                                    } else {
+                                        $scope.locals.currentPage = $scope.paginationOptions.currentPage;
+                                    }
+
                                     $scope.paginationOptions.pageChanged = pageChanged;
 
-                                    $scope.locals.currentPage = 1;
+
                                 }
                             }
 
@@ -1375,7 +1381,7 @@
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
-                            
+
                             $scope.$on("reInitGrid", function () {
                                 reInitGrid();
                             });
