@@ -197,7 +197,7 @@
             bindToController: {
                 bbAlertType: '@',
                 bbAlertCloseable: '@',
-                bbAlertClosed: '='
+                bbAlertClosed: '=?'
             },
             link: link,
             scope: {},
@@ -208,26 +208,6 @@
 
     angular.module('sky.alert.directive', ['sky.resources'])
         .directive('bbAlert', bbAlert);
-}());
-
-/*jshint browser: true */
-/*global angular */
-
-(function () {
-    'use strict';
-
-    angular.module('sky.autofocus', [])
-        .directive('bbAutofocus', ['$timeout', function ($timeout) {
-            return {
-                restrict: 'A',
-                link: function ($scope, $element) {
-                    /*jslint unparam: true */
-                    $timeout(function () {
-                        $element.focus();
-                    }, 500);
-                }
-            };
-        }]);
 }());
 
 /*jslint browser: true, plusplus: true */
@@ -249,11 +229,12 @@
         if (configType) {
             configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
+            /* istanbul ignore else: sanity check */
             if (configSettings) {
                 angular.extend(baseSettings, configSettings);
             }
         }
-        
+
         return baseSettings;
     }
 
@@ -896,17 +877,17 @@
             templateUrl: 'sky/templates/checklist/checklist.directive.html',
             bindToController: {
                 bbChecklistItems: '=',
-                bbChecklistSelectedItems: '=',
-                bbChecklistFilterCallback: '=',
-                bbChecklistIncludeSearch: '=',
-                bbChecklistSearchDebounce: '=',
+                bbChecklistSelectedItems: '=?',
+                bbChecklistFilterCallback: '=?',
+                bbChecklistIncludeSearch: '=?',
+                bbChecklistSearchDebounce: '=?',
                 bbChecklistSearchPlaceholder: '@',
                 bbChecklistNoItemsMessage: '@',
-                bbChecklistAutomationField: '=',
-                bbChecklistCategories: '=',
+                bbChecklistAutomationField: '=?',
+                bbChecklistCategories: '=?',
                 bbChecklistMode: '@',
                 bbChecklistSelectStyle: '@',
-                bbChecklistIsLoading: '='
+                bbChecklistIsLoading: '=?'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',
@@ -2633,8 +2614,10 @@
         var vm = this;
 
         $scope.$on('$destroy', function () {
-            vm.onDestroy();
-            vm = null;
+            if (angular.isFunction(vm.onDestroy)) {
+                vm.onDestroy();
+                vm = null;
+            }
         });
     }
 
@@ -2675,8 +2658,10 @@
         var vm = this;
 
         $scope.$on('$destroy', function () {
-            vm.onDestroy();
-            vm = null;
+            if (angular.isFunction(vm.onDestroy)) {
+                vm.onDestroy();
+                vm = null;
+            }
         });
 
         $scope.$watch(function () {
@@ -2844,8 +2829,10 @@
         var vm = this;
 
         $scope.$on('$destroy', function () {
-            vm.onDestroy();
-            vm = null;
+            if (angular.isFunction(vm.onDestroy)) {
+                vm.onDestroy();
+                vm = null;
+            }
         });
 
 
@@ -2868,6 +2855,7 @@
                 scope.$watch(function () {
                     return vm.errorType;
                 }, function (newValue) {
+                    /* istanbul ignore else: sanity check */
                     if (newValue !== vm.bbErrorType) {
                         vm.bbErrorType = newValue;
                     }
@@ -2903,8 +2891,10 @@
         var vm = this;
 
         $scope.$on('$destroy', function () {
-            vm.onDestroy();
-            vm = null;
+            if (angular.isFunction(vm.onDestroy)) {
+                vm.onDestroy();
+                vm = null;
+            }
         });
 
         $scope.$watch(function () {
@@ -2922,7 +2912,6 @@
                     break;
             }
         });
-
     }
 
     BBErrorTitleController.$inject = ['$scope', 'bbResources'];
@@ -3618,13 +3607,10 @@
                 };
 
                 bbGrid.scope.$watch('gridCreated', function (newValue) {
+                    /* istanbul ignore else: sanity check */
                     if (newValue) {
                         element.parents('.bb-grid-container').prepend(element);
                         element.show();
-
-                        if ($scope.locals.expanded) {
-                            animateFilters($scope.locals.expanded);
-                        }
                     }
                 });
 
@@ -7168,161 +7154,6 @@ angular.module('sky.palette.config', [])
         }]);
 }());
 
-/*jslint browser: true */
-/*global angular, jQuery */
-
-(function ($) {
-    'use strict';
-
-    angular.module('sky.searchfield', ['sky.resources'])
-        .directive('uiSelectMatch', ['$timeout', function ($timeout) {
-            return {
-                restrict: 'EA',
-                replace: false,
-                require: '^uiSelect',
-                link: function (scope, element, attrs, $select) {
-                    var selectContainerEl,
-                        origSizeSearchInputFunc,
-                        matchEl,
-                        windowResizeTimeout;
-
-                    function sizeMatchItems() {
-                        //The main logic flow for this function was taken from the ui-select's "sizeSearchInput()" function.
-                        //Some things are done below in order to give the tags time to render before we try to fix any
-                        //text overflow issues that may be present.
-
-                        function updateIfVisible(containerOffsetWidth) {
-                            var visible = (containerOffsetWidth > 0);
-
-                            if (visible) {
-                                //Get the container width minus any padding
-                                containerOffsetWidth -= containerOffsetWidth - angular.element(selectContainerEl).width();
-
-                                //For each match item, set the properly width so that text overflows properly
-                                matchEl.find('.ui-select-match-item').css({
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    maxWidth: containerOffsetWidth
-                                });
-                            }
-
-                            return visible;
-                        }
-
-                        $timeout(function () { //Give tags time to render correctly
-                            updateIfVisible(selectContainerEl.offsetWidth);
-                        });
-                    }
-
-                    if ($select.multiple) {
-                        matchEl = element;
-                        selectContainerEl = matchEl.parent().parent()[0];
-                        origSizeSearchInputFunc = $select.sizeSearchInput;
-
-                        //Hook into the ui-select function that controls resizing for multi search
-                        $select.sizeSearchInput = function () {
-                            origSizeSearchInputFunc();
-                            sizeMatchItems();
-                        };
-
-                        //Resize any tags on load
-                        sizeMatchItems();
-
-                        $(window).on('resize.searchField' + scope.$id, function () {
-                            $timeout.cancel(windowResizeTimeout);
-
-                            windowResizeTimeout = $timeout(function () {
-                                sizeMatchItems();
-                            }, 250);
-                        });
-
-                        scope.$on('$destroy', function () {
-                            $(window).off('resize.searchField' + scope.$id);
-                        });
-                    }
-                }
-            };
-        }])
-        .directive('uiSelectChoices', ['$templateCache', 'bbResources', function ($templateCache, bbResources) {
-            return {
-                restrict: 'EA',
-                replace: false,
-                require: '^uiSelect',
-                link: function (scope, element, attrs, $select) {
-                    var searching,
-                        selectContainerEl,
-                        msgEl;
-
-                    function updateUIForSearch(showSearchingMsg) {
-                        var msg;
-
-                        // Remove the no results message if it's currently displayed
-                        if (msgEl) {
-                            msgEl.remove();
-                            msgEl = null;
-                        }
-
-                        if (searching && $select.items.length === 0) {
-                            // Display the "Searching..." or "No results..." message - only when we have empty results because we
-                            //don't want the message to popup over a list of results as the user types.
-                            msg = showSearchingMsg ? bbResources.searchfield_searching : bbResources.searchfield_no_records;
-
-                            msgEl = angular.element($templateCache.get('sky/templates/searchfield/choices.html'));
-                            msgEl.find('.bb-searchfield-no-records').text(msg);
-
-                            selectContainerEl.append(msgEl);
-                        }
-                    }
-
-                    function clearResults() {
-                        searching = false;
-                        $select.items = []; // Clear out current result set
-                        updateUIForSearch();
-                    }
-
-                    //Remote Searches Only
-                    //If the refresh attribute is set the control is being used as a remote search
-                    if (attrs.refresh) {
-                        selectContainerEl = angular.element(element).parent();
-                        searching = false;
-
-                        //Watch when the search field is opened/closed so that we can update the UI and remove
-                        //the no results message, and remove the results for the next search.
-                        scope.$watch('$select.open', function () {
-                            clearResults();
-                        });
-
-                        //Watch the search results collection for any changes.
-                        //NOTE: This does NOT fire when the collection is empty and the search result
-                        //comes back empty.  To handle that case, see the "bbSearchFinished" event below.
-                        scope.$watchCollection('$select.items', function () {
-                            updateUIForSearch();
-                        });
-
-                        //This event should be fired by the consuming code after it gets and stores the results
-                        //from the remote server.  This allows us to handle the problem above where $watchCollection
-                        //doesn't fire when the collection is empty and the results also come back empty.
-                        scope.$on("bbSearchFinished", function () {
-                            updateUIForSearch();
-                        });
-
-                        //Watch all changes to the search text that the user is typing.
-                        scope.$watch('$select.search', function (search) {
-                            searching = (search && search.length > 0);
-
-                            if (searching) {
-                                //Initially shows the "Searching..." message until results come back from the remote server
-                                updateUIForSearch(true);
-                            } else {
-                                clearResults();
-                            }
-                        });
-                    }
-                }
-            };
-        }]);
-}(jQuery));
-
 /*global angular */
 
 (function () {
@@ -7825,12 +7656,6 @@ angular.module('sky.palette.config', [])
         };
 
         self.tabAdded = function () {
-            if (!$scope.bbTabsetOptions) {
-                $scope.bbTabsetOptions = {
-                    isSmallScreen: false,
-                    tabCount: 0
-                };
-            }
 
             if ($scope.bbTabsetOptions.isSmallScreen) {
                 $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
@@ -7928,12 +7753,11 @@ angular.module('sky.palette.config', [])
                     $scope.bbTabsetOptions.isSmallScreen = newBreakpoints.xs;
                     setupCollapsibleTabs(newBreakpoints.xs && ($scope.bbTabsetOptions.tabCount > 1));
                 }
-                if (!$scope.bbTabsetOptions) {
-                    $scope.bbTabsetOptions = {
-                        isSmallScreen: false,
-                        tabCount: 0
-                    };
-                }
+
+                $scope.bbTabsetOptions = {
+                    isSmallScreen: false,
+                    tabCount: 0
+                };
 
                 el.prepend($compile(getDropdownEl())($scope));
 
@@ -7950,10 +7774,10 @@ angular.module('sky.palette.config', [])
 
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
 
-                // Show initial scroll animation whenever the window width changes.
                 $($window).on('resize.tabcollapse' + tabCollapseId, function () {
                     var windowWidth = $($window).width();
 
+                    /* istanbul ignore else: sanity check */
                     if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
                         setDropdownMaxWidth();
                     }
@@ -8457,8 +8281,13 @@ angular.module('sky.palette.config', [])
 
         vm.setHeaderContentEl = function (el) {
             vm.headerContentEl = el;
-        };
 
+            /* istanbul ignore else: sanity check */
+            if (angular.isFunction(vm.updateHeaderContent)) {
+                vm.updateHeaderContent();
+            }
+        };
+        
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
             var i,
@@ -8561,6 +8390,8 @@ angular.module('sky.palette.config', [])
                     wrapperEl.append(vm.headerContentEl);
                 }
             }
+
+            vm.updateHeaderContent = updateHeaderContent;
 
             function initializeTile(data) {
                 $timeout(function () {
@@ -9014,36 +8845,6 @@ angular.module('sky.palette.config', [])
                 }
             };
         }]);
-}());
-
-/*global angular */
-
-(function () {
-    'use strict';
-
-
-    function bbTooltip($compile) {
-        return {
-            restrict: 'A',
-            scope: true,
-            link: function ($scope, el) {
-                //Add bootstrap directive
-                /*istanbul ignore else */
-                if (!el.attr('uib-tooltip-template')) {
-                    el.attr('uib-tooltip-template', "'" + el.attr('bb-tooltip') + "'");
-                }
-
-                el.removeAttr('bb-tooltip');
-                $compile(el)($scope);
-            }
-        };
-    }
-
-    bbTooltip.$inject = ['$compile'];
-
-    angular.module('sky.tooltip', ['ui.bootstrap.tooltip'])
-        .directive('bbTooltip', bbTooltip);
-
 }());
 
 /*global angular */
@@ -10086,7 +9887,6 @@ angular.module('sky.palette.config', [])
     var modules = [
         'sky.actionbar',
         'sky.alert',
-        'sky.autofocus',
         'sky.autonumeric',
         'sky.avatar',
         'sky.check',
@@ -10114,7 +9914,6 @@ angular.module('sky.palette.config', [])
         'sky.reorder',
         'sky.resources',
         'sky.scrollintoview',
-        'sky.searchfield',
         'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
@@ -10123,7 +9922,6 @@ angular.module('sky.palette.config', [])
         'sky.templating',
         'sky.textexpand',
         'sky.tiles',
-        'sky.tooltip',
         'sky.utilities',
         'sky.validation',
         'sky.viewkeeper',
@@ -10835,11 +10633,6 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '   </div>\n' +
         ' </div>\n' +
         '</div>\n' +
-        '');
-    $templateCache.put('sky/templates/searchfield/choices.html',
-        '<ul class="ui-select-choices ui-select-choices-content dropdown-menu">\n' +
-        '  <li class="bb-searchfield-no-records"></li>\n' +
-        '</ul>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfield.directive.html',
         '<ng-include src="bbSelectField.getFieldInclude()"></ng-include>\n' +
