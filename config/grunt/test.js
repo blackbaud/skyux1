@@ -10,7 +10,7 @@ module.exports = function (grunt, env, utils) {
                     'config/grunt/*.js',
                     'js/**/*.js'
                 ],
-                webdriver: 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) ? 'local' : '')
+                webdriver: 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'local' : '')
             }
         },
         connect: {
