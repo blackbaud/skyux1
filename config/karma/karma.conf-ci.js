@@ -71,6 +71,11 @@ module.exports = function (config) {
             pattern: 'dist/css/fonts/*.*',
             included: false,
             served: true
+        },
+        {
+            pattern: 'dist/css/images/*.*',
+            included: false,
+            served: true
         }
     );
 
