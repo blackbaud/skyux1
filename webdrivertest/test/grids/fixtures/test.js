@@ -3,6 +3,12 @@
 (function () {
     'use strict';
 
+    function RunTemplateCache($templateCache) {
+        $templateCache.put('bbGrid/samples/date.html', '<div>{{data | date: \'medium\'}}</div>');
+    }
+
+    RunTemplateCache.$inject = ['$templateCache'];
+
     function GridTestController($scope, $filter) {
         var self = this,
             action1,
@@ -256,7 +262,8 @@
                     jsonmap: 'mydate',
                     id: 5,
                     name: 'mydate',
-                    width_all: 200
+                    width_all: 200,
+                    template_url: 'bbGrid/samples/date.html'
                 },
                 {
                     caption: 'Caption with reaaaaaaaaaaly long name like reeeeediculous',
@@ -422,6 +429,7 @@
     GridTestController.$inject = ['$scope', '$filter'];
 
     angular.module('screenshots', ['sky'])
+    .run(RunTemplateCache)
     .controller('GridTestController', GridTestController);
 
 }());
