@@ -28,7 +28,6 @@ module.exports = {
         'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
         'bower_components/blockui/jquery.blockUI.js',
-        'bower_components/angular-ui-select/dist/select.js',
         'bower_components/angular-mocks/angular-mocks.js',
         'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
         'bower_components/ng-file-upload/ng-file-upload.js',
