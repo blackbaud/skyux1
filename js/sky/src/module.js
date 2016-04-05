@@ -32,6 +32,7 @@
         'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
+        'sky.reorder',
         'sky.resources',
         'sky.scrollintoview',
         'sky.searchfield',
