@@ -64,7 +64,7 @@ module.exports = function (grunt, utils) {
             if (!grunt.file.exists('browserstack.env')) {
                 utils.fatal('Expected browserstack.env file to exist.');
             } else {
-                require('dotenv').config();
+                require('dotenv').config({ path: 'browserstack.env' });
             }
         } else if (process.env.TRAVIS) {
             if (process.env.TRAVIS_SECURE_ENV_VARS === 'true') {
