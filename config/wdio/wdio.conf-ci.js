@@ -34,7 +34,7 @@
             build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
         }
     ];
-    shared.host = 'http://hub-cloud.browserstack.com';
+    shared.host = 'hub-cloud.browserstack.com';
     shared.port = 80;
     shared.plugins = {
         webdrivercss: {
