@@ -916,7 +916,7 @@
                             }
 
                             function pageChanged() {
-                                var skip = ($scope.locals.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
+                                var skip = ($scope.paginationOptions.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
                                     top = $scope.paginationOptions.itemsPerPage;
 
                                 $scope.$emit('loadMoreRows', {top: top, skip: skip});
@@ -935,9 +935,7 @@
                                     }
 
                                     if (!$scope.paginationOptions.currentPage) {
-                                        $scope.locals.currentPage = 1;
-                                    } else {
-                                        $scope.locals.currentPage = $scope.paginationOptions.currentPage;
+                                        $scope.paginationOptions.currentPage = 1;
                                     }
 
                                     $scope.paginationOptions.pageChanged = pageChanged;

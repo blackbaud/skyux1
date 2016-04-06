@@ -320,7 +320,7 @@ describe('Grid directive', function () {
         expect(cellEl.eq(2)).toHaveText('');
 
     });
-    
+
     it('reinitializes the grid in response to a reInitGrid event', function () {
         var gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
 
@@ -329,15 +329,15 @@ describe('Grid directive', function () {
         locals.gridOptions.columns[2].width_all = 200;
 
         el = setUpGrid(gridWrapperHtml, locals);
-        
+
         expect(el.find("td").eq(0).outerWidth()).toEqual(200);
 
         locals.gridOptions.columns[0].width_all = 100;
 
         $scope.$broadcast("reInitGrid");
-        
+
         expect(el.find("td").eq(0).outerWidth()).toEqual(100);
-        
+
     });
 
     describe('fixed headers', function () {
@@ -477,6 +477,66 @@ describe('Grid directive', function () {
             expect(paginationEl.eq(1)).toHaveText(2);
 
             expect(paginationEl.eq(2)).toHaveClass('disabled');
+
+        });
+
+        it('loads a grid with pagination with the custom currentPage', function () {
+            var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-pagination="locals.paginationOptions"></bb-grid></div>',
+                pagedData1 = [
+                    {
+                        name: 'John',
+                        instrument: 'Rhythm guitar'
+                    },
+                    {
+                        name: 'Paul',
+                        instrument: 'Bass',
+                        bio: 'Lorem'
+                    },
+                    {
+                        name: 'George',
+                        instrument: 'Lead guitar'
+                    },
+                    {
+                        name: 'Ringo',
+                        instrument: 'Drums'
+                    }
+                ],
+                paginationContainerEl,
+                paginationEl;
+
+            el = setUpGrid(gridHtml);
+
+            $scope.$on('loadMoreRows', getTopAndSkipFromLoadMore);
+
+            $scope.locals.paginationOptions = {
+                recordCount: 30,
+                currentPage: 2
+            };
+
+            setGridData(pagedData1);
+
+            paginationContainerEl = el.find('.bb-grid-pagination-container');
+
+            expect(paginationContainerEl.length).toBe(1);
+
+            paginationEl = paginationContainerEl.eq(0).find('li');
+
+            //default max of 5 pages shown with two arrow elements
+            expect(paginationEl.length).toBe(7);
+
+            //expect the correct numbers to be shown in pagination
+            expect(paginationEl.eq(1)).toHaveText(1);
+            expect(paginationEl.eq(2)).toHaveClass('active');
+            expect(paginationEl.eq(2)).toHaveText(2);
+            expect(paginationEl.eq(3)).toHaveText(3);
+            expect(paginationEl.eq(4)).toHaveText(4);
+            expect(paginationEl.eq(5)).toHaveText(5);
+
+            //expect movement to behave correctly
+            paginationEl.eq(6).find('a').click();
+
+            expect(top).toBe(5);
+            expect(skip).toBe(10);
 
         });
 
@@ -1193,7 +1253,7 @@ describe('Grid directive', function () {
             tableEl[0].p.resizeStop(200, 4);
         });
     });
-    
+
     it('will emit a `columnsResized` event when columns are resized', function () {
         var tableEl,
             resizeHappened = false,
@@ -1202,7 +1262,7 @@ describe('Grid directive', function () {
         $scope.$on("columnsResized", function () {
             resizeHappened = true;
         });
-        
+
         locals.gridOptions.columns[0].width_all = 100;
         locals.gridOptions.columns[1].width_all = 100;
         locals.gridOptions.columns[2].width_all = 100;
@@ -1215,11 +1275,11 @@ describe('Grid directive', function () {
 
         tableEl[0].p.resizeStart({}, 0);
         tableEl[0].p.resizeStop(50, 0);
-        
+
         expect(resizeHappened).toBe(true);
 
     });
-    
+
     it('will adjust the column index in the `columnsResized` event when there is a contextmenu', function () {
         var tableEl,
             colIndex,
@@ -1228,9 +1288,9 @@ describe('Grid directive', function () {
         $scope.$on("columnsResized", function (event, data) {
             colIndex = data.index;
         });
-        
+
         locals.gridOptions.getContextMenuItems = getContextMenuItems;
-        
+
         locals.gridOptions.columns[0].width_all = 100;
         locals.gridOptions.columns[1].width_all = 100;
         locals.gridOptions.columns[2].width_all = 100;
@@ -1243,11 +1303,11 @@ describe('Grid directive', function () {
 
         tableEl[0].p.resizeStart({}, 2);
         tableEl[0].p.resizeStop(50, 2);
-        
+
         expect(colIndex).toBe(1);
 
     });
-    
+
     it('will adjust the column index in the `columnsResized` event when multiselect and contextmenu is present', function () {
         var tableEl,
             colIndex,
@@ -1256,10 +1316,10 @@ describe('Grid directive', function () {
         $scope.$on("columnsResized", function (event, data) {
             colIndex = data.index;
         });
-        
+
         locals.gridOptions.getContextMenuItems = getContextMenuItems;
         locals.gridOptions.multiselect = true;
-        
+
         locals.gridOptions.columns[0].width_all = 100;
         locals.gridOptions.columns[1].width_all = 100;
         locals.gridOptions.columns[2].width_all = 100;
@@ -1272,7 +1332,7 @@ describe('Grid directive', function () {
 
         tableEl[0].p.resizeStart({}, 2);
         tableEl[0].p.resizeStop(50, 2);
-        
+
         expect(colIndex).toBe(0);
 
     });
