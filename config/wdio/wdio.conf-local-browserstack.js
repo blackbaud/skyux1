@@ -60,7 +60,7 @@
             build: 'win8-ie10-webdriver-local'
         }
     ];
-    shared.host = 'hub.browserstack.com';
+    shared.host = 'hub-cloud.browserstack.com';
     shared.port = 80;
     shared.plugins = {
         webdrivercss: {
