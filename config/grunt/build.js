@@ -112,6 +112,7 @@ module.exports = function (grunt, env, utils) {
             dist: {
                 options: {
                     outputStyle: 'compressed',
+                    precision: 5,
                     sourceMap: true
                 },
                 files: {
@@ -130,6 +131,7 @@ module.exports = function (grunt, env, utils) {
             skybundle: {
                 options: {
                     outputStyle: 'compressed',
+                    precision: 5,
                     sourceMap: true
                 },
                 files: {
