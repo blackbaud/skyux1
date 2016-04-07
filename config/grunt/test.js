@@ -118,7 +118,6 @@ module.exports = function (grunt, env, utils) {
     function cleanupWorkingScreenshots(root) {
         var pattern = root + '/**/*px.png',
             regressionPattern = root + '/**/*.regression.png';
-
         grunt.file.expand(
             {
                 filter: 'isFile',
