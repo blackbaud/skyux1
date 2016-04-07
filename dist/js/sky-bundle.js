@@ -103408,7 +103408,7 @@ global.easyXDM = easyXDM;
                             function resizeStop(newWidth, index) {
                                 var changedWidth,
                                     resizedColumnIndex = index;
-                                
+
                                 //If multiselect and/or contextmenu exist, then the resized column index is shifted.
                                 if (locals.multiselect) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
@@ -103416,7 +103416,7 @@ global.easyXDM = easyXDM;
                                 if (getContextMenuItems) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
                                 }
-                                
+
                                 $scope.$emit("columnsResized", { newWidth: newWidth, index: resizedColumnIndex });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
@@ -103442,7 +103442,7 @@ global.easyXDM = easyXDM;
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-                                
+
                                 return;
                             }
 
@@ -103763,7 +103763,7 @@ global.easyXDM = easyXDM;
                             }
 
                             function pageChanged() {
-                                var skip = ($scope.locals.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
+                                var skip = ($scope.paginationOptions.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
                                     top = $scope.paginationOptions.itemsPerPage;
 
                                 $scope.$emit('loadMoreRows', {top: top, skip: skip});
@@ -103781,9 +103781,13 @@ global.easyXDM = easyXDM;
                                         $scope.paginationOptions.maxPages = DEFAULT_MAX_PAGES;
                                     }
 
+                                    if (!$scope.paginationOptions.currentPage) {
+                                        $scope.paginationOptions.currentPage = 1;
+                                    }
+
                                     $scope.paginationOptions.pageChanged = pageChanged;
 
-                                    $scope.locals.currentPage = 1;
+
                                 }
                             }
 
@@ -104222,7 +104226,7 @@ global.easyXDM = easyXDM;
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
-                            
+
                             $scope.$on("reInitGrid", function () {
                                 reInitGrid();
                             });
@@ -109604,7 +109608,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
-        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
+        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
