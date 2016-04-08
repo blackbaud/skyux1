@@ -277,4 +277,14 @@ $bb-avatar-width: $bb-avatar-height !default;
 $bb-avatar-border-width: 2px !default;
 // end avatar
 
+// begin transitions
+$bb-transition-time-short: 150ms;
+$bb-transition-time-medium: 250ms;
+$bb-transition-time-long: 500ms;
+// end transitions
+
+// begin context menu
+$bb-context-menu-size: 24px !default;
+// end context menu
+
 // end _variables

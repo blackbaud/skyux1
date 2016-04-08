@@ -1,0 +1,43 @@
+<div ng-controller="RepeaterTestController as repeaterCtrl">
+  <div class="form-group">
+    <label>
+      Expand mode
+      <select class="form-control" ng-model="repeaterCtrl.expandMode">
+        <option value="single">
+          Single
+        </option>
+        <option value="multiple">
+          Multiple
+        </option>
+        <option value="none">
+          None
+        </option>
+      </select>
+    </label>
+  </div>
+  <div class="form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="repeaterCtrl.showContextMenu" /> Show context menu
+    </label>
+  </div>
+  <div class="form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="repeaterCtrl.showTitle" /> Show title
+    </label>
+  </div>
+  <button type="button" class="btn btn-primary" ng-click="repeaterCtrl.addItem()">Add an item</button>
+  <div style="width: 400px">
+    <bb-repeater bb-repeater-expand-mode="repeaterCtrl.expandMode">
+      <bb-repeater-item ng-repeat="item in repeaterCtrl.items">
+        <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
+          <bb-context-menu>
+            <bb-context-menu-item>Action 1</bb-context-menu-item>
+            <bb-context-menu-item>Action 2</bb-context-menu-item>
+          </bb-context-menu>
+        </bb-repeater-item-context-menu>
+        <bb-repeater-item-title ng-if="repeaterCtrl.showTitle">{{item.title}}</bb-repeater-item-title>
+        <bb-repeater-item-content>{{item.content}}</bb-repeater-item-content>
+      </bb-repeater-item>
+    </bb-repeater>
+  </div>
+</div>
