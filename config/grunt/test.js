@@ -10,7 +10,7 @@ module.exports = function (grunt, env, utils) {
                     'config/grunt/*.js',
                     'js/**/*.js'
                 ],
-                webdriver: 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) ? 'local' : '')
+                webdriver: 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'local' : '')
             }
         },
         connect: {
@@ -116,14 +116,16 @@ module.exports = function (grunt, env, utils) {
     }
 
     function cleanupWorkingScreenshots(root) {
-        var pattern = root + '/**/*px.png';
+        var pattern = root + '/**/*px.png',
+            regressionPattern = root + '/**/*.regresssion.png';
 
         grunt.file.expand(
             {
                 filter: 'isFile',
                 cwd: '.'
             },
-            pattern
+            pattern,
+            regressionPattern
         ).forEach(function (file) {
             grunt.file.delete(file);
         });

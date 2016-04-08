@@ -1,0 +1,104 @@
+
+@import "mixins";
+
+.bb-reorder-container {
+  position:relative
+}
+
+.bb-reorder-list-col-icon {
+  font-size: 1.5em;
+  font-color: $gray;
+}
+
+.bb-reorder-list-col-content {
+  margin-left: $margin;
+  margin-right: $margin;
+  flex-grow: 1;
+}
+
+.bb-reorder-list-col-top {
+  color: $bb-color-blue;
+  cursor:pointer;
+  white-space: nowrap;
+}
+
+.bb-reorder-list-row {
+    background-color: white;
+    border: none;
+    border-top: dotted 1px $gray-lighter;
+    cursor: pointer;
+    padding: $padding;
+    outline-offset: -5px;
+    width: 100%;
+    min-height: 50px;
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+
+    // we always want the sorting item to keep its border
+    &:not(.bb-reorder-list-sorting-item):first-child {
+      border: none;
+    }
+
+    // if we are sorting the first item, make sure the next sibling does not have a visible top border when it gets pushed up.
+    &:first-child.bb-reorder-list-sorting-item + .bb-reorder-list-row {
+      border-top:1px solid transparent; // need it to keep its height otherwise we are 1px smaller and the list shifts.
+    }
+}
+
+.bb-reorder-list-row-container {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bb-reorder-list-row-placeholder {
+  background-color: $body-bg;
+
+  // when we are sorting the placeholder height is set directly on the element.
+  // if the item being sorted had a border, the placeholder is going to be 1 px larger than it should
+  // be when it is moved to the top since the top child in the reorder list should
+  // not have a border. Need to reduce size by 1 px so the list does not shift.
+  // Note: the placeholder can only ever be the first child if the first item in the list
+  // is not being sorted. The first item will not have a border so this rule is not
+  // necessary in that case as the placeholder will have the correct size.
+  &:first-child {
+    margin-bottom: -1px;
+  }
+}
+
+.bb-reorder-list-row-placeholder .bb-reorder-list-row-container {
+  visibility: hidden;
+}
+
+.bb-reorder-list-sorting-item {
+  @include shadow();
+  border: 1px solid $gray-light;
+}
+
+.bb-reorder-animate-element {
+  background-color: white;
+  position: absolute;
+}
+
+.bb-reorder-list-title {
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.bb-reorder-list-description {
+    word-wrap: break-word;
+}
+
+.bb-reorder-list-row.ng-move {
+    transition:0.5s linear all;
+    opacity:0;
+}
+
+.bb-reorder-list-row.ng-move.ng-move-active {
+    opacity:1;
+}
+
+.bb-reorder-list-no-animate {
+   transition: none !important;
+}
