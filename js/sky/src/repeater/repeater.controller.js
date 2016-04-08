@@ -44,6 +44,7 @@
         vm.removeItem = function (item) {
             var itemIndex = items.indexOf(item);
 
+            /*istanbul ignore else sanity check */
             if (itemIndex >= 0) {
                 items.splice(itemIndex, 1);
             }

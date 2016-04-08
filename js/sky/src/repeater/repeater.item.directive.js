@@ -10,7 +10,7 @@
         name: 'Title',
         cls: 'title'
     }],
-    repeaterItemModule = angular.module('sky.repeater.item.directive', []);
+    repeaterItemModule = angular.module('sky.repeater.item.directive', ['sky.resources']);
 
     function makeComponent(component) {
         var controllerName,
@@ -104,12 +104,6 @@
 
             vm.getChevronLabel = function () {
                 return bbResources['chevron_' + (vm.bbRepeaterItemCollapsed ? 'expand' : 'collapse')];
-            };
-
-            vm.collapse = function () {
-                if (allowCollapse()) {
-                    vm.bbRepeaterItemCollapsed = true;
-                }
             };
 
             vm.allowCollapse = allowCollapse;
