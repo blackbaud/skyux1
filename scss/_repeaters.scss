@@ -77,27 +77,30 @@
 	height: 10px;
 	position: relative;
 	top: 3px;
-	transform: rotate(-45deg);
 	transition: transform $bb-transition-time-medium, left $bb-transition-time-medium;
 	vertical-align: top;
 	width: 10px;
 }
 
-.bb-repeater-item-chevron-left {
-    left: 7px;
-	transform: rotate(-45deg);
+.bb-repeater-item-chevron-flip-up {
+    .bb-repeater-item-chevron-left {
+        left: 7px;
+    	transform: rotate(-45deg);
+    }
 
-    &.bb-repeater-item-chevron-flip-up {
-        left: 2px;
+    .bb-repeater-item-chevron-right {
+        left: -6px;
     	transform: rotate(45deg);
     }
 }
 
-.bb-repeater-item-chevron-right {
-    left: -6px;
-	transform: rotate(45deg);
+.bb-repeater-item-chevron-flip-down {
+    .bb-repeater-item-chevron-left {
+        left: 2px;
+        transform: rotate(45deg);
+    }
 
-    &.bb-repeater-item-chevron-flip-up {
+    .bb-repeater-item-chevron-right {
         left: -1px;
     	transform: rotate(-45deg);
     }

@@ -62,7 +62,7 @@
     }
 
     function bbRepeaterItem() {
-        function BBRepeaterItemController() {
+        function BBRepeaterItemController(bbResources) {
             var vm = this;
 
             function addComponentSetter(component) {
@@ -102,6 +102,10 @@
                 return 'bb-repeater-item-chevron-flip-' + (vm.bbRepeaterItemCollapsed ? 'down' : 'up');
             };
 
+            vm.getChevronLabel = function () {
+                return bbResources['chevron_' + (vm.bbRepeaterItemCollapsed ? 'expand' : 'collapse')];
+            };
+
             vm.collapse = function () {
                 if (allowCollapse()) {
                     vm.bbRepeaterItemCollapsed = true;
@@ -112,6 +116,8 @@
 
             components.forEach(addComponentSetter);
         }
+
+        BBRepeaterItemController.$inject = ['bbResources'];
 
         function link(scope, el, attrs, ctrls) {
             var vm = ctrls[0],
@@ -187,7 +193,7 @@
                 ],
                 updateForCollapsedState
             );
-            
+
             bbRepeater.addItem(vm);
 
             scope.$on('$destroy', function () {
