@@ -107,7 +107,6 @@ describe('Datepicker directive', function () {
         dateFieldEl = el.find('.input-group.bb-datefield');
 
         expect(dateFieldEl.length).toBe(1);
-
         inputEl = dateFieldEl.find('input');
 
         expect(inputEl).toHaveValue('05/17/1985');
@@ -459,7 +458,7 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '1992/5/6');
 
-        expect(inputEl).toHaveValue('1992/05/06');
+        expect(inputEl).toHaveValue('1992/5/6');
 
         expect($scope.testdate1).toEqual(new Date('05/06/1992'));
     });
@@ -482,7 +481,7 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '16/4/1992');
 
-        expect(inputEl).toHaveValue('16/04/1992');
+        expect(inputEl).toHaveValue('16/4/1992');
 
         expect($scope.testdate1).toEqual(new Date('04/16/1992'));
 
@@ -510,8 +509,7 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '16.4.1992');
 
-        expect(inputEl).toHaveValue('16.04.1992');
-
+        expect(inputEl).toHaveValue('16.4.1992');
         expect($scope.testdate1).toEqual(new Date('04/16/1992'));
     });
 

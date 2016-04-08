@@ -9,7 +9,8 @@
             showWeeks: false,
             startingDay: 0,
             minDate: '',
-            maxDate: ''
+            maxDate: '',
+            altInputFormats: []
         })
         .directive('bbDatepicker', ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q',
         function (bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q) {
@@ -24,7 +25,8 @@
                     format: '=?bbDateFormat',
                     maxDate: '=?maxDate',
                     minDate: '=?minDate',
-                    placeholderText: '=?placeholder'
+                    placeholderText: '=?placeholder',
+                    bbAltInputFormats: '=?'
                 },
                 templateUrl: 'sky/templates/datepicker/datepicker.html',
                 controller: ['$scope', function ($scope) {
@@ -66,12 +68,12 @@
                     function setDate() {
                         var inputNgModel;
                         if (angular.isDate($scope.date)) {
-                            $scope.locals.date = $scope.date;
+                            $scope.locals.date = angular.copy($scope.date);
                         } else if (!$scope.locals.hasCustomValidation) {
-                            parsedDate = bbDatepickerParser.runParsers($scope.date, $scope.format);
+                            parsedDate = bbDatepickerParser.runModelParsers($scope.date, $scope.format);
                             if (angular.isDate(parsedDate)) {
-                                $scope.date = parsedDate;
-                                $scope.locals.date = parsedDate;
+                                $scope.date = angular.copy(parsedDate);
+                                $scope.locals.date = angular.copy(parsedDate);
                             } else {
                                 setDatepickerInput($scope.date);
 
@@ -125,7 +127,7 @@
                             if (angular.isDefined(result.formattedValue) && result.formattedValue !== $scope.date) {
                                 skipValidation = true;
                                 dateChangeInternal = true;
-                                $scope.date = result.formattedValue;
+                                $scope.date = angular.copy(result.formattedValue);
 
                                 /* istanbul ignore else: sanity check */
                                 if (inputEl) {
@@ -133,11 +135,11 @@
                                 }
 
                                 if (angular.isDate(result.formattedValue)) {
-                                    $scope.locals.date = result.formattedValue;
+                                    $scope.locals.date = angular.copy(result.formattedValue);
                                 }
                             }
                         }
-                        
+
                         deferred = $q.defer();
 
                         if (skipValidation || angular.isDate($scope.date) || $scope.date === '' || hasMinMaxError() || (!$scope.locals.required && $scope.date === null)) {
@@ -183,7 +185,8 @@
                             minDate: $scope.minDate
                         },
                         hasCustomValidation: false,
-                        inputName: attr.bbDatepickerName
+                        inputName: attr.bbDatepickerName,
+                        altInputFormats: bbDatepickerConfig.altInputFormats
                     };
 
                     if (!$scope.maxDate && bbDatepickerConfig.maxDate) {
@@ -214,6 +217,14 @@
                         $scope.format = bbDatepickerConfig.currentCultureDateFormatString;
                     }
 
+                    if (angular.isArray($scope.bbAltInputFormats)) {
+                        angular.extend($scope.locals.altInputFormats, $scope.bbAltInputFormats);
+                    }
+
+                    if ($scope.locals.altInputFormats.length < 1) {
+                        $scope.locals.altInputFormats = bbDatepickerParser.getAltInputFormats($scope.format);
+                    }
+
                     if (angular.isDefined($scope.dateOptions)) {
                         angular.extend($scope.locals.dateOptions, $scope.dateOptions);
 
@@ -235,6 +246,7 @@
                     $timeout(function () {
                         inputEl = el.find('input');
                         setDate();
+
 
                         ngModel.$asyncValidators.dateFormat = dateFormatValidator;
 
@@ -266,7 +278,7 @@
                                 inputNgModel.$setValidity('dateFormat', true);
                             } else if ($scope.date !== $scope.locals.date) {
                                 dateChangeInternal = true;
-                                $scope.date = $scope.locals.date;
+                                $scope.date = angular.copy($scope.locals.date);
                             }
                         }
 
@@ -284,7 +296,7 @@
                             if ($scope.date !== $scope.locals.date) {
                                 if (angular.isDate($scope.locals.date)) {
                                     dateChangeInternal = true;
-                                    $scope.date = $scope.locals.date;
+                                    $scope.date = angular.copy($scope.locals.date);
                                 }
                             }
 
@@ -346,7 +358,6 @@
                             if (typeof newDate === 'object' || newDate === '') {
                                 return newDate;
                             }
-
                             date = bbDatepickerParser.runParsers(newDate, format);
 
                             if (angular.isDate(date)) {
@@ -356,7 +367,6 @@
                             return date ? date : viewValue;
                         });
                     }
-
                     controllers[1].getInputNgModel = function () {
                         return ngModel;
                     };
@@ -436,6 +446,31 @@
             return value.match(/[.\/\-\s].*?/);
         }
 
+        function getAltInputFormats(format) {
+            var altInputFormats = [],
+                separator = matchSeparator(format),
+                yearBegin = format.indexOf('y'),
+                monthBegin = format.indexOf('M'),
+                dayBegin = format.indexOf('d'),
+                separatorChar;
+
+            separatorChar = separator[0];
+
+            if (separatorChar) {
+                if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
+                    if (monthBegin < dayBegin) {
+                        altInputFormats.push('M!' + separatorChar + 'd!' + separatorChar + 'yyyy');
+                    } else {
+                        altInputFormats.push('d!' + separatorChar + 'M!' + separatorChar + 'yyyy');
+                    }
+                } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) {
+                    altInputFormats.push('yyyy' + separatorChar + 'M!' + separatorChar + 'd!');
+                }
+            }
+
+            return altInputFormats;
+        }
+
         function dateHasSeparator(value) {
             /*
             * Validation criteria:
@@ -492,24 +527,24 @@
         }
 
         function parseMoment(value, format) {
-            var date = null,
-                momentDate;
+           var date = null,
+               momentDate;
 
-            if (isMomentParsable(value, format)) {
-                momentDate = bbMoment(value, format.toUpperCase());
-                if (momentDate.isValid()) {
-                    date = momentDate.toDate();
-                }
-            }
+           if (isMomentParsable(value, format)) {
+               momentDate = bbMoment(value, format.toUpperCase());
+               if (momentDate.isValid()) {
+                   date = momentDate.toDate();
+               }
+           }
 
-            return date;
-        }
+           return date;
+       }
 
         return {
             parseUTCString: parseUTCString,
             parseNoSeparatorDateString: parseNoSeparatorDateString,
-            parseMoment: parseMoment,
-            runParsers: function (value, format) {
+            getAltInputFormats: getAltInputFormats,
+            runModelParsers: function (value, format) {
                 var date = null;
 
                 if (!value || angular.isDate(value) || value === '') {
@@ -529,6 +564,24 @@
                 }
 
                 date = parseMoment(value, format);
+
+                return date;
+            },
+
+            runParsers: function (value, format) {
+                var date = null;
+
+                if (!value || angular.isDate(value) || value === '') {
+                    return value;
+                }
+
+                date = parseUTCString(value);
+
+                if (angular.isDate(date)) {
+                    return date;
+                }
+
+                date = parseNoSeparatorDateString(value, format);
 
                 return date;
             }
