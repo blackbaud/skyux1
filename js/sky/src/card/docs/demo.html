@@ -5,7 +5,7 @@
     </bb-card-heading-left>
     <bb-card-title ng-if="cardCtrl.showTitle">Large card</bb-card-title>
     <bb-card-content ng-if="cardCtrl.showContent">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
     </bb-card-content>
     <bb-card-heading-right ng-if="cardCtrl.showHeaderRight &amp;&amp; !cardCtrl.showCheckbox">
       <i class="fa fa-cog"></i>
@@ -17,7 +17,7 @@
   <bb-card bb-card-size="'small'">
     <bb-card-title>Small card</bb-card-title>
     <bb-card-content>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      This card demonstrates the reduced amount of space that is available when you set the card size to small. If the content requires additional space, you can use the default card size of large.
     </bb-card-content>
     <bb-card-actions>
       <bb-context-menu>
@@ -40,7 +40,7 @@
       </li>
       <li>
         <label>
-          <input type="checkbox" bb-check ng-model="cardCtrl.showActions" /> Show actions
+          <input type="checkbox" bb-check ng-model="cardCtrl.showActions" /> Show action
         </label>
       </li>
       <li>
