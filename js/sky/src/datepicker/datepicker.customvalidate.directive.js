@@ -20,10 +20,7 @@
                     ngModel.$parsers.unshift(function (viewValue) {
                         var newDate = ngModel.$viewValue,
                             date = null;
-                        //date was changed from datepicker or is empty so just return
-                        if (typeof newDate === 'object' || newDate === '') {
-                            return newDate;
-                        }
+
                         date = bbDatepickerParser.runParsers(newDate, format);
 
                         if (angular.isDate(date)) {

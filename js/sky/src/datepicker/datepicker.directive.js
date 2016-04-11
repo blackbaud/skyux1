@@ -160,7 +160,7 @@
             };
             vm.hasCustomValidation = false;
             vm.inputName = attr.bbDatepickerName;
-            vm.altInputFormats = bbDatepickerConfig.bbAltInputFormats;
+            vm.altInputFormats = angular.copy(bbDatepickerConfig.bbAltInputFormats);
 
 
             if (!vm.maxDate && bbDatepickerConfig.maxDate) {
@@ -238,7 +238,7 @@
 
                 function inputChanged() {
                     var inputNgModel = vm.getInputNgModel();
-
+                    /*istanbul ignore else: sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
                         if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
@@ -252,6 +252,7 @@
 
                         inputNgModel.invalidFormatMessage = null;
                         inputNgModel.$setValidity('dateFormat', true);
+
                     } else if (vm.date !== vm.pickerDate) {
                         dateChangeInternal = true;
                         vm.date = angular.copy(vm.pickerDate);
