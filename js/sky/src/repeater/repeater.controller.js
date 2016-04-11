@@ -27,9 +27,9 @@
             items.forEach(function (item) {
                 item.isCollapsible = isCollapsible;
 
-                if (isSingle && !item.bbRepeaterItemCollapsed) {
+                if (isSingle && item.bbRepeaterItemExpanded) {
                     if (foundExpanded) {
-                        item.bbRepeaterItemCollapsed = true;
+                        item.bbRepeaterItemExpanded = false;
                     }
 
                     foundExpanded = true;
@@ -54,7 +54,7 @@
             if (vm.bbRepeaterExpandMode === 'single') {
                 items.forEach(function (item) {
                     if (item !== expandedItem) {
-                        item.bbRepeaterItemCollapsed = true;
+                        item.bbRepeaterItemExpanded = false;
                     }
                 });
             }

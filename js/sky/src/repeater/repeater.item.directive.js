@@ -61,7 +61,7 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function bbRepeaterItem() {
+    function bbRepeaterItem($timeout) {
         function BBRepeaterItemController(bbResources) {
             var vm = this;
 
@@ -99,11 +99,11 @@
             };
 
             vm.getChevronCls = function () {
-                return 'bb-repeater-item-chevron-flip-' + (vm.bbRepeaterItemCollapsed ? 'down' : 'up');
+                return 'bb-repeater-item-chevron-flip-' + (vm.bbRepeaterItemExpanded ? 'up' : 'down');
             };
 
             vm.getChevronLabel = function () {
-                return bbResources['chevron_' + (vm.bbRepeaterItemCollapsed ? 'expand' : 'collapse')];
+                return bbResources['chevron_' + (vm.bbRepeaterItemExpanded ? 'collapse' : 'expand')];
             };
 
             vm.allowCollapse = allowCollapse;
@@ -114,8 +114,9 @@
         BBRepeaterItemController.$inject = ['bbResources'];
 
         function link(scope, el, attrs, ctrls) {
-            var vm = ctrls[0],
-                bbRepeater = ctrls[1];
+            var animateEnabled,
+                bbRepeater = ctrls[1],
+                vm = ctrls[0];
 
             function watchForComponent(component) {
                 scope.$watch(function () {
@@ -133,27 +134,27 @@
                 return el.find('.bb-repeater-item-content');
             }
 
-            function updateForCollapsedState() {
-                var animate = true,
+            function updateForExpandedState() {
+                var animate = animateEnabled,
                     contentEl = getContentEl(),
                     method;
 
-                if (!angular.isDefined(vm.bbRepeaterItemCollapsed)) {
-                    vm.bbRepeaterItemCollapsed = true;
+                if (!angular.isDefined(vm.bbRepeaterItemExpanded)) {
+                    vm.bbRepeaterItemExpanded = false;
                     animate = false;
                 }
 
-                if (vm.bbRepeaterItemCollapsed && vm.allowCollapse()) {
-                    method = 'slideUp';
-                } else {
+                if (vm.bbRepeaterItemExpanded || !vm.allowCollapse()) {
                     method = 'slideDown';
+                } else {
+                    method = 'slideUp';
                 }
 
                 contentEl[method]({
                     duration: animate ? 250 : 0
                 });
 
-                if (!vm.bbRepeaterItemCollapsed) {
+                if (vm.bbRepeaterItemExpanded) {
                     vm.bbRepeater.itemExpanded(vm);
                 }
             }
@@ -162,7 +163,7 @@
 
             vm.headerClick = function () {
                 if (vm.isCollapsible) {
-                    vm.bbRepeaterItemCollapsed = !vm.bbRepeaterItemCollapsed;
+                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
                 }
             };
 
@@ -172,20 +173,20 @@
                 return vm.isCollapsible;
             }, function (newValue) {
                 if (newValue === false) {
-                    vm.bbRepeaterItemCollapsed = false;
+                    vm.bbRepeaterItemExpanded = true;
                 }
             });
 
             scope.$watchGroup(
                 [
                     function () {
-                        return vm.bbRepeaterItemCollapsed;
+                        return vm.bbRepeaterItemExpanded;
                     },
                     function () {
                         return vm.titleCtrl;
                     }
                 ],
-                updateForCollapsedState
+                updateForExpandedState
             );
 
             bbRepeater.addItem(vm);
@@ -194,12 +195,17 @@
                 bbRepeater.removeItem(vm);
                 vm = null;
             });
+
+            $timeout(function () {
+                // This will enable expand/collapse animation only after the initial load.
+                animateEnabled = true;
+            });
         }
 
         return {
             scope: {},
             bindToController: {
-                bbRepeaterItemCollapsed: '='
+                bbRepeaterItemExpanded: '='
             },
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
@@ -209,6 +215,8 @@
             transclude: true
         };
     }
+
+    bbRepeaterItem.$inject = ['$timeout'];
 
     repeaterItemModule.directive('bbRepeaterItem', bbRepeaterItem);
 

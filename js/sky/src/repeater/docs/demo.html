@@ -28,7 +28,7 @@
   <button type="button" class="btn btn-primary" ng-click="repeaterCtrl.addItem()">Add an item</button>
   <div style="width: 400px">
     <bb-repeater bb-repeater-expand-mode="repeaterCtrl.expandMode">
-      <bb-repeater-item ng-repeat="item in repeaterCtrl.items">
+      <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded">
         <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
           <bb-context-menu>
             <bb-context-menu-item>Action 1</bb-context-menu-item>

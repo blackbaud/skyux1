@@ -27,7 +27,8 @@
             var next = vm.items.length + 1;
             vm.items.push({
                 title: 'Title ' + next,
-                content: content
+                content: content,
+                expanded: true
             });
         }
     }
