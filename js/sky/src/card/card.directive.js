@@ -4,12 +4,6 @@
     'use strict';
 
     var components = [{
-            name: 'HeadingLeft',
-            cls: 'heading-left'
-        }, {
-            name: 'HeadingRight',
-            cls: 'heading-right'
-        }, {
             name: 'Title',
             cls: 'title'
         }, {

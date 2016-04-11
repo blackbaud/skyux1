@@ -1,15 +1,9 @@
 <div ng-controller="CardTestController as cardCtrl">
   <bb-card bb-card-size="'large'" bb-card-selectable="cardCtrl.showCheckbox">
-    <bb-card-heading-left ng-if="cardCtrl.showHeaderLeft">
-      100
-    </bb-card-heading-left>
     <bb-card-title ng-if="cardCtrl.showTitle">Large card</bb-card-title>
     <bb-card-content ng-if="cardCtrl.showContent">
       This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
     </bb-card-content>
-    <bb-card-heading-right ng-if="cardCtrl.showHeaderRight &amp;&amp; !cardCtrl.showCheckbox">
-      <i class="fa fa-cog"></i>
-    </bb-card-heading-right>
     <bb-card-actions ng-if="cardCtrl.showActions">
       <button type="button" class="btn btn-default">Click me</button>
     </bb-card-actions>
@@ -46,16 +40,6 @@
       <li>
         <label>
           <input type="checkbox" bb-check ng-model="cardCtrl.showCheckbox" /> Show checkbox
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="checkbox" bb-check ng-model="cardCtrl.showHeaderLeft" /> Show header left content
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="checkbox" bb-check ng-model="cardCtrl.showHeaderRight" ng-disabled="cardCtrl.showCheckbox" /> Show header right content
         </label>
       </li>
     </ul>

@@ -9,9 +9,7 @@ describe('Card directive', function () {
         cardAllChildrenHtml;
 
     cardAllChildrenHtml = '<bb-card>' +
-        '   <bb-card-heading-left>Left</bb-card-heading-left>' +
         '   <bb-card-title>Title</bb-card-title>' +
-        '   <bb-card-heading-right>Right</bb-card-heading-right>' +
         '   <bb-card-content>Content</bb-card-content>' +
         '   <bb-card-actions><button type="button" class="btn btn-default">Button</button></bb-card-actions>' +
         '</bb-card>';
@@ -36,8 +34,6 @@ describe('Card directive', function () {
         $scope.$digest();
 
         expect(el.find('.bb-card-title bb-card-title')).toHaveText('Title');
-        expect(el.find('.bb-card-heading-left bb-card-heading-left')).toHaveText('Left');
-        expect(el.find('.bb-card-heading-right bb-card-heading-right')).toHaveText('Right');
         expect(el.find('.bb-card-content bb-card-content')).toHaveText('Content');
         expect(el.find('.bb-card-actions button')).toHaveText('Button');
     });
@@ -119,9 +115,7 @@ describe('Card directive', function () {
             el;
 
         children = [
-            'headingLeft',
             'title',
-            'headingRight',
             'content',
             'actions'
         ];

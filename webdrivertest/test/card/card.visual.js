@@ -29,21 +29,6 @@ describe('Card', function () {
             'all',
             [
                 'Title',
-                'HeaderLeftContent',
-                'HeaderRightContent',
-                'Content',
-                'Actions'
-            ],
-            false,
-            done
-        );
-    });
-
-    it('should match previous screenshot when no header left or right content is present', function (done) {
-        clickTest(
-            'noheaderleftright',
-            [
-                'Title',
                 'Content',
                 'Actions'
             ],
