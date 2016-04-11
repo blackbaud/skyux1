@@ -4,7 +4,7 @@ icon: table
 summary: The grid builds a full-featured grid with a search box, column picker, and filter form.
 ---
 
-The grid directive builds a full-featured grid with a search box, column picker, and filter form. The parent `bb-grid` directive includes multiple child directives. 
+The grid directive builds a full-featured grid with a search box, column picker, and filter form. The parent `bb-grid` directive includes multiple child directives.
 
  ### Dependencies ###
 
@@ -65,6 +65,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `column` &mdash; Specifies the name of the column to sort data by. Set by the `bb-grid` directive.
             - `descending` &mdash; Indicates whether to sort in descending order. Set to `true' by the `bb-grid` directive to sort in descending order.
     - `bb-grid-pagination` &mdash; *(Optional.)* Specifies an object with the following properties to indicate that the grid uses pagination instead of infinite scrolling.
+        - `currentPage` &mdash; *(Optional.)* Specifies the current page starting at 1. *(Default = 1)*
         - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default = 5)*
         - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar. *(Default = 5)*
         - `recordCount` &mdash; Specifies the total number of records available through pagination.
@@ -84,7 +85,7 @@ To display custom content, add the `bb-grid-custom-toolbar` attribute to the `bb
 
 ### Grid Events ###
     - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.
-        - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires. 
+        - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires.
     - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides the `promise` property to add new data to the grid.
         - `top` &mdash; Indicates how many records to retrieve and display in the grid. The value is the same as the `itemsPerPage` property in the `bb-grid-pagination` directive.
         - `skip` &mdash; Indicates how many records to skip before the first record displayed in the grid. The value equals the number of pages skipped multiplied by the number of items per page.
