@@ -127,9 +127,9 @@
 
         return {
             bindToController: {
-                bbCardSelectable: '=',
-                bbCardSelected: '=',
-                bbCardSize: '='
+                bbCardSelectable: '=?',
+                bbCardSelected: '=?',
+                bbCardSize: '=?'
             },
             controller: 'BBCardController',
             controllerAs: 'bbCard',
