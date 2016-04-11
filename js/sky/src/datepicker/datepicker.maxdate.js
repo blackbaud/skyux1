@@ -5,15 +5,17 @@
     function bbMaxDate() {
         return {
             restrict: 'A',
-            require: 'ngModel',
-            link: function ($scope, element, attrs, ngModel) {
+            require: ['ngModel', '^bbDatepicker'],
+            link: function ($scope, element, attrs, ctrls) {
+                var ngModel = ctrls[0],
+                    bbDatepicker = ctrls[1];
                 ngModel.$validators.maxDate = function (modelValue) {
-                    return !$scope.maxDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate($scope.maxDate) || modelValue <= $scope.maxDate;
+                    return !bbDatepicker.maxDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate(bbDatepicker.maxDate) || modelValue <= bbDatepicker.maxDate;
                 };
             }
         };
     }
 
-    angular.module('sky.datepicker.maxDate')
+    angular.module('sky.datepicker.maxdate', [])
         .directive('bbMaxDate', bbMaxDate);
 }());

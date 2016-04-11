@@ -8,7 +8,7 @@
         startingDay: 0,
         minDate: '',
         maxDate: '',
-        altInputFormats: []
+        bbAltInputFormats: []
     };
 
     angular.module('sky.datepicker.config', [])

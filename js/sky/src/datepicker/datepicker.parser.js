@@ -60,21 +60,25 @@
                 dayBegin = format.indexOf('d'),
                 separatorChar;
 
-            separatorChar = separator[0];
+            if (separator) {
+                separatorChar = separator[0];
 
-            if (separatorChar) {
-                if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
-                    if (monthBegin < dayBegin) {
-                        altInputFormats.push('M!' + separatorChar + 'd!' + separatorChar + 'yyyy');
-                    } else {
-                        altInputFormats.push('d!' + separatorChar + 'M!' + separatorChar + 'yyyy');
+                if (separatorChar) {
+                    if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
+                        if (monthBegin < dayBegin) {
+                            altInputFormats.push('M!' + separatorChar + 'd!' + separatorChar + 'yyyy');
+                        } else {
+                            altInputFormats.push('d!' + separatorChar + 'M!' + separatorChar + 'yyyy');
+                        }
+                    } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) {
+                        altInputFormats.push('yyyy' + separatorChar + 'M!' + separatorChar + 'd!');
                     }
-                } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) {
-                    altInputFormats.push('yyyy' + separatorChar + 'M!' + separatorChar + 'd!');
                 }
+
+                return altInputFormats;
             }
 
-            return altInputFormats;
+
         }
 
         function dateHasSeparator(value) {

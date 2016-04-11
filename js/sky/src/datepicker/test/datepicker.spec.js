@@ -39,7 +39,7 @@ describe('Datepicker directive', function () {
 
     afterEach(function () {
         if (angular.isDefined(datepickerScope)) {
-            datepickerScope.locals.opened = false;
+            datepickerScope.bbDatepicker.pickerOpened = false;
             datepickerScope.$digest();
         }
     });

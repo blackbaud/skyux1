@@ -5,10 +5,13 @@
     function bbMinDate() {
         return {
             restrict: 'A',
-            require: 'ngModel',
-            link: function ($scope, element, attrs, ngModel) {
+            require: ['ngModel', '^bbDatepicker'],
+            link: function ($scope, element, attrs, ctrls) {
+                var ngModel = ctrls[0],
+                    bbDatepicker = ctrls[1];
+
                 ngModel.$validators.minDate = function (modelValue) {
-                    return !$scope.minDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate($scope.minDate) || modelValue >= $scope.minDate;
+                    return !bbDatepicker.minDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate(bbDatepicker.minDate) || modelValue >= bbDatepicker.minDate;
                 };
             }
         };
