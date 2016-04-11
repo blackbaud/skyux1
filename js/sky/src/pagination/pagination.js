@@ -136,8 +136,8 @@
 
                                 function changePage(pageNumber) {
                                     /* Disable animation for the page change
-                                        to prevent issues with ng-repeat
-                                        that impact min-height measurements */
+                                       to prevent issues with ng-repeat
+                                       that impact min-height measurements */
                                     $animate.enabled(false, el);
                                     pagedData.currentPage = pageNumber;
 
