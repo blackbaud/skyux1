@@ -76,6 +76,9 @@ describe('Card directive', function () {
             '</bb-card>'
         )($scope);
 
+        // The element has to be in the DOM to trigger its click event in Firefox.
+        el.appendTo(document.body);
+
         $scope.$digest();
 
         checkEl = el.find('.bb-check-wrapper input');
@@ -89,6 +92,8 @@ describe('Card directive', function () {
 
         expect(el.find('.bb-card')).not.toHaveClass('bb-card-selected');
         expect($scope.cardSelected).toBe(false);
+
+        el.remove();
     });
 
     it('should allow the user to click the entire card to select the card', function () {
