@@ -108,59 +108,56 @@
                     scope.$watch('pagedData', function () {
                         var pageCount,
                             pagedData,
-                            tries = 0,
                             windowResizeTimeout;
 
-                        // Try for 1 second to set a min-height on paged data so the paging bar doesn't jump
+                        // set a min-height on paged data so the paging bar doesn't jump
                         // up when the user hits a page with less than the max number of items.
-                        function trySetMinHeight() {
+                        function setMinHeight() {
                             $timeout(function () {
-                                var currentPage,
-                                    height = el.height(),
-                                    i,
-                                    maxHeight = 0;
+                              var currentPage,
+                                  elClone,
+                                  i,
+                                  maxHeight = 0;
 
-                                function changePage(pageNumber) {
-                                    /* Disable animation for the page change
-                                       to prevent issues with ng-repeat
-                                       that impact min-height measurements */
-                                    $animate.enabled(false, el);
-                                    pagedData.currentPage = pageNumber;
+                              el.addClass('bb-pagination-content bb-pagination-content-calculating');
 
-                                    pagedData.pageChanged();
-                                    scope.$apply();
-                                    $animate.enabled(true, el);
+                              function changePage(pageNumber) {
+                                  /* Disable animation for the page change
+                                      to prevent issues with ng-repeat
+                                      that impact min-height measurements */
+                                  $animate.enabled(false, el);
+                                  pagedData.currentPage = pageNumber;
 
-                                }
+                                  pagedData.pageChanged();
+                                  scope.$apply();
+                                  $animate.enabled(true, el);
+                              }
 
-                                if (height === 0 && tries < 5) {
-                                    tries += 1;
-                                    trySetMinHeight();
-                                    return;
-                                }
+                              // Cache the current page so we can put it back.
+                              currentPage = pagedData.currentPage;
 
-                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
+                              // Reset the min height from any previous iteration.
+                              el.css('min-height', 0);
 
-                                // Cache the current page so we can put it back.
-                                currentPage = pagedData.currentPage;
+                              // Navigate through each page and find the tallest page.
+                              for (i = 1; i <= pageCount; i += 1) {
+                                  changePage(i);
+                                  elClone = el.clone();
+                                  elClone.addClass('bb-pagination-content-calculating-clone');
+                                  // Append the element to the body in case certain css rules are affecting the height.
+                                  angular.element('body').prepend(elClone);
+                                  maxHeight = Math.max(elClone.height(), maxHeight);
+                                  elClone.remove();
+                              }
 
-                                // Reset the min height from any previous iteration.
-                                el.css('min-height', 0);
+                              // Set the min height to the height of the tallest page.
+                              el.css('min-height', maxHeight);
 
-                                // Navigate through each page and find the tallest page.
-                                for (i = 1; i <= pageCount; i += 1) {
-                                    changePage(i);
-                                    maxHeight = Math.max(el.height(), maxHeight);
-                                }
+                              // Navigate back to the initial page.
+                              changePage(currentPage);
 
-                                // Set the min height to the height of the tallest page.
-                                el.css('min-height', maxHeight);
-
-                                // Navigate back to the initial page.
-                                changePage(currentPage);
-
-                                el.removeClass('bb-pagination-content-calculating');
-                            }, 200);
+                              el.removeClass('bb-pagination-content-calculating');
+                          });
                         }
 
                         pagedData = scope.pagedData;
@@ -169,7 +166,7 @@
                             pageCount = Math.ceil(pagedData.totalItems / (pagedData.itemsPerPage || 1));
 
                             if (pageCount > 1) {
-                                trySetMinHeight();
+                                setMinHeight();
 
                                 removeWindowResizeHandler();
 
@@ -178,7 +175,7 @@
                                         $timeout.cancel(windowResizeTimeout);
                                     }
 
-                                    windowResizeTimeout = $timeout(trySetMinHeight, 500);
+                                    windowResizeTimeout = $timeout(setMinHeight, 500);
                                 });
 
                                 el.on('$destroy', removeWindowResizeHandler);

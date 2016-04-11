@@ -189,7 +189,6 @@ describe('Pagination', function () {
             $scope.pagedData = bbPaging.init(testItems);
 
             $scope.$digest();
-            $timeout.flush();
 
             addClassSpy = spyOn($.fn, 'addClass').and.callThrough();
             removeClassSpy = spyOn($.fn, 'removeClass').and.callThrough();
@@ -198,7 +197,6 @@ describe('Pagination', function () {
 
             // Two flushes are needed here; one for the delay after the window resizes and one for the
             // delay after trying to set the min-height.
-            $timeout.flush();
             $timeout.flush();
 
             expect(addClassSpy).toHaveBeenCalledWith('bb-pagination-content bb-pagination-content-calculating');
