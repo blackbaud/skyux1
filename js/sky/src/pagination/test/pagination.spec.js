@@ -179,6 +179,29 @@ describe('Pagination', function () {
             el.remove();
         });
 
+        it('should set its min-height to the height of the tallest page even if hidden', function () {
+            var el = createPaginationContent(),
+                hiddenParent;
+
+            spyOn($animate, 'enabled');
+
+            hiddenParent = $('<div style="display:none"></div>');
+
+            el.appendTo(hiddenParent);
+            hiddenParent.appendTo(document.body);
+
+            $scope.pagedData = bbPaging.init(testItems);
+
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(el.css('min-height')).toBe('280px');
+
+            expect($animate.enabled).toHaveBeenCalled();
+
+            hiddenParent.remove();
+        });
+
         it('should reset its min-height when the window resizes', function () {
             var el = createPaginationContent(),
                 addClassSpy,

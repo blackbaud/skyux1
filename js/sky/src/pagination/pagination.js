@@ -113,51 +113,62 @@
                         // set a min-height on paged data so the paging bar doesn't jump
                         // up when the user hits a page with less than the max number of items.
                         function setMinHeight() {
+
+                            /* This functionality needs to be in a timeout so we can
+                               force dirty checking in the changePage function with an $apply.
+                               Failure to do so causes the ng-repeat that builds the rows to not
+                               be updated, which leads to the same calculated height for each page
+                               as the contents of the rows have not been updated. */
                             $timeout(function () {
-                              var currentPage,
-                                  elClone,
-                                  i,
-                                  maxHeight = 0;
+                                var currentPage,
+                                    placeholder,
+                                    i,
+                                    maxHeight = 0;
 
-                              el.addClass('bb-pagination-content bb-pagination-content-calculating');
+                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
 
-                              function changePage(pageNumber) {
-                                  /* Disable animation for the page change
-                                      to prevent issues with ng-repeat
-                                      that impact min-height measurements */
-                                  $animate.enabled(false, el);
-                                  pagedData.currentPage = pageNumber;
+                                // Use a placeholder to keep track of where the element is before moving.
+                                placeholder = angular.element('<div class="bb-pagination-placeholder"></div>');
+                                el.after(placeholder);
 
-                                  pagedData.pageChanged();
-                                  scope.$apply();
-                                  $animate.enabled(true, el);
-                              }
+                                // Append the element to the body in case certain css rules are affecting the height.
+                                angular.element('body').prepend(el);
 
-                              // Cache the current page so we can put it back.
-                              currentPage = pagedData.currentPage;
+                                function changePage(pageNumber) {
+                                    /* Disable animation for the page change
+                                        to prevent issues with ng-repeat
+                                        that impact min-height measurements */
+                                    $animate.enabled(false, el);
+                                    pagedData.currentPage = pageNumber;
 
-                              // Reset the min height from any previous iteration.
-                              el.css('min-height', 0);
+                                    pagedData.pageChanged();
+                                    scope.$apply();
+                                    $animate.enabled(true, el);
+                                }
 
-                              // Navigate through each page and find the tallest page.
-                              for (i = 1; i <= pageCount; i += 1) {
-                                  changePage(i);
-                                  elClone = el.clone();
-                                  elClone.addClass('bb-pagination-content-calculating-clone');
-                                  // Append the element to the body in case certain css rules are affecting the height.
-                                  angular.element('body').prepend(elClone);
-                                  maxHeight = Math.max(elClone.height(), maxHeight);
-                                  elClone.remove();
-                              }
+                                // Cache the current page so we can put it back.
+                                currentPage = pagedData.currentPage;
 
-                              // Set the min height to the height of the tallest page.
-                              el.css('min-height', maxHeight);
+                                // Reset the min height from any previous iteration.
+                                el.css('min-height', 0);
 
-                              // Navigate back to the initial page.
-                              changePage(currentPage);
+                                // Navigate through each page and find the tallest page.
+                                for (i = 1; i <= pageCount; i += 1) {
+                                    changePage(i);
+                                    maxHeight = Math.max(el.height(), maxHeight);
+                                }
 
-                              el.removeClass('bb-pagination-content-calculating');
-                          });
+                                // Set the min height to the height of the tallest page.
+                                el.css('min-height', maxHeight);
+
+                                // Navigate back to the initial page.
+                                changePage(currentPage);
+
+                                // Make sure to move the element back to its original position.
+                                placeholder.after(el);
+                                placeholder.remove();
+                                el.removeClass('bb-pagination-content-calculating');
+                            });
                         }
 
                         pagedData = scope.pagedData;
