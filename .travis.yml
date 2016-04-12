@@ -7,6 +7,8 @@ git:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - graphicsmagick
       - libcairo2-dev
