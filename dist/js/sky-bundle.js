@@ -104156,7 +104156,6 @@ global.easyXDM = easyXDM;
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -104386,7 +104385,8 @@ global.easyXDM = easyXDM;
 
                             function setScrollbarHeight() {
                                 var topScrollbar = getTopScrollbar(),
-                                    topScrollbarDiv = getTopScrollbarDiv();
+                                    topScrollbarDiv = getTopScrollbarDiv(),
+                                    scrollbarWidth = bbWindow.getScrollbarWidth();
 
                                 if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
@@ -105249,8 +105249,6 @@ global.easyXDM = easyXDM;
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
-
-                            scrollbarWidth = bbWindow.getScrollbarWidth();
 
                             id = $scope.$id;
                             toolbarContainerId = id + '-toolbar-container';
