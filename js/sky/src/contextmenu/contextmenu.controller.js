@@ -9,8 +9,12 @@
         vm.contextButtonStopPropagation = function ($event) {
             $event.stopPropagation();
         };
+
+        vm.getAriaLabel = function () {
+            return vm.bbContextMenuLabel;
+        };
     }
-    
+
     angular.module('sky.contextmenu.controller', [])
         .controller('BBContextMenuController', BBContextMenuController);
 }());

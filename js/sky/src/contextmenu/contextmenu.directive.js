@@ -5,19 +5,16 @@
 
     function bbContextMenu() {
         return {
-            bindToController: true,
+            bindToController: {
+                bbContextMenuLabel: '@'
+            },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
             replace: true,
             restrict: 'E',
             scope: {},
             transclude: true,
-            templateUrl: 'sky/templates/contextmenu/contextmenu.html',
-            link: function ($scope) {
-                $scope.contextButtonStopPropagation = function ($event) {
-                    $event.stopPropagation();
-                };
-            }
+            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
         };
     }
 
