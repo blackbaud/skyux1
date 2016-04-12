@@ -10,6 +10,7 @@ addons:
     packages:
       - graphicsmagick
       - libcairo2-dev
+      - ruby2.0
 
 before_install:
   # Used throughout the bash scripts
