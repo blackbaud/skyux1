@@ -81,7 +81,6 @@
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
-
                 function getTabUl() {
                     var ulEl = el.children('ul.nav.nav-tabs');
                     if (ulEl.length > 0) {
