@@ -68,7 +68,6 @@
         self.tabRemoved = function () {
             $scope.bbTabsetOptions.tabCount--;
         };
-
     }
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
