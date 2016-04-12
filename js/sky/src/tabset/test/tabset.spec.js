@@ -198,7 +198,8 @@ describe('Tabset module', function () {
                     '{{t.title}}' +
                     '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
                 '</tab-heading>' +
-                '{{t.content}}' +
+                '<span class="bb-test-content">{{t.content}}</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
             '</tab>' +
             '</tabset>';
 
@@ -256,7 +257,7 @@ describe('Tabset module', function () {
         }
 
         function getActiveTabContent(el) {
-            return el.find('.tab-pane.active span');
+            return el.find('.tab-pane.active span.bb-test-content');
         }
 
         function callBreakpointImmediate(tabCallback) {
@@ -286,6 +287,11 @@ describe('Tabset module', function () {
             return el.find('.bb-tab-dropdown-button');
         }
 
+        function verifyChildList(el) {
+            expect(el.find('.tab-pane.active ul.bb-test-ul li.bb-test-li').length).toBe(1);
+            expect(el.find('.bb-tabset-dropdown ul.bb-test-ul li.bb-test-li').length).toBe(0);
+        }
+
         function validateSmallMode(el) {
             tabsEl = getLargeScreenTabs(el);
             expect(tabsEl.length).toBe(0);
@@ -302,6 +308,8 @@ describe('Tabset module', function () {
             tabsEl.eq(1).click();
             $scope.$digest();
             expect(getActiveTabContent(el)).toHaveText($scope.myTabs[1].content);
+
+            verifyChildList(el);
 
             tabTitleEl = getTabDropdownButton(el);
             expect(tabTitleEl).toHaveText($scope.myTabs[1].title);
@@ -336,6 +344,7 @@ describe('Tabset module', function () {
             expect(openButtonEl.length).toBe(0);
 
             expect(getActiveTabContent(el)).toHaveText($scope.myTabs[activeIndex].content);
+            verifyChildList(el);
         }
 
         it('collapses into a dropdown on extra small mode when there is more than 1 tab', function () {
