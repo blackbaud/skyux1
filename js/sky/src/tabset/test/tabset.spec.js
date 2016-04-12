@@ -356,7 +356,6 @@ describe('Tabset module', function () {
 
             tabsEl = getLargeScreenTabs(el);
             expect(tabsEl.length).toBe(3);
-
             dropdownWrapperEl = getDropdownWrapper(el);
             expect(dropdownWrapperEl).not.toBeVisible();
 
