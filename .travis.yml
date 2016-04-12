@@ -10,7 +10,7 @@ addons:
     packages:
       - graphicsmagick
       - libcairo2-dev
-      - ruby2.0
+      - g++-4.8
 
 before_install:
   # Used throughout the bash scripts
@@ -22,6 +22,8 @@ before_install:
   - export SAVAGE_BRANCH="^savage-"
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
   - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
+
+  - rvm list
 
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
   - gem install sass
