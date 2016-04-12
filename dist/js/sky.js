@@ -6483,17 +6483,31 @@
                     scope.$watch('pagedData', function () {
                         var pageCount,
                             pagedData,
-                            tries = 0,
                             windowResizeTimeout;
 
-                        // Try for 1 second to set a min-height on paged data so the paging bar doesn't jump
+                        // set a min-height on paged data so the paging bar doesn't jump
                         // up when the user hits a page with less than the max number of items.
-                        function trySetMinHeight() {
+                        function setMinHeight() {
+
+                            /* This functionality needs to be in a timeout so we can
+                               force dirty checking in the changePage function with an $apply.
+                               Failure to do so causes the ng-repeat that builds the rows to not
+                               be updated, which leads to the same calculated height for each page
+                               as the contents of the rows have not been updated. */
                             $timeout(function () {
                                 var currentPage,
-                                    height = el.height(),
+                                    placeholder,
                                     i,
                                     maxHeight = 0;
+
+                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
+
+                                // Use a placeholder to keep track of where the element is before moving.
+                                placeholder = angular.element('<div class="bb-pagination-placeholder"></div>');
+                                el.after(placeholder);
+
+                                // Append the element to the body in case certain css rules are affecting the height.
+                                angular.element('body').prepend(el);
 
                                 function changePage(pageNumber) {
                                     /* Disable animation for the page change
@@ -6505,16 +6519,7 @@
                                     pagedData.pageChanged();
                                     scope.$apply();
                                     $animate.enabled(true, el);
-
                                 }
-
-                                if (height === 0 && tries < 5) {
-                                    tries += 1;
-                                    trySetMinHeight();
-                                    return;
-                                }
-
-                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
 
                                 // Cache the current page so we can put it back.
                                 currentPage = pagedData.currentPage;
@@ -6534,8 +6539,11 @@
                                 // Navigate back to the initial page.
                                 changePage(currentPage);
 
+                                // Make sure to move the element back to its original position.
+                                placeholder.after(el);
+                                placeholder.remove();
                                 el.removeClass('bb-pagination-content-calculating');
-                            }, 200);
+                            });
                         }
 
                         pagedData = scope.pagedData;
@@ -6544,7 +6552,7 @@
                             pageCount = Math.ceil(pagedData.totalItems / (pagedData.itemsPerPage || 1));
 
                             if (pageCount > 1) {
-                                trySetMinHeight();
+                                setMinHeight();
 
                                 removeWindowResizeHandler();
 
@@ -6553,7 +6561,7 @@
                                         $timeout.cancel(windowResizeTimeout);
                                     }
 
-                                    windowResizeTimeout = $timeout(trySetMinHeight, 500);
+                                    windowResizeTimeout = $timeout(setMinHeight, 500);
                                 });
 
                                 el.on('$destroy', removeWindowResizeHandler);
