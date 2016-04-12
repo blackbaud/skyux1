@@ -10383,7 +10383,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</section>\n' +
         '');
     $templateCache.put('sky/templates/check/styled.html',
-        '<span role="input"></span>\n' +
+        '<span role="checkbox" tabindex="-1"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
