@@ -100086,6 +100086,19 @@ global.easyXDM = easyXDM;
     'use strict';
 
     angular.module(
+        'sky.card',
+        [
+            'sky.card.directive'
+        ]
+    );
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
         'sky.checklist',
         [
             'sky.checklist.directive',
@@ -100737,6 +100750,156 @@ global.easyXDM = easyXDM;
     angular.module('sky.avatar.directive', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
         .directive('bbAvatar', bbAvatar);
 }(jQuery));
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    var components = [{
+            name: 'Title',
+            cls: 'title'
+        }, {
+            name: 'Content',
+            cls: 'content'
+        }, {
+            name: 'Actions',
+            cls: 'actions'
+        }],
+        cardModule = angular.module('sky.card.directive', ['sky.check']),
+        nextId = 0;
+
+    function makeCardComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbCard = ctrls[1];
+
+                vm.el = el;
+
+                bbCard['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbCard' + name, '^bbCard'],
+                controller: controllerName,
+                controllerAs: 'bbCard' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBCard' + name + 'Controller';
+
+        cardModule
+            .controller(controllerName, Controller)
+            .directive('bbCard' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBCardController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
+            var name = component.name;
+
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
+
+                vm[propName] = ctrl;
+
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
+                };
+            };
+        }
+
+        components.forEach(addComponentSetter);
+
+        vm.getClass = function () {
+            var cls = [];
+
+            switch (vm.bbCardSize) {
+            case 'small':
+                cls.push('bb-card-small');
+                break;
+            }
+
+            if (vm.bbCardSelectable) {
+                cls.push('bb-card-selectable');
+
+                if (vm.bbCardSelected) {
+                    cls.push('bb-card-selected');
+                }
+            }
+
+            return cls;
+        };
+
+        nextId++;
+        vm.cardCheckId = 'bb-card-check-' + nextId;
+    }
+
+    function bbCard() {
+        function link(scope, el, attrs, vm) {
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-card-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            components.forEach(watchForComponent);
+        }
+
+        return {
+            bindToController: {
+                bbCardSelectable: '=?',
+                bbCardSelected: '=?',
+                bbCardSize: '=?'
+            },
+            controller: 'BBCardController',
+            controllerAs: 'bbCard',
+            link: link,
+            restrict: 'E',
+            scope: {},
+            templateUrl: 'sky/templates/card/card.directive.html',
+            transclude: true
+        };
+    }
+
+    cardModule
+        .controller('BBCardController', BBCardController)
+        .directive('bbCard', bbCard);
+
+    components.forEach(makeCardComponent);
+}());
 
 /*jshint browser: true */
 /*global angular */
@@ -110122,6 +110285,7 @@ angular.module('sky.palette.config', [])
         'sky.autofocus',
         'sky.autonumeric',
         'sky.avatar',
+        'sky.card',
         'sky.check',
         'sky.checklist',
         'sky.contextmenu',
@@ -110259,6 +110423,25 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
         '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
         '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/card/card.directive.html',
+        '<section class="bb-card" ng-class="bbCard.getClass()">\n' +
+        '  <header ng-show="bbCard.headingLeftCtrl || bbCard.titleCtrl || bbCard.headingRightCtrl || bbCard.bbCardSelectable">\n' +
+        '    <label class="bb-card-header">\n' +
+        '      <div class="bb-card-heading-left" ng-if="bbCard.headingLeftCtrl"></div>\n' +
+        '      <div class="bb-card-heading-middle">\n' +
+        '        <h1 class="bb-card-title" ng-if="bbCard.titleCtrl"></h1>\n' +
+        '      </div>\n' +
+        '      <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.bbCardSelectable"></div>\n' +
+        '      <div class="bb-card-check" ng-if="bbCard.bbCardSelectable">\n' +
+        '        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />\n' +
+        '      </div>\n' +
+        '    </label>\n' +
+        '  </header>\n' +
+        '  <label class="bb-card-content" for="{{bbCard.cardCheckId}}"></label>\n' +
+        '  <div class="bb-card-actions" ng-if="bbCard.actionsCtrl"></div>\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</section>\n' +
         '');
     $templateCache.put('sky/templates/check/styled.html',
         '<span role="input"></span>\n' +
