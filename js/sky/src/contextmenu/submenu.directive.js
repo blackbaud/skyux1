@@ -3,16 +3,12 @@
 (function () {
     'use strict';
 
-    function getTemplateUrl(name) {
-        return 'sky/templates/contextmenu/' + name + '.html';
-    }
-
     function bbSubmenu(bbContextMenuToggleAccordion) {
         return {
             bindToController: {
                 heading: '=?bbSubmenuHeading'
             },
-            controller: 'BBSubmenuController',
+            controller: angular.noop,
             controllerAs: 'bbSubmenu',
             restrict: 'E',
             scope: {},
@@ -29,7 +25,7 @@
                 };
             },
             transclude: true,
-            templateUrl: getTemplateUrl('submenu')
+            templateUrl: 'sky/templates/contextmenu/submenu.html'
         };
     }
 
@@ -38,7 +34,6 @@
     angular.module(
         'sky.submenu.directive',
         [
-            'sky.submenu.controller',
             'sky.submenu.heading.directive',
             'sky.contextmenu.toggleaccordion.factory',
             'ui.bootstrap.dropdown',
