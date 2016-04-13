@@ -22,8 +22,7 @@ before_install:
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
   - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
 
-  - rvm install ruby-2.1.2
-  - rvm list
+  - rvm install ruby-2.3.0
 
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
   - gem install sass
