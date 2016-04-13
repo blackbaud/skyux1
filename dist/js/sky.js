@@ -4090,7 +4090,6 @@
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -4320,7 +4319,8 @@
 
                             function setScrollbarHeight() {
                                 var topScrollbar = getTopScrollbar(),
-                                    topScrollbarDiv = getTopScrollbarDiv();
+                                    topScrollbarDiv = getTopScrollbarDiv(),
+                                    scrollbarWidth = bbWindow.getScrollbarWidth();
 
                                 if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
@@ -5183,8 +5183,6 @@
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
-
-                            scrollbarWidth = bbWindow.getScrollbarWidth();
 
                             id = $scope.$id;
                             toolbarContainerId = id + '-toolbar-container';
@@ -7977,7 +7975,7 @@ angular.module('sky.palette.config', [])
                     liEl;
 
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
-                    ulEl = el.find('ul');
+                    ulEl = el.children('ul');
                     liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
@@ -8040,9 +8038,18 @@ angular.module('sky.palette.config', [])
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
+                function getTabUl() {
+                    var ulEl = el.children('ul.nav.nav-tabs');
+                    if (ulEl.length > 0) {
+                        return ulEl.eq(0);
+                    } else {
+                        return el.find('.bb-tabset-dropdown.nav.nav-tabs ul').eq(0);
+                    }
+                }
 
                 function getBootstrapTabs() {
-                    return el.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)');
+                    var ulEl = getTabUl();
+                    return ulEl.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
                 }
 
                 function getDropdownEl() {
@@ -8077,6 +8084,8 @@ angular.module('sky.palette.config', [])
 
                 }
 
+
+
                 function setupCollapsibleTabs(isCollapsed) {
                     var tabsEl,
                         dropdownContainerEl,
@@ -8086,7 +8095,7 @@ angular.module('sky.palette.config', [])
                     tabsEl = getBootstrapTabs();
                     dropdownButtonsEl = el.find('.bb-tab-button-wrap');
 
-                    ulEl = el.find('ul:not(.bb-tabset-dropdown)');
+                    ulEl = getTabUl();
                     if (isCollapsed) {
                         dropdownContainerEl = el.find('.bb-tabset-dropdown');
 
@@ -10383,7 +10392,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</section>\n' +
         '');
     $templateCache.put('sky/templates/check/styled.html',
-        '<span role="input"></span>\n' +
+        '<span role="checkbox" tabindex="-1"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
