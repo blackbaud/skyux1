@@ -11,7 +11,7 @@
         return {
             scope: {},
             bindToController: {
-                bbRepeaterExpandMode: '='
+                bbRepeaterExpandMode: '@?'
             },
             controller: 'BBRepeaterController',
             controllerAs: 'bbRepeater',

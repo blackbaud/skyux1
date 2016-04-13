@@ -6,6 +6,7 @@ describe('Repeater directive', function () {
 
     var $compile,
         $rootScope,
+        $timeout,
         bbResources,
         fxOff,
         repeaterHtml;
@@ -14,15 +15,16 @@ describe('Repeater directive', function () {
     beforeEach(module('sky.repeater'));
     beforeEach(module('sky.templates'));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _bbResources_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _bbResources_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
+        $timeout = _$timeout_;
         bbResources = _bbResources_;
 
         fxOff = $.fx.off;
         $.fx.off = true;
 
-        repeaterHtml = '<bb-repeater bb-repeater-expand-mode="expandMode">' +
+        repeaterHtml = '<bb-repeater bb-repeater-expand-mode="{{expandMode}}">' +
             '   <bb-repeater-item>' +
             '       <bb-repeater-item-context-menu ng-if="showContextMenu">' +
             '           <bb-context-menu>' +
@@ -116,6 +118,46 @@ describe('Repeater directive', function () {
         $scope.$digest();
 
         expect(getItems(el).eq(0)).toHaveClass('bb-repeater-item-with-context-menu');
+    });
+
+    it('should enable expand/collapse animation only after an item is initially rendered', function () {
+        var $scope = $rootScope.$new(),
+            animateSpy = spyOn($.fn, 'animate').and.callThrough(),
+            el;
+
+        function validateAnimation(duration) {
+            expect(animateSpy.calls.argsFor(0)[1]).toEqual(jasmine.objectContaining({
+                duration: duration
+            }));
+        }
+
+        $scope.items = [
+            {
+                expanded: false,
+                title: 'Title'
+            }
+        ];
+
+        el = $compile(
+            '<bb-repeater bb-repeater-expand-mode="single">' +
+            '   <bb-repeater-item ng-repeat="item in items" bb-repeater-item-expanded="item.expanded">' +
+            '       <bb-repeater-item-title>{{item.title}}</bb-repeater-item-title>' +
+            '   </bb-repeater-item>' +
+            '</bb-repeater>'
+        )($scope);
+
+        $scope.$digest();
+
+        validateAnimation(0);
+
+        animateSpy.calls.reset();
+
+        $timeout.flush();
+
+        $scope.items[0].expanded = true;
+        $scope.$digest();
+
+        validateAnimation(250);
     });
 
     describe('with expand mode of "single"', function () {

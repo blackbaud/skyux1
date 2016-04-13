@@ -203,14 +203,14 @@
         }
 
         return {
-            scope: {},
             bindToController: {
-                bbRepeaterItemExpanded: '='
+                bbRepeaterItemExpanded: '=?'
             },
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
             link: link,
             require: ['bbRepeaterItem', '^bbRepeater'],
+            scope: {},
             templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
             transclude: true
         };
