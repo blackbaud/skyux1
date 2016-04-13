@@ -15,7 +15,6 @@
         };
     }
 
-
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
             replace: true,
