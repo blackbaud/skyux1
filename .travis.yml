@@ -84,5 +84,5 @@ notifications:
 env:
   global:
     - BROWSER_STACK_BINARY_BASE_PATH=$HOME/browserstack-binary
-  
-  - CXX=g++-4.8
+  matrix:
+    - CXX=g++-4.8
