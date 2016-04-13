@@ -7,7 +7,8 @@ describe('Context menu', function () {
     var $animate,
         $compile,
         $document,
-        $scope;
+        $scope,
+        bbResources;
 
     beforeEach(module(
         'ngAnimateMock',
@@ -18,11 +19,15 @@ describe('Context menu', function () {
     ));
 
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$animate_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$animate_, _bbResources_) {
+
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
         $document = _$document_;
         $animate = _$animate_;
+        bbResources = _bbResources_;
+
+        bbResources.context_menu_default_label = '##(G)JG#F()DBNEWT#@)G';
 
         $scope.locals = {
             items: [
@@ -75,6 +80,10 @@ describe('Context menu', function () {
         }
     }
 
+    function validateButtonLabel(el, label) {
+        expect(el.find('.bb-context-menu-btn')).toHaveAttr('aria-label', label);
+    }
+
     it('can create a context menu dropdown using bb-context-menu-item', function () {
         var el = angular.element([
             '<div>',
@@ -118,6 +127,27 @@ describe('Context menu', function () {
             '</div>'
         ].join(''));
         verifyContextMenuDropdown(el);
+    });
+
+    it('should add a default localizable accessibility label to the context menu button', function () {
+        var el = $compile(
+            '<bb-context-menu></bb-context-menu>'
+        )($scope);
+
+        $scope.$digest();
+
+        validateButtonLabel(el, bbResources.context_menu_default_label);
+    });
+
+    it('should allow a custom accessibility label to be specified', function () {
+        var el = $compile(
+            '<bb-context-menu bb-context-menu-label="{{label}}"></bb-context-menu>'
+        )($scope);
+
+        $scope.label = 'Test label';
+        $scope.$digest();
+
+        validateButtonLabel(el, 'Test label');
     });
 
     describe('submenu directive', function () {
