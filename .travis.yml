@@ -23,7 +23,7 @@ before_install:
   - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
 
   - rm -rf ~/.rvm
-  - \curl -L https://get.rvm.io | bash -s stable --ruby
+  - \curl -L https://get.rvm.io --auto-dotfiles | bash -s stable --ruby
   - rvm list
 
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
