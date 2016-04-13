@@ -108091,7 +108091,6 @@ angular.module('sky.palette.config', [])
         self.tabRemoved = function () {
             $scope.bbTabsetOptions.tabCount--;
         };
-
     }
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
