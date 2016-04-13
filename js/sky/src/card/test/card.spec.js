@@ -43,7 +43,7 @@ describe('Card directive', function () {
             el;
 
         el = $compile(
-            '<bb-card bb-card-size="\'small\'">' +
+            '<bb-card bb-card-size="small">' +
             '</bb-card>'
         )($scope);
 
@@ -57,7 +57,7 @@ describe('Card directive', function () {
             el;
 
         el = $compile(
-            '<bb-card bb-card-selectable="\'true\'">' +
+            '<bb-card bb-card-selectable="true">' +
             '</bb-card>'
         )($scope);
 
@@ -72,7 +72,7 @@ describe('Card directive', function () {
             el;
 
         el = $compile(
-            '<bb-card bb-card-selectable="\'true\'" bb-card-selected="cardSelected">' +
+            '<bb-card bb-card-selectable="true" bb-card-selected="cardSelected">' +
             '</bb-card>'
         )($scope);
 
@@ -102,7 +102,7 @@ describe('Card directive', function () {
             el;
 
         el = $compile(
-            '<bb-card bb-card-selectable="\'true\'" bb-card-selected="cardSelected">' +
+            '<bb-card bb-card-selectable="true" bb-card-selected="cardSelected">' +
             '</bb-card>'
         )($scope);
 
