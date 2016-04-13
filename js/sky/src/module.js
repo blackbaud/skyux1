@@ -9,6 +9,7 @@
         'sky.alert',
         'sky.autonumeric',
         'sky.avatar',
+        'sky.card',
         'sky.check',
         'sky.checklist',
         'sky.contextmenu',
