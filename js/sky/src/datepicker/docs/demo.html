@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-6 col-xs-12">
                 <label>Date field</label>
-                <bb-datepicker min-date="datepickerCtrl.minDate" max-date="datepickerCtrl.maxDate" bb-datepicker-name="date2" ng-model="datepickerCtrl.date2" placeholder="datepickerCtrl.placeholder"></bb-datepicker>
+                <bb-datepicker min-date="datepickerCtrl.minDate" bb-date-format="'shortDate'" max-date="datepickerCtrl.maxDate" bb-datepicker-name="date2" ng-model="datepickerCtrl.date2" placeholder="datepickerCtrl.placeholder"></bb-datepicker>
                 <label class="error" ng-show="datepickerCtrl.testform.date2.$error.dateFormat">{{datepickerCtrl.testform.date2.invalidFormatMessage}}</label>
                 <label class="error" ng-show="datepickerCtrl.testform.date2.$error.minDate">Date is prior to minimum date range</label>
                 <label class="error" ng-show="datepickerCtrl.testform.date2.$error.maxDate">Date is after maximum date range</label>

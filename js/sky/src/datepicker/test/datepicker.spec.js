@@ -39,7 +39,7 @@ describe('Datepicker directive', function () {
 
     afterEach(function () {
         if (angular.isDefined(datepickerScope)) {
-            datepickerScope.locals.opened = false;
+            datepickerScope.bbDatepicker.pickerOpened = false;
             datepickerScope.$digest();
         }
     });
@@ -107,7 +107,6 @@ describe('Datepicker directive', function () {
         dateFieldEl = el.find('.input-group.bb-datefield');
 
         expect(dateFieldEl.length).toBe(1);
-
         inputEl = dateFieldEl.find('input');
 
         expect(inputEl).toHaveValue('05/17/1985');
@@ -173,6 +172,30 @@ describe('Datepicker directive', function () {
         expect($scope.testdate1).toEqual(new Date('05/18/1985'));
     });
 
+    it('handles having alternate formats', function () {
+        var el,
+            inputEl,
+            alternateInputHtml;
+
+        alternateInputHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-alt-input-formats="altInput" bb-datepicker-name="testDate1" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+
+        $scope.altInput = ['M!/d!/yyyy'];
+
+        el = setupDatepicker(alternateInputHtml, '5/17/1985');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, '5/8/1985');
+
+        expect($scope.testdate1).toEqual(new Date('05/8/1985'));
+
+        expect(inputEl).toHaveValue('5/8/1985');
+    });
+
     it('handles date change to invalid date', function () {
         var el,
             inputEl;
@@ -193,6 +216,12 @@ describe('Datepicker directive', function () {
         expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
         expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
 
+        setInput(inputEl, 0);
+        expect(angular.isDefined($scope.testdate1)).toBe(true);
+
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+
     });
 
     it('handles date change to invalid date from model', function () {
@@ -201,17 +230,25 @@ describe('Datepicker directive', function () {
 
         el = setupDatepicker(datepickerHtml, '5/17/1985');
 
-        $scope.testdate1 = 'blaaaaaaah';
+        $scope.testdate1 = 'blaaaah';
         $scope.$digest();
 
         inputEl = el.find('input');
 
         $timeout.flush();
 
-        expect(inputEl).toHaveValue('blaaaaaaah');
+        expect(inputEl).toHaveValue('blaaaah');
 
         inputEl.trigger('change');
-        expect(inputEl).toHaveValue('blaaaaaaah');
+        expect(inputEl).toHaveValue('blaaaah');
+
+        expect(angular.isDefined($scope.testdate1)).toBe(true);
+
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+
+        $scope.testdate1 = 'blue/5/1990';
+        $scope.$digest();
 
         expect(angular.isDefined($scope.testdate1)).toBe(true);
 
@@ -365,6 +402,7 @@ describe('Datepicker directive', function () {
         expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(true);
     });
 
+
     it('handles MMddyyy translations', function () {
         var el,
             inputEl;
@@ -459,9 +497,14 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '1992/5/6');
 
-        expect(inputEl).toHaveValue('1992/05/06');
+        expect(inputEl).toHaveValue('1992/5/6');
 
         expect($scope.testdate1).toEqual(new Date('05/06/1992'));
+
+        $scope.testdate1 = '1993/5/6';
+        $scope.$digest();
+
+        expect($scope.testdate1).toEqual(new Date('05/06/1993'));
     });
 
     it('hanldes dd/MM/yyyy dates', function () {
@@ -482,7 +525,7 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '16/4/1992');
 
-        expect(inputEl).toHaveValue('16/04/1992');
+        expect(inputEl).toHaveValue('16/4/1992');
 
         expect($scope.testdate1).toEqual(new Date('04/16/1992'));
 
@@ -510,8 +553,7 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '16.4.1992');
 
-        expect(inputEl).toHaveValue('16.04.1992');
-
+        expect(inputEl).toHaveValue('16.4.1992');
         expect($scope.testdate1).toEqual(new Date('04/16/1992'));
     });
 
@@ -528,6 +570,11 @@ describe('Datepicker directive', function () {
         setInput(inputEl, '19/1905/8');
 
         expect(inputEl).not.toHaveValue('19/1905/08');
+
+        $scope.testdate1 = '19/1906/8';
+        $scope.$digest();
+
+        expect(inputEl).not.toHaveValue('19/1906/08');
 
     });
 
