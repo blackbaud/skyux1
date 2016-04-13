@@ -1,5 +1,5 @@
 <div ng-controller="CardTestController as cardCtrl">
-  <bb-card bb-card-size="large" bb-card-selectable="{{cardCtrl.showCheckbox}}">
+  <bb-card bb-card-size="large" bb-card-selectable="{{cardCtrl.showCheckbox}}" bb-card-selected="cardCtrl.cardSelected">
     <bb-card-title ng-if="cardCtrl.showTitle">Large card</bb-card-title>
     <bb-card-content ng-if="cardCtrl.showContent">
       This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
