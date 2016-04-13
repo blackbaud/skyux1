@@ -7,12 +7,9 @@ git:
 
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
       - graphicsmagick
       - libcairo2-dev
-      - g++-4.8
 
 before_install:
   # Used throughout the bash scripts
@@ -84,5 +81,3 @@ notifications:
 env:
   global:
     - BROWSER_STACK_BINARY_BASE_PATH=$HOME/browserstack-binary
-  matrix:
-    - CXX=g++-4.8
