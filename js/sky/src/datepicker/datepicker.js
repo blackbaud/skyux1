@@ -292,34 +292,36 @@
 
                     $scope.locals.loaded = true;
 
+                    function inputChange() {
+                        var inputNgModel;
+
+                        //allows validation to kick off for invalid dates
+                        if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
+                            dateChangeInternal = true;
+                            $scope.date = inputEl.val();
+                        } else if ($scope.locals.required && hasRequiredError()) {
+                            dateChangeInternal = true;
+                            $scope.date = '';
+                            inputNgModel = $scope.getInputNgModel();
+                            inputNgModel.invalidFormatMessage = null;
+                            inputNgModel.$setValidity('dateFormat', true);
+                        } else if ($scope.date !== $scope.locals.date) {
+                            dateChangeInternal = true;
+                            $scope.date = $scope.locals.date;
+                        }
+                    }
+
+                    $scope.locals.inputChange = inputChange;
+
                     //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
                     $timeout(function () {
                         inputEl = el.find('input');
                         inputEl.on('change blur', function () {
                             $timeout(function () {
-                                var inputNgModel;
-
-                                //allows validation to kick off for invalid dates
-                                if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                                    dateChangeInternal = true;
-                                    $scope.date = inputEl.val();
-
-
-                                } else if ($scope.locals.required && hasRequiredError()) {
-                                    dateChangeInternal = true;
-                                    $scope.date = '';
-                                    inputNgModel = $scope.getInputNgModel();
-                                    inputNgModel.invalidFormatMessage = null;
-                                    inputNgModel.$setValidity('dateFormat', true);
-                                } else if ($scope.date !== $scope.locals.date) {
-
-                                    dateChangeInternal = true;
-                                    $scope.date = $scope.locals.date;
-
-                                }
-
+                                inputChange();
                             });
                         });
+
                     });
 
                 }
