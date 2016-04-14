@@ -155,7 +155,6 @@ describe('Autonumeric', function () {
             if (angular.isFunction(numericEl[0].setSelectionRange)) {
                 spyOn(numericEl[0], 'setSelectionRange');
                 $timeout.flush();
-
                 expect(numericEl[0].setSelectionRange).not.toHaveBeenCalled();
             }
 
