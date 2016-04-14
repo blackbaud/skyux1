@@ -6,17 +6,20 @@ describe('Autonumeric', function () {
 
     var $compile,
         $scope,
-        $timeout;
+        $timeout,
+        $document;
 
     beforeEach(module('ngMock'));
     beforeEach(module('sky.autonumeric'));
 
     describe('directive', function () {
-        beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
+        beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _$document_) {
             $compile = _$compile_;
             $scope = _$rootScope_.$new();
             $timeout = _$timeout_;
+            $document = _$document_;
         }));
+
 
         afterEach(function () {
             $scope.$destroy();
@@ -104,7 +107,7 @@ describe('Autonumeric', function () {
         //This is a test for IE11
         it('should set selection in the correct location', function () {
             var el = $compile('<input type="text" ng-model="numericValue" bb-autonumeric />')($scope);
-            el.appendTo(document.body);
+            el.appendTo($document[0].body);
 
             $scope.numericValue = 123456.78;
 
@@ -117,6 +120,8 @@ describe('Autonumeric', function () {
 
 
             if (angular.isFunction(el[0].setSelectionRange)) {
+                el.focus();
+
                 $timeout.flush();
                 //setSelectionRange does not impact firefox sets to 0
                 if (el[0].selectionStart !== 0) {
@@ -127,6 +132,37 @@ describe('Autonumeric', function () {
             }
 
             expect(el.val()).toBe('3.00');
+            el.remove();
+
+        });
+
+        it('should only set selection if element is focused', function () {
+            var el = $compile('<div><input class="bb-test-nonnumeric" type="text" ng-model="numericValue"/><input class="bb-test-numeric" type="text" ng-model="numericValue" bb-autonumeric />')($scope),
+                numericEl,
+                nonNumericEl;
+            el.appendTo($document[0].body);
+
+            numericEl = el.find('.bb-test-numeric');
+            nonNumericEl = el.find('.bb-test-nonnumeric');
+
+            $scope.numericValue = 123456.78;
+
+            $scope.$digest();
+
+            $scope.numericValue = 3;
+            numericEl[0].selectionStart = 1;
+
+            $scope.$digest();
+
+
+            if (angular.isFunction(numericEl[0].setSelectionRange)) {
+                spyOn(numericEl[0], 'setSelectionRange');
+                $timeout.flush();
+
+                expect(numericEl[0].setSelectionRange).not.toHaveBeenCalled();
+            }
+
+            expect(numericEl.val()).toBe('3.00');
             el.remove();
 
         });
@@ -219,7 +255,7 @@ describe('Autonumeric', function () {
 
             it('should keep the model in sync with a pasted value that does not meet the requirements', function () {
                 var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />')($scope);
-                el.appendTo(document.body);
+                el.appendTo($document[0].body);
                 $scope.moneyOptions = {
                     vMin: 0
                 };
@@ -241,7 +277,7 @@ describe('Autonumeric', function () {
                     '</div>',
                     '</bb-tile>'
                 ].join(''))($scope);
-                el.appendTo(document.body);
+                el.appendTo($document[0].body);
                 $scope.moneyOptions = {
                     vMin: 0
                 };
