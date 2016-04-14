@@ -153,6 +153,7 @@ describe('Autonumeric', function () {
             $scope.$digest();
 
             if (angular.isFunction(numericEl[0].setSelectionRange)) {
+                nonNumericEl.focus();
                 spyOn(numericEl[0], 'setSelectionRange');
                 $timeout.flush();
                 expect(numericEl[0].setSelectionRange).not.toHaveBeenCalled();
