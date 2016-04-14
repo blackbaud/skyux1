@@ -21,7 +21,7 @@
                 angular.extend(baseSettings, configSettings);
             }
         }
-        
+
         return baseSettings;
     }
 
@@ -36,6 +36,11 @@
             },
             money: {
                 aSign: '$'
+            },
+            percent: {
+                aSign: '%',
+                pSign: 's',
+                mDec: 0
             }
         })
         .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', function ($timeout, bbAutoNumericConfig, bbWindow) {

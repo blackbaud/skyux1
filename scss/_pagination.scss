@@ -107,6 +107,8 @@
 }
 .bb-pagination-content-calculating {
   visibility: hidden;
+  position: absolute;
+  top: -999em;
 }
 
 /* PAGINATION END */

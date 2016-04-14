@@ -100086,6 +100086,19 @@ global.easyXDM = easyXDM;
     'use strict';
 
     angular.module(
+        'sky.card',
+        [
+            'sky.card.directive'
+        ]
+    );
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
         'sky.checklist',
         [
             'sky.checklist.directive',
@@ -100094,6 +100107,30 @@ global.easyXDM = easyXDM;
             'sky.checklist.model.directive'
         ]
     );
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
+        'sky.contextmenu',
+        [
+            'sky.contextmenu.directive',
+            'sky.contextmenu.button.directive',
+            'sky.contextmenu.item.directive',
+            'sky.submenu'
+        ]
+    );
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.submenu', ['sky.submenu.directive']);
 }());
 
 /*global angular */
@@ -100319,7 +100356,7 @@ global.easyXDM = easyXDM;
                 angular.extend(baseSettings, configSettings);
             }
         }
-        
+
         return baseSettings;
     }
 
@@ -100334,6 +100371,11 @@ global.easyXDM = easyXDM;
             },
             money: {
                 aSign: '$'
+            },
+            percent: {
+                aSign: '%',
+                pSign: 's',
+                mDec: 0
             }
         })
         .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', function ($timeout, bbAutoNumericConfig, bbWindow) {
@@ -100737,6 +100779,156 @@ global.easyXDM = easyXDM;
     angular.module('sky.avatar.directive', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
         .directive('bbAvatar', bbAvatar);
 }(jQuery));
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    var components = [{
+            name: 'Title',
+            cls: 'title'
+        }, {
+            name: 'Content',
+            cls: 'content'
+        }, {
+            name: 'Actions',
+            cls: 'actions'
+        }],
+        cardModule = angular.module('sky.card.directive', ['sky.check']),
+        nextId = 0;
+
+    function makeCardComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbCard = ctrls[1];
+
+                vm.el = el;
+
+                bbCard['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbCard' + name, '^bbCard'],
+                controller: controllerName,
+                controllerAs: 'bbCard' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBCard' + name + 'Controller';
+
+        cardModule
+            .controller(controllerName, Controller)
+            .directive('bbCard' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBCardController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
+            var name = component.name;
+
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
+
+                vm[propName] = ctrl;
+
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
+                };
+            };
+        }
+
+        components.forEach(addComponentSetter);
+
+        vm.getClass = function () {
+            var cls = [];
+
+            switch (vm.bbCardSize) {
+            case 'small':
+                cls.push('bb-card-small');
+                break;
+            }
+
+            if (vm.bbCardSelectable) {
+                cls.push('bb-card-selectable');
+
+                if (vm.bbCardSelected) {
+                    cls.push('bb-card-selected');
+                }
+            }
+
+            return cls;
+        };
+
+        nextId++;
+        vm.cardCheckId = 'bb-card-check-' + nextId;
+    }
+
+    function bbCard() {
+        function link(scope, el, attrs, vm) {
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-card-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            components.forEach(watchForComponent);
+        }
+
+        return {
+            bindToController: {
+                bbCardSelectable: '@?',
+                bbCardSelected: '=?',
+                bbCardSize: '@?'
+            },
+            controller: 'BBCardController',
+            controllerAs: 'bbCard',
+            link: link,
+            restrict: 'E',
+            scope: {},
+            templateUrl: 'sky/templates/card/card.directive.html',
+            transclude: true
+        };
+    }
+
+    cardModule
+        .controller('BBCardController', BBCardController)
+        .directive('bbCard', bbCard);
+
+    components.forEach(makeCardComponent);
+}());
 
 /*jshint browser: true */
 /*global angular */
@@ -101214,112 +101406,232 @@ global.easyXDM = easyXDM;
         });
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBContextMenuButtonController(bbResources) {
+        var vm = this;
+
+        vm.getAriaLabel = function () {
+            var ariaLabel;
+
+            if (vm.bbContextMenu) {
+                ariaLabel = vm.bbContextMenu.getAriaLabel();
+            }
+
+            if (!ariaLabel) {
+                ariaLabel = vm.bbContextMenuButtonLabel || bbResources.context_menu_default_label;
+            }
+
+            return ariaLabel;
+        };
+    }
+
+    BBContextMenuButtonController.$inject = ['bbResources'];
+
+    angular.module('sky.contextmenu.button.controller', ['sky.resources'])
+        .controller('BBContextMenuButtonController', BBContextMenuButtonController);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbContextMenuButton() {
+        function link(scope, el, attrs, ctrls) {
+            var bbContextMenu = ctrls[1],
+                vm = ctrls[0];
+
+            vm.bbContextMenu = bbContextMenu;
+        }
+
+        return {
+            bindToController: {
+                bbContextMenuButtonLabel: '@'
+            },
+            controller: 'BBContextMenuButtonController',
+            controllerAs: 'bbContextMenuButton',
+            link: link,
+            restrict: 'E',
+            replace: true,
+            require: ['bbContextMenuButton', '?^bbContextMenu'],
+            scope: {},
+            templateUrl: 'sky/templates/contextmenu/menubutton.html'
+        };
+    }
+
+    angular.module(
+        'sky.contextmenu.button.directive',
+        [
+            'sky.contextmenu.button.controller',
+            'sky.resources'
+        ]
+    )
+        .directive('bbContextMenuButton', bbContextMenuButton);
+}());
+
 /* global angular */
 
 (function () {
     'use strict';
 
-    function getTemplateUrl(name) {
-        return 'sky/templates/contextmenu/' + name + '.html';
+    function BBContextMenuController() {
+        var vm = this;
+
+        vm.contextButtonStopPropagation = function ($event) {
+            $event.stopPropagation();
+        };
+
+        vm.getAriaLabel = function () {
+            return vm.bbContextMenuLabel;
+        };
     }
+
+    angular.module('sky.contextmenu.controller', [])
+        .controller('BBContextMenuController', BBContextMenuController);
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
 
     function bbContextMenu() {
         return {
+            bindToController: {
+                bbContextMenuLabel: '@'
+            },
+            controller: 'BBContextMenuController',
+            controllerAs: 'bbContextMenu',
             replace: true,
             restrict: 'E',
+            scope: {},
             transclude: true,
-            templateUrl: getTemplateUrl('contextmenu'),
-            link: function ($scope) {
-                $scope.contextButtonStopPropagation = function ($event) {
-                    $event.stopPropagation();
-                };
-            }
+            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
         };
     }
+
+    angular.module('sky.contextmenu.directive', ['ui.bootstrap.dropdown', 'ui.bootstrap.accordion', 'sky.contextmenu.controller'])
+        .directive('bbContextMenu', bbContextMenu);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
 
     function bbContextMenuItem() {
         return {
-            restrict: 'E',
-            transclude: true,
-            replace: true,
-            scope: {
+            bindToController: {
                 clickItem: '&bbContextMenuAction'
             },
-            templateUrl: getTemplateUrl('menuitem')
-        };
-    }
-
-    function bbContextMenuButton() {
-        return {
+            controller: angular.noop,
+            controllerAs: 'bbContextMenuItem',
             restrict: 'E',
+            transclude: true,
             replace: true,
-            templateUrl: getTemplateUrl('menubutton')
+            scope: {},
+            templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };
     }
 
-    function toggleAccordion($event, $scope) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.accordionLocals.accordionOpen = !$scope.accordionLocals.accordionOpen;
-    }
+    angular.module('sky.contextmenu.item.directive', [])
+        .directive('bbContextMenuItem', bbContextMenuItem);
+}());
 
-    function BBSubmenuController($scope) {
-        var self = this;
+/*global angular */
 
-        self.toggleAccordion = function ($event) {
-            toggleAccordion($event, $scope);
+(function () {
+    'use strict';
+
+    function bbContextMenuToggleAccordion() {
+        return function ($event, vm) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            vm.accordionOpen = !vm.accordionOpen;
         };
     }
 
-    BBSubmenuController.$inject = ['$scope'];
+    angular.module('sky.contextmenu.toggleaccordion.factory', [])
+        .factory('bbContextMenuToggleAccordion', bbContextMenuToggleAccordion);
 
-    function bbSubmenu() {
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    function bbSubmenu(bbContextMenuToggleAccordion) {
         return {
-            controller: 'bbSubmenuController',
-            restrict: 'E',
-            scope: {
+            bindToController: {
                 heading: '=?bbSubmenuHeading'
             },
-            link: function ($scope, el, attrs) {
-                $scope.accordionLocals = {
-                    accordionOpen: false,
-                    staticHeader: false
-                };
+            controller: angular.noop,
+            controllerAs: 'bbSubmenu',
+            restrict: 'E',
+            scope: {},
+            link: function (scope, el, attrs, vm) {
+                vm.accordionOpen = false;
+                vm.staticHeader = false;
 
                 if (angular.isDefined(attrs.bbSubmenuHeading)) {
-                    $scope.accordionLocals.staticHeader = true;
+                    vm.staticHeader = true;
                 }
 
-                $scope.toggleAccordion = function ($event) {
-                    toggleAccordion($event, $scope);
+                vm.toggleAccordion = function ($event) {
+                    bbContextMenuToggleAccordion($event, vm);
                 };
             },
             transclude: true,
-            templateUrl: getTemplateUrl('submenu')
+            templateUrl: 'sky/templates/contextmenu/submenu.html'
         };
     }
+
+    bbSubmenu.$inject = ['bbContextMenuToggleAccordion'];
+
+    angular.module(
+        'sky.submenu.directive',
+        [
+            'sky.submenu.heading.directive',
+            'sky.contextmenu.toggleaccordion.factory',
+            'ui.bootstrap.dropdown',
+            'ui.bootstrap.accordion'
+        ]
+    )
+        .directive('bbSubmenu', bbSubmenu);
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
 
     function bbSubmenuHeading() {
         return {
+            bindToController: true,
+            controller: angular.noop,
+            controllerAs: 'bbSubmenuHeading',
             restrict: 'E',
-            require: '^bbSubmenu',
+            require: ['bbSubmenuHeading', '^bbSubmenu'],
             scope: true,
-            link: function ($scope, el, attrs, submenuCtrl) {
-                $scope.toggleAccordion = function ($event) {
+            link: function ($scope, el, attrs, ctrls) {
+                var submenuCtrl = ctrls[1],
+                    vm = ctrls[0];
+
+                vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
                 };
             },
             transclude: true,
-            templateUrl: getTemplateUrl('submenuheading')
+            templateUrl: 'sky/templates/contextmenu/submenuheading.html'
         };
     }
 
-    angular.module('sky.contextmenu', ['ui.bootstrap.dropdown', 'ui.bootstrap.accordion'])
-        .controller('bbSubmenuController', BBSubmenuController)
-        .directive('bbContextMenu', bbContextMenu)
-        .directive('bbContextMenuItem', bbContextMenuItem)
-        .directive('bbContextMenuButton', bbContextMenuButton)
-        .directive('bbSubmenu', bbSubmenu)
+    angular.module('sky.submenu.heading.directive', [])
         .directive('bbSubmenuHeading', bbSubmenuHeading);
 }());
 
@@ -103988,7 +104300,6 @@ global.easyXDM = easyXDM;
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -104218,7 +104529,8 @@ global.easyXDM = easyXDM;
 
                             function setScrollbarHeight() {
                                 var topScrollbar = getTopScrollbar(),
-                                    topScrollbarDiv = getTopScrollbarDiv();
+                                    topScrollbarDiv = getTopScrollbarDiv(),
+                                    scrollbarWidth = bbWindow.getScrollbarWidth();
 
                                 if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
@@ -105081,8 +105393,6 @@ global.easyXDM = easyXDM;
                             if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                                 $scope.selectedRows = [];
                             }
-
-                            scrollbarWidth = bbWindow.getScrollbarWidth();
 
                             id = $scope.$id;
                             toolbarContainerId = id + '-toolbar-container';
@@ -106549,17 +106859,31 @@ global.easyXDM = easyXDM;
                     scope.$watch('pagedData', function () {
                         var pageCount,
                             pagedData,
-                            tries = 0,
                             windowResizeTimeout;
 
-                        // Try for 1 second to set a min-height on paged data so the paging bar doesn't jump
+                        // set a min-height on paged data so the paging bar doesn't jump
                         // up when the user hits a page with less than the max number of items.
-                        function trySetMinHeight() {
+                        function setMinHeight() {
+
+                            /* This functionality needs to be in a timeout so we can
+                               force dirty checking in the changePage function with an $apply.
+                               Failure to do so causes the ng-repeat that builds the rows to not
+                               be updated, which leads to the same calculated height for each page
+                               as the contents of the rows have not been updated. */
                             $timeout(function () {
                                 var currentPage,
-                                    height = el.height(),
+                                    placeholder,
                                     i,
                                     maxHeight = 0;
+
+                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
+
+                                // Use a placeholder to keep track of where the element is before moving.
+                                placeholder = angular.element('<div class="bb-pagination-placeholder"></div>');
+                                el.after(placeholder);
+
+                                // Append the element to the body in case certain css rules are affecting the height.
+                                angular.element('body').prepend(el);
 
                                 function changePage(pageNumber) {
                                     /* Disable animation for the page change
@@ -106571,16 +106895,7 @@ global.easyXDM = easyXDM;
                                     pagedData.pageChanged();
                                     scope.$apply();
                                     $animate.enabled(true, el);
-
                                 }
-
-                                if (height === 0 && tries < 5) {
-                                    tries += 1;
-                                    trySetMinHeight();
-                                    return;
-                                }
-
-                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
 
                                 // Cache the current page so we can put it back.
                                 currentPage = pagedData.currentPage;
@@ -106600,8 +106915,11 @@ global.easyXDM = easyXDM;
                                 // Navigate back to the initial page.
                                 changePage(currentPage);
 
+                                // Make sure to move the element back to its original position.
+                                placeholder.after(el);
+                                placeholder.remove();
                                 el.removeClass('bb-pagination-content-calculating');
-                            }, 200);
+                            });
                         }
 
                         pagedData = scope.pagedData;
@@ -106610,7 +106928,7 @@ global.easyXDM = easyXDM;
                             pageCount = Math.ceil(pagedData.totalItems / (pagedData.itemsPerPage || 1));
 
                             if (pageCount > 1) {
-                                trySetMinHeight();
+                                setMinHeight();
 
                                 removeWindowResizeHandler();
 
@@ -106619,7 +106937,7 @@ global.easyXDM = easyXDM;
                                         $timeout.cancel(windowResizeTimeout);
                                     }
 
-                                    windowResizeTimeout = $timeout(trySetMinHeight, 500);
+                                    windowResizeTimeout = $timeout(setMinHeight, 500);
                                 });
 
                                 el.on('$destroy', removeWindowResizeHandler);
@@ -107867,7 +108185,7 @@ angular.module('sky.palette.config', [])
                     liEl;
 
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
-                    ulEl = el.find('ul');
+                    ulEl = el.children('ul');
                     liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
@@ -107917,7 +108235,6 @@ angular.module('sky.palette.config', [])
         self.tabRemoved = function () {
             $scope.bbTabsetOptions.tabCount--;
         };
-
     }
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
@@ -107930,9 +108247,18 @@ angular.module('sky.palette.config', [])
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
+                function getTabUl() {
+                    var ulEl = el.children('ul.nav.nav-tabs');
+                    if (ulEl.length > 0) {
+                        return ulEl.eq(0);
+                    } else {
+                        return el.find('.bb-tabset-dropdown.nav.nav-tabs ul').eq(0);
+                    }
+                }
 
                 function getBootstrapTabs() {
-                    return el.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)');
+                    var ulEl = getTabUl();
+                    return ulEl.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
                 }
 
                 function getDropdownEl() {
@@ -107967,6 +108293,8 @@ angular.module('sky.palette.config', [])
 
                 }
 
+
+
                 function setupCollapsibleTabs(isCollapsed) {
                     var tabsEl,
                         dropdownContainerEl,
@@ -107976,7 +108304,7 @@ angular.module('sky.palette.config', [])
                     tabsEl = getBootstrapTabs();
                     dropdownButtonsEl = el.find('.bb-tab-button-wrap');
 
-                    ulEl = el.find('ul:not(.bb-tabset-dropdown)');
+                    ulEl = getTabUl();
                     if (isCollapsed) {
                         dropdownContainerEl = el.find('.bb-tabset-dropdown');
 
@@ -110114,6 +110442,7 @@ angular.module('sky.palette.config', [])
         'sky.autofocus',
         'sky.autonumeric',
         'sky.avatar',
+        'sky.card',
         'sky.check',
         'sky.checklist',
         'sky.contextmenu',
@@ -110183,7 +110512,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -110252,8 +110581,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/card/card.directive.html',
+        '<section class="bb-card" ng-class="bbCard.getClass()">\n' +
+        '  <header ng-show="bbCard.headingLeftCtrl || bbCard.titleCtrl || bbCard.headingRightCtrl || bbCard.bbCardSelectable">\n' +
+        '    <label class="bb-card-header">\n' +
+        '      <div class="bb-card-heading-left" ng-if="bbCard.headingLeftCtrl"></div>\n' +
+        '      <div class="bb-card-heading-middle">\n' +
+        '        <h1 class="bb-card-title" ng-if="bbCard.titleCtrl"></h1>\n' +
+        '      </div>\n' +
+        '      <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.bbCardSelectable"></div>\n' +
+        '      <div class="bb-card-check" ng-if="bbCard.bbCardSelectable">\n' +
+        '        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />\n' +
+        '      </div>\n' +
+        '    </label>\n' +
+        '  </header>\n' +
+        '  <label class="bb-card-content" for="{{bbCard.cardCheckId}}"></label>\n' +
+        '  <div class="bb-card-actions" ng-if="bbCard.actionsCtrl"></div>\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</section>\n' +
+        '');
     $templateCache.put('sky/templates/check/styled.html',
-        '<span role="input"></span>\n' +
+        '<span role="checkbox" tabindex="-1"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
@@ -110325,29 +110673,34 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
         '    <ul uib-dropdown-menu role="menu">\n' +
-        '        <ng-transclude/>\n' +
+        '        <ng-transclude></ng-transclude>\n' +
         '    </ul>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menubutton.html',
-        '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>\n' +
+        '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn" aria-label="{{bbContextMenuButton.getAriaLabel()}}">\n' +
+        '  <i class="fa fa-ellipsis-h"></i>\n' +
+        '</button>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menuitem.html',
-        '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>\n' +
+        '<li role="presentation">\n' +
+        '  <a role="menuitem" href="javascript:void(0)" ng-click="bbContextMenuItem.clickItem()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '  </a>\n' +
+        '</li>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <uib-accordion>\n' +
-        '        <uib-accordion-group is-open="accordionLocals.accordionOpen">\n' +
-        '\n' +
-        '            <uib-accordion-heading ng-if="accordionLocals.staticHeader">\n' +
-        '                <div ng-click="toggleAccordion($event)">\n' +
+        '        <uib-accordion-group is-open="bbSubmenu.accordionOpen">\n' +
+        '            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">\n' +
+        '                <div ng-click="bbSubmenu.toggleAccordion($event)">\n' +
         '                    <span>\n' +
-        '                        {{heading}}\n' +
+        '                        {{bbSubmenu.heading}}\n' +
         '                    <span>\n' +
-        '                    <i ng-class="\'fa-chevron-\' + (accordionLocals.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '                    <i ng-class="\'fa-chevron-\' + (bbSubmenu.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '                </div>\n' +
         '            </uib-accordion-heading>\n' +
         '            <ng-transclude></ng-transclude>\n' +
@@ -110357,11 +110710,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenuheading.html',
         '<uib-accordion-heading>\n' +
-        '    <div ng-click="toggleAccordion($event)">\n' +
+        '    <div ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '        <i ng-class="\'fa-chevron-\' + (accordionLocals.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '    </div>\n' +
-        '\n' +
         '</uib-accordion-heading>\n' +
         '');
     $templateCache.put('sky/templates/datefield/datefield.html',
