@@ -55,25 +55,13 @@
         flex-grow: 1;
     }
 
-    .bb-repeater-item-chevron {
-        border: none;
-        background-color: transparent;
-        display: none;
-        flex-shrink: 0;
-        height: $bb-context-menu-size;
-        margin: 0;
-        overflow: hidden;
-        padding: $padding-half 0 0 0;
-        width: $bb-context-menu-size;
-    }
-
     .bb-repeater-item-collapsible {
         .bb-repeater-item-header {
             cursor: pointer;
-        }
 
-        .bb-repeater-item-chevron {
-            display: block;
+            .bb-chevron {
+                display: block;
+            }
         }
 
         .bb-repeater-item-content {
@@ -84,43 +72,6 @@
     .bb-repeater-item-collapsed {
         .bb-repeater-item-content {
             display: none;
-        }
-    }
-
-    .bb-repeater-item-chevron-part {
-    	border-color: #d1dade;
-        border-style: solid;
-        border-width: 3px 0 0 0;
-    	display: inline-block;
-    	height: 10px;
-    	position: relative;
-    	top: 3px;
-    	transition: transform $bb-transition-time-medium, left $bb-transition-time-medium;
-    	vertical-align: top;
-    	width: 10px;
-    }
-
-    .bb-repeater-item-chevron-flip-up {
-        .bb-repeater-item-chevron-left {
-            left: 7px;
-        	transform: rotate(-45deg);
-        }
-
-        .bb-repeater-item-chevron-right {
-            left: -6px;
-        	transform: rotate(45deg);
-        }
-    }
-
-    .bb-repeater-item-chevron-flip-down {
-        .bb-repeater-item-chevron-left {
-            left: 2px;
-            transform: rotate(45deg);
-        }
-
-        .bb-repeater-item-chevron-right {
-            left: -1px;
-        	transform: rotate(-45deg);
         }
     }
 }

@@ -10,7 +10,7 @@
         name: 'Title',
         cls: 'title'
     }],
-    repeaterItemModule = angular.module('sky.repeater.item.directive', ['sky.resources']);
+    repeaterItemModule;
 
     function makeComponent(component) {
         var controllerName,
@@ -62,7 +62,7 @@
     }
 
     function bbRepeaterItem($timeout) {
-        function BBRepeaterItemController(bbResources) {
+        function BBRepeaterItemController() {
             var vm = this;
 
             function addComponentSetter(component) {
@@ -88,7 +88,6 @@
 
                 if (allowCollapse()) {
                     cls.push('bb-repeater-item-collapsible');
-
                 }
 
                 if (vm.contextMenuCtrl) {
@@ -98,20 +97,10 @@
                 return cls;
             };
 
-            vm.getChevronCls = function () {
-                return 'bb-repeater-item-chevron-flip-' + (vm.bbRepeaterItemExpanded ? 'up' : 'down');
-            };
-
-            vm.getChevronLabel = function () {
-                return bbResources['chevron_' + (vm.bbRepeaterItemExpanded ? 'collapse' : 'expand')];
-            };
-
             vm.allowCollapse = allowCollapse;
 
             components.forEach(addComponentSetter);
         }
-
-        BBRepeaterItemController.$inject = ['bbResources'];
 
         function link(scope, el, attrs, ctrls) {
             var animateEnabled,
@@ -159,7 +148,12 @@
                 }
             }
 
+            function syncChevronWithExpanded() {
+                vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
+            }
+
             vm.bbRepeater = bbRepeater;
+            syncChevronWithExpanded();
 
             vm.headerClick = function () {
                 if (vm.isCollapsible) {
@@ -177,17 +171,30 @@
                 }
             });
 
-            scope.$watchGroup(
-                [
-                    function () {
-                        return vm.bbRepeaterItemExpanded;
-                    },
-                    function () {
-                        return vm.titleCtrl;
-                    }
-                ],
+            scope.$watch(
+                function () {
+                    return vm.bbRepeaterItemExpanded;
+                },
+                function () {
+                    syncChevronWithExpanded();
+                    updateForExpandedState();
+                }
+            );
+
+            scope.$watch(
+                function () {
+                    return vm.titleCtrl;
+                },
                 updateForExpandedState
             );
+
+            scope.$watch(function () {
+                return vm.chevronDirection;
+            }, function () {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = vm.chevronDirection !== 'down';
+                }
+            });
 
             bbRepeater.addItem(vm);
 
@@ -217,6 +224,14 @@
     }
 
     bbRepeaterItem.$inject = ['$timeout'];
+
+    repeaterItemModule = angular.module(
+        'sky.repeater.item.directive',
+        [
+            'sky.chevron',
+            'sky.resources'
+        ]
+    );
 
     repeaterItemModule.directive('bbRepeaterItem', bbRepeaterItem);
 

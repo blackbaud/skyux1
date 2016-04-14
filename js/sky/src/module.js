@@ -12,6 +12,7 @@
         'sky.avatar',
         'sky.check',
         'sky.checklist',
+        'sky.chevron',
         'sky.contextmenu',
         'sky.data',
         'sky.datepicker',

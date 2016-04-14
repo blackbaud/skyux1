@@ -69,7 +69,7 @@ describe('Repeater directive', function () {
     }
 
     function getChevronAt(repeaterEl, index) {
-        return repeaterEl.find('.bb-repeater-item-chevron').eq(index);
+        return repeaterEl.find('.bb-chevron').eq(index);
     }
 
     function toggleCollapseAt(repeaterEl, index) {
@@ -90,22 +90,6 @@ describe('Repeater directive', function () {
         $scope.$digest();
 
         expect(getItems(el).length).toBe(2);
-    });
-
-    it('should make item chevrons accessible with localizable text', function () {
-        var $scope = $rootScope.$new(),
-            el;
-
-        el = $compile(repeaterHtml)($scope);
-
-        $scope.expandMode = 'multiple';
-        $scope.$digest();
-
-        expect(getChevronAt(el, 0)).toHaveAttr('aria-label', bbResources.chevron_expand);
-
-        toggleCollapseAt(el, 0);
-
-        expect(getChevronAt(el, 0)).toHaveAttr('aria-label', bbResources.chevron_collapse);
     });
 
     it('should add the appropriate class to an item when a context menu is present', function () {
