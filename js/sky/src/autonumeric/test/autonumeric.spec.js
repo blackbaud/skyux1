@@ -152,7 +152,6 @@ describe('Autonumeric', function () {
 
             $scope.$digest();
 
-
             if (angular.isFunction(numericEl[0].setSelectionRange)) {
                 spyOn(numericEl[0], 'setSelectionRange');
                 $timeout.flush();
