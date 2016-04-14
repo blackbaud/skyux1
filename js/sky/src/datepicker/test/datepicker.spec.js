@@ -200,7 +200,7 @@ describe('Datepicker directive', function () {
 
         inputEl = el.find('input');
 
-        inputEl.val('debug').trigger('input');
+        inputEl.val('debug').trigger('change');
 
         //non enter key
         event = $.Event('keydown');
@@ -225,6 +225,8 @@ describe('Datepicker directive', function () {
         expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
         expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
         expect($scope.testdate1).toEqual('debug');
+
+        $timeout.flush();
     });
 
     it('handles date change to invalid date from model', function () {
