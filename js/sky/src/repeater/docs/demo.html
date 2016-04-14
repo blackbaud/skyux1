@@ -3,14 +3,14 @@
     <label>
       Expand mode
       <select class="form-control" ng-model="repeaterCtrl.expandMode">
+        <option value="none">
+          None
+        </option>
         <option value="single">
           Single
         </option>
         <option value="multiple">
           Multiple
-        </option>
-        <option value="none">
-          None
         </option>
       </select>
     </label>
@@ -26,18 +26,33 @@
     </label>
   </div>
   <button type="button" class="btn btn-primary" ng-click="repeaterCtrl.addItem()">Add an item</button>
-  <div style="width: 400px">
-    <bb-repeater bb-repeater-expand-mode="{{repeaterCtrl.expandMode}}">
-      <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded">
-        <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
-          <bb-context-menu>
-            <bb-context-menu-item>Action 1</bb-context-menu-item>
-            <bb-context-menu-item>Action 2</bb-context-menu-item>
-          </bb-context-menu>
-        </bb-repeater-item-context-menu>
-        <bb-repeater-item-title ng-if="repeaterCtrl.showTitle">{{item.title}}</bb-repeater-item-title>
-        <bb-repeater-item-content>{{item.content}}</bb-repeater-item-content>
-      </bb-repeater-item>
-    </bb-repeater>
+  <div class="row">
+    <div class="col-md-6">
+      <bb-repeater bb-repeater-expand-mode="{{repeaterCtrl.expandMode}}">
+        <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded">
+          <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
+            <bb-context-menu>
+              <bb-context-menu-item>Mark completed</bb-context-menu-item>
+              <bb-context-menu-item>Edit</bb-context-menu-item>
+              <li class="divider"></li>
+              <bb-context-menu-item>Delete</bb-context-menu-item>
+            </bb-context-menu>
+          </bb-repeater-item-context-menu>
+          <bb-repeater-item-title ng-if="repeaterCtrl.showTitle">
+            <div class="pull-left">
+              {{item.title}}
+            </div>
+            <div class="pull-right">
+              <span class="label" ng-class="repeaterCtrl.getStatusCls(item)">{{item.status}}</span>
+            </div>
+          </bb-repeater-item-title>
+          <bb-repeater-item-content>
+            <div>
+              {{item.note}}
+            </div>
+          </bb-repeater-item-content>
+        </bb-repeater-item>
+      </bb-repeater>
+    </div>
   </div>
 </div>

@@ -30,7 +30,7 @@
 
     .bb-repeater-item {
         display: flex;
-        padding: $padding-3_4 $padding;
+        padding: $padding;
         border-bottom: dotted 1px #ccc;
     }
 
@@ -44,14 +44,14 @@
     }
 
     .bb-repeater-item-context-menu {
-        padding: $padding-half $padding-3_4 0 0;
+        padding: $padding-half $padding 0 0;
     }
 
     .bb-repeater-item-title {
         font-family: $font-family-base;
-        font-size: $font-size-base;
+        font-size: $bb-font-size-lg;
         font-weight: bold;
-        margin: 10px 0;
+        margin: $margin 0;
         flex-grow: 1;
     }
 
@@ -61,11 +61,12 @@
 
             .bb-chevron {
                 display: block;
+                margin-left: $margin;
             }
         }
 
         .bb-repeater-item-content {
-            padding-right: $bb-context-menu-size + $padding-3_4;
+            padding-right: $bb-context-menu-size + $padding;
         }
     }
 

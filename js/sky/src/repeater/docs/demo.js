@@ -3,33 +3,41 @@
 (function () {
     'use strict';
 
-    var content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-
     function RepeaterTestController() {
         var vm = this;
 
-        vm.expandMode = 'single';
+        vm.expandMode = 'none';
         vm.showContextMenu = true;
         vm.showTitle = true;
 
         vm.items = [
             {
-                title: 'Title 1',
-                content: content
+                title: 'Call Robert Hernandez',
+                note: 'Robert recently gave a very generous gift.  We should call him to thank him.',
+                status: 'Completed',
+                statusType: 'success'
             },
             {
-                title: 'Title 2',
-                content: content
+                title: 'Send invitation to Spring Ball',
+                note: 'The Spring Ball is coming up soon.  Let\'s get those invitations out!',
+                status: 'Past due',
+                statusType: 'warning'
             }
         ];
 
         vm.addItem = function () {
             var next = vm.items.length + 1;
             vm.items.push({
-                title: 'Title ' + next,
-                content: content,
-                expanded: true
+                title: 'New reminder ' + next,
+                note: 'This is a new reminder',
+                expanded: true,
+                status: 'Active',
+                statusType: 'info'
             });
+        }
+
+        vm.getStatusCls = function (item) {
+            return 'label-' + item.statusType;
         }
     }
 
