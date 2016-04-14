@@ -17,8 +17,8 @@
                 description: 'Description 2'
             },
             {
-                title: 'Title 3',
-                description: 'Description 3'
+                title: 'LongTitleLongTitleLongTitleLongTitleLongTitleLongTitleLongTitleLongTitleLongTitleLongTitle',
+                description: 'LongDescriptionLongDescriptionLongDescriptionLongDescriptionLongDescriptionLongDescription'
             },
             {
                 title: 'Title 4',
