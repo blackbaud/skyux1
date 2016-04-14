@@ -6,18 +6,16 @@ describe('Autonumeric', function () {
 
     var $compile,
         $scope,
-        $timeout,
-        $document;
+        $timeout;
 
     beforeEach(module('ngMock'));
     beforeEach(module('sky.autonumeric'));
 
     describe('directive', function () {
-        beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _$document_) {
+        beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
             $compile = _$compile_;
             $scope = _$rootScope_.$new();
             $timeout = _$timeout_;
-            $document = _$document_;
         }));
 
 
@@ -107,7 +105,7 @@ describe('Autonumeric', function () {
         //This is a test for IE11
         it('should set selection in the correct location', function () {
             var el = $compile('<input type="text" ng-model="numericValue" bb-autonumeric />')($scope);
-            el.appendTo($document[0].body);
+            el.appendTo(document.body);
 
             $scope.numericValue = 123456.78;
 
@@ -140,7 +138,7 @@ describe('Autonumeric', function () {
             var el = $compile('<div><input class="bb-test-nonnumeric" type="text" ng-model="numericValue"/><input class="bb-test-numeric" type="text" ng-model="numericValue" bb-autonumeric />')($scope),
                 numericEl,
                 nonNumericEl;
-            el.appendTo($document[0].body);
+            el.appendTo(document.body);
 
             numericEl = el.find('.bb-test-numeric');
             nonNumericEl = el.find('.bb-test-nonnumeric');
@@ -255,7 +253,7 @@ describe('Autonumeric', function () {
 
             it('should keep the model in sync with a pasted value that does not meet the requirements', function () {
                 var el = $compile('<input type="text" ng-model="moneyValue" bb-autonumeric="money" bb-autonumeric-settings="moneyOptions" />')($scope);
-                el.appendTo($document[0].body);
+                el.appendTo(document.body);
                 $scope.moneyOptions = {
                     vMin: 0
                 };
@@ -277,7 +275,7 @@ describe('Autonumeric', function () {
                     '</div>',
                     '</bb-tile>'
                 ].join(''))($scope);
-                el.appendTo($document[0].body);
+                el.appendTo(document.body);
                 $scope.moneyOptions = {
                     vMin: 0
                 };
