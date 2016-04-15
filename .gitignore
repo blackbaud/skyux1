@@ -216,7 +216,3 @@ webdrivertest/test/**/*.full.html
 .slimerjs-cache/
 browserstack.env
 browserstack-binary/
-
-js/sky/src/datepicker/datepicker.js
-
-js/sky/templates/datepicker/datepicker.html
