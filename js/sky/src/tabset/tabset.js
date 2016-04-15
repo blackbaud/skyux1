@@ -18,7 +18,7 @@
                     liEl;
 
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
-                    ulEl = el.find('ul');
+                    ulEl = el.children('ul');
                     liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
@@ -68,7 +68,6 @@
         self.tabRemoved = function () {
             $scope.bbTabsetOptions.tabCount--;
         };
-
     }
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
@@ -81,9 +80,18 @@
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
+                function getTabUl() {
+                    var ulEl = el.children('ul.nav.nav-tabs');
+                    if (ulEl.length > 0) {
+                        return ulEl.eq(0);
+                    } else {
+                        return el.find('.bb-tabset-dropdown.nav.nav-tabs ul').eq(0);
+                    }
+                }
 
                 function getBootstrapTabs() {
-                    return el.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)');
+                    var ulEl = getTabUl();
+                    return ulEl.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
                 }
 
                 function getDropdownEl() {
@@ -118,6 +126,8 @@
 
                 }
 
+
+
                 function setupCollapsibleTabs(isCollapsed) {
                     var tabsEl,
                         dropdownContainerEl,
@@ -127,7 +137,7 @@
                     tabsEl = getBootstrapTabs();
                     dropdownButtonsEl = el.find('.bb-tab-button-wrap');
 
-                    ulEl = el.find('ul:not(.bb-tabset-dropdown)');
+                    ulEl = getTabUl();
                     if (isCollapsed) {
                         dropdownContainerEl = el.find('.bb-tabset-dropdown');
 

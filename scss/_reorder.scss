@@ -17,7 +17,8 @@
 .bb-reorder-list-col-content {
   margin-left: $margin;
   margin-right: $margin;
-  flex-grow: 1;
+  flex-basis: 100%;
+  min-width: 0;
 }
 
 .bb-reorder-list-col-top {
