@@ -10,10 +10,9 @@
                  bb-file-drop-link-change="fileAttachmentDemo.fileLinked(link)"
                  >
             </div>
-            <div class="alert alert-danger alert-dismissible" ng-show="fileAttachmentDemo.rejected.length > 0">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="fileAttachmentDemo.rejected.length = 0"><span aria-hidden="true">&times;</span></button>
-                The file <strong>{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}</strong> is invalid.  Files must be an image and less than 500 KB.
-            </div>
+            <bb-alert bb-alert-type="danger" bb-alert-closeable="true" bb-alert-closed="fileAttachmentDemo.alertClosed" ng-if="fileAttachmentDemo.rejected.length > 0">
+              The file <strong>{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}</strong> is invalid.  Files must be less than 5 MB.
+            </bb-alert>
             <div ng-repeat="item in fileAttachmentDemo.allItems" bb-file-item="item" bb-file-item-delete="fileAttachmentDemo.deleteAttachment(item)" style="margin-bottom: 10px">
                 <div class="form-group">
                     <label>Name for this attachment</label>
