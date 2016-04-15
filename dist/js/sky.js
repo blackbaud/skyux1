@@ -48,6 +48,14 @@
 (function () {
     'use strict';
 
+    angular.module('sky.chevron', ['sky.chevron.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module(
         'sky.contextmenu',
         [
@@ -97,6 +105,14 @@
     'use strict';
 
     angular.module('sky.reorder', ['sky.reorder.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.repeater', ['sky.repeater.directive', 'sky.repeater.item.directive']);
 }());
 
 /*global angular */
@@ -301,7 +317,7 @@
                 mDec: 0
             }
         })
-        .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', function ($timeout, bbAutoNumericConfig, bbWindow) {
+        .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', '$document', function ($timeout, bbAutoNumericConfig, bbWindow, $document) {
             return {
                 require: 'ngModel',
                 restrict: 'A',
@@ -360,7 +376,9 @@
                                 $timeout(autonumericChange);
                             } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
                                 $timeout(function () {
-                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                    if ($document[0] && $document[0].activeElement === el[0]) {
+                                        el[0].setSelectionRange(selectionStart, selectionStart);
+                                    }
                                 });
                             }
                         } else if (newValue === null) {
@@ -1327,6 +1345,60 @@
 
             };
         });
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBChevronController(bbResources) {
+        var vm = this;
+
+        function getDirection() {
+            return vm.bbChevronDirection || 'up';
+        }
+
+        vm.getCls = function () {
+            return 'bb-chevron-flip-' + getDirection();
+        };
+
+        vm.getLabel = function () {
+            return bbResources['chevron_' + (getDirection() === 'up' ? 'collapse' : 'expand')];
+        };
+
+        vm.click = function ($event) {
+            $event.stopPropagation();
+
+            vm.bbChevronDirection = (getDirection() === 'up' ? 'down' : 'up');
+        };
+    }
+
+    BBChevronController.$inject = ['bbResources'];
+
+    angular.module('sky.chevron.controller', ['sky.resources'])
+        .controller('BBChevronController', BBChevronController);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbChevron() {
+        return {
+            bindToController: {
+                bbChevronDirection: '=?'
+            },
+            controller: 'BBChevronController',
+            controllerAs: 'bbChevron',
+            scope: {},
+            templateUrl: 'sky/templates/chevron/chevron.directive.html'
+        };
+    }
+
+    angular.module('sky.chevron.directive', ['sky.chevron.controller'])
+        .directive('bbChevron', bbChevron);
 }());
 
 /*global angular */
@@ -2321,6 +2393,14 @@
                         vm.date = angular.copy(vm.pickerDate);
                     }
                 }
+
+                function enterPress($event) {
+                    if ($event.keyCode === 13) {
+                        inputChanged();
+                    }
+                }
+
+                vm.enterPress = enterPress;
 
                 /*  Need to handle input change instead of model change
                     because ngModelOptions updateOn blur does not work
@@ -3508,13 +3588,13 @@
                                 url: scope.bbFileDrop.url
                             }
                         });
-                        
+
                         scope.bbFileDrop.url = null;
                     },
-                    fileChange: function ($files, $event, $rejectedFiles) {
+                    fileChange: function ($files, $event, $invalidFiles) {
                         scope.bbFileDropChange({
                             files: $files,
-                            rejectedFiles: $rejectedFiles
+                            rejectedFiles: $invalidFiles
                         });
                     }
                 };
@@ -3532,7 +3612,7 @@
 
                 dropEl.attr({
                     'ngf-allow-dir': attrs.bbFileDropAllowDir,
-                    'ngf-accept': attrs.bbFileDropAccept,
+                    'ngf-pattern': attrs.bbFileDropAccept,
                     'ngf-multiple': attrs.bbFileDropMultiple || 'true',
                     'ngf-min-size': attrs.bbFileDropMinSize || '0',
                     'ngf-max-size': attrs.bbFileDropMaxSize || '500000'
@@ -7403,6 +7483,352 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
+    function BBRepeaterController($scope) {
+        var items = [],
+            vm = this;
+
+        function expandModeIsMultiple() {
+            return vm.bbRepeaterExpandMode === 'multiple';
+        }
+
+        function expandModeIsSingle() {
+            return vm.bbRepeaterExpandMode === 'single';
+        }
+
+        function expandModeIsNone() {
+            return !expandModeIsMultiple() && !expandModeIsSingle();
+        }
+
+        function updateForExpandMode() {
+            var foundExpanded,
+                isCollapsible = !expandModeIsNone(),
+                isSingle = expandModeIsSingle();
+
+            items.forEach(function (item) {
+                item.isCollapsible = isCollapsible;
+
+                if (isSingle && item.bbRepeaterItemExpanded) {
+                    if (foundExpanded) {
+                        item.bbRepeaterItemExpanded = false;
+                    }
+
+                    foundExpanded = true;
+                }
+            });
+        }
+
+        vm.addItem = function (item) {
+            items.push(item);
+        };
+
+        vm.removeItem = function (item) {
+            var itemIndex = items.indexOf(item);
+
+            /*istanbul ignore else sanity check */
+            if (itemIndex >= 0) {
+                items.splice(itemIndex, 1);
+            }
+        };
+
+        vm.itemExpanded = function (expandedItem) {
+            if (vm.bbRepeaterExpandMode === 'single') {
+                items.forEach(function (item) {
+                    if (item !== expandedItem) {
+                        item.bbRepeaterItemExpanded = false;
+                    }
+                });
+            }
+        };
+
+        $scope.$watch(function () {
+            return vm.bbRepeaterExpandMode;
+        }, updateForExpandMode);
+
+        $scope.$watchCollection(function () {
+            return items;
+        }, function () {
+            updateForExpandMode();
+        });
+    }
+
+    BBRepeaterController.$inject = ['$scope'];
+
+    angular.module('sky.repeater.controller', [])
+        .controller('BBRepeaterController', BBRepeaterController);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbRepeater() {
+        function link() {
+
+        }
+
+        return {
+            scope: {},
+            bindToController: {
+                bbRepeaterExpandMode: '@?'
+            },
+            controller: 'BBRepeaterController',
+            controllerAs: 'bbRepeater',
+            link: link,
+            templateUrl: 'sky/templates/repeater/repeater.directive.html',
+            transclude: true
+        };
+    }
+
+    angular.module('sky.repeater.directive', ['sky.repeater.controller'])
+        .directive('bbRepeater', bbRepeater);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    var components = [{
+        name: 'ContextMenu',
+        cls: 'context-menu'
+    }, {
+        name: 'Title',
+        cls: 'title'
+    }],
+    repeaterItemModule;
+
+    function makeComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbRepeaterItem = ctrls[1];
+
+                vm.el = el;
+
+                bbRepeaterItem['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbRepeaterItem' + name, '^bbRepeaterItem'],
+                controller: controllerName,
+                controllerAs: 'bbRepeaterItem' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBRepeaterItem' + name + 'Controller';
+
+        repeaterItemModule
+            .controller(controllerName, Controller)
+            .directive('bbRepeaterItem' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function bbRepeaterItem($timeout) {
+        function BBRepeaterItemController() {
+            var vm = this;
+
+            function addComponentSetter(component) {
+                var name = component.name;
+
+                vm['set' + name] = function (ctrl) {
+                    var propName = getCtrlPropName(component);
+
+                    vm[propName] = ctrl;
+
+                    ctrl.onDestroy = function () {
+                        vm[propName] = null;
+                    };
+                };
+            }
+
+            function allowCollapse() {
+                return vm.isCollapsible && vm.titleCtrl;
+            }
+
+            vm.getCls = function () {
+                var cls = [];
+
+                if (allowCollapse()) {
+                    cls.push('bb-repeater-item-collapsible');
+                }
+
+                if (vm.contextMenuCtrl) {
+                    cls.push('bb-repeater-item-with-context-menu');
+                }
+
+                return cls;
+            };
+
+            vm.allowCollapse = allowCollapse;
+
+            components.forEach(addComponentSetter);
+        }
+
+        function link(scope, el, attrs, ctrls) {
+            var animateEnabled,
+                bbRepeater = ctrls[1],
+                vm = ctrls[0];
+
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-repeater-item-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            function getContentEl() {
+                return el.find('.bb-repeater-item-content');
+            }
+
+            function updateForExpandedState() {
+                var animate = animateEnabled,
+                    contentEl = getContentEl(),
+                    method;
+
+                if (!angular.isDefined(vm.bbRepeaterItemExpanded)) {
+                    vm.bbRepeaterItemExpanded = false;
+                    animate = false;
+                }
+
+                if (vm.bbRepeaterItemExpanded || !vm.allowCollapse()) {
+                    method = 'slideDown';
+                } else {
+                    method = 'slideUp';
+                }
+
+                contentEl[method]({
+                    duration: animate ? 250 : 0
+                });
+
+                if (vm.bbRepeaterItemExpanded) {
+                    vm.bbRepeater.itemExpanded(vm);
+                }
+            }
+
+            function syncChevronWithExpanded() {
+                vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
+            }
+
+            vm.bbRepeater = bbRepeater;
+            syncChevronWithExpanded();
+
+            vm.headerClick = function () {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                }
+            };
+
+            components.forEach(watchForComponent);
+
+            scope.$watch(function () {
+                return vm.isCollapsible;
+            }, function (newValue) {
+                if (newValue === false) {
+                    vm.bbRepeaterItemExpanded = true;
+                }
+            });
+
+            scope.$watch(
+                function () {
+                    return vm.bbRepeaterItemExpanded;
+                },
+                function () {
+                    syncChevronWithExpanded();
+                    updateForExpandedState();
+                }
+            );
+
+            scope.$watch(
+                function () {
+                    return vm.titleCtrl;
+                },
+                updateForExpandedState
+            );
+
+            scope.$watch(function () {
+                return vm.chevronDirection;
+            }, function () {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = vm.chevronDirection !== 'down';
+                }
+            });
+
+            bbRepeater.addItem(vm);
+
+            scope.$on('$destroy', function () {
+                bbRepeater.removeItem(vm);
+                vm = null;
+            });
+
+            $timeout(function () {
+                // This will enable expand/collapse animation only after the initial load.
+                animateEnabled = true;
+            });
+        }
+
+        return {
+            bindToController: {
+                bbRepeaterItemExpanded: '=?'
+            },
+            controller: BBRepeaterItemController,
+            controllerAs: 'bbRepeaterItem',
+            link: link,
+            require: ['bbRepeaterItem', '^bbRepeater'],
+            scope: {},
+            templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
+            transclude: true
+        };
+    }
+
+    bbRepeaterItem.$inject = ['$timeout'];
+
+    repeaterItemModule = angular.module(
+        'sky.repeater.item.directive',
+        [
+            'sky.chevron',
+            'sky.resources'
+        ]
+    );
+
+    repeaterItemModule.directive('bbRepeaterItem', bbRepeaterItem);
+
+    components.forEach(makeComponent);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     var serviceModules = [];
     
     function bbResoucesFilter(bbResources) {
@@ -10379,6 +10805,7 @@ angular.module('sky.palette.config', [])
         'sky.card',
         'sky.check',
         'sky.checklist',
+        'sky.chevron',
         'sky.contextmenu',
         'sky.data',
         'sky.datepicker',
@@ -10400,6 +10827,7 @@ angular.module('sky.palette.config', [])
         'sky.pagination',
         'sky.popover',
         'sky.reorder',
+        'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',
         'sky.selectfield',
@@ -10444,7 +10872,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -10603,6 +11031,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/chevron/chevron.directive.html',
+        '<button type="button" class="bb-chevron" ng-class="bbChevron.getCls()" ng-click="bbChevron.click($event)" aria-label="{{bbChevron.getLabel()}}">\n' +
+        '  <i class="bb-chevron-part bb-chevron-left"></i>\n' +
+        '  <i class="bb-chevron-part bb-chevron-right"></i>\n' +
+        '</button>\n' +
+        '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
         '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
@@ -10666,6 +11100,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '                ng-model="bbDatepicker.pickerDate"\n' +
         '                ng-model-options="{ allowInvalid: true }"\n' +
+        '                ng-keydown="bbDatepicker.enterPress($event)"\n' +
         '\n' +
         '                is-open="bbDatepicker.pickerOpened"\n' +
         '                datepicker-options="bbDatepicker.pickerOptions"\n' +
@@ -10786,7 +11221,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '             ngf-drop\n' +
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
-        '             ngf-change="bbFileDrop.fileChange($files, $event, $rejectedFiles)"\n' +
+        '             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"\n' +
         '             >\n' +
         '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
         '                <div class="bb-file-drop-contents-not-over">\n' +
@@ -10816,7 +11251,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           class="form-control"\n' +
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
-        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"\n' +
+        '                           ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"\n' +
         '                           />\n' +
         '                </div>\n' +
         '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
@@ -11152,6 +11587,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         ' </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/repeater/repeater.directive.html',
+        '<div class="bb-repeater-component bb-repeater">\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/repeater/repeater.item.directive.html',
+        '<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">\n' +
+        '  <div class="bb-repeater-item-left">\n' +
+        '    <div class="bb-repeater-item-context-menu" ng-if="bbRepeaterItem.contextMenuCtrl"></div>\n' +
+        '  </div>\n' +
+        '  <div class="bb-repeater-item-right">\n' +
+        '    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick()">\n' +
+        '      <h1 class="bb-repeater-item-title" ng-if="bbRepeaterItem.titleCtrl"></h1>\n' +
+        '      <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>\n' +
+        '    </header>\n' +
+        '    <div class="bb-repeater-item-content">\n' +
+        '      <ng-transclude></ng-transclude>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</section>\n' +
+        '');
     $templateCache.put('sky/templates/selectfield/selectfield.directive.html',
         '<ng-include src="bbSelectField.getFieldInclude()"></ng-include>\n' +
         '<div ng-transclude></div>\n' +
@@ -11237,7 +11693,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<li class="bb-tab-button"></li>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/container.html',
-        '<div></div>\n' +
+        '<div class="bb-text-expand-container"></div>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/ellipsis.html',
         '<span class="bb-text-expand-ellipsis">...</span>\n' +
