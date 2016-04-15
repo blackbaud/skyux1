@@ -2376,34 +2376,42 @@
 
                     $scope.locals.loaded = true;
 
+                    function inputChange() {
+                        var inputNgModel;
+
+                        //allows validation to kick off for invalid dates
+                        if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
+                            dateChangeInternal = true;
+                            $scope.date = inputEl.val();
+                        } else if ($scope.locals.required && hasRequiredError()) {
+                            dateChangeInternal = true;
+                            $scope.date = '';
+                            inputNgModel = $scope.getInputNgModel();
+                            inputNgModel.invalidFormatMessage = null;
+                            inputNgModel.$setValidity('dateFormat', true);
+                        } else if ($scope.date !== $scope.locals.date) {
+                            dateChangeInternal = true;
+                            $scope.date = $scope.locals.date;
+                        }
+                    }
+
+                    function enterPress($event) {
+                        if ($event.keyCode === 13) {
+                            inputChange();
+                        }
+                    }
+
+                    $scope.locals.enterPress = enterPress;
+
                     //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
                     $timeout(function () {
                         inputEl = el.find('input');
                         inputEl.on('change blur', function () {
                             $timeout(function () {
-                                var inputNgModel;
-
-                                //allows validation to kick off for invalid dates
-                                if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                                    dateChangeInternal = true;
-                                    $scope.date = inputEl.val();
-
-
-                                } else if ($scope.locals.required && hasRequiredError()) {
-                                    dateChangeInternal = true;
-                                    $scope.date = '';
-                                    inputNgModel = $scope.getInputNgModel();
-                                    inputNgModel.invalidFormatMessage = null;
-                                    inputNgModel.$setValidity('dateFormat', true);
-                                } else if ($scope.date !== $scope.locals.date) {
-
-                                    dateChangeInternal = true;
-                                    $scope.date = $scope.locals.date;
-
-                                }
-
+                                inputChange();
                             });
                         });
+
                     });
 
                 }
@@ -11086,7 +11094,30 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/datepicker/datepicker.html',
         '<div>\n' +
         '    <div ng-if="locals.loaded" class="input-group bb-datefield">\n' +
-        '        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" uib-datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" max-date="maxDate" min-date="minDate" ng-required="locals.required" bb-min-date bb-max-date />\n' +
+        '        <input\n' +
+        '          name="{{locals.inputName}}"\n' +
+        '          type="text"\n' +
+        '\n' +
+        '          ng-keydown="locals.enterPress($event)"\n' +
+        '\n' +
+        '          class="form-control"\n' +
+        '          ng-model="locals.date"\n' +
+        '          is-open="locals.opened"\n' +
+        '          datepicker-options="locals.dateOptions"\n' +
+        '          uib-datepicker-popup="{{format}}"\n' +
+        '          show-button-bar="locals.showButtonBar"\n' +
+        '          current-text="{{resources.datepicker_today}}"\n' +
+        '          clear-text="{{resources.datepicker_clear}}"\n' +
+        '          close-text="{{resources.datepicker_close}}"\n' +
+        '          datepicker-append-to-body="{{locals.appendToBody}}"\n' +
+        '          close-on-date-selection="{{locals.closeOnSelection}}"\n' +
+        '          bb-datepicker-custom-validate="{{locals.hasCustomValidation}}"\n' +
+        '          placeholder="{{placeholderText}}"\n' +
+        '          max-date="maxDate"\n' +
+        '          min-date="minDate"\n' +
+        '          ng-required="locals.required"\n' +
+        '          bb-min-date\n' +
+        '          bb-max-date />\n' +
         '        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{\'bb-datefield-open\': locals.opened}">\n' +
         '            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
