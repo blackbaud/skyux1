@@ -82,6 +82,7 @@
             sortableOptions = {
                 placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
                 axis: 'y', // constrain movement to the Y axis,
+                handle: '.bb-reorder-list-col-icon',
                 start: function (e, ui) {
                     scope.$apply(function () {
                         vm.sorting = true;
