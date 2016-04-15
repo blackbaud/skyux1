@@ -224,6 +224,44 @@ describe('Datepicker directive', function () {
 
     });
 
+    it('handles date change on enter', function () {
+        var el,
+            inputEl,
+            event;
+
+        el = setupDatepicker(datepickerHtml, '5/17/1985');
+
+        inputEl = el.find('input');
+
+        inputEl.val('debug').trigger('change');
+
+        //non enter key
+        event = $.Event('keydown');
+        event.which = 15;
+        event.keyCode = 15;
+        inputEl.trigger(event);
+
+        expect(angular.isDefined($scope.testdate1)).toBe(true);
+
+        expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+        expect(angular.isDefined($scope.testform.testDate1.invalidFormatMessage)).toBe(false);
+        expect($scope.testdate1).toEqual(new Date('05/17/1985'));
+
+        //enter key
+        event = $.Event('keydown');
+        event.which = 13;
+        event.keyCode = 13;
+        inputEl.trigger(event);
+
+        expect(angular.isDefined($scope.testdate1)).toBe(true);
+
+        expect($scope.testform.testDate1.$error.dateFormat).toBe(true);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
+        expect($scope.testdate1).toEqual('debug');
+
+        $timeout.flush();
+    });
+
     it('handles date change to invalid date from model', function () {
         var el,
             inputEl;

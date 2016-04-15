@@ -259,6 +259,14 @@
                     }
                 }
 
+                function enterPress($event) {
+                    if ($event.keyCode === 13) {
+                        inputChanged();
+                    }
+                }
+
+                vm.enterPress = enterPress;
+
                 /*  Need to handle input change instead of model change
                     because ngModelOptions updateOn blur does not work
                     correctly with the uib-datepicker */

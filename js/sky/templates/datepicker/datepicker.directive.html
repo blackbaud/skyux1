@@ -8,6 +8,7 @@
 
                 ng-model="bbDatepicker.pickerDate"
                 ng-model-options="{ allowInvalid: true }"
+                ng-keydown="bbDatepicker.enterPress($event)"
 
                 is-open="bbDatepicker.pickerOpened"
                 datepicker-options="bbDatepicker.pickerOptions"
