@@ -3370,13 +3370,13 @@
                                 url: scope.bbFileDrop.url
                             }
                         });
-                        
+
                         scope.bbFileDrop.url = null;
                     },
-                    fileChange: function ($files, $event, $rejectedFiles) {
+                    fileChange: function ($files, $event, $invalidFiles) {
                         scope.bbFileDropChange({
                             files: $files,
-                            rejectedFiles: $rejectedFiles
+                            rejectedFiles: $invalidFiles
                         });
                     }
                 };
@@ -3394,7 +3394,7 @@
 
                 dropEl.attr({
                     'ngf-allow-dir': attrs.bbFileDropAllowDir,
-                    'ngf-accept': attrs.bbFileDropAccept,
+                    'ngf-pattern': attrs.bbFileDropAccept,
                     'ngf-multiple': attrs.bbFileDropMultiple || 'true',
                     'ngf-min-size': attrs.bbFileDropMinSize || '0',
                     'ngf-max-size': attrs.bbFileDropMaxSize || '500000'
@@ -10764,7 +10764,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '             ngf-drop\n' +
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
-        '             ngf-change="bbFileDrop.fileChange($files, $event, $rejectedFiles)"\n' +
+        '             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"\n' +
         '             >\n' +
         '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
         '                <div class="bb-file-drop-contents-not-over">\n' +
@@ -10794,7 +10794,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           class="form-control"\n' +
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
-        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"\n' +
+        '                           ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"\n' +
         '                           />\n' +
         '                </div>\n' +
         '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
