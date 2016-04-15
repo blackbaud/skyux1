@@ -241,10 +241,11 @@ describe('Datepicker directive', function () {
         event.keyCode = 15;
         inputEl.trigger(event);
 
+
         expect(angular.isDefined($scope.testdate1)).toBe(true);
 
         expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
-        expect(angular.isDefined($scope.testform.testDate1.invalidFormatMessage)).toBe(false);
+        expect($scope.testform.testDate1.invalidFormatMessage).toBe(null);
         expect($scope.testdate1).toEqual(new Date('05/17/1985'));
 
         //enter key
