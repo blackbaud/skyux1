@@ -102037,7 +102037,7 @@ global.easyXDM = easyXDM;
                 mDec: 0
             }
         })
-        .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', function ($timeout, bbAutoNumericConfig, bbWindow) {
+        .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', '$document', function ($timeout, bbAutoNumericConfig, bbWindow, $document) {
             return {
                 require: 'ngModel',
                 restrict: 'A',
@@ -102096,7 +102096,9 @@ global.easyXDM = easyXDM;
                                 $timeout(autonumericChange);
                             } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
                                 $timeout(function () {
-                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                    if ($document[0] && $document[0].activeElement === el[0]) {
+                                        el[0].setSelectionRange(selectionStart, selectionStart);
+                                    }
                                 });
                             }
                         } else if (newValue === null) {
