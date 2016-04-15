@@ -5,7 +5,7 @@
              ngf-drop
              ngf-keep="false"
              ngf-drag-over-class="{accept: 'bb-file-drop-accept', reject: 'bb-file-drop-reject'}"
-             ngf-change="bbFileDrop.fileChange($files, $event, $rejectedFiles)"
+             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"
              >
             <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">
                 <div class="bb-file-drop-contents-not-over">
@@ -35,7 +35,7 @@
                            class="form-control"
                            placeholder="{{'file_upload_link_placeholder' | bbResources}}"
                            ng-model="bbFileDrop.url"
-                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"
+                           ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"
                            />
                 </div>
                 <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">
