@@ -47,6 +47,14 @@
         "_description": "Text in a checklist when no items are shown based on the current filter.",
         "message": "No items found"
     },
+    "chevron_collapse": {
+        "_description": "Screen reader text for when clicking the chevron would collapse the corresponding section",
+        "message": "Collapse"
+    },
+    "chevron_expand": {
+        "_description": "Screen reader text for when clicking the chevron would expand the corresponding section",
+        "message": "Expand"
+    },
     "context_menu_default_label": {
         "_description": "The label on the context menu button used for screen readers when the consumer has not specified a label",
         "message": "Context menu"

@@ -18,6 +18,7 @@ describe('Autonumeric', function () {
             $timeout = _$timeout_;
         }));
 
+
         afterEach(function () {
             $scope.$destroy();
         });
@@ -117,6 +118,8 @@ describe('Autonumeric', function () {
 
 
             if (angular.isFunction(el[0].setSelectionRange)) {
+                el.focus();
+
                 $timeout.flush();
                 //setSelectionRange does not impact firefox sets to 0
                 if (el[0].selectionStart !== 0) {
@@ -127,6 +130,36 @@ describe('Autonumeric', function () {
             }
 
             expect(el.val()).toBe('3.00');
+            el.remove();
+
+        });
+
+        it('should only set selection if element is focused', function () {
+            var el = $compile('<div><input class="bb-test-nonnumeric" type="text" ng-model="numericValue"/><input class="bb-test-numeric" type="text" ng-model="numericValue" bb-autonumeric />')($scope),
+                numericEl,
+                nonNumericEl;
+            el.appendTo(document.body);
+
+            numericEl = el.find('.bb-test-numeric');
+            nonNumericEl = el.find('.bb-test-nonnumeric');
+
+            $scope.numericValue = 123456.78;
+
+            $scope.$digest();
+
+            $scope.numericValue = 3;
+            numericEl[0].selectionStart = 1;
+
+            $scope.$digest();
+
+            if (angular.isFunction(numericEl[0].setSelectionRange)) {
+                nonNumericEl.focus();
+                spyOn(numericEl[0], 'setSelectionRange');
+                $timeout.flush();
+                expect(numericEl[0].setSelectionRange).not.toHaveBeenCalled();
+            }
+
+            expect(numericEl.val()).toBe('3.00');
             el.remove();
 
         });

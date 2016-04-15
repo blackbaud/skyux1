@@ -25,7 +25,8 @@ describe('textexpand', function () {
         result = browser.url('/textexpand/fixtures/test.full.html')
             .click('#screenshot-text-expand .bb-text-expand-see-more')
             .click('#screenshot-text-expand-line-break .bb-text-expand-see-more')
-            .click('#screenshot-text-expand-repeater .bb-text-expand-see-more');
+            .click('#screenshot-text-expand-repeater .bb-text-expand-see-more')
+            .click('#screenshot-text-expand-no-word-break .bb-text-expand-see-more');
 
         common.compareScreenshot({
             browserResult: result,
