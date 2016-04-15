@@ -11220,7 +11220,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<li class="bb-tab-button"></li>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/container.html',
-        '<div></div>\n' +
+        '<div class="bb-text-expand-container"></div>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/ellipsis.html',
         '<span class="bb-text-expand-ellipsis">...</span>\n' +
