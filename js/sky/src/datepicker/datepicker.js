@@ -311,7 +311,13 @@
                         }
                     }
 
-                    $scope.locals.inputChange = inputChange;
+                    function enterPress($event) {
+                        if ($event.keyCode === 13) {
+                            inputChange();
+                        }
+                    }
+
+                    $scope.locals.enterPress = enterPress;
 
                     //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
                     $timeout(function () {

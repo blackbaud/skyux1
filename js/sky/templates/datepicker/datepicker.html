@@ -4,7 +4,7 @@
           name="{{locals.inputName}}"
           type="text"
 
-          ng-keydown="$event.keyCode === 13 && locals.inputChange()"
+          ng-keydown="locals.enterPress($event)"
 
           class="form-control"
           ng-model="locals.date"
