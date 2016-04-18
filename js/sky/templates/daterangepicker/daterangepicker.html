@@ -8,13 +8,25 @@
     </div>
     <div class="form-group bb-date-range-picker-form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">
       <label class="bb-date-range-picker-label" ng-if="!bbDateRangePickerCtrl.noLabels">{{::bbDateRangePickerCtrl.resources.date_range_picker_from_date}}</label>
-      <bb-datepicker ng-model="bbDateRangePickerCtrl.fromDate" bb-max-date="bbDateRangePickerCtrl.maxDate" bb-datepicker-name="fromDate" datepicker-append-to-body="true" placeholder="bbDateRangePickerCtrl.fromPlaceholder"></bb-datepicker>
+      <bb-datepicker
+        ng-model="bbDateRangePickerCtrl.fromDate"
+        bb-datepicker-max="bbDateRangePickerCtrl.maxDate"
+        bb-datepicker-name="fromDate"
+        bb-datepicker-append-to-body="true"
+        bb-datepicker-placeholder="bbDateRangePickerCtrl.fromPlaceholder">
+      </bb-datepicker>
       <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.fromDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>
       <label class="bb-date-range-picker-date-max-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.fromDate.$error.maxDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_max_date_error}}</label>
     </div>
     <div class="form-group bb-date-range-picker-form-group" ng-if="bbDateRangePickerCtrl.specificRangeIsVisible">
       <label class="bb-date-range-picker-label" ng-if="!bbDateRangePickerCtrl.noLabels">{{::bbDateRangePickerCtrl.resources.date_range_picker_to_date}}</label>
-      <bb-datepicker ng-model="bbDateRangePickerCtrl.toDate" bb-min-date="bbDateRangePickerCtrl.minDate" bb-datepicker-name="toDate" datepicker-append-to-body="true" placeholder="bbDateRangePickerCtrl.toPlaceholder"></bb-datepicker>
+      <bb-datepicker
+        ng-model="bbDateRangePickerCtrl.toDate"
+        bb-datepicker-min="bbDateRangePickerCtrl.minDate"
+        bb-datepicker-name="toDate"
+        bb-datepicker-append-to-body="true"
+        bb-datepicker-placeholder="bbDateRangePickerCtrl.toPlaceholder">
+      </bb-datepicker>
       <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>
       <label class="bb-date-range-picker-date-min-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.minDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_min_date_error}}</label>
     </div>
