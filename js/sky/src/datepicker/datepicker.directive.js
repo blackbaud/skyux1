@@ -156,16 +156,6 @@
                 vm.bbMinDate = vm.minDate;
             }
 
-            if (bbDatepickerConfig.maxDate) {
-                $log.warn('bbDatepickerConfig maxDate property is deprecated, use bbDatepickerConfig.bbMaxDate instead');
-                bbDatepickerConfig.bbMaxDate = bbDatepickerConfig.maxDate;
-            }
-
-            if (bbDatepickerConfig.minDate) {
-                $log.warn('bbDatepickerConfig minDate property is deprecated, use bbDatepickerConfig.bbMinDate instead');
-                bbDatepickerConfig.bbMinDate = bbDatepickerConfig.minDate;
-            }
-
             vm.showButtonBar = false;
             vm.appendToBody = false;
             vm.pickerDate = '';
@@ -183,14 +173,14 @@
             vm.inputName = attr.bbDatepickerName;
             vm.altInputFormats = angular.copy(bbDatepickerConfig.bbAltInputFormats);
 
-            if (!vm.bbMaxDate && bbDatepickerConfig.bbMaxDate) {
-                vm.bbMaxDate = angular.copy(bbDatepickerConfig.bbMaxDate);
+            if (!vm.bbMaxDate && bbDatepickerConfig.maxDate) {
+                vm.bbMaxDate = angular.copy(bbDatepickerConfig.maxDate);
                 vm.pickerOptions.maxDate = vm.bbMaxDate;
                 vm.maxDate = vm.bbMaxDate;
             }
 
-            if (!vm.bbMinDate && bbDatepickerConfig.bbMinDate) {
-                vm.bbMinDate = angular.copy(bbDatepickerConfig.bbMinDate);
+            if (!vm.bbMinDate && bbDatepickerConfig.minDate) {
+                vm.bbMinDate = angular.copy(bbDatepickerConfig.minDate);
                 vm.pickerOptions.minDate = vm.bbMinDate;
                 vm.minDate = vm.bbMinDate;
             }
@@ -234,8 +224,10 @@
 
             vm.required = angular.isDefined(attr.required);
 
-            if (vm.placeholderText === null || angular.isUndefined(vm.placeholderText)) {
-                vm.placeholderText = vm.format.toLowerCase();
+            vm.bbPlaceholder = vm.placeholderText;
+
+            if (vm.bbPlaceholder === null || angular.isUndefined(vm.bbPlaceholder)) {
+                vm.bbPlaceholder = vm.format.toLowerCase();
             }
 
             $timeout(function () {
@@ -371,12 +363,14 @@
                 bbDateOptions: '=?',
                 customValidation: '=?bbCustomValidation',
                 format: '=?bbDateFormat',
-                bbMaxDate: '=?bbMaxDate',
-                bbMinDate: '=?bbMinDate',
+                bbMaxDate: '=?bbDatepickerMax',
+                bbMinDate: '=?bbDatepickerMin',
+                bbAltInputFormats: '=?',
+                bbPlaceholder: '=?bbDatepickerPlaceholder',
                 maxDate: '=?maxDate', //deprecated
                 minDate: '=?minDate', //deprecated
-                placeholderText: '=?placeholder',
-                bbAltInputFormats: '=?'
+                placeholderText: '=?placeholder' //deprecated
+
             },
             require: ['ngModel', 'bbDatepicker'],
             scope: {},

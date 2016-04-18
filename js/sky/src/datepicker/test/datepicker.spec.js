@@ -786,6 +786,25 @@ describe('Datepicker directive', function () {
         expect(inputEl.attr('placeholder')).toBe('All about dat money');
     });
 
+    it('adds placeholder text with bbDatepicker prefix when specified', function () {
+        var el,
+            inputEl,
+            placeholderTextHtml =
+            '<div>' +
+            '<form name="testform">' +
+            '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-datepicker-placeholder="myPlaceholder"></bb-datepicker>' +
+            '</form>' +
+            '</div>';
+
+        $scope.myPlaceholder = 'All about dat money';
+
+        el = setupDatepicker(placeholderTextHtml, '5/18/1992');
+
+        inputEl = el.find('input');
+
+        expect(inputEl.attr('placeholder')).toBe('All about dat money');
+    });
+
     it('can have custom bootstrap datepicker options', function () {
         var el,
             inputEl,
@@ -1295,8 +1314,6 @@ describe('Datepicker directive', function () {
     describe('min and max date using bb prefix', function () {
 
         afterEach(function () {
-            dateConfig.bbMinDate = undefined;
-            dateConfig.bbMaxDate = undefined;
 
             dateConfig.minDate = undefined;
             dateConfig.maxDate = undefined;
@@ -1327,8 +1344,8 @@ describe('Datepicker directive', function () {
                 '</form>' +
                 '</div>';
 
-            dateConfig.bbMinDate = new Date('5/15/2015');
-            dateConfig.bbMaxDate = new Date('5/18/2015');
+            dateConfig.minDate = new Date('5/15/2015');
+            dateConfig.maxDate = new Date('5/18/2015');
 
 
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
@@ -1346,8 +1363,8 @@ describe('Datepicker directive', function () {
                 '</form>' +
                 '</div>';
 
-            dateConfig.bbMinDate = '5/15/2015';
-            dateConfig.bbMaxDate = '5/18/2015';
+            dateConfig.minDate = '5/15/2015';
+            dateConfig.maxDate = '5/18/2015';
 
 
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
@@ -1380,8 +1397,8 @@ describe('Datepicker directive', function () {
 
             $scope.maxDate = '';
 
-            dateConfig.bbMinDate = new Date('5/15/2015');
-            dateConfig.bbMaxDate = new Date('5/18/2015');
+            dateConfig.minDate = new Date('5/15/2015');
+            dateConfig.maxDate = new Date('5/18/2015');
 
             el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
 
@@ -1419,9 +1436,6 @@ describe('Datepicker directive', function () {
         afterEach(function () {
             dateConfig.minDate = undefined;
             dateConfig.maxDate = undefined;
-
-            dateConfig.bbMinDate = undefined;
-            dateConfig.bbMaxDate = undefined;
         });
 
         it('can set a min and max date from the directive', function () {

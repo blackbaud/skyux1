@@ -6,10 +6,8 @@
         currentCultureDateFormatString: 'MM/dd/yyyy',
         showWeeks: false,
         startingDay: 0,
-        bbMinDate: '',
-        bbMaxDate: '',
-        minDate: '', //deprecated
-        maxDate: '', //deprecated
+        minDate: '',
+        maxDate: '',
         bbAltInputFormats: []
     };
 
