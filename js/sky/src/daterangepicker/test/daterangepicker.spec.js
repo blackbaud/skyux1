@@ -227,6 +227,7 @@ describe('Date range picker', function () {
 
             setDatepickerInput(datepickerInputEl.eq(1), '12/12/2000', $scope);
             expect($scope.toDate).toEqual(new Date('12/12/2000'));
+            expect($scope.isValid).toBe(true);
 
             //verify validation of dateFormat, min, and max date
             setDatepickerInput(datepickerInputEl.eq(0), 'a', $scope);
@@ -250,6 +251,9 @@ describe('Date range picker', function () {
             setDatepickerInput(datepickerInputEl.eq(1), '12/12/2003', $scope);
 
             expect($scope.isValid).toBe(true);
+            expect(dateFormatErrorEl.eq(0)).not.toBeVisible();
+            expect(maxDateErrorEl.eq(0)).not.toBeVisible();
+
 
             setDatepickerInput(datepickerInputEl.eq(1), '12/12/2000', $scope);
 

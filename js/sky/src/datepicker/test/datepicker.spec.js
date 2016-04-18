@@ -1292,7 +1292,138 @@ describe('Datepicker directive', function () {
         openCalendar(el);
     }
 
+    describe('min and max date using bb prefix', function () {
+
+        afterEach(function () {
+            dateConfig.bbMinDate = undefined;
+            dateConfig.bbMaxDate = undefined;
+
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
+        });
+
+        it('can set a min and max date from the directive', function () {
+            var el,
+                minMaxDatepickerHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-min-date="myMinDate" bb-max-date="myMaxDate"></bb-datepicker>' +
+                '</form>' +
+                '</div>';
+
+            $scope.myMinDate = new Date('5/15/2015');
+
+            $scope.myMaxDate = new Date('5/18/2015');
+
+            el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
+
+            runMinAndMaxDateFullTest(el, '5/3/2015', '5/19/2015', '5/16/2015', 3, 19, 16);
+        });
+
+        it('can set a min and max date from the bbDatepickerConfig if no min and max date are specified', function () {
+            var el,
+                minMaxDatepickerHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+                '</div>';
+
+            dateConfig.bbMinDate = new Date('5/15/2015');
+            dateConfig.bbMaxDate = new Date('5/18/2015');
+
+
+            el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
+
+            runMinAndMaxDateFullTest(el, '5/3/2015', '5/19/2015', '5/16/2015', 3, 19, 16);
+
+        });
+
+        it('only does min and max date validation if they are Javascript Date objects', function () {
+            var el,
+                inputEl,
+                minMaxDatepickerHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1"></bb-datepicker>' +
+                '</form>' +
+                '</div>';
+
+            dateConfig.bbMinDate = '5/15/2015';
+            dateConfig.bbMaxDate = '5/18/2015';
+
+
+            el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
+
+            inputEl = el.find('input');
+
+            setInput(inputEl, '5/3/2015');
+
+            expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+            expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(false);
+            expect(angular.isDefined($scope.testform.testDate1.$error.minDate)).toBe(false);
+
+            setInput(inputEl, '5/19/2015');
+
+            expect(angular.isDefined($scope.testform.testDate1.$error.dateFormat)).toBe(false);
+            expect(angular.isDefined($scope.testform.testDate1.$error.minDate)).toBe(false);
+            expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(false);
+
+        });
+
+        it('can have the min and max date changed after initialization', function () {
+            var el,
+                minMaxDatepickerHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                '<bb-datepicker debug bb-datepicker-name="testDate1" ng-model="testdate1" bb-min-date="minDate" bb-max-date="maxDate"></bb-datepicker>' +
+                '</form>' +
+                '</div>';
+
+            $scope.minDate = '';
+
+            $scope.maxDate = '';
+
+            dateConfig.bbMinDate = new Date('5/15/2015');
+            dateConfig.bbMaxDate = new Date('5/18/2015');
+
+            el = setupDatepicker(minMaxDatepickerHtml, '5/17/2015');
+
+            runMinAndMaxDateFullTest(el, '5/3/2015', '5/19/2015', '5/16/2015', 3, 19, 16);
+
+            $scope.minDate = new Date('5/20/2015');
+
+            $scope.maxDate = new Date('5/25/2015');
+            $scope.testdate1 = '5/22/2015';
+            $scope.$digest();
+
+            runMinAndMaxDateFullTest(el, '5/19/2015', '5/26/2015', '5/23/2015', 19, 26, 23);
+
+        });
+
+        it('does max date validation without a min date', function () {
+            var el,
+                inputEl,
+                maxDatepickerHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-max-date="maxDate"></bb-datepicker>' +
+                '</form>' +
+                '</div>';
+
+            $scope.maxDate = new Date('5/25/2015');
+            el = setupDatepicker(maxDatepickerHtml, '5/17/2015');
+            inputEl = el.find('input');
+            setInput(inputEl, '5/27/2015');
+            expect(angular.isDefined($scope.testform.testDate1.$error.maxDate)).toBe(true);
+        });
+    });
+
     describe('min and max date', function () {
+
+        afterEach(function () {
+            dateConfig.minDate = undefined;
+            dateConfig.maxDate = undefined;
+
+            dateConfig.bbMinDate = undefined;
+            dateConfig.bbMaxDate = undefined;
+        });
+
         it('can set a min and max date from the directive', function () {
             var el,
                 minMaxDatepickerHtml = '<div>' +
@@ -1367,7 +1498,7 @@ describe('Datepicker directive', function () {
             var el,
                 minMaxDatepickerHtml = '<div>' +
                 '<form name="testform" novalidate>' +
-                '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" min-date="minDate" max-date="maxDate"></bb-datepicker>' +
+                '<bb-datepicker debug bb-datepicker-name="testDate1" ng-model="testdate1" min-date="minDate" max-date="maxDate"></bb-datepicker>' +
                 '</form>' +
                 '</div>';
 
@@ -1389,6 +1520,7 @@ describe('Datepicker directive', function () {
             $scope.$digest();
 
             runMinAndMaxDateFullTest(el, '5/19/2015', '5/26/2015', '5/23/2015', 19, 26, 23);
+
             dateConfig.minDate = undefined;
             dateConfig.maxDate = undefined;
         });
