@@ -64,8 +64,8 @@
         "message": "Back to top"
     },
     "grid_column_picker_all_categories": {
-        "_description": "Button text for category filters used to indicate that all columns should be shown in the column picker",
-        "message": "All"
+        "_description": "Text for category filters used to indicate that all columns should be shown in the column picker",
+        "message": "All categories"
     },
     "grid_column_picker_description_header": {
         "_description": "In the column picker, the header for the column showing the description of the columns to include in the grid.",

@@ -110,11 +110,6 @@
             }
         };
 
-        vm.filterByCategory = function (selectedCategory) {
-            vm.selectedCategory = selectedCategory;
-            invokeFilter();
-        };
-
         vm.isSingleSelect = function () {
             return vm.bbChecklistSelectStyle === 'single';
         };
@@ -158,11 +153,29 @@
             }
         });
 
+        vm.allCategories = 'bbChecklistAllCategories';
+        vm.selectedOption = vm.allCategories;
+
+        $scope.$watch(function () {
+            return vm.selectedOption;
+        }, function (newValue, oldValue) {
+            if (newValue === vm.allCategories) {
+                vm.selectedCategory = null;
+            } else {
+                vm.selectedCategory = newValue;
+            }
+            if (newValue !== oldValue) {
+                invokeFilter();
+            }
+        });
+
         $scope.$emit('bbPickerReady', {
             setSelectedItems: function (selectedItems) {
                 vm.bbChecklistSelectedItems = selectedItems;
             }
         });
+
+
     }
 
     BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];
