@@ -119,6 +119,47 @@ describe('Datepicker directive', function () {
         expect(iconEl.length).toBe(1);
     });
 
+    it('sets up everything correctly with un-prefixed appendToBody', function () {
+        var el,
+            appendHtml,
+            pickerEl;
+
+        appendHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" datepicker-append-to-body="true"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+
+        el = setupDatepicker(appendHtml, '5/17/1985', true);
+
+        pickerEl = angular.element(document.body).children('div[uib-datepicker-popup-wrap]');
+
+        expect(pickerEl.length).toBe(1);
+
+        el.remove();
+    });
+
+    it('sets up everything correctly with prefixed appendToBody', function () {
+        var el,
+            appendHtml,
+            pickerEl;
+
+        appendHtml = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-datepicker-append-to-body="true"></bb-datepicker>' +
+                '</form>' +
+            '</div>';
+
+        el = setupDatepicker(appendHtml, '5/17/1985', true);
+
+        pickerEl = angular.element(document.body).children('div[uib-datepicker-popup-wrap]');
+
+        expect(pickerEl.length).toBe(1);
+
+        el.remove();
+    });
+
+
     it('renders SQL UTC dates properly', function () {
         var el,
             inputEl;
