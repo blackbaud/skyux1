@@ -134,9 +134,11 @@ describe('Checklist directive', function () {
 
     });
 
-    it('should input row clicks', function () {
+    it('should handle input clicks', function () {
         var inputEl,
             el = angular.element(checklistHtml);
+
+        el.appendTo(document.body);
 
         $compile(el)($scope);
 
@@ -155,6 +157,8 @@ describe('Checklist directive', function () {
         inputEl.eq(0).click();
 
         expect($scope.locals.selectedItems).toEqual([items[1]]);
+
+        el.remove();
     });
 
     it('clears selections', function () {
