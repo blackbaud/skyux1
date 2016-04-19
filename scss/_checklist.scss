@@ -52,7 +52,7 @@
         font-weight: normal;
     }
 
-    input {
+    input.bb-checklist-search-box {
         background-color: #fff;
         width: 100%;
         outline: none;
@@ -69,6 +69,9 @@
 .bb-checklist-category-bar {
     white-space: nowrap;
     overflow: auto;
+    .form-control {
+      margin-right: $margin-plus-half;
+    }
 }
 
 .bb-checklist-search {

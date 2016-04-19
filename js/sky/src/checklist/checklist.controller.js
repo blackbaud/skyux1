@@ -12,6 +12,19 @@
             return !category || item.category === category;
         }
 
+        function itemInSubset(item, subsetSelected) {
+            if (!vm.bbChecklistSubsetLabel || angular.isUndefined(item[vm.bbChecklistSubsetProperty])) {
+                return true;
+            }
+
+            if (vm.subsetExclude) {
+                return item[vm.bbCheclistSubsetProperty] === false || item[vm.bbChecklistSubsetProperty] !== subsetSelected;
+            } else {
+                return item[vm.bbChecklistSubsetProperty] === false || item[vm.bbChecklistSubsetProperty] === subsetSelected;
+            }
+
+        }
+
         function itemMatchesFilter(item, category, searchTextUpper) {
             var i,
                 p,
@@ -19,17 +32,19 @@
                 val;
 
             if (itemMatchesCategory(item, category)) {
-                if (!searchTextUpper) {
-                    return true;
-                }
+                if (itemInSubset(item, vm.subsetSelected)) {
+                    if (!searchTextUpper) {
+                        return true;
+                    }
 
-                for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
-                    p = SEARCH_PROPS[i];
-                    if (item.hasOwnProperty(p)) {
-                        val = item[p];
+                    for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
+                        p = SEARCH_PROPS[i];
+                        if (item.hasOwnProperty(p)) {
+                            val = item[p];
 
-                        if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
-                            return true;
+                            if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -47,7 +62,7 @@
                 searchTextUpper = (vm.searchText || '').toUpperCase(),
                 selectedCategory = vm.selectedCategory;
 
-            if (!searchTextUpper && !selectedCategory) {
+            if (!searchTextUpper && !selectedCategory && !vm.bbChecklistSubsetLabel) {
                 filteredItems = items.slice(0);
             } else {
                 filteredItems = [];
@@ -70,7 +85,8 @@
             } else if (vm.bbChecklistFilterCallback) {
                 vm.bbChecklistFilterCallback({
                     searchText: vm.searchText,
-                    category: vm.selectedCategory
+                    category: vm.selectedCategory,
+                    subsetSelected: vm.subsetSelected
                 });
             }
         }
@@ -134,6 +150,12 @@
             });
         };
 
+        /*  In grid view, ensure that clicking input does not also cause the
+            row click function to be called */
+        vm.inputClicked = function ($event) {
+            $event.stopPropagation();
+        };
+
         vm.setColumns = function (columns) {
             vm.columns = columns;
         };
@@ -167,6 +189,12 @@
             if (newValue !== oldValue) {
                 invokeFilter();
             }
+        });
+
+        $scope.$watch(function () {
+            return vm.subsetSelected;
+        }, function () {
+            invokeFilter();
         });
 
         $scope.$emit('bbPickerReady', {

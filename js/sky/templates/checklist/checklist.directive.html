@@ -8,14 +8,18 @@
         </div>
       </div>
     </div>
-    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar">
-      <div class="row">
-        <div class="col-xs-12 col-sm-4">
-          <select class="form-control" ng-model="bbChecklist.selectedOption">
-            <option value="{{bbChecklist.allCategories}}">{{'grid_column_picker_all_categories' | bbResources}}</option>
-            <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>
-          </select>
-        </div>
+    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">
+      <div class="form-group">
+        <select class="form-control" ng-model="bbChecklist.selectedOption">
+          <option value="{{bbChecklist.allCategories}}">{{'grid_column_picker_all_categories' | bbResources}}</option>
+          <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="control-label" ng-if="bbChecklist.bbChecklistSubsetLabel">
+            <input bb-check type="checkbox" ng-model="bbChecklist.subsetSelected" />
+            {{bbChecklist.bbChecklistSubsetLabel}}
+        </label>
       </div>
     </div>
     <div class="bb-checklist-filter-bar bb-checklist-select-all-bar" ng-show="!bbChecklist.isSingleSelect()">
@@ -49,9 +53,9 @@
         </tr>
       </thead>
       <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
-        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">
+        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item)" class="bb-checklist-row">
           <td>
-            <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />
+            <input ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />
           </td>
           <td ng-repeat="column in bbChecklist.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>
         </tr>
