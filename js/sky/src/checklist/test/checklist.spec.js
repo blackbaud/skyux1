@@ -134,6 +134,29 @@ describe('Checklist directive', function () {
 
     });
 
+    it('should input row clicks', function () {
+        var inputEl,
+            el = angular.element(checklistHtml);
+
+        $compile(el)($scope);
+
+        $scope.locals = locals;
+
+        $scope.$digest();
+
+        inputEl = el.find('tbody tr input');
+
+        expect($scope.locals.selectedItems).toEqual([items[0]]);
+
+        inputEl.eq(1).click();
+
+        expect($scope.locals.selectedItems).toEqual([items[0], items[1]]);
+
+        inputEl.eq(0).click();
+
+        expect($scope.locals.selectedItems).toEqual([items[1]]);
+    });
+
     it('clears selections', function () {
         var clearEl,
             rowEl,
