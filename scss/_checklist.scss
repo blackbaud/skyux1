@@ -70,8 +70,21 @@
     white-space: nowrap;
     overflow: auto;
     .form-control {
-      margin-right: $margin-plus-half;
+        margin-right: $margin-plus-half;
     }
+    .control-label {
+        margin-bottom: 0;
+    }
+    .form-group {
+        margin-bottom: 0;
+    }
+
+  @media (max-width: $screen-sm-max) {
+      .form-group + .form-group {
+          margin-bottom: 0;
+          margin-top: 5px;
+      }
+  }
 }
 
 .bb-checklist-search {

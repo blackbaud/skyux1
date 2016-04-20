@@ -9,6 +9,12 @@
     padding: 0;
 }
 
+.bb-check-wrapper {
+  span.bb-check-label-text {
+    vertical-align: middle;
+  }
+}
+
 .bb-check-checkbox,
 .bb-check-radio {
     border: 1px solid $gray-lighter;
@@ -39,10 +45,10 @@
     border: none;
 
     &:before {
-        color: $bb-color-white;
-        content: $bbsky-char-check-nostroke;
-        font-family: BBSKY;
-        font-size: $bb-font-size-sm;
+      color: $bb-color-white;
+      content: $bbsky-char-check-nostroke;
+      font-family: BBSKY;
+      font-size: $bb-font-size-sm;
     }
 }
 
@@ -56,10 +62,10 @@
 
 .bb-check-wrapper input:focus + .bb-check-checkbox,
 .bb-check-wrapper input:focus + .bb-check-radio {
-  //default
-  outline: thin dotted;
+    //default
+    outline: thin dotted;
 
-  //webkit
-  outline: -webkit-focus-ring-color auto 5px;
-  outline-offset: -2px;
+    //webkit
+    outline: -webkit-focus-ring-color auto 5px;
+    outline-offset: -2px;
 }

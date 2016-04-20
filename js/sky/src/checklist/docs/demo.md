@@ -12,7 +12,7 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
         - `bb-checklist-selected-items` &mdash; An array that represents the selected items in the list.
         - `bb-checklist-include-search` &mdash; Provides a Boolean value to indicate whether to include a search text box to filter the checkbox list. A callback function can be used to filter the list based on search text. Search text is highlighted within the list.
         - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search text box.
-        - `bb-checklist-filter-callback` &mdash; Specifies the function to be called when a user modifies the search text. The consumer uses this to update the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter that contains the `searchText` and `category` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
+        - `bb-checklist-filter-callback` &mdash; Specifies the function to be called when a user modifies the search text. The consumer uses this to update the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter that contains the `searchText` and `category`, and `subsetSelected` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
         - `bb-checklist-filter-local` &mdash; Instructs the checklist directive to filter items in the list by making sure the properties of each item match a specified category or search text.
         - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making web requests in `bb-checklist-filter-callback`, this avoids new requests after each character that users type.
         - `bb-checklist-no-items-message` &mdash; Specifies a message to display when the list displays no items. *(Default: 'No items found')*
@@ -22,6 +22,9 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
         - `bb-checklist-categories` &mdash; An array of category names to build category filters at the top of the list.
         - `bb-checklist-select-style` &mdash; *(Optional.)* When set to `single`, the checklist will only allow selection of one item in the checklist.
         - `bb-checklist-is-loading` &mdash; *(Optional.)* User can set to true to give indication that the checklist is loading items. Useful for when using remote search.
+        - `bb-checklist-subset-label` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the checklist items.
+        - `bb-checklist-subset-property` &mdash; *(Optional.)* Specifies a property name that will be used to filter by subset on the checklist items when using local search. The property will be set to `true` if it is a member of the subset.
+        - `bb-checklist-subset-exclude` &mdash; *(Optional.)* When using local search, instructs the checklist directive to exclude items with the `bb-checklist-subset-property` set to true when the subset checkbox is selected. When this attribute is not present, the checklist directive includes items with the `bb-checklist-subset-property` when the subset checkbox is selected.
 
 ### Checklist Column Settings ###
     - `bb-checklist-columns` &mdash; Allows you to specify multiple columns of data for the checkbox list.
