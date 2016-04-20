@@ -131,7 +131,6 @@ describe('Checklist directive', function () {
 
         expect($scope.locals.selectedItems).toEqual([items[1]]);
 
-
     });
 
     it('clears selections', function () {
