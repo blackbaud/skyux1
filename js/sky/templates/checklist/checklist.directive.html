@@ -18,7 +18,7 @@
       <div class="form-group">
 
         <label class="control-label" ng-if="bbChecklist.bbChecklistSubsetLabel">
-          <input bb-check type="checkbox" ng-model="bbChecklist.subsetSelected" />
+          <input class="bb-checklist-subset-input" bb-check type="checkbox" ng-model="bbChecklist.subsetSelected" />
           {{bbChecklist.bbChecklistSubsetLabel}}
         </label>
       </div>
@@ -54,7 +54,7 @@
         </tr>
       </thead>
       <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
-        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item)" class="bb-checklist-row">
+        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">
           <td>
             <input ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />
           </td>

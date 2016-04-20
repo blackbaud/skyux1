@@ -13,14 +13,14 @@
         }
 
         function itemInSubset(item, subsetSelected) {
-            if (!vm.bbChecklistSubsetLabel || angular.isUndefined(item[vm.bbChecklistSubsetProperty])) {
+            if (!vm.bbChecklistSubsetLabel || angular.isUndefined(item[vm.bbChecklistSubsetProperty]) || item[vm.bbCheclistSubsetProperty] === false) {
                 return true;
             }
 
             if (vm.subsetExclude) {
-                return item[vm.bbCheclistSubsetProperty] === false || item[vm.bbChecklistSubsetProperty] !== subsetSelected;
+                return item[vm.bbChecklistSubsetProperty] !== subsetSelected;
             } else {
-                return item[vm.bbChecklistSubsetProperty] === false || item[vm.bbChecklistSubsetProperty] === subsetSelected;
+                return item[vm.bbChecklistSubsetProperty] === subsetSelected;
             }
 
         }
@@ -175,27 +175,30 @@
             }
         });
 
-        vm.allCategories = 'bbChecklistAllCategories';
-        vm.selectedOption = vm.allCategories;
+        if (angular.isDefined(vm.bbChecklistCategories)) {
+            vm.allCategories = 'bbChecklistAllCategories';
+            vm.selectedOption = vm.allCategories;
+            $scope.$watch(function () {
+                return vm.selectedOption;
+            }, function (newValue, oldValue) {
+                if (newValue === vm.allCategories) {
+                    vm.selectedCategory = null;
+                } else {
+                    vm.selectedCategory = newValue;
+                }
+                if (newValue !== oldValue) {
+                    invokeFilter();
+                }
+            });
+        }
 
-        $scope.$watch(function () {
-            return vm.selectedOption;
-        }, function (newValue, oldValue) {
-            if (newValue === vm.allCategories) {
-                vm.selectedCategory = null;
-            } else {
-                vm.selectedCategory = newValue;
-            }
-            if (newValue !== oldValue) {
+        if (angular.isDefined(vm.bbChecklistSubsetLabel)) {
+            $scope.$watch(function () {
+                return vm.subsetSelected;
+            }, function () {
                 invokeFilter();
-            }
-        });
-
-        $scope.$watch(function () {
-            return vm.subsetSelected;
-        }, function () {
-            invokeFilter();
-        });
+            });
+        }
 
         $scope.$emit('bbPickerReady', {
             setSelectedItems: function (selectedItems) {
