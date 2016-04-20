@@ -1060,6 +1060,12 @@
             });
         };
 
+        /*  In grid view, ensure that clicking input does not also cause the
+            row click function to be called */
+        vm.inputClicked = function ($event) {
+            $event.stopPropagation();
+        };
+
         vm.setColumns = function (columns) {
             vm.columns = columns;
         };
@@ -7229,6 +7235,7 @@ angular.module('sky.palette.config', [])
             sortableOptions = {
                 placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
                 axis: 'y', // constrain movement to the Y axis,
+                handle: '.bb-reorder-list-col-icon',
                 start: function (e, ui) {
                     scope.$apply(function () {
                         vm.sorting = true;
@@ -11016,7 +11023,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">\n' +
         '        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">\n' +
         '          <td>\n' +
-        '            <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />\n' +
+        '            <input ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />\n' +
         '          </td>\n' +
         '          <td ng-repeat="column in bbChecklist.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
         '        </tr>\n' +
