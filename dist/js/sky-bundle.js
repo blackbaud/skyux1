@@ -102838,6 +102838,7 @@ global.easyXDM = easyXDM;
             scope: {},
             link: function (scope, el, attrs, vm) {
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
+                vm.focusSearch = attrs.bbChecklistFocusSearch;
             }
         };
     }
@@ -112689,7 +112690,15 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div>\n' +
         '    <div ng-if="bbChecklist.bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
         '      <div class="bb-checklist-search">\n' +
-        '        <input type="text" class="bb-checklist-search-box" maxlength="255" placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}" ng-model="bbChecklist.searchText" ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
+        '        <input\n' +
+        '          type="text"\n' +
+        '          class="bb-checklist-search-box"\n' +
+        '          maxlength="255"\n' +
+        '          placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}"\n' +
+        '          ng-model="bbChecklist.searchText"\n' +
+        '          ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}"\n' +
+        '          data-bbauto-field="ChecklistSearch"\n' +
+        '          ng-attr-autofocus="{{bbChecklist.focusSearch}}" />\n' +
         '        <div class="bb-checklist-search-icon">\n' +
         '          <i class="fa fa-search"></i>\n' +
         '        </div>\n' +
