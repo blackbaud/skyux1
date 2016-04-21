@@ -120,6 +120,10 @@
 }
 
 .bb-context-menu .dropdown-menu {
+  
+    li:disabled {
+        pointer-events:none;  
+    }
 
     li > a {
         border-radius: 3px;
