@@ -485,6 +485,8 @@ describe('Checklist directive', function () {
 
         $scope.$digest();
 
+        expect(el.find('.bb-checklist-search input')).not.toHaveAttr('autofocus');
+
         el.find('.bb-checklist-search-box').val('z').change();
 
         rowEl = el.find('.bb-checklist-row');
@@ -499,6 +501,45 @@ describe('Checklist directive', function () {
         // The second item should be filtered out even though the hidden property would match the search text.
         expect(rowEl.length).toBe(1);
 
+        el.remove();
+    });
+
+    it('should allow autofocus to be set on search using the bb-checklist-focus-search attribute', function () {
+        var el,
+            checklistHtml;
+
+        checklistHtml = '<bb-checklist ' +
+            'bb-checklist-items="items" ' +
+            'bb-checklist-include-search="locals.includeSearch"' +
+            'bb-checklist-mode="list" ' +
+            'bb-checklist-focus-search ' +
+            'bb-checklist-filter-local>' +
+        '</bb-checklist>';
+
+        $scope.locals = {
+            items: [
+                {
+                    title: 'Title 1',
+                    description: 'Description 1'
+                },
+                {
+                    title: 'Title 2',
+                    description: 'Description 2'
+                },
+                {
+                    title: 'Title 3',
+                    description: 'Description 3'
+                }
+            ],
+            includeSearch: true
+        };
+        el = $compile(checklistHtml)($scope);
+
+        el.appendTo(document.body);
+
+        $scope.$digest();
+
+        expect(el.find('.bb-checklist-search input')).toHaveAttr('autofocus');
         el.remove();
     });
 
