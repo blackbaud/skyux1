@@ -11,6 +11,7 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
         - `bb-checklist-items` &mdash; An array of objects that represents the rows to display in the list.
         - `bb-checklist-selected-items` &mdash; An array that represents the selected items in the list.
         - `bb-checklist-include-search` &mdash; Provides a Boolean value to indicate whether to include a search text box to filter the checkbox list. A callback function can be used to filter the list based on search text. Search text is highlighted within the list.
+        - `bb-checklist-focus-search` &mdash; *(Optional.)* Instructs the checklist directive to apply the autofocus attribute to the checklist search input.
         - `bb-checklist-search-placeholder` &mdash; Specifies placeholder text to display in the search text box.
         - `bb-checklist-filter-callback` &mdash; Specifies the function to be called when a user modifies the search text. The consumer uses this to update the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter that contains the `searchText` and `category`, and `subsetSelected` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
         - `bb-checklist-filter-local` &mdash; Instructs the checklist directive to filter items in the list by making sure the properties of each item match a specified category or search text.

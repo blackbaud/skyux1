@@ -32,6 +32,7 @@
             link: function (scope, el, attrs, vm) {
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
                 vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
+                vm.focusSearch = attrs.bbChecklistFocusSearch;
             }
         };
     }
