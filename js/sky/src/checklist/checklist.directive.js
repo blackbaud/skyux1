@@ -29,6 +29,7 @@
             scope: {},
             link: function (scope, el, attrs, vm) {
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
+                vm.focusSearch = attrs.bbChecklistFocusSearch;
             }
         };
     }
