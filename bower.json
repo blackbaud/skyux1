@@ -1,6 +1,6 @@
 {
   "name": "blackbaud-skyux",
-  "version": "1.5.11",
+  "version": "1.5.18",
   "homepage": "http://skyux.developer.blackbaud.com",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
   "main": [
@@ -46,7 +46,7 @@
     "angular-toastr": "1.6.0",
     "blockui": "*",
     "angular-ui-router": "0.2.15",
-    "ng-file-upload": "5.0.6",
+    "ng-file-upload": "12.0.4",
     "bootstrap": "3.3.5",
     "angular-ui-select": "0.11.2",
     "fastclick": "1.0.6"

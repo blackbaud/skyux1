@@ -15,5 +15,10 @@
 .bb-text-expand-text {
   margin: 0;
   white-space: pre-wrap;
+}
+
+.bb-text-expand-container {
   word-break: break-word;
+  word-wrap: break-word;
+  max-width: 100%;
 }

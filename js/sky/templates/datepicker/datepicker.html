@@ -1,6 +1,29 @@
 <div>
     <div ng-if="locals.loaded" class="input-group bb-datefield">
-        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" uib-datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" max-date="maxDate" min-date="minDate" ng-required="locals.required" bb-min-date bb-max-date />
+        <input
+          name="{{locals.inputName}}"
+          type="text"
+
+          ng-keydown="locals.enterPress($event)"
+
+          class="form-control"
+          ng-model="locals.date"
+          is-open="locals.opened"
+          datepicker-options="locals.dateOptions"
+          uib-datepicker-popup="{{format}}"
+          show-button-bar="locals.showButtonBar"
+          current-text="{{resources.datepicker_today}}"
+          clear-text="{{resources.datepicker_clear}}"
+          close-text="{{resources.datepicker_close}}"
+          datepicker-append-to-body="{{locals.appendToBody}}"
+          close-on-date-selection="{{locals.closeOnSelection}}"
+          bb-datepicker-custom-validate="{{locals.hasCustomValidation}}"
+          placeholder="{{placeholderText}}"
+          max-date="maxDate"
+          min-date="minDate"
+          ng-required="locals.required"
+          bb-min-date
+          bb-max-date />
         <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{'bb-datefield-open': locals.opened}">
             <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">
                 <i class="fa fa-calendar"></i>

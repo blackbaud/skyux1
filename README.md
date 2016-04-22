@@ -13,13 +13,7 @@ http://skyux.developer.blackbaud.com/
 
 ## Installation
 
-You have three options for consuming Sky UX.  The first and easiest is to point your site to our CDN:
-
-    <!-- Put this in your page's HEAD element -->
-    <link rel="stylesheet" type="text/css" href="https://sky.blackbaudcdn.net/skyux/1.5.11/css/sky-bundle.css" />
-
-    <!-- Put this at the bottom of your page's BODY element -->
-    <script src="https://sky.blackbaudcdn.net/skyux/1.5.11/js/sky-bundle.min.js"></script>
+You have three options for consuming Sky UX.  The first and easiest is to point your site to our CDN, which you can read about in our [Getting Started](http://skyux.developer.blackbaud.com/getting-started/start-a-project/#create-a-page) guide.
 
 The second option is to install Sky UX via [Bower](http://bower.io/search/?q=blackbaud-skyux):
 
@@ -29,7 +23,7 @@ The third option is to install Sky UX via [NPM](https://www.npmjs.com/package/bl
 
     npm install blackbaud-skyux
 
-If you install via Bower or NPM you will need to include the same files as above but with the URL pointing to your own server rather than the CDN.
+If you install via Bower or NPM you will need to include the same files as indicated in the [Getting Started](http://skyux.developer.blackbaud.com/getting-started/start-a-project/#create-a-page) guide but with the URL pointing to your own web server rather than the CDN.  You may also use a [hybrid approach](http://skyux.developer.blackbaud.com/blog/2016-01-06/) where you load SKY UX via the CDN and fall back to a version hosted by your web server if the CDN is unavailable.
 
 ## Contributing
 

@@ -20,6 +20,19 @@
     'use strict';
 
     angular.module(
+        'sky.card',
+        [
+            'sky.card.directive'
+        ]
+    );
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
         'sky.checklist',
         [
             'sky.checklist.directive',
@@ -28,6 +41,38 @@
             'sky.checklist.model.directive'
         ]
     );
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.chevron', ['sky.chevron.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
+        'sky.contextmenu',
+        [
+            'sky.contextmenu.directive',
+            'sky.contextmenu.button.directive',
+            'sky.contextmenu.item.directive',
+            'sky.submenu'
+        ]
+    );
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.submenu', ['sky.submenu.directive']);
 }());
 
 /*global angular */
@@ -44,6 +89,22 @@
     'use strict';
 
     angular.module('sky.pagesummary', []);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.reorder', ['sky.reorder.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.repeater', ['sky.repeater.directive', 'sky.repeater.item.directive']);
 }());
 
 /*global angular */
@@ -239,11 +300,11 @@
         );
 
         if (configType) {
-            configSettings = bbAutoNumericConfig[configType];
-        }
+            configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
-        if (configSettings) {
-            angular.extend(baseSettings, configSettings);
+            if (configSettings) {
+                angular.extend(baseSettings, configSettings);
+            }
         }
 
         return baseSettings;
@@ -260,9 +321,14 @@
             },
             money: {
                 aSign: '$'
+            },
+            percent: {
+                aSign: '%',
+                pSign: 's',
+                mDec: 0
             }
         })
-        .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', function ($timeout, bbAutoNumericConfig, bbWindow) {
+        .directive('bbAutonumeric', ['$timeout', 'bbAutonumericConfig', 'bbWindow', '$document', function ($timeout, bbAutoNumericConfig, bbWindow, $document) {
             return {
                 require: 'ngModel',
                 restrict: 'A',
@@ -321,7 +387,9 @@
                                 $timeout(autonumericChange);
                             } else if (el[0] && angular.isFunction(el[0].setSelectionRange) && angular.isDefined(selectionStart)) {
                                 $timeout(function () {
-                                    el[0].setSelectionRange(selectionStart, selectionStart);
+                                    if ($document[0] && $document[0].activeElement === el[0]) {
+                                        el[0].setSelectionRange(selectionStart, selectionStart);
+                                    }
                                 });
                             }
                         } else if (newValue === null) {
@@ -664,6 +732,156 @@
         .directive('bbAvatar', bbAvatar);
 }(jQuery));
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    var components = [{
+            name: 'Title',
+            cls: 'title'
+        }, {
+            name: 'Content',
+            cls: 'content'
+        }, {
+            name: 'Actions',
+            cls: 'actions'
+        }],
+        cardModule = angular.module('sky.card.directive', ['sky.check']),
+        nextId = 0;
+
+    function makeCardComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbCard = ctrls[1];
+
+                vm.el = el;
+
+                bbCard['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbCard' + name, '^bbCard'],
+                controller: controllerName,
+                controllerAs: 'bbCard' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBCard' + name + 'Controller';
+
+        cardModule
+            .controller(controllerName, Controller)
+            .directive('bbCard' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function BBCardController() {
+        var vm = this;
+
+        function addComponentSetter(component) {
+            var name = component.name;
+
+            vm['set' + name] = function (ctrl) {
+                var propName = getCtrlPropName(component);
+
+                vm[propName] = ctrl;
+
+                ctrl.onDestroy = function () {
+                    vm[propName] = null;
+                };
+            };
+        }
+
+        components.forEach(addComponentSetter);
+
+        vm.getClass = function () {
+            var cls = [];
+
+            switch (vm.bbCardSize) {
+            case 'small':
+                cls.push('bb-card-small');
+                break;
+            }
+
+            if (vm.bbCardSelectable) {
+                cls.push('bb-card-selectable');
+
+                if (vm.bbCardSelected) {
+                    cls.push('bb-card-selected');
+                }
+            }
+
+            return cls;
+        };
+
+        nextId++;
+        vm.cardCheckId = 'bb-card-check-' + nextId;
+    }
+
+    function bbCard() {
+        function link(scope, el, attrs, vm) {
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-card-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            components.forEach(watchForComponent);
+        }
+
+        return {
+            bindToController: {
+                bbCardSelectable: '@?',
+                bbCardSelected: '=?',
+                bbCardSize: '@?'
+            },
+            controller: 'BBCardController',
+            controllerAs: 'bbCard',
+            link: link,
+            restrict: 'E',
+            scope: {},
+            templateUrl: 'sky/templates/card/card.directive.html',
+            transclude: true
+        };
+    }
+
+    cardModule
+        .controller('BBCardController', BBCardController)
+        .directive('bbCard', bbCard);
+
+    components.forEach(makeCardComponent);
+}());
+
 /*jshint browser: true */
 /*global angular */
 
@@ -685,6 +903,15 @@
                         el.wrap(createEl('wrapper'));
                     } else {
                         labelEl.addClass('bb-check-wrapper');
+
+                        /*  wrap non-whitespace label text to set
+                            vertical-align middle properly */ 
+                        labelEl.contents()
+                        .filter(function () {
+                            return this.nodeType === 3 && /\S/.test(this.textContent);
+                        })
+                        .wrap(createEl('labeltext'));
+
                     }
                     if (attr.type === 'radio') {
                         typeClass = 'bb-check-radio';
@@ -715,6 +942,19 @@
             return !category || item.category === category;
         }
 
+        function itemInSubset(item, subsetSelected) {
+            if (!vm.bbChecklistSubsetLabel || angular.isUndefined(item[vm.bbChecklistSubsetProperty]) || item[vm.bbCheclistSubsetProperty] === false) {
+                return true;
+            }
+
+            if (vm.subsetExclude) {
+                return item[vm.bbChecklistSubsetProperty] !== subsetSelected;
+            } else {
+                return item[vm.bbChecklistSubsetProperty] === subsetSelected;
+            }
+
+        }
+
         function itemMatchesFilter(item, category, searchTextUpper) {
             var i,
                 p,
@@ -722,17 +962,19 @@
                 val;
 
             if (itemMatchesCategory(item, category)) {
-                if (!searchTextUpper) {
-                    return true;
-                }
+                if (itemInSubset(item, vm.subsetSelected)) {
+                    if (!searchTextUpper) {
+                        return true;
+                    }
 
-                for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
-                    p = SEARCH_PROPS[i];
-                    if (item.hasOwnProperty(p)) {
-                        val = item[p];
+                    for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
+                        p = SEARCH_PROPS[i];
+                        if (item.hasOwnProperty(p)) {
+                            val = item[p];
 
-                        if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
-                            return true;
+                            if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -750,7 +992,7 @@
                 searchTextUpper = (vm.searchText || '').toUpperCase(),
                 selectedCategory = vm.selectedCategory;
 
-            if (!searchTextUpper && !selectedCategory) {
+            if (!searchTextUpper && !selectedCategory && !vm.bbChecklistSubsetLabel) {
                 filteredItems = items.slice(0);
             } else {
                 filteredItems = [];
@@ -773,7 +1015,8 @@
             } else if (vm.bbChecklistFilterCallback) {
                 vm.bbChecklistFilterCallback({
                     searchText: vm.searchText,
-                    category: vm.selectedCategory
+                    category: vm.selectedCategory,
+                    subsetSelected: vm.subsetSelected
                 });
             }
         }
@@ -813,11 +1056,6 @@
             }
         };
 
-        vm.filterByCategory = function (selectedCategory) {
-            vm.selectedCategory = selectedCategory;
-            invokeFilter();
-        };
-
         vm.isSingleSelect = function () {
             return vm.bbChecklistSelectStyle === 'single';
         };
@@ -842,6 +1080,12 @@
             });
         };
 
+        /*  In grid view, ensure that clicking input does not also cause the
+            row click function to be called */
+        vm.inputClicked = function ($event) {
+            $event.stopPropagation();
+        };
+
         vm.setColumns = function (columns) {
             vm.columns = columns;
         };
@@ -861,11 +1105,38 @@
             }
         });
 
+        if (angular.isDefined(vm.bbChecklistCategories)) {
+            vm.allCategories = 'bbChecklistAllCategories';
+            vm.selectedOption = vm.allCategories;
+            $scope.$watch(function () {
+                return vm.selectedOption;
+            }, function (newValue, oldValue) {
+                if (newValue === vm.allCategories) {
+                    vm.selectedCategory = null;
+                } else {
+                    vm.selectedCategory = newValue;
+                }
+                if (newValue !== oldValue) {
+                    invokeFilter();
+                }
+            });
+        }
+
+        if (angular.isDefined(vm.bbChecklistSubsetLabel)) {
+            $scope.$watch(function () {
+                return vm.subsetSelected;
+            }, function () {
+                invokeFilter();
+            });
+        }
+
         $scope.$emit('bbPickerReady', {
             setSelectedItems: function (selectedItems) {
                 vm.bbChecklistSelectedItems = selectedItems;
             }
         });
+
+
     }
 
     BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];
@@ -888,23 +1159,27 @@
             templateUrl: 'sky/templates/checklist/checklist.directive.html',
             bindToController: {
                 bbChecklistItems: '=',
-                bbChecklistSelectedItems: '=',
-                bbChecklistFilterCallback: '=',
-                bbChecklistIncludeSearch: '=',
-                bbChecklistSearchDebounce: '=',
+                bbChecklistSelectedItems: '=?',
+                bbChecklistFilterCallback: '=?',
+                bbChecklistIncludeSearch: '=?',
+                bbChecklistSearchDebounce: '=?',
                 bbChecklistSearchPlaceholder: '@',
                 bbChecklistNoItemsMessage: '@',
-                bbChecklistAutomationField: '=',
-                bbChecklistCategories: '=',
-                bbChecklistMode: '@',
-                bbChecklistSelectStyle: '@',
-                bbChecklistIsLoading: '='
+                bbChecklistAutomationField: '=?',
+                bbChecklistCategories: '=?',
+                bbChecklistMode: '@?',
+                bbChecklistSelectStyle: '@?',
+                bbChecklistIsLoading: '=?',
+                bbChecklistSubsetLabel: '=?',
+                bbChecklistSubsetProperty: '@?'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',
             scope: {},
             link: function (scope, el, attrs, vm) {
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
+                vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
+                vm.focusSearch = attrs.bbChecklistFocusSearch;
             }
         };
     }
@@ -1140,112 +1415,286 @@
         });
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBChevronController(bbResources) {
+        var vm = this;
+
+        function getDirection() {
+            return vm.bbChevronDirection || 'up';
+        }
+
+        vm.getCls = function () {
+            return 'bb-chevron-flip-' + getDirection();
+        };
+
+        vm.getLabel = function () {
+            return bbResources['chevron_' + (getDirection() === 'up' ? 'collapse' : 'expand')];
+        };
+
+        vm.click = function ($event) {
+            $event.stopPropagation();
+
+            vm.bbChevronDirection = (getDirection() === 'up' ? 'down' : 'up');
+        };
+    }
+
+    BBChevronController.$inject = ['bbResources'];
+
+    angular.module('sky.chevron.controller', ['sky.resources'])
+        .controller('BBChevronController', BBChevronController);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbChevron() {
+        return {
+            bindToController: {
+                bbChevronDirection: '=?'
+            },
+            controller: 'BBChevronController',
+            controllerAs: 'bbChevron',
+            scope: {},
+            templateUrl: 'sky/templates/chevron/chevron.directive.html'
+        };
+    }
+
+    angular.module('sky.chevron.directive', ['sky.chevron.controller'])
+        .directive('bbChevron', bbChevron);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBContextMenuButtonController(bbResources) {
+        var vm = this;
+
+        vm.getAriaLabel = function () {
+            var ariaLabel;
+
+            if (vm.bbContextMenu) {
+                ariaLabel = vm.bbContextMenu.getAriaLabel();
+            }
+
+            if (!ariaLabel) {
+                ariaLabel = vm.bbContextMenuButtonLabel || bbResources.context_menu_default_label;
+            }
+
+            return ariaLabel;
+        };
+    }
+
+    BBContextMenuButtonController.$inject = ['bbResources'];
+
+    angular.module('sky.contextmenu.button.controller', ['sky.resources'])
+        .controller('BBContextMenuButtonController', BBContextMenuButtonController);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbContextMenuButton() {
+        function link(scope, el, attrs, ctrls) {
+            var bbContextMenu = ctrls[1],
+                vm = ctrls[0];
+
+            vm.bbContextMenu = bbContextMenu;
+        }
+
+        return {
+            bindToController: {
+                bbContextMenuButtonLabel: '@'
+            },
+            controller: 'BBContextMenuButtonController',
+            controllerAs: 'bbContextMenuButton',
+            link: link,
+            restrict: 'E',
+            replace: true,
+            require: ['bbContextMenuButton', '?^bbContextMenu'],
+            scope: {},
+            templateUrl: 'sky/templates/contextmenu/menubutton.html'
+        };
+    }
+
+    angular.module(
+        'sky.contextmenu.button.directive',
+        [
+            'sky.contextmenu.button.controller',
+            'sky.resources'
+        ]
+    )
+        .directive('bbContextMenuButton', bbContextMenuButton);
+}());
+
 /* global angular */
 
 (function () {
     'use strict';
 
-    function getTemplateUrl(name) {
-        return 'sky/templates/contextmenu/' + name + '.html';
+    function BBContextMenuController() {
+        var vm = this;
+
+        vm.contextButtonStopPropagation = function ($event) {
+            $event.stopPropagation();
+        };
+
+        vm.getAriaLabel = function () {
+            return vm.bbContextMenuLabel;
+        };
     }
+
+    angular.module('sky.contextmenu.controller', [])
+        .controller('BBContextMenuController', BBContextMenuController);
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
 
     function bbContextMenu() {
         return {
+            bindToController: {
+                bbContextMenuLabel: '@'
+            },
+            controller: 'BBContextMenuController',
+            controllerAs: 'bbContextMenu',
             replace: true,
             restrict: 'E',
+            scope: {},
             transclude: true,
-            templateUrl: getTemplateUrl('contextmenu'),
-            link: function ($scope) {
-                $scope.contextButtonStopPropagation = function ($event) {
-                    $event.stopPropagation();
-                };
-            }
+            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
         };
     }
+
+    angular.module('sky.contextmenu.directive', ['ui.bootstrap.dropdown', 'ui.bootstrap.accordion', 'sky.contextmenu.controller'])
+        .directive('bbContextMenu', bbContextMenu);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
 
     function bbContextMenuItem() {
         return {
-            restrict: 'E',
-            transclude: true,
-            replace: true,
-            scope: {
+            bindToController: {
                 clickItem: '&bbContextMenuAction'
             },
-            templateUrl: getTemplateUrl('menuitem')
-        };
-    }
-
-    function bbContextMenuButton() {
-        return {
+            controller: angular.noop,
+            controllerAs: 'bbContextMenuItem',
             restrict: 'E',
+            transclude: true,
             replace: true,
-            templateUrl: getTemplateUrl('menubutton')
+            scope: {},
+            templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };
     }
 
-    function toggleAccordion($event, $scope) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.accordionLocals.accordionOpen = !$scope.accordionLocals.accordionOpen;
-    }
+    angular.module('sky.contextmenu.item.directive', [])
+        .directive('bbContextMenuItem', bbContextMenuItem);
+}());
 
-    function BBSubmenuController($scope) {
-        var self = this;
+/*global angular */
 
-        self.toggleAccordion = function ($event) {
-            toggleAccordion($event, $scope);
+(function () {
+    'use strict';
+
+    function bbContextMenuToggleAccordion() {
+        return function ($event, vm) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            vm.accordionOpen = !vm.accordionOpen;
         };
     }
 
-    BBSubmenuController.$inject = ['$scope'];
+    angular.module('sky.contextmenu.toggleaccordion.factory', [])
+        .factory('bbContextMenuToggleAccordion', bbContextMenuToggleAccordion);
 
-    function bbSubmenu() {
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
+
+    function bbSubmenu(bbContextMenuToggleAccordion) {
         return {
-            controller: 'bbSubmenuController',
-            restrict: 'E',
-            scope: {
+            bindToController: {
                 heading: '=?bbSubmenuHeading'
             },
-            link: function ($scope, el, attrs) {
-                $scope.accordionLocals = {
-                    accordionOpen: false,
-                    staticHeader: false
-                };
+            controller: angular.noop,
+            controllerAs: 'bbSubmenu',
+            restrict: 'E',
+            scope: {},
+            link: function (scope, el, attrs, vm) {
+                vm.accordionOpen = false;
+                vm.staticHeader = false;
 
                 if (angular.isDefined(attrs.bbSubmenuHeading)) {
-                    $scope.accordionLocals.staticHeader = true;
+                    vm.staticHeader = true;
                 }
 
-                $scope.toggleAccordion = function ($event) {
-                    toggleAccordion($event, $scope);
+                vm.toggleAccordion = function ($event) {
+                    bbContextMenuToggleAccordion($event, vm);
                 };
             },
             transclude: true,
-            templateUrl: getTemplateUrl('submenu')
+            templateUrl: 'sky/templates/contextmenu/submenu.html'
         };
     }
+
+    bbSubmenu.$inject = ['bbContextMenuToggleAccordion'];
+
+    angular.module(
+        'sky.submenu.directive',
+        [
+            'sky.submenu.heading.directive',
+            'sky.contextmenu.toggleaccordion.factory',
+            'ui.bootstrap.dropdown',
+            'ui.bootstrap.accordion'
+        ]
+    )
+        .directive('bbSubmenu', bbSubmenu);
+}());
+
+/* global angular */
+
+(function () {
+    'use strict';
 
     function bbSubmenuHeading() {
         return {
+            bindToController: true,
+            controller: angular.noop,
+            controllerAs: 'bbSubmenuHeading',
             restrict: 'E',
-            require: '^bbSubmenu',
+            require: ['bbSubmenuHeading', '^bbSubmenu'],
             scope: true,
-            link: function ($scope, el, attrs, submenuCtrl) {
-                $scope.toggleAccordion = function ($event) {
+            link: function ($scope, el, attrs, ctrls) {
+                var submenuCtrl = ctrls[1],
+                    vm = ctrls[0];
+
+                vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
                 };
             },
             transclude: true,
-            templateUrl: getTemplateUrl('submenuheading')
+            templateUrl: 'sky/templates/contextmenu/submenuheading.html'
         };
     }
 
-    angular.module('sky.contextmenu', ['ui.bootstrap.dropdown', 'ui.bootstrap.accordion'])
-        .controller('bbSubmenuController', BBSubmenuController)
-        .directive('bbContextMenu', bbContextMenu)
-        .directive('bbContextMenuItem', bbContextMenuItem)
-        .directive('bbContextMenuButton', bbContextMenuButton)
-        .directive('bbSubmenu', bbSubmenu)
+    angular.module('sky.submenu.heading.directive', [])
         .directive('bbSubmenuHeading', bbSubmenuHeading);
 }());
 
@@ -1984,34 +2433,42 @@
 
                     $scope.locals.loaded = true;
 
+                    function inputChange() {
+                        var inputNgModel;
+
+                        //allows validation to kick off for invalid dates
+                        if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
+                            dateChangeInternal = true;
+                            $scope.date = inputEl.val();
+                        } else if ($scope.locals.required && hasRequiredError()) {
+                            dateChangeInternal = true;
+                            $scope.date = '';
+                            inputNgModel = $scope.getInputNgModel();
+                            inputNgModel.invalidFormatMessage = null;
+                            inputNgModel.$setValidity('dateFormat', true);
+                        } else if ($scope.date !== $scope.locals.date) {
+                            dateChangeInternal = true;
+                            $scope.date = $scope.locals.date;
+                        }
+                    }
+
+                    function enterPress($event) {
+                        if ($event.keyCode === 13) {
+                            inputChange();
+                        }
+                    }
+
+                    $scope.locals.enterPress = enterPress;
+
                     //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
                     $timeout(function () {
                         inputEl = el.find('input');
                         inputEl.on('change blur', function () {
                             $timeout(function () {
-                                var inputNgModel;
-
-                                //allows validation to kick off for invalid dates
-                                if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                                    dateChangeInternal = true;
-                                    $scope.date = inputEl.val();
-
-
-                                } else if ($scope.locals.required && hasRequiredError()) {
-                                    dateChangeInternal = true;
-                                    $scope.date = '';
-                                    inputNgModel = $scope.getInputNgModel();
-                                    inputNgModel.invalidFormatMessage = null;
-                                    inputNgModel.$setValidity('dateFormat', true);
-                                } else if ($scope.date !== $scope.locals.date) {
-
-                                    dateChangeInternal = true;
-                                    $scope.date = $scope.locals.date;
-
-                                }
-
+                                inputChange();
                             });
                         });
+
                     });
 
                 }
@@ -2623,6 +3080,111 @@
         .directive('bbDateRangePicker', bbDateRangePickerDirective);
 }());
 
+/* global angular */
+(function () {
+    'use strict';
+
+    function BBErrorActionController($scope) {
+        var vm = this;
+
+        $scope.$on('$destroy', function () {
+            vm.onDestroy();
+            vm = null;
+        });
+    }
+
+    BBErrorActionController.$inject = ['$scope'];
+
+    function bbErrorAction() {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0],
+                bbError = ctrls[1];
+
+            vm.el = el;
+
+            if (bbError !== null) {
+                bbError.setAction(vm);
+            }
+
+        }
+
+        return {
+            restrict: 'E',
+            require: ['bbErrorAction', '?^bbError'],
+            controller: BBErrorActionController,
+            controllerAs: 'bbErrorAction',
+            link: link,
+            scope: {}
+        };
+    }
+
+    angular.module('sky.error.action.directive', [])
+        .directive('bbErrorAction', bbErrorAction);
+}());
+
+/* global angular */
+(function () {
+    'use strict';
+
+    function BBErrorDescriptionController($scope, bbResources) {
+        var vm = this;
+
+        $scope.$on('$destroy', function () {
+            vm.onDestroy();
+            vm = null;
+        });
+
+        $scope.$watch(function () {
+            return vm.bbErrorType || vm.errorType;
+        }, function (newValue) {
+            switch (newValue) {
+                case 'broken':
+                    vm.description = bbResources.error_description_broken;
+                    break;
+                case 'construction':
+                    vm.description = bbResources.error_description_construction;
+                    break;
+                case 'notFound':
+                    vm.description = '';
+            }
+        });
+    }
+
+    BBErrorDescriptionController.$inject = ['$scope', 'bbResources'];
+
+    function bbErrorDescription() {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0],
+                bbError = ctrls[1];
+
+            vm.el = el;
+
+            if (bbError !== null) {
+                bbError.setDescription(vm, 'errorDefault' in attrs);
+            }
+
+        }
+
+        return {
+            restrict: 'E',
+            require: ['bbErrorDescription', '?^bbError'],
+            controller: BBErrorDescriptionController,
+            controllerAs: 'bbErrorDescription',
+            bindToController: {
+                errorType: '@',
+                bbErrorType: '@'
+            },
+            link: link,
+            scope: {},
+            transclude: true,
+            templateUrl: 'sky/templates/error/error.description.directive.html'
+        };
+    }
+
+    angular.module('sky.error.description.directive', [])
+        .directive('bbErrorDescription', bbErrorDescription);
+}());
+
 /*global angular */
 (function () {
     'use strict';
@@ -2641,48 +3203,6 @@
         cls: 'action'
     }];
 
-    function makeErrorComponent(component) {
-        var controllerName,
-            name = component.name;
-
-        function Controller($scope) {
-            var vm = this;
-
-            $scope.$on('$destroy', function () {
-                vm.onDestroy();
-                vm = null;
-            });
-        }
-
-        Controller.$inject = ['$scope'];
-
-        function componentFn() {
-            function link(scope, el, attrs, ctrls) {
-                var vm = ctrls[0],
-                    bbError = ctrls[1];
-
-                vm.el = el;
-
-                bbError['set' + name](vm);
-            }
-
-            return {
-                restrict: 'E',
-                require: ['bbError' + name, '^bbError'],
-                controller: controllerName,
-                controllerAs: 'bbError' + name,
-                bindToController: true,
-                link: link,
-                scope: {}
-            };
-        }
-
-        controllerName = 'BBError' + name + 'Controller';
-
-        angular.module('sky.error.directive')
-            .controller(controllerName, Controller)
-            .directive('bbError' + name, componentFn);
-    }
 
     function getCtrlPropName(component) {
         var name = component.name;
@@ -2690,25 +3210,46 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBErrorController() {
+    function getOverridePropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'HasOverride';
+    }
+
+    function BBErrorController($scope) {
         var vm = this;
 
         function addComponentSetter(component) {
             var name = component.name;
 
-            vm['set' + name] = function (ctrl) {
-                var propName = getCtrlPropName(component);
+            vm['set' + name] = function (ctrl, isDefaultError) {
+                var ctrlName = getCtrlPropName(component),
+                    hasOverride = getOverridePropName(component);
 
-                vm[propName] = ctrl;
+                vm[ctrlName] = ctrl;
+
+                if (!isDefaultError) {
+                    vm[hasOverride] = true;
+                }
 
                 ctrl.onDestroy = function () {
-                    vm[propName] = null;
+                    vm[ctrlName] = null;
                 };
             };
         }
 
+        $scope.$watch(function () {
+            return vm.bbErrorType || vm.errorType;
+        }, function (newValue) {
+            vm.imageType = newValue;
+            vm.titleType =  newValue;
+            vm.descriptionType =  newValue;
+        });
+
         components.forEach(addComponentSetter);
     }
+
+    BBErrorController.$inject = ['$scope'];
 
     function bbError() {
         function link(scope, el, attrs, vm) {
@@ -2716,7 +3257,9 @@
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
                 }, function (newValue) {
+
                     if (newValue) {
+
                         el.find('.bb-error-' + component.cls)
                             .empty()
                             .append(newValue.el);
@@ -2731,7 +3274,10 @@
             restrict: 'E',
             controller: 'BBErrorController',
             controllerAs: 'bbError',
-            bindToController: true,
+            bindToController: {
+                errorType: '@',
+                bbErrorType: '@'
+            },
             link: link,
             scope: {},
             templateUrl: 'sky/templates/error/error.directive.html',
@@ -2739,12 +3285,134 @@
         };
     }
 
-    angular.module('sky.error.directive', [])
+    angular.module('sky.error.directive', ['sky.error.image.directive', 'sky.error.title.directive', 'sky.error.description.directive', 'sky.error.action.directive'])
         .controller('BBErrorController', BBErrorController)
         .directive('bbError', bbError);
 
-    components.forEach(makeErrorComponent);
+}());
 
+/* global angular */
+(function () {
+    'use strict';
+
+    function BBErrorImageController($scope) {
+        var vm = this;
+
+        $scope.$on('$destroy', function () {
+            vm.onDestroy();
+            vm = null;
+        });
+
+
+    }
+
+    BBErrorImageController.$inject = ['$scope'];
+
+    function bbErrorImage() {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0],
+                bbError = ctrls[1];
+
+            vm.el = el;
+
+            if (bbError !== null) {
+                bbError.setImage(vm, 'errorDefault' in attrs);
+            }
+
+            if (angular.isDefined(attrs.errorType)) {
+                scope.$watch(function () {
+                    return vm.errorType;
+                }, function (newValue) {
+                    if (newValue !== vm.bbErrorType) {
+                        vm.bbErrorType = newValue;
+                    }
+                });
+            }
+        }
+
+        return {
+            restrict: 'E',
+            require: ['bbErrorImage', '?^bbError'],
+            controller: BBErrorImageController,
+            controllerAs: 'bbErrorImage',
+            bindToController: {
+                errorType: '@',
+                bbErrorType: '@'
+            },
+            link: link,
+            scope: {},
+            transclude: true,
+            templateUrl: 'sky/templates/error/error.image.directive.html'
+        };
+    }
+
+    angular.module('sky.error.image.directive', [])
+        .directive('bbErrorImage', bbErrorImage);
+}());
+
+/* global angular */
+(function () {
+    'use strict';
+
+    function BBErrorTitleController($scope, bbResources) {
+        var vm = this;
+
+        $scope.$on('$destroy', function () {
+            vm.onDestroy();
+            vm = null;
+        });
+
+        $scope.$watch(function () {
+            return vm.bbErrorType || vm.errorType;
+        }, function (newValue) {
+            switch (newValue) {
+                case 'broken':
+                    vm.title = bbResources.error_title_broken;
+                    break;
+                case 'construction':
+                    vm.title = bbResources.error_title_construction;
+                    break;
+                case 'notFound':
+                    vm.title = bbResources.error_title_notfound;
+                    break;
+            }
+        });
+
+    }
+
+    BBErrorTitleController.$inject = ['$scope', 'bbResources'];
+
+    function bbErrorTitle() {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0],
+                bbError = ctrls[1];
+
+            vm.el = el;
+
+            if (bbError !== null) {
+                bbError.setTitle(vm, 'errorDefault' in attrs);
+            }
+
+        }
+
+        return {
+            restrict: 'E',
+            require: ['bbErrorTitle', '?^bbError'],
+            controller: BBErrorTitleController,
+            controllerAs: 'bbErrorTitle',
+            bindToController: {
+                errorType: '@',
+                bbErrorType: '@'
+            },
+            link: link,
+            scope: {},
+            transclude: true,
+            templateUrl: 'sky/templates/error/error.title.directive.html'
+        };
+    }
+
+    angular.module('sky.error.title.directive', [])
+        .directive('bbErrorTitle', bbErrorTitle);
 }());
 
 /*global angular */
@@ -2839,13 +3507,13 @@
                                 url: scope.bbFileDrop.url
                             }
                         });
-                        
+
                         scope.bbFileDrop.url = null;
                     },
-                    fileChange: function ($files, $event, $rejectedFiles) {
+                    fileChange: function ($files, $event, $invalidFiles) {
                         scope.bbFileDropChange({
                             files: $files,
-                            rejectedFiles: $rejectedFiles
+                            rejectedFiles: $invalidFiles
                         });
                     }
                 };
@@ -2863,7 +3531,7 @@
 
                 dropEl.attr({
                     'ngf-allow-dir': attrs.bbFileDropAllowDir,
-                    'ngf-accept': attrs.bbFileDropAccept,
+                    'ngf-pattern': attrs.bbFileDropAccept,
                     'ngf-multiple': attrs.bbFileDropMultiple || 'true',
                     'ngf-min-size': attrs.bbFileDropMinSize || '0',
                     'ngf-max-size': attrs.bbFileDropMaxSize || '500000'
@@ -3703,7 +4371,6 @@
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -3933,7 +4600,8 @@
 
                             function setScrollbarHeight() {
                                 var topScrollbar = getTopScrollbar(),
-                                    topScrollbarDiv = getTopScrollbarDiv();
+                                    topScrollbarDiv = getTopScrollbarDiv(),
+                                    scrollbarWidth = bbWindow.getScrollbarWidth();
 
                                 if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
@@ -4078,7 +4746,7 @@
                             function resizeStop(newWidth, index) {
                                 var changedWidth,
                                     resizedColumnIndex = index;
-                                
+
                                 //If multiselect and/or contextmenu exist, then the resized column index is shifted.
                                 if (locals.multiselect) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
@@ -4086,7 +4754,7 @@
                                 if (getContextMenuItems) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
                                 }
-                                
+
                                 $scope.$emit("columnsResized", { newWidth: newWidth, index: resizedColumnIndex });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
@@ -4112,7 +4780,7 @@
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-                                
+
                                 return;
                             }
 
@@ -4433,7 +5101,7 @@
                             }
 
                             function pageChanged() {
-                                var skip = ($scope.locals.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
+                                var skip = ($scope.paginationOptions.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
                                     top = $scope.paginationOptions.itemsPerPage;
 
                                 $scope.$emit('loadMoreRows', {top: top, skip: skip});
@@ -4451,9 +5119,13 @@
                                         $scope.paginationOptions.maxPages = DEFAULT_MAX_PAGES;
                                     }
 
+                                    if (!$scope.paginationOptions.currentPage) {
+                                        $scope.paginationOptions.currentPage = 1;
+                                    }
+
                                     $scope.paginationOptions.pageChanged = pageChanged;
 
-                                    $scope.locals.currentPage = 1;
+
                                 }
                             }
 
@@ -4793,8 +5465,6 @@
                                 $scope.selectedRows = [];
                             }
 
-                            scrollbarWidth = bbWindow.getScrollbarWidth();
-
                             id = $scope.$id;
                             toolbarContainerId = id + '-toolbar-container';
 
@@ -4892,7 +5562,7 @@
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
-                            
+
                             $scope.$on("reInitGrid", function () {
                                 reInitGrid();
                             });
@@ -6260,17 +6930,31 @@
                     scope.$watch('pagedData', function () {
                         var pageCount,
                             pagedData,
-                            tries = 0,
                             windowResizeTimeout;
 
-                        // Try for 1 second to set a min-height on paged data so the paging bar doesn't jump
+                        // set a min-height on paged data so the paging bar doesn't jump
                         // up when the user hits a page with less than the max number of items.
-                        function trySetMinHeight() {
+                        function setMinHeight() {
+
+                            /* This functionality needs to be in a timeout so we can
+                               force dirty checking in the changePage function with an $apply.
+                               Failure to do so causes the ng-repeat that builds the rows to not
+                               be updated, which leads to the same calculated height for each page
+                               as the contents of the rows have not been updated. */
                             $timeout(function () {
                                 var currentPage,
-                                    height = el.height(),
+                                    placeholder,
                                     i,
                                     maxHeight = 0;
+
+                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
+
+                                // Use a placeholder to keep track of where the element is before moving.
+                                placeholder = angular.element('<div class="bb-pagination-placeholder"></div>');
+                                el.after(placeholder);
+
+                                // Append the element to the body in case certain css rules are affecting the height.
+                                angular.element('body').prepend(el);
 
                                 function changePage(pageNumber) {
                                     /* Disable animation for the page change
@@ -6282,16 +6966,7 @@
                                     pagedData.pageChanged();
                                     scope.$apply();
                                     $animate.enabled(true, el);
-
                                 }
-
-                                if (height === 0 && tries < 5) {
-                                    tries += 1;
-                                    trySetMinHeight();
-                                    return;
-                                }
-
-                                el.addClass('bb-pagination-content bb-pagination-content-calculating');
 
                                 // Cache the current page so we can put it back.
                                 currentPage = pagedData.currentPage;
@@ -6311,8 +6986,11 @@
                                 // Navigate back to the initial page.
                                 changePage(currentPage);
 
+                                // Make sure to move the element back to its original position.
+                                placeholder.after(el);
+                                placeholder.remove();
                                 el.removeClass('bb-pagination-content-calculating');
-                            }, 200);
+                            });
                         }
 
                         pagedData = scope.pagedData;
@@ -6321,7 +6999,7 @@
                             pageCount = Math.ceil(pagedData.totalItems / (pagedData.itemsPerPage || 1));
 
                             if (pageCount > 1) {
-                                trySetMinHeight();
+                                setMinHeight();
 
                                 removeWindowResizeHandler();
 
@@ -6330,7 +7008,7 @@
                                         $timeout.cancel(windowResizeTimeout);
                                     }
 
-                                    windowResizeTimeout = $timeout(trySetMinHeight, 500);
+                                    windowResizeTimeout = $timeout(setMinHeight, 500);
                                 });
 
                                 el.on('$destroy', removeWindowResizeHandler);
@@ -6523,6 +7201,551 @@ angular.module('sky.palette.config', [])
         .directive('bbUibPopoverTemplate', bbUibPopoverTemplate)
         .directive('bbPopoverTemplate', bbPopoverTemplate);
 }(jQuery));
+
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+
+    function bbReorder($filter, $timeout) {
+        var bbAutonumericConfig = {
+            mDec: 0 // no decimals
+        };
+
+        function applyNumberFormatting(index) {
+            return $filter('bbAutonumeric')(index, bbAutonumericConfig);
+        }
+
+        function setPositionNumberText(item, index) {
+            $(item).find('.bb-reorder-list-sorting-number').text(applyNumberFormatting(index));
+        }
+
+        function setPositionNumbers(incrementStep, siblingTraversalFunc, displayIndex, placeholder, item) {
+            var curSibling;
+
+            // set the position number of the item being sorted to account for how the user moved it
+            setPositionNumberText(item, displayIndex);
+
+            curSibling = siblingTraversalFunc.call(placeholder).not(item);
+            while (curSibling.length > 0) {
+                displayIndex = displayIndex + incrementStep;
+                setPositionNumberText(curSibling, displayIndex);
+                curSibling = siblingTraversalFunc.call(curSibling).not(item);
+            }
+        }
+
+        function link(scope, el, attrs, vm) {
+            var sortableOptions, // jQuery sortable widget options
+                originalSortItemIndex, // the original index of th item being sorted before sorting starts
+                currentSortItemIndex, // the index where the sorting item is currently being placed
+                finalIndex = -1, // the final index of the element being sorting after sorting has ended
+                currentRepeaterItems; // the set of items from ng-repeat before sorting starts
+
+            vm.sorting = false;
+
+            // sends an item to the top of the list with a rising animation
+            vm.pushToTop = function (item) {
+                var toTheTopEl,
+                    index,
+                    toTheTopElOffset,
+                    animateCloneEl;
+
+                index = vm.bbReorderItems.indexOf(item);
+
+                el.sortable("disable"); // don't allow sorting during animation
+
+                toTheTopEl = $(el.children()[index]);
+                toTheTopElOffset = toTheTopEl.position();
+
+                // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
+                animateCloneEl = toTheTopEl.clone();
+                animateCloneEl.addClass('bb-reorder-animate-element');
+                animateCloneEl.css({top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px"});
+
+                el.append(animateCloneEl);
+
+                toTheTopEl.addClass('bb-reorder-list-row-placeholder');
+
+                // animate that we are moving the item to the top of the list
+                $(animateCloneEl).fadeOut({duration: 500, queue: false, always: function () {
+                   toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
+
+                   animateCloneEl.remove();
+                   el.sortable("enable");
+
+                   scope.$apply(function () {
+                       // perform the swap moving the item to the top of the list
+                       vm.bbReorderItems.splice(
+                         0, 0,
+                         vm.bbReorderItems.splice(index, 1)[0]);
+                   });
+               }});
+            };
+
+            //Setup jQuery sortable options for the items being sorted
+            sortableOptions = {
+                placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
+                axis: 'y', // constrain movement to the Y axis,
+                handle: '.bb-reorder-list-col-icon',
+                start: function (e, ui) {
+                    scope.$apply(function () {
+                        vm.sorting = true;
+                    });
+
+                    // need to keep track of the how the items were placed in the DOM since
+                    // the sortable is going to mess them up which breaks ng-repeat
+                    currentRepeaterItems = el.contents().not(ui.placeholder);
+
+                    ui.item.addClass('bb-reorder-list-sorting-item');
+
+                    originalSortItemIndex = ui.item.index();
+                    currentSortItemIndex = originalSortItemIndex;
+
+                    // need to set the height of the placeholder since we need to account for the padding on the row items
+                    ui.placeholder.height(ui.item.outerHeight());
+
+                    // set the current index of all rows for display purposes
+                    $.each(el.children('.bb-reorder-list-row'), function (i, item) {
+                        setPositionNumberText(item, i + 1);
+                    });
+                },
+                stop: function (e, ui) {
+                    // replace the repeater elements and comments so ng-repeat does not break
+                    currentRepeaterItems.appendTo(el);
+
+                    ui.item.removeClass('bb-reorder-list-sorting-item');
+
+                    if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
+                        scope.$apply(function () {
+                            // perform the swap that the user just performed
+                            vm.bbReorderItems.splice(
+                              finalIndex, 0,
+                              vm.bbReorderItems.splice(originalSortItemIndex, 1)[0]);
+                        });
+                    }
+
+                    scope.$apply(function () {
+                        vm.sorting = false;
+                    });
+
+                    originalSortItemIndex = null;
+                    currentSortItemIndex = null;
+                    finalIndex = -1;
+                    currentRepeaterItems = null;
+
+                    // once the ng-repeat has finished rendering the move, re-enable animations
+                    $timeout(function () {
+                        el.children().removeClass('bb-reorder-list-no-animate');
+                    });
+                },
+                update: function (e, ui) {
+                    // grab the final index of the item being sorted before we cancel
+                    // the sort and its position gets reset.
+                    finalIndex = ui.item.index();
+
+                    // don't animate the move when sorting
+                    el.children().addClass('bb-reorder-list-no-animate');
+
+                    // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
+                    el.sortable('cancel');
+                },
+                change: function (e, ui) {
+                    var displayIndex,
+                        newIndex;
+
+                    // Since the element being sorted is positioned absolute it remains in the
+                    // same position so we can't use its index. Instead use the placeholder since
+                    // that will be in the right position in the list.
+                    newIndex = ui.item.siblings().index(ui.placeholder);
+
+                    if (newIndex === currentSortItemIndex) {
+                        return;
+                    }
+
+                    // the display position shown to the user should start at 1, not 0
+                    displayIndex = newIndex + 1;
+
+                    // when we are sorting, change the position numbers on the rows
+                    if (newIndex > currentSortItemIndex) {
+                        // set the text of all previous siblings to account for change
+                        setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
+                    } else {
+                        // set the text of all next siblings to account for change
+                        setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
+                    }
+
+                    currentSortItemIndex = newIndex;
+                }
+            };
+
+            el.sortable(sortableOptions);
+        }
+
+        return {
+            replace: true,
+            restrict: 'E',
+            scope: {},
+            bindToController: {
+                bbReorderItems: '='
+            },
+            controller: angular.noop,
+            controllerAs: 'bbReorder',
+            templateUrl: 'sky/templates/reorder/reorder.directive.html',
+            link: link
+        };
+    }
+
+    bbReorder.$inject = ['$filter', '$timeout'];
+
+    angular.module('sky.reorder.directive', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
+        .directive('bbReorder', bbReorder);
+}(jQuery));
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function BBRepeaterController($scope) {
+        var items = [],
+            vm = this;
+
+        function expandModeIsMultiple() {
+            return vm.bbRepeaterExpandMode === 'multiple';
+        }
+
+        function expandModeIsSingle() {
+            return vm.bbRepeaterExpandMode === 'single';
+        }
+
+        function expandModeIsNone() {
+            return !expandModeIsMultiple() && !expandModeIsSingle();
+        }
+
+        function updateForExpandMode() {
+            var foundExpanded,
+                isCollapsible = !expandModeIsNone(),
+                isSingle = expandModeIsSingle();
+
+            items.forEach(function (item) {
+                item.isCollapsible = isCollapsible;
+
+                if (isSingle && item.bbRepeaterItemExpanded) {
+                    if (foundExpanded) {
+                        item.bbRepeaterItemExpanded = false;
+                    }
+
+                    foundExpanded = true;
+                }
+            });
+        }
+
+        vm.addItem = function (item) {
+            items.push(item);
+        };
+
+        vm.removeItem = function (item) {
+            var itemIndex = items.indexOf(item);
+
+            /*istanbul ignore else sanity check */
+            if (itemIndex >= 0) {
+                items.splice(itemIndex, 1);
+            }
+        };
+
+        vm.itemExpanded = function (expandedItem) {
+            if (vm.bbRepeaterExpandMode === 'single') {
+                items.forEach(function (item) {
+                    if (item !== expandedItem) {
+                        item.bbRepeaterItemExpanded = false;
+                    }
+                });
+            }
+        };
+
+        $scope.$watch(function () {
+            return vm.bbRepeaterExpandMode;
+        }, updateForExpandMode);
+
+        $scope.$watchCollection(function () {
+            return items;
+        }, function () {
+            updateForExpandMode();
+        });
+    }
+
+    BBRepeaterController.$inject = ['$scope'];
+
+    angular.module('sky.repeater.controller', [])
+        .controller('BBRepeaterController', BBRepeaterController);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbRepeater() {
+        function link() {
+
+        }
+
+        return {
+            scope: {},
+            bindToController: {
+                bbRepeaterExpandMode: '@?'
+            },
+            controller: 'BBRepeaterController',
+            controllerAs: 'bbRepeater',
+            link: link,
+            templateUrl: 'sky/templates/repeater/repeater.directive.html',
+            transclude: true
+        };
+    }
+
+    angular.module('sky.repeater.directive', ['sky.repeater.controller'])
+        .directive('bbRepeater', bbRepeater);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    var components = [{
+        name: 'ContextMenu',
+        cls: 'context-menu'
+    }, {
+        name: 'Title',
+        cls: 'title'
+    }],
+    repeaterItemModule;
+
+    function makeComponent(component) {
+        var controllerName,
+            name = component.name;
+
+        function Controller($scope) {
+            var vm = this;
+
+            $scope.$on('$destroy', function () {
+                vm.onDestroy();
+                vm = null;
+            });
+        }
+
+        Controller.$inject = ['$scope'];
+
+        function componentFn() {
+            function link(scope, el, attrs, ctrls) {
+                var vm = ctrls[0],
+                    bbRepeaterItem = ctrls[1];
+
+                vm.el = el;
+
+                bbRepeaterItem['set' + name](vm);
+            }
+
+            return {
+                restrict: 'E',
+                require: ['bbRepeaterItem' + name, '^bbRepeaterItem'],
+                controller: controllerName,
+                controllerAs: 'bbRepeaterItem' + name,
+                bindToController: true,
+                link: link,
+                scope: {}
+            };
+        }
+
+        controllerName = 'BBRepeaterItem' + name + 'Controller';
+
+        repeaterItemModule
+            .controller(controllerName, Controller)
+            .directive('bbRepeaterItem' + name, componentFn);
+    }
+
+    function getCtrlPropName(component) {
+        var name = component.name;
+
+        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
+    }
+
+    function bbRepeaterItem($timeout) {
+        function BBRepeaterItemController() {
+            var vm = this;
+
+            function addComponentSetter(component) {
+                var name = component.name;
+
+                vm['set' + name] = function (ctrl) {
+                    var propName = getCtrlPropName(component);
+
+                    vm[propName] = ctrl;
+
+                    ctrl.onDestroy = function () {
+                        vm[propName] = null;
+                    };
+                };
+            }
+
+            function allowCollapse() {
+                return vm.isCollapsible && vm.titleCtrl;
+            }
+
+            vm.getCls = function () {
+                var cls = [];
+
+                if (allowCollapse()) {
+                    cls.push('bb-repeater-item-collapsible');
+                }
+
+                if (vm.contextMenuCtrl) {
+                    cls.push('bb-repeater-item-with-context-menu');
+                }
+
+                return cls;
+            };
+
+            vm.allowCollapse = allowCollapse;
+
+            components.forEach(addComponentSetter);
+        }
+
+        function link(scope, el, attrs, ctrls) {
+            var animateEnabled,
+                bbRepeater = ctrls[1],
+                vm = ctrls[0];
+
+            function watchForComponent(component) {
+                scope.$watch(function () {
+                    return vm[getCtrlPropName(component)];
+                }, function (newValue) {
+                    if (newValue) {
+                        el.find('.bb-repeater-item-' + component.cls)
+                            .empty()
+                            .append(newValue.el);
+                    }
+                });
+            }
+
+            function getContentEl() {
+                return el.find('.bb-repeater-item-content');
+            }
+
+            function updateForExpandedState() {
+                var animate = animateEnabled,
+                    contentEl = getContentEl(),
+                    method;
+
+                if (!angular.isDefined(vm.bbRepeaterItemExpanded)) {
+                    vm.bbRepeaterItemExpanded = false;
+                    animate = false;
+                }
+
+                if (vm.bbRepeaterItemExpanded || !vm.allowCollapse()) {
+                    method = 'slideDown';
+                } else {
+                    method = 'slideUp';
+                }
+
+                contentEl[method]({
+                    duration: animate ? 250 : 0
+                });
+
+                if (vm.bbRepeaterItemExpanded) {
+                    vm.bbRepeater.itemExpanded(vm);
+                }
+            }
+
+            function syncChevronWithExpanded() {
+                vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
+            }
+
+            vm.bbRepeater = bbRepeater;
+            syncChevronWithExpanded();
+
+            vm.headerClick = function () {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                }
+            };
+
+            components.forEach(watchForComponent);
+
+            scope.$watch(function () {
+                return vm.isCollapsible;
+            }, function (newValue) {
+                if (newValue === false) {
+                    vm.bbRepeaterItemExpanded = true;
+                }
+            });
+
+            scope.$watch(
+                function () {
+                    return vm.bbRepeaterItemExpanded;
+                },
+                function () {
+                    syncChevronWithExpanded();
+                    updateForExpandedState();
+                }
+            );
+
+            scope.$watch(
+                function () {
+                    return vm.titleCtrl;
+                },
+                updateForExpandedState
+            );
+
+            scope.$watch(function () {
+                return vm.chevronDirection;
+            }, function () {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = vm.chevronDirection !== 'down';
+                }
+            });
+
+            bbRepeater.addItem(vm);
+
+            scope.$on('$destroy', function () {
+                bbRepeater.removeItem(vm);
+                vm = null;
+            });
+
+            $timeout(function () {
+                // This will enable expand/collapse animation only after the initial load.
+                animateEnabled = true;
+            });
+        }
+
+        return {
+            bindToController: {
+                bbRepeaterItemExpanded: '=?'
+            },
+            controller: BBRepeaterItemController,
+            controllerAs: 'bbRepeaterItem',
+            link: link,
+            require: ['bbRepeaterItem', '^bbRepeater'],
+            scope: {},
+            templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
+            transclude: true
+        };
+    }
+
+    bbRepeaterItem.$inject = ['$timeout'];
+
+    repeaterItemModule = angular.module(
+        'sky.repeater.item.directive',
+        [
+            'sky.chevron',
+            'sky.resources'
+        ]
+    );
+
+    repeaterItemModule.directive('bbRepeaterItem', bbRepeaterItem);
+
+    components.forEach(makeComponent);
+}());
 
 /*global angular */
 
@@ -7380,7 +8603,7 @@ angular.module('sky.palette.config', [])
                     liEl;
 
                 if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
-                    ulEl = el.find('ul');
+                    ulEl = el.children('ul');
                     liEl = angular.element(getTemplate($templateCache, 'tabbutton'));
                     ulEl.append(liEl);
 
@@ -7430,7 +8653,6 @@ angular.module('sky.palette.config', [])
         self.tabRemoved = function () {
             $scope.bbTabsetOptions.tabCount--;
         };
-
     }
 
     BBTabsetCollapsibleController.$inject = ['$scope'];
@@ -7443,9 +8665,18 @@ angular.module('sky.palette.config', [])
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
+                function getTabUl() {
+                    var ulEl = el.children('ul.nav.nav-tabs');
+                    if (ulEl.length > 0) {
+                        return ulEl.eq(0);
+                    } else {
+                        return el.find('.bb-tabset-dropdown.nav.nav-tabs ul').eq(0);
+                    }
+                }
 
                 function getBootstrapTabs() {
-                    return el.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)');
+                    var ulEl = getTabUl();
+                    return ulEl.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
                 }
 
                 function getDropdownEl() {
@@ -7480,6 +8711,8 @@ angular.module('sky.palette.config', [])
 
                 }
 
+
+
                 function setupCollapsibleTabs(isCollapsed) {
                     var tabsEl,
                         dropdownContainerEl,
@@ -7489,7 +8722,7 @@ angular.module('sky.palette.config', [])
                     tabsEl = getBootstrapTabs();
                     dropdownButtonsEl = el.find('.bb-tab-button-wrap');
 
-                    ulEl = el.find('ul:not(.bb-tabset-dropdown)');
+                    ulEl = getTabUl();
                     if (isCollapsed) {
                         dropdownContainerEl = el.find('.bb-tabset-dropdown');
 
@@ -8434,6 +9667,8 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
+    var DEFAULT_TIMEOUT = 10000;
+
     function nextId() {
         nextId.index = nextId.index || 0;
         nextId.index++;
@@ -8446,16 +9681,31 @@ angular.module('sky.palette.config', [])
         } else if (!opts.message && !opts.templateUrl) {
             throw 'You must provide either a message or a templateUrl.';
         }
+
+        switch (opts.toastType) {
+        case 'info':
+        case 'warning':
+        case 'success':
+        case 'error':
+            break;
+        case 'danger':
+            opts.toastType = 'error';
+            break;
+        default:
+            opts.toastType = 'info';
+        }
     }
 
     angular.module('sky.toast', ['toastr'])
         .config(['toastrConfig', function (toastrConfig) {
             angular.extend(toastrConfig, {
                 closeButton: true,
+                extendedTimeOut: DEFAULT_TIMEOUT,
                 newestOnTop: true,
                 positionClass: 'toast-bottom-right',
                 tapToDismiss: false,
-                timeOut: 6000
+                timeOut: DEFAULT_TIMEOUT,
+                toastClass: 'toast bb-toast'
             });
         }])
         .factory('bbToast', ['toastr', '$templateCache', '$compile', '$controller', '$rootScope', '$q', '$injector', function (toastr, $templateCache, $compile, $controller, $rootScope, $q, $injector) {
@@ -8470,14 +9720,26 @@ angular.module('sky.palette.config', [])
                 return promisesArr;
             }
 
-            function open(message, config) {
+            function open(message, config, opts) {
                 config = config || {};
-                config.iconClass = 'bb-toast';
-                return toastr.info(message, '', config);
+
+                config.iconClass = 'bb-toast-' + opts.toastType;
+
+                switch (opts.timeout) {
+                case 'infinite':
+                    config.timeOut = config.extendedTimeOut = 0;
+                    break;
+                default:
+                    if (!isNaN(opts.timeout)) {
+                        config.timeOut = config.extendedTimeOut = +opts.timeout;
+                    }
+                }
+
+                return toastr[opts.toastType](message, '', config);
             }
 
             function openMessage(opts) {
-                return open(opts.message);
+                return open(opts.message, null, opts);
             }
 
             function openWithTemplate(opts) {
@@ -8518,7 +9780,7 @@ angular.module('sky.palette.config', [])
 
                     elId = nextId();
 
-                    toast = open("<div id='" + elId + "'></div>", { allowHtml: true });
+                    toast = open("<div id='" + elId + "'></div>", { allowHtml: true }, opts);
                     toastScope = toast.scope;
 
                     //We need to hook in after the toast element has been created and the temporary message
@@ -8535,7 +9797,10 @@ angular.module('sky.palette.config', [])
 
             return {
                 open: function (opts) {
-                    opts = opts || {};
+                    // Clone the options so as we make changes we don't alter the object
+                    // passed to us.
+                    opts = angular.extend({}, opts);
+
                     validateOptions(opts);
 
                     if (opts.templateUrl) {
@@ -9595,8 +10860,10 @@ angular.module('sky.palette.config', [])
         'sky.autofocus',
         'sky.autonumeric',
         'sky.avatar',
+        'sky.card',
         'sky.check',
         'sky.checklist',
+        'sky.chevron',
         'sky.contextmenu',
         'sky.data',
         'sky.datepicker',
@@ -9617,6 +10884,8 @@ angular.module('sky.palette.config', [])
         'sky.pagesummary',
         'sky.pagination',
         'sky.popover',
+        'sky.reorder',
+        'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',
         'sky.searchfield',
@@ -9663,7 +10932,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_no_items":"No items found","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -9732,8 +11001,30 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/card/card.directive.html',
+        '<section class="bb-card" ng-class="bbCard.getClass()">\n' +
+        '  <header ng-show="bbCard.headingLeftCtrl || bbCard.titleCtrl || bbCard.headingRightCtrl || bbCard.bbCardSelectable">\n' +
+        '    <label class="bb-card-header">\n' +
+        '      <div class="bb-card-heading-left" ng-if="bbCard.headingLeftCtrl"></div>\n' +
+        '      <div class="bb-card-heading-middle">\n' +
+        '        <h1 class="bb-card-title" ng-if="bbCard.titleCtrl"></h1>\n' +
+        '      </div>\n' +
+        '      <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.bbCardSelectable"></div>\n' +
+        '      <div class="bb-card-check" ng-if="bbCard.bbCardSelectable">\n' +
+        '        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />\n' +
+        '      </div>\n' +
+        '    </label>\n' +
+        '  </header>\n' +
+        '  <label class="bb-card-content" for="{{bbCard.cardCheckId}}"></label>\n' +
+        '  <div class="bb-card-actions" ng-if="bbCard.actionsCtrl"></div>\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</section>\n' +
+        '');
+    $templateCache.put('sky/templates/check/labeltext.html',
+        '<span class="bb-check-label-text"></span>\n' +
+        '');
     $templateCache.put('sky/templates/check/styled.html',
-        '<span role="input"></span>\n' +
+        '<span role="checkbox" tabindex="-1"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
@@ -9743,15 +11034,34 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div>\n' +
         '    <div ng-if="bbChecklist.bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
         '      <div class="bb-checklist-search">\n' +
-        '        <input type="text" class="bb-checklist-search-box" maxlength="255" placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}" ng-model="bbChecklist.searchText" ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
+        '        <input\n' +
+        '          type="text"\n' +
+        '          class="bb-checklist-search-box"\n' +
+        '          maxlength="255"\n' +
+        '          placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}"\n' +
+        '          ng-model="bbChecklist.searchText"\n' +
+        '          ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}"\n' +
+        '          data-bbauto-field="ChecklistSearch"\n' +
+        '          ng-attr-autofocus="{{bbChecklist.focusSearch}}" />\n' +
         '        <div class="bb-checklist-search-icon">\n' +
         '          <i class="fa fa-search"></i>\n' +
         '        </div>\n' +
         '      </div>\n' +
         '    </div>\n' +
-        '    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar">\n' +
-        '      <button type="button" class="btn btn-sm" ng-click="bbChecklist.filterByCategory()" ng-class="bbChecklist.selectedCategory ? \'btn-default\' : \'btn-primary\'">{{\'grid_column_picker_all_categories\' | bbResources}}</button>\n' +
-        '      <button ng-repeat="category in bbChecklist.bbChecklistCategories" type="button" class="btn btn-sm" ng-click="bbChecklist.filterByCategory(category)" ng-class="bbChecklist.selectedCategory === category ? \'btn-primary\' : \'btn-default\'">{{category}}</button>\n' +
+        '    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">\n' +
+        '      <div class="form-group">\n' +
+        '        <select class="form-control" ng-model="bbChecklist.selectedOption">\n' +
+        '          <option value="{{bbChecklist.allCategories}}">{{\'grid_column_picker_all_categories\' | bbResources}}</option>\n' +
+        '          <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>\n' +
+        '        </select>\n' +
+        '      </div>\n' +
+        '      <div class="form-group">\n' +
+        '\n' +
+        '        <label class="control-label" ng-if="bbChecklist.bbChecklistSubsetLabel">\n' +
+        '          <input class="bb-checklist-subset-input" bb-check type="checkbox" ng-model="bbChecklist.subsetSelected" />\n' +
+        '          {{bbChecklist.bbChecklistSubsetLabel}}\n' +
+        '        </label>\n' +
+        '      </div>\n' +
         '    </div>\n' +
         '    <div class="bb-checklist-filter-bar bb-checklist-select-all-bar" ng-show="!bbChecklist.isSingleSelect()">\n' +
         '      <button type="button" class="btn btn-link" data-bbauto-field="ChecklistSelectAll" ng-click="bbChecklist.selectAll()">{{\'checklist_select_all\' | bbResources}}</button>\n' +
@@ -9786,7 +11096,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">\n' +
         '        <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">\n' +
         '          <td>\n' +
-        '            <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />\n' +
+        '            <input ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />\n' +
         '          </td>\n' +
         '          <td ng-repeat="column in bbChecklist.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
         '        </tr>\n' +
@@ -9803,31 +11113,42 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/chevron/chevron.directive.html',
+        '<button type="button" class="bb-chevron" ng-class="bbChevron.getCls()" ng-click="bbChevron.click($event)" aria-label="{{bbChevron.getLabel()}}">\n' +
+        '  <i class="bb-chevron-part bb-chevron-left"></i>\n' +
+        '  <i class="bb-chevron-part bb-chevron-right"></i>\n' +
+        '</button>\n' +
+        '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
         '    <ul uib-dropdown-menu role="menu">\n' +
-        '        <ng-transclude/>\n' +
+        '        <ng-transclude></ng-transclude>\n' +
         '    </ul>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menubutton.html',
-        '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>\n' +
+        '<button type="button" class="btn bb-btn-secondary bb-context-menu-btn" aria-label="{{bbContextMenuButton.getAriaLabel()}}">\n' +
+        '  <i class="fa fa-ellipsis-h"></i>\n' +
+        '</button>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menuitem.html',
-        '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>\n' +
+        '<li role="presentation">\n' +
+        '  <a role="menuitem" href="javascript:void(0)" ng-click="bbContextMenuItem.clickItem()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '  </a>\n' +
+        '</li>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <uib-accordion>\n' +
-        '        <uib-accordion-group is-open="accordionLocals.accordionOpen">\n' +
-        '\n' +
-        '            <uib-accordion-heading ng-if="accordionLocals.staticHeader">\n' +
-        '                <div ng-click="toggleAccordion($event)">\n' +
+        '        <uib-accordion-group is-open="bbSubmenu.accordionOpen">\n' +
+        '            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">\n' +
+        '                <div ng-click="bbSubmenu.toggleAccordion($event)">\n' +
         '                    <span>\n' +
-        '                        {{heading}}\n' +
+        '                        {{bbSubmenu.heading}}\n' +
         '                    <span>\n' +
-        '                    <i ng-class="\'fa-chevron-\' + (accordionLocals.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '                    <i ng-class="\'fa-chevron-\' + (bbSubmenu.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '                </div>\n' +
         '            </uib-accordion-heading>\n' +
         '            <ng-transclude></ng-transclude>\n' +
@@ -9837,11 +11158,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenuheading.html',
         '<uib-accordion-heading>\n' +
-        '    <div ng-click="toggleAccordion($event)">\n' +
+        '    <div ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '        <i ng-class="\'fa-chevron-\' + (accordionLocals.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '    </div>\n' +
-        '\n' +
         '</uib-accordion-heading>\n' +
         '');
     $templateCache.put('sky/templates/datefield/datefield.html',
@@ -9854,7 +11174,30 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/datepicker/datepicker.html',
         '<div>\n' +
         '    <div ng-if="locals.loaded" class="input-group bb-datefield">\n' +
-        '        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" uib-datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" max-date="maxDate" min-date="minDate" ng-required="locals.required" bb-min-date bb-max-date />\n' +
+        '        <input\n' +
+        '          name="{{locals.inputName}}"\n' +
+        '          type="text"\n' +
+        '\n' +
+        '          ng-keydown="locals.enterPress($event)"\n' +
+        '\n' +
+        '          class="form-control"\n' +
+        '          ng-model="locals.date"\n' +
+        '          is-open="locals.opened"\n' +
+        '          datepicker-options="locals.dateOptions"\n' +
+        '          uib-datepicker-popup="{{format}}"\n' +
+        '          show-button-bar="locals.showButtonBar"\n' +
+        '          current-text="{{resources.datepicker_today}}"\n' +
+        '          clear-text="{{resources.datepicker_clear}}"\n' +
+        '          close-text="{{resources.datepicker_close}}"\n' +
+        '          datepicker-append-to-body="{{locals.appendToBody}}"\n' +
+        '          close-on-date-selection="{{locals.closeOnSelection}}"\n' +
+        '          bb-datepicker-custom-validate="{{locals.hasCustomValidation}}"\n' +
+        '          placeholder="{{placeholderText}}"\n' +
+        '          max-date="maxDate"\n' +
+        '          min-date="minDate"\n' +
+        '          ng-required="locals.required"\n' +
+        '          bb-min-date\n' +
+        '          bb-max-date />\n' +
         '        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{\'bb-datefield-open\': locals.opened}">\n' +
         '            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
@@ -9886,15 +11229,49 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/error/error.description.directive.html',
+        '<div class="bb-error-description-container">\n' +
+        '  <span ng-if="bbErrorDescription.description">{{bbErrorDescription.description}}</span>\n' +
+        '</div>\n' +
+        '<ng-transclude></ng-transclude>\n' +
+        '');
     $templateCache.put('sky/templates/error/error.directive.html',
-        '<div class="row">\n' +
+        '<div class="row bb-error">\n' +
         '  <section class="col-xs-12 text-center">\n' +
-        '    <div class="bb-error-image" ng-show="bbError.imageCtrl"></div>\n' +
-        '    <div class="bb-error-title" ng-show="bbError.titleCtrl"></div>\n' +
-        '    <div class="bb-error-description" ng-show="bbError.descriptionCtrl"></div>\n' +
+        '    <div class="bb-error-image" ng-show="bbError.imageCtrl">\n' +
+        '      <bb-error-image error-default error-type="{{bbError.imageType}}" ng-if="bbError.imageType !== \'\' && !bbError.imageHasOverride">\n' +
+        '      </bb-error-image>\n' +
+        '    </div>\n' +
+        '    <div class="bb-error-title" ng-show="bbError.titleCtrl">\n' +
+        '      <bb-error-title error-default error-type="{{bbError.titleType}}" ng-if="bbError.titleType !== \'\' && !bbError.titleHasOverride">\n' +
+        '      </bb-error-title>\n' +
+        '    </div>\n' +
+        '    <div class="bb-error-description" ng-show="bbError.descriptionCtrl">\n' +
+        '      <bb-error-description error-default error-type="{{bbError.descriptionType}}" ng-if="bbError.descriptionType !== \'\' && !bbError.descriptionHasOverride">\n' +
+        '      </bb-error-description>\n' +
+        '    </div>\n' +
         '    <div class="bb-error-action" ng-show="bbError.actionCtrl"></div>\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '  </section>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/error/error.image.directive.html',
+        '<div ng-if="bbErrorImage.bbErrorType" class="bb-error-image-container">\n' +
+        '  <div class="bb-error-image-broken" ng-if="bbErrorImage.bbErrorType === \'broken\'">\n' +
+        '  </div>\n' +
+        '\n' +
+        '  <div class="bb-error-image-construction" ng-if="bbErrorImage.bbErrorType === \'construction\'">\n' +
+        '  </div>\n' +
+        '\n' +
+        '  <div class="bb-error-image-notfound" ng-if="bbErrorImage.bbErrorType === \'notFound\'">\n' +
+        '  </div>\n' +
+        '</div>\n' +
+        '<ng-transclude></ng-transclude>\n' +
+        '');
+    $templateCache.put('sky/templates/error/error.title.directive.html',
+        '<div class="bb-error-title-container">\n' +
+        '  <span ng-if="bbErrorTitle.title">{{bbErrorTitle.title}}</span>\n' +
+        '  <ng-transclude></ng-transclude>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/error/errormodal.template.html',
@@ -9924,7 +11301,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '             ngf-drop\n' +
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
-        '             ngf-change="bbFileDrop.fileChange($files, $event, $rejectedFiles)"\n' +
+        '             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"\n' +
         '             >\n' +
         '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
         '                <div class="bb-file-drop-contents-not-over">\n' +
@@ -9954,7 +11331,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           class="form-control"\n' +
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
-        '                           ng-keypress="$event.keyCode === 13 && bbFileDrop.addLink($event)"\n' +
+        '                           ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"\n' +
         '                           />\n' +
         '                </div>\n' +
         '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
@@ -10129,7 +11506,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
-        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="locals.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
+        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
@@ -10268,6 +11645,49 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/reorder/reorder.directive.html',
+        '<div class="bb-reorder-container">\n' +
+        ' <div ng-repeat="item in bbReorder.bbReorderItems" class="bb-reorder-list-row">\n' +
+        '   <div class="bb-reorder-list-row-container">\n' +
+        '     <div class="bb-reorder-list-col bb-reorder-list-col-icon">\n' +
+        '       <i class="fa fa-arrows"></i>\n' +
+        '     </div>\n' +
+        '     <div class="bb-reorder-list-col bb-reorder-list-col-content">\n' +
+        '       <div class="bb-reorder-list-title">{{item.title}}</div>\n' +
+        '       <div class="bb-reorder-list-description">{{item.description}}</div>\n' +
+        '     </div>\n' +
+        '     <button type="button" ng-show="!$first &amp;&amp; !bbReorder.sorting" ng-click="bbReorder.pushToTop(item)" class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link">\n' +
+        '       <i class="fa fa-arrow-circle-up"></i>\n' +
+        '       <span>{{\'reorder_top\' | bbResources}}</span>\n' +
+        '     </button>\n' +
+        '     <div ng-show="bbReorder.sorting" class="bb-reorder-list-col">\n' +
+        '       <span class="bb-reorder-list-sorting-number"></span>\n' +
+        '     </div>\n' +
+        '   </div>\n' +
+        ' </div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/repeater/repeater.directive.html',
+        '<div class="bb-repeater-component bb-repeater">\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/repeater/repeater.item.directive.html',
+        '<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">\n' +
+        '  <div class="bb-repeater-item-left">\n' +
+        '    <div class="bb-repeater-item-context-menu" ng-if="bbRepeaterItem.contextMenuCtrl"></div>\n' +
+        '  </div>\n' +
+        '  <div class="bb-repeater-item-right">\n' +
+        '    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick()">\n' +
+        '      <h1 class="bb-repeater-item-title" ng-if="bbRepeaterItem.titleCtrl"></h1>\n' +
+        '      <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>\n' +
+        '    </header>\n' +
+        '    <div class="bb-repeater-item-content">\n' +
+        '      <ng-transclude></ng-transclude>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</section>\n' +
+        '');
     $templateCache.put('sky/templates/searchfield/choices.html',
         '<ul class="ui-select-choices ui-select-choices-content dropdown-menu">\n' +
         '  <li class="bb-searchfield-no-records"></li>\n' +
@@ -10358,7 +11778,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<li class="bb-tab-button"></li>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/container.html',
-        '<div></div>\n' +
+        '<div class="bb-text-expand-container"></div>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/ellipsis.html',
         '<span class="bb-text-expand-ellipsis">...</span>\n' +

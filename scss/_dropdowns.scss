@@ -40,8 +40,8 @@
     border-color: #c1c1c1;
     border-radius: 50%;
     padding: 0;
-    height: 24px;
-    width: 24px;
+    height: $bb-context-menu-size;
+    width: $bb-context-menu-size;
 
     &:hover,
     &:focus,

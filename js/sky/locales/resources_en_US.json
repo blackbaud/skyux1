@@ -47,13 +47,25 @@
         "_description": "Text in a checklist when no items are shown based on the current filter.",
         "message": "No items found"
     },
+    "chevron_collapse": {
+        "_description": "Screen reader text for when clicking the chevron would collapse the corresponding section",
+        "message": "Collapse"
+    },
+    "chevron_expand": {
+        "_description": "Screen reader text for when clicking the chevron would expand the corresponding section",
+        "message": "Expand"
+    },
+    "context_menu_default_label": {
+        "_description": "The label on the context menu button used for screen readers when the consumer has not specified a label",
+        "message": "Context menu"
+    },
     "grid_back_to_top": {
         "_description": "Text for link in grid to scroll back to the top.",
         "message": "Back to top"
     },
     "grid_column_picker_all_categories": {
-        "_description": "Button text for category filters used to indicate that all columns should be shown in the column picker",
-        "message": "All"
+        "_description": "Text for category filters used to indicate that all columns should be shown in the column picker",
+        "message": "All categories"
     },
     "grid_column_picker_description_header": {
         "_description": "In the column picker, the header for the column showing the description of the columns to include in the grid.",
@@ -392,8 +404,28 @@
         "message": "Start date must be before end date"
     },
     "errormodal_ok": {
-        "_description": "Text used on the primary button to dismiss the error modal",
+        "_description": "Text used on the primary button to dismiss the error modal.",
         "message": "OK"
+    },
+    "error_description_broken": {
+        "_description": "Text used for the error description to when page is broken.",
+        "message": "Try to refresh this page or come back later."
+    },
+    "error_description_construction": {
+        "_description": "Text used for the error description when page is under construction.",
+        "message": "Thanks for your patience while improvements are made!\nPlease check back in a little while."
+    },
+    "error_title_broken": {
+        "_description": "Text used for the error title when something is broken",
+        "message": "Sorry, something went wrong."
+    },
+    "error_title_construction": {
+        "_description": "Text used for the error title when page is under construction.",
+        "message": "This page will return soon."
+    },
+    "error_title_notfound": {
+        "_description": "Text used for the error title when page is not found.",
+        "message": "Sorry, we can't reach that page."
     },
     "file_size_b_plural": {
         "_description": "",
@@ -498,5 +530,9 @@
     "datepicker_close": {
         "_description": "Text displayed in the Close button of the datepicker",
         "message": "Done"
+    },
+    "reorder_top": {
+      "_description": "Text displayed to indicate that a row can be pushed to the top of the list",
+      "message": "Top"
     }
 }
