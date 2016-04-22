@@ -18,6 +18,8 @@ $bb-brand-alternate: $bb-color-blue !default;
 $bb-brand-alternate-light: lighten($bb-brand-alternate, 10%) !default; //#1a80b3
 $bb-brand-alternate-lighter: lighten($bb-brand-alternate, 20%) !default; //#3399cc
 
+$bb-inline-filter-color: #e9f4fc !default;
+
 $bb-nav-color: #a7b1c2 !default;
 $bb-nav-selected-color: $bb-color-white !default;
 $bb-nav-selected-bg-color: #293846 !default;

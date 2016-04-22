@@ -1,8 +1,8 @@
 @import "mixins";
 
 .bb-filters-inline {
-    background-color: #e9f4fc;
-    padding: 10px;
+    background-color: $bb-inline-filter-color;
+    padding: $padding;
 }
 
 .toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active {

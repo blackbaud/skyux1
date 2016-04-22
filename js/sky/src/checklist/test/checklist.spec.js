@@ -131,7 +131,6 @@ describe('Checklist directive', function () {
 
         expect($scope.locals.selectedItems).toEqual([items[1]]);
 
-
     });
 
     it('should handle input clicks', function () {
@@ -543,7 +542,8 @@ describe('Checklist directive', function () {
         el.remove();
     });
 
-    describe('category toolbar', function () {
+    describe('checklist filters', function () {
+
         var categories,
             checklistHtml,
             itemsWithCategories;
@@ -568,123 +568,240 @@ describe('Checklist directive', function () {
                 {
                     title: 'Title 3',
                     description: 'Description 3',
-                    category: 'Category 2'
+                    category: 'Category 2',
+                    inactive: true
                 }
             ];
 
-            checklistHtml =
-                '<bb-checklist ' +
-                    'bb-checklist-items="items" ' +
-                    'bb-checklist-selected-items="selectedItems" ' +
-                    'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
-                    'bb-checklist-no-items-message="\'No items found\'" ' +
-                    'bb-checklist-mode="list" ' +
-                    'bb-checklist-categories="categories" ' +
-                    'bb-checklist-filter-local>' +
-                '</bb-checklist>';
         });
 
-        it('should be displayed when categories are specified', function () {
-            var buttonEls,
-                categoryBarEl,
-                el;
+        describe('category toolbar', function () {
 
-            $scope.categories = categories;
-            $scope.items = itemsWithCategories;
+            beforeEach(function () {
+                checklistHtml =
+                    '<bb-checklist ' +
+                        'bb-checklist-items="items" ' +
+                        'bb-checklist-selected-items="selectedItems" ' +
+                        'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                        'bb-checklist-no-items-message="\'No items found\'" ' +
+                        'bb-checklist-mode="list" ' +
+                        'bb-checklist-categories="categories" ' +
+                        'bb-checklist-filter-local>' +
+                    '</bb-checklist>';
+            });
 
-            el = $compile(checklistHtml)($scope);
+            it('should be displayed when categories are specified', function () {
+                var optionEls,
+                    categoryBarEl,
+                    el;
 
-            $scope.$digest();
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
 
-            categoryBarEl = el.find('.bb-checklist-category-bar');
-
-            expect(categoryBarEl).toExist();
-
-            buttonEls = categoryBarEl.find('button');
-
-            expect(buttonEls.length).toBe(3);
-
-            expect(buttonEls.eq(0)).toHaveText(resources.grid_column_picker_all_categories);
-            expect(buttonEls.eq(1)).toHaveText('Category 1');
-            expect(buttonEls.eq(2)).toHaveText('Category 2');
-        });
-
-        it('should automatically filter the list of items when a category is clicked and filtering is set to local', function () {
-            var buttonEls,
-                categoryBarEl,
-                el;
-
-            function validateCategoryButton(buttonIndex, expectedItemCount) {
-                var rowEls;
-
-                buttonEls.eq(buttonIndex).click();
+                el = $compile(checklistHtml)($scope);
 
                 $scope.$digest();
 
-                rowEls = el.find('.bb-checklist-list-row');
+                categoryBarEl = el.find('.bb-checklist-category-bar');
 
-                expect(rowEls.length).toBe(expectedItemCount);
+                expect(categoryBarEl).toExist();
+
+                optionEls = categoryBarEl.find('option');
+
+                expect(optionEls.length).toBe(3);
+
+                expect(optionEls.eq(0)).toHaveText(resources.grid_column_picker_all_categories);
+                expect(optionEls.eq(1)).toHaveText('Category 1');
+                expect(optionEls.eq(2)).toHaveText('Category 2');
+            });
+
+            it('should automatically filter the list of items when a category is clicked and filtering is set to local', function () {
+                var selectEl,
+                    categoryBarEl,
+                    el;
+
+                function validateCategoryButton(category, expectedItemCount) {
+                    var rowEls;
+
+                    selectEl.val(category);
+                    selectEl.change();
+
+                    $scope.$digest();
+
+                    rowEls = el.find('.bb-checklist-list-row');
+
+                    expect(rowEls.length).toBe(expectedItemCount);
+                }
+
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+
+                el = $compile(checklistHtml)($scope);
+
+                $scope.$digest();
+
+                categoryBarEl = el.find('.bb-checklist-category-bar');
+                selectEl = el.find('select');
+
+                validateCategoryButton(categories[0], 2);
+                validateCategoryButton(categories[1], 1);
+                validateCategoryButton('bbChecklistAllCategories', 3);
+            });
+
+            it('should not show the category filter bar when an empty list of categories is supplied', function () {
+                var categoryBarEl,
+                    el;
+
+                $scope.categories = [];
+                $scope.items = itemsWithCategories;
+
+                el = $compile(checklistHtml)($scope);
+
+                $scope.$digest();
+
+                categoryBarEl = el.find('.bb-checklist-category-bar');
+
+                expect(categoryBarEl).not.toExist();
+            });
+
+            it('should only affect filtered items when using the select all or clear all feature', function () {
+                var el;
+
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+
+                el = $compile(checklistHtml)($scope);
+
+                $scope.$digest();
+
+                el.find('select').val(categories[0]).change();
+
+                $scope.$digest();
+
+                el.find('.bb-checklist-select-all-bar button').eq(0).click();
+
+                $scope.$digest();
+
+                expect($scope.selectedItems.length).toBe(2);
+            });
+
+        });
+
+        describe('subset checkbox', function () {
+
+            function getChecklistRows(el) {
+                return el.find('.bb-checklist-list-row');
             }
 
-            $scope.categories = categories;
-            $scope.items = itemsWithCategories;
+            function getSubsetInput(el) {
+                return el.find('.bb-checklist-subset-input');
+            }
 
-            el = $compile(checklistHtml)($scope);
+            it('should allow you to include a subset of items', function () {
+                var el,
+                    inputEl,
+                    rowEls;
 
-            // The bbCheck directive is linked in a $timeout, so this will force it to render.
-            $timeout.flush();
+                checklistHtml =
+                        '<bb-checklist ' +
+                            'bb-checklist-items="items" ' +
+                            'bb-checklist-selected-items="selectedItems" ' +
+                            'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                            'bb-checklist-no-items-message="\'No items found\'" ' +
+                            'bb-checklist-mode="list" ' +
+                            'bb-checklist-categories="categories" ' +
+                            'bb-checklist-subset-label="subsetLabel" ' +
+                            'bb-checklist-subset-property="inactive" ' +
+                            'bb-checklist-filter-local>' +
+                        '</bb-checklist>';
 
-            $scope.$digest();
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+                $scope.subsetLabel = 'Show inactive';
 
-            categoryBarEl = el.find('.bb-checklist-category-bar');
-            buttonEls = el.find('button');
+                el = $compile(checklistHtml)($scope);
 
-            validateCategoryButton(1, 2);
-            validateCategoryButton(2, 1);
-            validateCategoryButton(0, 3);
-        });
+                el.appendTo(document.body);
 
-        it('should not show the category filter bar when an empty list of categories is supplied', function () {
-            var categoryBarEl,
-                el;
+                $scope.$digest();
 
-            $scope.categories = [];
-            $scope.items = itemsWithCategories;
+                rowEls = getChecklistRows(el);
 
-            el = $compile(checklistHtml)($scope);
+                expect(rowEls.length).toBe(2);
 
-            // The bbCheck directive is linked in a $timeout, so this will force it to render.
-            $timeout.flush();
+                inputEl = getSubsetInput(el);
+                inputEl.click();
 
-            $scope.$digest();
+                rowEls = getChecklistRows(el);
 
-            categoryBarEl = el.find('.bb-checklist-category-bar');
+                expect(rowEls.length).toBe(3);
 
-            expect(categoryBarEl).not.toExist();
-        });
+                el.find('select').val(categories[1]).change();
 
-        it('should only affect filtered items when using the select all or clear all feature', function () {
-            var el;
+                rowEls = getChecklistRows(el);
 
-            $scope.categories = categories;
-            $scope.items = itemsWithCategories;
+                expect(rowEls.length).toBe(1);
 
-            el = $compile(checklistHtml)($scope);
+                inputEl.click();
 
-            // The bbCheck directive is linked in a $timeout, so this will force it to render.
-            $timeout.flush();
+                rowEls = getChecklistRows(el);
 
-            $scope.$digest();
+                expect(rowEls.length).toBe(0);
 
-            el.find('button').eq(1).click();
+            });
 
-            $scope.$digest();
+            it('should allow you to exclude a subset of items', function () {
+                var el,
+                    rowEls,
+                    inputEl;
 
-            el.find('.bb-checklist-select-all-bar button').eq(0).click();
+                checklistHtml =
+                        '<bb-checklist ' +
+                            'bb-checklist-items="items" ' +
+                            'bb-checklist-selected-items="selectedItems" ' +
+                            'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                            'bb-checklist-no-items-message="\'No items found\'" ' +
+                            'bb-checklist-mode="list" ' +
+                            'bb-checklist-categories="categories" ' +
+                            'bb-checklist-subset-label="subsetLabel" ' +
+                            'bb-checklist-subset-property="inactive" ' +
+                            'bb-checklist-subset-exclude ' +
+                            'bb-checklist-filter-local>' +
+                            '</bb-checklist>';
 
-            $scope.$digest();
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+                $scope.subsetLabel = 'Hide inactive';
 
-            expect($scope.selectedItems.length).toBe(2);
+                el = $compile(checklistHtml)($scope);
+
+                el.appendTo(document.body);
+
+                $scope.$digest();
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(3);
+
+                inputEl = getSubsetInput(el);
+                inputEl.click();
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(2);
+
+                el.find('select').val(categories[1]).change();
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(0);
+
+                inputEl.click();
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(1);
+            });
         });
     });
 

@@ -33,7 +33,8 @@
             {
                 title: 'Sweatshirt',
                 description: 'This column has nothing to do with the other ones',
-                category: 'Miscellaneous'
+                category: 'Miscellaneous',
+                inactive: true
             }
         ];
 
