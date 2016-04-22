@@ -186,7 +186,6 @@
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
-                                scrollbarWidth,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -416,7 +415,8 @@
 
                             function setScrollbarHeight() {
                                 var topScrollbar = getTopScrollbar(),
-                                    topScrollbarDiv = getTopScrollbarDiv();
+                                    topScrollbarDiv = getTopScrollbarDiv(),
+                                    scrollbarWidth = bbWindow.getScrollbarWidth();
 
                                 if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
@@ -561,7 +561,7 @@
                             function resizeStop(newWidth, index) {
                                 var changedWidth,
                                     resizedColumnIndex = index;
-                                
+
                                 //If multiselect and/or contextmenu exist, then the resized column index is shifted.
                                 if (locals.multiselect) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
@@ -569,7 +569,7 @@
                                 if (getContextMenuItems) {
                                     resizedColumnIndex =  resizedColumnIndex - 1;
                                 }
-                                
+
                                 $scope.$emit("columnsResized", { newWidth: newWidth, index: resizedColumnIndex });
 
                                 tableWrapper.addClass('bb-grid-table-wrapper-overflow');
@@ -595,7 +595,7 @@
                                 tableEl.setGridWidth(totalColumnWidth, false);
                                 resetTopScrollbar();
                                 syncHeaderToTableWrapper();
-                                
+
                                 return;
                             }
 
@@ -916,7 +916,7 @@
                             }
 
                             function pageChanged() {
-                                var skip = ($scope.locals.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
+                                var skip = ($scope.paginationOptions.currentPage - 1) * $scope.paginationOptions.itemsPerPage,
                                     top = $scope.paginationOptions.itemsPerPage;
 
                                 $scope.$emit('loadMoreRows', {top: top, skip: skip});
@@ -934,9 +934,13 @@
                                         $scope.paginationOptions.maxPages = DEFAULT_MAX_PAGES;
                                     }
 
+                                    if (!$scope.paginationOptions.currentPage) {
+                                        $scope.paginationOptions.currentPage = 1;
+                                    }
+
                                     $scope.paginationOptions.pageChanged = pageChanged;
 
-                                    $scope.locals.currentPage = 1;
+
                                 }
                             }
 
@@ -1276,8 +1280,6 @@
                                 $scope.selectedRows = [];
                             }
 
-                            scrollbarWidth = bbWindow.getScrollbarWidth();
-
                             id = $scope.$id;
                             toolbarContainerId = id + '-toolbar-container';
 
@@ -1375,7 +1377,7 @@
                             $scope.$watch('options.filters', function (f) {
                                 $scope.$broadcast('updateAppliedFilters', f);
                             });
-                            
+
                             $scope.$on("reInitGrid", function () {
                                 reInitGrid();
                             });

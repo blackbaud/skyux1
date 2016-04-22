@@ -225,16 +225,13 @@ describe('Grid column picker', function () {
         expect(getChecklistItemTitleEl(modalRowsEl, 5)).toHaveText('Name');
 
         //get categories
-        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar button');
+        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar select option');
 
-        expect(categoryEl.eq(0)).toHaveText('All');
-        expect(categoryEl.eq(0)).toHaveClass('btn-primary');
+        expect(categoryEl.eq(0)).toHaveText('All categories');
 
         expect(categoryEl.eq(1)).toHaveText('Specialness');
-        expect(categoryEl.eq(1)).toHaveClass('btn-default');
 
         expect(categoryEl.eq(2)).toHaveText('Nonesense');
-        expect(categoryEl.eq(2)).toHaveClass('btn-default');
 
         closeModal(modalEl.eq(0));
     });
@@ -242,7 +239,7 @@ describe('Grid column picker', function () {
     it('applies search and category filters', function () {
         var modalEl,
             modalRowsEl,
-            categoryEl,
+            selectEl,
             columnChooserButtonEl,
             searchEl;
 
@@ -261,9 +258,8 @@ describe('Grid column picker', function () {
         modalEl = getModal();
 
         //get categories
-        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar button');
-
-        categoryEl.eq(1).click();
+        selectEl = modalEl.eq(0).find('.bb-checklist-filter-bar select');
+        selectEl.val('Specialness').change();
 
         $scope.$digest();
 
@@ -291,7 +287,7 @@ describe('Grid column picker', function () {
         expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
 
         searchEl.eq(0).val('').trigger('change');
-        categoryEl.eq(0).click();
+        selectEl.val('bbChecklistAllCategories').change();
 
         modalRowsEl = getColumnChooserRows(modalEl);
 

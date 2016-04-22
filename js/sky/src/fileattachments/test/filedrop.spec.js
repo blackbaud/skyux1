@@ -161,7 +161,15 @@ describe('File drop directive', function () {
 
         for (p in attrs) {
             if (attrs.hasOwnProperty(p)) {
-                ngfProp = p.replace('bb-file-drop-', 'ngf-');
+                // When we upgraded to ng-file-upload 12.0.4 some attribute names no longer align.
+                switch (p) {
+                case 'bb-file-drop-accept':
+                    ngfProp = 'ngf-pattern';
+                    break;
+                default:
+                    ngfProp = p.replace('bb-file-drop-', 'ngf-');
+                }
+
                 expect(fileDropEl).toHaveAttr(ngfProp, attrs[p]);
             }
         }

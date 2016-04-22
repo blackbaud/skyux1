@@ -5,7 +5,8 @@
 
     function SelectFieldTestController($timeout) {
         var vm = this,
-            searchableItems;
+            searchableItems,
+            searchTimeout;
 
         function loadInitialValues() {
             vm.listItems = searchableItems.slice(0, 6);
@@ -32,7 +33,12 @@
             you can provide a search function that can fetch items remotely */
         vm.onSearch = function (args) {
             vm.loadingSearch = true;
-            $timeout(function () {
+
+            if (searchTimeout) {
+                $timeout.cancel(searchTimeout);
+            }
+
+            searchTimeout = $timeout(function () {
                 loadItems(args.searchText);
                 vm.loadingSearch = false;
             }, 2000);
@@ -132,7 +138,9 @@
         loadInitialValues();
 
         vm.selectedItems = vm.listItems.slice(0, 2);
-        vm.selectedSingleItems = [vm.listItems[1]];
+
+        vm.listItemsSingle = angular.copy(vm.listItems);
+        vm.selectedSingleItems = [vm.listItemsSingle[1]];
     }
 
     SelectFieldTestController.$inject = ['$timeout'];

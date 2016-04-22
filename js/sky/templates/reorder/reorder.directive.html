@@ -1,0 +1,20 @@
+<div class="bb-reorder-container">
+ <div ng-repeat="item in bbReorder.bbReorderItems" class="bb-reorder-list-row">
+   <div class="bb-reorder-list-row-container">
+     <div class="bb-reorder-list-col bb-reorder-list-col-icon">
+       <i class="fa fa-arrows"></i>
+     </div>
+     <div class="bb-reorder-list-col bb-reorder-list-col-content">
+       <div class="bb-reorder-list-title">{{item.title}}</div>
+       <div class="bb-reorder-list-description">{{item.description}}</div>
+     </div>
+     <button type="button" ng-show="!$first &amp;&amp; !bbReorder.sorting" ng-click="bbReorder.pushToTop(item)" class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link">
+       <i class="fa fa-arrow-circle-up"></i>
+       <span>{{'reorder_top' | bbResources}}</span>
+     </button>
+     <div ng-show="bbReorder.sorting" class="bb-reorder-list-col">
+       <span class="bb-reorder-list-sorting-number"></span>
+     </div>
+   </div>
+ </div>
+</div>

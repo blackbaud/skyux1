@@ -1,13 +1,12 @@
 <div class="bb-submenu">
     <uib-accordion>
-        <uib-accordion-group is-open="accordionLocals.accordionOpen">
-
-            <uib-accordion-heading ng-if="accordionLocals.staticHeader">
-                <div ng-click="toggleAccordion($event)">
+        <uib-accordion-group is-open="bbSubmenu.accordionOpen">
+            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">
+                <div ng-click="bbSubmenu.toggleAccordion($event)">
                     <span>
-                        {{heading}}
+                        {{bbSubmenu.heading}}
                     <span>
-                    <i ng-class="'fa-chevron-' + (accordionLocals.accordionOpen ? 'up' : 'down')" class="fa bb-submenu-chevron"></i>
+                    <i ng-class="'fa-chevron-' + (bbSubmenu.accordionOpen ? 'up' : 'down')" class="fa bb-submenu-chevron"></i>
                 </div>
             </uib-accordion-heading>
             <ng-transclude></ng-transclude>

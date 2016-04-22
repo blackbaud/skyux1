@@ -1,0 +1,14 @@
+<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">
+  <div class="bb-repeater-item-left">
+    <div class="bb-repeater-item-context-menu" ng-if="bbRepeaterItem.contextMenuCtrl"></div>
+  </div>
+  <div class="bb-repeater-item-right">
+    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick()">
+      <h1 class="bb-repeater-item-title" ng-if="bbRepeaterItem.titleCtrl"></h1>
+      <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>
+    </header>
+    <div class="bb-repeater-item-content">
+      <ng-transclude></ng-transclude>
+    </div>
+  </div>
+</section>
