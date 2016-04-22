@@ -11,6 +11,7 @@
     shared.capabilities = [
         {
             browserName: 'chrome',
+            browser_version: '49.0.2623.75',
             'browserstack.local': 'true',
             'browserstack.debug': 'true',
             os: 'OS X',
