@@ -29,7 +29,7 @@ describe('Reorder', function () {
 
         browserResult = browser
             .url('/reorder/fixtures/test.full.html')
-            .moveToObject('#screenshot-reorder .bb-reorder-list-row:first-child')
+            .moveToObject('#screenshot-reorder .bb-reorder-list-row:first-child .bb-reorder-list-col-icon')
             .buttonDown()
             .moveToObject('#screenshot-reorder .bb-reorder-list-row:nth-child(2)', 0, -35);
 
