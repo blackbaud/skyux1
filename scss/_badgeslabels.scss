@@ -1,3 +1,12 @@
+.bb-label-list {
+  .label {
+      display: inline-block;
+      margin: $margin-half;
+      line-height: inherit;
+  }
+}
+
+
 .label {
   background-color: $gray-lighter;
   color: $bb-label-badge-color;
@@ -7,7 +16,6 @@
   text-shadow: none;
   padding-left: .6em;
   padding-right: .6em;
-  line-height: 2.5;
   border-radius: 10rem;
 }
 
