@@ -138,7 +138,9 @@
         loadInitialValues();
 
         vm.selectedItems = vm.listItems.slice(0, 2);
-        vm.selectedSingleItems = [vm.listItems[1]];
+
+        vm.listItemsSingle = angular.copy(vm.listItems);
+        vm.selectedSingleItems = [vm.listItemsSingle[1]];
     }
 
     SelectFieldTestController.$inject = ['$timeout'];

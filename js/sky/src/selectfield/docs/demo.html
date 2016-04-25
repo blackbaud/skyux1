@@ -42,16 +42,18 @@
     bb-checklist-include-search="true"
     bb-checklist-mode="list"
     bb-checklist-filter-callback="selectFieldCtrl.onSearch"
-    bb-checklist-is-loading="selectFieldCtrl.loadingSearch">
+    bb-checklist-is-loading="selectFieldCtrl.loadingSearch"
+    bb-checklist-focus-search>
   </bb-checklist>
 </script>
 <script type="text/ng-template" id="demo/selectfield/selectfieldpickersingle.html">
   <bb-checklist
-    bb-checklist-items="selectFieldCtrl.listItems"
+    bb-checklist-items="selectFieldCtrl.listItemsSingle"
     bb-checklist-include-search="true"
     bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
     bb-checklist-mode="list"
     bb-checklist-select-style="single"
-    bb-checklist-filter-local>
+    bb-checklist-filter-local
+    bb-checklist-focus-search>
   </bb-checklist>
 </script>
