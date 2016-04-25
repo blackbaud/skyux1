@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function bbMaxDate() {
+    function bbDatepickerMaxDate() {
         return {
             restrict: 'A',
             require: ['ngModel', '^bbDatepicker'],
@@ -10,12 +10,12 @@
                 var ngModel = ctrls[0],
                     bbDatepicker = ctrls[1];
                 ngModel.$validators.maxDate = function (modelValue) {
-                    return !bbDatepicker.maxDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate(bbDatepicker.maxDate) || modelValue <= bbDatepicker.maxDate;
+                    return !bbDatepicker.bbMaxDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate(bbDatepicker.bbMaxDate) || modelValue <= bbDatepicker.bbMaxDate;
                 };
             }
         };
     }
 
     angular.module('sky.datepicker.maxdate', [])
-        .directive('bbMaxDate', bbMaxDate);
+        .directive('bbDatepickerMaxDate', bbDatepickerMaxDate);
 }());

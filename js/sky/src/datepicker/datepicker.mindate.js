@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function bbMinDate() {
+    function bbDatepickerMinDate() {
         return {
             restrict: 'A',
             require: ['ngModel', '^bbDatepicker'],
@@ -11,7 +11,7 @@
                     bbDatepicker = ctrls[1];
 
                 ngModel.$validators.minDate = function (modelValue) {
-                    return !bbDatepicker.minDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate(bbDatepicker.minDate) || modelValue >= bbDatepicker.minDate;
+                    return !bbDatepicker.bbMinDate || !modelValue || !angular.isDate(modelValue) || !angular.isDate(bbDatepicker.bbMinDate) || modelValue >= bbDatepicker.bbMinDate;
                 };
             }
         };
@@ -19,5 +19,5 @@
 
 
     angular.module('sky.datepicker.mindate', [])
-        .directive('bbMinDate', bbMinDate);
+        .directive('bbDatepickerMinDate', bbDatepickerMinDate);
 }());

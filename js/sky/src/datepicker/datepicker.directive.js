@@ -19,7 +19,7 @@
     }
 
 
-    function bbDatepicker(bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q) {
+    function bbDatepicker(bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q, $log) {
 
         function link($scope, el, attr, ctrls) {
             var parsedDate,
@@ -122,7 +122,7 @@
                     setInvalidFormatMessage(null);
                     resolveValidation();
                 } else if (vm.hasCustomValidation && angular.isString(modelValue)) {
-                    customFormattingResult = vm.customValidation.formatValue(modelValue);
+                    customFormattingResult = vm.bbDatepickerCustomValidation.formatValue(modelValue);
                     if (customFormattingResult.then) {
                         customFormattingResult.then(handleCustomFormattingValidation);
                     } else {
@@ -142,79 +142,130 @@
                 return deferred.promise;
             }
 
-            ngModel.$options = {
-                allowInvalid: true
-            };
-
-            vm.showButtonBar = false;
-            vm.appendToBody = false;
-            vm.pickerDate = '';
-            vm.pickerOpened = false;
-            vm.loaded = false;
-            vm.closeOnSelection = true;
-            vm.pickerOptions = {
-                showWeeks: bbDatepickerConfig.showWeeks,
-                startingDay: bbDatepickerConfig.startingDay,
-                maxDate: vm.maxDate,
-                minDate: vm.minDate
-            };
-            vm.hasCustomValidation = false;
-            vm.inputName = attr.bbDatepickerName;
-            vm.altInputFormats = angular.copy(bbDatepickerConfig.bbAltInputFormats);
-
-
-            if (!vm.maxDate && bbDatepickerConfig.maxDate) {
-                vm.maxDate = bbDatepickerConfig.maxDate;
-                vm.pickerOptions.maxDate = vm.maxDate;
-            }
-
-            if (!vm.minDate && bbDatepickerConfig.minDate) {
-                vm.minDate = bbDatepickerConfig.minDate;
-                vm.pickerOptions.minDate = vm.minDate;
-            }
-
-            vm.resources = bbResources;
-
-            if (angular.isDefined(attr.showButtonBar)) {
-                vm.showButtonBar = attr.showButtonBar;
-            }
-
-            if (angular.isDefined(attr.closeOnDateSelection)) {
-                vm.closeOnSelection = attr.closeOnDateSelection;
-            }
-
-            if (angular.isDefined(attr.datepickerAppendToBody)) {
-                vm.appendToBody = (attr.datepickerAppendToBody === 'true');
-            }
-
-            if (angular.isUndefined(vm.format)) {
-                vm.format = bbDatepickerConfig.currentCultureDateFormatString;
-            }
-
-            if (angular.isArray(vm.bbAltInputFormats)) {
-                angular.extend(vm.altInputFormats, vm.bbAltInputFormats);
-            }
-
-            if (vm.altInputFormats.length < 1) {
-                vm.altInputFormats = bbDatepickerParser.getAltInputFormats(vm.format);
-            }
-
-            if (angular.isDefined(vm.bbDateOptions)) {
-                angular.extend(vm.pickerOptions, vm.bbDateOptions);
-
-            }
-
-            if (angular.isDefined(vm.customValidation)) {
-                if (angular.isFunction(vm.customValidation.formatValue)) {
-                    vm.hasCustomValidation = true;
+            function setAppendToBody(appendToBodyAttr) {
+                if (angular.isDefined(appendToBodyAttr) || angular.isDefined(appendToBodyAttr)) {
+                    vm.appendToBody = (appendToBodyAttr === 'true');
                 }
             }
 
-            vm.required = angular.isDefined(attr.required);
+            function initializeDatepickerOptions() {
 
-            if (vm.placeholderText === null || angular.isUndefined(vm.placeholderText)) {
-                vm.placeholderText = vm.format.toLowerCase();
+                ngModel.$options = {
+                    allowInvalid: true
+                };
+                
+                vm.pickerDate = '';
+                vm.pickerOpened = false;
+
+                vm.pickerOptions = {
+                    showWeeks: bbDatepickerConfig.showWeeks,
+                    startingDay: bbDatepickerConfig.startingDay,
+                    maxDate: vm.bbMaxDate,
+                    minDate: vm.bbMinDate
+                };
+
+                vm.hasCustomValidation = false;
+                vm.inputName = attr.bbDatepickerName;
+
+                if (angular.isUndefined(vm.format)) {
+                    vm.format = bbDatepickerConfig.currentCultureDateFormatString;
+                }
+
+                if (vm.maxDate) {
+                    $log.warn('bbDatepicker max-date attribute is deprecated, use bb-datepicker-max instead');
+                    vm.bbMaxDate = vm.maxDate;
+                }
+
+                if (vm.minDate) {
+                    $log.warn('bbDatepicker min-date attribute is deprecated, use bb-datepicker-min instead');
+                    vm.bbMinDate = vm.minDate;
+                }
+
+                if (vm.placeholderText) {
+                    $log.warn('bbDatepicker placeholder attribute is deprecated, use bb-datepicker-placeholder instead');
+                    vm.bbPlaceholder = vm.placeholderText;
+                }
+
+
+                if (vm.bbPlaceholder === null || angular.isUndefined(vm.bbPlaceholder)) {
+                    vm.bbPlaceholder = vm.format.toLowerCase();
+                }
+
+                vm.appendToBody = false;
+
+                if (angular.isDefined(attr.datepickerAppendToBody)) {
+                    $log.warn('bbDatepicker datepicker-append-to-body attribute is deprecated, use bb-datepicker-append-to-body instead');
+                    setAppendToBody(attr.datepickerAppendToBody);
+                } else {
+                    setAppendToBody(attr.bbDatepickerAppendToBody);
+                }
+
+                vm.showButtonBar = false;
+
+                if (angular.isDefined(attr.showButtonBar)) {
+                    $log.warn('bbDatepicker show-button-bar attribute is deprecated, use bb-datepicker-show-button-bar instead');
+                    vm.showButtonBar = attr.showButtonBar;
+                } else if (angular.isDefined(attr.bbDatepickerShowButtonBar)) {
+                    vm.showButtonBar = attr.bbDatepickerShowButtonBar;
+                }
+
+                vm.closeOnSelection = true;
+
+                if (angular.isDefined(attr.closeOnDateSelection)) {
+                    $log.warn('bbDatepicker close-on-date-selection attribute is deprecated, use bb-datepicker-close-on-date-selection instead');
+                    vm.closeOnSelection = attr.closeOnDateSelection;
+                } else if (angular.isDefined(attr.bbDatepickerCloseOnDateSelection)) {
+                    vm.closeOnSelection = attr.bbDatepickerCloseOnDateSelection;
+                }
+
+                if (angular.isDefined(vm.customValidation)) {
+                    $log.warn('bbDatepicker bb-custom-validation attribute is deprecated, use bb-datepicker-custom-validation instead');
+                    vm.bbDatepickerCustomValidation = vm.customValidation;
+                }
+
+                vm.altInputFormats = angular.copy(bbDatepickerConfig.bbAltInputFormats);
+
+                if (angular.isArray(vm.bbAltInputFormats)) {
+                    $log.warn('bbDatepicker bb-alt-input-formats attribute is deprecated, use bb-datepicker-alt-input-formats instead');
+                    angular.extend(vm.altInputFormats, vm.bbAltInputFormats);
+                } else if (angular.isArray(vm.bbDatepickerAltInputFormats)) {
+                    angular.extend(vm.altInputFormats, vm.bbDatepickerAltInputFormats);
+                }
+
+                if (vm.altInputFormats.length < 1) {
+                    vm.altInputFormats = bbDatepickerParser.getAltInputFormats(vm.format);
+                }
+
+                if (!vm.bbMaxDate && bbDatepickerConfig.maxDate) {
+                    vm.bbMaxDate = angular.copy(bbDatepickerConfig.maxDate);
+                    vm.pickerOptions.maxDate = vm.bbMaxDate;
+                    vm.maxDate = vm.bbMaxDate;
+                }
+
+                if (!vm.bbMinDate && bbDatepickerConfig.minDate) {
+                    vm.bbMinDate = angular.copy(bbDatepickerConfig.minDate);
+                    vm.pickerOptions.minDate = vm.bbMinDate;
+                    vm.minDate = vm.bbMinDate;
+                }
+
+                vm.resources = bbResources;
+
+                if (angular.isDefined(vm.bbDateOptions)) {
+                    angular.extend(vm.pickerOptions, vm.bbDateOptions);
+
+                }
+
+                if (angular.isDefined(vm.bbDatepickerCustomValidation)) {
+                    if (angular.isFunction(vm.bbDatepickerCustomValidation.formatValue)) {
+                        vm.hasCustomValidation = true;
+                    }
+                }
+
+                vm.required = angular.isDefined(attr.required);
             }
+
+            vm.loaded = false;
+            initializeDatepickerOptions();
 
             $timeout(function () {
                 inputEl = el.find('input');
@@ -312,21 +363,27 @@
 
             $scope.$watch(
                 function () {
-                    return vm.maxDate;
+                    if (angular.isDefined(attr.maxDate)) {
+                        vm.bbMaxDate = vm.maxDate;
+                    }
+                    return vm.bbMaxDate;
                 },
-                function () {
+                function (newValue) {
                     runValidators();
-                    vm.pickerOptions.maxDate = vm.maxDate;
+                    vm.pickerOptions.maxDate = newValue;
                 }
             );
 
             $scope.$watch(
                 function () {
-                    return vm.minDate;
+                    if (angular.isDefined(attr.minDate)) {
+                        vm.bbMinDate = vm.minDate;
+                    }
+                    return vm.bbMinDate;
                 },
-                function () {
+                function (newValue) {
                     runValidators();
-                    vm.pickerOptions.minDate = vm.minDate;
+                    vm.pickerOptions.minDate = newValue;
                 }
             );
 
@@ -341,12 +398,18 @@
             bindToController: {
                 date: '=ngModel',
                 bbDateOptions: '=?',
-                customValidation: '=?bbCustomValidation',
+                bbDatepickerCustomValidation: '=?bbDatepickerCustomValidation',
                 format: '=?bbDateFormat',
-                maxDate: '=?maxDate',
-                minDate: '=?minDate',
-                placeholderText: '=?placeholder',
-                bbAltInputFormats: '=?'
+                bbMaxDate: '=?bbDatepickerMax',
+                bbMinDate: '=?bbDatepickerMin',
+                bbPlaceholder: '=?bbDatepickerPlaceholder',
+                bbDatepickerAltInputFormats: '=?',
+
+                bbAltInputFormats: '=?', //deprecated
+                maxDate: '=?maxDate', //deprecated
+                minDate: '=?minDate', //deprecated
+                placeholderText: '=?placeholder', //deprecated
+                customValidation: '=?bbCustomValidation' //deprecated
             },
             require: ['ngModel', 'bbDatepicker'],
             scope: {},
@@ -356,7 +419,7 @@
         };
     }
 
-    bbDatepicker.$inject = ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q'];
+    bbDatepicker.$inject = ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q', '$log'];
 
 
     angular.module('sky.datepicker.directive',
