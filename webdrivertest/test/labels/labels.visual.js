@@ -14,7 +14,7 @@ describe('labels', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'labels',
             selector: '#screenshot-labels',
-            screenWidth: [1280, 480],
+            screenWidth: [1280],
             done: done
         });
     });
