@@ -6,8 +6,15 @@
 }
 
 .bb-reorder-list-col-icon {
-  font-size: 1.5em;
-  font-color: $gray;
+  font-size: 1em;
+  color: $gray;
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  padding: 16px;
+  height: 44px;
+  width: 44px;
+
 }
 
 .bb-reorder-list-col-content {
@@ -21,20 +28,18 @@
   color: $bb-color-blue;
   cursor:pointer;
   white-space: nowrap;
+  height: 44px;
+  width: 44px;
 }
 
 .bb-reorder-list-row {
     background-color: white;
     border: none;
     border-top: dotted 1px $gray-lighter;
-    cursor: pointer;
     padding: $padding;
     outline-offset: -5px;
     width: 100%;
     min-height: 50px;
-    cursor: move;
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
 
     // we always want the sorting item to keep its border
     &:not(.bb-reorder-list-sorting-item):first-child {

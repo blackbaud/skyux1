@@ -20,15 +20,19 @@
                 bbChecklistNoItemsMessage: '@',
                 bbChecklistAutomationField: '=?',
                 bbChecklistCategories: '=?',
-                bbChecklistMode: '@',
-                bbChecklistSelectStyle: '@',
-                bbChecklistIsLoading: '=?'
+                bbChecklistMode: '@?',
+                bbChecklistSelectStyle: '@?',
+                bbChecklistIsLoading: '=?',
+                bbChecklistSubsetLabel: '=?',
+                bbChecklistSubsetProperty: '@?'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',
             scope: {},
             link: function (scope, el, attrs, vm) {
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
+                vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
+                vm.focusSearch = attrs.bbChecklistFocusSearch;
             }
         };
     }
