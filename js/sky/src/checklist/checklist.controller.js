@@ -29,9 +29,6 @@
             return bbChecklistUtility.contains(vm.bbChecklistSelectedItems, item);
         }
 
-        function onlyShowSelectedItem(item) {
-            return !vm.onlyShowSelected || itemIsSelected(item);
-        }
 
         function itemMatchesFilter(item, category, searchTextUpper) {
             var i,
@@ -40,21 +37,19 @@
                 val;
 
 
-            if (onlyShowSelectedItem(item)) {
-                if (itemMatchesCategory(item, category)) {
-                    if (itemInSubset(item, vm.subsetSelected)) {
-                        if (!searchTextUpper) {
-                            return true;
-                        }
+            if (itemMatchesCategory(item, category)) {
+                if (itemInSubset(item, vm.subsetSelected)) {
+                    if (!searchTextUpper) {
+                        return true;
+                    }
 
-                        for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
-                            p = SEARCH_PROPS[i];
-                            if (item.hasOwnProperty(p)) {
-                                val = item[p];
+                    for (i = 0, len = SEARCH_PROPS.length; i < len; i++) {
+                        p = SEARCH_PROPS[i];
+                        if (item.hasOwnProperty(p)) {
+                            val = item[p];
 
-                                if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
-                                    return true;
-                                }
+                            if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
+                                return true;
                             }
                         }
                     }
@@ -91,20 +86,24 @@
         }
 
         function invokeFilter() {
-            if (vm.filterLocal) {
+            /* When the show only selected items checkbox is checked,
+               then no other filters should be applied */
+            if (vm.onlyShowSelected) {
+                vm.filteredItems = vm.bbChecklistSelectedItems || [];
+            } else if (vm.filterLocal) {
                 invokeFilterLocal();
             } else if (vm.bbChecklistFilterCallback) {
                 vm.bbChecklistFilterCallback({
                     searchText: vm.searchText,
                     category: vm.selectedCategory,
-                    subsetSelected: vm.subsetSelected,
-                    onlyShowSelected: vm.onlyShowSelected
+                    subsetSelected: vm.subsetSelected
                 });
             }
         }
 
         function eachFilteredItem(callback) {
-            vm.filteredItems.forEach(callback);
+            var filteredItemsCopy = angular.copy(vm.filteredItems);
+            filteredItemsCopy.forEach(callback);
         }
 
         function selectItem(item) {
@@ -208,13 +207,12 @@
             });
         }
 
-        if (vm.onlySelectedAvailable) {
-            $scope.$watch(function () {
-                return vm.onlyShowSelected;
-            }, function () {
-                invokeFilter();
-            });
-        }
+        $scope.$watch(function () {
+            return vm.onlyShowSelected;
+        }, function () {
+            invokeFilter();
+        });
+
 
         $scope.$emit('bbPickerReady', {
             setSelectedItems: function (selectedItems) {
