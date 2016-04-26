@@ -34,6 +34,10 @@
     <div class="bb-checklist-filter-bar bb-checklist-select-all-bar" ng-show="!bbChecklist.isSingleSelect()">
       <button type="button" class="btn btn-link" data-bbauto-field="ChecklistSelectAll" ng-click="bbChecklist.selectAll()">{{'checklist_select_all' | bbResources}}</button>
       <button type="button" class="btn btn-link" data-bbauto-field="ChecklistClear" ng-click="bbChecklist.clear()">{{'checklist_clear_all' | bbResources}}</button>
+      <label class="control-label" ng-if="bbChecklist.onlySelectedAvailable">
+        <input bb-check type="checkbox" ng-model="bbChecklist.onlyShowSelected" />
+        {{'checklist_only_selected_items' | bbResources}}
+      </label>
     </div>
   </div>
   <div class="bb-checklist-wrapper" bb-wait="bbChecklist.bbChecklistIsLoading" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">
