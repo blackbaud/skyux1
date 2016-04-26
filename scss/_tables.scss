@@ -100,7 +100,7 @@
                       cursor: pointer;
                       max-width: 99%;
 
-                      @media (max-width: $screen-md-max)) {
+                      @media (max-width: ($screen-md-max)) {
                         max-width: 98%;
                       }
                       @media (max-width: ($screen-xs-max)) {
