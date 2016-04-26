@@ -81,28 +81,37 @@
             }
             .bb-applied-filter-content-container {
               flex-basis: 95%;
-                min-width: 0;
+              min-width: 0;
+
               .bb-applied-filter-content {
                   background-color: $alert-warning-bg;
                   border: 1px solid $alert-warning-border;
                   border-radius: 4px;
                   padding: 3px;
                   height: 26px;
-
-                  display: inline-flex;
-
+                  display: inline-block;
+                  max-width: 100%;
 
                   .bb-applied-filter-text {
                       @include text-overflow();
                       color: $alert-warning-text;
-                      display: block;
+                      display: inline-block;
                       padding-right: $padding;
                       cursor: pointer;
+                      max-width: 99%;
+
+                      @media (max-width: $screen-md-max)) {
+                        max-width: 98%;
+                      }
+                      @media (max-width: ($screen-xs-max)) {
+                        max-width: 96%;
+                      }
                   }
 
                   .close {
                       color: $alert-warning-text;
                       padding-top: 3px;
+                      float: right;
                   }
               }
             }
