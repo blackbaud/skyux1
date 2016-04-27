@@ -9,6 +9,7 @@
           placeholder="{{bbChecklist.bbChecklistSearchPlaceholder}}"
           ng-model="bbChecklist.searchText"
           ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}"
+          ng-disabled="bbChecklist.onlyShowSelected"
           data-bbauto-field="ChecklistSearch"
           ng-attr-autofocus="{{bbChecklist.focusSearch}}" />
         <div class="bb-checklist-search-icon">
@@ -18,7 +19,7 @@
     </div>
     <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">
       <div class="form-group">
-        <select class="form-control" ng-model="bbChecklist.selectedOption">
+        <select class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">
           <option value="{{bbChecklist.allCategories}}">{{'grid_column_picker_all_categories' | bbResources}}</option>
           <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>
         </select>
@@ -26,7 +27,7 @@
       <div class="form-group">
 
         <label class="control-label" ng-if="bbChecklist.bbChecklistSubsetLabel">
-          <input class="bb-checklist-subset-input" bb-check type="checkbox" ng-model="bbChecklist.subsetSelected" />
+          <input class="bb-checklist-subset-input" bb-check type="checkbox" ng-model="bbChecklist.subsetSelected" ng-disabled="bbChecklist.onlyShowSelected"/>
           {{bbChecklist.bbChecklistSubsetLabel}}
         </label>
       </div>
