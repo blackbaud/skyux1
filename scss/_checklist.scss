@@ -47,6 +47,10 @@
         }
     }
 
+    .bb-checklist-clear {
+        margin-right: 15px;
+    }
+
     .btn-primary {
         font-size: 12px;
         font-weight: normal;
@@ -58,6 +62,14 @@
         outline: none;
         border: none;
         -webkit-appearance: none;
+        height: auto;
+        box-shadow: none;
+
+    }
+
+    .bb-checklist-search-box[disabled], .bb-checklist-search-box[disabled]+.bb-checklist-search-icon {
+        background-color: $input-bg-disabled;
+        cursor: not-allowed;
     }
 }
 
@@ -79,12 +91,12 @@
         margin-bottom: 0;
     }
 
-  @media (max-width: $screen-sm-max) {
+    @media (max-width: $screen-sm-max) {
       .form-group + .form-group {
           margin-bottom: 0;
           margin-top: 5px;
       }
-  }
+    }
 }
 
 .bb-checklist-search {
