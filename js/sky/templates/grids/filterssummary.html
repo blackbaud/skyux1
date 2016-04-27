@@ -2,8 +2,11 @@
     <div class="bb-applied-filter-header">
         <span>{{resources.grid_filters_summary_header}}</span>
     </div>
-    <div class="bb-applied-filter-content" ng-click="openFilterMenu()">
-        <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>
-        <span class="fa fa-times close" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>
+    <div class="bb-applied-filter-content-container">
+      <div tabindex="0" role="button" class="bb-applied-filter-content" ng-click="openFilterMenu()">
+          <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>
+          <span tabindex="0" role="button" class="fa fa-times close" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>
+      </div>
     </div>
+
 </div>

@@ -113176,10 +113176,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-applied-filter-header">\n' +
         '        <span>{{resources.grid_filters_summary_header}}</span>\n' +
         '    </div>\n' +
-        '    <div class="bb-applied-filter-content" ng-click="openFilterMenu()">\n' +
-        '        <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
-        '        <span class="fa fa-times close" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
+        '    <div class="bb-applied-filter-content-container">\n' +
+        '      <div tabindex="0" role="button" class="bb-applied-filter-content" ng-click="openFilterMenu()">\n' +
+        '          <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
+        '          <span tabindex="0" role="button" class="fa fa-times close" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
+        '      </div>\n' +
         '    </div>\n' +
+        '\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/grid.html',
