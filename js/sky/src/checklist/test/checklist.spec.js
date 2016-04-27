@@ -748,6 +748,8 @@ describe('Checklist directive', function () {
 
                 expect(rowEls.length).toBe(0);
 
+                el.remove();
+
             });
 
             it('should allow you to exclude a subset of items', function () {
@@ -801,6 +803,7 @@ describe('Checklist directive', function () {
                 rowEls = getChecklistRows(el);
 
                 expect(rowEls.length).toBe(1);
+                el.remove();
             });
         });
     });
