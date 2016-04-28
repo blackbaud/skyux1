@@ -67,9 +67,11 @@
 
     }
 
-    .bb-checklist-search-box[disabled], .bb-checklist-search-box[disabled]+.bb-checklist-search-icon {
-        background-color: $input-bg-disabled;
-        cursor: not-allowed;
+    .bb-search-disabled {
+      .bb-checklist-search-box, .bb-checklist-search-icon {
+          background-color: $input-bg-disabled;
+          cursor: not-allowed;
+      }
     }
 }
 

@@ -1,7 +1,7 @@
 <div>
   <div>
     <div ng-if="bbChecklist.bbChecklistIncludeSearch" class="bb-checklist-filter-bar">
-      <div class="bb-checklist-search">
+      <div class="bb-checklist-search" ng-class="{'bb-search-disabled': bbChecklist.onlyShowSelected}">
         <input
           type="text"
           class="bb-checklist-search-box"

@@ -695,6 +695,63 @@ describe('Checklist directive', function () {
                 el.remove();
 
             });
+
+            it('should disable the search, categories, and subset control', function () {
+                var el,
+                    checkboxInputEl,
+                    searchEl,
+                    searchContainerEl,
+                    categoriesEl,
+                    subsetEl;
+
+                checklistHtml =
+                    '<bb-checklist ' +
+                        'bb-checklist-items="items" ' +
+                        'bb-checklist-selected-items="selectedItems" ' +
+                        'bb-checklist-include-search="includeSearch"' +
+                        'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                        'bb-checklist-no-items-message="\'No items found\'" ' +
+                        'bb-checklist-mode="list" ' +
+                        'bb-checklist-categories="categories" ' +
+                        'bb-checklist-only-selected ' +
+                        'bb-checklist-subset-label="subsetLabel" ' +
+                        'bb-checklist-subset-property="inactive" ' +
+                        'bb-checklist-filter-local>' +
+                    '</bb-checklist>';
+
+                $scope.includeSearch = true;
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+                $scope.subsetLabel = 'Hide inactive';
+
+                el = $compile(checklistHtml)($scope);
+
+                el.appendTo(document.body);
+
+                $scope.$digest();
+                checkboxInputEl = el.find('.bb-checklist-select-all-bar .control-label input');
+
+                searchEl = el.find('.bb-checklist-search input');
+                searchContainerEl = el.find('.bb-checklist-search');
+                categoriesEl = el.find('.bb-checklist-category-bar select');
+                subsetEl = el.find('.bb-checklist-category-bar .bb-checklist-subset-input');
+
+                expect(searchEl).not.toBeDisabled();
+                expect(searchContainerEl).not.toHaveClass('bb-search-disabled');
+                expect(categoriesEl).not.toBeDisabled();
+                expect(subsetEl).not.toBeDisabled();
+
+                checkboxInputEl.click();
+                $scope.$digest();
+
+                expect(searchEl).toBeDisabled();
+                expect(searchContainerEl).toHaveClass('bb-search-disabled');
+                expect(categoriesEl).toBeDisabled();
+                expect(subsetEl).toBeDisabled();
+
+                el.remove();
+
+            });
         });
 
         describe('category toolbar', function () {
@@ -867,6 +924,7 @@ describe('Checklist directive', function () {
                 rowEls = getChecklistRows(el);
 
                 expect(rowEls.length).toBe(0);
+                el.remove();
 
             });
 
@@ -921,6 +979,7 @@ describe('Checklist directive', function () {
                 rowEls = getChecklistRows(el);
 
                 expect(rowEls.length).toBe(1);
+                el.remove();
             });
         });
     });
