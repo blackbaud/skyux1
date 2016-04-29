@@ -111,7 +111,9 @@ module.exports = function (grunt, env, utils) {
         sass: {
             dist: {
                 options: {
-                    style: 'compressed'
+                    outputStyle: 'compressed',
+                    precision: 5,
+                    sourceMap: true
                 },
                 files: {
                     '<%= skyux.paths.dist %>css/sky.css': 'scss/sky.scss'
@@ -119,8 +121,8 @@ module.exports = function (grunt, env, utils) {
             },
             palette: {
                 options: {
-                    sourcemap: 'none',
-                    style: 'compact'
+                    outputStyle: 'compact',
+                    sourceMap: false
                 },
                 files: {
                     '<%= skyux.paths.paletteCss %>': '<%= skyux.paths.paletteTemplate %>template.scss'
@@ -128,7 +130,9 @@ module.exports = function (grunt, env, utils) {
             },
             skybundle: {
                 options: {
-                    style: 'compressed'
+                    outputStyle: 'compressed',
+                    precision: 5,
+                    sourceMap: true
                 },
                 files: {
                     '<%= skyux.paths.dist %>css/sky-bundle.css': '.tmp/sky-bundle.scss'
