@@ -1214,7 +1214,6 @@ describe('Datepicker directive', function () {
                     '</div>' +
                 '</form>' +
             '</div>';
-
             // Custom date formatting method
             $scope.dateOptions = {
                 formatValue: function (value) {

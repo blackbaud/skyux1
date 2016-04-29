@@ -26,8 +26,8 @@
                         does not kick off the custom validation, so we must
                         trigger it manually */
                     oldDateSelection = uibPopupScope.dateSelection;
-                    uibPopupScope.dateSelection = function () {
-                        oldDateSelection();
+                    uibPopupScope.dateSelection = function (newDate) {
+                        oldDateSelection(newDate);
                         el.trigger('change');
                     };
 
