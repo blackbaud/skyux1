@@ -26,6 +26,7 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
         - `bb-checklist-subset-label` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the checklist items.
         - `bb-checklist-subset-property` &mdash; *(Optional.)* Specifies a property name that will be used to filter by subset on the checklist items when using local search. The property will be set to `true` if it is a member of the subset.
         - `bb-checklist-subset-exclude` &mdash; *(Optional.)* When using local search, instructs the checklist directive to exclude items with the `bb-checklist-subset-property` set to true when the subset checkbox is selected. When this attribute is not present, the checklist directive includes items with the `bb-checklist-subset-property` when the subset checkbox is selected.
+        - `bb-checklist-only-selected` &mdash; *(Optional.)* Instructs the checklist to include a checkbox which hides unselected items when checked.
 
 ### Checklist Column Settings ###
     - `bb-checklist-columns` &mdash; Allows you to specify multiple columns of data for the checkbox list.

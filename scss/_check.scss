@@ -55,7 +55,7 @@
 
 .bb-check-wrapper input:disabled + .bb-check-checkbox,
 .bb-check-wrapper input:disabled + .bb-check-radio {
-    background-color: $gray-lighter;
+    background-color: $input-bg-disabled;
     border: 1px solid $gray-lighter;
     cursor: default;
 }
