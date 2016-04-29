@@ -121,15 +121,16 @@ describe('Checklist directive', function () {
 
         rowEl = el.find('tbody tr');
 
-        expect($scope.locals.selectedItems).toEqual([items[0]]);
+        //ignore the random properties angular puts in for ng-repeat
+        expect(angular.equals($scope.locals.selectedItems, [items[0]])).toBe(true);
 
         rowEl.eq(1).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[0], items[1]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[0], items[1]])).toBe(true);
 
         rowEl.eq(0).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[1]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[1]])).toBe(true);
 
     });
 
@@ -147,15 +148,16 @@ describe('Checklist directive', function () {
 
         inputEl = el.find('tbody tr input');
 
-        expect($scope.locals.selectedItems).toEqual([items[0]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[0]])).toBe(true);
 
         inputEl.eq(1).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[0], items[1]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[0], items[1]])).toBe(true);
 
         inputEl.eq(0).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[1]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[1]])).toBe(true);
+
 
         el.remove();
     });
@@ -175,8 +177,7 @@ describe('Checklist directive', function () {
 
         rowEl.eq(1).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[0], items[1]]);
-
+        expect(angular.equals($scope.locals.selectedItems, [items[0], items[1]])).toBe(true);
         clearEl = el.find('button:contains("' + resources.checklist_clear_all + '")');
 
         clearEl.eq(0).click();
@@ -200,13 +201,13 @@ describe('Checklist directive', function () {
 
         rowEl.eq(1).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[0], items[1]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[0], items[1]])).toBe(true);
 
         selectEl = el.find('button:contains("' + resources.checklist_select_all + '")');
 
         selectEl.eq(0).click();
 
-        expect($scope.locals.selectedItems).toEqual(items);
+        expect(angular.equals($scope.locals.selectedItems, items)).toBe(true);
     });
 
     it('should watch the search text', function () {
@@ -227,7 +228,7 @@ describe('Checklist directive', function () {
 
         rowEl.eq(1).click();
 
-        expect($scope.locals.selectedItems).toEqual([items[0], items[1]]);
+        expect(angular.equals($scope.locals.selectedItems, [items[0], items[1]])).toBe(true);
 
         searchEl = el.find('input[type="text"]');
         searchEl.val('your mother').trigger('change');
@@ -508,7 +509,7 @@ describe('Checklist directive', function () {
             checklistHtml;
 
         checklistHtml = '<bb-checklist ' +
-            'bb-checklist-items="items" ' +
+            'bb-checklist-items="locals.items" ' +
             'bb-checklist-include-search="locals.includeSearch"' +
             'bb-checklist-mode="list" ' +
             'bb-checklist-focus-search ' +
@@ -542,6 +543,7 @@ describe('Checklist directive', function () {
         el.remove();
     });
 
+
     describe('checklist filters', function () {
 
         var categories,
@@ -573,6 +575,183 @@ describe('Checklist directive', function () {
                 }
             ];
 
+        });
+
+        function getChecklistRows(el) {
+            return el.find('.bb-checklist-list-row');
+        }
+
+        describe('show selected checkbox', function () {
+
+            beforeEach(function () {
+                checklistHtml =
+                    '<bb-checklist ' +
+                        'bb-checklist-items="items" ' +
+                        'bb-checklist-selected-items="selectedItems" ' +
+                        'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                        'bb-checklist-no-items-message="\'No items found\'" ' +
+                        'bb-checklist-mode="list" ' +
+                        'bb-checklist-categories="categories" ' +
+                        'bb-checklist-only-selected ' +
+                        'bb-checklist-filter-local>' +
+                    '</bb-checklist>';
+            });
+
+            it('should only show selected items', function () {
+                var el,
+                    checkboxLabelEl,
+                    checkboxInputEl,
+                    rowEls,
+                    selectEl;
+
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+
+                el = $compile(checklistHtml)($scope);
+
+                el.appendTo(document.body);
+
+                $scope.$digest();
+
+                checkboxLabelEl = el.find('.bb-checklist-select-all-bar .control-label');
+
+                expect(checkboxLabelEl).toHaveText(resources.checklist_only_selected_items);
+                checkboxInputEl = checkboxLabelEl.find('input');
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(3);
+
+                checkboxInputEl.click();
+
+                $scope.$digest();
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(0);
+
+                checkboxInputEl.click();
+
+                $scope.$digest();
+                rowEls = getChecklistRows(el);
+                rowEls.find('input').eq(0).click();
+                $scope.$digest();
+
+                checkboxInputEl.click();
+
+                $scope.$digest();
+
+                rowEls = getChecklistRows(el);
+                expect(rowEls.length).toBe(1);
+
+                selectEl = el.find('select');
+
+                selectEl.val($scope.categories[1]);
+                selectEl.change();
+
+                $scope.$digest();
+
+                expect(rowEls.length).toBe(1);
+                el.remove();
+
+            });
+
+            it('should clear all correctly', function () {
+                var el,
+                    checkboxInputEl,
+                    clearEl,
+                    rowEls;
+
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+
+                el = $compile(checklistHtml)($scope);
+
+                el.appendTo(document.body);
+
+                $scope.$digest();
+
+                checkboxInputEl = el.find('.bb-checklist-select-all-bar .control-label input');
+
+                rowEls = getChecklistRows(el);
+
+                rowEls.find('input').eq(0).click();
+                rowEls.find('input').eq(1).click();
+
+                checkboxInputEl.click();
+
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(2);
+
+                clearEl = el.find('button:contains("' + resources.checklist_clear_all + '")');
+
+                clearEl.eq(0).click();
+
+                expect($scope.selectedItems).toEqual([]);
+                rowEls = getChecklistRows(el);
+
+                expect(rowEls.length).toBe(0);
+                el.remove();
+
+            });
+
+            it('should disable the search, categories, and subset control', function () {
+                var el,
+                    checkboxInputEl,
+                    searchEl,
+                    searchContainerEl,
+                    categoriesEl,
+                    subsetEl;
+
+                checklistHtml =
+                    '<bb-checklist ' +
+                        'bb-checklist-items="items" ' +
+                        'bb-checklist-selected-items="selectedItems" ' +
+                        'bb-checklist-include-search="includeSearch"' +
+                        'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                        'bb-checklist-no-items-message="\'No items found\'" ' +
+                        'bb-checklist-mode="list" ' +
+                        'bb-checklist-categories="categories" ' +
+                        'bb-checklist-only-selected ' +
+                        'bb-checklist-subset-label="subsetLabel" ' +
+                        'bb-checklist-subset-property="inactive" ' +
+                        'bb-checklist-filter-local>' +
+                    '</bb-checklist>';
+
+                $scope.includeSearch = true;
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+                $scope.subsetLabel = 'Hide inactive';
+
+                el = $compile(checklistHtml)($scope);
+
+                el.appendTo(document.body);
+
+                $scope.$digest();
+                checkboxInputEl = el.find('.bb-checklist-select-all-bar .control-label input');
+
+                searchEl = el.find('.bb-checklist-search input');
+                searchContainerEl = el.find('.bb-checklist-search');
+                categoriesEl = el.find('.bb-checklist-category-bar select');
+                subsetEl = el.find('.bb-checklist-category-bar .bb-checklist-subset-input');
+
+                expect(searchEl).not.toBeDisabled();
+                expect(searchContainerEl).not.toHaveClass('bb-search-disabled');
+                expect(categoriesEl).not.toBeDisabled();
+                expect(subsetEl).not.toBeDisabled();
+
+                checkboxInputEl.click();
+                $scope.$digest();
+
+                expect(searchEl).toBeDisabled();
+                expect(searchContainerEl).toHaveClass('bb-search-disabled');
+                expect(categoriesEl).toBeDisabled();
+                expect(subsetEl).toBeDisabled();
+
+                el.remove();
+
+            });
         });
 
         describe('category toolbar', function () {
@@ -689,9 +868,7 @@ describe('Checklist directive', function () {
 
         describe('subset checkbox', function () {
 
-            function getChecklistRows(el) {
-                return el.find('.bb-checklist-list-row');
-            }
+
 
             function getSubsetInput(el) {
                 return el.find('.bb-checklist-subset-input');
@@ -747,6 +924,7 @@ describe('Checklist directive', function () {
                 rowEls = getChecklistRows(el);
 
                 expect(rowEls.length).toBe(0);
+                el.remove();
 
             });
 
@@ -801,6 +979,7 @@ describe('Checklist directive', function () {
                 rowEls = getChecklistRows(el);
 
                 expect(rowEls.length).toBe(1);
+                el.remove();
             });
         });
     });
