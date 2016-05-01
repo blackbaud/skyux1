@@ -9,7 +9,7 @@ describe('toast', function () {
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open')
-            .waitForVisible('#toast-container');
+            .waitForVisible('#toast-container', 1500);
 
         common.compareScreenshot({
             browserResult: result,
@@ -26,7 +26,7 @@ describe('toast', function () {
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open-info')
-            .waitForVisible('#toast-container');
+            .waitForVisible('#toast-container', 1500);
 
         common.compareScreenshot({
             browserResult: result,
@@ -43,7 +43,7 @@ describe('toast', function () {
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open-success')
-            .waitForVisible('#toast-container');
+            .waitForVisible('#toast-container', 1500);
 
         common.compareScreenshot({
             browserResult: result,
@@ -60,7 +60,7 @@ describe('toast', function () {
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open-warning')
-            .waitForVisible('#toast-container');
+            .waitForVisible('#toast-container', 1500);
 
         common.compareScreenshot({
             browserResult: result,
@@ -77,7 +77,7 @@ describe('toast', function () {
 
         result = browser.url('/toast/fixtures/test.full.html')
             .click('#screenshot-toast-open-danger')
-            .waitForVisible('#toast-container');
+            .waitForVisible('#toast-container', 1500);
 
         common.compareScreenshot({
             browserResult: result,
