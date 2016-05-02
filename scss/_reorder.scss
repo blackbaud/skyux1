@@ -27,9 +27,11 @@
 .bb-reorder-list-col-top {
   color: $bb-color-blue;
   cursor:pointer;
-  white-space: nowrap;
-  height: 44px;
+  white-space: normal;
+  word-wrap: break-word;
+  min-height: 44px;
   width: 44px;
+  flex-basis: 30%;
 }
 
 .bb-reorder-list-row {

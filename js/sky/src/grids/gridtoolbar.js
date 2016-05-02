@@ -106,6 +106,12 @@
                     }
                 }, true);
 
+                $scope.$watch('options.searchText', function (newValue) {
+                    if (newValue !== $scope.searchText) {
+                        $scope.searchText = newValue;
+                    }
+                });
+
                 $scope.$watch('options.filtersOpen', function (newValue) {
                     if (angular.isDefined(newValue)) {
                         toggleFilterMenu(newValue);

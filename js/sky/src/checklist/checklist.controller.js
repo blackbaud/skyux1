@@ -13,7 +13,7 @@
         }
 
         function itemInSubset(item, subsetSelected) {
-            if (!vm.bbChecklistSubsetLabel || angular.isUndefined(item[vm.bbChecklistSubsetProperty]) || item[vm.bbCheclistSubsetProperty] === false) {
+            if (!vm.bbChecklistSubsetLabel || angular.isUndefined(item[vm.bbChecklistSubsetProperty]) || item[vm.bbChecklistSubsetProperty] === false) {
                 return true;
             }
 
@@ -25,11 +25,17 @@
 
         }
 
+        function itemIsSelected(item) {
+            return bbChecklistUtility.contains(vm.bbChecklistSelectedItems, item);
+        }
+
+
         function itemMatchesFilter(item, category, searchTextUpper) {
             var i,
                 p,
                 len,
                 val;
+
 
             if (itemMatchesCategory(item, category)) {
                 if (itemInSubset(item, vm.subsetSelected)) {
@@ -62,7 +68,7 @@
                 searchTextUpper = (vm.searchText || '').toUpperCase(),
                 selectedCategory = vm.selectedCategory;
 
-            if (!searchTextUpper && !selectedCategory && !vm.bbChecklistSubsetLabel) {
+            if (!searchTextUpper && !selectedCategory && !vm.bbChecklistSubsetLabel && !vm.onlyShowSelected) {
                 filteredItems = items.slice(0);
             } else {
                 filteredItems = [];
@@ -80,7 +86,11 @@
         }
 
         function invokeFilter() {
-            if (vm.filterLocal) {
+            /* When the show only selected items checkbox is checked,
+               then no other filters should be applied */
+            if (vm.onlyShowSelected) {
+                vm.filteredItems = vm.bbChecklistSelectedItems || [];
+            } else if (vm.filterLocal) {
                 invokeFilterLocal();
             } else if (vm.bbChecklistFilterCallback) {
                 vm.bbChecklistFilterCallback({
@@ -91,12 +101,9 @@
             }
         }
 
-        function itemIsSelected(item) {
-            return bbChecklistUtility.contains(vm.bbChecklistSelectedItems, item);
-        }
-
         function eachFilteredItem(callback) {
-            vm.filteredItems.forEach(callback);
+            var filteredItemsCopy = angular.copy(vm.filteredItems);
+            filteredItemsCopy.forEach(callback);
         }
 
         function selectItem(item) {
@@ -199,6 +206,13 @@
                 invokeFilter();
             });
         }
+
+        $scope.$watch(function () {
+            return vm.onlyShowSelected;
+        }, function () {
+            invokeFilter();
+        });
+
 
         $scope.$emit('bbPickerReady', {
             setSelectedItems: function (selectedItems) {

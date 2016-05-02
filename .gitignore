@@ -216,3 +216,13 @@ webdrivertest/test/**/*.full.html
 .slimerjs-cache/
 browserstack.env
 browserstack-binary/
+
+js/sky/src/datepicker/datepicker.js
+
+webdriver-screenshots/MAC_firefox/MAC_firefox_searchfield_multiple_dropdown_full.searchfield_multiple_dropdown.1280px.baseline.png
+
+webdriver-screenshots/MAC_firefox/MAC_firefox_searchfield_single_dropdown_full.searchfield_single_dropdown.1280px.baseline.png
+
+webdrivertest/test/searchfield/fixtures/test.html
+
+webdrivertest/test/searchfield/searchfield.visual.js
