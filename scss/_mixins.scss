@@ -39,3 +39,30 @@
     /* Make the element inline-block so that it spins in place. */
     display: inline-block;
 }
+
+@mixin bb-border($type) {
+    @if($type == "light") {
+        border-bottom: 1px solid $border-color;
+    }
+
+    @if($type == "dark") {
+        border-bottom: 1px solid $gray-ligher;
+    }
+
+    @if($type == "nav") {
+        border-bottom: $bb-nav-selected-border-width solid $bb-color-blue;
+    }
+
+    @if($type == "tab") {
+        border-bottom: 2px solid $bb-color-blue;
+    }
+
+    @if($type == "tile") {
+        border-top: 4px solid $border-color;
+    }
+
+    @if($type == "row") {
+        border-bottom: 1px dotted $gray-lighter;
+    }
+
+}
