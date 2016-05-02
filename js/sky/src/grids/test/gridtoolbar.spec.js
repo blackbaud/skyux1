@@ -360,6 +360,25 @@ describe('Grid toolbars', function () {
             expect($scope.locals.gridOptions.searchText).toBe('John');
 
         });
+
+        it('responds to consumer searchText change', function () {
+            var searchEl;
+
+            el = setUpGrid(basicGridHtml);
+            setOptions(options);
+
+            setGridData(dataSet1);
+
+            searchEl = el.find('.bb-grid-toolbar-container .bb-search-container input');
+
+            expect(searchEl).toHaveValue('');
+
+            $scope.locals.gridOptions.searchText = 'John';
+
+            $scope.$digest();
+
+            expect(searchEl).toHaveValue('John');
+        });
     });
 
     describe('custom toolbar', function () {

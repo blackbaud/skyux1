@@ -33,7 +33,8 @@ describe('Page summary', function () {
                 'Content',
                 'Alert'
             ],
-            done
+            done,
+            [480, 1280]
         );
     });
 

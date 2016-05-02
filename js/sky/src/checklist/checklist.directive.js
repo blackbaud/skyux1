@@ -33,6 +33,7 @@
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
                 vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
                 vm.focusSearch = attrs.bbChecklistFocusSearch;
+                vm.onlySelectedAvailable = angular.isDefined(attrs.bbChecklistOnlySelected);
             }
         };
     }

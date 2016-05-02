@@ -1506,6 +1506,66 @@ describe('Datepicker directive', function () {
 
             el.remove();
         });
+
+        it('validates when a date is selected in the calendar', function () {
+            var el,
+                inputEl,
+                calendarEl,
+                calendarDayEl,
+                customValidationEl = '<div>' +
+                '<form name="testform" novalidate>' +
+                    '<div class="form-group">' +
+                        '<bb-datepicker bb-datepicker-name="testDate1" ng-required="{{true}}" ng-model="testdate1" bb-custom-validation="dateOptions"></bb-datepicker>' +
+                    '</div>' +
+                '</form>' +
+            '</div>';
+
+            // Custom date formatting method
+            $scope.dateOptions = {
+                formatValue: function (value) {
+
+                    return $q(function (resolve) {
+                        var formattedValue = value,
+                            formattingErrorMessage;
+
+                        if (value.toUpperCase() !== value) {
+                            formattingErrorMessage = 'Any letters should be capitalized.';
+                        } else {
+                            formattedValue = '[' + value.toUpperCase() + ']';
+                        }
+
+                        resolve({
+                            formattedValue: formattedValue,
+                            formattingErrorMessage: formattingErrorMessage
+                        });
+                    });
+                }
+            };
+
+            el = setupDatepicker(customValidationEl, '5/17/1985', true);
+
+            $scope.testdate1 = new Date('5/19/1985');
+            $scope.$digest();
+
+            inputEl = el.find('input');
+
+            openCalendar(el);
+
+            calendarEl = getCalendar(el);
+            calendarDayEl = getDate(calendarEl, 5);
+
+            calendarDayEl.parent('button').click();
+
+            $scope.$digest();
+            $timeout.flush();
+
+            expect(inputEl).toHaveValue('[05/05/1985]');
+            expect($scope.testdate1).toEqual('[05/05/1985]');
+
+            openCalendar(el);
+
+            el.remove();
+        });
     });
 
     function runMinAndMaxDateFullTest(el, minDateCompare, maxDateCompare, middleDateCompare, minDay, maxDay, middleDay) {
