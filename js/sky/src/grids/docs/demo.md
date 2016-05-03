@@ -34,7 +34,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `exclude_from_search` &mdash; *(Optional.)* Indicates whether exclude the column from highlighting search text. To prevent the column from highlighting search text, set this property to `true`.
             - `id` &mdash; Specifies a unique identifier for the column. The options object's `selectedColumnIds` property references this ID.
             - `jsonmap` &mdash; Specifies the name of the property within the `data` property that maps to the data in the column.
-            - `name` &mdash; Specifies a unique name for the column.
+            - `name` &mdash; Specifies a unique name for the column. If `name` is a different value than `jsonmap`, then this value must not match any other property name for the grid data.
             - `right_align` &mdash; *(Optional.)* Indicates whether to right-align the content in the column. To right-align content, set this property to `true`. By default, content is left-aligned.
             - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data object, use the format `data.property_name`.
             - `width_all` &mdash; *(Optional.)* Sets the default column width (in pixels). To override the default column width for certain screen sizes, you can set breakpoint-specific column widths with the `width_xs`, `width_sm`, `width_md`, and `width_lg` properties. When columns do not take up the entire the grid, the last column extends beyond its default width to take up the remaining space. *(Default: 150px)*
