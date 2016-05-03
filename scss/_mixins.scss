@@ -40,29 +40,41 @@
     display: inline-block;
 }
 
-@mixin bb-border($type) {
-    @if($type == "light") {
-        border-bottom: 1px solid $border-color;
+@mixin bb-border($type, $sides...) {
+
+    @if(length($sides) == 0) {
+        @if($type != "tile") {
+            $sides: "bottom";
+        } @else {
+            $sides: "top";
+        }
     }
 
-    @if($type == "dark") {
-        border-bottom: 1px solid $gray-ligher;
+    @each $side in $sides {
+      @if($type == "light") {
+          border-#{$side}: 1px solid $border-color;
+      }
+
+      @if($type == "dark") {
+          border-#{$side}: 1px solid $gray-lighter;
+      }
+
+      @if($type == "nav") {
+          border-#{$side}: $bb-nav-selected-border-width solid $bb-color-blue;
+      }
+
+      @if($type == "tab") {
+          border-#{$side}: 2px solid $bb-color-blue;
+      }
+
+      @if($type == "tile") {
+          border-top: 4px solid $border-color;
+      }
+
+      @if($type == "row") {
+          border-#{$side}: 1px dotted $gray-lighter;
+      }
     }
 
-    @if($type == "nav") {
-        border-bottom: $bb-nav-selected-border-width solid $bb-color-blue;
-    }
-
-    @if($type == "tab") {
-        border-bottom: 2px solid $bb-color-blue;
-    }
-
-    @if($type == "tile") {
-        border-top: 4px solid $border-color;
-    }
-
-    @if($type == "row") {
-        border-bottom: 1px dotted $gray-lighter;
-    }
 
 }

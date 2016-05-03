@@ -12,10 +12,7 @@
         -moz-border-right-colors: none;
         -moz-border-top-colors: none;
         background-color: #fff;
-        border-color: $border-color;
-        border-image: none;
-        border-style: solid solid none;
-        border-width: 4px 0px 0;
+        @include bb-border(tile);
         color: inherit;
         margin-bottom: 0;
         height: 48px;
@@ -122,10 +119,7 @@
 .bb-tile-content {
     background-color: #fff;
     color: inherit;
-    border-color: $border-color;
-    border-image: none;
-    border-style: solid solid none;
-    border-width: 1px 0;
+    @include bb-border(light, top, bottom);
     clear: both;
 }
 
@@ -181,10 +175,10 @@ tiles behave within a column of tiles.*/
 
 .toolbar {
     &.bb-tile-toolbar {
-        border: 1px solid $border-color;
-        border-right: none;
-        border-left: none;
-        border-top: none;
+       @include bb-border(light);
+       border-top: none;
+       border-left: none;
+       border-right: none;
     }
 }
 
