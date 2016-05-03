@@ -120,6 +120,9 @@
     background-color: #fff;
     color: inherit;
     @include bb-border(light, top, bottom);
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0;
     clear: both;
 }
 
