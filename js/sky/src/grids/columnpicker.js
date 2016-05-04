@@ -40,33 +40,39 @@
 
         return 0;
     }
-    
+
     function getInitialSelectedColumns(columns, selectedIds) {
         var selectedColumns = [];
-        
+
         angular.forEach(columns, function (column) {
             if (selectedIds.indexOf(column.id) >= 0) {
                 selectedColumns.push(column);
             }
         });
-        
+
         return selectedColumns;
     }
 
-    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode) {
+    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode, subsetLabel, subsetProperty, subsetExclude, onlySelected) {
         var columns = [],
             initialSelectedColumns;
 
         angular.forEach(availableColumns, function (column) {
-            columns.push({
+            var newColumn = {
                 id: column.id,
                 name: column.name,
                 title: column.caption,
                 category: column.category,
                 description: column.description
-            });
+            };
+
+            if (subsetProperty) {
+                newColumn[subsetProperty] = column[subsetProperty];
+            }
+
+            columns.push(newColumn);
         });
-        
+
         initialSelectedColumns = getInitialSelectedColumns(columns, initialSelectedColumnIds);
 
         columns.sort(columnCompare);
@@ -75,16 +81,28 @@
         $scope.categories = buildCategoryList(columns);
         $scope.locals = {};
         $scope.locals.selectedColumns = initialSelectedColumns.slice(0);
+        $scope.locals.subsetLabel = subsetLabel;
+        $scope.locals.subsetProperty = subsetProperty;
+
+        if (subsetExclude) {
+            $scope.locals.subsetExclude = subsetExclude;
+        }
+
+        if (onlySelected) {
+            $scope.locals.onlySelected = onlySelected;
+        }
+
+
         $scope.columnPickerHelpKey = columnPickerHelpKey;
         $scope.listMode = listMode;
-        
+
         $scope.applyChanges = function () {
             var column,
                 scopeColumns = $scope.columns,
                 selectedColumns = $scope.locals.selectedColumns,
                 columnIds = [],
                 i;
-            
+
             //Loop through previously selected columns.  If they are still selected, add
             //them to the resulting list in their original order.
             angular.forEach(initialSelectedColumnIds, function (columnId) {
@@ -104,7 +122,7 @@
             //then add them to the end.
             angular.forEach(selectedColumns, function (column) {
                 var id = column.id;
-                
+
                 if (columnIds.indexOf(id) < 0) {
                     columnIds.push(id);
                 }
@@ -113,8 +131,8 @@
             $scope.$close(columnIds);
         };
     }
-    
-    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode'];
+
+    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode', 'subsetLabel', 'subsetProperty', 'subsetExclude', 'onlySelected'];
 
     angular.module('sky.grids.columnpicker', ['sky.checklist', 'sky.resources'])
         .controller('BBGridColumnPickerController', BBGridColumnPickerController);
