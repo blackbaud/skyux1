@@ -17,7 +17,7 @@
     //////////////////////////////////////////////////////////////
     thead {
         border: 0;
-        border-bottom: 1px solid $gray-lighter;
+        @include bb-border(dark);
         white-space: nowrap;
         background-color: $bb-color-white;
     }
@@ -63,7 +63,7 @@
             border-top: 0;
             border-left: 0;
             border-right: 0;
-            border-bottom: 1px dotted $gray-lighter;
+            @include bb-border(row);
             @include ellipsis(false);
             .bb-check-checkbox.checked:before {
                 padding-left: 0;
