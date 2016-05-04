@@ -40,9 +40,6 @@
                             columnPickerHelpKey: function () {
                                 return $scope.options.columnPickerHelpKey;
                             },
-                            listMode: function () {
-                                return $scope.options.columnPickerMode;
-                            },
                             subsetLabel: function () {
                                 return $scope.options.columnPickerSubsetLabel;
                             },

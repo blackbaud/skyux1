@@ -53,7 +53,7 @@
         return selectedColumns;
     }
 
-    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode, subsetLabel, subsetProperty, subsetExclude, onlySelected) {
+    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, subsetLabel, subsetProperty, subsetExclude, onlySelected) {
         var columns = [],
             initialSelectedColumns;
 
@@ -92,9 +92,7 @@
             $scope.locals.onlySelected = onlySelected;
         }
 
-
         $scope.columnPickerHelpKey = columnPickerHelpKey;
-        $scope.listMode = listMode;
 
         $scope.applyChanges = function () {
             var column,
@@ -132,7 +130,7 @@
         };
     }
 
-    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode', 'subsetLabel', 'subsetProperty', 'subsetExclude', 'onlySelected'];
+    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'subsetLabel', 'subsetProperty', 'subsetExclude', 'onlySelected'];
 
     angular.module('sky.grids.columnpicker', ['sky.checklist', 'sky.resources'])
         .controller('BBGridColumnPickerController', BBGridColumnPickerController);

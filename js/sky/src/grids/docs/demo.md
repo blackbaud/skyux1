@@ -42,7 +42,6 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `width_sm` &mdash; *(Optional.)* Sets the column width for screen sizes from 768px to 991px.
             - `width_md` &mdash; *(Optional.)* Sets the column width for screen sizes from 992px to 1199px.
             - `width_lg` &mdash; *(Optional.)* Sets the column width for screen sizes greater than 1199px.
-        - `columnPickerMode` &mdash; *(Optional.)* Sets the style for the column picker checklist. Can be set to either `list` or `grid`. *(Default = `grid`)*
         - `columnPickerHelpKey` &mdash; *(Optional.)* Sets the help key for the column picker.
         - `columnPickerSubsetLabel` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the columns.
         - `columnPickerSubsetProperty` &mdash; *(Optional.)* Specifies a property name of the column that will be used to filter by subset. The property will be set to `true` if it is a member of the subset.
