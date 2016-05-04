@@ -12,7 +12,7 @@
 }
 
 .bb-navbar {
-    border-bottom: 1px solid $gray-lighter;
+    @include bb-border(dark);
     background-color: $bb-nav-bg-color;
     margin-bottom: 0;
 
@@ -75,7 +75,7 @@
             &.bb-navbar-active {
                 a {
                     background-color: $bb-nav-selected-bg-color;
-                    border-bottom: solid $bb-nav-selected-border-width $bb-color-blue;
+                    @include bb-border(nav);
                     color: $bb-nav-selected-color;
                     padding-bottom: $bb-nav-item-padding - $bb-nav-selected-border-width;
                 }
