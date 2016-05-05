@@ -42,6 +42,11 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `width_sm` &mdash; *(Optional.)* Sets the column width for screen sizes from 768px to 991px.
             - `width_md` &mdash; *(Optional.)* Sets the column width for screen sizes from 992px to 1199px.
             - `width_lg` &mdash; *(Optional.)* Sets the column width for screen sizes greater than 1199px.
+        - `columnPickerHelpKey` &mdash; *(Optional.)* Sets the help key for the column picker.
+        - `columnPickerSubsetLabel` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the columns.
+        - `columnPickerSubsetProperty` &mdash; *(Optional.)* Specifies a property name of the column that will be used to filter by subset. The property will be set to `true` if it is a member of the subset.
+        - `columnPickerSubsetExclude` &mdash; *(Optional.)* When set to true, instructs the column picker to exclude columns with the `columnPickerSubsetProperty` set to true when the subset checkbox is selected. When set to false, the column picker includes the columns with the `columnPickerSubsetProperty` set to true when the subset checkbox is selected. *(Default = `false`)*
+        - `columnPickerOnlySelected` &mdash; *(Optional.)* When set to true, instructs the column picker to include a checkbox which hides unselected items when checked.
         - `data` &mdash; An array of objects that represents the rows in the grid. Each row should have properties that correspond to the `jsonmap` properties within the `columns` property.
         - `fixedToolbar` &mdash; *(Optional.)* Indicates whether to prevent the toolbar and grid headers from scrolling with the window. To prevent them from scrolling, set this property to `true`. *(Default = `false`)*
         - `filtersAreActive` &mdash; *(Optional.)* Indicates whether to highlight the filter button to indicate that the grid is filtered. To highlight the button, set this property to `true`.

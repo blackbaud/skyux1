@@ -40,8 +40,17 @@
                             columnPickerHelpKey: function () {
                                 return $scope.options.columnPickerHelpKey;
                             },
-                            listMode: function () {
-                                return $scope.options.columnPickerMode;
+                            subsetLabel: function () {
+                                return $scope.options.columnPickerSubsetLabel;
+                            },
+                            subsetProperty: function () {
+                                return $scope.options.columnPickerSubsetProperty;
+                            },
+                            subsetExclude: function () {
+                                return $scope.options.columnPickerSubsetExclude;
+                            },
+                            onlySelected: function () {
+                                return $scope.options.columnPickerOnlySelected;
                             }
                         }
                     }).result.then(function (selectedColumnIds) {
