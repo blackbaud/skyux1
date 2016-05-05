@@ -264,12 +264,40 @@
         };
     }
 
+
+    function bbTabHeadingXs($parse, $compile, $templateCache) {
+        return {
+            require: 'uibTab',
+            link: function ($scope, el, attr) {
+                var headingModel,
+                    anchorEl;
+
+                anchorEl = el.find('a');
+                anchorEl.wrapInner(getTemplate($templateCache, 'largeheading'));
+                anchorEl.append($compile(getTemplate($templateCache, 'smallheading'))($scope));
+
+                headingModel = $parse(attr.bbTabHeadingXs);
+
+                $scope.bbTabHeadingXs = headingModel($scope);
+
+                $scope.$watch(function () {
+                    return headingModel($scope);
+                }, function (newValue) {
+                    $scope.bbTabHeadingXs = newValue;
+                });
+            }
+        };
+    }
+
+    bbTabHeadingXs.$inject = ['$parse', '$compile', '$templateCache'];
+
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
         .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
         .directive('tab', tab)
-        .directive('uibTab', tab);
+        .directive('uibTab', tab)
+        .directive('bbTabHeadingXs', bbTabHeadingXs);
 
 }(jQuery));
