@@ -110594,13 +110594,39 @@ angular.module('sky.palette.config', [])
         };
     }
 
+
+    function bbTabHeadingXs($compile, $templateCache) {
+        return {
+            require: 'uibTab',
+            link: function ($scope, el, attr) {
+                var anchorEl;
+
+                anchorEl = el.find('a');
+                anchorEl.wrapInner(getTemplate($templateCache, 'largeheading'));
+                anchorEl.append($compile(getTemplate($templateCache, 'smallheading'))($scope));
+
+
+                $scope.bbTabHeadingXs = attr.bbTabHeadingXs;
+
+                $scope.$watch(function () {
+                    return attr.bbTabHeadingXs;
+                }, function (newValue) {
+                    $scope.bbTabHeadingXs = newValue;
+                });
+            }
+        };
+    }
+
+    bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
+
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
         .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
         .directive('tab', tab)
-        .directive('uibTab', tab);
+        .directive('uibTab', tab)
+        .directive('bbTabHeadingXs', bbTabHeadingXs);
 
 }(jQuery));
 
@@ -113522,10 +113548,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle><div class="bb-tab-header-text">{{bbTabsetOptions.selectedTabHeader}}</div><i class="fa fa-caret-down"></i></button>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/tabset/largeheading.html',
+        '<div class="hidden-xs"></div>\n' +
+        '');
     $templateCache.put('sky/templates/tabset/openbutton.html',
         '<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary">\n' +
         '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span>\n' +
         '</button>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/smallheading.html',
+        '<div class="visible-xs">{{bbTabHeadingXs}}</div>\n' +
         '');
     $templateCache.put('sky/templates/tabset/tabbutton.html',
         '<li class="bb-tab-button"></li>\n' +
