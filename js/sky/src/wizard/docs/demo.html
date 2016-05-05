@@ -9,7 +9,8 @@
       <form ng-submit="wizardModalCtrl.save()">
         <div bb-modal-body>
           <uib-tabset bb-wizard>
-            <uib-tab ng-repeat="step in wizardModalCtrl.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
+            <uib-tab ng-repeat="step in wizardModalCtrl.steps" heading="{{step.heading}}" bb-tab-heading-xs="{{step.heading_xs}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()" >
+
               <ng-include src="step.templateUrl"></ng-include>
             </uib-tab>
           </uib-tabset>
