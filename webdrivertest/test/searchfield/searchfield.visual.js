@@ -25,7 +25,7 @@ describe('searchfield', function () {
 
         result = browser.url('/searchfield/fixtures/test.full.html')
             .click('#screenshot-searchfield-single .ui-select-toggle')
-            .waitForVisible('#screenshot-searchfield-single', 1500);
+            .waitForVisible('#screenshot-searchfield-single');
 
         common.compareScreenshot({
             browserResult: result,
