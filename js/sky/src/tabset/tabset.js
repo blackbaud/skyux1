@@ -265,23 +265,21 @@
     }
 
 
-    function bbTabHeadingXs($parse, $compile, $templateCache) {
+    function bbTabHeadingXs($compile, $templateCache) {
         return {
             require: 'uibTab',
             link: function ($scope, el, attr) {
-                var headingModel,
-                    anchorEl;
+                var anchorEl;
 
                 anchorEl = el.find('a');
                 anchorEl.wrapInner(getTemplate($templateCache, 'largeheading'));
                 anchorEl.append($compile(getTemplate($templateCache, 'smallheading'))($scope));
 
-                headingModel = $parse(attr.bbTabHeadingXs);
 
-                $scope.bbTabHeadingXs = headingModel($scope);
+                $scope.bbTabHeadingXs = attr.bbTabHeadingXs;
 
                 $scope.$watch(function () {
-                    return headingModel($scope);
+                    return attr.bbTabHeadingXs;
                 }, function (newValue) {
                     $scope.bbTabHeadingXs = newValue;
                 });
@@ -289,7 +287,7 @@
         };
     }
 
-    bbTabHeadingXs.$inject = ['$parse', '$compile', '$templateCache'];
+    bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
