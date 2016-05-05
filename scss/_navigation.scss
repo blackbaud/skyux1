@@ -38,7 +38,7 @@
         font-size: 0;
         color: $bb-nav-color;
 
-        li {
+        > li {
             cursor: pointer;
             font-size: 14px;
             white-space: nowrap;
@@ -53,11 +53,20 @@
                     font-size: 12px;
                     font-weight: normal;
                     color: $bb-nav-color;
+
+                    padding: $padding $bb-nav-item-padding *0.75;
+                    text-decoration: none;
+                    margin: 0;
+                    border-radius: 0;
+
+                    &:hover {
+                        background-color: $bb-nav-selected-bg-color;
+                        color: $bb-nav-selected-color;
+                    }
                 }
             }
 
-            a,
-            .dropdown-menu a {
+            > a {
                 padding: $bb-nav-item-padding $bb-nav-item-padding * 0.75;
                 text-decoration: none;
                 color: $bb-nav-color;
@@ -70,6 +79,7 @@
                     color: $bb-nav-selected-color;
                 }
             }
+
 
             &:hover,
             &.bb-navbar-active {
