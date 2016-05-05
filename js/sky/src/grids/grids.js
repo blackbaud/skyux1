@@ -118,6 +118,13 @@
                             }
                         };
 
+                        self.highlightSearchText = function () {
+                            /*istanbul ignore else: sanity check */
+                            if (angular.isFunction(locals.highlightSearchText)) {
+                                locals.highlightSearchText();
+                            }
+                        };
+
                         self.scope = $scope;
 
                         $scope.resources = bbResources;
@@ -1251,6 +1258,8 @@
                             locals.resetMultiselect = resetMultiselect;
 
                             locals.toggleMultiselectRows = toggleMultiselectRows;
+
+                            locals.highlightSearchText = highlightSearchText;
 
                             locals.setFilters = function (filters) {
                                 $scope.options.filters = filters;

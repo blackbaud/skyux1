@@ -28,7 +28,7 @@ describe('Grid directive', function () {
     }
 
     function searchTextChanged() {
-        if (angular.isDefined($scope.locals.gridOptions.searchText) && $scope.locals.gridOptions !== '') {
+        if (angular.isDefined($scope.locals.gridOptions.searchText) && $scope.locals.gridOptions.searchText !== '') {
             $scope.locals.gridOptions.data = [dataSet1[0]];
         } else {
             $scope.locals.gridOptions.data = dataSet1;
@@ -649,6 +649,37 @@ describe('Grid directive', function () {
             spanEl = rowEl.eq(0).find('span');
             expect(spanEl.eq(0)).toHaveClass('highlight');
 
+        });
+
+        it('highlights searched items in rows if search text is set and data is not reloaded', function () {
+            var rowEl,
+                searchEl,
+                searchIconEl,
+                spanEl;
+
+            $scope.$watch('locals.gridOptions.searchText', function () {
+                $scope.locals.gridOptions.data = dataSet1;
+            });
+
+            el = setUpGrid(basicGridHtml);
+
+            setGridData(dataSet1);
+
+            searchEl = getSearchBox(el);
+
+            searchEl.eq(0).val('John').trigger('change');
+
+            searchIconEl = getSearchIcon(el);
+            searchIconEl.eq(0).click();
+
+            $scope.$digest();
+
+            $timeout.flush();
+
+            rowEl = getGridRows(el);
+
+            spanEl = rowEl.eq(0).find('span');
+            expect(spanEl.eq(0)).toHaveClass('highlight');
         });
 
         it('can exclude columns from search', function () {
