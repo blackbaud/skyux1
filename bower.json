@@ -1,6 +1,6 @@
 {
   "name": "blackbaud-skyux",
-  "version": "1.5.20",
+  "version": "1.5.21",
   "homepage": "http://skyux.developer.blackbaud.com",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
   "main": [
