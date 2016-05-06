@@ -24,6 +24,11 @@
                     }
 
                     $scope.options.searchText = $scope.searchText;
+
+                    /*istanbul ignore else: sanity check */
+                    if (bbGrid !== null) {
+                        bbGrid.highlightSearchText();
+                    }
                 }
 
                 function openColumnPicker() {
