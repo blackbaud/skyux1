@@ -216,7 +216,3 @@ webdrivertest/test/**/*.full.html
 .slimerjs-cache/
 browserstack.env
 browserstack-binary/
-
-webdriver-screenshots/MAC_firefox/MAC_firefox_searchfield_multiple_close_hover_full.searchfield_multiple_close_hover.1280px.baseline.png
-
-webdrivertest/test/searchfield/searchfield.visual.js
