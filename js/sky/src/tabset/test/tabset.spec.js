@@ -160,6 +160,37 @@ describe('Tabset module', function () {
             expect(tabsEl.eq(0)).toHaveClass('active');
             expect(tabsEl.eq(1)).not.toHaveClass('active');
             expect(tabsEl.eq(2)).not.toHaveClass('active');
+        });
+    });
+
+    describe('Xs tab heading', function () {
+        it('should add a tab heading that is visible at xs breakpoints', function () {
+            var el,
+                largeHeadingEl,
+                smallHeadingEl,
+                tabHtml = '<uib-tabset>' +
+                            '<uib-tab heading="{{locals.heading_lg}}" bb-tab-heading-xs="{{locals.heading_sm}}">' +
+                                'Content 1' +
+                            '</uib-tab>' +
+                            '</uib-tabset>';
+
+            $scope.locals = {
+                heading_lg: 'Looooong heading',
+                heading_sm: 'Heading'
+            };
+
+            el = $compile(tabHtml)($scope);
+            $scope.$digest();
+            largeHeadingEl = el.find('li a .hidden-xs');
+            expect(largeHeadingEl).toHaveText($scope.locals.heading_lg);
+            smallHeadingEl = el.find('li a .visible-xs');
+            expect(smallHeadingEl).toHaveText($scope.locals.heading_sm);
+
+            $scope.locals.heading_sm = '1';
+            $scope.$digest();
+
+            smallHeadingEl = el.find('li a .visible-xs');
+            expect(smallHeadingEl).toHaveText($scope.locals.heading_sm);
 
         });
     });

@@ -16,6 +16,7 @@ module.exports = {
         expectationResultHandler: function () {
         }
     },
+    waitforTimeout: 3000,
     onPrepare: function () {
         console.log('preparing tests');
     },

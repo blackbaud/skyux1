@@ -6,8 +6,8 @@ if [[ "$IS_RELEASE" == "true" ]]; then
   echo -e "Starting to update skyux-releases.\n"
 
   # What user will be committing to the sky-docs repo
-  git config --global user.email "travis@travis-ci.org"
-  git config --global user.name "Travis"
+  git config --global user.email "sky-build-user@blackbaud.com"
+  git config --global user.name "Blackbaud Sky Build User"
 
   # Clones the sky-docs repo into a "gh/" folder
   git clone --quiet https://${GH_TOKEN}@github.com/blackbaud/skyux-releases.git gh > /dev/null

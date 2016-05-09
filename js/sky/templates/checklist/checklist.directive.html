@@ -17,8 +17,8 @@
         </div>
       </div>
     </div>
-    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">
-      <div class="form-group">
+    <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">
+      <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">
         <select class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">
           <option value="{{bbChecklist.allCategories}}">{{'grid_column_picker_all_categories' | bbResources}}</option>
           <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>

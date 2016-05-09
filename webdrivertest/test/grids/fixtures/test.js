@@ -292,8 +292,7 @@
                 excludedColumns: ['bio']
             },
             selectedColumnIds: [1, 2, 3, 5],
-            columnPickerHelpKey: 'bb-security-users.html',
-            columnPickerMode: 'list'
+            columnPickerHelpKey: 'bb-security-users.html'
         };
 
         self.gridOptions2 = {

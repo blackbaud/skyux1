@@ -7,16 +7,17 @@
 
         li {
             border-bottom: none;
-            margin-right: $margin / 2;
+            margin-right: $margin-half;
             margin-top: 0;
+            margin-bottom: $margin-half;
 
             a {
                 @include border-radius($border-radius-small);
                 background-color: $gray-lightest;
                 border: none;
                 color: $bb-color-blue;
-                padding-top: $padding / 2;
-                padding-bottom: $padding / 2;
+                padding-top: $padding-half;
+                padding-bottom: $padding-half;
                 max-width: 200px;
             }
 
@@ -48,6 +49,6 @@
     }
 
     .tab-content {
-        margin-top: $margin-plus-half;
+        margin-top: $margin;
     }
 }
