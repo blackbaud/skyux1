@@ -4,7 +4,7 @@
     background-color: #f9f8f8;
     padding: $padding;
     border-top: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
+    @include bb-border(light);
 
     .bb-action-bar-group {
         display: inline-block;

@@ -10,7 +10,7 @@
 
 .bb-repeater-item {
     padding: $padding;
-    border-bottom: dotted 1px #ccc;
+    @include bb-border(row);
 
     &:first-child {
         padding-top: 0;
@@ -31,7 +31,7 @@
     .bb-repeater-item {
         display: flex;
         padding: $padding;
-        border-bottom: dotted 1px #ccc;
+        @include bb-border(row);
     }
 
     .bb-repeater-item-right {
