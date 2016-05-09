@@ -104825,33 +104825,39 @@ global.easyXDM = easyXDM;
 
         return 0;
     }
-    
+
     function getInitialSelectedColumns(columns, selectedIds) {
         var selectedColumns = [];
-        
+
         angular.forEach(columns, function (column) {
             if (selectedIds.indexOf(column.id) >= 0) {
                 selectedColumns.push(column);
             }
         });
-        
+
         return selectedColumns;
     }
 
-    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode) {
+    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, subsetLabel, subsetProperty, subsetExclude, onlySelected) {
         var columns = [],
             initialSelectedColumns;
 
         angular.forEach(availableColumns, function (column) {
-            columns.push({
+            var newColumn = {
                 id: column.id,
                 name: column.name,
                 title: column.caption,
                 category: column.category,
                 description: column.description
-            });
+            };
+
+            if (subsetProperty) {
+                newColumn[subsetProperty] = column[subsetProperty];
+            }
+
+            columns.push(newColumn);
         });
-        
+
         initialSelectedColumns = getInitialSelectedColumns(columns, initialSelectedColumnIds);
 
         columns.sort(columnCompare);
@@ -104860,16 +104866,26 @@ global.easyXDM = easyXDM;
         $scope.categories = buildCategoryList(columns);
         $scope.locals = {};
         $scope.locals.selectedColumns = initialSelectedColumns.slice(0);
+        $scope.locals.subsetLabel = subsetLabel;
+        $scope.locals.subsetProperty = subsetProperty;
+
+        if (subsetExclude) {
+            $scope.locals.subsetExclude = subsetExclude;
+        }
+
+        if (onlySelected) {
+            $scope.locals.onlySelected = onlySelected;
+        }
+
         $scope.columnPickerHelpKey = columnPickerHelpKey;
-        $scope.listMode = listMode;
-        
+
         $scope.applyChanges = function () {
             var column,
                 scopeColumns = $scope.columns,
                 selectedColumns = $scope.locals.selectedColumns,
                 columnIds = [],
                 i;
-            
+
             //Loop through previously selected columns.  If they are still selected, add
             //them to the resulting list in their original order.
             angular.forEach(initialSelectedColumnIds, function (columnId) {
@@ -104889,7 +104905,7 @@ global.easyXDM = easyXDM;
             //then add them to the end.
             angular.forEach(selectedColumns, function (column) {
                 var id = column.id;
-                
+
                 if (columnIds.indexOf(id) < 0) {
                     columnIds.push(id);
                 }
@@ -104898,12 +104914,13 @@ global.easyXDM = easyXDM;
             $scope.$close(columnIds);
         };
     }
-    
-    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode'];
+
+    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'subsetLabel', 'subsetProperty', 'subsetExclude', 'onlySelected'];
 
     angular.module('sky.grids.columnpicker', ['sky.checklist', 'sky.resources'])
         .controller('BBGridColumnPickerController', BBGridColumnPickerController);
 }());
+
 /*global angular */
 
 (function () {
@@ -105302,6 +105319,13 @@ global.easyXDM = easyXDM;
                             /*istanbul ignore else: sanity check */
                             if (angular.isFunction(locals.topScrollbarScroll)) {
                                 locals.topScrollbarScroll();
+                            }
+                        };
+
+                        self.highlightSearchText = function () {
+                            /*istanbul ignore else: sanity check */
+                            if (angular.isFunction(locals.highlightSearchText)) {
+                                locals.highlightSearchText();
                             }
                         };
 
@@ -106439,6 +106463,8 @@ global.easyXDM = easyXDM;
 
                             locals.toggleMultiselectRows = toggleMultiselectRows;
 
+                            locals.highlightSearchText = highlightSearchText;
+
                             locals.setFilters = function (filters) {
                                 $scope.options.filters = filters;
                                 $scope.locals.applySearchText();
@@ -106669,6 +106695,11 @@ global.easyXDM = easyXDM;
                     }
 
                     $scope.options.searchText = $scope.searchText;
+
+                    /*istanbul ignore else: sanity check */
+                    if (bbGrid !== null) {
+                        bbGrid.highlightSearchText();
+                    }
                 }
 
                 function openColumnPicker() {
@@ -106685,8 +106716,17 @@ global.easyXDM = easyXDM;
                             columnPickerHelpKey: function () {
                                 return $scope.options.columnPickerHelpKey;
                             },
-                            listMode: function () {
-                                return $scope.options.columnPickerMode;
+                            subsetLabel: function () {
+                                return $scope.options.columnPickerSubsetLabel;
+                            },
+                            subsetProperty: function () {
+                                return $scope.options.columnPickerSubsetProperty;
+                            },
+                            subsetExclude: function () {
+                                return $scope.options.columnPickerSubsetExclude;
+                            },
+                            onlySelected: function () {
+                                return $scope.options.columnPickerOnlySelected;
                             }
                         }
                     }).result.then(function (selectedColumnIds) {
@@ -109725,11 +109765,36 @@ angular.module('sky.palette.config', [])
 
     tab.$inject = ['$log', '$parse', '$timeout'];
 
+    function bbTabHeadingXs($compile, $templateCache) {
+        return {
+            require: 'uibTab',
+            link: function ($scope, el, attr) {
+                var anchorEl;
+
+                anchorEl = el.find('a');
+                anchorEl.wrapInner(getTemplate($templateCache, 'largeheading'));
+                anchorEl.append($compile(getTemplate($templateCache, 'smallheading'))($scope));
+
+
+                $scope.bbTabHeadingXs = attr.bbTabHeadingXs;
+
+                $scope.$watch(function () {
+                    return attr.bbTabHeadingXs;
+                }, function (newValue) {
+                    $scope.bbTabHeadingXs = newValue;
+                });
+            }
+        };
+    }
+
+    bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
+
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
-        .directive('uibTab', tab);
+        .directive('uibTab', tab)
+        .directive('bbTabHeadingXs', bbTabHeadingXs);
 
 }(jQuery));
 
@@ -111920,8 +111985,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>\n' +
         '      </div>\n' +
         '    </div>\n' +
-        '    <div ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">\n' +
-        '      <div class="form-group">\n' +
+        '    <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">\n' +
+        '      <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">\n' +
         '        <select class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">\n' +
         '          <option value="{{bbChecklist.allCategories}}">{{\'grid_column_picker_all_categories\' | bbResources}}</option>\n' +
         '          <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>\n' +
@@ -112298,14 +112363,18 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{\'grid_column_picker_header\' | bbResources}}</bb-modal-header>\n' +
         '  <div bb-modal-body>\n' +
         '    <bb-checklist\n' +
-        '                  bb-checklist-items="columns" \n' +
-        '                  bb-checklist-selected-items="locals.selectedColumns" \n' +
-        '                  bb-checklist-include-search="\'true\'" \n' +
-        '                  bb-checklist-search-placeholder="{{\'grid_column_picker_search_placeholder\' | bbResources}}" \n' +
+        '                  bb-checklist-items="columns"\n' +
+        '                  bb-checklist-selected-items="locals.selectedColumns"\n' +
+        '                  bb-checklist-include-search="\'true\'"\n' +
+        '                  bb-checklist-search-placeholder="{{\'grid_column_picker_search_placeholder\' | bbResources}}"\n' +
         '                  bb-checklist-no-items-message="{{\'grid_column_picker_search_no_columns\' | bbResources}}"\n' +
-        '                  bb-checklist-categories="categories" \n' +
-        '                  bb-checklist-mode="list" \n' +
+        '                  bb-checklist-categories="categories"\n' +
+        '                  bb-checklist-mode="list"\n' +
         '                  bb-checklist-filter-local\n' +
+        '                  bb-checklist-subset-label="locals.subsetLabel"\n' +
+        '                  bb-checklist-subset-property="{{locals.subsetProperty}}"\n' +
+        '                  ng-attr-bb-checklist-subset-exclude="{{locals.subsetExclude}}"\n' +
+        '                  ng-attr-bb-checklist-only-selected="{{locals.onlySelected}}"\n' +
         '                  >\n' +
         '    </bb-checklist>\n' +
         '  </div>\n' +
@@ -112313,7 +112382,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <bb-modal-footer-button-primary data-bbauto-field="ColumnPickerSubmit" ng-click="applyChanges()">{{\'grid_column_picker_submit\' | bbResources}}</bb-modal-footer-button-primary>\n' +
         '    <bb-modal-footer-button-cancel data-bbauto-field="ColumnPickerCancel"></bb-modal-footer-button-cancel>\n' +
         '  </bb-modal-footer>\n' +
-        '</bb-modal>');
+        '</bb-modal>\n' +
+        '');
     $templateCache.put('sky/templates/grids/dropdown.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
         '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">\n' +
@@ -112657,10 +112727,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <button type="button" class="btn btn-primary bb-tab-dropdown-button" uib-dropdown-toggle><div class="bb-tab-header-text">{{bbTabsetOptions.selectedTabHeader}}</div><i class="fa fa-caret-down"></i></button>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/tabset/largeheading.html',
+        '<div class="hidden-xs"></div>\n' +
+        '');
     $templateCache.put('sky/templates/tabset/openbutton.html',
         '<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary">\n' +
         '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span>\n' +
         '</button>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/smallheading.html',
+        '<div class="visible-xs">{{bbTabHeadingXs}}</div>\n' +
         '');
     $templateCache.put('sky/templates/tabset/tabbutton.html',
         '<li class="bb-tab-button"></li>\n' +
