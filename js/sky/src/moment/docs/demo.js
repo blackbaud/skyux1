@@ -6,7 +6,7 @@
     function MomentTestController(bbMoment) {
         var self = this;
         
-        self.momentDate = bbMoment().format('MMMM Do YYYY, h:mm:ss a');
+        self.momentDate = bbMoment().format('MMMM D, YYYY, h:mm:ss a');
     }
     
     MomentTestController.$inject = ['bbMoment'];

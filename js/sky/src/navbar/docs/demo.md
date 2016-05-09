@@ -1,7 +1,11 @@
 ---
 name: Navbar
 icon: compass
-summary: The navbar creates a Bootstrap `nav` element and applies Sky UX classes to it.
+summary: The navbar creates a Bootstrap `nav` element and applies SKY UX classes to it.
 ---
 
-The navbar directive creates a Bootstrap `nav` element with the appropriate Sky UX classes applied to it and its children, and also adds behavior such as showing sub-navigation items when the user hovers over the dropdown. If you do not wish to use the omnibar for collapsing the navbar into a mobile menu on small screens, then place the `bb-navbar-showmobile` class on the `bb-navbar` directive.
+The navbar directive creates a Bootstrap `nav` element and applies the appropriate SKY UX classes to it and its children. It also adds behavior such as displaying sub-navigation items when users hover over a dropdown. If you do not want the omnibar to collapse the navbar into a mobile menu on small screens, then place the `bb-navbar-showmobile` class on the `bb-navbar` directive.
+
+### Navbar Settings ###
+- `bb-navbar` &mdash; Creates a Bootstrap `nav` element and applies SKY UX classes.
+    - `bb-navbar-showmobile` &mdash; Indicates not to collapse the navbar into a mobile menu for small screen sizes. Within the `bb-navbar` element, you add a `class` attribute and set its value to  `bb-navbar-showmobile`.
