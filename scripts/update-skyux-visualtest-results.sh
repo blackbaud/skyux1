@@ -13,7 +13,7 @@ if [[ "$(ls -A webdriver-screenshots-diffs)" ]]; then
 
     branch="$TRAVIS_BUILD_NUMBER-webdriver"
     if [[ $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]; then
-      branch="$TRAVIS_BUILD_NUMBER-webdriver-savage"
+      branch="$branch-savage"
     fi
     git checkout -b $branch
 
