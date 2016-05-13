@@ -33,7 +33,7 @@ We highly encourage contributions from all users of Sky UX.  We just ask that yo
 
 1. Fork the master branch into your own repo
 2. Create a branch named after the feature you will be contributing (.e.g. my-new-feature)
-3. Clone your repo locally, then run `npm install` and `bower install` from your local repo's directory to install all required dependencies
+3. Clone your repo locally, then run `npm install` from your local repo's directory to install all required dependencies
 4. Run `grunt build` to do your initial build.  As you write your code, the individual pieces will be built (see step 1 below)
 
 ### Writing the code
