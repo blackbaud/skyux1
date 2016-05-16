@@ -208,6 +208,10 @@ tiles behave within a column of tiles.*/
     padding: 15px;
 }
 
+.bb-tile-content-section:not(:last-child) {
+  @include bb-border(light);
+}
+
 .bb-tile-grab-handle {
     color: #E7EAEC;
     cursor: move;
