@@ -682,6 +682,46 @@ describe('Grid directive', function () {
             expect(spanEl.eq(0)).toHaveClass('highlight');
         });
 
+        it('clears searched item highlight when data set is not reloaded and items are searched again', function () {
+            var rowEl,
+                searchEl,
+                searchIconEl,
+                spanEl;
+
+            $scope.$watch('locals.gridOptions.searchText', function () {
+                $scope.locals.gridOptions.data = dataSet1;
+            });
+
+            el = setUpGrid(basicGridHtml);
+
+            setGridData(dataSet1);
+
+            searchEl = getSearchBox(el);
+
+            searchEl.eq(0).val('John').trigger('change');
+
+            searchIconEl = getSearchIcon(el);
+            searchIconEl.eq(0).click();
+
+            $scope.$digest();
+
+            $timeout.flush();
+
+            searchEl.eq(0).val('Paul').trigger('change');
+
+            searchIconEl = getSearchIcon(el);
+            searchIconEl.eq(0).click();
+            $scope.$digest();
+
+            rowEl = getGridRows(el);
+
+            spanEl = rowEl.eq(0).find('span');
+            expect(spanEl.eq(0)).not.toHaveClass('highlight');
+
+            spanEl = rowEl.eq(1).find('span');
+            expect(spanEl.eq(0)).toHaveClass('highlight');
+        });
+
         it('can exclude columns from search', function () {
             var rowEl,
                 searchEl,

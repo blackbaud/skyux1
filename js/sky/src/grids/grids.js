@@ -655,6 +655,7 @@
                             function highlightSearchText() {
                                 var options = $scope.options;
                                 if (options && options.searchText) {
+                                    bbHighlight.clear(tableEl);
                                     bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
                                 } else {
                                     bbHighlight.clear(tableEl);
