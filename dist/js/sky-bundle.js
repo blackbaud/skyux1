@@ -105328,8 +105328,9 @@ global.easyXDM = easyXDM;
                     isFile: function () {
                         var item = scope.item;
 
-                        return item && angular.isDefined(item.size);
+                        return item && angular.isDefined(item.size) && item.size !== '' && item.size !== null;
                     },
+
                     isImg: function () {
                         var fileTypeUpper = getFileTypeUpper(),
                             slashIndex;
