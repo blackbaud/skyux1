@@ -9,8 +9,8 @@ if [[ "$IS_RELEASE" == "true" && "$IS_PRERELEASE" == "false" ]]; then
   branch="master"
 
   # What user will be committing to the sky-docs repo
-  git config --global user.email "travis@travis-ci.org"
-  git config --global user.name "Travis"
+  git config --global user.email "sky-build-user@blackbaud.com"
+  git config --global user.name "Blackbaud Sky Build User"
 
   # Clones the sky-docs repo into a "docs/" folder
   git clone --quiet --branch=$branch https://${GH_TOKEN}@github.com/blackbaud/skyux-docs.git docs > /dev/null

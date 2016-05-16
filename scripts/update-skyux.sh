@@ -5,8 +5,8 @@ set -e
 if [[ "$TRAVIS_PULL_REQUEST" == "false" && ! $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]; then
   echo -e "Starting to update skyux.\n"
 
-  git config --global user.email "travis@travis-ci.org"
-  git config --global user.name "Travis"
+  git config --global user.email "sky-build-user@blackbaud.com"
+  git config --global user.name "Blackbaud Sky Build User"
   git clone --quiet --branch=$TRAVIS_BRANCH https://${GH_TOKEN}@github.com/blackbaud/skyux.git skyux > /dev/null
 
   cp -rf dist/ skyux/
