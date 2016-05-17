@@ -106596,10 +106596,9 @@ global.easyXDM = easyXDM;
 
                             function highlightSearchText() {
                                 var options = $scope.options;
+                                bbHighlight.clear(tableEl);
                                 if (options && options.searchText) {
                                     bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
-                                } else {
-                                    bbHighlight.clear(tableEl);
                                 }
                             }
 
