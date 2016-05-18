@@ -5,8 +5,8 @@
 }
 
 .btn-success {
-  background-color: $bb-color-blue;
-  border-color: $bb-color-blue;
+  background-color: $bb-color-green;
+  border-color: $bb-color-green;
 }
 
 .btn-success:hover,
@@ -14,8 +14,8 @@
 .btn-success:active,
 .btn-success.active,
 .open .dropdown-toggle.btn-success {
-  background-color: darken($bb-color-blue, 3%);
-  border-color: darken($bb-color-blue, 3%);
+  background-color: darken($bb-color-green, 3%);
+  border-color: darken($bb-color-green, 3%);
 }
 
 .btn-success:active,
@@ -39,8 +39,8 @@ fieldset[disabled] .btn-success:hover,
 fieldset[disabled] .btn-success:focus,
 fieldset[disabled] .btn-success:active,
 fieldset[disabled] .btn-success.active {
-  background-color: lighten($bb-color-blue, 4%);
-  border-color: lighten($bb-color-blue, 4%);
+  background-color: lighten($bb-color-green, 4%);
+  border-color: lighten($bb-color-green, 4%);
 }
 
 .btn-info {

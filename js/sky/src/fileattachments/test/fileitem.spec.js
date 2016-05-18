@@ -49,6 +49,34 @@ describe('File item directive', function () {
         expect(el.find('.bb-file-item-size')).toHaveText('(200 bytes)');
     });
 
+    it('should not display the file size if it is null', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            file;
+
+        file = {
+            size: null
+        };
+
+        el = getFileItemEl($scope, file);
+
+        expect(el.find('.bb-file-item-size').length).toBe(0);
+    });
+
+    it('should not display the file size if it is empty string', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            file;
+
+        file = {
+            size: ''
+        };
+
+        el = getFileItemEl($scope, file);
+
+        expect(el.find('.bb-file-item-size').length).toBe(0);
+    });
+
     it('should display the file name', function () {
         var $scope = $rootScope.$new(),
             el,
