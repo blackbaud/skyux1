@@ -13,7 +13,7 @@ describe('datepicker', function () {
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_closed',
-            selector: '#screenshot-datepicker',
+            selector: '#screenshot-datepickers',
             done: done
         });
 
@@ -25,13 +25,13 @@ describe('datepicker', function () {
 
         result = browser.url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker .bb-date-field-calendar-button')
-            .waitForVisible('ul[uib-datepicker-popup-wrap]');
+            .waitForVisible('ul.uib-datepicker-popup');
 
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_open',
-            selector: '#screenshot-datepickers',
+            selector: '#screenshot-datepicker',
             done: done
         });
 
@@ -43,7 +43,8 @@ describe('datepicker', function () {
 
         result = browser.url('/datepicker/fixtures/test.full.html')
             .click('#screenshot-datepicker-append-to-body .bb-date-field-calendar-button')
-            .waitForVisible('ul[uib-datepicker-popup-wrap]');
+            .waitForVisible('ul.uib-datepicker-popup');
+
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
@@ -51,8 +52,6 @@ describe('datepicker', function () {
             selector: '#screenshot-datepicker-append-to-body',
             done: done
         });
-
     });
-
 
 });

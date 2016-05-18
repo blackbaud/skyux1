@@ -1,4 +1,5 @@
 <div ng-controller="TabsetTestController as tabsetTestCtrl">
+
     <uib-tabset bb-tabset-add="tabsetTestCtrl.addTab()" bb-tabset-open="tabsetTestCtrl.openTab()" bb-tabset-collapsible>
       <uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in tabsetTestCtrl.tabs" class="bb-tab-close">
           <uib-tab-heading>

@@ -1,7 +1,7 @@
 {
   "name": "blackbaud-skyux",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
-  "version": "1.5.22",
+  "version": "1.6.0-5",
   "repository": {
     "type": "git",
     "url": "https://github.com/blackbaud/skyux"
@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "assemble-yaml": "0.2.1",
-    "blackbaud-stache": "0.7.15",
+    "blackbaud-stache": "0.7.23",
     "browserstacktunnel-wrapper": "1.4.2",
     "dotenv": "2.0.0",
     "grunt": "0.4.5",
@@ -57,7 +57,19 @@
     "path": "0.12.7",
     "wdio-jasmine-framework": "0.1.7",
     "webdrivercss": "v2.0.0beta-rc1",
-    "webdriverio": "3.2.6"
+    "webdriverio": "3.2.6",
+    "to": {
+      "version": "0.2.9",
+      "from": "to@>=0.2.9 <0.3.0",
+      "resolved": "https://registry.npmjs.org/to/-/to-0.2.9.tgz",
+      "dependencies": {
+        "handy": {
+          "version": "0.0.13",
+          "from": "handy@>=0.0.11",
+          "resolved": "https://registry.npmjs.org/handy/-/handy-0.0.13.tgz"
+        }
+      }
+    }
   },
   "scripts": {
     "test": "grunt test"

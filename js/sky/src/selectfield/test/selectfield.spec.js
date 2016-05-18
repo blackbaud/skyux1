@@ -20,6 +20,7 @@ describe('Select field directive', function () {
         $animate.flush();
     }
 
+
     beforeEach(module(
         'ngMock',
         'ngAnimateMock',

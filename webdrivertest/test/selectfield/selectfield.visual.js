@@ -5,13 +5,16 @@ describe('selectfield', function () {
 
     it('should match the baseline screenshot of the multiple select field', function (done) {
         var browserResult,
-            common = require('../common');
+            common = require('../common'),
+            result;
 
         browserResult = browser
             .url('/selectfield/fixtures/test.full.html');
 
+        result = common.moveCursorOffScreen(browserResult);
+
         common.compareScreenshot({
-            browserResult: browserResult,
+            browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'selectfield_multiple',
             selector: '#screenshot-selectfield-multiple',
@@ -25,6 +28,7 @@ describe('selectfield', function () {
 
         browserResult = browser
             .url('/selectfield/fixtures/test.full.html');
+
 
         common.compareScreenshot({
             browserResult: browserResult,

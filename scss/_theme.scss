@@ -203,10 +203,7 @@ label.error {
 
 /*overriding default tooltip styling for angular ui bootstrap */
 .tooltip-inner {
-    white-space: nowrap;
-    max-width: none;
     background-color: $bb-color-white;
-    padding: 0;
 
     text-align: left;
     color: $gray-dark;
