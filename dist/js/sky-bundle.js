@@ -104594,8 +104594,9 @@ global.easyXDM = easyXDM;
                     isFile: function () {
                         var item = scope.item;
 
-                        return item && angular.isDefined(item.size);
+                        return item && angular.isDefined(item.size) && item.size !== '' && item.size !== null;
                     },
+
                     isImg: function () {
                         var fileTypeUpper = getFileTypeUpper(),
                             slashIndex;
@@ -105858,10 +105859,9 @@ global.easyXDM = easyXDM;
 
                             function highlightSearchText() {
                                 var options = $scope.options;
+                                bbHighlight.clear(tableEl);
                                 if (options && options.searchText) {
                                     bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
-                                } else {
-                                    bbHighlight.clear(tableEl);
                                 }
                             }
 
@@ -112493,7 +112493,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/gridtoolbar.html',
         '<div class="bb-grid-toolbar-container">\n' +
         '    <div class="clearfix toolbar bb-table-toolbar">\n' +
-        '        <button type="button" data-bbauto-field="AddButton" class="bb-grid-toolbar-btn btn-success btn" ng-show="toolbarLocals.hasAdd" ng-click="options.onAddClick()">\n' +
+        '        <button type="button" data-bbauto-field="AddButton" class="bb-grid-toolbar-btn btn-primary btn" ng-show="toolbarLocals.hasAdd" ng-click="options.onAddClick()">\n' +
         '            <i class="fa fa-plus-circle"></i>\n' +
         '            <span class="bb-toolbar-btn-label" ng-show="options.onAddClickLabel">{{options.onAddClickLabel}}</span>\n' +
         '        </button>\n' +

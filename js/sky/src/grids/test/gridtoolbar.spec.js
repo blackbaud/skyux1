@@ -34,7 +34,7 @@ describe('Grid toolbars', function () {
     }
 
     function getAddButton(el) {
-        return el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-toolbar-btn.btn-success');
+        return el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-toolbar-btn.btn-primary');
     }
 
     function setGridData(data) {
