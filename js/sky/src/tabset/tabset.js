@@ -52,12 +52,6 @@
         };
 
         self.tabAdded = function () {
-            if (!$scope.bbTabsetOptions) {
-                $scope.bbTabsetOptions = {
-                    isSmallScreen: false,
-                    tabCount: 0
-                };
-            }
 
             if ($scope.bbTabsetOptions.isSmallScreen) {
                 $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
@@ -165,12 +159,11 @@
                     $scope.bbTabsetOptions.isSmallScreen = newBreakpoints.xs;
                     setupCollapsibleTabs(newBreakpoints.xs && ($scope.bbTabsetOptions.tabCount > 1));
                 }
-                if (!$scope.bbTabsetOptions) {
-                    $scope.bbTabsetOptions = {
-                        isSmallScreen: false,
-                        tabCount: 0
-                    };
-                }
+
+                $scope.bbTabsetOptions = {
+                    isSmallScreen: false,
+                    tabCount: 0
+                };
 
                 el.prepend($compile(getDropdownEl())($scope));
 
@@ -187,10 +180,10 @@
 
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
 
-                // Show initial scroll animation whenever the window width changes.
                 $($window).on('resize.tabcollapse' + tabCollapseId, function () {
                     var windowWidth = $($window).width();
 
+                    /* istanbul ignore else: sanity check */
                     if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
                         setDropdownMaxWidth();
                     }
@@ -247,11 +240,14 @@
         };
     }
 
-    function tab() {
+    function tab($log, $parse, $timeout) {
         return {
-            require: '?^bbTabsetCollapsible',
-            link: function ($scope, el, attr, bbTabsetCollapsibleCtrl) {
-                var tabScope = el.isolateScope();
+            require: ['?^bbTabsetCollapsible', '^uibTabset'],
+            link: function ($scope, el, attr, ctrls) {
+                var tabScope = el.isolateScope(),
+                    bbTabsetCollapsibleCtrl = ctrls[0],
+                    uibTabsetCtrl = ctrls[1],
+                    activeModel;
 
                 function getTabHeading() {
                     return tabScope.heading;
@@ -260,10 +256,36 @@
                 if (bbTabsetCollapsibleCtrl !== null && !angular.isDefined(attr.bbTabCollapseHeader)) {
                     collapsibleTabTitle($scope, el, bbTabsetCollapsibleCtrl, getTabHeading);
                 }
+
+                if (angular.isDefined(attr.active)) {
+                    $timeout(function () {
+                        $log.warn('uibTab active attribute is deprecated, instead track active state on uibTabset');
+
+                        activeModel = $parse(attr.active);
+
+
+                        $scope.$watch(function () {
+                            return activeModel($scope);
+                        }, function (newValue) {
+                            if (newValue === true && uibTabsetCtrl.active !== tabScope.index) {
+                                uibTabsetCtrl.select(tabScope.index);
+                            }
+                        });
+
+                        tabScope.$watch(function () {
+                            return tabScope.active;
+                        }, function (newValue) {
+                            if (angular.isDefined(newValue) && newValue !== activeModel($scope)) {
+                                activeModel.assign($scope, newValue);
+                            }
+                        });
+                    });
+                }
             }
         };
     }
 
+    tab.$inject = ['$log', '$parse', '$timeout'];
 
     function bbTabHeadingXs($compile, $templateCache) {
         return {
@@ -291,10 +313,8 @@
 
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .directive('uibTabset', tabset)
-        .directive('tabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
-        .directive('tab', tab)
         .directive('uibTab', tab)
         .directive('bbTabHeadingXs', bbTabHeadingXs);
 

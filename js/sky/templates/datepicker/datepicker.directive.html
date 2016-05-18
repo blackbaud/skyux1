@@ -1,0 +1,35 @@
+<div>
+    <div ng-if="bbDatepicker.loaded" class="input-group bb-datefield">
+
+        <input name="{{bbDatepicker.inputName}}"
+                type="text"
+                class="form-control"
+                placeholder="{{bbDatepicker.bbPlaceholder}}"
+
+                ng-model="bbDatepicker.pickerDate"
+                ng-model-options="{ allowInvalid: true }"
+                ng-keydown="bbDatepicker.enterPress($event)"
+
+                is-open="bbDatepicker.pickerOpened"
+                datepicker-options="bbDatepicker.pickerOptions"
+                uib-datepicker-popup="{{bbDatepicker.format}}"
+                show-button-bar="bbDatepicker.showButtonBar"
+                current-text="{{bbDatepicker.resources.datepicker_today}}"
+                clear-text="{{bbDatepicker.resources.datepicker_clear}}"
+                close-text="{{bbDatepicker.resources.datepicker_close}}"
+                datepicker-append-to-body="{{bbDatepicker.appendToBody}}"
+                close-on-date-selection="{{bbDatepicker.closeOnSelection}}"
+                alt-input-formats="bbDatepicker.altInputFormats"
+
+                bb-datepicker-custom-validate="{{bbDatepicker.hasCustomValidation}}"
+                bb-datepicker-min-date
+                bb-datepicker-max-date
+
+                 />
+        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{'bb-datefield-open': bbDatepicker.pickerOpened}">
+            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="bbDatepicker.open($event)">
+                <i class="fa fa-calendar"></i>
+            </button>
+        </span>
+    </div>
+</div>

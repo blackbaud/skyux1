@@ -7,7 +7,6 @@
     var modules = [
         'sky.actionbar',
         'sky.alert',
-        'sky.autofocus',
         'sky.autonumeric',
         'sky.avatar',
         'sky.card',
@@ -38,7 +37,6 @@
         'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',
-        'sky.searchfield',
         'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
@@ -47,7 +45,6 @@
         'sky.templating',
         'sky.textexpand',
         'sky.tiles',
-        'sky.tooltip',
         'sky.utilities',
         'sky.validation',
         'sky.viewkeeper',

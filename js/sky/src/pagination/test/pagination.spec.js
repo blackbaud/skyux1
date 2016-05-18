@@ -29,7 +29,7 @@ describe('Pagination', function () {
     });
 
     beforeEach(module('ngMock'));
-    beforeEach(module('template/pagination/pagination.html'));
+    beforeEach(module('uib/template/pagination/pagination.html'));
     beforeEach(module('sky.pagination'));
 
     beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _bbPaging_, _$animate_) {
