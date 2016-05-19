@@ -68,7 +68,8 @@
                 };
 
                 bbGrid.scope.$watch('gridCreated', function (newValue) {
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue) {
                         element.parents('.bb-grid-container').prepend(element);
                         element.show();

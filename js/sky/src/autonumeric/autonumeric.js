@@ -17,7 +17,8 @@
         if (configType) {
             configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
-            /* istanbul ignore else: sanity check */
+            /* istanbul ignore else */
+            /* sanity check */
             if (configSettings) {
                 angular.extend(baseSettings, configSettings);
             }
