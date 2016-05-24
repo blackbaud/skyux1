@@ -146,7 +146,8 @@
 
                     containerEl = createEl($templateCache, 'container');
 
-                    /* istanbul ignore else: nothing happens when there's no value, so there's nothing to test. */
+                    /* istanbul ignore else */
+                    /* nothing happens when there's no value, so there's nothing to test. */
                     if (newValue) {
                         collapsedText = getTruncatedText(newValue, maxLength, maxNewlines);
                         expandedText = getTruncatedText(newValue, maxExpandedLength, maxExpandedNewlines); // Get text based on max expanded length

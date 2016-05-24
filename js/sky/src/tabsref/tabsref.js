@@ -17,7 +17,8 @@
                         }
                     }
 
-                    /*istanbul ignore else sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (sref) {
                         checkCurrentState();
 
