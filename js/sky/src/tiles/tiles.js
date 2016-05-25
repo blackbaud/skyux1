@@ -143,11 +143,11 @@
 
             function initializeTile(data) {
                 $timeout(function () {
-                    var tiles = data.tiles || /*istanbul ignore next: default value */ [];
+                    var tiles = data.tiles || /*istanbul ignore next */ [];
 
                     if (!vm.tileInitialized) {
                         //retrieve the tile id from the parent container
-                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
+                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next */ '';
                         vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
                     }
 
@@ -389,7 +389,7 @@
                         i,
                         n,
                         tile,
-                        tileId = data.tileId || /*istanbul ignore next: default value */ '',
+                        tileId = data.tileId || /*istanbul ignore next */ '',
                         tiles = vm.tiles;
 
                     collapsed = data.collapsed || false;

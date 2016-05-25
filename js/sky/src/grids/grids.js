@@ -1225,7 +1225,8 @@
                                         tableDomEl.addJSONData(rows);
                                         $timeout(highlightSearchText);
                                         handleTableWrapperResize();
-                                        /*istanbul ignore next: sanity check */
+                                        /*istanbul ignore next */
+                                        /* sanity check */
                                         updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
 
                                         setUpFancyCheckCell();
