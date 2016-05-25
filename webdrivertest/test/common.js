@@ -39,7 +39,7 @@
                     }
                     logError('See: ' + violation.helpUrl + '\n');
                 }
-                expect(ret.value.violations.length).toBe(0, ' number of accesiblity violations');
+                expect(ret.value.violations.length).toBe(0, ' number of accessiblity violations');
             }
         }).call(options.done);
     }
