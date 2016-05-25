@@ -79,14 +79,16 @@
             };
 
             vm.okClick = function () {
-                /*istanbul ignore else sanity check */
+                /*istanbul ignore else*/
+                /* sanity check */
                 if (modalInstance) {
                     modalInstance.close('save');
                 }
             };
 
             vm.clearClick = function () {
-                /*istanbul ignore else sanity check */
+                /*istanbul ignore else */
+                /*sanity check */
                 if (modalInstance) {
                     selectedItems = [];
                     modalInstance.close('save');

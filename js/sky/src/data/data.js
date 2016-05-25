@@ -13,7 +13,8 @@
             p,
             url;
 
-        /*istanbul ignore else: sanity check */
+        /*istanbul ignore else */
+        /* sanity check */
         if (option) {
             if (angular.isString(option) || option.BB_DATA_POST) {
                 url = option;

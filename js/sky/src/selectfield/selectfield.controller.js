@@ -43,7 +43,8 @@
             var selectedItems = vm.bbSelectFieldSelectedItems,
                 formattedCount;
 
-            /*istanbul ignore else sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (angular.isArray(selectedItems)) {
 
                 formattedCount = $filter('bbAutonumeric')(selectedItems.length, 'number', true);

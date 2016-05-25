@@ -84,11 +84,14 @@
 
             vm.filteredItems = filteredItems;
         }
+        
 
         function invokeFilter() {
             /* When the show only selected items checkbox is checked,
                then no other filters should be applied */
             if (vm.onlyShowSelected) {
+                /*istanbul ignore next */
+                /* sanity check */
                 vm.filteredItems = vm.bbChecklistSelectedItems || [];
             } else if (vm.filterLocal) {
                 invokeFilterLocal();

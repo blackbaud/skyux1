@@ -60,11 +60,13 @@
                 dayBegin = format.indexOf('d'),
                 separatorChar;
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (separator) {
                 separatorChar = separator[0];
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (separatorChar) {
                     if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
                         if (monthBegin < dayBegin) {

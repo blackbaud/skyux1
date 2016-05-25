@@ -160,7 +160,8 @@
                 $timeout(function () {
                     var $el;
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else*/
+                    /* sanity check */
                     if (getWaitCount(el) === 0) {
                         $el = $(el);
 

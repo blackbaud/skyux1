@@ -37,7 +37,8 @@
                 toggleDropdown: toggleDropdown
             };
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction($scope.getContextMenuItems)) {
                 $scope.locals.items = $scope.getContextMenuItems($scope.rowData.id, $scope.rowData);
             }
@@ -63,28 +64,32 @@
                             self = this;
 
                         self.setFilters = function (filters) {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.setFilters)) {
                                 locals.setFilters(filters);
                             }
                         };
 
                         self.syncViewKeepers = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if ($scope.syncViewKeepers) {
                                 $scope.syncViewKeepers();
                             }
                         };
 
                         self.syncActionBarViewKeeper = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction($scope.syncActionBarViewKeeper)) {
                                 $scope.syncActionBarViewKeeper();
                             }
                         };
 
                         self.resetMultiselect = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.resetMultiselect)) {
                                 locals.resetMultiselect();
                             }
@@ -105,21 +110,24 @@
                         };
 
                         self.toggleMultiselectRows = function (visibleSelectedRows) {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.toggleMultiselectRows)) {
                                 locals.toggleMultiselectRows(visibleSelectedRows);
                             }
                         };
 
                         self.syncGridHeaderScrollToTopScrollbar = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.topScrollbarScroll)) {
                                 locals.topScrollbarScroll();
                             }
                         };
 
                         self.highlightSearchText = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.highlightSearchText)) {
                                 locals.highlightSearchText();
                             }
@@ -135,7 +143,8 @@
                             hasColPicker: true,
                             hasFilters: true,
                             applySearchText: function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
@@ -315,7 +324,8 @@
                                         is_context_menu: true
                                     });
 
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (!compiledTemplates[dropdown_template]) {
                                         compiledTemplates[dropdown_template] = $compile($templateCache.get(dropdown_template));
                                     }
@@ -401,7 +411,8 @@
                             }
 
                             function getColumnNameFromElementId(columnName) {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (columnName) {
                                     return columnName.replace(locals.gridId + "_", "");
                                 }
@@ -456,7 +467,8 @@
                                 gridHeaders[extendedColumnIndex].width = columnSize;
                                 gridHeaders[extendedColumnIndex].el.style.width = colSizePx;
                                 tableGrid.cols[extendedColumnIndex].style.width = colSizePx;
-                                /* istanbul ignore next: sanity check */
+                                /* istanbul ignore next */
+                                /* sanity check */
                                 tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
                                 tableGrid.hDiv.scrollLeft = bodyScrollLeft;
                             }
@@ -511,7 +523,8 @@
 
                                     width = getDesiredGridWidth();
 
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (width > 0) {
                                         tableEl.setGridWidth(width);
                                         resetTopScrollbar();
@@ -610,10 +623,12 @@
                                 var className,
                                     headerElId,
                                     sortOptions;
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (header) {
                                     header.find('th').removeClass('sorting-asc').removeClass('sorting-desc');
-                                    /* istanbul ignore else: sanity check */
+                                    /* istanbul ignore else */
+                                    /* sanity check */
                                     if ($scope.options) {
                                         sortOptions = $scope.options.sortOptions;
                                         if (sortOptions && sortOptions.column) {
@@ -640,7 +655,8 @@
                                 }
 
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (sortOptions) {
                                     excludedColumns = sortOptions.excludedColumns;
                                     if (excludedColumns) {
@@ -1001,7 +1017,8 @@
                                 tableEl = element.find('table');
                                 tableDomEl = tableEl[0];
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
 
                                     columns = $scope.options.columns;
@@ -1131,10 +1148,12 @@
                                     templateUrlsToLoad = {};
 
                                 //Identify any template URLs that haven't been compiled
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
                                     columns = $scope.options.columns;
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (columns) {
                                         angular.forEach(columns, function (column) {
                                             var templateUrl = column.template_url;
@@ -1155,11 +1174,13 @@
 
                                     // Compile templates and store them for use when adding rows.
                                     for (p in result.text) {
-                                        /*istanbul ignore else: sanity check */
+                                        /*istanbul ignore else */
+                                        /* sanity check */
                                         if (result.text.hasOwnProperty(p)) {
                                             template = result.text[p];
 
-                                            /*istanbul ignore else: sanity check */
+                                            /*istanbul ignore else */
+                                            /* sanity check */
                                             if (template) {
                                                 compiledTemplates[p] = $compile(template);
                                             }
@@ -1187,7 +1208,8 @@
                             }
 
                             function setRows(rows) {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
 
@@ -1221,7 +1243,8 @@
                                     vkActionBarAndBackToTop.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
                                     verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                                 }
@@ -1299,7 +1322,8 @@
                             $scope.$watch('options.selectedColumnIds', function (newValue) {
                                 var columnChangedData;
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (newValue) {
                                     if (reorderingColumns) {
                                         reorderingColumns = false;
@@ -1363,14 +1387,16 @@
                             });
 
                             $scope.syncViewKeepers = function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkToolbars) {
                                     vkToolbars.syncElPosition();
                                 }
                             };
 
                             $scope.syncActionBarViewKeeper = function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkActionBarAndBackToTop) {
                                     vkActionBarAndBackToTop.syncElPosition();
                                 }
@@ -1394,7 +1420,8 @@
 
                             tableWrapper.on('scroll', function () {
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkHeader) {
                                     vkHeader.syncElPosition();
                                 }
@@ -1436,17 +1463,20 @@
 
                             element.on('$destroy', function () {
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkToolbars) {
                                     vkToolbars.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkHeader) {
                                     vkHeader.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkActionBarAndBackToTop) {
                                     vkActionBarAndBackToTop.destroy();
                                 }
