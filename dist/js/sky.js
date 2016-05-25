@@ -290,7 +290,8 @@
         if (configType) {
             configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
-            /* istanbul ignore else: sanity check */
+            /* istanbul ignore else */
+            /* sanity check */
             if (configSettings) {
                 angular.extend(baseSettings, configSettings);
             }
@@ -532,7 +533,8 @@
                     nameSplit = name.split(' ');
                     initials = getInitial(nameSplit[0]);
 
-                    /* istanbul ignore else this is tested through a visual regression test */
+                    /* istanbul ignore else */ 
+                    /* this is tested through a visual regression test */
                     if (nameSplit.length > 1) {
                         initials += getInitial(nameSplit[nameSplit.length - 1]);
                     }
@@ -1003,11 +1005,14 @@
 
             vm.filteredItems = filteredItems;
         }
+        
 
         function invokeFilter() {
             /* When the show only selected items checkbox is checked,
                then no other filters should be applied */
             if (vm.onlyShowSelected) {
+                /*istanbul ignore next */
+                /* sanity check */
                 vm.filteredItems = vm.bbChecklistSelectedItems || [];
             } else if (vm.filterLocal) {
                 invokeFilterLocal();
@@ -1717,7 +1722,8 @@
             p,
             url;
 
-        /*istanbul ignore else: sanity check */
+        /*istanbul ignore else */
+        /* sanity check */
         if (option) {
             if (angular.isString(option) || option.BB_DATA_POST) {
                 url = option;
@@ -2299,7 +2305,8 @@
 
                 function resolveValidation() {
                     var inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel) {
                         deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
                         inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
@@ -2310,7 +2317,8 @@
 
                 function setInvalidFormatMessage(errorMessage) {
                     var inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel) {
                         inputNgModel.invalidFormatMessage = errorMessage;
                     }
@@ -2327,7 +2335,8 @@
                         dateChangeInternal = true;
                         vm.date = angular.copy(result.formattedValue);
 
-                        /* istanbul ignore else: sanity check */
+                        /* istanbul ignore else */
+                        /* sanity check */
                         if (inputEl) {
                             inputEl.val(vm.date);
                         }
@@ -2353,7 +2362,8 @@
                     }
                 } else {
                     inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel && inputNgModel.$error && inputNgModel.$error.date) {
                         setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                     }
@@ -2375,7 +2385,7 @@
                 ngModel.$options = {
                     allowInvalid: true
                 };
-                
+
                 vm.pickerDate = '';
                 vm.pickerOpened = false;
 
@@ -2511,7 +2521,8 @@
 
                 function inputChanged() {
                     var inputNgModel = vm.getInputNgModel();
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
                         if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
@@ -2577,7 +2588,8 @@
 
             function runValidators() {
                 var inputNgModel = vm.getInputNgModel();
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (inputNgModel) {
                     inputNgModel.$validate();
                 }
@@ -2767,11 +2779,13 @@
                 dayBegin = format.indexOf('d'),
                 separatorChar;
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (separator) {
                 separatorChar = separator[0];
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (separatorChar) {
                     if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
                         if (monthBegin < dayBegin) {
@@ -3552,7 +3566,8 @@
                 scope.$watch(function () {
                     return vm.errorType;
                 }, function (newValue) {
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue !== vm.bbErrorType) {
                         vm.bbErrorType = newValue;
                     }
@@ -4322,7 +4337,8 @@
                 };
 
                 bbGrid.scope.$watch('gridCreated', function (newValue) {
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue) {
                         element.parents('.bb-grid-container').prepend(element);
                         element.show();
@@ -4468,7 +4484,8 @@
                 toggleDropdown: toggleDropdown
             };
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction($scope.getContextMenuItems)) {
                 $scope.locals.items = $scope.getContextMenuItems($scope.rowData.id, $scope.rowData);
             }
@@ -4494,28 +4511,32 @@
                             self = this;
 
                         self.setFilters = function (filters) {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.setFilters)) {
                                 locals.setFilters(filters);
                             }
                         };
 
                         self.syncViewKeepers = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if ($scope.syncViewKeepers) {
                                 $scope.syncViewKeepers();
                             }
                         };
 
                         self.syncActionBarViewKeeper = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction($scope.syncActionBarViewKeeper)) {
                                 $scope.syncActionBarViewKeeper();
                             }
                         };
 
                         self.resetMultiselect = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.resetMultiselect)) {
                                 locals.resetMultiselect();
                             }
@@ -4536,21 +4557,24 @@
                         };
 
                         self.toggleMultiselectRows = function (visibleSelectedRows) {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.toggleMultiselectRows)) {
                                 locals.toggleMultiselectRows(visibleSelectedRows);
                             }
                         };
 
                         self.syncGridHeaderScrollToTopScrollbar = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.topScrollbarScroll)) {
                                 locals.topScrollbarScroll();
                             }
                         };
 
                         self.highlightSearchText = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.highlightSearchText)) {
                                 locals.highlightSearchText();
                             }
@@ -4566,7 +4590,8 @@
                             hasColPicker: true,
                             hasFilters: true,
                             applySearchText: function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
@@ -4746,7 +4771,8 @@
                                         is_context_menu: true
                                     });
 
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (!compiledTemplates[dropdown_template]) {
                                         compiledTemplates[dropdown_template] = $compile($templateCache.get(dropdown_template));
                                     }
@@ -4832,7 +4858,8 @@
                             }
 
                             function getColumnNameFromElementId(columnName) {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (columnName) {
                                     return columnName.replace(locals.gridId + "_", "");
                                 }
@@ -4887,7 +4914,8 @@
                                 gridHeaders[extendedColumnIndex].width = columnSize;
                                 gridHeaders[extendedColumnIndex].el.style.width = colSizePx;
                                 tableGrid.cols[extendedColumnIndex].style.width = colSizePx;
-                                /* istanbul ignore next: sanity check */
+                                /* istanbul ignore next */
+                                /* sanity check */
                                 tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
                                 tableGrid.hDiv.scrollLeft = bodyScrollLeft;
                             }
@@ -4942,7 +4970,8 @@
 
                                     width = getDesiredGridWidth();
 
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (width > 0) {
                                         tableEl.setGridWidth(width);
                                         resetTopScrollbar();
@@ -5041,10 +5070,12 @@
                                 var className,
                                     headerElId,
                                     sortOptions;
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (header) {
                                     header.find('th').removeClass('sorting-asc').removeClass('sorting-desc');
-                                    /* istanbul ignore else: sanity check */
+                                    /* istanbul ignore else */
+                                    /* sanity check */
                                     if ($scope.options) {
                                         sortOptions = $scope.options.sortOptions;
                                         if (sortOptions && sortOptions.column) {
@@ -5071,7 +5102,8 @@
                                 }
 
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (sortOptions) {
                                     excludedColumns = sortOptions.excludedColumns;
                                     if (excludedColumns) {
@@ -5432,7 +5464,8 @@
                                 tableEl = element.find('table');
                                 tableDomEl = tableEl[0];
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
 
                                     columns = $scope.options.columns;
@@ -5562,10 +5595,12 @@
                                     templateUrlsToLoad = {};
 
                                 //Identify any template URLs that haven't been compiled
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
                                     columns = $scope.options.columns;
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (columns) {
                                         angular.forEach(columns, function (column) {
                                             var templateUrl = column.template_url;
@@ -5586,11 +5621,13 @@
 
                                     // Compile templates and store them for use when adding rows.
                                     for (p in result.text) {
-                                        /*istanbul ignore else: sanity check */
+                                        /*istanbul ignore else */
+                                        /* sanity check */
                                         if (result.text.hasOwnProperty(p)) {
                                             template = result.text[p];
 
-                                            /*istanbul ignore else: sanity check */
+                                            /*istanbul ignore else */
+                                            /* sanity check */
                                             if (template) {
                                                 compiledTemplates[p] = $compile(template);
                                             }
@@ -5618,7 +5655,8 @@
                             }
 
                             function setRows(rows) {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
 
@@ -5652,7 +5690,8 @@
                                     vkActionBarAndBackToTop.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
                                     verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                                 }
@@ -5730,7 +5769,8 @@
                             $scope.$watch('options.selectedColumnIds', function (newValue) {
                                 var columnChangedData;
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (newValue) {
                                     if (reorderingColumns) {
                                         reorderingColumns = false;
@@ -5794,14 +5834,16 @@
                             });
 
                             $scope.syncViewKeepers = function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkToolbars) {
                                     vkToolbars.syncElPosition();
                                 }
                             };
 
                             $scope.syncActionBarViewKeeper = function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkActionBarAndBackToTop) {
                                     vkActionBarAndBackToTop.syncElPosition();
                                 }
@@ -5825,7 +5867,8 @@
 
                             tableWrapper.on('scroll', function () {
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkHeader) {
                                     vkHeader.syncElPosition();
                                 }
@@ -5867,17 +5910,20 @@
 
                             element.on('$destroy', function () {
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkToolbars) {
                                     vkToolbars.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkHeader) {
                                     vkHeader.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkActionBarAndBackToTop) {
                                     vkActionBarAndBackToTop.destroy();
                                 }
@@ -5915,14 +5961,16 @@
                     var searchEl;
 
                     searchEl = el.find('.bb-search-container input');
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
                         searchEl.eq(0).select();
                     }
 
                     $scope.options.searchText = $scope.searchText;
 
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (bbGrid !== null) {
                         bbGrid.highlightSearchText();
                     }
@@ -5967,7 +6015,8 @@
                         } else {
                             $scope.toolbarLocals.filtersVisible = !$scope.toolbarLocals.filtersVisible;
                         }
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     } else if (bbGrid !== null && angular.isFunction(bbGrid.toggleFilterMenu)) {
                         bbGrid.toggleFilterMenu(isOpen);
                     }
@@ -5987,7 +6036,8 @@
 
                 $scope.resources = bbResources;
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (bbGrid !== null && angular.isUndefined($scope.options)) {
                     $scope.$watch(function () {
                         return bbGrid.scope.options;
@@ -6006,7 +6056,8 @@
                             moveInlineFilters();
                         }
 
-                        /*istanbul ignore else: sanity check */
+                        /*istanbul ignore else */
+                        /* sanity check */
                         if (bbGrid !== null) {
                             bbGrid.applySearchText = applySearchText;
                         }
@@ -6029,7 +6080,8 @@
                     }
                 });
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (bbGrid !== null) {
                     topScrollbarEl.on('scroll', function () {
                         bbGrid.syncGridHeaderScrollToTopScrollbar();
@@ -6037,7 +6089,8 @@
                 }
 
                 $scope.$on('$destroy', function () {
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (bbGrid !== null) {
                         topScrollbarEl.off();
                     }
@@ -7437,7 +7490,8 @@ angular.module('sky.palette.config', [])
                        both variables directly on scope as well as using 'controller
                        as'
                     */
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
                         $parse(popoverIsOpenAttr).assign(origScope, false);
                     }
@@ -7721,7 +7775,8 @@ angular.module('sky.palette.config', [])
         vm.removeItem = function (item) {
             var itemIndex = items.indexOf(item);
 
-            /*istanbul ignore else sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (itemIndex >= 0) {
                 items.splice(itemIndex, 1);
             }
@@ -8086,7 +8141,8 @@ angular.module('sky.palette.config', [])
 
                     overflowY = parentEl.css('overflow-y');
 
-                    /*istanbul ignore else: sanity check (the computed overflow property will likely never return a non-string value) */
+                    /*istanbul ignore else */
+                    /* sanity check (the computed overflow property will likely never return a non-string value) */
                     if (angular.isString(overflowY)) {
                         switch (overflowY.toUpperCase()) {
                         case 'AUTO':
@@ -8221,7 +8277,8 @@ angular.module('sky.palette.config', [])
                         retryCount = 0;
                     }
 
-                    /*istanbul ignore else: hard to reach in a unit test */
+                    /*istanbul ignore else*/
+                    /* hard to reach in a unit test */
                     if (el.is(':visible') && el.children('.collapsing').length === 0) {
                         options = angular.extend({}, bbScrollIntoViewConfig);
 
@@ -8237,7 +8294,8 @@ angular.module('sky.palette.config', [])
                     }
                 }
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (attrs.bbScrollIntoView) {
                     scope.$watch(attrs.bbScrollIntoView, function (newValue, oldValue) {
                         if (newValue && newValue !== oldValue) {
@@ -8299,7 +8357,8 @@ angular.module('sky.palette.config', [])
             var selectedItems = vm.bbSelectFieldSelectedItems,
                 formattedCount;
 
-            /*istanbul ignore else sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (angular.isArray(selectedItems)) {
 
                 formattedCount = $filter('bbAutonumeric')(selectedItems.length, 'number', true);
@@ -8503,14 +8562,16 @@ angular.module('sky.palette.config', [])
             };
 
             vm.okClick = function () {
-                /*istanbul ignore else sanity check */
+                /*istanbul ignore else*/
+                /* sanity check */
                 if (modalInstance) {
                     modalInstance.close('save');
                 }
             };
 
             vm.clearClick = function () {
-                /*istanbul ignore else sanity check */
+                /*istanbul ignore else */
+                /*sanity check */
                 if (modalInstance) {
                     selectedItems = [];
                     modalInstance.close('save');
@@ -8626,7 +8687,8 @@ angular.module('sky.palette.config', [])
                             overflowOccurred,
                             scrollLeft;
 
-                        /*istanbul ignore else: sanity check */
+                        /*istanbul ignore else */
+                        /* sanity check */
                         if (navTabsEl.length > 0) {
                             hasOverflow = angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:first')) ||
                                 angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:last'));
@@ -8887,7 +8949,8 @@ angular.module('sky.palette.config', [])
                 $($window).on('resize.tabcollapse' + tabCollapseId, function () {
                     var windowWidth = $($window).width();
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
                         setDropdownMaxWidth();
                     }
@@ -9043,7 +9106,8 @@ angular.module('sky.palette.config', [])
                         }
                     }
 
-                    /*istanbul ignore else sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (sref) {
                         checkCurrentState();
 
@@ -9306,7 +9370,8 @@ angular.module('sky.palette.config', [])
 
                     containerEl = createEl($templateCache, 'container');
 
-                    /* istanbul ignore else: nothing happens when there's no value, so there's nothing to test. */
+                    /* istanbul ignore else */
+                    /* nothing happens when there's no value, so there's nothing to test. */
                     if (newValue) {
                         collapsedText = getTruncatedText(newValue, maxLength, maxNewlines);
                         expandedText = getTruncatedText(newValue, maxExpandedLength, maxExpandedNewlines); // Get text based on max expanded length
@@ -9417,12 +9482,13 @@ angular.module('sky.palette.config', [])
         vm.setHeaderContentEl = function (el) {
             vm.headerContentEl = el;
 
-            /* istanbul ignore else: sanity check */
+            /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(vm.updateHeaderContent)) {
                 vm.updateHeaderContent();
             }
         };
-        
+
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
             var i,
@@ -10051,7 +10117,8 @@ angular.module('sky.palette.config', [])
             "left": left
         });
 
-        /*istanbul ignore else: sanity check */
+        /*istanbul ignore else*/
+        /* sanity check */
         if (width !== null) {
             elQ.css({ "width": width });
         }
@@ -10085,7 +10152,8 @@ angular.module('sky.palette.config', [])
         if (vk.verticalOffSetEl) {
             verticalOffSetElTop = vk.verticalOffSetEl.css('top');
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else*/
+            /* sanity check */
             if (verticalOffSetElTop) {
                 verticalOffSetElTop = parseInt(verticalOffSetElTop, 10);
                 if (isNaN(verticalOffSetElTop)) {
@@ -10439,7 +10507,8 @@ angular.module('sky.palette.config', [])
                                 });
                             } else if (scrollingDown) {
                                 if (element.offset().top + element.height() >= scrollPos + $window.innerHeight) {
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else*/
+                                    /* sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
@@ -10458,7 +10527,8 @@ angular.module('sky.palette.config', [])
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else*/
+                                    /* sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
@@ -10662,7 +10732,8 @@ angular.module('sky.palette.config', [])
                 $timeout(function () {
                     var $el;
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else*/
+                    /* sanity check */
                     if (getWaitCount(el) === 0) {
                         $el = $(el);
 
