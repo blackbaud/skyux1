@@ -15,6 +15,10 @@
         return platform + '_' + browserName;
     }
 
+    function logError(message) {
+        console.log('\x1b[31m', message);
+    }
+
     function checkAccessibility(options) {
         options.browserResult.executeAsync(function (done) {
             axe.a11yCheck(document, function (results) {
@@ -25,15 +29,15 @@
                 j,
                 violation;
             if (ret.value.violations && ret.value.violations.length !== 0) {
-                console.log('\nThe following accessibility issues exist in ' + options.screenshotName + ': \n');
+                logError('\nThe following accessibility issues exist in ' + options.screenshotName + ': \n');
                 for (i = 0; i < ret.value.violations.length; i++) {
                     violation = ret.value.violations[i];
-                    console.log(violation.help);
-                    console.log('violation at: ');
+                    logError(violation.help);
+                    logError('violation at: ');
                     for (j = 0; j < violation.nodes.length; j++) {
-                        console.log(violation.nodes[j].target);
+                        logError(violation.nodes[j].target);
                     }
-                    console.log('See: ' + violation.helpUrl + '\n');
+                    logError('See: ' + violation.helpUrl + '\n');
                 }
                 expect(ret.value.violations.length).toBe(0, ' number of accesiblity violations');
             }
