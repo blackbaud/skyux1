@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html ng-app="screenshots">
+<html ng-app="screenshots" lang="en">
     <head>
         <meta charset="utf-8"></meta>
-        <title></title>
+        <title>Visual tests</title>
         <link rel="stylesheet" href="/##DIST_PATH##css/libs.css" />
         <link rel="stylesheet" href="/##DIST_PATH##css/sky.css" />
         <style type="text/css">
@@ -35,6 +35,7 @@
     </head>
     <body>
         ##TEST_HTML##
+        <script src="/node_modules/axe-core/axe.min.js"></script>
         <script src="/##DIST_PATH##js/sky-bundle.js"></script>
         <script>
           $.fx.off = true;
