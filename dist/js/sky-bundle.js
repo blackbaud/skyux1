@@ -100970,7 +100970,9 @@ global.easyXDM = easyXDM;
             replace: true,
             controller: angular.noop,
             controllerAs: 'bbActionBarItem',
-            bindToController: true,
+            bindToController: {
+                bbActionBarItemLabel: '@'
+            },
             scope: {},
             require: '?^bbActionBarItemGroup',
             transclude: true,
@@ -111959,7 +111961,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/actionbar/actionbaritem.html',
-        '<button class="btn bb-btn-secondary bb-action-bar-item-button" type="button">\n' +
+        '<button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-attr-aria-label="{{bbActionBarItem.bbActionBarItemLabel}}">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>\n' +
         '');
