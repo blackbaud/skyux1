@@ -10,7 +10,7 @@
 
             vm.bbContextMenu = bbContextMenu;
         }
-
+        
         return {
             bindToController: {
                 bbContextMenuButtonLabel: '@'
@@ -19,7 +19,6 @@
             controllerAs: 'bbContextMenuButton',
             link: link,
             restrict: 'E',
-            replace: true,
             require: ['bbContextMenuButton', '?^bbContextMenu'],
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menubutton.html'

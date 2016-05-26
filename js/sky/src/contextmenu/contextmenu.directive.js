@@ -9,8 +9,8 @@
                 bbContextMenuLabel: '@'
             },
             controller: 'BBContextMenuController',
-            controllerAs: 'bbContextMenu',
             replace: true,
+            controllerAs: 'bbContextMenu',
             restrict: 'E',
             scope: {},
             transclude: true,
