@@ -2,11 +2,11 @@
 (function () {
     'use strict';
 
-    function TabSrefConfig($stateProvider) {
+    function TabSrefConfig($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('rootState', {
                 url: '/',
-                template: '<uib-tabset><uib-tab heading="Tab 1" bb-tab-sref="TabState1">Content</uib-tab><uib-tab heading="Tab 2" bb-tab-sref="TabState2">Content 2</uib-tab><uib-tab heading="Tab 3" bb-tab-sref="TabState3">Content 3</uib-tab></uib-tabset>'
+                templateUrl: 'demo/tabsref/tabset.html'
             })
             .state('TabState1', {
                 parent: 'rootState',
@@ -20,10 +20,12 @@
                 parent: 'rootState',
                 url: 'tabsref/tab3'
             });
+
+        $urlRouterProvider.when('', '/tabsref/tab2');
     }
 
 
-    TabSrefConfig.$inject = ['$stateProvider'];
+    TabSrefConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     angular.module('stache')
         .config(TabSrefConfig)
