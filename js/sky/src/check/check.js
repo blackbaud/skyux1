@@ -44,7 +44,7 @@
                         scope.$watch(function () {
                             return scope.$eval(attr.ngValue);
                         }, function (newValue) {
-                           scope.checkValue = newValue; 
+                            scope.checkValue = newValue; 
                         });
 
                         typeClass = 'bb-check-radio';
