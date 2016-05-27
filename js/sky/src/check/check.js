@@ -16,7 +16,7 @@
             }
 
             return {
-                require: 'ngModel',
+                require: '?ngModel',
                 link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
                         styledEl,
@@ -34,7 +34,6 @@
                             return this.nodeType === 3 && /\S/.test(this.textContent);
                         })
                         .wrap(createEl('labeltext'));
-
                     }
                     
                     scope.checkModel = ngModel;
