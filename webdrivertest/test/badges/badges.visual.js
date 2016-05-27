@@ -14,7 +14,8 @@ describe('badges', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'badges',
             selector: '#screenshot-badges',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
 
     });

@@ -15,7 +15,8 @@ describe('Avatar', function () {
             prefix: common.getPrefix(browser),
             screenshotName: ('avatar_' + type),
             selector: ('#screenshot-avatar-' + type),
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     }
 

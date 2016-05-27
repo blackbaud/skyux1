@@ -15,6 +15,7 @@ describe('Alert', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'alert',
             selector: '#screenshot-alert',
+            checkAccessibility: true,
             done: done
         });
     });
