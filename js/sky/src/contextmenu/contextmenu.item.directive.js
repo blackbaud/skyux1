@@ -12,7 +12,6 @@
             controllerAs: 'bbContextMenuItem',
             restrict: 'E',
             transclude: true,
-            replace: true,
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };
