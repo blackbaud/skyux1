@@ -1521,7 +1521,7 @@
 
             vm.bbContextMenu = bbContextMenu;
         }
-
+        
         return {
             bindToController: {
                 bbContextMenuButtonLabel: '@'
@@ -1530,7 +1530,6 @@
             controllerAs: 'bbContextMenuButton',
             link: link,
             restrict: 'E',
-            replace: true,
             require: ['bbContextMenuButton', '?^bbContextMenu'],
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menubutton.html'
@@ -1580,7 +1579,6 @@
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
-            replace: true,
             restrict: 'E',
             scope: {},
             transclude: true,
@@ -1606,7 +1604,6 @@
             controllerAs: 'bbContextMenuItem',
             restrict: 'E',
             transclude: true,
-            replace: true,
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };

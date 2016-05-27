@@ -102300,7 +102300,7 @@ global.easyXDM = easyXDM;
 
             vm.bbContextMenu = bbContextMenu;
         }
-
+        
         return {
             bindToController: {
                 bbContextMenuButtonLabel: '@'
@@ -102309,7 +102309,6 @@ global.easyXDM = easyXDM;
             controllerAs: 'bbContextMenuButton',
             link: link,
             restrict: 'E',
-            replace: true,
             require: ['bbContextMenuButton', '?^bbContextMenu'],
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menubutton.html'
@@ -102359,7 +102358,6 @@ global.easyXDM = easyXDM;
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
-            replace: true,
             restrict: 'E',
             scope: {},
             transclude: true,
@@ -102385,7 +102383,6 @@ global.easyXDM = easyXDM;
             controllerAs: 'bbContextMenuItem',
             restrict: 'E',
             transclude: true,
-            replace: true,
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };
