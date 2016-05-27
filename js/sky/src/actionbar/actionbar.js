@@ -17,7 +17,7 @@
 
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
-            replace: true,
+            
             transclude: true,
             controller: function () {
                 var vm = this;
