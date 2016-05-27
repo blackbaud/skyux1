@@ -16,13 +16,11 @@
             }
 
             return {
-                require: ['ngModel', '?ngValue'],
-                link: function (scope, el, attr, ctrls) {
+                require: 'ngModel',
+                link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
                         styledEl,
-                        typeClass,
-                        ngModel = ctrls[0],
-                        ngValue = ctrls[1];
+                        typeClass;
 
                     if (labelEl.length < 1) {
                         el.wrap(createEl('wrapper'));
