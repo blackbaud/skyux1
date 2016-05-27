@@ -24,7 +24,8 @@ describe('Tab Sref directive', function () {
 
         $state = {
             go: angular.noop,
-            is: angular.noop
+            is: angular.noop,
+            includes: angular.noop
         };
 
         $provide.value('$state', $state);
