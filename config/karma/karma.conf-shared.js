@@ -54,6 +54,11 @@ module.exports = {
         reporters: [
             {
                 type: 'html'
+            },
+            {
+                type: 'json',
+                // Necessary in order to match codecov's auto-detect
+                file: 'coverage.json'
             }
         ]
     }
