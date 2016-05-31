@@ -101660,13 +101660,20 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
     angular.module('sky.check', [])
-        .directive('bbCheck', ['$templateCache', function ($templateCache) {
-            function createEl(name) {
-                return angular.element($templateCache.get('sky/templates/check/' + name + '.html'));
+        .directive('bbCheck', ['$templateCache', '$compile', function ($templateCache, $compile) {
+            function createEl(name, scope) {
+                var templateHtml;
+                
+                templateHtml = $templateCache.get('sky/templates/check/' + name + '.html');
+                if (scope) {
+                    templateHtml = $compile(templateHtml)(scope);
+                }
+                return angular.element(templateHtml);
             }
 
             return {
-                link: function (scope, el, attr) {
+                require: '?ngModel',
+                link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
                         styledEl,
                         typeClass;
@@ -101683,15 +101690,25 @@ global.easyXDM = easyXDM;
                             return this.nodeType === 3 && /\S/.test(this.textContent);
                         })
                         .wrap(createEl('labeltext'));
-
                     }
+                    
+                    scope.checkModel = ngModel;
+                    
                     if (attr.type === 'radio') {
+
+                        scope.$watch(function () {
+                            return scope.$eval(attr.ngValue);
+                        }, function (newValue) {
+                            scope.checkValue = newValue; 
+                        });
+
                         typeClass = 'bb-check-radio';
                     } else {
                         typeClass = 'bb-check-checkbox';
                     }
-
-                    styledEl = createEl('styled');
+                    
+                    styledEl = createEl(('styled' + attr.type), scope);
+                    
                     styledEl.addClass(typeClass);
 
                     el.after(styledEl);
@@ -112034,9 +112051,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/check/labeltext.html',
         '<span class="bb-check-label-text"></span>\n' +
         '');
-    $templateCache.put('sky/templates/check/styled.html',
-        '<span role="checkbox" tabindex="-1"></span>\n' +
+    $templateCache.put('sky/templates/check/styledcheckbox.html',
+        '<span role="checkbox" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue}}"></span>\n' +
         '');
+    $templateCache.put('sky/templates/check/styledradio.html',
+        '<span role="radio" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue === checkValue}}"></span>');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
         '');
