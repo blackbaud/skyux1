@@ -228,7 +228,7 @@ module.exports = function (grunt, env, utils) {
             capability,
             mkdirp = require('mkdirp');
         for (i = 0; i < capabilities.length; i++) {
-            capability = capabilities[i]
+            capability = capabilities[i];
             mkdirp.sync(webdriverFolderRoot + '/' + capability.os + '_' + capability.browser);
             mkdirp.sync(webdriverFolderRoot + '-diffs/' + capability.os + '_' + capability.browser);
         }
