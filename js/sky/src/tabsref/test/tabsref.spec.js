@@ -24,7 +24,8 @@ describe('Tab Sref directive', function () {
 
         $state = {
             go: angular.noop,
-            is: angular.noop
+            is: angular.noop,
+            includes: angular.noop
         };
 
         $provide.value('$state', $state);
@@ -53,7 +54,7 @@ describe('Tab Sref directive', function () {
                 tabSelectCalled,
                 $scope = $rootScope.$new();
 
-            $state.is = function (sref) {
+            $state.includes = function (sref) {
                 return sref === 'tabstate.b';
             };
 
@@ -85,7 +86,7 @@ describe('Tab Sref directive', function () {
                 stateGoCalled = true;
             };
 
-            $state.is = function (sref) {
+            $state.includes = function (sref) {
                 return sref === "tabstate.a";
             };
 
@@ -146,7 +147,7 @@ describe('Tab Sref directive', function () {
                 tabSelectCalled,
                 $scope = $rootScope.$new();
 
-            $state.is = function (sref) {
+            $state.includes = function (sref) {
                 return sref === 'tabstate.b';
             };
 
@@ -183,7 +184,7 @@ describe('Tab Sref directive', function () {
                 stateGoCalled = true;
             };
 
-            $state.is = function (sref) {
+            $state.includes = function (sref) {
                 return sref === "tabstate.a";
             };
 
