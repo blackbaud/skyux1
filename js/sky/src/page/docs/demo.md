@@ -6,7 +6,7 @@ summary: The page component handles functionality around loading pages.
 
 The page directive handles functionality around loading pages.
 
-### Page Settings ###
+### Page settings ###
 - `bb-page-status` &mdash; Indicates the status of the page.
     - `LOADING` &mdash; Denotes that the page is loading.
     - `LOADED` &mdash; Denotes that the page loaded successfully.
