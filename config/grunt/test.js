@@ -187,6 +187,8 @@ module.exports = function (grunt, env, utils) {
             os = capability.os;
             if (os === 'OS X') {
                 os = 'MAC';
+            } else {
+                os = 'WIN';
             }
             
             browser = capability.browserName;
