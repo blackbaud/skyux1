@@ -20,7 +20,8 @@ describe('Card', function () {
             prefix: common.getPrefix(browser),
             screenshotName: ('card_' + screenshotName),
             selector: '#screenshots-card',
-            done: done
+            done: done,
+            checkAccessibilty: true
         });
     }
 
