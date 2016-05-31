@@ -10,6 +10,8 @@
 
         if (browser.desiredCapabilities.os === 'OS X') {
             platform = 'MAC';
+        } else {
+            platform = 'WIN'
         }
 
         return platform + '_' + browserName;
