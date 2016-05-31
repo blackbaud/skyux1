@@ -9117,7 +9117,7 @@ angular.module('sky.palette.config', [])
                         stateChangeDeregistration;
 
                     function checkCurrentState() {
-                        if ($state.is(sref)) {
+                        if ($state.includes(sref)) {
                             tabsetCtrl.select(el.isolateScope().index);
                         }
                     }
@@ -9134,7 +9134,7 @@ angular.module('sky.palette.config', [])
                         scope.$watch(function () {
                             return tabsetCtrl.active;
                         }, function (newValue) {
-                            if (newValue === el.isolateScope().index && !$state.is(sref)) {
+                            if (newValue === el.isolateScope().index && !$state.includes(sref)) {
                                 // JPB - Delay calling state.go because the state change will fail
                                 // if it is triggered while in the middle of processing of another state change.
                                 // This can happen if you browse to the page without specifying the state of a particular tab
