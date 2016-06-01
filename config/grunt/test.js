@@ -1,7 +1,8 @@
-/*global module*/
+/*global module, require*/
 module.exports = function (grunt, env, utils) {
     'use strict';
-
+    var webdriverFolderRoot = 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'local' : '');
+    
     grunt.config.merge({
         skyux: {
             paths: {
@@ -10,7 +11,7 @@ module.exports = function (grunt, env, utils) {
                     'config/grunt/*.js',
                     'js/**/*.js'
                 ],
-                webdriver: 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'local' : '')
+                webdriver: webdriverFolderRoot
             }
         },
         connect: {
@@ -55,18 +56,6 @@ module.exports = function (grunt, env, utils) {
             },
             watch: {
                 background: true
-            }
-        },
-        mkdir: {
-            webdriver: {
-                options: {
-                    create: [
-                        '<%= skyux.paths.webdriver %>/MAC_chrome',
-                        '<%= skyux.paths.webdriver %>/MAC_firefox',
-                        '<%= skyux.paths.webdriver %>-diffs/MAC_chrome',
-                        '<%= skyux.paths.webdriver %>-diffs/MAC_firefox'
-                    ]
-                }
             }
         },
         // Renamed the original grunt-contrib-watch task
@@ -183,6 +172,77 @@ module.exports = function (grunt, env, utils) {
 
         grunt.task.run(tasks);
     });
+    
+    function getCapabilitiesObject(configName) {
+        
+        var i,
+            capability,
+            os,
+            browser,
+            capabilities = [],
+            wdioCapabilities = require('../wdio/' + configName).config.capabilities;
+        
+        for (i = 0; i < wdioCapabilities.length; i++) {
+            capability = wdioCapabilities[i];
+            os = capability.os;
+            if (os === 'OS X') {
+                os = 'MAC';
+            } else {
+                os = 'WIN';
+            }
+            
+            browser = capability.browserName;
+            capabilities.push({ os: os, browser: browser });
+            
+        }
+        
+        return capabilities;
+    }
+    
+    function getWebDriverCapabilities() {
+        var capabilities,
+            configName;
+            
+        switch (env.get()) {
+        case env.SUPPORTED.CI_PR_FORK:
+        case env.SUPPORTED.CI_PR_BRANCH:
+        case env.SUPPORTED.CI_PUSH:
+            configName = 'wdio.conf-ci.js';
+            break;
+        case env.SUPPORTED.LOCAL_BS:
+            configName = 'wdio.conf-local-browserstack.js';
+            break;
+        case env.SUPPORTED.LOCAL:
+            configName = 'wdio.conf-local.js';
+           
+            break;
+        default:
+            utils.log('grunt visualtest is not configured to run in this environment.');
+        }
+        
+        capabilities = getCapabilitiesObject(configName);
+        
+        return capabilities;
+    }
+    
+    function createWebdriverFolders(capabilities) {
+        var i,
+            capability,
+            mkdirp = require('mkdirp');
+        for (i = 0; i < capabilities.length; i++) {
+            capability = capabilities[i];
+            mkdirp.sync(webdriverFolderRoot + '/' + capability.os + '_' + capability.browser);
+            mkdirp.sync(webdriverFolderRoot + '-diffs/' + capability.os + '_' + capability.browser);
+        }
+    }
+    
+    grunt.registerTask('createWebdriverFolders', function () {
+        var capabilities;
+            
+        capabilities = getWebDriverCapabilities();
+        createWebdriverFolders(capabilities);
+
+    });
 
     // visualtest task supports an optional target.
     // defaults to local
@@ -192,7 +252,7 @@ module.exports = function (grunt, env, utils) {
             'cleanupworkingscreenshots',
             'buildwebdrivertestfixtures',
             'connect:webdrivertest',
-            'mkdir:webdriver'
+            'createWebdriverFolders'
         ];
 
         switch (env.get()) {
