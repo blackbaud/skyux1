@@ -1,10 +1,10 @@
 <div ng-controller="PageTestController as pageCtrl">
     <bb-page bb-page-status="pageCtrl.pageStatus" bb-page-uses-load-manager="true">
         <div>
-            Page Content
+            This text represents the content on a page, and the buttons simulate loading the page.
         </div>
         <p></p>
     </bb-page>
-    <button ng-click="pageCtrl.simulateLoading()">Simulate loading</button>
-    <button ng-click="pageCtrl.simulateNotAuthorized()">Simulate not authorized</button>
+    <button type="button" class="btn bb-btn-secondary" ng-click="pageCtrl.simulateLoading()">Simulate loading</button>
+    <button type="button" class="btn bb-btn-secondary" ng-click="pageCtrl.simulateNotAuthorized()">Simulate not authorized</button>
 </div>
