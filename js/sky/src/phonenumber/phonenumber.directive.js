@@ -19,7 +19,7 @@
             * false if otherwise
             */
             function selectedCountryIsLocal() {
-                return input.intlTelInput('getSelectedCountryData').iso2 === $scope.localCountry;
+                return input.intlTelInput('getSelectedCountryData').iso2 === $scope.country;
             }
 
             /**
@@ -51,10 +51,15 @@
             input.intlTelInput();
 
             // ** scope variables **
-            // when the plugin's country is changed, update the scope's formatted number
+            // if a bb-phone-number-country is provided, then set it to the plugin's country
+            if ($scope.country) {
+                input.intlTelInput('setCountry', $scope.country);
+            }
+
+            // when the plugin's country is changed, update the scope's result
             // and run whatever function is provided in the bb-phone-number-country-changed function
             input.on('countrychange', function (e, countryData) {
-                $scope.formattedNumber = getFormattedNumber();
+                $scope.result = getFormattedNumber();
 
                 if ($scope.countryChanged) {
                     $scope.countryChanged({
@@ -63,28 +68,24 @@
                 }
             });
 
-            // if bb-phone-number-formatted-number is not set then we make it empty
-            if (!$scope.formattedNumber) {
-                $scope.formattedNumber = '';
+            // if bb-phone-number-result is not set then we make it empty
+            if (!$scope.result) {
+                $scope.result = '';
             }
 
             // ensure that when the scope's phoneNumber is updated,
             // the variable provided by ng-model
             $scope.$watch('phoneNumber', function () {
-                    $scope.formattedNumber = getFormattedNumber();
+                    $scope.result = getFormattedNumber();
                 }
               );
 
-            // if a bb-phone-number-local-country is provided, then set it to the plugin's country
-            if ($scope.localCountry) {
-                input.intlTelInput('setCountry', $scope.localCountry);
-            }
-
+            // the bb-phone-valid variable needs to be updated based on the plugin's validation
             $scope.$watch(
                 function () {
                     return input.intlTelInput("isValidNumber");
                 }, function (newVal) {
-                    $scope.isValid = newVal;
+                    $scope.valid = newVal;
                 }
             );
 
@@ -99,11 +100,11 @@
             replace: true,
             restrict: 'E',
             scope: {
+                country: '@bbPhoneNumberCountry',
                 countryChanged: '&bbPhoneNumberCountryChanged',
-                formattedNumber: '=?bbPhoneNumberFormattedNumber',
-                isValid: '=?bbPhoneNumberValid',
-                localCountry: '@bbPhoneNumberLocalCountry',
-                phoneNumberLabel: '@?bbPhoneNumberLabel'
+                label: '@?bbPhoneNumberLabel',
+                result: '=?bbPhoneNumberResult',
+                valid: '=?bbPhoneNumberValid'
             },
             templateUrl: 'sky/templates/phonenumber/phonenumber.directive.html'
         };

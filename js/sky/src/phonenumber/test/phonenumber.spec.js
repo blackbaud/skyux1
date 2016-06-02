@@ -58,20 +58,20 @@ describe('Phone number directive', function () {
         var html = '<bb-phone-number ';
 
         if (properties) {
-            if (properties.localCountry) {
-                html += 'bb-phone-number-local-country="' + properties.localCountry + '" ';
+            if (properties.country) {
+                html += 'bb-phone-number-country="' + properties.country + '" ';
             }
             if (properties.countryChanged) {
                 html += 'bb-phone-number-country-changed="' + properties.countryChanged + '" ';
             }
-            if (properties.formattedNumber) {
-                html += 'bb-phone-number-formatted-number="' + properties.formattedNumber + '" ';
+            if (properties.label) {
+                html += 'bb-phone-number-label="' + properties.label + '" ';
             }
-            if (properties.phoneNumberLabel) {
-                html += 'bb-phone-number-label="' + properties.phoneNumberLabel + '" ';
+            if (properties.result) {
+                html += 'bb-phone-number-result="' + properties.result + '" ';
             }
-            if (properties.isValid) {
-                html += 'bb-phone-number-valid="' + properties.isValid + '" ';
+            if (properties.valid) {
+                html += 'bb-phone-number-valid="' + properties.valid + '" ';
             }
         }
 
@@ -119,7 +119,7 @@ describe('Phone number directive', function () {
         var el,
             $scope = $rootScope.$new(),
             flagContainer,
-            properties = { localCountry: internationalCountryData.iso2};
+            properties = { country: internationalCountryData.iso2};
 
         // ** act ***
         el = compileDirective($scope, properties);
@@ -143,7 +143,7 @@ describe('Phone number directive', function () {
             $scope = $rootScope.$new(),
             countryChangedSpy,
             properties = {
-                localCountry: nationalCountryData.iso2,
+                country: nationalCountryData.iso2,
                 countryChanged: 'countryChanged(countryData)'
             };
         $scope.countryChanged = angular.noop;
@@ -171,8 +171,8 @@ describe('Phone number directive', function () {
         var el,
             $scope = $rootScope.$new(),
             properties = {
-                localCountry: nationalCountryData.iso2,
-                formattedNumber: 'formattedNumber'
+                country: nationalCountryData.iso2,
+                result: 'result'
             };
         el = compileDirective($scope, properties);
         el.appendTo(document.body);
@@ -182,7 +182,7 @@ describe('Phone number directive', function () {
         setNumber(el, nationalCountryData.unformattedTestNumber);
 
         // ** assert **
-        expect($scope.formattedNumber).toBe(nationalCountryData.formattedTestNumber);
+        expect($scope.result).toBe(nationalCountryData.formattedTestNumber);
 
         // ** clean up **
         el.remove();
@@ -193,8 +193,8 @@ describe('Phone number directive', function () {
         var el,
             $scope = $rootScope.$new(),
             properties = {
-                localCountry: nationalCountryData.iso2,
-                formattedNumber: 'formattedNumber'
+                country: nationalCountryData.iso2,
+                result: 'result'
             };
         el = compileDirective($scope, properties);
         el.appendTo(document.body);
@@ -205,7 +205,7 @@ describe('Phone number directive', function () {
         setNumber(el, internationalCountryData.unformattedTestNumber);
 
         // ** assert **
-        expect($scope.formattedNumber).toBe(internationalCountryData.formattedTestNumber);
+        expect($scope.result).toBe(internationalCountryData.formattedTestNumber);
 
         // ** clean up **
         el.remove();
@@ -216,7 +216,7 @@ describe('Phone number directive', function () {
         var el,
             $scope = $rootScope.$new(),
             properties = {
-                phoneNumberLabel: 'speak of the devil and he shall appear'
+                label: 'speak of the devil and he shall appear'
             };
 
         // ** act **
@@ -225,7 +225,7 @@ describe('Phone number directive', function () {
         $scope.$digest();
 
         // ** assert **
-        expect(directiveElements.label(el)).toHaveText(properties.phoneNumberLabel);
+        expect(directiveElements.label(el)).toHaveText(properties.label);
 
         // ** clean up **
         el.remove();
@@ -236,8 +236,8 @@ describe('Phone number directive', function () {
         var el,
             $scope = $rootScope.$new(),
             properties = {
-                localCountry: nationalCountryData.iso2,
-                isValid: 'isValid'
+                country: nationalCountryData.iso2,
+                valid: 'valid'
             };
         el = compileDirective($scope, properties);
         el.appendTo(document.body);
@@ -247,7 +247,7 @@ describe('Phone number directive', function () {
         setNumber(el, nationalCountryData.unformattedTestNumber);
 
         // ** assert **
-        expect($scope.isValid).toBeTruthy();
+        expect($scope.valid).toBeTruthy();
 
         // ** clean up **
         el.remove();
@@ -258,18 +258,18 @@ describe('Phone number directive', function () {
         var el,
             $scope = $rootScope.$new(),
             properties = {
-                localCountry: nationalCountryData.iso2,
-                isValid: 'isValid'
+                country: nationalCountryData.iso2,
+                valid: 'valid'
             };
         el = compileDirective($scope, properties);
         el.appendTo(document.body);
         $scope.$digest();
 
         // ** act **
-        setNumber(el, 'invalid');
+        setNumber(el, 'invalid_number');
 
         // ** assert **
-        expect($scope.isValid).toBeFalsy();
+        expect($scope.valid).toBeFalsy();
 
         // ** clean up **
         el.remove();

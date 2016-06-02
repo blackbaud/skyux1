@@ -3,14 +3,14 @@
     <div class="col-sm-4">
       <div class="form-group">
         <label for="phone-number-input" class="control-label">
-          <h4>Phone Number directive:</h4>
+          <h4>Phone number directive:</h4>
         </label>
         <div>
-          <bb-phone-number  bb-phone-number-country-changed="phonenumberCtl.countryChanged(countryData)"
-                            bb-phone-number-formatted-number="phonenumberCtl.phoneNumber"
-                            bb-phone-number-valid="phonenumberCtl.isValid"
-                            bb-phone-number-label="Phone Number Label"
-                            bb-phone-number-local-country="us">
+          <bb-phone-number  bb-phone-number-country="us"
+                            bb-phone-number-country-changed="phonenumberCtl.countryChanged(countryData)"
+                            bb-phone-number-label="Phone number label"
+                            bb-phone-number-result="phonenumberCtl.phoneNumber"
+                            bb-phone-number-valid="phonenumberCtl.isValid">
           </bb-phone-number>
         </div>
       </div>
