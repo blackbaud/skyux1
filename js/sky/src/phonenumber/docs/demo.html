@@ -1,0 +1,50 @@
+<div ng-controller="PhoneNumberDemoController as phonenumberCtl">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="phone-number-input" class="control-label">
+          <h4>Phone Number directive:</h4>
+        </label>
+        <div>
+          <bb-phone-number  bb-phone-number-country-changed="phonenumberCtl.countryChanged(countryData)"
+                            bb-phone-number-formatted-number="phonenumberCtl.phoneNumber"
+                            bb-phone-number-valid="phonenumberCtl.isValid"
+                            bb-phone-number-label="Phone Number Label"
+                            bb-phone-number-local-country="us">
+          </bb-phone-number>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <label for="phone-number-input" class="control-label">
+        <h4>Formatted phone number:</h4>
+      </label>
+      <div>
+      #:
+      <strong>
+        <span ng-bind="phonenumberCtl.phoneNumber"/>
+      </strong>
+      </div>
+      <div>
+      Valid:
+      <strong>
+        <span ng-bind="phonenumberCtl.isValid"/>
+      </strong>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="control-label">
+        <h4>countryData object:</h4>
+      </label>
+      <div>
+        name: <span ng-bind="phonenumberCtl.countryData.name"/>
+      </div>
+      <div>
+        io2: <span ng-bind="phonenumberCtl.countryData.iso2"/>
+      </div>
+      <div>
+        dialCode: <span ng-bind="phonenumberCtl.countryData.dialCode"/>
+      </div>
+    </div>
+  </div>
+</div>

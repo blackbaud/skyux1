@@ -1,0 +1,34 @@
+@import "mixins";
+
+.intl-tel-input {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+}
+
+.intl-tel-input .country-list {
+  -webkit-overflow-scrolling: touch;
+}
+
+.intl-tel-input .country-list .country {
+  padding: 10px 10px;
+}
+
+.iti-arrow {
+  border-left: none !important;
+  border-top: none !important;
+  right: 10px !important;
+  top: 35% !important;
+  @extend .fa;
+  @extend .fa-caret-down;
+}
+
+.iti-flag {
+  background-image:url("images/flags.png");
+}
+
+@media
+only screen and (min-resolution: 2dppx) {
+  .iti-flag {
+    background-image:url("images/flags@2x.png");
+  }
+}
