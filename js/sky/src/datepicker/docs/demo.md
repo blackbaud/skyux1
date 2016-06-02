@@ -6,7 +6,7 @@ summary: The datepicker wraps the Angular UI Bootstrap datepicker directive to c
 
 The datepicker directive wraps the [Angular UI Bootstrap datepicker directive](https://angular-ui.github.io/bootstrap/#/datepicker). It creates a text box with a calendar picker to select dates.
 
-### Datepicker Settings
+### Datepicker settings
     - `bb-datepicker` &mdash; Creates a text box with a calendar picker.
         - `bb-datepicker-custom-validation` &mdash; *(Optional.)* Specifies an object that contains a function to validate entries in the text box.
             - `formatValue` &mdash; A function to be called when users enter text in the textbox. The only parameter to pass to the function is the raw value of the text box. If a problem occurs when formatting value in the input, the function returns an object or a promise of an object with the following properties:

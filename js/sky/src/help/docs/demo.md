@@ -12,12 +12,12 @@ The help service allows Angular components to open and close the help panel prog
 
 ---
 
-### bbHelp Methods ###
+### bbHelp methods ###
 - `init()` &mdash; Adds a global help button to the top-right corner of the page. You should supply the appropriate `bbHelpConfig` options before you call `init()`.
 - `open()` &mdash; Opens help using the specified help key. If `init()` has not been called yet, then the global add button is added to the page before the help topic opens.
 - `close()` &mdash; Closes the current help topic.
 
-### bbHelpConfig Settings ###
+### bbHelpConfig settings ###
 - `caseCentral` &mdash; *(Optional.)* Customizes the URL for the "Case Central" link in the Help Widget. To remove the link, set this to an empty string.
 - `clientId` &mdash; *(Optional.)* Passes the client ID to the chat session.
 - `communityUrl` &mdash; *(Optional.)* Specifies a URL for a "Community" link in the Help Widget to link to a Blackbaud Community website. For example, to link to the ***Raiser's Edge NXT*** Community, you specify <a href="https://community.blackbaud.com/products/raisersedgenxt" target="_blank">https://community.blackbaud.com/products/raisersedgenxt</a>.

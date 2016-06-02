@@ -6,7 +6,7 @@ summary: The checklist builds a filterable checkbox list that can display multip
 
 The checklist directive allows you to build a filterable checkbox list. The `bb-checklist-columns` element allows you to specify multiple columns for the rows in the checkbox list. You can display items in a list view where each row displays a title and description. The list view is preferred to the grid view because it is mobile-responsive.
 
-### Checklist Settings ###
+### Checklist settings ###
     - `bb-checklist` &mdash; Creates a filterable checkbox list.
         - `bb-checklist-items` &mdash; An array of objects that represents the rows to display in the list.
         - `bb-checklist-selected-items` &mdash; An array that represents the selected items in the list.
@@ -28,7 +28,7 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
         - `bb-checklist-subset-exclude` &mdash; *(Optional.)* When using local search, instructs the checklist directive to exclude items with the `bb-checklist-subset-property` set to true when the subset checkbox is selected. When this attribute is not present, the checklist directive includes items with the `bb-checklist-subset-property` when the subset checkbox is selected.
         - `bb-checklist-only-selected` &mdash; *(Optional.)* Instructs the checklist to include a checkbox which hides unselected items when checked.
 
-### Checklist Column Settings ###
+### Checklist column settings ###
     - `bb-checklist-columns` &mdash; Allows you to specify multiple columns of data for the checkbox list.
         - `bb-checklist-column` &mdash; Allows you to specify an individual column of data for the checkbox list.
             - `bb-checklist-column-caption` &mdash; Specifies caption text for the column header.

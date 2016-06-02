@@ -12,7 +12,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
 - **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
 ---
 
-### Grid Settings ###
+### Grid settings ###
 - `bb-grid ` &mdash; Creates a full-featured grid that includes a search box, column picker, and filter form.
     - `bb-grid-filters` &mdash; *(Optional.)* Creates a flyout filter menu within the `bb-grid` directive.
         - `bb-options` &mdash; Specifies an object with the following properties for the `bb-grid-filters` directive.
@@ -83,12 +83,12 @@ The grid directive builds a full-featured grid with a search box, column picker,
     - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.
     - `bb-selections-updated` &mdash; *(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.
 
-### Custom Grid Toolbar ###
+### Custom grid toolbar ###
 You can display custom content in the grid toolbar alongside the add button, search input, column chooser, and filter button. You add custom content between the add button and the search input.
 
 To display custom content, add the `bb-grid-custom-toolbar` attribute to the `bb-grid` directive. Then place a `bb-grid-toolbar` directive with your custom controls in the `bb-grid` directive.
 
-### Grid Events ###
+### Grid events ###
     - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.
         - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires.
     - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides the `promise` property to add new data to the grid.

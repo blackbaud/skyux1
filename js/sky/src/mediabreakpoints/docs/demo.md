@@ -1,5 +1,5 @@
 ---
-name: Media Breakpoints
+name: Media breakpoints
 icon: mobile
 summary: The media breakpoints service calls callback functions when a Bootstrap grid system breakpoint is hit.
 ---
@@ -12,7 +12,7 @@ The media breakpoints service calls callback functions when a [Bootstrap grid sy
 
 ---
 
-### Media Breakpoint Methods ###
+### Media breakpoint methods ###
 
  - `register(callback)` &mdash; Registers a callback method with the service to be called any time a media breakpoint is hit. The callback function is called with the following arguments:
   - `breakpoint` &mdash; An object with `xs`, `sm`, `md`, and `lg` properties. The property that corresponds to the current breakpoint is set to `true` and the rest are set to `false`.

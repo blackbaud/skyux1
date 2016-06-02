@@ -1,5 +1,5 @@
 ---
-name: Tab Sref
+name: Tab sref
 icon: link
 summary: The tab sref component provides tab info in page URLs so that hyperlinks can point to specific tabs.
 ---
@@ -12,6 +12,6 @@ The tab sref directive adds the ability to change the page's URL when the user c
 
 ---
 
-### Tab Sref Settings ###
+### Tab sref settings ###
 
- - `bb-tab-sref` The name of the state where the application should navigate when the tab is selected.
+ - `bb-tab-sref` &mdash; The name of the state where the application should navigate when the tab is selected.
