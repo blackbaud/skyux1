@@ -30,11 +30,17 @@ describe('Phone number directive', function () {
         label: function (el) {
             return el.find('[data-bbauto-field="PhoneNumberLabel"]');
         },
+        labelSr: function (el) {
+            return el.find('[data-bbauto-field="PhoneNumberLabelSr"]');
+        },
         dropdown: function (el) {
             return el.find('.country-list');
         },
         dropdownItems: function (el) {
             return el.find('.country');
+        },
+        wrapper: function (el) {
+            return el.find('[data-bbauto-field="PhoneNumberWrapper"]');
         }
     };
 
@@ -55,7 +61,7 @@ describe('Phone number directive', function () {
     };
 
     compileDirective = function ($scope, properties) {
-        var html = '<bb-phone-number ';
+        var html = '<div><bb-phone-number ';
 
         if (properties) {
             if (properties.country) {
@@ -67,6 +73,9 @@ describe('Phone number directive', function () {
             if (properties.label) {
                 html += 'bb-phone-number-label="' + properties.label + '" ';
             }
+            if (properties.labelSr) {
+                html += 'bb-phone-number-label-sr="' + properties.labelSr + '" ';
+            }
             if (properties.result) {
                 html += 'bb-phone-number-result="' + properties.result + '" ';
             }
@@ -75,7 +84,7 @@ describe('Phone number directive', function () {
             }
         }
 
-        html += '></bb-phone-number>';
+        html += '></bb-phone-number></div>';
         return $compile(html)($scope);
     };
 
@@ -275,11 +284,28 @@ describe('Phone number directive', function () {
         el.remove();
     });
 
-    it('should apply ARIA (accessibility rich internet application) tags to the necessary elements.', function () {
+    it('should add the has-error class to the div wrapper when text has been entered and bb-phone-number-valid variable is false.', function () {
         // ** arrange **
         var el,
-            $scope = $rootScope.$new(),
-            dropdownItems;
+            $scope = $rootScope.$new();
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** act **
+        setNumber(el, 'invalid_number');
+
+        // ** assert **
+        expect(directiveElements.wrapper(el).hasClass('has-error')).toBeTruthy();
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should not add the has-error class to the div wrapper when text has been not entered.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
 
         // ** act **
         el = compileDirective($scope);
@@ -287,13 +313,48 @@ describe('Phone number directive', function () {
         $scope.$digest();
 
         // ** assert **
-        dropdownItems = directiveElements.dropdownItems(el);
-        // Check that the country dropdown (as a ul element) has the listbox role
-        expect(directiveElements.dropdown(el).attr('role')).toBe('listbox');
-        // Check that every item in the country dropdown has the option role
-        angular.forEach(dropdownItems, function (value) {
-            expect(value.getAttribute('role')).toBe('option');
-        });
+        expect(directiveElements.wrapper(el).hasClass('has-error')).toBeFalsy();
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should remove the has-error class from the div wrapper when a valid number has been entered.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new(),
+            properties = {
+                country: nationalCountryData.iso2
+            };
+        el = compileDirective($scope, properties);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** act **
+        setNumber(el, nationalCountryData.unformattedTestNumber);
+
+        // ** assert **
+        expect(directiveElements.wrapper(el).hasClass('has-error')).toBeFalsy();
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should set the text of the sr-only label to the text provided in bb-phone-number-label-sr.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new(),
+            properties = {
+                labelSr: 'you cant see me but i can see you'
+            };
+
+        // ** act **
+        el = compileDirective($scope, properties);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** assert **
+        expect(directiveElements.labelSr(el)).toHaveText(properties.labelSr);
 
         // ** clean up **
         el.remove();

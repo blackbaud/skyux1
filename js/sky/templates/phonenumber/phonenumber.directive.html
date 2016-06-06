@@ -1,4 +1,10 @@
-<div class="form-group bb-phone-number-form-group">
+<div class="form-group bb-phone-number-form-group"
+     data-bbauto-field="PhoneNumberWrapper"
+     ng-class="{'has-error': !valid}">
+  <label class="sr-only"
+        data-bbauto-field="PhoneNumberLabelSr">
+         {{labelSr}}
+  </label>
   <label class="bb-phone-number-label"
          data-bbauto-field="PhoneNumberLabel"
          for="bb-phone-number-input"

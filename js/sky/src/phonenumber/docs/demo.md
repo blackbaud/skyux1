@@ -21,5 +21,6 @@ The phone number component wraps up the [intl-tel-input jQuery plugin](http://ja
       - iso2: The country's ISO alpha-2 code
       - dialCode: The country's pre-fixed dial code
   - `bb-phone-number-label` &mdash; *(Optional.)* Provides a text label to display over the field where users enter the phone number.
+  - `bb-phone-number-label-sr` &mdash; *(Optional.)* Provides an off-screen text label to read by a screen reader. The label would be read before the label text provided in `bb-phone-number-label`. See **[this information on Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility)** for more details.
   - `bb-phone-number-result` &mdash; *(Optional.)* A variable that is set to the provided phone number's national or international format.
   - `bb-phone-number-valid` &mdash; *(Optional.)* A variable that is set to `true` when the phone number is valid and `false` when the phone number is not valid.
