@@ -23,7 +23,7 @@ You use the `bb-page-summary-image` directive to display the image. As the examp
 ### Status
 You can display important status information about a page's content with labels in the status section of the pagesummary.
 
-You use the `bb-page-summary-status` directive to display the status section. You typically display the labels with  a series of `span` elements and the [Bootstrap CSS classes for labels](http://getbootstrap.com/components/#labels).
+You use the `bb-page-summary-status` directive to display the status section. You typically display the labels with  a series of `span` elements and the [Bootstrap CSS classes for labels](http://getbootstrap.com/components/#labels). The `bb-label-list` class provides a container for labels to prevent them from overlapping when they wrap to multiple lines.
 
 ### Key information
 You can highlight important information about a page's content in the key information section of the page summary. This section can display any type of content, but it generally highlights a key information block such as important summary numbers.
