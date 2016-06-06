@@ -42,7 +42,7 @@
         bbPageConfig.redirectUrl = '/components';
         bbPageConfig.notFoundUrl = '/notfound';
         
-         $stateProvider
+        $stateProvider
             .state('default', {
                 url: '/',
                 templateUrl: 'demo/page/buttons.html'
@@ -51,7 +51,8 @@
                 url: '/notfound',
                 templateUrl: 'demo/page/notfound.html'
             });
-         $urlRouterProvider.otherwise('/');
+         
+        $urlRouterProvider.otherwise('/');
     }
     
     bbPageSetup.$inject = ['bbPageConfig', '$stateProvider', '$urlRouterProvider'];
