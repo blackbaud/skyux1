@@ -16,8 +16,9 @@ describe('actionbar', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'actionbar',
             selector: '#screenshot-actionbar',
-            done: done,
-            screenWidth: [480, 1280]
+            screenWidth: [480, 1280],
+            checkAccessibility: true,
+            done: done
         });
     });
 });

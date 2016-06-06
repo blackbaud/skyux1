@@ -10,7 +10,6 @@
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
-            replace: true,
             restrict: 'E',
             scope: {},
             transclude: true,

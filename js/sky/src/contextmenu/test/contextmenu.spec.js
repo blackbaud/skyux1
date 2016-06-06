@@ -64,7 +64,7 @@ describe('Context menu', function () {
         $compile(el)($scope);
         $scope.$digest();
         expect(el.find('div.bb-context-menu.dropdown').length).toBe(1);
-        expect(el.find('button.btn.bb-btn-secondary.bb-context-menu-btn.dropdown-toggle i.fa.fa-ellipsis-h').length).toBe(1);
+        expect(el.find('bb-context-menu-button.dropdown-toggle button.btn.bb-btn-secondary.bb-context-menu-btn i.fa.fa-ellipsis-h').length).toBe(1);
 
         el.find('.bb-context-menu-btn').click();
         $scope.$digest();
@@ -94,8 +94,6 @@ describe('Context menu', function () {
             '</bb-context-menu>',
             '</div>'
         ].join(''));
-
-
 
         verifyContextMenuDropdown(el);
 

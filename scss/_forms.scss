@@ -152,6 +152,11 @@ select.ng-invalid.submitted,
   width: 100%;
 }
 
+.form-control::-ms-expand {
+    border: none;
+    background-color: #fff;
+}
+
 .control-label.required:after {
     content: "*";
     color: $bb-error-color;

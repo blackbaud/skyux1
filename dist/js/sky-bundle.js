@@ -100929,7 +100929,7 @@ global.easyXDM = easyXDM;
 
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
-            replace: true,
+            
             transclude: true,
             controller: function () {
                 var vm = this;
@@ -100970,7 +100970,9 @@ global.easyXDM = easyXDM;
             replace: true,
             controller: angular.noop,
             controllerAs: 'bbActionBarItem',
-            bindToController: true,
+            bindToController: {
+                bbActionBarItemLabel: '@'
+            },
             scope: {},
             require: '?^bbActionBarItemGroup',
             transclude: true,
@@ -101658,13 +101660,20 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
     angular.module('sky.check', [])
-        .directive('bbCheck', ['$templateCache', function ($templateCache) {
-            function createEl(name) {
-                return angular.element($templateCache.get('sky/templates/check/' + name + '.html'));
+        .directive('bbCheck', ['$templateCache', '$compile', function ($templateCache, $compile) {
+            function createEl(name, scope) {
+                var templateHtml;
+                
+                templateHtml = $templateCache.get('sky/templates/check/' + name + '.html');
+                if (scope) {
+                    templateHtml = $compile(templateHtml)(scope);
+                }
+                return angular.element(templateHtml);
             }
 
             return {
-                link: function (scope, el, attr) {
+                require: '?ngModel',
+                link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
                         styledEl,
                         typeClass;
@@ -101681,15 +101690,25 @@ global.easyXDM = easyXDM;
                             return this.nodeType === 3 && /\S/.test(this.textContent);
                         })
                         .wrap(createEl('labeltext'));
-
                     }
+                    
+                    scope.checkModel = ngModel;
+                    
                     if (attr.type === 'radio') {
+
+                        scope.$watch(function () {
+                            return scope.$eval(attr.ngValue);
+                        }, function (newValue) {
+                            scope.checkValue = newValue; 
+                        });
+
                         typeClass = 'bb-check-radio';
                     } else {
                         typeClass = 'bb-check-checkbox';
                     }
-
-                    styledEl = createEl('styled');
+                    
+                    styledEl = createEl(('styled' + attr.type), scope);
+                    
                     styledEl.addClass(typeClass);
 
                     el.after(styledEl);
@@ -102298,7 +102317,7 @@ global.easyXDM = easyXDM;
 
             vm.bbContextMenu = bbContextMenu;
         }
-
+        
         return {
             bindToController: {
                 bbContextMenuButtonLabel: '@'
@@ -102307,7 +102326,6 @@ global.easyXDM = easyXDM;
             controllerAs: 'bbContextMenuButton',
             link: link,
             restrict: 'E',
-            replace: true,
             require: ['bbContextMenuButton', '?^bbContextMenu'],
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menubutton.html'
@@ -102357,7 +102375,6 @@ global.easyXDM = easyXDM;
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
-            replace: true,
             restrict: 'E',
             scope: {},
             transclude: true,
@@ -102383,7 +102400,6 @@ global.easyXDM = easyXDM;
             controllerAs: 'bbContextMenuItem',
             restrict: 'E',
             transclude: true,
-            replace: true,
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };
@@ -109880,7 +109896,7 @@ angular.module('sky.palette.config', [])
                         stateChangeDeregistration;
 
                     function checkCurrentState() {
-                        if ($state.is(sref)) {
+                        if ($state.includes(sref)) {
                             tabsetCtrl.select(el.isolateScope().index);
                         }
                     }
@@ -109897,7 +109913,7 @@ angular.module('sky.palette.config', [])
                         scope.$watch(function () {
                             return tabsetCtrl.active;
                         }, function (newValue) {
-                            if (newValue === el.isolateScope().index && !$state.is(sref)) {
+                            if (newValue === el.isolateScope().index && !$state.includes(sref)) {
                                 // JPB - Delay calling state.go because the state change will fail
                                 // if it is triggered while in the middle of processing of another state change.
                                 // This can happen if you browse to the page without specifying the state of a particular tab
@@ -111959,7 +111975,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/actionbar/actionbaritem.html',
-        '<button class="btn bb-btn-secondary bb-action-bar-item-button" type="button">\n' +
+        '<button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-attr-aria-label="{{bbActionBarItem.bbActionBarItemLabel}}">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>\n' +
         '');
@@ -112035,9 +112051,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/check/labeltext.html',
         '<span class="bb-check-label-text"></span>\n' +
         '');
-    $templateCache.put('sky/templates/check/styled.html',
-        '<span role="checkbox" tabindex="-1"></span>\n' +
+    $templateCache.put('sky/templates/check/styledcheckbox.html',
+        '<span role="checkbox" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue}}"></span>\n' +
         '');
+    $templateCache.put('sky/templates/check/styledradio.html',
+        '<span role="radio" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue === checkValue}}"></span>');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
         '');

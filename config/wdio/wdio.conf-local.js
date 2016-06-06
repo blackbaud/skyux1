@@ -1,7 +1,14 @@
-/* global require, exports */
+/* global require, exports, process */
 
 (function () {
     'use strict';
+    var os;
+    
+    if (process.platform === 'win32') {
+        os = 'WIN';
+    } else {
+        os = 'OS X';
+    }
 
     // Load our shared config
     var config = require('./wdio.conf-shared.js');
@@ -9,7 +16,7 @@
     config.capabilities = [
         {
             browserName: 'chrome',
-            os: 'OS X'
+            os: os
         }
     ];
 
