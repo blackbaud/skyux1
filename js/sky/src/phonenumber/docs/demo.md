@@ -15,7 +15,7 @@ The phone number component wraps up the [intl-tel-input jQuery plugin](http://ja
 ### Phone Number Settings ###
 - `bb-phone-number` &mdash; Creates a textbox with a country dropdown and phone format placeholders.
   - `bb-phone-number-country` &mdash; *(Optional.)* Specifies the country that the directive considers as the local, or default, country. The value supplied should be the country's ISO alpha-2 code. When the local country is selected, the the `bb-phone-number-result` variable will be formatted in the national format without a dial code. When the local country is not selected, the `bb-phone-number-result` variable will be formatted in the international format with a dial code.
-  - `bb-phone-number-country-changed` &mdash; *(Optional.)* Specifies a function with the supplied countryData object (below) as a parameter. When a user selects a country from the country dropdown or a country phone number format is detected from the input's content, the specified function is called and the countryData parameter holds data for the newly selected country.
+  - `bb-phone-number-country-changed` &mdash; *(Optional.)* Specifies a function with the supplied countryData object (below) as a parameter. When a user selects a country from the country dropdown or a country phone number format is detected from the input's content, the specified function is called.
     - countryData
       - name: The country's name
       - iso2: The country's ISO alpha-2 code
