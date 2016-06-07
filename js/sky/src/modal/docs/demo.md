@@ -8,7 +8,7 @@ The modal directive and service allow you to launch modals in a consistent way i
 
 In addition to the `bbModal` service to lauch modals, a `bb-modal` directive can provide a common look-and-feel for modal content. Within `bb-modal`, `bb-modal-header` displays a common modal header, `bb-modal-footer` displays a common modal footer and buttons, and `bb-modal-body` wraps the modal's body content.
 
-### Modal Settings ###
+### Modal settings ###
 - `bb-modal` &mdash; Creates a modal with a common SKY UX look-and-feel.
     - `bb-modal-header` &mdash; Specifies a header for the modal.
         - `bb-modal-help-key` &mdash; Specifies a help key for the modal. A help button in the modal header links to this help key.
