@@ -77,6 +77,11 @@
             // the variable provided by ng-model
             $scope.$watch('phoneNumber', function () {
                     $scope.result = getFormattedNumber();
+                }
+              );
+
+            // Ensure that the validity is checked whenever the result changes
+            $scope.$watch('result', function () {
                     $scope.valid = input.val().length < 1 || input.intlTelInput("isValidNumber");
                 }
               );
@@ -93,7 +98,6 @@
         return {
             controllerAs: 'bbPhoneNumber',
             link: link,
-            replace: true,
             restrict: 'E',
             scope: {
                 country: '@bbPhoneNumberCountry',

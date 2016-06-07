@@ -23,7 +23,8 @@ describe('Phone Number directive', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'phonenumber',
             selector: '#screenshot-phonenumber',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -40,7 +41,8 @@ describe('Phone Number directive', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'phonenumber_flag_select',
             selector: '#screenshot-phonenumber',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -58,7 +60,8 @@ describe('Phone Number directive', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'phonenumber_intl_country',
             selector: '#screenshot-phonenumber',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 });
