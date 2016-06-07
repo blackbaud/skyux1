@@ -101181,8 +101181,8 @@ global.easyXDM = easyXDM;
                     });
 
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
-                    /*
-                        istanbul ignore next: the test for this code isn't passing on IE 10 on BrowserStack in automated mode.
+                    /* istanbul ignore next */
+                    /* The test for this code isn't passing on IE 10 on BrowserStack in automated mode.
                         This isn't mission-critical so I'm just ignoring it for now.
                     */
                     el.on('focusin.bbAutonumeric', function () {
@@ -106467,7 +106467,8 @@ global.easyXDM = easyXDM;
                                         tableDomEl.addJSONData(rows);
                                         $timeout(highlightSearchText);
                                         handleTableWrapperResize();
-                                        /*istanbul ignore next: sanity check */
+                                        /*istanbul ignore next */
+                                        /* sanity check */
                                         updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
 
                                         setUpFancyCheckCell();
@@ -107204,7 +107205,8 @@ global.easyXDM = easyXDM;
             }
         }
 
-        /* istanbul ignore next boilerplate RequireJS detection */
+        /* istanbul ignore next */
+        /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
             require(['enquire'], registerEnquire);
@@ -107471,9 +107473,11 @@ global.easyXDM = easyXDM;
 
     bbMoment.$inject = ['$window'];
 
-    /*istanbul ignore next boilerplate require gunk */
+    /*istanbul ignore next */
+    /* boilerplate require gunk */
     function runRegisterMoment($window) {
 
+        /*istanbul ignore next */
         function registerMoment(moment) {
             $window.moment = moment;
         }
@@ -107623,7 +107627,7 @@ global.easyXDM = easyXDM;
                                 //This special case is just about dealing with an edge case issue with client side javascript.
                                 if ($window.localStorage) {
                                     omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
-                                    
+
                                     if (omnibarIndicatesNullUserTime && (new Date() - Date.parse(omnibarIndicatesNullUserTime)) / 1000 <= 10) {
                                         // We just looped through Auth within the last 10 seconds, so don't leave again now.
                                         return;
@@ -107634,7 +107638,8 @@ global.easyXDM = easyXDM;
                                         $window.localStorage.omnibarIndicatesNullUserTime = (new Date()).toString();
                                     } catch (e) {
                                         // Safari private browsing will throw an exception on setting localStroage.
-                                        /*istanbul ignore next: super edge case */
+                                        /*istanbul ignore next */
+                                        /* super edge case */
                                         return;
                                     }
                                 } else {
@@ -110230,7 +110235,8 @@ angular.module('sky.palette.config', [])
 
                     el.empty().append(containerEl);
 
-                    /* istanbul ignore next: these internal variables can't be tested. */
+                    /* istanbul ignore next */
+                    /* these internal variables can't be tested. */
                     el.on('$destroy', function () {
                         containerEl = null;
                         expandEl = null;
@@ -110391,11 +110397,11 @@ angular.module('sky.palette.config', [])
 
             function initializeTile(data) {
                 $timeout(function () {
-                    var tiles = data.tiles || /*istanbul ignore next: default value */ [];
+                    var tiles = data.tiles || /*istanbul ignore next */ [];
 
                     if (!vm.tileInitialized) {
                         //retrieve the tile id from the parent container
-                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
+                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next */ '';
                         vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
                     }
 
@@ -110637,7 +110643,7 @@ angular.module('sky.palette.config', [])
                         i,
                         n,
                         tile,
-                        tileId = data.tileId || /*istanbul ignore next: default value */ '',
+                        tileId = data.tileId || /*istanbul ignore next */ '',
                         tiles = vm.tiles;
 
                     collapsed = data.collapsed || false;
@@ -111495,7 +111501,7 @@ angular.module('sky.palette.config', [])
 
                 options = angular.extend({}, {
                     visualBlockDelay: 300
-                }, options || /* istanbul ignore next: sanity check */ {});
+                }, options || /* istanbul ignore next */ {});
 
                 customBlockOptions = {
                     fadeIn: options.fadeIn
