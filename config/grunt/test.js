@@ -206,7 +206,6 @@ module.exports = function (grunt, env, utils) {
 
     function getWdioConfigName() {
         var configName;
-
         switch (env.get()) {
         case env.SUPPORTED.CI_PR_FORK:
         case env.SUPPORTED.CI_PR_BRANCH:
