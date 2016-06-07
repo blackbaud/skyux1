@@ -128,7 +128,7 @@
 
                 options = angular.extend({}, {
                     visualBlockDelay: 300
-                }, options || /* istanbul ignore next: sanity check */ {});
+                }, options || /* istanbul ignore next */ {});
 
                 customBlockOptions = {
                     fadeIn: options.fadeIn

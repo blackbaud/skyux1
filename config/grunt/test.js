@@ -30,6 +30,9 @@ module.exports = function (grunt, env, utils) {
             },
             localBrowserStackTunnelStop: {
                 cmd: './scripts/browserstack-local-stop.sh'
+            },
+            uploadCoverage: {
+                cmd: './node_modules/.bin/codecov'
             }
         },
         jshint: {
@@ -281,20 +284,28 @@ module.exports = function (grunt, env, utils) {
 
     // This is the main entry point for testing skyux.
     grunt.registerTask('test', function () {
-        var tasks = [
-            'lint',
-            'build',
-            'unittest',
-            'visualtest'
-        ];
+        var tasks;
 
         switch (env.get()) {
         case env.SUPPORTED.CI_PR_BRANCH:
-            break;
-        case env.SUPPORTED.LOCAL:
-        case env.SUPPORTED.LOCAL_BS:
+
         case env.SUPPORTED.CI_PUSH:
-            tasks.push('docs');
+        case env.SUPPORTED.LOCAL:
+            tasks = [
+                'lint',
+                'build',
+                'unittest',
+                'exec:uploadCoverage',
+                'visualtest'
+            ];
+            break;
+        case env.SUPPORTED.LOCAL_BS:
+            tasks = [
+                'lint',
+                'build',
+                'unittest',
+                'visualtest'
+            ];
             break;
         case env.SUPPORTED.CI_PR_FORK:
             utils.log('Pull requests from forks are ran via blackbaud-sky-savage.');
@@ -302,6 +313,11 @@ module.exports = function (grunt, env, utils) {
         default:
             utils.log('grunt test is not configured to run in this environment.');
             return;
+        }
+
+        // Only a push to master needs the docs
+        if (env.isCurrent(env.SUPPORTED.CI_PUSH)) {
+            tasks.push('docs');
         }
 
         grunt.task.run(tasks);

@@ -127,8 +127,8 @@
                     });
 
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
-                    /*
-                        istanbul ignore next: the test for this code isn't passing on IE 10 on BrowserStack in automated mode.
+                    /* istanbul ignore next */
+                    /* The test for this code isn't passing on IE 10 on BrowserStack in automated mode.
                         This isn't mission-critical so I'm just ignoring it for now.
                     */
                     el.on('focusin.bbAutonumeric', function () {
