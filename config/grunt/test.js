@@ -204,7 +204,7 @@ module.exports = function (grunt, env, utils) {
         return capabilities;
     }
 
-     function getWdioConfigName() {
+    function getWdioConfigName() {
         var configName;
 
         switch (env.get()) {
