@@ -100929,7 +100929,6 @@ global.easyXDM = easyXDM;
 
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
-            
             transclude: true,
             controller: function () {
                 var vm = this;
