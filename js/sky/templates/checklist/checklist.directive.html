@@ -11,7 +11,8 @@
           ng-model-options="{debounce: bbChecklist.bbChecklistSearchDebounce}"
           ng-disabled="bbChecklist.onlyShowSelected"
           data-bbauto-field="ChecklistSearch"
-          ng-attr-autofocus="{{bbChecklist.focusSearch}}" />
+          ng-attr-autofocus="{{bbChecklist.focusSearch}}"
+          ng-attr-aria-label="{{'checklist_search_label' | bbResources}}" />
         <div class="bb-checklist-search-icon">
           <i class="fa fa-search"></i>
         </div>
@@ -19,7 +20,7 @@
     </div>
     <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">
       <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">
-        <select class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">
+        <select ng-attr-aria-label="{{'checklist_categories_label' | bbResources}}" class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">
           <option value="{{bbChecklist.allCategories}}">{{'grid_column_picker_all_categories' | bbResources}}</option>
           <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>
         </select>
@@ -52,7 +53,7 @@
         <div ng-switch-default>
           <label ng-repeat="item in bbChecklist.filteredItems" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}">
             <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">
-              <input bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
+              <input ng-attr-aria-label="{{item.title}}" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
             </div>
             <ng-include class="bb-checklist-list-col" src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
           </label>
@@ -62,14 +63,14 @@
     <table class="table bb-checklist-table" ng-switch-default>
       <thead>
         <tr>
-          <th class="bb-checklist-checkbox-column"></th>
-          <th ng-repeat="column in bbChecklist.columns" class="{{column.class}}" ng-style="{'width': column.width}">{{column.caption}}</th>
+          <th scope="col" class="bb-checklist-checkbox-column"  ng-attr-title="{{'checklist_check_title' | bbResources}}"></th>
+          <th scope="col" ng-repeat="column in bbChecklist.columns" class="{{column.class}}" ng-style="{'width': column.width}">{{column.caption}}</th>
         </tr>
       </thead>
       <tbody bb-highlight="bbChecklist.searchText" bb-highlight-beacon="bbChecklist.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
         <tr ng-repeat="item in bbChecklist.filteredItems" ng-click="bbChecklist.rowClicked(item);" class="bb-checklist-row">
           <td>
-            <input ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />
+            <input ng-attr-aria-label="{{item.column}}" ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" data-bbauto-field="{{item[bbChecklist.bbChecklistAutomationField]}}" />
           </td>
           <td ng-repeat="column in bbChecklist.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>
         </tr>
