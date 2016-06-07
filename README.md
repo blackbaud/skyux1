@@ -72,7 +72,7 @@ selenium-standalone install
 selenium-standalone start
 ```
 
-After installing these prerequisites you can run the visual regression tests using `grunt visualtest`, which will create and compare screenshots in the `webdriver-screenshotslocal` folder.
+After installing these prerequisites you can run the visual regression tests using `grunt visualtest`, which will create and compare screenshots in the `webdriver-screenshotslocal` folder. You can run specific test suites using the `--components` option with the name of the component you wish to test e.g. `grunt visualtest --components=actionbar,alert`.
 
 ### Submitting the code
 

@@ -73,13 +73,18 @@ module.exports = function (grunt, env, utils) {
                 configFile: './config/wdio/wdio.conf-ci.js'
             },
             local: {
-                configFile: './config/wdio/wdio.conf-local.js'
+                configFile: './config/wdio/wdio.conf-local.js'   
             },
             localBrowserStack: {
                 configFile: './config/wdio/wdio.conf-local-browserstack.js'
+            },
+            component: {
+                configFile: './tmp/componentconfig.js'
             }
         }
     });
+
+
 
     function buildTestFixtures(root) {
         var pathDist = grunt.config.get('skyux.paths.dist'),
@@ -201,11 +206,9 @@ module.exports = function (grunt, env, utils) {
         
         return capabilities;
     }
-    
-    function getWebDriverCapabilities() {
-        var capabilities,
-            configName;
-            
+
+    function getWdioConfigName() {
+        var configName;
         switch (env.get()) {
         case env.SUPPORTED.CI_PR_FORK:
         case env.SUPPORTED.CI_PR_BRANCH:
@@ -222,6 +225,16 @@ module.exports = function (grunt, env, utils) {
         default:
             utils.log('grunt visualtest is not configured to run in this environment.');
         }
+
+        return configName;
+    }
+
+    
+    function getWebDriverCapabilities() {
+        var capabilities,
+            configName;
+            
+        configName = getWdioConfigName();
         
         capabilities = getCapabilitiesObject(configName);
         
@@ -247,6 +260,48 @@ module.exports = function (grunt, env, utils) {
 
     });
 
+   
+
+    function getSpecificComponentConfig() {
+        var componentsString,
+            components,
+            i,
+            configName = getWdioConfigName(),
+            wdioConfig;
+
+        componentsString = grunt.option('components');
+
+        if (componentsString) {
+            components = componentsString.split(',');
+            wdioConfig = require('../wdio/' + configName).config;
+
+            wdioConfig.specs = [];
+
+            for (i = 0; i < components.length; i++) {
+                wdioConfig.specs.push('webdrivertest/test/**/' + components[i] + '.visual.js');
+            }
+           
+        }
+
+        return wdioConfig;
+
+    }
+
+    function writeSpecificComponentConfig() {
+        var newConfig = getSpecificComponentConfig(),
+            fileContents;
+
+        if (newConfig) {
+            fileContents = 'exports.config = ' + JSON.stringify(newConfig) + ';';
+            grunt.file.write('tmp/componentconfig.js', fileContents);
+        }
+
+    }
+
+    grunt.registerTask('cleanuptmp', function () {
+        grunt.file.delete('tmp');
+    });
+
     // visualtest task supports an optional target.
     // defaults to local
     grunt.registerTask('visualtest', function () {
@@ -256,22 +311,29 @@ module.exports = function (grunt, env, utils) {
             'buildwebdrivertestfixtures',
             'connect:webdrivertest',
             'createWebdriverFolders'
-        ];
+        ],
+        webdriverTask;
+
+        if (grunt.option('components')) {
+            writeSpecificComponentConfig();
+            webdriverTask = 'webdriver:component';
+        }
 
         switch (env.get()) {
         case env.SUPPORTED.CI_PR_FORK:
         case env.SUPPORTED.CI_PR_BRANCH:
         case env.SUPPORTED.CI_PUSH:
             tasks.push('exec:ciBrowserStackTunnel');
-            tasks.push('webdriver:ci');
+            tasks.push(webdriverTask || 'webdriver:ci');
+            
             break;
         case env.SUPPORTED.LOCAL_BS:
             tasks.push('exec:localBrowserStackTunnelStart');
-            tasks.push('webdriver:localBrowserStack');
+            tasks.push(webdriverTask || 'webdriver:localBrowserStack');
             tasks.push('exec:localBrowserStackTunnelStop');
             break;
         case env.SUPPORTED.LOCAL:
-            tasks.push('webdriver:local');
+            tasks.push(webdriverTask || 'webdriver:local');
             break;
         default:
             utils.log('grunt visualtest is not configured to run in this environment.');
@@ -279,6 +341,11 @@ module.exports = function (grunt, env, utils) {
 
         tasks.push('cleanupwebdrivertestfixtures');
         tasks.push('cleanupworkingscreenshots');
+
+        if (webdriverTask) {
+            tasks.push('cleanuptmp');
+        }
+
         grunt.task.run(tasks);
     });
 
