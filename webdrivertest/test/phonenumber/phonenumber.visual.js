@@ -8,7 +8,8 @@ describe('Phone Number directive', function () {
         countryList: '.country-list',
         localCountryTextbox: 'input[placeholder="(201) 555-5555"]',
         intlCountryTextbox: 'input[placeholder="01812-345678"]',
-        intlCountrySelect: 'li[data-dial-code="880"]'
+        intlCountrySelect: 'li[data-dial-code="880"]',
+        wrapper: '#screenshot-phone-number'
     };
 
     it('should match the baseline phone number screenshot.', function (done) {
@@ -22,7 +23,7 @@ describe('Phone Number directive', function () {
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'phonenumber',
-            selector: '#screenshot-phonenumber',
+            selector: selectors.wrapper,
             done: done,
             checkAccessibility: true
         });
@@ -40,7 +41,7 @@ describe('Phone Number directive', function () {
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'phonenumber_flag_select',
-            selector: '#screenshot-phonenumber',
+            selector: selectors.wrapper,
             done: done,
             checkAccessibility: true
         });
@@ -59,7 +60,7 @@ describe('Phone Number directive', function () {
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'phonenumber_intl_country',
-            selector: '#screenshot-phonenumber',
+            selector: selectors.wrapper,
             done: done,
             checkAccessibility: true
         });
