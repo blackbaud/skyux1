@@ -1,0 +1,21 @@
+window.jQuery = require('jquery');
+require("jquery-ui-bundle");
+require("jquery-ui-touch-punch");
+require("angular");
+require("angular-animate");
+require("angular-messages");
+require("angular-toastr");
+require("angular-ui-bootstrap");
+require("angular-ui-router");
+require("autonumeric");
+require("block-ui");
+require("bootstrap");
+require("enquire.js");
+require("fastclick");
+require("flot-charts");
+require("free-jqgrid/js/jquery.jqGrid");
+require("moment");
+require("ng-file-upload");
+require("./dist/js/sky");
+
+module.exports = 'sky';
