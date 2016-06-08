@@ -7,6 +7,28 @@
     margin-bottom: $margin-plus-half;
 }
 
+.bb-key-info {
+    display: inline-block;
+    margin-right: $margin-triple;
+}
+
 .bb-key-info-value {
-    background: grey;
+    font: 400 20px $bb-font-family-narrow;
+    color: $text-color;
+}
+
+.bb-key-info-label {
+    font: 400 13px $font-family-sans-serif;
+    color: #707374;
+}
+
+.bb-key-info-horizontal {
+    .bb-key-info-value, 
+    .bb-key-info-label {
+        display: inline-block;  
+    }
+    
+    .bb-key-info-label {
+        margin-left: $margin-half;    
+    }
 }

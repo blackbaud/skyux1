@@ -5,7 +5,7 @@
 
     function KeyInfoTestController() {
         var vm = this;
-
+        vm.layout = 'horizontal';
 
     }
 

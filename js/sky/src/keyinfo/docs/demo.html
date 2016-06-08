@@ -1,9 +1,32 @@
-<div ng-controller="KeyInfoTestController as keyinfoCtrl">
+<div ng-controller="KeyInfoTestController as keyInfoCtrl">
+  <h3>Vertical example</h3>
+  
+  <bb-key-info>
     <bb-key-info-value>
-      This is sample value.
+      This is a sample value. 1
     </bb-key-info-value>
     <bb-key-info-label>
-      This is sample label.
+      This is a sample label. 1
     </bb-key-info-label>
+  </bb-key-info>
+  <bb-key-info>
+    <bb-key-info-value>
+      This is a sample value. 2
+    </bb-key-info-value>
+    <bb-key-info-label>
+      This is a sample label. 2
+    </bb-key-info-label>
+  </bb-key-info>
+  
+  <h3>Horizontal example</h3>
+  
+  <bb-key-info bb-key-info-layout="horizontal">
+    <bb-key-info-value>
+      This is a horizontal sample value.
+    </bb-key-info-value>
+    <bb-key-info-label>
+      This is a horizontal sample label.
+    </bb-key-info-label>
+  </bb-key-info>
 </div>
 
