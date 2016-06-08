@@ -51,12 +51,12 @@
           </button>
         </div>
         <div ng-switch-default>
-          <label ng-repeat="item in bbChecklist.filteredItems" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}">
+          <div ng-repeat="item in bbChecklist.filteredItems" class="bb-checklist-list-row" ng-click="bbChecklist.rowClicked(item)" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}">
             <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">
-              <input ng-attr-aria-label="{{item.title}}" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
+              <input ng-attr-aria-label="{{item.title}}" ng-click="bbChecklist.inputClicked($event)" bb-check type="checkbox" checklist-model="bbChecklist.bbChecklistSelectedItems" checklist-value="item" checklist-select-style="bbChecklist.bbChecklistSelectStyle" />
             </div>
             <ng-include class="bb-checklist-list-col" src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
-          </label>
+          </div>
         </div>
       </div>
     </div>
