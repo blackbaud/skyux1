@@ -1,9 +1,23 @@
-﻿<div ng-controller="PageTestController as pageCtrl">
-    <bb-page bb-page-status="pageCtrl.pageStatus" bb-page-uses-load-manager="true">
-        <div>
-            Page Content
-        </div>
+<div ng-controller="PageTestController as pageCtrl">
+    <bb-page bb-page-status="pageCtrl.pageStatus">   
+         <div>
+       This text represents the content on a page, and the buttons simulate loading the page.
+    </div>
+    <p></p>
     </bb-page>
-    <button ng-click="pageCtrl.simulateLoading()">Simulate loading</button>
-    <button ng-click="pageCtrl.simulateNotAuthorized()">Simulate not authorized</button>
+    <ui-view></ui-view>
+    
 </div>
+
+<script type="text/ng-template" id="demo/page/notfound.html">
+    <bb-error bb-error-type="notFound">
+        <bb-error-action>
+            <button type="button" class="btn-primary btn" ng-click="pageCtrl.returnHome()">Return to another page</button>    
+        </bb-error-action>
+    </bb-error>
+</script>
+<script type="text/ng-template" id="demo/page/buttons.html">
+    <button type="button" class="btn bb-btn-secondary" ng-click="pageCtrl.simulateLoading()">Simulate loading</button>
+    <button type="button" class="btn bb-btn-secondary" ng-click="pageCtrl.simulateNotAuthorized()">Simulate not authorized</button>
+    <button type="button" class="btn bb-btn-secondary" ng-click="pageCtrl.simulateNotFound()">Simulate not found</button>
+</script>

@@ -61,7 +61,8 @@
                        both variables directly on scope as well as using 'controller
                        as'
                     */
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
                         $parse(popoverIsOpenAttr).assign(origScope, false);
                     }

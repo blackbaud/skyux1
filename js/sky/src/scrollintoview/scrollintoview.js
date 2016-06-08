@@ -42,7 +42,8 @@
 
                     overflowY = parentEl.css('overflow-y');
 
-                    /*istanbul ignore else: sanity check (the computed overflow property will likely never return a non-string value) */
+                    /*istanbul ignore else */
+                    /* sanity check (the computed overflow property will likely never return a non-string value) */
                     if (angular.isString(overflowY)) {
                         switch (overflowY.toUpperCase()) {
                         case 'AUTO':
@@ -177,7 +178,8 @@
                         retryCount = 0;
                     }
 
-                    /*istanbul ignore else: hard to reach in a unit test */
+                    /*istanbul ignore else*/
+                    /* hard to reach in a unit test */
                     if (el.is(':visible') && el.children('.collapsing').length === 0) {
                         options = angular.extend({}, bbScrollIntoViewConfig);
 
@@ -193,7 +195,8 @@
                     }
                 }
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (attrs.bbScrollIntoView) {
                     scope.$watch(attrs.bbScrollIntoView, function (newValue, oldValue) {
                         if (newValue && newValue !== oldValue) {

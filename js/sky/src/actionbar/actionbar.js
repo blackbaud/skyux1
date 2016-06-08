@@ -17,7 +17,6 @@
 
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
-            replace: true,
             transclude: true,
             controller: function () {
                 var vm = this;
@@ -58,7 +57,9 @@
             replace: true,
             controller: angular.noop,
             controllerAs: 'bbActionBarItem',
-            bindToController: true,
+            bindToController: {
+                bbActionBarItemLabel: '@'
+            },
             scope: {},
             require: '?^bbActionBarItemGroup',
             transclude: true,

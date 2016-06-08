@@ -56,7 +56,8 @@
             }
         }
 
-        /* istanbul ignore next boilerplate RequireJS detection */
+        /* istanbul ignore next */
+        /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
             require(['enquire'], registerEnquire);

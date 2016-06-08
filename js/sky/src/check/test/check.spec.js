@@ -68,9 +68,7 @@ describe('Check directive', function () {
         }
 
         it('wraps the input in a label if no parent label exists and adds a bb-check-radio element after', function () {
-
             el = angular.element('<div><input type="radio" bb-check /></div>');
-
             verifyFancyRadio(el);
         });
 

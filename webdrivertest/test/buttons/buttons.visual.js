@@ -14,7 +14,8 @@ describe('buttons', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'buttons',
             selector: '#screenshot-buttons',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -36,7 +37,8 @@ describe('buttons', function () {
             prefix: common.getPrefix(browser),
             screenshotName: ('button_' + type + '_click'),
             selector: ('#screenshots-buttons-' + type),
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     }
 

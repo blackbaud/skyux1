@@ -183,7 +183,8 @@
                 $($window).on('resize.tabcollapse' + tabCollapseId, function () {
                     var windowWidth = $($window).width();
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
                         setDropdownMaxWidth();
                     }

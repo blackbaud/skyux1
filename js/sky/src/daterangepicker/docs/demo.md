@@ -1,12 +1,12 @@
 ---
-name: Date-range Picker
+name: Date-range picker
 icon: calendar
 summary: The date-range picker creates a box with a dropdown to select date ranges from a set of well-known options.
 ---
 
 The date-range picker directive creates a text box where users can select date ranges from a set of well-known options. You can also allow users to select dates to create specific date ranges. The directive works hand-in-hand with a date-range picker service to provide service-oriented functionality.
 
-### Date-range Picker Settings ###
+### Date-range picker settings ###
     - `bb-date-range-picker` &mdash; Creates a text box with a dropdown to select date ranges.
         - `bb-date-range-picker-value` &mdash; Specifies an object that tracks the value of the date-range picker control. The `.dateRangeType` property provides the integer (ENUM) value of the date-range type that users select.
         - `bb-date-range-picker-automation-id` &mdash; Specifies a string to use when creating the `bb-auto-field` attribute on elements in the date-range picker.
@@ -20,7 +20,7 @@ The date-range picker directive creates a text box where users can select date r
         - `bb-date-range-picker-valid` &mdash; *(Optional.)* A variable that is set to `true` when dates in a specific date range are valid and `false` when dates are not valid.
         - `bb-date-range-picker-no-labels` &mdash; *(Optional.)* Indicates whether to hide the labels for the date-range picker and specific date controls. When set to `true`, placeholder text appears within the specific date controls.
 
-### Date-range Picker Service ###
+### Date-range picker service ###
 The date-range picker service provides functionality that works closely with the directive. The service includes the following properties:
 
     - `dateRangeTypes` &mdash; An ENUM of all date-range types that the date-range picker understands and can include in the dropdown.

@@ -100929,7 +100929,6 @@ global.easyXDM = easyXDM;
 
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
-            replace: true,
             transclude: true,
             controller: function () {
                 var vm = this;
@@ -100970,7 +100969,9 @@ global.easyXDM = easyXDM;
             replace: true,
             controller: angular.noop,
             controllerAs: 'bbActionBarItem',
-            bindToController: true,
+            bindToController: {
+                bbActionBarItemLabel: '@'
+            },
             scope: {},
             require: '?^bbActionBarItemGroup',
             transclude: true,
@@ -101069,7 +101070,8 @@ global.easyXDM = easyXDM;
         if (configType) {
             configSettings = angular.isObject(configType) ? configType : bbAutoNumericConfig[configType];
 
-            /* istanbul ignore else: sanity check */
+            /* istanbul ignore else */
+            /* sanity check */
             if (configSettings) {
                 angular.extend(baseSettings, configSettings);
             }
@@ -101178,8 +101180,8 @@ global.easyXDM = easyXDM;
                     });
 
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
-                    /*
-                        istanbul ignore next: the test for this code isn't passing on IE 10 on BrowserStack in automated mode.
+                    /* istanbul ignore next */
+                    /* The test for this code isn't passing on IE 10 on BrowserStack in automated mode.
                         This isn't mission-critical so I'm just ignoring it for now.
                     */
                     el.on('focusin.bbAutonumeric', function () {
@@ -101311,7 +101313,8 @@ global.easyXDM = easyXDM;
                     nameSplit = name.split(' ');
                     initials = getInitial(nameSplit[0]);
 
-                    /* istanbul ignore else this is tested through a visual regression test */
+                    /* istanbul ignore else */ 
+                    /* this is tested through a visual regression test */
                     if (nameSplit.length > 1) {
                         initials += getInitial(nameSplit[nameSplit.length - 1]);
                     }
@@ -101656,13 +101659,20 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
     angular.module('sky.check', [])
-        .directive('bbCheck', ['$templateCache', function ($templateCache) {
-            function createEl(name) {
-                return angular.element($templateCache.get('sky/templates/check/' + name + '.html'));
+        .directive('bbCheck', ['$templateCache', '$compile', function ($templateCache, $compile) {
+            function createEl(name, scope) {
+                var templateHtml;
+                
+                templateHtml = $templateCache.get('sky/templates/check/' + name + '.html');
+                if (scope) {
+                    templateHtml = $compile(templateHtml)(scope);
+                }
+                return angular.element(templateHtml);
             }
 
             return {
-                link: function (scope, el, attr) {
+                require: '?ngModel',
+                link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
                         styledEl,
                         typeClass;
@@ -101679,15 +101689,25 @@ global.easyXDM = easyXDM;
                             return this.nodeType === 3 && /\S/.test(this.textContent);
                         })
                         .wrap(createEl('labeltext'));
-
                     }
+                    
+                    scope.checkModel = ngModel;
+                    
                     if (attr.type === 'radio') {
+
+                        scope.$watch(function () {
+                            return scope.$eval(attr.ngValue);
+                        }, function (newValue) {
+                            scope.checkValue = newValue; 
+                        });
+
                         typeClass = 'bb-check-radio';
                     } else {
                         typeClass = 'bb-check-checkbox';
                     }
-
-                    styledEl = createEl('styled');
+                    
+                    styledEl = createEl(('styled' + attr.type), scope);
+                    
                     styledEl.addClass(typeClass);
 
                     el.after(styledEl);
@@ -101782,11 +101802,14 @@ global.easyXDM = easyXDM;
 
             vm.filteredItems = filteredItems;
         }
+        
 
         function invokeFilter() {
             /* When the show only selected items checkbox is checked,
                then no other filters should be applied */
             if (vm.onlyShowSelected) {
+                /*istanbul ignore next */
+                /* sanity check */
                 vm.filteredItems = vm.bbChecklistSelectedItems || [];
             } else if (vm.filterLocal) {
                 invokeFilterLocal();
@@ -102293,7 +102316,7 @@ global.easyXDM = easyXDM;
 
             vm.bbContextMenu = bbContextMenu;
         }
-
+        
         return {
             bindToController: {
                 bbContextMenuButtonLabel: '@'
@@ -102302,7 +102325,6 @@ global.easyXDM = easyXDM;
             controllerAs: 'bbContextMenuButton',
             link: link,
             restrict: 'E',
-            replace: true,
             require: ['bbContextMenuButton', '?^bbContextMenu'],
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menubutton.html'
@@ -102352,7 +102374,6 @@ global.easyXDM = easyXDM;
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
-            replace: true,
             restrict: 'E',
             scope: {},
             transclude: true,
@@ -102378,7 +102399,6 @@ global.easyXDM = easyXDM;
             controllerAs: 'bbContextMenuItem',
             restrict: 'E',
             transclude: true,
-            replace: true,
             scope: {},
             templateUrl: 'sky/templates/contextmenu/menuitem.html'
         };
@@ -102496,7 +102516,8 @@ global.easyXDM = easyXDM;
             p,
             url;
 
-        /*istanbul ignore else: sanity check */
+        /*istanbul ignore else */
+        /* sanity check */
         if (option) {
             if (angular.isString(option) || option.BB_DATA_POST) {
                 url = option;
@@ -103078,7 +103099,8 @@ global.easyXDM = easyXDM;
 
                 function resolveValidation() {
                     var inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel) {
                         deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
                         inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
@@ -103089,7 +103111,8 @@ global.easyXDM = easyXDM;
 
                 function setInvalidFormatMessage(errorMessage) {
                     var inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel) {
                         inputNgModel.invalidFormatMessage = errorMessage;
                     }
@@ -103106,7 +103129,8 @@ global.easyXDM = easyXDM;
                         dateChangeInternal = true;
                         vm.date = angular.copy(result.formattedValue);
 
-                        /* istanbul ignore else: sanity check */
+                        /* istanbul ignore else */
+                        /* sanity check */
                         if (inputEl) {
                             inputEl.val(vm.date);
                         }
@@ -103132,7 +103156,8 @@ global.easyXDM = easyXDM;
                     }
                 } else {
                     inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel && inputNgModel.$error && inputNgModel.$error.date) {
                         setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                     }
@@ -103154,7 +103179,7 @@ global.easyXDM = easyXDM;
                 ngModel.$options = {
                     allowInvalid: true
                 };
-                
+
                 vm.pickerDate = '';
                 vm.pickerOpened = false;
 
@@ -103290,7 +103315,8 @@ global.easyXDM = easyXDM;
 
                 function inputChanged() {
                     var inputNgModel = vm.getInputNgModel();
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
                         if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
@@ -103356,7 +103382,8 @@ global.easyXDM = easyXDM;
 
             function runValidators() {
                 var inputNgModel = vm.getInputNgModel();
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (inputNgModel) {
                     inputNgModel.$validate();
                 }
@@ -103546,11 +103573,13 @@ global.easyXDM = easyXDM;
                 dayBegin = format.indexOf('d'),
                 separatorChar;
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (separator) {
                 separatorChar = separator[0];
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (separatorChar) {
                     if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
                         if (monthBegin < dayBegin) {
@@ -104331,7 +104360,8 @@ global.easyXDM = easyXDM;
                 scope.$watch(function () {
                     return vm.errorType;
                 }, function (newValue) {
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue !== vm.bbErrorType) {
                         vm.bbErrorType = newValue;
                     }
@@ -105101,7 +105131,8 @@ global.easyXDM = easyXDM;
                 };
 
                 bbGrid.scope.$watch('gridCreated', function (newValue) {
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue) {
                         element.parents('.bb-grid-container').prepend(element);
                         element.show();
@@ -105247,7 +105278,8 @@ global.easyXDM = easyXDM;
                 toggleDropdown: toggleDropdown
             };
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction($scope.getContextMenuItems)) {
                 $scope.locals.items = $scope.getContextMenuItems($scope.rowData.id, $scope.rowData);
             }
@@ -105273,28 +105305,32 @@ global.easyXDM = easyXDM;
                             self = this;
 
                         self.setFilters = function (filters) {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.setFilters)) {
                                 locals.setFilters(filters);
                             }
                         };
 
                         self.syncViewKeepers = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if ($scope.syncViewKeepers) {
                                 $scope.syncViewKeepers();
                             }
                         };
 
                         self.syncActionBarViewKeeper = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction($scope.syncActionBarViewKeeper)) {
                                 $scope.syncActionBarViewKeeper();
                             }
                         };
 
                         self.resetMultiselect = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.resetMultiselect)) {
                                 locals.resetMultiselect();
                             }
@@ -105315,21 +105351,24 @@ global.easyXDM = easyXDM;
                         };
 
                         self.toggleMultiselectRows = function (visibleSelectedRows) {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.toggleMultiselectRows)) {
                                 locals.toggleMultiselectRows(visibleSelectedRows);
                             }
                         };
 
                         self.syncGridHeaderScrollToTopScrollbar = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.topScrollbarScroll)) {
                                 locals.topScrollbarScroll();
                             }
                         };
 
                         self.highlightSearchText = function () {
-                            /*istanbul ignore else: sanity check */
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.highlightSearchText)) {
                                 locals.highlightSearchText();
                             }
@@ -105345,7 +105384,8 @@ global.easyXDM = easyXDM;
                             hasColPicker: true,
                             hasFilters: true,
                             applySearchText: function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (angular.isFunction(self.applySearchText)) {
                                     self.applySearchText();
                                 }
@@ -105525,7 +105565,8 @@ global.easyXDM = easyXDM;
                                         is_context_menu: true
                                     });
 
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (!compiledTemplates[dropdown_template]) {
                                         compiledTemplates[dropdown_template] = $compile($templateCache.get(dropdown_template));
                                     }
@@ -105611,7 +105652,8 @@ global.easyXDM = easyXDM;
                             }
 
                             function getColumnNameFromElementId(columnName) {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (columnName) {
                                     return columnName.replace(locals.gridId + "_", "");
                                 }
@@ -105666,7 +105708,8 @@ global.easyXDM = easyXDM;
                                 gridHeaders[extendedColumnIndex].width = columnSize;
                                 gridHeaders[extendedColumnIndex].el.style.width = colSizePx;
                                 tableGrid.cols[extendedColumnIndex].style.width = colSizePx;
-                                /* istanbul ignore next: sanity check */
+                                /* istanbul ignore next */
+                                /* sanity check */
                                 tableEl[0].p.tblwidth = totalWidth || tableEl[0].p.tblwidth;
                                 tableGrid.hDiv.scrollLeft = bodyScrollLeft;
                             }
@@ -105721,7 +105764,8 @@ global.easyXDM = easyXDM;
 
                                     width = getDesiredGridWidth();
 
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (width > 0) {
                                         tableEl.setGridWidth(width);
                                         resetTopScrollbar();
@@ -105820,10 +105864,12 @@ global.easyXDM = easyXDM;
                                 var className,
                                     headerElId,
                                     sortOptions;
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (header) {
                                     header.find('th').removeClass('sorting-asc').removeClass('sorting-desc');
-                                    /* istanbul ignore else: sanity check */
+                                    /* istanbul ignore else */
+                                    /* sanity check */
                                     if ($scope.options) {
                                         sortOptions = $scope.options.sortOptions;
                                         if (sortOptions && sortOptions.column) {
@@ -105850,7 +105896,8 @@ global.easyXDM = easyXDM;
                                 }
 
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (sortOptions) {
                                     excludedColumns = sortOptions.excludedColumns;
                                     if (excludedColumns) {
@@ -106211,7 +106258,8 @@ global.easyXDM = easyXDM;
                                 tableEl = element.find('table');
                                 tableDomEl = tableEl[0];
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
 
                                     columns = $scope.options.columns;
@@ -106341,10 +106389,12 @@ global.easyXDM = easyXDM;
                                     templateUrlsToLoad = {};
 
                                 //Identify any template URLs that haven't been compiled
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
                                     columns = $scope.options.columns;
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else */
+                                    /* sanity check */
                                     if (columns) {
                                         angular.forEach(columns, function (column) {
                                             var templateUrl = column.template_url;
@@ -106365,11 +106415,13 @@ global.easyXDM = easyXDM;
 
                                     // Compile templates and store them for use when adding rows.
                                     for (p in result.text) {
-                                        /*istanbul ignore else: sanity check */
+                                        /*istanbul ignore else */
+                                        /* sanity check */
                                         if (result.text.hasOwnProperty(p)) {
                                             template = result.text[p];
 
-                                            /*istanbul ignore else: sanity check */
+                                            /*istanbul ignore else */
+                                            /* sanity check */
                                             if (template) {
                                                 compiledTemplates[p] = $compile(template);
                                             }
@@ -106397,7 +106449,8 @@ global.easyXDM = easyXDM;
                             }
 
                             function setRows(rows) {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
 
@@ -106413,7 +106466,8 @@ global.easyXDM = easyXDM;
                                         tableDomEl.addJSONData(rows);
                                         $timeout(highlightSearchText);
                                         handleTableWrapperResize();
-                                        /*istanbul ignore next: sanity check */
+                                        /*istanbul ignore next */
+                                        /* sanity check */
                                         updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
 
                                         setUpFancyCheckCell();
@@ -106431,7 +106485,8 @@ global.easyXDM = easyXDM;
                                     vkActionBarAndBackToTop.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options) {
                                     verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                                 }
@@ -106509,7 +106564,8 @@ global.easyXDM = easyXDM;
                             $scope.$watch('options.selectedColumnIds', function (newValue) {
                                 var columnChangedData;
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (newValue) {
                                     if (reorderingColumns) {
                                         reorderingColumns = false;
@@ -106573,14 +106629,16 @@ global.easyXDM = easyXDM;
                             });
 
                             $scope.syncViewKeepers = function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkToolbars) {
                                     vkToolbars.syncElPosition();
                                 }
                             };
 
                             $scope.syncActionBarViewKeeper = function () {
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkActionBarAndBackToTop) {
                                     vkActionBarAndBackToTop.syncElPosition();
                                 }
@@ -106604,7 +106662,8 @@ global.easyXDM = easyXDM;
 
                             tableWrapper.on('scroll', function () {
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkHeader) {
                                     vkHeader.syncElPosition();
                                 }
@@ -106646,17 +106705,20 @@ global.easyXDM = easyXDM;
 
                             element.on('$destroy', function () {
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkToolbars) {
                                     vkToolbars.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkHeader) {
                                     vkHeader.destroy();
                                 }
 
-                                /*istanbul ignore else: sanity check */
+                                /*istanbul ignore else */
+                                /* sanity check */
                                 if (vkActionBarAndBackToTop) {
                                     vkActionBarAndBackToTop.destroy();
                                 }
@@ -106694,14 +106756,16 @@ global.easyXDM = easyXDM;
                     var searchEl;
 
                     searchEl = el.find('.bb-search-container input');
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
                         searchEl.eq(0).select();
                     }
 
                     $scope.options.searchText = $scope.searchText;
 
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (bbGrid !== null) {
                         bbGrid.highlightSearchText();
                     }
@@ -106746,7 +106810,8 @@ global.easyXDM = easyXDM;
                         } else {
                             $scope.toolbarLocals.filtersVisible = !$scope.toolbarLocals.filtersVisible;
                         }
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     } else if (bbGrid !== null && angular.isFunction(bbGrid.toggleFilterMenu)) {
                         bbGrid.toggleFilterMenu(isOpen);
                     }
@@ -106766,7 +106831,8 @@ global.easyXDM = easyXDM;
 
                 $scope.resources = bbResources;
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (bbGrid !== null && angular.isUndefined($scope.options)) {
                     $scope.$watch(function () {
                         return bbGrid.scope.options;
@@ -106785,7 +106851,8 @@ global.easyXDM = easyXDM;
                             moveInlineFilters();
                         }
 
-                        /*istanbul ignore else: sanity check */
+                        /*istanbul ignore else */
+                        /* sanity check */
                         if (bbGrid !== null) {
                             bbGrid.applySearchText = applySearchText;
                         }
@@ -106808,7 +106875,8 @@ global.easyXDM = easyXDM;
                     }
                 });
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (bbGrid !== null) {
                     topScrollbarEl.on('scroll', function () {
                         bbGrid.syncGridHeaderScrollToTopScrollbar();
@@ -106816,7 +106884,8 @@ global.easyXDM = easyXDM;
                 }
 
                 $scope.$on('$destroy', function () {
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (bbGrid !== null) {
                         topScrollbarEl.off();
                     }
@@ -107135,7 +107204,8 @@ global.easyXDM = easyXDM;
             }
         }
 
-        /* istanbul ignore next boilerplate RequireJS detection */
+        /* istanbul ignore next */
+        /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
             require(['enquire'], registerEnquire);
@@ -107402,9 +107472,11 @@ global.easyXDM = easyXDM;
 
     bbMoment.$inject = ['$window'];
 
-    /*istanbul ignore next boilerplate require gunk */
+    /*istanbul ignore next */
+    /* boilerplate require gunk */
     function runRegisterMoment($window) {
 
+        /*istanbul ignore next */
         function registerMoment(moment) {
             $window.moment = moment;
         }
@@ -107554,7 +107626,7 @@ global.easyXDM = easyXDM;
                                 //This special case is just about dealing with an edge case issue with client side javascript.
                                 if ($window.localStorage) {
                                     omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
-                                    
+
                                     if (omnibarIndicatesNullUserTime && (new Date() - Date.parse(omnibarIndicatesNullUserTime)) / 1000 <= 10) {
                                         // We just looped through Auth within the last 10 seconds, so don't leave again now.
                                         return;
@@ -107565,7 +107637,8 @@ global.easyXDM = easyXDM;
                                         $window.localStorage.omnibarIndicatesNullUserTime = (new Date()).toString();
                                     } catch (e) {
                                         // Safari private browsing will throw an exception on setting localStroage.
-                                        /*istanbul ignore next: super edge case */
+                                        /*istanbul ignore next */
+                                        /* super edge case */
                                         return;
                                     }
                                 } else {
@@ -108216,7 +108289,8 @@ angular.module('sky.palette.config', [])
                        both variables directly on scope as well as using 'controller
                        as'
                     */
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
                         $parse(popoverIsOpenAttr).assign(origScope, false);
                     }
@@ -108500,7 +108574,8 @@ angular.module('sky.palette.config', [])
         vm.removeItem = function (item) {
             var itemIndex = items.indexOf(item);
 
-            /*istanbul ignore else sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (itemIndex >= 0) {
                 items.splice(itemIndex, 1);
             }
@@ -108865,7 +108940,8 @@ angular.module('sky.palette.config', [])
 
                     overflowY = parentEl.css('overflow-y');
 
-                    /*istanbul ignore else: sanity check (the computed overflow property will likely never return a non-string value) */
+                    /*istanbul ignore else */
+                    /* sanity check (the computed overflow property will likely never return a non-string value) */
                     if (angular.isString(overflowY)) {
                         switch (overflowY.toUpperCase()) {
                         case 'AUTO':
@@ -109000,7 +109076,8 @@ angular.module('sky.palette.config', [])
                         retryCount = 0;
                     }
 
-                    /*istanbul ignore else: hard to reach in a unit test */
+                    /*istanbul ignore else*/
+                    /* hard to reach in a unit test */
                     if (el.is(':visible') && el.children('.collapsing').length === 0) {
                         options = angular.extend({}, bbScrollIntoViewConfig);
 
@@ -109016,7 +109093,8 @@ angular.module('sky.palette.config', [])
                     }
                 }
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (attrs.bbScrollIntoView) {
                     scope.$watch(attrs.bbScrollIntoView, function (newValue, oldValue) {
                         if (newValue && newValue !== oldValue) {
@@ -109078,7 +109156,8 @@ angular.module('sky.palette.config', [])
             var selectedItems = vm.bbSelectFieldSelectedItems,
                 formattedCount;
 
-            /*istanbul ignore else sanity check */
+            /*istanbul ignore else */
+            /* sanity check */
             if (angular.isArray(selectedItems)) {
 
                 formattedCount = $filter('bbAutonumeric')(selectedItems.length, 'number', true);
@@ -109282,14 +109361,16 @@ angular.module('sky.palette.config', [])
             };
 
             vm.okClick = function () {
-                /*istanbul ignore else sanity check */
+                /*istanbul ignore else*/
+                /* sanity check */
                 if (modalInstance) {
                     modalInstance.close('save');
                 }
             };
 
             vm.clearClick = function () {
-                /*istanbul ignore else sanity check */
+                /*istanbul ignore else */
+                /*sanity check */
                 if (modalInstance) {
                     selectedItems = [];
                     modalInstance.close('save');
@@ -109405,7 +109486,8 @@ angular.module('sky.palette.config', [])
                             overflowOccurred,
                             scrollLeft;
 
-                        /*istanbul ignore else: sanity check */
+                        /*istanbul ignore else */
+                        /* sanity check */
                         if (navTabsEl.length > 0) {
                             hasOverflow = angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:first')) ||
                                 angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:last'));
@@ -109666,7 +109748,8 @@ angular.module('sky.palette.config', [])
                 $($window).on('resize.tabcollapse' + tabCollapseId, function () {
                     var windowWidth = $($window).width();
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (lastWindowWidth !== windowWidth && $scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1) {
                         setDropdownMaxWidth();
                     }
@@ -109817,12 +109900,13 @@ angular.module('sky.palette.config', [])
                         stateChangeDeregistration;
 
                     function checkCurrentState() {
-                        if ($state.is(sref)) {
+                        if ($state.includes(sref)) {
                             tabsetCtrl.select(el.isolateScope().index);
                         }
                     }
 
-                    /*istanbul ignore else sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (sref) {
                         checkCurrentState();
 
@@ -109833,7 +109917,7 @@ angular.module('sky.palette.config', [])
                         scope.$watch(function () {
                             return tabsetCtrl.active;
                         }, function (newValue) {
-                            if (newValue === el.isolateScope().index && !$state.is(sref)) {
+                            if (newValue === el.isolateScope().index && !$state.includes(sref)) {
                                 // JPB - Delay calling state.go because the state change will fail
                                 // if it is triggered while in the middle of processing of another state change.
                                 // This can happen if you browse to the page without specifying the state of a particular tab
@@ -110085,7 +110169,8 @@ angular.module('sky.palette.config', [])
 
                     containerEl = createEl($templateCache, 'container');
 
-                    /* istanbul ignore else: nothing happens when there's no value, so there's nothing to test. */
+                    /* istanbul ignore else */
+                    /* nothing happens when there's no value, so there's nothing to test. */
                     if (newValue) {
                         collapsedText = getTruncatedText(newValue, maxLength, maxNewlines);
                         expandedText = getTruncatedText(newValue, maxExpandedLength, maxExpandedNewlines); // Get text based on max expanded length
@@ -110149,7 +110234,8 @@ angular.module('sky.palette.config', [])
 
                     el.empty().append(containerEl);
 
-                    /* istanbul ignore next: these internal variables can't be tested. */
+                    /* istanbul ignore next */
+                    /* these internal variables can't be tested. */
                     el.on('$destroy', function () {
                         containerEl = null;
                         expandEl = null;
@@ -110196,12 +110282,13 @@ angular.module('sky.palette.config', [])
         vm.setHeaderContentEl = function (el) {
             vm.headerContentEl = el;
 
-            /* istanbul ignore else: sanity check */
+            /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(vm.updateHeaderContent)) {
                 vm.updateHeaderContent();
             }
         };
-        
+
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
             var i,
@@ -110309,11 +110396,11 @@ angular.module('sky.palette.config', [])
 
             function initializeTile(data) {
                 $timeout(function () {
-                    var tiles = data.tiles || /*istanbul ignore next: default value */ [];
+                    var tiles = data.tiles || /*istanbul ignore next */ [];
 
                     if (!vm.tileInitialized) {
                         //retrieve the tile id from the parent container
-                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
+                        vm.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next */ '';
                         vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
                     }
 
@@ -110555,7 +110642,7 @@ angular.module('sky.palette.config', [])
                         i,
                         n,
                         tile,
-                        tileId = data.tileId || /*istanbul ignore next: default value */ '',
+                        tileId = data.tileId || /*istanbul ignore next */ '',
                         tiles = vm.tiles;
 
                     collapsed = data.collapsed || false;
@@ -110830,7 +110917,8 @@ angular.module('sky.palette.config', [])
             "left": left
         });
 
-        /*istanbul ignore else: sanity check */
+        /*istanbul ignore else*/
+        /* sanity check */
         if (width !== null) {
             elQ.css({ "width": width });
         }
@@ -110864,7 +110952,8 @@ angular.module('sky.palette.config', [])
         if (vk.verticalOffSetEl) {
             verticalOffSetElTop = vk.verticalOffSetEl.css('top');
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else*/
+            /* sanity check */
             if (verticalOffSetElTop) {
                 verticalOffSetElTop = parseInt(verticalOffSetElTop, 10);
                 if (isNaN(verticalOffSetElTop)) {
@@ -111218,7 +111307,8 @@ angular.module('sky.palette.config', [])
                                 });
                             } else if (scrollingDown) {
                                 if (element.offset().top + element.height() >= scrollPos + $window.innerHeight) {
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else*/
+                                    /* sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
@@ -111237,7 +111327,8 @@ angular.module('sky.palette.config', [])
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else*/
+                                    /* sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
@@ -111409,7 +111500,7 @@ angular.module('sky.palette.config', [])
 
                 options = angular.extend({}, {
                     visualBlockDelay: 300
-                }, options || /* istanbul ignore next: sanity check */ {});
+                }, options || /* istanbul ignore next */ {});
 
                 customBlockOptions = {
                     fadeIn: options.fadeIn
@@ -111441,7 +111532,8 @@ angular.module('sky.palette.config', [])
                 $timeout(function () {
                     var $el;
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else*/
+                    /* sanity check */
                     if (getWaitCount(el) === 0) {
                         $el = $(el);
 
@@ -111888,7 +111980,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/actionbar/actionbaritem.html',
-        '<button class="btn bb-btn-secondary bb-action-bar-item-button" type="button">\n' +
+        '<button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-attr-aria-label="{{bbActionBarItem.bbActionBarItemLabel}}">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>\n' +
         '');
@@ -111964,9 +112056,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/check/labeltext.html',
         '<span class="bb-check-label-text"></span>\n' +
         '');
-    $templateCache.put('sky/templates/check/styled.html',
-        '<span role="checkbox" tabindex="-1"></span>\n' +
+    $templateCache.put('sky/templates/check/styledcheckbox.html',
+        '<span role="checkbox" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue}}"></span>\n' +
         '');
+    $templateCache.put('sky/templates/check/styledradio.html',
+        '<span role="radio" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue === checkValue}}"></span>');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
         '');

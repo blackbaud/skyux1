@@ -24,7 +24,8 @@
                     nameSplit = name.split(' ');
                     initials = getInitial(nameSplit[0]);
 
-                    /* istanbul ignore else this is tested through a visual regression test */
+                    /* istanbul ignore else */ 
+                    /* this is tested through a visual regression test */
                     if (nameSplit.length > 1) {
                         initials += getInitial(nameSplit[nameSplit.length - 1]);
                     }

@@ -53,6 +53,10 @@
         tr.ui-state-highlight {
             background-color: #eeeffb;
             border: 1px solid #dadbf6;
+
+            &:nth-child(2) {
+              border-top: none;
+            }
         }
     }
 

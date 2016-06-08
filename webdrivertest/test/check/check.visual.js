@@ -14,7 +14,8 @@ describe('check', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'check',
             selector: '#screenshot-check',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 });

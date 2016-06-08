@@ -77,7 +77,8 @@
 
                 function resolveValidation() {
                     var inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel) {
                         deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
                         inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
@@ -88,7 +89,8 @@
 
                 function setInvalidFormatMessage(errorMessage) {
                     var inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel) {
                         inputNgModel.invalidFormatMessage = errorMessage;
                     }
@@ -105,7 +107,8 @@
                         dateChangeInternal = true;
                         vm.date = angular.copy(result.formattedValue);
 
-                        /* istanbul ignore else: sanity check */
+                        /* istanbul ignore else */
+                        /* sanity check */
                         if (inputEl) {
                             inputEl.val(vm.date);
                         }
@@ -131,7 +134,8 @@
                     }
                 } else {
                     inputNgModel = vm.getInputNgModel();
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (inputNgModel && inputNgModel.$error && inputNgModel.$error.date) {
                         setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                     }
@@ -153,7 +157,7 @@
                 ngModel.$options = {
                     allowInvalid: true
                 };
-                
+
                 vm.pickerDate = '';
                 vm.pickerOpened = false;
 
@@ -289,7 +293,8 @@
 
                 function inputChanged() {
                     var inputNgModel = vm.getInputNgModel();
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
                         if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
@@ -355,7 +360,8 @@
 
             function runValidators() {
                 var inputNgModel = vm.getInputNgModel();
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (inputNgModel) {
                     inputNgModel.$validate();
                 }

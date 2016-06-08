@@ -78,7 +78,8 @@
                             overflowOccurred,
                             scrollLeft;
 
-                        /*istanbul ignore else: sanity check */
+                        /*istanbul ignore else */
+                        /* sanity check */
                         if (navTabsEl.length > 0) {
                             hasOverflow = angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:first')) ||
                                 angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:last'));

@@ -32,7 +32,8 @@
                 scope.$watch(function () {
                     return vm.errorType;
                 }, function (newValue) {
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue !== vm.bbErrorType) {
                         vm.bbErrorType = newValue;
                     }

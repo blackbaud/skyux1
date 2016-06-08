@@ -128,7 +128,7 @@
 
                 options = angular.extend({}, {
                     visualBlockDelay: 300
-                }, options || /* istanbul ignore next: sanity check */ {});
+                }, options || /* istanbul ignore next */ {});
 
                 customBlockOptions = {
                     fadeIn: options.fadeIn
@@ -160,7 +160,8 @@
                 $timeout(function () {
                     var $el;
 
-                    /* istanbul ignore else: sanity check */
+                    /* istanbul ignore else*/
+                    /* sanity check */
                     if (getWaitCount(el) === 0) {
                         $el = $(el);
 
