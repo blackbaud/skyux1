@@ -18,7 +18,8 @@ describe('checklist', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'checklist_grid',
             selector: '#screenshot-checklist-grid',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -35,7 +36,8 @@ describe('checklist', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'checklist_list',
             selector: '#screenshot-checklist-list',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -52,7 +54,8 @@ describe('checklist', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'checklist_single',
             selector: '#screenshot-checklist-single',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 });
