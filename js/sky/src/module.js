@@ -32,7 +32,7 @@
         'sky.page',
         'sky.pagesummary',
         'sky.pagination',
-        'sky.phonenumber',
+        'sky.phonefield',
         'sky.popover',
         'sky.reorder',
         'sky.repeater',

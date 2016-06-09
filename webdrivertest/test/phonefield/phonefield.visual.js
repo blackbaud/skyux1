@@ -1,57 +1,58 @@
 /*global describe, it, browser, require */
 
-describe('Phone Number directive', function () {
+describe('Phone Field directive', function () {
     'use strict';
 
-    var selectors = {
+    var testPath = '/phonefield/fixtures/test.full.html',
+        selectors = {
         flagContainer: '.flag-container',
         countryList: '.country-list',
         localCountryTextbox: 'input[placeholder="(201) 555-5555"]',
         intlCountryTextbox: 'input[placeholder="01812-345678"]',
         intlCountrySelect: 'li[data-dial-code="880"]',
-        wrapper: '#screenshot-phone-number'
+        wrapper: '#screenshot-phone-field'
     };
 
-    it('should match the baseline phone number screenshot.', function (done) {
+    it('should match the baseline phone field screenshot.', function (done) {
         var result,
             common = require('../common');
 
-        result = browser.url('/phonenumber/fixtures/test.full.html')
+        result = browser.url(testPath)
                  .waitForVisible(selectors.localCountryTextbox);
 
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'phonenumber',
+            screenshotName: 'phonefield',
             selector: selectors.wrapper,
             done: done,
             checkAccessibility: true
         });
     });
 
-    it('should match the baseline phone number screenshot when the flag selector is clicked.', function (done) {
+    it('should match the baseline phone field screenshot when the flag selector is clicked.', function (done) {
         var result,
             common = require('../common');
 
-        result = browser.url('/phonenumber/fixtures/test.full.html')
+        result = browser.url(testPath)
                  .click(selectors.flagContainer)
                  .waitForVisible(selectors.countryList);
 
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'phonenumber_flag_select',
+            screenshotName: 'phonefield_flag_select',
             selector: selectors.wrapper,
             done: done,
             checkAccessibility: true
         });
     });
 
-    it('should match the baseline phone number screenshot when an international country is selected.', function (done) {
+    it('should match the baseline phone field screenshot when an international country is selected.', function (done) {
         var result,
             common = require('../common');
 
-        result = browser.url('/phonenumber/fixtures/test.full.html')
+        result = browser.url(testPath)
                  .click(selectors.flagContainer)
                  .click(selectors.intlCountrySelect)
                  .waitForVisible(selectors.intlCountryTextbox);
@@ -59,7 +60,7 @@ describe('Phone Number directive', function () {
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'phonenumber_intl_country',
+            screenshotName: 'phonefield_intl_country',
             selector: selectors.wrapper,
             done: done,
             checkAccessibility: true
