@@ -216,3 +216,4 @@ webdrivertest/test/**/*.full.html
 .slimerjs-cache/
 browserstack.env
 browserstack-binary/
+tmp/

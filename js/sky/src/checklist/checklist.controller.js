@@ -160,7 +160,7 @@
             });
         };
 
-        /*  In grid view, ensure that clicking input does not also cause the
+        /*  Ensure that clicking input does not also cause the
             row click function to be called */
         vm.inputClicked = function ($event) {
             $event.stopPropagation();
