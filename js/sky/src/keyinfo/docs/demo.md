@@ -1,7 +1,7 @@
 ---
 name: Key Info
 icon: 
-summary: The keyinfo component displays --for John--
+summary: The key info component displays a value and its corresponding label.
 ---
 
 The key info component displays a value and its corresponding label. It includes an option to let the value and label to be displayed vertically (default) or horizontally. 
