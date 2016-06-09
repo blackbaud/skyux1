@@ -1,7 +1,9 @@
 <div class="container">
   <div ng-controller="PhoneFieldTestController as phoneFieldCtrl">
     <div id="screenshot-phone-field" style="width:300px">
+      <label for="phone-field-input">screenshot test</label>
       <input bb-phone-field="phoneFieldCtrl.bbPhoneFieldConfig"
+             id="phone-field-input"
              ng-model="phoneFieldCtrl.phoneNumber"/>
     </div>
   </div>
