@@ -39,11 +39,11 @@
             // when the country changes, update the scope's bbPhoneFieldConfig property
             input.on('countrychange', function (e, countryData) {
                 ngModel.$setViewValue(getFormattedNumber());
-                $scope.$apply(function () {
-                        if ($scope.bbPhoneFieldConfig.props) {
-                            $scope.bbPhoneFieldConfig.props.selectedCountry = countryData;
-                        }
-                    });
+                if ($scope.bbPhoneFieldConfig.props) {
+                    $scope.$apply(function () {
+                                $scope.bbPhoneFieldConfig.props.selectedCountry = countryData;
+                            });
+                }
             });
 
             // ** ng-model settings **
