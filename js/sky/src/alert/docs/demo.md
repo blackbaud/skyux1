@@ -1,5 +1,5 @@
 ---
-name: alert
+name: Alert
 icon: bell
 summary: The alert component displays a SKY UX-themed Bootstrap alert.
 ---
