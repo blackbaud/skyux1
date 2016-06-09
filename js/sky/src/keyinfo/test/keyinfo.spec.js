@@ -27,7 +27,7 @@ describe('KeyInfo component', function () {
         expect(el.find('.bb-key-info')).toHaveClass('bb-key-info-horizontal');
     });
     
-    it('should have the appropriate content in expected areas', function() {
+    it('should have the appropriate content in expected areas', function () {
         var el,
             $scope = $rootScope.$new(),
             keyvalue = 'foo',
