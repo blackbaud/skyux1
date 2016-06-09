@@ -29,7 +29,7 @@
   <div class="row">
     <div class="col-md-6">
       <bb-repeater bb-repeater-expand-mode="{{repeaterCtrl.expandMode}}">
-        <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded">
+        <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded" bb-repeater-item-selectable="true" bb-repeater-item-selected="item.isSelected">
           <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
             <bb-context-menu>
               <bb-context-menu-item>Mark completed</bb-context-menu-item>

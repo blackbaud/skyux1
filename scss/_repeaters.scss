@@ -45,6 +45,7 @@
 
     .bb-repeater-item-context-menu {
         padding: $padding-half $padding 0 0;
+        display: inline-block;
     }
 
     .bb-repeater-item-title {
@@ -75,4 +76,21 @@
             display: none;
         }
     }
+
+    .bb-repeater-item-selected {
+        background-color: $bb-selected-color;
+        transition: background-color $bb-transition-time-short;
+    }
+
+    .bb-repeater-item-selectable {
+        .bb-repeater-item-right {
+            cursor: pointer;
+        }
+    }
+
+    .bb-repeater-item-multiselect {
+        display: inline-block;
+        padding-right: $padding-half;
+    }
+
 }

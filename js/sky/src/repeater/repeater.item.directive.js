@@ -22,6 +22,14 @@
                     cls.push('bb-repeater-item-with-context-menu');
                 }
 
+                if (vm.itemIsSelectable()) {
+                    cls.push('bb-repeater-item-selectable');
+
+                    if (vm.bbRepeaterItemSelected) {
+                        cls.push('bb-repeater-item-selected');
+                    }
+                }
+
                 return cls;
             };
 
@@ -129,6 +137,12 @@
                 vm = null;
             });
 
+            function itemIsSelectable() {
+                return vm.bbRepeaterItemSelectable === 'true';
+            }
+
+            vm.itemIsSelectable = itemIsSelectable;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
@@ -137,7 +151,9 @@
 
         return {
             bindToController: {
-                bbRepeaterItemExpanded: '=?'
+                bbRepeaterItemExpanded: '=?',
+                bbRepeaterItemSelectable: '@?',
+                bbRepeaterItemSelected: '=?'
             },
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
