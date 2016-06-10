@@ -9,9 +9,11 @@
 
     bbMoment.$inject = ['$window'];
 
-    /*istanbul ignore next boilerplate require gunk */
+    /*istanbul ignore next */
+    /* boilerplate require gunk */
     function runRegisterMoment($window) {
 
+        /*istanbul ignore next */
         function registerMoment(moment) {
             $window.moment = moment;
         }

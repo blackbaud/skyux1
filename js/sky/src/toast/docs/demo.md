@@ -13,11 +13,10 @@ The toast service can be used to launch toast in a consistent way in a Sky UX ap
 
 ---
 
-### Toast Settings ##
-
- - `message` Used to provide a basic string message for simple toasts.
- - `templateUrl` Url for a template in the `$templateCache`. Used to provide an HTML template when displaying complex toasts.  Cannot be combined with the `message` option.
- - `controller` Used in conjunction with `templateUrl`. Specifies the name of a controller to apply to the template's scope.
- - `resolve` Items that will be resolved and passed to the controller as locals.
- - `toastType`  Specifies a style for the toast. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `info`)*
- - `timeout` Specifies the amount of time in milliseconds to display the toast message before it is automatically dismissed.  Specifying a value of `infinite` will show the toast message until the user clicks the close button.  *(Default: `10000`)*
+### Toast settings ##
+ - `message` &mdash; Provides a basic string message for simple toasts.
+ - `templateUrl` &mdash; URL for a template in the `$templateCache`. Used to provide an HTML template when displaying complex toasts.  Cannot be combined with the `message` option.
+ - `controller` &mdash; Used in conjunction with `templateUrl`. Specifies the name of a controller to apply to the template's scope.
+ - `resolve` &mdash; Items that will be resolved and passed to the controller as locals.
+ - `toastType` &mdash; Specifies a style for the toast. The valid options are `success`, `info`, `warning`, and `danger`. *(Default: `info`)*
+ - `timeout` &mdash; Specifies the amount of time in milliseconds to display the toast message before it is automatically dismissed.  Specifying a value of `infinite` will show the toast message until the user clicks the close button. *(Default: `10000`)*

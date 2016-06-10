@@ -211,7 +211,8 @@
 
                     el.empty().append(containerEl);
 
-                    /* istanbul ignore next: these internal variables can't be tested. */
+                    /* istanbul ignore next */
+                    /* these internal variables can't be tested. */
                     el.on('$destroy', function () {
                         containerEl = null;
                         expandEl = null;

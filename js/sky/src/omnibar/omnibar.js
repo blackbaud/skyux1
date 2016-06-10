@@ -100,7 +100,7 @@
                                 //This special case is just about dealing with an edge case issue with client side javascript.
                                 if ($window.localStorage) {
                                     omnibarIndicatesNullUserTime = $window.localStorage.omnibarIndicatesNullUserTime;
-                                    
+
                                     if (omnibarIndicatesNullUserTime && (new Date() - Date.parse(omnibarIndicatesNullUserTime)) / 1000 <= 10) {
                                         // We just looped through Auth within the last 10 seconds, so don't leave again now.
                                         return;
@@ -111,7 +111,8 @@
                                         $window.localStorage.omnibarIndicatesNullUserTime = (new Date()).toString();
                                     } catch (e) {
                                         // Safari private browsing will throw an exception on setting localStroage.
-                                        /*istanbul ignore next: super edge case */
+                                        /*istanbul ignore next */
+                                        /* super edge case */
                                         return;
                                     }
                                 } else {

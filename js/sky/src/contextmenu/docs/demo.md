@@ -1,12 +1,12 @@
 ---
-name: Context Menu
+name: Context menu
 icon: ellipsis-h
 summary: The context menu creates simple or complicated dropdown menus that you can incorporate into buttons.
 ---
 
 The context menu directives allow you to create SKY UX-themed [UI Bootstrap dropdowns](https://angular-ui.github.io/bootstrap/#/dropdown). The context menu module includes multiple directives.
 
-### Context Menu Settings
+### Context menu settings
     - `bb-context-menu` &mdash; Creates a dropdown menu with the context menu button.
         - `bb-context-menu-label` &mdash; Assigns a label to the context menu button for screen readers.
         - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu.

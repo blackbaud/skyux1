@@ -1,5 +1,5 @@
 ---
-name: Scroll into View
+name: Scroll into view
 icon: eye
 summary: The scroll-into-view component causes an element to scroll into the viewport when its bound value changes.
 ---

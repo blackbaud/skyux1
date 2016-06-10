@@ -6,7 +6,7 @@ summary: The data service provides access to convenience functions that allow yo
 
 The `bbData` service provides methods to load and save data through web service endpoints.
 
-### bbData Functions ###
+### bbData functions ###
 
   - `load(loadObj)` &mdash; Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request. An `httpResults` property contains the results from the underlying calls to [Angular's `$http` service](https://docs.angularjs.org/api/ng/service/$http). The object includes metadata about the response such as the HTTP status code.
     - `data` &mdash; A URL or an object with multiple URLs to be requested. `result.data` contains the promise results. For example: `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`. Requests to the URLs are made with credentials.

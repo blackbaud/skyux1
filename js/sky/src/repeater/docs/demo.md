@@ -8,7 +8,7 @@ The repeater directive creates a container to display formatted information for 
 
 When you create a repeater, you can specify whether to let users collapse and expand list items to hide and view their content. The default standard layout does not allow users to collapse items. The multiple-expand layout allows users to collapse and expand items as necessary. And the single-expand layout allows users to collapse and expand one item at a time.
 
-### Repeater Settings ###
+### Repeater settings ###
 - `bb-repeater` &mdash; Creates a container to display formatted information for a list of objects.
     - `bb-repeater-expand-mode` &mdash; *(Optional.)* Specifies the layout for the repeater list. The layout indicates whether users can collapse and expand repeater items. Items  in a collapsed state still display their titles. *(Default: `none`)*
         - `none` &mdash; Loads repeater items in an expanded state and does not allow users to collapse items. This standard layout provides the quickest access to the details about objects. It is best-suited for scenarios where the main content is concise and users need to view it frequently.

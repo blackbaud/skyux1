@@ -1,5 +1,5 @@
 ---
-name: File Attachments
+name: File attachments
 icon: cloud-upload
 summary: The file attachments module provides the ability to add multiple files to forms and then display information about the files.
 ---
@@ -14,7 +14,7 @@ class on the element that receives drop events to exempt it from the drop exclus
 
 The `bb-file-item` directive displays summary information about files that users attach  to forms. By default, the directive displays file names, delete buttons, and fields for names and tags.. For files from local drives, the directive also displays file sizes and thumbnails.
 
-### File Drop Settings ###
+### File drop settings ###
 - `bb-file-drop` &mdash; Provides an element for users to click to select files from local drives or to use as a drop zone to drag and drop files.
     - `bb-file-drop-accept` &mdash; *(Optional.)* Provides a comma-delimited string literal of MIME types that users can drop or select (`bb-file-drop-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-drop-accept="'image/png'"`) or a custom validation function (`bb-file-drop-accept="fileAttachmentDemo.validate($file)"`). By default, any type of file is allowed.
     - `bb-file-drop-multiple` &mdash; *(Optional.)* Indicates whether users can drag and drop multiple files at the same time. *(Default: `true`)* 
@@ -28,6 +28,6 @@ The `bb-file-item` directive displays summary information about files that users
     - `bb-file-drop-link-change` &mdash; *(Optional.)* Specifies a function to be called when users add hyperlinks. The function accepts a `link` parameter with a `url` property that contains the hyperlink.
     - `bb-file-drop-noclick` &mdash; *(Optional.)* Disables the option for users to click the element and select files through a file dialog. To disable the option, you include this attribute with no value.
 
-### File Item Settings ###
+### File item settings ###
 - `bb-file-item` &mdash; Displays summary information about files that users attach to forms. By default, the directive displays file names, delete buttons, and fields for names and tags. For files from local drives, it also displays file sizes and thumbnails.
 - `bb-file-item-delete` &mdash; Specifies a function to call when users click the delete button for an item. The deleted item is passed to the function.

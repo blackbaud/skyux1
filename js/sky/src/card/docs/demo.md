@@ -10,7 +10,7 @@ Cards frequently present users with a call to action. They can use visual cues t
 
 You can modify cards to handle a variety of scenarios, but they generally consist of three main parts: a title to identify what the card represents, content to display in the body of the card, and an action to let users act on the card. Each item is optional.
 
-### Card Settings ###
+### Card settings ###
 - `bb-card` &mdash; Creates a small container to highlight important information.
     - `bb-card-size` &mdash; Specifies the size of the card. For a large container, specify `large`. For a small container, specify `small`. *(Default: `large`)*
     - `bb-card-selectable` &mdash; Specifies whether to display a checkbox to the right of the title. Users can select the checkbox for one or more cards to then perform an action on the selected cards.

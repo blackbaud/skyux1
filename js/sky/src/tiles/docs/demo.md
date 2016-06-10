@@ -8,24 +8,24 @@ The `bb-tile` directive creates a collapsible container and is the bulding block
 
 When used on forms, it automatically adjusts the background color on the form and shrinks the tile header.
 
-### Tile Settings ###
+### Tile settings ###
 
- - `bb-tile-header` The header text for the tile.
- - `bb-tile-settings-click` A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header.  If not specified, the settings button is not displayed.
- - `bb-tile-collapsed` (optional) binds to the collapsed state of the tile so that the tile can respond to user setting collapsed state.
+ - `bb-tile-header` &mdash; The header text for the tile.
+ - `bb-tile-settings-click` &mdash; A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header.  If not specified, the settings button is not displayed.
+ - `bb-tile-collapsed` &mdash; (optional) binds to the collapsed state of the tile so that the tile can respond to user setting collapsed state.
 
-### Tile Dashboard Directive ###
+### Tile dashboard directive ###
 
 The `bb-tile-dashboard` directive allows you to have a set of tiles within a page which have controllable layouts and collapsed states. It depends on [angular-ui router](https://github.com/angular-ui/ui-router/wiki) to define states that map to tile controllers and templates.
 
-### Tile Dashboard Settings ###
+### Tile dashboard settings ###
 
-- `bb-tiles` An array of tile objects to be contained in the dashboard. Contains the following object:
-    - `id` Unique ID for the tile.
-    - `view_name` The name of the view for the tile defined in the ui-router `$stateProvider`.
-    - `collapsed` True if the tile should be collapsed, false otherwise.
-    - `collapsed_small` True if the tile should be collapsed in small screen state, false otherwise.
-- `bb-layout` An object containing information about how the tiles should be organized within the tile dashboard. Contains the following:
-    - `one_column_layout` Array of tile ids that correspond with how the tiles should be ordered in a one column layout (small screen) ex: `layout.one_column_layout = ['Tile1', 'Tile2'];`.
-    - `two_column_layout` Array that corresponds with how tiles should be ordered in a two column layout. ex: `layout.two_column_layout = [['Tile1'], ['Tile2']];` where `Tile1` is in the left hand column and `Tile2` is in the right hand column.
-- `bb-tile-dashboard-all-collapsed` If set to true, then collapses all tiles in the dashboard, if set to false, expands all tiles in the dashboard.
+- `bb-tiles` &mdash; An array of tile objects to be contained in the dashboard. Contains the following object:
+    - `id` &mdash; Unique ID for the tile.
+    - `view_name` &mdash; The name of the view for the tile defined in the ui-router `$stateProvider`.
+    - `collapsed` &mdash; True if the tile should be collapsed, false otherwise.
+    - `collapsed_small` &mdash; True if the tile should be collapsed in small screen state, false otherwise.
+- `bb-layout` &mdash; An object containing information about how the tiles should be organized within the tile dashboard. Contains the following:
+    - `one_column_layout` &mdash; Array of tile ids that correspond with how the tiles should be ordered in a one column layout (small screen) ex: `layout.one_column_layout = ['Tile1', 'Tile2'];`.
+    - `two_column_layout` &mdash; Array that corresponds with how tiles should be ordered in a two column layout. ex: `layout.two_column_layout = [['Tile1'], ['Tile2']];` where `Tile1` is in the left hand column and `Tile2` is in the right hand column.
+- `bb-tile-dashboard-all-collapsed` &mdash; If set to true, then collapses all tiles in the dashboard, if set to false, expands all tiles in the dashboard.
