@@ -11,6 +11,10 @@
                 return vm.isCollapsible && vm.titleElExists();
             }
 
+            function selectItem() {
+                vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
+            }
+
             vm.getCls = function () {
                 var cls = [];
 
@@ -31,6 +35,19 @@
                 }
 
                 return cls;
+            };
+
+            vm.labelClick = function ($event) {
+                $event.stopPropagation();
+            };
+
+            vm.selectItem = selectItem;
+
+            vm.headerClick = function ($event) {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                    $event.stopPropagation();
+                } 
             };
 
             vm.allowCollapse = allowCollapse;
@@ -92,12 +109,6 @@
             vm.bbRepeater = bbRepeater;
             syncChevronWithExpanded();
 
-            vm.headerClick = function () {
-                if (vm.isCollapsible) {
-                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
-                }
-            };
-
             scope.$watch(
                 titleElExists,
                 updateForExpandedState
@@ -147,6 +158,8 @@
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
+
+            vm.itemCheckId = 'bb-repeater-item-' + scope.$id;
         }
 
         return {

@@ -38,13 +38,25 @@
         flex-grow: 1;
     }
 
+    .bb-repeater-item-left {
+        display: flex;
+        align-items: baseline;
+        padding-top: $padding-half;
+    }
+
     .bb-repeater-item-header {
         align-items: center;
         display: flex;
     }
 
+    .bb-repeater-item-label {
+        display: block;
+        margin-bottom: 0;
+        font-weight: normal;
+    }
+
     .bb-repeater-item-context-menu {
-        padding: $padding-half $padding 0 0;
+        padding: 0 $padding 0 0;
         display: inline-block;
     }
 
@@ -90,7 +102,7 @@
 
     .bb-repeater-item-multiselect {
         display: inline-block;
-        padding-right: $padding-half;
+        padding-right: $padding;
     }
 
 }

@@ -6,12 +6,14 @@
     <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">
     </div>
   </div>
-  <div class="bb-repeater-item-right" ng-click="bbRepeaterItem.bbRepeaterItemSelected = !bbRepeaterItem.bbRepeaterItemSelected">
-    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick()">
+  <div class="bb-repeater-item-right" ng-click="bbRepeaterItem.selectItem()">
+    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick($event)">
       <h1 class="bb-repeater-item-title" ng-show="bbRepeaterItem.titleElExists()" ng-transclude="bbRepeaterItemTitle"></h1>
       <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>
     </header>
-    <div class="bb-repeater-item-content" ng-transclude="bbRepeaterItemContent">
-    </div>
+    <label class="bb-repeater-item-label" for="{{bbRepeaterItem.itemCheckId}}" ng-click="bbRepeaterItem.labelClick($event)">
+      <div class="bb-repeater-item-content" ng-transclude="bbRepeaterItemContent">
+      </div>
+    </label>
   </div>
 </section>
