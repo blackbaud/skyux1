@@ -23,7 +23,6 @@
         'sky.help',
         'sky.helpbutton',
         'sky.highlight',
-        'sky.keyinfo',
         'sky.mediabreakpoints',
         'sky.modal',
         'sky.moment',
