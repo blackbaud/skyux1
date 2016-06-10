@@ -3,14 +3,12 @@
 (function () {
     'use strict';
 
-    function bbAlert() {
-        function Controller() {
-            var vm = this;
-            vm.close = function () {
-                vm.bbAlertClosed = true;
-            };
-        }
-    }
+    function Controller() {
+        var vm = this;
+        vm.close = function () {
+            vm.bbAlertClosed = true;
+        };
+    }   
 
     angular.module('sky.alert.component', ['sky.resources'])
         .component('bbAlert', {
@@ -20,6 +18,7 @@
                 bbAlertClosed: '=?'
             },
             templateUrl: 'sky/templates/alert/alert.html',
-            transclude: true
+            transclude: true,
+            controller: Controller
         });
 }());
