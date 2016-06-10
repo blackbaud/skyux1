@@ -54,7 +54,8 @@ describe('Phone field directive', function () {
     compileDirective = function ($scope) {
         var html = '<form name="form">' +
                    '  <input bb-phone-field="phoneFieldConfig" ' +
-                   '         ng-model="phoneNumber"/>' +
+                   '         ng-model="phoneNumber"' +
+                   '         name="phoneNumber"/>' +
                    '</form>';
         return $compile(html)($scope);
     };
@@ -226,5 +227,49 @@ describe('Phone field directive', function () {
         // ** clean up **
         el.remove();
     });
+
+    it('should set the value provided to ng-model to a nationally formatted number when the input text is changed manually.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** act **
+        directiveElements.input(el).val(nationalCountryData.unformattedTestNumber).change();
+
+        // ** assert **
+        expect($scope.phoneNumber).toBe(nationalCountryData.formattedTestNumber);
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should set the value provided to ng-model to a nationally formatted number when the ng-model variable is changed programmatically.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** act **
+        $scope.phoneNumber = nationalCountryData.unformattedTestNumber;
+        $scope.$digest();
+
+        // ** assert **
+        expect($scope.form.phoneNumber.$viewValue).toBe(nationalCountryData.formattedTestNumber);
+
+        // ** clean up **
+        el.remove();
+    });
+
 
 });

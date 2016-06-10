@@ -5,7 +5,7 @@
     /**
     * bbPhoneField directive controller for bb-phone-field
     */
-    function bbPhoneField() {
+    function bbPhoneField(bbPhoneFieldConfig) {
         function link($scope, el, attrs, ngModel) {
             // ** variables **
             var input = el;
@@ -22,7 +22,7 @@
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
-                    if ($scope.bbPhoneFieldConfig.props && $scope.bbPhoneFieldConfig.props.countryIso2 === selectedCountryData.iso2) {
+                    if (bbPhoneFieldConfig && bbPhoneFieldConfig.countryIso2 === selectedCountryData.iso2) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
@@ -39,17 +39,21 @@
             // when the country changes, update the scope's bbPhoneFieldConfig property
             input.on('countrychange', function (e, countryData) {
                 ngModel.$setViewValue(getFormattedNumber());
-                if ($scope.bbPhoneFieldConfig.props) {
+                if (bbPhoneFieldConfig) {
                     $scope.$apply(function () {
-                                $scope.bbPhoneFieldConfig.props.selectedCountry = countryData;
-                            });
+                            bbPhoneFieldConfig.selectedCountry = countryData;
+                        });
                 }
             });
 
             // ** ng-model settings **
             // anytime ng-model is updated, its final value should be the formatted phone number
-            $scope.$watch(attrs.ngModel, function () {
-                ngModel.$setViewValue(getFormattedNumber());
+            ngModel.$parsers.unshift(function () {
+                return getFormattedNumber();
+            });
+            ngModel.$formatters.unshift(function (value) {
+                input.val(value);
+                return getFormattedNumber();
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
@@ -58,11 +62,12 @@
 
             // ** bbPhoneFieldConfig properties **
             if ($scope.bbPhoneFieldConfig.props) {
+                bbPhoneFieldConfig = $scope.bbPhoneFieldConfig.props;
                 // if a default country is provided, we set that as the initial country
-                if ($scope.bbPhoneFieldConfig.props.countryIso2) {
+                if (bbPhoneFieldConfig.countryIso2) {
                     input.intlTelInput('setCountry', $scope.bbPhoneFieldConfig.props.countryIso2);
                 }
-                $scope.bbPhoneFieldConfig.props.selectedCountry = input.intlTelInput('getSelectedCountryData');
+                bbPhoneFieldConfig.selectedCountry = input.intlTelInput('getSelectedCountryData');
             }
 
             // ** ARIA (Accessibility Rich Internet Applications) **
@@ -86,6 +91,8 @@
         };
     }
 
-    angular.module('sky.phonefield.directive', [])
+    bbPhoneField.$inject = ['bbPhoneFieldConfig'];
+
+    angular.module('sky.phonefield.directive', ['sky.phonefield.config'])
         .directive('bbPhoneField', bbPhoneField);
 }());
