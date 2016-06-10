@@ -1,7 +1,7 @@
 /*jshint browser: true, jasmine: true */
 /*global inject, module */
 
-describe('KeyInfo component', function () {
+describe('Key info component', function () {
     'use strict';
 
     var $compile,
