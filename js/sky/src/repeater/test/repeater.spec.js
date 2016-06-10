@@ -114,7 +114,7 @@ describe('Repeater directive', function () {
 
         beforeEach(function () {
             repeaterMultiselectHtml = '<bb-repeater>' +
-                '<bb-repeater-item bb-repeater-item-selectable="{{locals.selectable}}" bb-repeater-item-selected="locals.selected">' +
+                '<bb-repeater-item bb-repeater-item-selectable="{{locals.selectable}}" bb-repeater-item-input-label="locals.inputLabel" bb-repeater-item-selected="locals.selected">' +
                 '<bb-repeater-item-title>My Title</bb-repeater-item-title>' +
                 '<bb-repeater-item-content>My Content</bb-repeater-item-content>' +
                 '</bb-repeater-item>' +
@@ -149,6 +149,39 @@ describe('Repeater directive', function () {
             $scope.$digest();
 
             expect(getItemCheck(el).length).toBe(0);
+        });
+
+        it('should use bbRepeaterItemInputLabel as aria-label when specified', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                inputLabel: 'Yo dawg'
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            $scope.$digest();
+
+            expect(getItemCheck(el).length).toBe(1);
+            expect(el.find('input').attr('aria-label')).toBe('Yo dawg');
+        });
+
+        it('should use the title contents as aria-label when bbRepeaterItemInputLabel is not specified', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            $scope.$digest();
+
+            expect(getItemCheck(el).length).toBe(1);
+            expect(el.find('input').attr('aria-label')).toBe('My Title');
         });
 
 
