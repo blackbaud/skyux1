@@ -23,7 +23,8 @@ describe('repeaters', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'repeaters',
             selector: '#screenshot-repeaters-full',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -33,9 +34,10 @@ describe('repeaters', function () {
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'repeaters-component-collapsed',
+            screenshotName: 'repeaters_component_collapsed',
             selector: '#screenshot-repeaters-component-full',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -46,9 +48,10 @@ describe('repeaters', function () {
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'repeaters-component-expanded',
+            screenshotName: 'repeaters_component_expanded',
             selector: '#screenshot-repeaters-component-full',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -60,9 +63,10 @@ describe('repeaters', function () {
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'repeaters-component-expanded-no-context-menu',
+            screenshotName: 'repeaters_component_expanded_no_context_menu',
             selector: '#screenshot-repeaters-component-full',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -73,9 +77,24 @@ describe('repeaters', function () {
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'repeaters-component-expanded-no-title',
+            screenshotName: 'repeaters_component_expanded_no_title',
             selector: '#screenshot-repeaters-component-full',
-            done: done
+            done: done,
+            checkAccessibility: true
+        });
+    });
+    
+    it('should match the baseline repeater component screenshot when no checkbox exists', function (done) {
+        var result = createBrowserResult(true)
+            .click('#screenshot-repeaters-hide-checkbox');
+
+        common.compareScreenshot({
+            browserResult: result,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'repeaters_component_expanded_no_checkbox',
+            selector: '#screenshot-repeaters-component-full',
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -86,9 +105,10 @@ describe('repeaters', function () {
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
-            screenshotName: 'repeaters-component-expanded-no-expand',
+            screenshotName: 'repeaters_component_expanded_no_expand',
             selector: '#screenshot-repeaters-component-full',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 });

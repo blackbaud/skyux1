@@ -523,6 +523,10 @@
       "_description": "Text displayed on the button in single select mode to clear selection and close form",
       "message": "Clear selection"
     },
+    "tile_chevron_label": {
+        "_description": "Label for the expand and collapse chevron in tiles",
+        "message": "Expand or collapse"
+    },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",
         "message": "Finish"

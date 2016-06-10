@@ -37,10 +37,6 @@
                 return cls;
             };
 
-            vm.labelClick = function ($event) {
-                $event.stopPropagation();
-            };
-
             vm.selectItem = selectItem;
 
             vm.headerClick = function ($event) {
@@ -114,6 +110,16 @@
                 updateForExpandedState
             );
 
+            function getTitleTextContent() {
+                return vm.titleEl.text();
+            }
+
+            if (vm.bbRepeaterItemInputLabel === null || angular.isUndefined(vm.bbRepeaterItemInputLabel)) {
+                scope.$watch(getTitleTextContent, function (newValue) {
+                    vm.bbRepeaterItemInputLabel = newValue;
+                });
+            }
+
             scope.$watch(function () {
                 return vm.isCollapsible;
             }, function (newValue) {
@@ -159,14 +165,14 @@
                 animateEnabled = true;
             });
 
-            vm.itemCheckId = 'bb-repeater-item-' + scope.$id;
         }
 
         return {
             bindToController: {
                 bbRepeaterItemExpanded: '=?',
                 bbRepeaterItemSelectable: '@?',
-                bbRepeaterItemSelected: '=?'
+                bbRepeaterItemSelected: '=?',
+                bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
@@ -185,7 +191,7 @@
     bbRepeaterItem.$inject = ['$timeout'];
 
 
-    angular.module('sky.repeater.item.directive', ['sky.chevron', 'sky.resources'])
+    angular.module('sky.repeater.item.directive', ['sky.chevron', 'sky.check', 'sky.resources'])
         .directive('bbRepeaterItem', bbRepeaterItem);
 
 }());

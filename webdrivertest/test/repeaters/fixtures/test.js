@@ -17,12 +17,17 @@
             vm.showContextMenu = false;
         };
 
+        vm.hideCheckbox = function () {
+            vm.showCheckbox = false;
+        };
+
         vm.setExpandMode = function (expandMode) {
             vm.expandMode = expandMode;
         };
 
         vm.showTitle = true;
         vm.showContextMenu = true;
+        vm.showCheckbox = true;
         vm.expandMode = 'multiple';
 
         vm.items = [
