@@ -13,13 +13,11 @@
 }
 
 .bb-key-info-value {
-    font: 400 $bb-alternate-font-size-sm $bb-font-family-narrow;
-    color: $text-color;
+    @include bb-headline();
 }
 
 .bb-key-info-label {
-    font: 400 $font-size-base $font-family-sans-serif;
-    color: $bb-text-deemphasized-color;
+    @include bb-field-label();
 }
 
 .bb-key-info-horizontal {
