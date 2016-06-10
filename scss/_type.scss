@@ -33,8 +33,7 @@ Semantic font class styles are based on existing styling of analogous components
 }
 
 .bb-headline {
-    font: 400 $bb-alternate-font-size-sm $bb-font-family-narrow;
-    color: $text-color;
+    @include bb-headline();
 }
 
 .bb-emphasized {
@@ -48,6 +47,5 @@ Semantic font class styles are based on existing styling of analogous components
 }
 
 .bb-field-label {
-    font: 400 $font-size-base $font-family-sans-serif;
-    color: $bb-text-deemphasized-color;
+    @include bb-field-label();
 }
