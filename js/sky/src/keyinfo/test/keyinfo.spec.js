@@ -41,3 +41,4 @@ describe('Key info component', function () {
         expect(el.find('.bb-key-info-label')).toHaveText(keylabel);
     });
 });
+ 

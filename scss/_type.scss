@@ -29,7 +29,7 @@ Semantic font class styles are based on existing styling of analogous components
 
 .bb-subsection-heading {
     font: 400 17px $font-family-sans-serif;
-    color: #707374;
+    color: $bb-text-deemphasized-color;
 }
 
 .bb-headline {
@@ -44,10 +44,10 @@ Semantic font class styles are based on existing styling of analogous components
 
 .bb-deemphasized {
     font: 400 italic 13px $font-family-sans-serif;
-    color: #707374;
+    color: $bb-text-deemphasized-color;
 }
 
 .bb-field-label {
     font: 400 13px $font-family-sans-serif;
-    color: #707374;
+    color: $bb-text-deemphasized-color;
 }
