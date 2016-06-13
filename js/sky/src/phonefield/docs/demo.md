@@ -13,7 +13,7 @@ The phone number component wraps up the [intl-tel-input jQuery plugin](http://ja
 ---
 
 ### Phone field settings ###
-- `bb-phone-field` &mdash; *(Optional.)* A variable that holds settings for the global configuration object `bbPhoneFieldConfig`.
+- `bb-phone-field` &mdash; A variable that holds settings for the global configuration object `bbPhoneFieldConfig`.
 
 ### bbPhoneFieldConfig settings ###
 - `countryIso2`: The ISO alpha-2 code of the country that the plugin will consider the default country. When the default country is selected, `ng-model`'s value will be formatted in the default country's national phone format. When the default country is not selected, `ng-model`'s value will be formatted in the selected country's international phone format (dial code included).
