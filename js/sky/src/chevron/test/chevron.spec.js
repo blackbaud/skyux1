@@ -1,7 +1,7 @@
 /*jshint browser: true, jasmine: true */
 /*global $, inject, module */
 
-describe('Chevron directive', function () {
+describe('Chevron component', function () {
     'use strict';
 
     var $compile,
