@@ -24,7 +24,7 @@
     "angular-mocks": "1.5.3",
     "assemble-yaml": "0.2.1",
     "axe-core": "1.1.1",
-    "blackbaud-stache": "0.7.23",
+    "blackbaud-stache": "0.7.25",
     "browserstacktunnel-wrapper": "1.4.2",
     "codecov": "1.0.1",
     "dotenv": "2.0.0",
