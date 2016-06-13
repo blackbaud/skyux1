@@ -11,7 +11,8 @@ describe('Phone field directive', function () {
         nationalCountryData,
         internationalCountryData,
         setNumber,
-        setCountry;
+        setCountry,
+        bbPhoneFieldConfig;
 
     directiveElements =
     {
@@ -71,15 +72,17 @@ describe('Phone field directive', function () {
     beforeEach(module('ngMock'));
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.phonefield'));
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _bbPhoneFieldConfig_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
+        bbPhoneFieldConfig = _bbPhoneFieldConfig_;
     }));
 
     it('should implement the intl-tel-input jQuery plugin and provide an intl-tel-input div container, input, and flag contianer.', function () {
         // ** arrange **
         var el,
             $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {};
 
         // ** act **
         el = compileDirective($scope);
@@ -271,5 +274,23 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
+    it('should set the scope bbPhoneField countryIso2 to that of bbPhoneFieldConfig if no countryIso2 is provided in the bbPhoneField param.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: undefined
+        };
+        // ** act **
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** assert **
+        expect($scope.phoneFieldConfig.countryIso2).toBe(bbPhoneFieldConfig.countryIso2);
+
+        // ** clean up **
+        el.remove();
+    });
 
 });

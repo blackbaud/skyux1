@@ -3,8 +3,7 @@
     'use strict';
 
     var bbPhoneFieldConfig = {
-        countryIso2: '',
-        selectedCountry: undefined
+        countryIso2: 'us'
     };
 
     angular.module('sky.phonefield.config', [])

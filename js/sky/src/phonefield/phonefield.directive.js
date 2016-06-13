@@ -6,9 +6,11 @@
     * bbPhoneField directive controller for bb-phone-field
     */
     function bbPhoneField(bbPhoneFieldConfig) {
-        function link($scope, el, attrs, ngModel) {
+        function link($scope, el, attrs, ctrls) {
             // ** variables **
-            var input = el;
+            var input = el,
+                phoneField = ctrls[0],
+                ngModel = ctrls[1];
 
             /**
             * getFormattedNumber returns the national or internationally formatted phone number in the input
@@ -22,7 +24,7 @@
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
-                    if (bbPhoneFieldConfig && bbPhoneFieldConfig.countryIso2 === selectedCountryData.iso2) {
+                    if (phoneField.props.countryIso2 === selectedCountryData.iso2) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
@@ -39,11 +41,9 @@
             // when the country changes, update the scope's bbPhoneFieldConfig property
             input.on('countrychange', function (e, countryData) {
                 ngModel.$setViewValue(getFormattedNumber());
-                if (bbPhoneFieldConfig) {
-                    $scope.$apply(function () {
-                            bbPhoneFieldConfig.selectedCountry = countryData;
-                        });
-                }
+                $scope.$apply(function () {
+                        phoneField.props.selectedCountry = countryData;
+                    });
             });
 
             // ** ng-model settings **
@@ -61,14 +61,12 @@
             };
 
             // ** bbPhoneFieldConfig properties **
-            if ($scope.bbPhoneFieldConfig.props) {
-                bbPhoneFieldConfig = $scope.bbPhoneFieldConfig.props;
-                // if a default country is provided, we set that as the initial country
-                if (bbPhoneFieldConfig.countryIso2) {
-                    input.intlTelInput('setCountry', $scope.bbPhoneFieldConfig.props.countryIso2);
-                }
-                bbPhoneFieldConfig.selectedCountry = input.intlTelInput('getSelectedCountryData');
+            // if a default country as countryIso2 is not provided, we set it to bbPhoneFieldConfig's countryIso2
+            if (!phoneField.props.countryIso2) {
+                phoneField.props.countryIso2 = bbPhoneFieldConfig.countryIso2;
             }
+            input.intlTelInput('setCountry', phoneField.props.countryIso2);
+            phoneField.props.selectedCountry = input.intlTelInput('getSelectedCountryData');
 
             // ** ARIA (Accessibility Rich Internet Applications) **
             // We hide the country dropdown from a screen reader because the "dropdown"
@@ -84,10 +82,10 @@
                 props: '=bbPhoneField'
             },
             controller: bbPhoneField,
-            controllerAs: "bbPhoneFieldConfig",
+            controllerAs: "bbPhoneField",
             link: link,
-            restrict: 'A',
-            require: 'ngModel'
+            require: ['bbPhoneField', 'ngModel'],
+            restrict: 'A'
         };
     }
 
