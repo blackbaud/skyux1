@@ -96,6 +96,14 @@
 (function () {
     'use strict';
 
+    angular.module('sky.keyinfo', ['sky.keyinfo.component']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module('sky.pagesummary', []);
 }());
 
@@ -6367,6 +6375,23 @@
         }]);
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+    
+    angular.module('sky.keyinfo.component', [])
+        .component('bbKeyInfo', {
+            bindings: {
+                bbKeyInfoLayout: '@?'
+            }, 
+            templateUrl: 'sky/templates/keyinfo/keyinfo.component.html',
+            transclude: {
+                value: 'bbKeyInfoValue',
+                label: 'bbKeyInfoLabel'
+            }
+        });
+}());
 /*global angular, define, enquire, require */
 
 (function () {
@@ -11122,6 +11147,7 @@ angular.module('sky.palette.config', [])
         'sky.help',
         'sky.helpbutton',
         'sky.highlight',
+        'sky.keyinfo',
         'sky.mediabreakpoints',
         'sky.modal',
         'sky.moment',
@@ -11838,6 +11864,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/seemore.html',
         '<div bb-text-expand="data" bb-text-expand-max-length="100" style="white-space: pre-wrap"></div>\n' +
         '');
+    $templateCache.put('sky/templates/keyinfo/keyinfo.component.html',
+        '<div ng-class="{\'bb-key-info-horizontal\': $ctrl.bbKeyInfoLayout === \'horizontal\'}" class="bb-key-info">\n' +
+        '    <div class="bb-key-info-value" ng-transclude="value"></div>\n' +
+        '    <div class="bb-key-info-label" ng-transclude="label"></div>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/modal/modal.html',
         '<div class="bb-modal-content-wrapper" ng-transclude></div>');
     $templateCache.put('sky/templates/modal/modalfooter.html',
@@ -12024,12 +12056,6 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</button>\n' +
         '');
-    $templateCache.put('sky/templates/tabs/tab.html',
-        '<div ng-hide="!tabsInitialized" data-bbauto-field="{{bbTabAutomationId}}" class="responsiveTabControl">\n' +
-        '    <ul ng-transclude>\n' +
-        '\n' +
-        '    </ul>\n' +
-        '</div>');
     $templateCache.put('sky/templates/tabset/addbutton.html',
         '<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary">\n' +
         '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span>\n' +
