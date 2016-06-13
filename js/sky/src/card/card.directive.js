@@ -82,6 +82,12 @@
             };
         }
 
+        function cardIsSelectable() {
+            return vm.bbCardSelectable === 'true';
+        }
+
+        vm.cardIsSelectable = cardIsSelectable;
+
         components.forEach(addComponentSetter);
 
         vm.getClass = function () {

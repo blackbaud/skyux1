@@ -25,11 +25,16 @@
       <input type="checkbox" bb-check ng-model="repeaterCtrl.showTitle" /> Show title
     </label>
   </div>
+   <div class="form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="repeaterCtrl.showCheck" /> Show checkbox
+    </label>
+  </div>
   <button type="button" class="btn btn-primary" ng-click="repeaterCtrl.addItem()">Add an item</button>
   <div class="row">
     <div class="col-md-6">
       <bb-repeater bb-repeater-expand-mode="{{repeaterCtrl.expandMode}}">
-        <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded">
+        <bb-repeater-item ng-repeat="item in repeaterCtrl.items" bb-repeater-item-expanded="item.expanded" bb-repeater-item-selectable="{{repeaterCtrl.showCheck}}" bb-repeater-item-selected="item.isSelected">
           <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
             <bb-context-menu>
               <bb-context-menu-item>Mark completed</bb-context-menu-item>

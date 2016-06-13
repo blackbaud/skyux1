@@ -31,7 +31,7 @@
     <div id="screenshot-repeaters-component-full" ng-show="repeaterCtrl.showComponent">
       <div id="screenshot-repeater-component">
         <bb-repeater bb-repeater-expand-mode="{{repeaterCtrl.expandMode}}">
-          <bb-repeater-item ng-repeat="item in repeaterCtrl.items">
+          <bb-repeater-item bb-repeater-item-input-label="'Repeater item input'" ng-repeat="item in repeaterCtrl.items" bb-repeater-item-selectable="{{repeaterCtrl.showCheckbox}}">
             <bb-repeater-item-context-menu ng-if="repeaterCtrl.showContextMenu">
               <bb-context-menu>
                 <bb-context-menu-item>Item 1</bb-context-menu-item>
@@ -50,6 +50,7 @@
     <button type="button" id="screenshot-repeaters-switch-to-component" ng-click="repeaterCtrl.switchToComponent()">Switch to component</button>
     <button type="button" id="screenshot-repeaters-hide-title" ng-click="repeaterCtrl.hideTitle()">Hide title</button>
     <button type="button" id="screenshot-repeaters-hide-context-menu" ng-click="repeaterCtrl.hideContextMenu()">Hide context menu</button>
+     <button type="button" id="screenshot-repeaters-hide-checkbox" ng-click="repeaterCtrl.hideCheckbox()">Hide checkbox</button>
     <button type="button" id="screenshot-repeaters-expand-mode-none" ng-click="repeaterCtrl.setExpandMode('none')">Set none mode</button>
   </div>
 </div>
