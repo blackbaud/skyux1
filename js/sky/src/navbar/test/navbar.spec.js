@@ -1,7 +1,7 @@
 /*jshint browser: true, jasmine: true */
 /*global inject, module */
 
-describe('Navbar directive', function () {
+describe('Navbar component', function () {
     'use strict';
 
     var $compile,
