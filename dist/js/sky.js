@@ -3,9 +3,9 @@
 (function () {
     'use strict';
 
-    angular.module('sky.alert', ['sky.alert.directive']);
-}());
 
+    angular.module('sky.alert', ['sky.alert.component']);
+}());
 /*global angular */
 
 (function () {
@@ -98,7 +98,6 @@
 
     angular.module('sky.keyinfo', ['sky.keyinfo.component']);
 }());
-
 /*global angular */
 
 (function () {
@@ -249,35 +248,24 @@
 (function () {
     'use strict';
 
-    function bbAlert() {
-        function Controller() {
+    function Controller() {
+        var vm = this;
+        vm.close = function () {
+            vm.bbAlertClosed = true;
+        };
+    }   
 
-        }
-
-        function link(scope, el, attrs, vm) {
-            vm.close = function () {
-                vm.bbAlertClosed = true;
-            };
-        }
-
-        return {
-            restrict: 'E',
-            controller: Controller,
-            controllerAs: 'bbAlert',
-            bindToController: {
+    angular.module('sky.alert.component', ['sky.resources'])
+        .component('bbAlert', {
+            bindings: {
                 bbAlertType: '@',
                 bbAlertCloseable: '@',
                 bbAlertClosed: '=?'
             },
-            link: link,
-            scope: {},
             templateUrl: 'sky/templates/alert/alert.html',
-            transclude: true
-        };
-    }
-
-    angular.module('sky.alert.directive', ['sky.resources'])
-        .directive('bbAlert', bbAlert);
+            transclude: true,
+            controller: Controller
+        });
 }());
 
 /*jslint browser: true, plusplus: true */
@@ -11207,8 +11195,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</span>\n' +
         '');
     $templateCache.put('sky/templates/alert/alert.html',
-        '<div class="alert" ng-class="[\'alert-\' + (bbAlert.bbAlertType || \'warning\'), bbAlert.bbAlertCloseable === \'true\' ? \'alert-dismissible\' : null]" ng-show="!bbAlert.bbAlertClosed" role="alert">\n' +
-        '    <button ng-show="bbAlert.bbAlertCloseable === \'true\'" type="button" class="close" ng-click="bbAlert.close({$event: $event})">\n' +
+        '<div class="alert" ng-class="[\'alert-\' + ($ctrl.bbAlertType || \'warning\'), $ctrl.bbAlertCloseable === \'true\' ? \'alert-dismissible\' : null]" ng-show="!$ctrl.bbAlertClosed" role="alert">\n' +
+        '    <button ng-show="$ctrl.bbAlertCloseable === \'true\'" type="button" class="close" ng-click="$ctrl.close({$event: $event})">\n' +
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'alert_close\' | bbResources}}</span>\n' +
         '    </button>\n' +
@@ -11833,8 +11821,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div ng-class="{\'bb-key-info-horizontal\': $ctrl.bbKeyInfoLayout === \'horizontal\'}" class="bb-key-info">\n' +
         '    <div class="bb-key-info-value" ng-transclude="value"></div>\n' +
         '    <div class="bb-key-info-label" ng-transclude="label"></div>\n' +
-        '</div>\n' +
-        '');
+        '</div>');
     $templateCache.put('sky/templates/modal/modal.html',
         '<div class="bb-modal-content-wrapper" ng-transclude></div>');
     $templateCache.put('sky/templates/modal/modalfooter.html',
