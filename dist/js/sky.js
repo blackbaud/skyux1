@@ -48,7 +48,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.chevron', ['sky.chevron.directive']);
+    angular.module('sky.chevron', ['sky.chevron.component']);
 }());
 
 /*global angular */
@@ -1449,6 +1449,20 @@
 (function () {
     'use strict';
 
+    angular.module('sky.chevron.component', ['sky.chevron.controller'])
+        .component('bbChevron', {
+            bindings: {
+                bbChevronDirection: '=?'
+            },
+            controller: 'BBChevronController',
+            templateUrl: 'sky/templates/chevron/chevron.component.html'
+        });
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+
     function BBChevronController(bbResources) {
         var vm = this;
 
@@ -1475,27 +1489,6 @@
 
     angular.module('sky.chevron.controller', ['sky.resources'])
         .controller('BBChevronController', BBChevronController);
-}());
-
-/*global angular */
-
-(function () {
-    'use strict';
-
-    function bbChevron() {
-        return {
-            bindToController: {
-                bbChevronDirection: '=?'
-            },
-            controller: 'BBChevronController',
-            controllerAs: 'bbChevron',
-            scope: {},
-            templateUrl: 'sky/templates/chevron/chevron.directive.html'
-        };
-    }
-
-    angular.module('sky.chevron.directive', ['sky.chevron.controller'])
-        .directive('bbChevron', bbChevron);
 }());
 
 /*global angular */
@@ -11346,8 +11339,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/chevron/chevron.directive.html',
-        '<button type="button" class="bb-chevron" ng-class="bbChevron.getCls()" ng-click="bbChevron.click($event)" aria-label="{{bbChevron.getLabel()}}">\n' +
+    $templateCache.put('sky/templates/chevron/chevron.component.html',
+        '<button type="button" class="bb-chevron" ng-class="$ctrl.getCls()" ng-click="$ctrl.click($event)" aria-label="{{$ctrl.getLabel()}}">\n' +
         '  <i class="bb-chevron-part bb-chevron-left"></i>\n' +
         '  <i class="bb-chevron-part bb-chevron-right"></i>\n' +
         '</button>\n' +
