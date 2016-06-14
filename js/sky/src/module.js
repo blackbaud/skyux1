@@ -10,6 +10,7 @@
         'sky.autonumeric',
         'sky.avatar',
         'sky.card',
+        'sky.carousel',
         'sky.check',
         'sky.checklist',
         'sky.chevron',
