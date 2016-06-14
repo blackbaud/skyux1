@@ -10,7 +10,7 @@
     function Controller($element) {
         
         /*jslint unparam: true */
-        $element.on('mouseenter', '.dropdown', function () {
+        ($element).on('mouseenter', '.dropdown', function () {
             toggleOpen(this, 'add');
         }).on('mouseleave', '.dropdown', function () {
             toggleOpen(this, 'remove');
