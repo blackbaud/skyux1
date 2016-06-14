@@ -1,0 +1,6 @@
+coverage:
+  round: down
+  status:
+    patch:
+      default:
+        target: 100%
