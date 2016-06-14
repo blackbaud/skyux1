@@ -1,41 +1,9 @@
 <div ng-controller="CarouselTestController as carouselCtrl">
+  
   <bb-carousel class="bb-carousel-card">
-    <bb-carousel-item>
+    <bb-carousel-item ng-repeat="item in carouselCtrl.items">
       <bb-card bb-card-size="large">
-        <bb-card-title>Large card 1</bb-card-title>
-        <bb-card-content>
-          This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
-        </bb-card-content>
-        <bb-card-actions>
-          <button type="button" class="btn btn-default">Click me</button>
-        </bb-card-actions>
-      </bb-card>
-    </bb-carousel-item>
-    <bb-carousel-item>
-      <bb-card bb-card-size="large">
-        <bb-card-title>Large card 2</bb-card-title>
-        <bb-card-content>
-          This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
-        </bb-card-content>
-        <bb-card-actions>
-          <button type="button" class="btn btn-default">Click me</button>
-        </bb-card-actions>
-      </bb-card>
-    </bb-carousel-item>
-    <bb-carousel-item>
-      <bb-card bb-card-size="large">
-        <bb-card-title>Large card 3</bb-card-title>
-        <bb-card-content>
-          This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
-        </bb-card-content>
-        <bb-card-actions>
-          <button type="button" class="btn btn-default">Click me</button>
-        </bb-card-actions>
-      </bb-card>
-    </bb-carousel-item>
-    <bb-carousel-item>
-      <bb-card bb-card-size="large">
-        <bb-card-title>Large card 4</bb-card-title>
+        <bb-card-title>Large card {{item}}</bb-card-title>
         <bb-card-content>
           This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
         </bb-card-content>

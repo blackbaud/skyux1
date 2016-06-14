@@ -3,8 +3,12 @@
 (function () {
     'use strict';
 
-    function Controller($scope) {
+    function Controller($element) {
         var vm = this;
+
+        vm.elIsItem = function (el) {
+            return $element[0].contains(el);
+        };
 
         vm.itemClick = function () {
             vm.carouselCtrl.setSelectedItem(vm);
@@ -15,7 +19,7 @@
         };
     }
 
-    Controller.$inject = ['$scope'];
+    Controller.$inject = ['$element'];
 
     angular.module('sky.carousel.item.component', [])
         .component('bbCarouselItem', {

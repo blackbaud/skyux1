@@ -49,7 +49,21 @@
         }
 
         function createTransformCss(offset) {
-            return 'translate3d(' + offset + '%, 0, 0) scale(' + (offset ? '0.9' : '1') + ')';
+            var scale = (offset ? '0.9' : '1');
+
+            return 'translate3d(' + offset + '%, 0, 0) scale(' + scale + ')';
+        }
+
+        function getElIndex(item) {
+            var i,
+                itemEls = getItemEls(),
+                n;
+
+            for (i = 0, n = itemEls.length; i < n; i++) {
+                if (item.elIsItem(itemEls[i])) {
+                    return i;
+                }
+            }
         }
 
         vm.currentItemIndex = 0;
@@ -67,7 +81,7 @@
                 offset;
 
             if (typeof item !== 'number') {
-                item = vm.items.indexOf(item);
+                item = getElIndex(item);
             }
 
             if (!allowIndex(item)) {
