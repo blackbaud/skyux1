@@ -4,7 +4,7 @@ icon: bell
 summary: The alert component displays a SKY UX-themed Bootstrap alert.
 ---
 
-The alert directive displays a SKY UX-themed Bootstrap alert. It includes an option to let users dismiss the alert with a close button. For information about the Bootstrap alert, see the [Bootstrap documentation](http://getbootstrap.com/components/#alerts).
+The alert component displays a SKY UX-themed Bootstrap alert. It includes an option to let users dismiss the alert with a close button. For information about the Bootstrap alert, see the [Bootstrap documentation](http://getbootstrap.com/components/#alerts).
 
 ### Alert settings ###
     - `bb-alert` &mdash; Creates a SKY UX-themed Bootstrap alert.
