@@ -6735,25 +6735,26 @@
     function toggleOpen(el, action) {
         $(el)[action + 'Class']('open');
     }
-
+    
+    function Controller($element) {
+        
+        /*jslint unparam: true */
+        ($element).on('mouseenter', '.dropdown', function () {
+            toggleOpen(this, 'add');
+        }).on('mouseleave', '.dropdown', function () {
+            toggleOpen(this, 'remove');
+        }).on('click', '.dropdown-menu a', function () {
+            toggleOpen($('.dropdown', $element), 'remove');
+        });
+    }
+    
+    Controller.$inject = ['$element']; 
     angular.module('sky.navbar', [])
-        .directive('bbNavbar', function () {
-            return {
-                restrict: 'E',
-                replace: true,
-                transclude: true,
-                templateUrl: 'sky/templates/navbar/navbar.html',
-                link: function (scope, el) {
-                    /*jslint unparam: true */
-                    $(el).on('mouseenter', '.dropdown', function () {
-                        toggleOpen(this, 'add');
-                    }).on('mouseleave', '.dropdown', function () {
-                        toggleOpen(this, 'remove');
-                    }).on('click', '.dropdown-menu a', function () {
-                        toggleOpen($('.dropdown', el), 'remove');
-                    });
-                }
-            };
+        .component('bbNavbar', {
+            transclude: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/navbar/navbar.component.html', 
+            controller: Controller 
         });
 }(jQuery));
 
@@ -11835,7 +11836,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="clearfix"></div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/navbar/navbar.html',
+    $templateCache.put('sky/templates/navbar/navbar.component.html',
         '<nav class="navbar navbar-default bb-navbar" ng-transclude></nav>');
     $templateCache.put('sky/templates/page/page.html',
         '<section ng-if="locals.noPageStatusSpecified() || bbPageStatus === locals.pageStatuses.LOADED">\n' +
