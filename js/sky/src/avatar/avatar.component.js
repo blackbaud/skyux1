@@ -158,7 +158,7 @@
             return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
         };
 
-        if (angular.isFunction(vm.bbAvatarChange)) {
+        if ($element.attr('bb-avatar-change')) {
             vm.canChange = true;
         }
 
