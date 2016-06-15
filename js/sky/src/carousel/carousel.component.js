@@ -19,7 +19,6 @@
         function createDots() {
             var i,
                 itemCount = getItemEls().length,
-                lastDot,
                 nextDot;
 
             vm.dots = [];
@@ -29,21 +28,8 @@
                 }
             } else {
                 for (i = 0; i < MAX_DOTS; i++) {
-                    switch (i) {
-                    case 0:
-                        nextDot = 0;
-                        break;
-                    case (MAX_DOTS - 1):
-                        nextDot = itemCount - 1;
-                        break;
-                    default:
-                        nextDot = Math.floor((i * itemCount / (MAX_DOTS - 1)));
-                        break;
-                    }
-
+                    nextDot = Math.floor((i * itemCount / (MAX_DOTS)));
                     vm.dots.push(nextDot);
-
-                    lastDot = nextDot;
                 }
             }
         }
@@ -113,6 +99,31 @@
 
         vm.previousCard = function () {
             vm.setSelectedItem(vm.currentItemIndex - 1);
+        };
+
+        vm.dotIsSelected = function (dot) {
+            var dotIndex,
+                dots = vm.dots,
+                existingDot,
+                i,
+                itemIndex = vm.currentItemIndex,
+                n;
+
+            if (dot === itemIndex) {
+                return true;
+            }
+
+            dotIndex = dots.indexOf(dot);
+
+            if (dotIndex === dots.length - 1) {
+                if (vm.currentItemIndex > dots[dotIndex]) {
+                    return true;
+                }
+            } else if (itemIndex > dots[dotIndex] && itemIndex < dots[dotIndex + 1]) {
+                return true;
+            }
+
+            return false;
         };
 
         $scope.$watchCollection(function () {

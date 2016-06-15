@@ -23,7 +23,7 @@
         type="button"
         class="bb-carousel-dot-btn"
         ng-class="{
-            'bb-carousel-dot-btn-selected': $ctrl.currentItemIndex === dot
+            'bb-carousel-dot-btn-selected': $ctrl.dotIsSelected(dot)
         }"
         ng-repeat="dot in $ctrl.dots"
         ng-click="$ctrl.setSelectedItem(dot)"
