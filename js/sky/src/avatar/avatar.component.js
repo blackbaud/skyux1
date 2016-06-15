@@ -204,7 +204,8 @@
                 bbAvatarChange: '&'
             }, 
             controller: Controller,
-            template: template
+            template: template,
+            controllerAs: 'bbAvatar'
         });
     
 }(jQuery));
