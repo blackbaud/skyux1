@@ -104,10 +104,7 @@
         vm.dotIsSelected = function (dot) {
             var dotIndex,
                 dots = vm.dots,
-                existingDot,
-                i,
-                itemIndex = vm.currentItemIndex,
-                n;
+                itemIndex = vm.currentItemIndex;
 
             if (dot === itemIndex) {
                 return true;
@@ -136,7 +133,7 @@
 
     Controller.$inject = ['$scope', '$element'];
 
-    angular.module('sky.carousel.component', [])
+    angular.module('sky.carousel.component', ['ngTouch'])
         .component('bbCarousel', {
             bindings: {},
             templateUrl: 'sky/templates/carousel/carousel.component.html',
