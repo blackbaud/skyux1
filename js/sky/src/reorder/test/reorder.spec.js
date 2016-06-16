@@ -22,7 +22,7 @@ describe('Reorder', function () {
         bbResources = _bbResources_;
     }));
 
-    describe('directive', function () {
+    describe('component', function () {
 
         function createTestItems() {
             return [{
@@ -60,7 +60,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorder.bbReorderItems.length).toBe(4);
+            expect(elScope.$ctrl.bbReorderItems.length).toBe(4);
         });
 
         it('should display title and description correctly', function () {
@@ -119,7 +119,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            elScope.bbReorder.sorting = true;
+            elScope.$ctrl.sorting = true;
             $scope.$digest();
 
             secondRow = el.find('.bb-reorder-list-row')[1];
@@ -151,7 +151,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            elScope.bbReorder.sorting = true;
+            elScope.$ctrl.sorting = true;
             $scope.$digest();
 
             firstRow = el.find('.bb-reorder-list-row')[0];
@@ -209,7 +209,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorder.sorting).toBe(true);
+            expect(elScope.$ctrl.sorting).toBe(true);
 
             rows = el.find('.bb-reorder-list-row');
 
@@ -251,7 +251,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorder.sorting).toBe(false);
+            expect(elScope.$ctrl.sorting).toBe(false);
         });
 
         it('should handle the sortable update event', function () {

@@ -41,9 +41,9 @@ module.exports = {
         'src/**/docs/*'
     ],
     preprocessors: {
-        'js/sky/src/*/*.js': [
-            'coverage'
-        ]
+        // 'js/sky/src/*/*.js': [
+        //     'coverage'
+        // ]
     },
     reporters: [
         'dots',
