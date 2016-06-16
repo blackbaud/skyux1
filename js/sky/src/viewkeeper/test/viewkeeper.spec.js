@@ -43,9 +43,10 @@ describe('Viewkeeper', function () {
                 scrollListenerCount;
             
             el = $compile(
+                '<bb-omnibar></bb-omnibar>' +
                 '<div id="viewkeeper-test-{{$id}}">' +
                     '<div bb-view-keeper bb-boundary-el-id="\'viewkeeper-test-\' + $id">a</div>' +
-                '</div>'
+                '</div>' 
             )($scope);
             
             el.appendTo(document.body);
@@ -90,6 +91,7 @@ describe('Viewkeeper', function () {
                 windowHeight = $(window).height();
             
             boundaryEl = $(
+                '<bb-omnibar></bb-omnibar>' +
                 '<div style="position: absolute; width: 500px; background-color: red">' + 
                    '<div style="height: 100px; background-color: blue">a</div>' + 
                 '</div>'

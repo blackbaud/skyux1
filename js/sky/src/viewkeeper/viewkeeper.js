@@ -301,9 +301,14 @@
             function mediaBreakpointHandler(breakpoints) {
                 //For user agents in which the omnibar follows you down the page, the ViewKeeper needs
                 //to adjust for the height of the omnibar.
-
-                //Ideally these values should be driven from a more appropriate source (omnibar js?)
-                bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
+                if ($document.find('bb-omnibar').length > 0) {
+                    //Ideally these values should be driven from a more appropriate source (omnibar js?)
+                    bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
+                    angular.element('body').removeClass('bb-viewkeeper-no-omnibar');
+                } else {
+                    bbViewKeeperConfig.viewportMarginTop = 0;
+                    angular.element('body').addClass('bb-viewkeeper-no-omnibar');
+                }
             }
 
             if (/iPad|iPod|iPhone/i.test($window.navigator.userAgent)) {
