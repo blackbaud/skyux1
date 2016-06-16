@@ -35,9 +35,11 @@
         }
 
         function createTransformCss(offset) {
-            var scale = (offset ? '0.9' : '1');
+            if (offset) {
+                return 'translate3d(' + offset + '%, 0, 0) scale(0.9)';    
+            }
 
-            return 'translate3d(' + offset + '%, 0, 0) scale(' + scale + ')';
+            return 'none';
         }
 
         function getElIndex(item) {
@@ -70,6 +72,7 @@
                 item = getElIndex(item);
             }
 
+            /*istanbul ignore if */
             if (!allowIndex(item)) {
                 return;
             }
@@ -78,6 +81,7 @@
 
             itemEls = getItemEls();
 
+            /*istanbul ignore else */
             if (itemEls) {
                 for (i = 0, n = itemEls.length; i < n; i++) {
                     itemEl = itemEls[i];

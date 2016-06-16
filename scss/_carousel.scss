@@ -49,6 +49,12 @@
     z-index: 1;
 }
 
+@media (max-width: $screen-xs-max) {
+    .bb-carousel-btn {
+        display: none;
+    }
+}
+
 .bb-carousel-btn:hover {
     opacity: 0.9;
 }
