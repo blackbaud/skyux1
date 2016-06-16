@@ -105,7 +105,7 @@
 
                 // set the current index of all rows for display purposes
                 $.each(getListItems(), function (i, item) {
-                    setPositionNumberText(angular.element(item, i + 1);
+                    setPositionNumberText(item, i + 1);
                 });
             },
             stop: function (e, ui) {
