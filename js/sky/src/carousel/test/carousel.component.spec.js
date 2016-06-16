@@ -9,8 +9,14 @@ describe('Carousel component', function () {
         styleEl;
 
     function createCarouselEl($scope, itemCount) {
-        var html = '<bb-carousel class="bb-carousel-card">',
+        var html,
             i;
+
+        html = '<bb-carousel ' + 
+                'class="bb-carousel-card" ' +
+                'bb-carousel-selected-index="selectedIndex" ' +
+                'bb-carousel-selected-index-change="selectedIndexChange(index)"' + 
+            '>';
         
         for (i = 0; i < itemCount; i++) {
             html += 
@@ -262,4 +268,48 @@ describe('Carousel component', function () {
             el.remove();
         }
     );
+
+    it('should notify the host when an item is selected', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            selectedSpy;
+
+        $scope.selectedIndexChange = function () { };
+
+        selectedSpy = spyOn($scope, 'selectedIndexChange');
+
+        el = createCarouselEl($scope, 10);
+
+        el.appendTo(document.body);
+
+        $scope.$digest();
+
+        clickCarouselItem(el, 1);
+        validateItemSelected(el, 1);
+
+        expect(selectedSpy).toHaveBeenCalledWith(1);
+
+        el.remove();
+    });
+
+    it('should allow the host to set the selected index', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 10);
+
+        el.appendTo(document.body);
+
+        $scope.selectedIndex = 1;
+        $scope.$digest();
+
+        validateItemSelected(el, 1);
+
+        $scope.selectedIndex = 0;
+        $scope.$digest();
+
+        validateItemSelected(el, 0);
+
+        el.remove();
+    });
 });

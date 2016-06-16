@@ -6,7 +6,8 @@
     var MAX_DOTS = 10;
 
     function Controller($scope, $element) {
-        var vm = this;
+        var currentItemIndex,
+            vm = this;
 
         function getItemEls() {
             return $element[0].querySelectorAll('.bb-carousel-item');
@@ -54,14 +55,14 @@
             }
         }
 
-        vm.currentItemIndex = 0;
+        currentItemIndex = 0;
         vm.items = [];
 
         vm.addItem = function (item) {
             vm.items.push(item);
         };
 
-        vm.setSelectedItem = function (item) {
+        vm.setSelectedItem = function (item, skipChange) {
             var i,
                 itemEl,
                 itemEls,
@@ -91,24 +92,30 @@
                 }
             }
 
-            vm.currentItemIndex = item;
+            currentItemIndex = item;
 
-            vm.allowPrevious = vm.currentItemIndex > 0;
-            vm.allowNext = vm.currentItemIndex < itemEls.length - 1;
+            vm.allowPrevious = currentItemIndex > 0;
+            vm.allowNext = currentItemIndex < itemEls.length - 1;
+
+            if (!skipChange && angular.isFunction(vm.bbCarouselSelectedIndexChange)) {
+                vm.bbCarouselSelectedIndexChange({
+                    index: currentItemIndex
+                });
+            }
         };
 
         vm.nextCard = function () {
-            vm.setSelectedItem(vm.currentItemIndex + 1);
+            vm.setSelectedItem(currentItemIndex + 1);
         };
 
         vm.previousCard = function () {
-            vm.setSelectedItem(vm.currentItemIndex - 1);
+            vm.setSelectedItem(currentItemIndex - 1);
         };
 
         vm.dotIsSelected = function (dot) {
             var dotIndex,
                 dots = vm.dots,
-                itemIndex = vm.currentItemIndex;
+                itemIndex = currentItemIndex;
 
             if (dot === itemIndex) {
                 return true;
@@ -117,7 +124,7 @@
             dotIndex = dots.indexOf(dot);
 
             if (dotIndex === dots.length - 1) {
-                if (vm.currentItemIndex > dots[dotIndex]) {
+                if (currentItemIndex > dots[dotIndex]) {
                     return true;
                 }
             } else if (itemIndex > dots[dotIndex] && itemIndex < dots[dotIndex + 1]) {
@@ -131,7 +138,13 @@
             return vm.items;
         }, function () {
             createDots();
-            vm.setSelectedItem(vm.currentItemIndex);
+            vm.setSelectedItem(currentItemIndex, true);
+        });
+
+        $scope.$watch(function () {
+            return vm.bbCarouselSelectedIndex;
+        }, function () {
+            vm.setSelectedItem(vm.bbCarouselSelectedIndex || 0, true);
         });
     }
 
@@ -139,7 +152,10 @@
 
     angular.module('sky.carousel.component', ['ngTouch'])
         .component('bbCarousel', {
-            bindings: {},
+            bindings: {
+                bbCarouselSelectedIndex: '<?',
+                bbCarouselSelectedIndexChange: '&?'
+            },
             templateUrl: 'sky/templates/carousel/carousel.component.html',
             transclude: true,
             controller: Controller
