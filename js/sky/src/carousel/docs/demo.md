@@ -1,9 +1,13 @@
 ---
 name: Carousel
 icon: forward
-summary: The check applies a commonly styled selector to a checkbox or radio button.
+summary: The carousel displays a list of items that the user can cycle through using arrow buttons on the desktop or swipe gestures on a mobile device.
 ---
 
-The `bb-check` directive allows you to change an input element of type checkbox or radio button into a commonly styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
- 
+The `bb-carousel` component displays a list of items that the user can cycle through using arrow buttons on the desktop or swipe gestures on a mobile device.
+
+### Carousel settings ###
+- `bb-carousel` &mdash; Creates a carousel.
+    - `bb-carousel-selected-index` &mdash; The index of the item to select. *(Default: 0)*
+    - `bb-carousel-selected-index-change` &mdash; Function to call when the user selects a new item in the carousel. This function accepts an `index` parameter representing the selected item index.
 ---
