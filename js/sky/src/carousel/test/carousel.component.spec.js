@@ -6,6 +6,8 @@ describe('Carousel component', function () {
 
     var $compile,
         $rootScope,
+        bbFormat,
+        bbResources,
         styleEl;
 
     function createCarouselEl($scope, itemCount) {
@@ -34,8 +36,12 @@ describe('Carousel component', function () {
         expect(el.find('.bb-carousel-item').eq(index).position().left).toBe(0);  
     }
 
+    function getDotBtns(el) {
+        return el.find('.bb-carousel-dot-btn');
+    }
+
     function validateDotSelected(el, index) {
-        var dotBtnEl = el.find('.bb-carousel-dot-btn').eq(index);
+        var dotBtnEl = getDotBtns(el).eq(index);
 
         expect(dotBtnEl).toHaveClass('bb-carousel-dot-btn-selected');
     }
@@ -68,17 +74,37 @@ describe('Carousel component', function () {
         swipeCarousel(el, -40);
     }
 
+    function getNextBtn(el) {
+        return el.find('.bb-carousel-btn-next');
+    }
+
+    function getPreviousBtn(el) {
+        return el.find('.bb-carousel-btn-previous');
+    }
+
+    function validateAriaLabel(el, label) {
+        expect(el).toHaveAttr('aria-label', label);
+    }
+
+    function buildDotBtnLabel(itemIndex) {
+        return bbFormat.formatText(bbResources.carousel_dot_label, itemIndex + 1);
+    }
+
     beforeEach(module(
         'ngTouch',
         'ngMock',
         'sky.card',
         'sky.carousel',
+        'sky.format',
+        'sky.resources',
         'sky.templates'
     ));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _bbFormat_, _bbResources_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
+        bbFormat = _bbFormat_;
+        bbResources = _bbResources_;
 
         // Disable CSS animations
         styleEl = $('<style>* {transition: none !important;}</style>').appendTo(document.body);
@@ -138,13 +164,25 @@ describe('Carousel component', function () {
 
         validateItemSelected(el, 0);
 
-        el.find('.bb-carousel-btn-next').click();
+        getNextBtn(el).click();
         validateItemSelected(el, 1);
 
-        el.find('.bb-carousel-btn-previous').click();
+        getPreviousBtn(el).click();
         validateItemSelected(el, 0);
 
         el.remove();
+    });
+
+    it('should add accessibility labels to the arrow buttons', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 2);
+
+        $scope.$digest();
+
+        validateAriaLabel(getNextBtn(el), bbResources.carousel_button_label_next);
+        validateAriaLabel(getPreviousBtn(el), bbResources.carousel_button_label_previous);
     });
 
     it('should show/hide arrows depending on the selected card', function () {
@@ -161,18 +199,18 @@ describe('Carousel component', function () {
         $scope.$digest();
 
         itemEls = el.find('.bb-carousel-item');
-        previousBtn = $('.bb-carousel-btn-previous');
-        nextBtn = $('.bb-carousel-btn-next'); 
+        previousBtn = getPreviousBtn(el);
+        nextBtn = getNextBtn(el); 
 
         expect(previousBtn).not.toBeVisible();
         expect(nextBtn).toBeVisible();
 
-        el.find('.bb-carousel-btn-next').click();
+        nextBtn.click();
 
         expect(previousBtn).toBeVisible();
         expect(nextBtn).toBeVisible();
 
-        el.find('.bb-carousel-btn-next').click();
+        nextBtn.click();
 
         expect(previousBtn).toBeVisible();
         expect(nextBtn).not.toBeVisible();
@@ -192,12 +230,31 @@ describe('Carousel component', function () {
 
         validateItemSelected(el, 0);
 
-        el.find('.bb-carousel-dot-btn').eq(1).click(); 
+        getDotBtns(el).eq(1).click(); 
 
         validateItemSelected(el, 1);
         validateDotSelected(el, 1);
 
         el.remove();
+    });
+
+    it('should add accessibility labels to the dot buttons', function () {
+        var $scope = $rootScope.$new(),
+            dotBtnEls,
+            el,
+            expectedLabel,
+            i,
+            itemCount = 10;
+
+        el = createCarouselEl($scope, itemCount);
+
+        $scope.$digest();
+
+        dotBtnEls = getDotBtns(el);
+
+        for (i = 0; i < itemCount; i++) {
+            expectedLabel = bbFormat.formatText(bbResources.carousel_dot_label, i + 1);
+        }
     });
 
     it('should limit the number of dot buttons', function () {
@@ -210,7 +267,7 @@ describe('Carousel component', function () {
 
         $scope.$digest();
 
-        expect(el.find('.bb-carousel-dot-btn').length).toBe(10);
+        expect(getDotBtns(el).length).toBe(10);
 
         el.remove();
     });
@@ -228,8 +285,12 @@ describe('Carousel component', function () {
 
             $scope.$digest();
 
-            dotBtnEls = el.find('.bb-carousel-dot-btn');
+            dotBtnEls = getDotBtns(el);
             
+            validateAriaLabel(dotBtnEls.eq(1), buildDotBtnLabel(2));
+            validateAriaLabel(dotBtnEls.eq(2), buildDotBtnLabel(4));
+            validateAriaLabel(dotBtnEls.eq(9), buildDotBtnLabel(18));
+
             dotBtnEls.eq(1).click();
             validateDotSelected(el, 1);
             validateItemSelected(el, 2);

@@ -4,6 +4,7 @@
       class="bb-carousel-btn bb-carousel-btn-previous"
       ng-click="$ctrl.previousCard()" 
       ng-show="$ctrl.allowPrevious"
+      aria-label="{{::'carousel_button_label_previous' | bbResources}}"
   >
     <i class="fa fa-chevron-left"></i>
   </button>
@@ -20,6 +21,7 @@
       class="bb-carousel-btn bb-carousel-btn-next"
       ng-click="$ctrl.nextCard()" 
       ng-show="$ctrl.allowNext"
+      aria-label="{{::'carousel_button_label_next' | bbResources}}"
   >
     <i class="fa fa-chevron-right"></i>
   </button>
@@ -32,6 +34,7 @@
         }"
         ng-repeat="dot in $ctrl.dots"
         ng-click="$ctrl.setSelectedItem(dot)"
+        aria-label="{{$ctrl.getDotLabel(dot)}}"
     >
       <div class="bb-carousel-dot-content"></div>
     </button>

@@ -5,7 +5,7 @@
 
     var MAX_DOTS = 10;
 
-    function Controller($scope, $element) {
+    function Controller($scope, $element, bbFormat, bbResources) {
         var currentItemIndex,
             vm = this;
 
@@ -56,6 +56,7 @@
         }
 
         currentItemIndex = 0;
+
         vm.items = [];
 
         vm.addItem = function (item) {
@@ -134,6 +135,10 @@
             return false;
         };
 
+        vm.getDotLabel = function (dot) {
+            return bbFormat.formatText(bbResources.carousel_dot_label, dot + 1);
+        };
+
         $scope.$watchCollection(function () {
             return vm.items;
         }, function () {
@@ -148,7 +153,7 @@
         });
     }
 
-    Controller.$inject = ['$scope', '$element'];
+    Controller.$inject = ['$scope', '$element', 'bbFormat', 'bbResources'];
 
     angular.module('sky.carousel.component', ['ngTouch'])
         .component('bbCarousel', {
