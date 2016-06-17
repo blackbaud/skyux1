@@ -223,8 +223,7 @@ $invalid-field-color: #b94a48;
 // end form
 
 //begin dialog
-$zindex-dropdown: 1000;
-$z-index-flyout: $zindex-dropdown - 1 !default;
+$z-index-flyout: 999 !default;
 $z-index-dialog: 2000;
 $z-index-control: 10000;
 //end dialog
