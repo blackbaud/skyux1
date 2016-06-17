@@ -10,15 +10,20 @@ describe('Carousel component', function () {
         bbResources,
         styleEl;
 
-    function createCarouselEl($scope, itemCount) {
+    function createCarouselEl($scope, itemCount, style) {
         var html,
             i;
 
         html = '<bb-carousel ' + 
                 'class="bb-carousel-card" ' +
                 'bb-carousel-selected-index="selectedIndex" ' +
-                'bb-carousel-selected-index-change="selectedIndexChange(index)"' + 
-            '>';
+                'bb-carousel-selected-index-change="selectedIndexChange(index)"';
+                
+        if (style) {
+            html += ' bb-carousel-style="' + style + '"';
+        }
+
+        html += '>';
         
         for (i = 0; i < itemCount; i++) {
             html += 
@@ -370,6 +375,36 @@ describe('Carousel component', function () {
         $scope.$digest();
 
         validateItemSelected(el, 0);
+
+        el.remove();
+    });
+
+    it('should default to a style of card', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 10);
+
+        el.appendTo(document.body);
+
+        $scope.$digest();
+        
+        expect('.bb-carousel-wrapper').toHaveClass('bb-carousel-card');
+
+        el.remove();
+    });
+
+    it('should support displaying small cards as items', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 10, 'card-small');
+
+        el.appendTo(document.body);
+
+        $scope.$digest();
+        
+        expect('.bb-carousel-wrapper').toHaveClass('bb-carousel-card-small');
 
         el.remove();
     });

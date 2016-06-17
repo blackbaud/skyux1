@@ -159,7 +159,8 @@
         .component('bbCarousel', {
             bindings: {
                 bbCarouselSelectedIndex: '<?',
-                bbCarouselSelectedIndexChange: '&?'
+                bbCarouselSelectedIndexChange: '&?',
+                bbCarouselStyle: '@'
             },
             templateUrl: 'sky/templates/carousel/carousel.component.html',
             transclude: true,

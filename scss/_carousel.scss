@@ -9,13 +9,14 @@
     margin: 0 auto;
     padding: 0;
     position: relative;
-    touch-action: pan-y;
     white-space: nowrap;
 }
 
-.bb-carousel-card {
-    margin: 0 auto;
+.bb-carousel-contents {
+    position: relative;
+}
 
+.bb-carousel-card {
     .bb-carousel {
         height: $bb-card-height;
         width: $bb-card-width;
@@ -23,8 +24,10 @@
 }
 
 .bb-carousel-card-small {
-    height: $bb-card-height-small;
-    width: $bb-card-width-small;
+    .bb-carousel {
+        height: $bb-card-height-small;
+        width: $bb-card-width-small;
+    }
 }
 
 .bb-carousel-item {
