@@ -22,7 +22,7 @@ describe('Reorder', function () {
         bbResources = _bbResources_;
     }));
 
-    describe('directive', function () {
+    describe('component', function () {
 
         function createTestItems() {
             return [{
@@ -49,6 +49,10 @@ describe('Reorder', function () {
 
             return el;
         }
+        
+        function getContainerEl(el) {
+            return el.find('.bb-reorder-container');
+        }
 
         it('should set items on the isolate scope', function () {
             var $scope = $rootScope.$new(),
@@ -60,7 +64,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorder.bbReorderItems.length).toBe(4);
+            expect(elScope.$ctrl.bbReorderItems.length).toBe(4);
         });
 
         it('should display title and description correctly', function () {
@@ -119,7 +123,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            elScope.bbReorder.sorting = true;
+            elScope.$ctrl.sorting = true;
             $scope.$digest();
 
             secondRow = el.find('.bb-reorder-list-row')[1];
@@ -151,7 +155,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            elScope.bbReorder.sorting = true;
+            elScope.$ctrl.sorting = true;
             $scope.$digest();
 
             firstRow = el.find('.bb-reorder-list-row')[0];
@@ -209,7 +213,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorder.sorting).toBe(true);
+            expect(elScope.$ctrl.sorting).toBe(true);
 
             rows = el.find('.bb-reorder-list-row');
 
@@ -251,7 +255,7 @@ describe('Reorder', function () {
 
             elScope = el.isolateScope();
 
-            expect(elScope.bbReorder.sorting).toBe(false);
+            expect(elScope.$ctrl.sorting).toBe(false);
         });
 
         it('should handle the sortable update event', function () {
@@ -280,6 +284,7 @@ describe('Reorder', function () {
 
         it('should set the position numbers correctly when moving the sorting item from bottom to top', function () {
             var $scope = $rootScope.$new(),
+                containerEl,
                 changeEventCallback,
                 startEventCallback,
                 eventArg,
@@ -293,13 +298,15 @@ describe('Reorder', function () {
 
             $scope.items = createTestItems();
             el = initializeDirective($scope);
+            
+            containerEl = getContainerEl(el);
 
             // we are going to move the bottom item to the top of the list
             rowBeingMoved = $(el.find('.bb-reorder-list-row')[3]);
 
             // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
-            el.append(placeholder);
+            containerEl.append(placeholder);
 
             eventArg = {
                 item: rowBeingMoved,
@@ -314,7 +321,7 @@ describe('Reorder', function () {
             el.find('#placeholder').remove();
 
             placeholder = $('<div id="placeholder"></div>');
-            el.prepend(placeholder);
+            containerEl.prepend(placeholder);
 
             eventArg = {
                 item: rowBeingMoved,
@@ -329,13 +336,14 @@ describe('Reorder', function () {
             rows = el.find('.bb-reorder-list-row');
 
             $.each(rows, function (i, item) {
-                expect($(item).find('.bb-reorder-list-sorting-number')).toContainText(newOrder[i]);
+                expect($(item).find('.bb-reorder-list-sorting-number').text()).toBe(newOrder[i]);
             });
         });
 
         it('should set the position numbers correctly when moving the sorting item from top to bottom', function () {
             var $scope = $rootScope.$new(),
                 changeEventCallback,
+                containerEl,
                 startEventCallback,
                 eventArg,
                 rows,
@@ -349,12 +357,14 @@ describe('Reorder', function () {
             $scope.items = createTestItems();
             el = initializeDirective($scope);
 
+            containerEl = getContainerEl(el);
+            
             // we are going to move the top element to the bottom of the list
             rowBeingMoved = $(el.find('.bb-reorder-list-row')[0]);
 
             // put the placeholder in the right position as if the user was currently sorting
             placeholder = $('<div id="placeholder"></div>');
-            el.prepend(placeholder);
+            containerEl.prepend(placeholder);
 
             eventArg = {
                 item: rowBeingMoved,
@@ -369,7 +379,7 @@ describe('Reorder', function () {
             el.find('#placeholder').remove();
 
             placeholder = $('<div id="placeholder"></div>');
-            el.append(placeholder);
+            containerEl.append(placeholder);
 
             eventArg = {
                 item: rowBeingMoved,
