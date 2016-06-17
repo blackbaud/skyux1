@@ -55,7 +55,8 @@ describe('Phone Field directive', function () {
         result = browser.url(testPath)
                  .click(selectors.flagContainer)
                  .click(selectors.intlCountrySelect)
-                 .waitForVisible(selectors.intlCountryTextbox);
+                 .waitForVisible(selectors.intlCountryTextbox)
+                 .click('body');
 
         common.compareScreenshot({
             browserResult: result,
