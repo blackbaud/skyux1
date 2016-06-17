@@ -11,7 +11,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.avatar', ['sky.avatar.config', 'sky.avatar.directive']);
+    angular.module('sky.avatar', ['sky.avatar.config', 'sky.avatar.component']);
 }());
 
 /*global angular */
@@ -104,6 +104,14 @@
     'use strict';
 
     angular.module('sky.pagesummary', []);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.phonefield', ['sky.phonefield.directive']);
 }());
 
 /*global angular */
@@ -491,6 +499,217 @@
         }]);
 }(jQuery));
 
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+
+    function Controller($filter, $templateCache, $window, bbAvatarConfig, bbErrorModal, bbFormat, bbPalette, bbResources, $element, $scope) {
+        var vm = this, blobUrl, templateLoaded;
+
+        function setImageUrl(url) {
+            $element.find('.bb-avatar-image').css('background-image', 'url(' + url + ')');
+        }
+
+        function getInitial(name) {
+            return name.charAt(0).toUpperCase();
+        }
+
+        function getInitials(name) {
+            var initials,
+                nameSplit;
+
+            if (name) {
+                nameSplit = name.split(' ');
+                initials = getInitial(nameSplit[0]);
+
+                /* istanbul ignore else */ 
+                /* this is tested through a visual regression test */
+                if (nameSplit.length > 1) {
+                    initials += getInitial(nameSplit[nameSplit.length - 1]);
+                }
+            }
+
+            return initials;
+        }
+
+        function getPlaceholderColor(name) {
+            var colorIndex,
+                colors = bbPalette.getColorSequence(6),
+                seed;
+
+            if (name) {
+                // Generate a unique-ish color based on the record name.  This is deterministic
+                // so that a given name will always generate the same color.
+                seed = name.charCodeAt(0) + name.charCodeAt(name.length - 1) + name.length;
+                colorIndex = Math.abs(seed % colors.length);
+            } else {
+                colorIndex = 0;
+            }
+
+            return colors[colorIndex];
+        }
+        function drawPlaceolderImage() {
+            var canvas,
+                context,
+                devicePixelRatio,
+                fontSize = "46px",
+                initials,
+                name,
+                size = 100;
+
+            name = vm.bbAvatarName;
+            initials = getInitials(name);
+
+            canvas = $element.find('.bb-avatar-initials')[0];
+            context = canvas.getContext('2d');
+
+            devicePixelRatio = $window.devicePixelRatio;
+
+            /* istanbul ignore else */
+            if (devicePixelRatio) {
+                $(canvas)
+                    .attr('width', size * devicePixelRatio)
+                    .attr('height', size * devicePixelRatio);
+
+                context.scale(devicePixelRatio, devicePixelRatio);
+            }
+
+            context.fillStyle = getPlaceholderColor(name);
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (initials) {
+                context.font = fontSize + ' Arial';
+                context.textAlign = 'center';
+                context.fillStyle = '#FFF';
+                context.fillText(initials, size * 0.5, size * (2 / 3));
+            }
+        }
+
+        function revokeBlobUrl() {
+            if (blobUrl) {
+                $window.URL.revokeObjectURL(blobUrl);
+                blobUrl = null;
+            }
+        }
+
+        function loadPhoto() {
+            var src,
+                url;
+
+            revokeBlobUrl();
+
+            if (templateLoaded) {
+                src = vm.bbAvatarSrc;
+
+                if (src) {
+                    if (src instanceof $window.File) {
+                        url = $window.URL.createObjectURL(src);
+
+                        // Keep the last blob URL around so we can revoke it later.
+                        // https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL
+                        blobUrl = url;
+                    } else {
+                        url = src;
+                    }
+
+                    setImageUrl(url);
+                } else {
+                    drawPlaceolderImage();
+                }
+            }
+        }
+        function handleInvalidFileDrop(rejectedFile) {
+        
+            var errorDescription,
+            errorTitle,
+            maxFileSizeFormatted;
+
+            if (rejectedFile.type.toUpperCase().indexOf('IMAGE/') !== 0) {
+                errorDescription = bbResources.avatar_error_not_image_description;
+                errorTitle = bbResources.avatar_error_not_image_title;
+            } else {
+                maxFileSizeFormatted = $filter('bbFileSize')(bbAvatarConfig.maxFileSize);
+
+                errorDescription = bbFormat.formatText(bbResources.avatar_error_too_large_description, maxFileSizeFormatted);
+                errorTitle = bbResources.avatar_error_too_large_title;
+            }
+
+            bbErrorModal.open({
+                errorDescription: errorDescription,
+                errorTitle: errorTitle
+            });
+        }
+
+        vm.onTemplateLoad = function () {
+            templateLoaded = true;
+        };
+
+        vm.photoDrop = function (files, rejectedFiles) {
+            if (angular.isArray(rejectedFiles) && rejectedFiles.length > 0) {
+                handleInvalidFileDrop(rejectedFiles[0]);
+            } else {
+                vm.bbAvatarChange({
+                    file: files[0]
+                });
+            }
+        };
+
+        vm.showInitials = function () {
+            return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
+        };
+
+        if ($element.attr('bb-avatar-change')) {
+            vm.canChange = true;
+        }
+
+        $scope.$watch(function () {
+            return templateLoaded;
+        }, loadPhoto);
+
+        $scope.$watch(function () {
+            return vm.bbAvatarSrc;
+        }, loadPhoto);
+
+        $scope.$watch(function () {
+            return vm.bbAvatarName;
+        }, loadPhoto);
+
+        $scope.$on('$destroy', function () {
+            revokeBlobUrl();
+        });
+
+        vm.maxFileSize = bbAvatarConfig.maxFileSize;
+    
+    }
+    
+    Controller.$inject = ['$filter', '$templateCache', '$window', 'bbAvatarConfig', 'bbErrorModal', 'bbFormat', 'bbPalette', 'bbResources', '$element', '$scope'];
+
+    function template($element, $templateCache, bbAvatarConfig) {
+        var dropEl;
+
+        $element.html($templateCache.get('sky/templates/avatar/avatar.component.html'));
+
+        dropEl = $element.find('.bb-avatar-file-drop');
+
+        dropEl.attr('bb-file-drop-max-size', bbAvatarConfig.maxFileSize);
+    }
+    
+    template.$inject = ['$element', '$templateCache', 'bbAvatarConfig'];
+    
+    angular.module('sky.avatar.component', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
+        .component('bbAvatar', {
+            bindings: {
+                bbAvatarSrc: '=',
+                bbAvatarName: '=',
+                bbAvatarChange: '&'
+            }, 
+            controller: Controller,
+            template: template
+        });
+    
+}(jQuery));
+
 /*global angular */
 
 (function () {
@@ -503,222 +722,6 @@
     angular.module('sky.avatar.config', [])
         .constant('bbAvatarConfig', bbAvatarConfig);
 }());
-
-/*global angular, jQuery */
-
-(function ($) {
-    'use strict';
-
-    function bbAvatar($filter, $templateCache, $window, bbAvatarConfig, bbErrorModal, bbFormat, bbPalette, bbResources) {
-        function link(scope, el, attrs, vm) {
-            var blobUrl,
-                templateLoaded;
-
-            function setImageUrl(url) {
-                el.find('.bb-avatar-image').css('background-image', 'url(' + url + ')');
-            }
-
-            function getInitial(name) {
-                return name.charAt(0).toUpperCase();
-            }
-
-            function getInitials(name) {
-                var initials,
-                    nameSplit;
-
-                if (name) {
-                    nameSplit = name.split(' ');
-                    initials = getInitial(nameSplit[0]);
-
-                    /* istanbul ignore else */ 
-                    /* this is tested through a visual regression test */
-                    if (nameSplit.length > 1) {
-                        initials += getInitial(nameSplit[nameSplit.length - 1]);
-                    }
-                }
-
-                return initials;
-            }
-
-            function getPlaceholderColor(name) {
-                var colorIndex,
-                    colors = bbPalette.getColorSequence(6),
-                    seed;
-
-                if (name) {
-                    // Generate a unique-ish color based on the record name.  This is deterministic
-                    // so that a given name will always generate the same color.
-                    seed = name.charCodeAt(0) + name.charCodeAt(name.length - 1) + name.length;
-                    colorIndex = Math.abs(seed % colors.length);
-                } else {
-                    colorIndex = 0;
-                }
-
-                return colors[colorIndex];
-            }
-
-            function drawPlaceolderImage() {
-                var canvas,
-                    context,
-                    devicePixelRatio,
-                    fontSize = "46px",
-                    initials,
-                    name,
-                    size = 100;
-
-                name = vm.bbAvatarName;
-                initials = getInitials(name);
-
-                canvas = el.find('.bb-avatar-initials')[0];
-                context = canvas.getContext('2d');
-
-                devicePixelRatio = $window.devicePixelRatio;
-
-                /* istanbul ignore else */
-                if (devicePixelRatio) {
-                    $(canvas)
-                        .attr('width', size * devicePixelRatio)
-                        .attr('height', size * devicePixelRatio);
-
-                    context.scale(devicePixelRatio, devicePixelRatio);
-                }
-
-                context.fillStyle = getPlaceholderColor(name);
-                context.fillRect(0, 0, canvas.width, canvas.height);
-
-                if (initials) {
-                    context.font = fontSize + ' Arial';
-                    context.textAlign = 'center';
-                    context.fillStyle = '#FFF';
-                    context.fillText(initials, size * 0.5, size * (2 / 3));
-                }
-            }
-
-            function revokeBlobUrl() {
-                if (blobUrl) {
-                    $window.URL.revokeObjectURL(blobUrl);
-                    blobUrl = null;
-                }
-            }
-
-            function loadPhoto() {
-                var src,
-                    url;
-
-                revokeBlobUrl();
-
-                if (templateLoaded) {
-                    src = vm.bbAvatarSrc;
-
-                    if (src) {
-                        if (src instanceof $window.File) {
-                            url = $window.URL.createObjectURL(src);
-
-                            // Keep the last blob URL around so we can revoke it later.
-                            // https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL
-                            blobUrl = url;
-                        } else {
-                            url = src;
-                        }
-
-                        setImageUrl(url);
-                    } else {
-                        drawPlaceolderImage();
-                    }
-                }
-            }
-
-            function handleInvalidFileDrop(rejectedFile) {
-                var errorDescription,
-                    errorTitle,
-                    maxFileSizeFormatted;
-
-                if (rejectedFile.type.toUpperCase().indexOf('IMAGE/') !== 0) {
-                    errorDescription = bbResources.avatar_error_not_image_description;
-                    errorTitle = bbResources.avatar_error_not_image_title;
-                } else {
-                    maxFileSizeFormatted = $filter('bbFileSize')(bbAvatarConfig.maxFileSize);
-
-                    errorDescription = bbFormat.formatText(bbResources.avatar_error_too_large_description, maxFileSizeFormatted);
-                    errorTitle = bbResources.avatar_error_too_large_title;
-                }
-
-                bbErrorModal.open({
-                    errorDescription: errorDescription,
-                    errorTitle: errorTitle
-                });
-            }
-
-            vm.onTemplateLoad = function () {
-                templateLoaded = true;
-            };
-
-            vm.photoDrop = function (files, rejectedFiles) {
-                if (angular.isArray(rejectedFiles) && rejectedFiles.length > 0) {
-                    handleInvalidFileDrop(rejectedFiles[0]);
-                } else {
-                    vm.bbAvatarChange({
-                        file: files[0]
-                    });
-                }
-            };
-
-            vm.showInitials = function () {
-                return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
-            };
-
-            if (attrs.bbAvatarChange) {
-                vm.canChange = true;
-            }
-
-            scope.$watch(function () {
-                return templateLoaded;
-            }, loadPhoto);
-
-            scope.$watch(function () {
-                return vm.bbAvatarSrc;
-            }, loadPhoto);
-
-            scope.$watch(function () {
-                return vm.bbAvatarName;
-            }, loadPhoto);
-
-            scope.$on('$destroy', function () {
-                revokeBlobUrl();
-            });
-
-            vm.maxFileSize = bbAvatarConfig.maxFileSize;
-        }
-
-        function template(el) {
-            var dropEl;
-
-            el.html($templateCache.get('sky/templates/avatar/avatar.directive.html'));
-
-            dropEl = el.find('.bb-avatar-file-drop');
-
-            dropEl.attr('bb-file-drop-max-size', bbAvatarConfig.maxFileSize);
-        }
-
-        return {
-            scope: {},
-            bindToController: {
-                bbAvatarSrc: '=',
-                bbAvatarName: '=',
-                bbAvatarChange: '&'
-            },
-            controller: angular.noop,
-            controllerAs: 'bbAvatar',
-            link: link,
-            template: template
-        };
-    }
-
-    bbAvatar.$inject = ['$filter', '$templateCache', '$window', 'bbAvatarConfig', 'bbErrorModal', 'bbFormat', 'bbPalette', 'bbResources'];
-
-    angular.module('sky.avatar.directive', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
-        .directive('bbAvatar', bbAvatar);
-}(jQuery));
 
 /*global angular */
 
@@ -7452,6 +7455,115 @@ angular.module('sky.palette.config', [])
         }]);
 }());
 
+/*global angular */
+(function () {
+    'use strict';
+
+    var bbPhoneFieldConfig = {
+        countryIso2: 'us'
+    };
+
+    angular.module('sky.phonefield.config', [])
+        .constant('bbPhoneFieldConfig', bbPhoneFieldConfig);
+}());
+
+/* global angular, intlTelInputUtils*/
+(function () {
+    'use strict';
+
+    /**
+    * bbPhoneField directive controller for bb-phone-field
+    */
+    function bbPhoneField(bbPhoneFieldConfig) {
+        function link($scope, el, attrs, ctrls) {
+            // ** variables **
+            var input = el,
+                phoneField = ctrls[0],
+                ngModel = ctrls[1];
+
+            /**
+            * getFormattedNumber returns the national or internationally formatted phone number in the input
+            * based on the currently selected country and the default country
+            */
+            function getFormattedNumber() {
+                var formattedNumber = '',
+                    selectedCountryData = input.intlTelInput('getSelectedCountryData');
+
+                // Grab the plugin's version of the formatted phone number
+                if (input.val()) {
+                    formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
+                    // If the currently selected country is also the directive's default country, it is already formatted
+                    if (phoneField.props.countryIso2 === selectedCountryData.iso2) {
+                        return formattedNumber;
+                    } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
+                        return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
+                    }
+                }
+
+                return formattedNumber;
+            }
+
+            // ** intl-tel-input initilization **
+            // initialize the intl-tel-input plugin.
+            // nationalMode is true by default, which we want for easy formatting purposes.
+            input.intlTelInput();
+            // when the country changes, update the scope's bbPhoneFieldConfig property
+            input.on('countrychange', function (e, countryData) {
+                ngModel.$setViewValue(getFormattedNumber());
+                $scope.$apply(function () {
+                        phoneField.props.selectedCountry = countryData;
+                    });
+            });
+
+            // ** ng-model settings **
+            // anytime ng-model is updated, its final value should be the formatted phone number
+            ngModel.$parsers.unshift(function () {
+                return getFormattedNumber();
+            });
+            ngModel.$formatters.unshift(function (value) {
+                input.val(value);
+                return getFormattedNumber();
+            });
+            // tie ng-model's format validation to the plugin's validator
+            ngModel.$validators.bbPhoneFormat = function (modelValue) {
+                return modelValue && input.intlTelInput('isValidNumber');
+            };
+
+            // ** bbPhoneFieldConfig properties **
+            // if a default country as countryIso2 is not provided, we set it to bbPhoneFieldConfig's countryIso2
+            if (!phoneField.props.countryIso2) {
+                phoneField.props.countryIso2 = bbPhoneFieldConfig.countryIso2;
+            }
+            input.intlTelInput('setCountry', phoneField.props.countryIso2);
+            phoneField.props.selectedCountry = input.intlTelInput('getSelectedCountryData');
+
+            // ** ARIA (Accessibility Rich Internet Applications) **
+            // We hide the country dropdown from a screen reader because the "dropdown"
+            // is actually an unordered list which is not easily accessed without clicking or arrowing accordingly
+            angular.element('.selected-flag').attr('aria-hidden', true);
+            // If the screen-reader user does manage to get the dropdown going, we apply the ARIA tags so that they can header the countries
+            angular.element('.country-list').attr('role', 'listbox');
+            angular.element('.country').attr('role', 'option');
+        }
+
+        return {
+            bindToController: {
+                props: '=bbPhoneField'
+            },
+            controller: bbPhoneField,
+            controllerAs: "bbPhoneField",
+            link: link,
+            require: ['bbPhoneField', 'ngModel'],
+            restrict: 'A'
+        };
+    }
+
+    bbPhoneField.$inject = ['bbPhoneFieldConfig'];
+
+    angular.module('sky.phonefield.directive', ['sky.phonefield.config'])
+        .directive('bbPhoneField', bbPhoneField);
+}());
+
 /*global angular, jQuery */
 
 (function ($) {
@@ -11104,6 +11216,7 @@ angular.module('sky.palette.config', [])
         'sky.page',
         'sky.pagesummary',
         'sky.pagination',
+        'sky.phonefield',
         'sky.popover',
         'sky.reorder',
         'sky.repeater',
@@ -11197,27 +11310,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div ng-transclude></div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/avatar/avatar.directive.html',
-        '<div class="bb-avatar" ng-switch="bbAvatar.canChange">\n' +
+    $templateCache.put('sky/templates/avatar/avatar.component.html',
+        '<div class="bb-avatar" ng-switch="$ctrl.canChange">\n' +
         '  <div ng-switch-when="true">\n' +
         '    <div\n' +
         '       class="bb-avatar-file-drop"\n' +
         '       bb-file-drop\n' +
-        '       bb-file-drop-change="bbAvatar.photoDrop(files, rejectedFiles)"\n' +
+        '       bb-file-drop-change="$ctrl.photoDrop(files, rejectedFiles)"\n' +
         '       bb-file-drop-accept="\'image/*\'"\n' +
         '       >\n' +
-        '      <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '      <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="$ctrl.onTemplateLoad()"></ng-include>\n' +
         '    </div>\n' +
         '  </div>\n' +
         '  <div ng-switch-default>\n' +
-        '    <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '    <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="$ctrl.onTemplateLoad()"></ng-include>\n' +
         '  </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/avatar/avatarinner.include.html',
         '<div class="bb-avatar-wrapper">\n' +
-        '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
-        '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
+        '  <div class="bb-avatar-image" ng-show="$ctrl.bbAvatarSrc"></div>\n' +
+        '  <canvas class="bb-avatar-initials" ng-show="$ctrl.showInitials()"></canvas>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/card/card.directive.html',

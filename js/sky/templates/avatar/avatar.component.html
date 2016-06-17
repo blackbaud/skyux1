@@ -1,0 +1,15 @@
+<div class="bb-avatar" ng-switch="$ctrl.canChange">
+  <div ng-switch-when="true">
+    <div
+       class="bb-avatar-file-drop"
+       bb-file-drop
+       bb-file-drop-change="$ctrl.photoDrop(files, rejectedFiles)"
+       bb-file-drop-accept="'image/*'"
+       >
+      <ng-include src="'sky/templates/avatar/avatarinner.include.html'" onload="$ctrl.onTemplateLoad()"></ng-include>
+    </div>
+  </div>
+  <div ng-switch-default>
+    <ng-include src="'sky/templates/avatar/avatarinner.include.html'" onload="$ctrl.onTemplateLoad()"></ng-include>
+  </div>
+</div>
