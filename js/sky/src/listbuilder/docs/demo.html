@@ -1,0 +1,35 @@
+<div ng-controller="ListbuilderTestController as listCtrl">
+  <bb-listbuilder>
+    <bb-listbuilder-toolbar bb-listbuilder-sort="listCtrl.sortOptions" bb-listbuilder-search="listCtrl.onSearch()">
+      <bb-listbuilder-add ng-click="listCtrl.onAddClick()">
+        Add Stuff
+      </bb-listbuilder-add>
+      <bb-listbuilder-filter>
+      </bb-listbuilder-filter>
+      <bb-listbuilder-actions>
+        <bb-listbuilder-action ng-click="listCtrl.onActionClick()">
+          My action
+        </bb-listbuilder-action>
+      </bb-listbuilder-actions>
+    </bb-listbuilder-toolbar>
+    <bb-listbuilder-content>
+      <bb-listbuilder-cards>
+        <bb-card ng-repeat="item in listCtrl.data" bb-card-selectable="true" bb-card-selected="item.selected">
+        <bb-card-title>
+          {{item.name}}
+        </bb-card-title>
+        <bb-card-content>
+          {{item.content}}
+        </bb-card-content>
+        <bb-card-actions>
+          <bb-context-menu>
+          <bb-context-menu-item>Action 1</bb-context-menu-item>
+          <bb-context-menu-item>Action 2</bb-context-menu-item>
+        </bb-context-menu>
+        </bb-card-actions>
+      </bb-card>
+      </bb-listbuilder-cards>
+    </bb-listbuilder-content>
+   
+  </bb-listbuilder>
+</div>

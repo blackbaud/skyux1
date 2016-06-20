@@ -24,6 +24,7 @@
         'sky.helpbutton',
         'sky.highlight',
         'sky.keyinfo',
+        'sky.listbuilder',
         'sky.mediabreakpoints',
         'sky.modal',
         'sky.moment',
