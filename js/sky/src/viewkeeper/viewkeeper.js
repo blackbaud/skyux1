@@ -363,7 +363,6 @@
                     }
                 });
             }
-
             return {
                 link: link,
                 restrict: 'A',
