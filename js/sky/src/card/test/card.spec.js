@@ -66,6 +66,19 @@ describe('Card directive', function () {
         expect(el.find('.bb-card.bb-card-selectable .bb-card-header .bb-card-check .bb-check-wrapper')).toExist();
     });
 
+    it('should not display a checkbox when the selectable attribute is set to false', function () {
+        var $scope = $rootScope.$new(),
+            el;
+        el = $compile(
+            '<bb-card bb-card-selectable="false">' +
+            '</bb-card>'
+        )($scope);
+
+        $scope.$digest();
+
+        expect(el.find('.bb-card.bb-card-selectable .bb-card-header .bb-card-check .bb-check-wrapper')).not.toExist();
+    });
+
     it('should update the bound values the user clicks the checkbox', function () {
         var $scope = $rootScope.$new(),
             checkEl,

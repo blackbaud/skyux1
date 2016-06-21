@@ -22,7 +22,7 @@
         return tiles;
     }
 
-    function BBTileController($scope, $timeout) {
+    function BBTileController($scope, $timeout, bbResources) {
         var vm = this,
             displayModeChanging = false;
 
@@ -77,6 +77,7 @@
         vm.isCollapsed = vm.bbTileCollapsed || false;
         vm.smallTileDisplayMode = false;
         vm.tileId = '';
+        vm.resources = bbResources;
 
         vm.titleClick = function () {
             vm.isCollapsed = !vm.isCollapsed;
@@ -119,7 +120,7 @@
         });
     }
 
-    BBTileController.$inject = ['$scope', '$timeout'];
+    BBTileController.$inject = ['$scope', '$timeout', 'bbResources'];
 
     function bbTile($timeout) {
         function link($scope, el, attrs, ctrls) {
@@ -435,7 +436,7 @@
 
     bbTileDashboard.$inject = ['$timeout', 'bbMediaBreakpoints'];
 
-    angular.module('sky.tiles', ['sky.mediabreakpoints'])
+    angular.module('sky.tiles', ['sky.mediabreakpoints', 'sky.resources'])
         .directive('bbTile', bbTile)
         .directive('bbTileHeaderContent', bbTileHeaderContent)
         .directive('bbTileHeaderCheck', bbTileHeaderCheck)

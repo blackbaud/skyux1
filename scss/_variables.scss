@@ -13,6 +13,7 @@ $bb-color-yellow: #f8ac59 !default;
 $bb-color-red: #ed5565 !default;
 $bb-color-white: #fff !default;
 $bb-color-purple: #6533c5 !default;
+$bb-text-deemphasized-color: #707374 !default;
 
 $bb-brand-alternate: $bb-color-blue !default;
 $bb-brand-alternate-light: lighten($bb-brand-alternate, 10%) !default; //#1a80b3
@@ -222,7 +223,7 @@ $invalid-field-color: #b94a48;
 // end form
 
 //begin dialog
-$z-index-flyout: 1030;
+$z-index-flyout: 999 !default;
 $z-index-dialog: 2000;
 $z-index-control: 10000;
 //end dialog

@@ -3,84 +3,16 @@
 (function () {
     'use strict';
 
-    var components = [{
-        name: 'ContextMenu',
-        cls: 'context-menu'
-    }, {
-        name: 'Title',
-        cls: 'title'
-    }],
-    repeaterItemModule;
-
-    function makeComponent(component) {
-        var controllerName,
-            name = component.name;
-
-        function Controller($scope) {
-            var vm = this;
-
-            $scope.$on('$destroy', function () {
-                vm.onDestroy();
-                vm = null;
-            });
-        }
-
-        Controller.$inject = ['$scope'];
-
-        function componentFn() {
-            function link(scope, el, attrs, ctrls) {
-                var vm = ctrls[0],
-                    bbRepeaterItem = ctrls[1];
-
-                vm.el = el;
-
-                bbRepeaterItem['set' + name](vm);
-            }
-
-            return {
-                restrict: 'E',
-                require: ['bbRepeaterItem' + name, '^bbRepeaterItem'],
-                controller: controllerName,
-                controllerAs: 'bbRepeaterItem' + name,
-                bindToController: true,
-                link: link,
-                scope: {}
-            };
-        }
-
-        controllerName = 'BBRepeaterItem' + name + 'Controller';
-
-        repeaterItemModule
-            .controller(controllerName, Controller)
-            .directive('bbRepeaterItem' + name, componentFn);
-    }
-
-    function getCtrlPropName(component) {
-        var name = component.name;
-
-        return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
-    }
-
     function bbRepeaterItem($timeout) {
         function BBRepeaterItemController() {
             var vm = this;
 
-            function addComponentSetter(component) {
-                var name = component.name;
-
-                vm['set' + name] = function (ctrl) {
-                    var propName = getCtrlPropName(component);
-
-                    vm[propName] = ctrl;
-
-                    ctrl.onDestroy = function () {
-                        vm[propName] = null;
-                    };
-                };
+            function allowCollapse() {
+                return vm.isCollapsible && vm.titleElExists();
             }
 
-            function allowCollapse() {
-                return vm.isCollapsible && vm.titleCtrl;
+            function selectItem() {
+                vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
             }
 
             vm.getCls = function () {
@@ -90,16 +22,31 @@
                     cls.push('bb-repeater-item-collapsible');
                 }
 
-                if (vm.contextMenuCtrl) {
+                if (vm.contextMenuElExists()) {
                     cls.push('bb-repeater-item-with-context-menu');
+                }
+
+                if (vm.itemIsSelectable()) {
+                    cls.push('bb-repeater-item-selectable');
+
+                    if (vm.bbRepeaterItemSelected) {
+                        cls.push('bb-repeater-item-selected');
+                    }
                 }
 
                 return cls;
             };
 
-            vm.allowCollapse = allowCollapse;
+            vm.selectItem = selectItem;
 
-            components.forEach(addComponentSetter);
+            vm.headerClick = function ($event) {
+                if (vm.isCollapsible) {
+                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                    $event.stopPropagation();
+                } 
+            };
+
+            vm.allowCollapse = allowCollapse;
         }
 
         function link(scope, el, attrs, ctrls) {
@@ -107,16 +54,13 @@
                 bbRepeater = ctrls[1],
                 vm = ctrls[0];
 
-            function watchForComponent(component) {
-                scope.$watch(function () {
-                    return vm[getCtrlPropName(component)];
-                }, function (newValue) {
-                    if (newValue) {
-                        el.find('.bb-repeater-item-' + component.cls)
-                            .empty()
-                            .append(newValue.el);
-                    }
-                });
+
+            function titleElExists() {
+                return vm.titleEl[0] && vm.titleEl[0].children.length > 0;
+            }
+
+            function contextMenuElExists() {
+                return vm.contextMenuEl[0] && vm.contextMenuEl[0].children.length > 0;
             }
 
             function getContentEl() {
@@ -152,16 +96,29 @@
                 vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
             }
 
+            vm.titleEl = el.find('.bb-repeater-item-title');
+            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu');
+
+            vm.titleElExists = titleElExists;
+            vm.contextMenuElExists = contextMenuElExists;
+
             vm.bbRepeater = bbRepeater;
             syncChevronWithExpanded();
 
-            vm.headerClick = function () {
-                if (vm.isCollapsible) {
-                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
-                }
-            };
+            scope.$watch(
+                titleElExists,
+                updateForExpandedState
+            );
 
-            components.forEach(watchForComponent);
+            function getTitleTextContent() {
+                return vm.titleEl.text();
+            }
+
+            if (vm.bbRepeaterItemInputLabel === null || angular.isUndefined(vm.bbRepeaterItemInputLabel)) {
+                scope.$watch(getTitleTextContent, function (newValue) {
+                    vm.bbRepeaterItemInputLabel = newValue;
+                });
+            }
 
             scope.$watch(function () {
                 return vm.isCollapsible;
@@ -181,13 +138,6 @@
                 }
             );
 
-            scope.$watch(
-                function () {
-                    return vm.titleCtrl;
-                },
-                updateForExpandedState
-            );
-
             scope.$watch(function () {
                 return vm.chevronDirection;
             }, function () {
@@ -196,6 +146,7 @@
                 }
             });
 
+             
             bbRepeater.addItem(vm);
 
             scope.$on('$destroy', function () {
@@ -203,15 +154,25 @@
                 vm = null;
             });
 
+            function itemIsSelectable() {
+                return vm.bbRepeaterItemSelectable === 'true';
+            }
+
+            vm.itemIsSelectable = itemIsSelectable;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
+
         }
 
         return {
             bindToController: {
-                bbRepeaterItemExpanded: '=?'
+                bbRepeaterItemExpanded: '=?',
+                bbRepeaterItemSelectable: '@?',
+                bbRepeaterItemSelected: '=?',
+                bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
@@ -219,21 +180,18 @@
             require: ['bbRepeaterItem', '^bbRepeater'],
             scope: {},
             templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
-            transclude: true
+            transclude: {
+                bbRepeaterItemContextMenu: '?bbRepeaterItemContextMenu',
+                bbRepeaterItemTitle: '?bbRepeaterItemTitle',
+                bbRepeaterItemContent: '?bbRepeaterItemContent'
+            }
         };
     }
 
     bbRepeaterItem.$inject = ['$timeout'];
 
-    repeaterItemModule = angular.module(
-        'sky.repeater.item.directive',
-        [
-            'sky.chevron',
-            'sky.resources'
-        ]
-    );
 
-    repeaterItemModule.directive('bbRepeaterItem', bbRepeaterItem);
+    angular.module('sky.repeater.item.directive', ['sky.chevron', 'sky.check', 'sky.resources'])
+        .directive('bbRepeaterItem', bbRepeaterItem);
 
-    components.forEach(makeComponent);
 }());
