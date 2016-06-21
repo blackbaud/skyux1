@@ -5,6 +5,7 @@
         background-image: none;
         border-radius: $alert-border-radius;
         box-shadow: none;
+        display: -webkit-flex; /* iOS 8 support */
         display: flex;
         padding: 0;
         background-color: transparent;
