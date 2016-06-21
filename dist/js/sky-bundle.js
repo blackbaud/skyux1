@@ -111784,7 +111784,6 @@ angular.module('sky.palette.config', [])
                     }
                 });
             }
-
             return {
                 link: link,
                 restrict: 'A',
