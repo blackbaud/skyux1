@@ -6,11 +6,11 @@
         templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
         bindings: {
             bbListbuilderOnSearch: '&',
-            bbListbuilderSearchLocal: '@'
+            bbListbuilderSearchText: '>'
         },
         controller: 'BBListbuilderToolbarController'
     };
 
     angular.module('sky.listbuilder.toolbar.component', ['sky.listbuilder.toolbar.controller'])
         .component('bbListbuilderToolbar', listbuilderToolbarComponent);
-})
+}());
