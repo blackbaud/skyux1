@@ -5,13 +5,16 @@
     @include bb-border(light, top, bottom);
 }
 
+.bb-listbuilder-search-container {
+    max-width: 255px;
+}
+
 .bb-listbuilder-search-input {
     @include bb-border(light, top, bottom, left);
     border-right: none;
     transition: none;
     @include box-shadow(none);
     border-radius: 6px;
-    max-width: 255px;
 }
 
 .bb-listbuilder-search-button {
