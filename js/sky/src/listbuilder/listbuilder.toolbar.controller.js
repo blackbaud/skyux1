@@ -5,14 +5,23 @@
     function BBListbuilderToolbarController(bbHighlight, $element) {
         var ctrl = this;
 
+
+        function highlightSearchText(searchText) {
+            var cardEl = $element.find('.bb-card');
+            bbHighlight.clear(cardEl);
+            if (searchText) {
+                bbHighlight(cardEl.not('.bb-grid-no-search'), searchText, 'highlight');
+            }
+        }
+
+        console.log('waaaaaaaadaup');
         function applySearchText(searchText) {
 
             //select input
-            //highlight text
-            bbHighlight.clear(tableEl);
-            if (searchText) {
-                bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
-            }
+            //highlight
+            highlightSearchText(searchText);
+            //search callback
+            
         }
 
         ctrl.applySearchText = applySearchText;

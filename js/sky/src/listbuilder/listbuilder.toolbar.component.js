@@ -5,8 +5,8 @@
     var listbuilderToolbarComponent = {
         templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
         bindings: {
-            bbListbuilderOnSearch: '&',
-            bbListbuilderSearchText: '>'
+            bbListbuilderOnSearch: '&?',
+            bbListbuilderSearchText: '<?'
         },
         controller: 'BBListbuilderToolbarController'
     };

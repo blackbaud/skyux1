@@ -2,4 +2,21 @@
     min-height: 39px;
     background-color: $bb-color-white;
     padding: $padding-half $padding $padding-half $padding;
+    @include bb-border(light, top, bottom);
+}
+
+.bb-listbuilder-search-input {
+    @include bb-border(light, top, bottom, left);
+    border-right: none;
+    transition: none;
+    @include box-shadow(none);
+    border-radius: 6px;
+    max-width: 255px;
+}
+
+.bb-listbuilder-search-button {
+    background-color: $bb-color-white;
+    border-left: none;
+    @include bb-border(light, top, bottom, right);
+    border-radius: 6px;
 }

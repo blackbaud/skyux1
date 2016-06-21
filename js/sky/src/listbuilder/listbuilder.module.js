@@ -3,5 +3,5 @@
 (function () {
     'use strict';
 
-    angular.module('sky.listbuilder', ['sky.listbuilder.component']);
+    angular.module('sky.listbuilder', ['sky.listbuilder.component', 'sky.listbuilder.toolbar.component']);
 }());

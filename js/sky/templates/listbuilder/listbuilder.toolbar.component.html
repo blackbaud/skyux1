@@ -1,7 +1,12 @@
 <div class="bb-listbuilder-toolbar">
-    <input 
-        type="text" 
-        ng-model="$ctrl.bbListbuilderSearchText" 
-        ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbListbuilderSearchText)" 
-        data-bbauto-field="SearchBox" />
+    <div class="input-group">
+        <input 
+            type="text" 
+            class="form-control bb-listbuilder-search-input"
+            ng-model="$ctrl.bbListbuilderSearchText" 
+            ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbListbuilderSearchText)" 
+            data-bbauto-field="SearchBox" />
+        <span class="input-group-addon bb-listbuilder-search-button"><i class="fa fa-search"></i></span>
+    </div>
+    
 </div>
