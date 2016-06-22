@@ -1,6 +1,6 @@
 <div ng-controller="ListbuilderTestController as listCtrl">
   <bb-listbuilder>
-    <bb-listbuilder-toolbar bb-listbuilder-sort="listCtrl.sortOptions" bb-listbuilder-search="listCtrl.onSearch()">
+    <bb-listbuilder-toolbar bb-listbuilder-sort="listCtrl.sortOptions" bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)">
       <bb-listbuilder-add ng-click="listCtrl.onAddClick()">
         Add Stuff
       </bb-listbuilder-add>

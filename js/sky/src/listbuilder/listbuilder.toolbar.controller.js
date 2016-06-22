@@ -2,25 +2,34 @@
 (function () {
     'use strict';
 
-    function BBListbuilderToolbarController(bbHighlight, $element) {
+    function BBListbuilderToolbarController($element, $timeout, $q) {
         var ctrl = this;
 
-
-        function highlightSearchText(searchText) {
-            var cardEl = $element.find('.bb-card');
-            bbHighlight.clear(cardEl);
-            if (searchText) {
-                bbHighlight(cardEl.not('.bb-grid-no-search'), searchText, 'highlight');
-            }
-        }
-
-        console.log('waaaaaaaadaup');
         function applySearchText(searchText) {
 
             //select input
-            //highlight
-            highlightSearchText(searchText);
+            var searchEl = $element.find('bb-listbuilder-search-input'),
+                deferred = $q.defer(),
+                highlightPromise;
+
+            highlightPromise = deferred.promise;
+
+            /*istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(searchEl.select) && searchEl.length > 0 && searchText) {
+                searchEl.eq(0).select();
+            }
+
+            highlightPromise.then(function () {
+                //highlight
+                $timeout(function () {
+                    ctrl.listbuilderCtrl.highlightSearchText(searchText);
+                });
+            });
+
             //search callback
+            ctrl.bbListbuilderOnSearch({searchText: searchText, highlightResults: deferred.resolve});
+            
             
         }
 
@@ -28,8 +37,8 @@
 
     }
 
-    BBListbuilderToolbarController.$inject = ['bbHighlight', '$element'];
+    BBListbuilderToolbarController.$inject = ['$element', '$timeout', '$q'];
 
-    angular.module('sky.listbuilder.toolbar.controller', [])
+    angular.module('sky.listbuilder.toolbar.controller', ['sky.resources'])
         .controller('BBListbuilderToolbarController', BBListbuilderToolbarController);
 }());

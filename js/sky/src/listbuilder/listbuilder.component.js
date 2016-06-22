@@ -7,9 +7,10 @@
         transclude: {
             bbListbuilderToolbar: '?bbListbuilderToolbar',
             bbListbuilderContent: '?bbListbuilderContent'
-        }
+        },
+        controller: 'BBListbuilderController'
     };
 
-    angular.module('sky.listbuilder.component', [])
+    angular.module('sky.listbuilder.component', ['sky.listbuilder.controller'])
         .component('bbListbuilder', listbuilderComponent);
 }());

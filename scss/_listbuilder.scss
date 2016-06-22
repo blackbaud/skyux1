@@ -15,11 +15,23 @@
     transition: none;
     @include box-shadow(none);
     border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .bb-listbuilder-search-button {
-    background-color: $bb-color-white;
-    border-left: none;
-    @include bb-border(light, top, bottom, right);
-    border-radius: 6px;
+    
+    button.btn {
+        background-color: $bb-color-white;
+        border: none;
+        height: auto;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        border-left: none;
+        @include bb-border(light, top, bottom, right);
+    }
+}
+
+.bb-listbuilder-search-input:focus + .bb-listbuilder-search-button button:hover {
+    z-index: auto;
 }

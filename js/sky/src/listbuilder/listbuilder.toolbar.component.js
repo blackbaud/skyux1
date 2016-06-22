@@ -8,7 +8,10 @@
             bbListbuilderOnSearch: '&?',
             bbListbuilderSearchText: '<?'
         },
-        controller: 'BBListbuilderToolbarController'
+        controller: 'BBListbuilderToolbarController',
+        require: {
+            listbuilderCtrl: '^bbListbuilder'
+        }
     };
 
     angular.module('sky.listbuilder.toolbar.component', ['sky.listbuilder.toolbar.controller'])
