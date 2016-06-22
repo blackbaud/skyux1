@@ -1,7 +1,7 @@
 /*jslint browser: true */
 /*global angular, jQuery */
 
-(function ($) {
+(function () {
     'use strict';
 
     angular.module('sky.wait.factory', [])
