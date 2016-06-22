@@ -4,5 +4,5 @@
 (function ($) {
     'use strict';
 
-    angular.module('sky.wait.module', []);
+    angular.module('sky.wait', ['sky.wait.directive', 'sky.wait.factory']);
 }());
