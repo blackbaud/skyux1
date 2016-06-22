@@ -203,14 +203,14 @@ describe('Avatar directive', function () {
         $scope.photoChange = function () {
 
         };
-
+ 
         photoChangeSpy = spyOn($scope, 'photoChange');
 
         droppedFile = new fakeWindow.File();
 
         $scope.$digest();
 
-        el.isolateScope().bbAvatar.photoDrop([droppedFile]);
+        el.isolateScope().$ctrl.photoDrop([droppedFile]);
 
         expect(photoChangeSpy).toHaveBeenCalledWith(droppedFile);
     });
@@ -226,7 +226,7 @@ describe('Avatar directive', function () {
 
         fakeErrorOpenSpy = spyOn(fakeErrorModal, 'open');
 
-        el.isolateScope().bbAvatar.photoDrop([], [droppedFile]);
+        el.isolateScope().$ctrl.photoDrop([], [droppedFile]);
 
         expect(fakeErrorOpenSpy).toHaveBeenCalledWith({
             errorDescription: expectedErrorDescription,

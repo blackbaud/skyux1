@@ -32,6 +32,8 @@ module.exports = {
         'node_modules/angular-mocks/angular-mocks.js',
         'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
         'node_modules/ng-file-upload/dist/ng-file-upload.js',
+        'node_modules/intl-tel-input/build/js/utils.js',
+        'node_modules/intl-tel-input/build/js/intlTelInput.min.js',
         'js/sky/src/*/*.module.js',
         'js/sky/src/*/*.js',
         'js/sky/templates/templates.js.tmp',

@@ -11,7 +11,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.avatar', ['sky.avatar.config', 'sky.avatar.directive']);
+    angular.module('sky.avatar', ['sky.avatar.config', 'sky.avatar.component']);
 }());
 
 /*global angular */
@@ -48,7 +48,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.chevron', ['sky.chevron.directive']);
+    angular.module('sky.chevron', ['sky.chevron.component']);
 }());
 
 /*global angular */
@@ -111,7 +111,15 @@
 (function () {
     'use strict';
 
-    angular.module('sky.reorder', ['sky.reorder.directive']);
+    angular.module('sky.phonefield', ['sky.phonefield.directive']);
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.reorder', ['sky.reorder.component']);
 }());
 
 /*global angular */
@@ -491,6 +499,217 @@
         }]);
 }(jQuery));
 
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+
+    function Controller($filter, $templateCache, $window, bbAvatarConfig, bbErrorModal, bbFormat, bbPalette, bbResources, $element, $scope) {
+        var vm = this, blobUrl, templateLoaded;
+
+        function setImageUrl(url) {
+            $element.find('.bb-avatar-image').css('background-image', 'url(' + url + ')');
+        }
+
+        function getInitial(name) {
+            return name.charAt(0).toUpperCase();
+        }
+
+        function getInitials(name) {
+            var initials,
+                nameSplit;
+
+            if (name) {
+                nameSplit = name.split(' ');
+                initials = getInitial(nameSplit[0]);
+
+                /* istanbul ignore else */ 
+                /* this is tested through a visual regression test */
+                if (nameSplit.length > 1) {
+                    initials += getInitial(nameSplit[nameSplit.length - 1]);
+                }
+            }
+
+            return initials;
+        }
+
+        function getPlaceholderColor(name) {
+            var colorIndex,
+                colors = bbPalette.getColorSequence(6),
+                seed;
+
+            if (name) {
+                // Generate a unique-ish color based on the record name.  This is deterministic
+                // so that a given name will always generate the same color.
+                seed = name.charCodeAt(0) + name.charCodeAt(name.length - 1) + name.length;
+                colorIndex = Math.abs(seed % colors.length);
+            } else {
+                colorIndex = 0;
+            }
+
+            return colors[colorIndex];
+        }
+        function drawPlaceolderImage() {
+            var canvas,
+                context,
+                devicePixelRatio,
+                fontSize = "46px",
+                initials,
+                name,
+                size = 100;
+
+            name = vm.bbAvatarName;
+            initials = getInitials(name);
+
+            canvas = $element.find('.bb-avatar-initials')[0];
+            context = canvas.getContext('2d');
+
+            devicePixelRatio = $window.devicePixelRatio;
+
+            /* istanbul ignore else */
+            if (devicePixelRatio) {
+                $(canvas)
+                    .attr('width', size * devicePixelRatio)
+                    .attr('height', size * devicePixelRatio);
+
+                context.scale(devicePixelRatio, devicePixelRatio);
+            }
+
+            context.fillStyle = getPlaceholderColor(name);
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (initials) {
+                context.font = fontSize + ' Arial';
+                context.textAlign = 'center';
+                context.fillStyle = '#FFF';
+                context.fillText(initials, size * 0.5, size * (2 / 3));
+            }
+        }
+
+        function revokeBlobUrl() {
+            if (blobUrl) {
+                $window.URL.revokeObjectURL(blobUrl);
+                blobUrl = null;
+            }
+        }
+
+        function loadPhoto() {
+            var src,
+                url;
+
+            revokeBlobUrl();
+
+            if (templateLoaded) {
+                src = vm.bbAvatarSrc;
+
+                if (src) {
+                    if (src instanceof $window.File) {
+                        url = $window.URL.createObjectURL(src);
+
+                        // Keep the last blob URL around so we can revoke it later.
+                        // https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL
+                        blobUrl = url;
+                    } else {
+                        url = src;
+                    }
+
+                    setImageUrl(url);
+                } else {
+                    drawPlaceolderImage();
+                }
+            }
+        }
+        function handleInvalidFileDrop(rejectedFile) {
+        
+            var errorDescription,
+            errorTitle,
+            maxFileSizeFormatted;
+
+            if (rejectedFile.type.toUpperCase().indexOf('IMAGE/') !== 0) {
+                errorDescription = bbResources.avatar_error_not_image_description;
+                errorTitle = bbResources.avatar_error_not_image_title;
+            } else {
+                maxFileSizeFormatted = $filter('bbFileSize')(bbAvatarConfig.maxFileSize);
+
+                errorDescription = bbFormat.formatText(bbResources.avatar_error_too_large_description, maxFileSizeFormatted);
+                errorTitle = bbResources.avatar_error_too_large_title;
+            }
+
+            bbErrorModal.open({
+                errorDescription: errorDescription,
+                errorTitle: errorTitle
+            });
+        }
+
+        vm.onTemplateLoad = function () {
+            templateLoaded = true;
+        };
+
+        vm.photoDrop = function (files, rejectedFiles) {
+            if (angular.isArray(rejectedFiles) && rejectedFiles.length > 0) {
+                handleInvalidFileDrop(rejectedFiles[0]);
+            } else {
+                vm.bbAvatarChange({
+                    file: files[0]
+                });
+            }
+        };
+
+        vm.showInitials = function () {
+            return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
+        };
+
+        if ($element.attr('bb-avatar-change')) {
+            vm.canChange = true;
+        }
+
+        $scope.$watch(function () {
+            return templateLoaded;
+        }, loadPhoto);
+
+        $scope.$watch(function () {
+            return vm.bbAvatarSrc;
+        }, loadPhoto);
+
+        $scope.$watch(function () {
+            return vm.bbAvatarName;
+        }, loadPhoto);
+
+        $scope.$on('$destroy', function () {
+            revokeBlobUrl();
+        });
+
+        vm.maxFileSize = bbAvatarConfig.maxFileSize;
+    
+    }
+    
+    Controller.$inject = ['$filter', '$templateCache', '$window', 'bbAvatarConfig', 'bbErrorModal', 'bbFormat', 'bbPalette', 'bbResources', '$element', '$scope'];
+
+    function template($element, $templateCache, bbAvatarConfig) {
+        var dropEl;
+
+        $element.html($templateCache.get('sky/templates/avatar/avatar.component.html'));
+
+        dropEl = $element.find('.bb-avatar-file-drop');
+
+        dropEl.attr('bb-file-drop-max-size', bbAvatarConfig.maxFileSize);
+    }
+    
+    template.$inject = ['$element', '$templateCache', 'bbAvatarConfig'];
+    
+    angular.module('sky.avatar.component', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
+        .component('bbAvatar', {
+            bindings: {
+                bbAvatarSrc: '=',
+                bbAvatarName: '=',
+                bbAvatarChange: '&'
+            }, 
+            controller: Controller,
+            template: template
+        });
+    
+}(jQuery));
+
 /*global angular */
 
 (function () {
@@ -503,222 +722,6 @@
     angular.module('sky.avatar.config', [])
         .constant('bbAvatarConfig', bbAvatarConfig);
 }());
-
-/*global angular, jQuery */
-
-(function ($) {
-    'use strict';
-
-    function bbAvatar($filter, $templateCache, $window, bbAvatarConfig, bbErrorModal, bbFormat, bbPalette, bbResources) {
-        function link(scope, el, attrs, vm) {
-            var blobUrl,
-                templateLoaded;
-
-            function setImageUrl(url) {
-                el.find('.bb-avatar-image').css('background-image', 'url(' + url + ')');
-            }
-
-            function getInitial(name) {
-                return name.charAt(0).toUpperCase();
-            }
-
-            function getInitials(name) {
-                var initials,
-                    nameSplit;
-
-                if (name) {
-                    nameSplit = name.split(' ');
-                    initials = getInitial(nameSplit[0]);
-
-                    /* istanbul ignore else */ 
-                    /* this is tested through a visual regression test */
-                    if (nameSplit.length > 1) {
-                        initials += getInitial(nameSplit[nameSplit.length - 1]);
-                    }
-                }
-
-                return initials;
-            }
-
-            function getPlaceholderColor(name) {
-                var colorIndex,
-                    colors = bbPalette.getColorSequence(6),
-                    seed;
-
-                if (name) {
-                    // Generate a unique-ish color based on the record name.  This is deterministic
-                    // so that a given name will always generate the same color.
-                    seed = name.charCodeAt(0) + name.charCodeAt(name.length - 1) + name.length;
-                    colorIndex = Math.abs(seed % colors.length);
-                } else {
-                    colorIndex = 0;
-                }
-
-                return colors[colorIndex];
-            }
-
-            function drawPlaceolderImage() {
-                var canvas,
-                    context,
-                    devicePixelRatio,
-                    fontSize = "46px",
-                    initials,
-                    name,
-                    size = 100;
-
-                name = vm.bbAvatarName;
-                initials = getInitials(name);
-
-                canvas = el.find('.bb-avatar-initials')[0];
-                context = canvas.getContext('2d');
-
-                devicePixelRatio = $window.devicePixelRatio;
-
-                /* istanbul ignore else */
-                if (devicePixelRatio) {
-                    $(canvas)
-                        .attr('width', size * devicePixelRatio)
-                        .attr('height', size * devicePixelRatio);
-
-                    context.scale(devicePixelRatio, devicePixelRatio);
-                }
-
-                context.fillStyle = getPlaceholderColor(name);
-                context.fillRect(0, 0, canvas.width, canvas.height);
-
-                if (initials) {
-                    context.font = fontSize + ' Arial';
-                    context.textAlign = 'center';
-                    context.fillStyle = '#FFF';
-                    context.fillText(initials, size * 0.5, size * (2 / 3));
-                }
-            }
-
-            function revokeBlobUrl() {
-                if (blobUrl) {
-                    $window.URL.revokeObjectURL(blobUrl);
-                    blobUrl = null;
-                }
-            }
-
-            function loadPhoto() {
-                var src,
-                    url;
-
-                revokeBlobUrl();
-
-                if (templateLoaded) {
-                    src = vm.bbAvatarSrc;
-
-                    if (src) {
-                        if (src instanceof $window.File) {
-                            url = $window.URL.createObjectURL(src);
-
-                            // Keep the last blob URL around so we can revoke it later.
-                            // https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL
-                            blobUrl = url;
-                        } else {
-                            url = src;
-                        }
-
-                        setImageUrl(url);
-                    } else {
-                        drawPlaceolderImage();
-                    }
-                }
-            }
-
-            function handleInvalidFileDrop(rejectedFile) {
-                var errorDescription,
-                    errorTitle,
-                    maxFileSizeFormatted;
-
-                if (rejectedFile.type.toUpperCase().indexOf('IMAGE/') !== 0) {
-                    errorDescription = bbResources.avatar_error_not_image_description;
-                    errorTitle = bbResources.avatar_error_not_image_title;
-                } else {
-                    maxFileSizeFormatted = $filter('bbFileSize')(bbAvatarConfig.maxFileSize);
-
-                    errorDescription = bbFormat.formatText(bbResources.avatar_error_too_large_description, maxFileSizeFormatted);
-                    errorTitle = bbResources.avatar_error_too_large_title;
-                }
-
-                bbErrorModal.open({
-                    errorDescription: errorDescription,
-                    errorTitle: errorTitle
-                });
-            }
-
-            vm.onTemplateLoad = function () {
-                templateLoaded = true;
-            };
-
-            vm.photoDrop = function (files, rejectedFiles) {
-                if (angular.isArray(rejectedFiles) && rejectedFiles.length > 0) {
-                    handleInvalidFileDrop(rejectedFiles[0]);
-                } else {
-                    vm.bbAvatarChange({
-                        file: files[0]
-                    });
-                }
-            };
-
-            vm.showInitials = function () {
-                return !!(vm.bbAvatarName && !vm.bbAvatarSrc);
-            };
-
-            if (attrs.bbAvatarChange) {
-                vm.canChange = true;
-            }
-
-            scope.$watch(function () {
-                return templateLoaded;
-            }, loadPhoto);
-
-            scope.$watch(function () {
-                return vm.bbAvatarSrc;
-            }, loadPhoto);
-
-            scope.$watch(function () {
-                return vm.bbAvatarName;
-            }, loadPhoto);
-
-            scope.$on('$destroy', function () {
-                revokeBlobUrl();
-            });
-
-            vm.maxFileSize = bbAvatarConfig.maxFileSize;
-        }
-
-        function template(el) {
-            var dropEl;
-
-            el.html($templateCache.get('sky/templates/avatar/avatar.directive.html'));
-
-            dropEl = el.find('.bb-avatar-file-drop');
-
-            dropEl.attr('bb-file-drop-max-size', bbAvatarConfig.maxFileSize);
-        }
-
-        return {
-            scope: {},
-            bindToController: {
-                bbAvatarSrc: '=',
-                bbAvatarName: '=',
-                bbAvatarChange: '&'
-            },
-            controller: angular.noop,
-            controllerAs: 'bbAvatar',
-            link: link,
-            template: template
-        };
-    }
-
-    bbAvatar.$inject = ['$filter', '$templateCache', '$window', 'bbAvatarConfig', 'bbErrorModal', 'bbFormat', 'bbPalette', 'bbResources'];
-
-    angular.module('sky.avatar.directive', ['sky.avatar.config', 'sky.error', 'sky.format', 'sky.palette', 'sky.resources'])
-        .directive('bbAvatar', bbAvatar);
-}(jQuery));
 
 /*global angular */
 
@@ -1449,6 +1452,20 @@
 (function () {
     'use strict';
 
+    angular.module('sky.chevron.component', ['sky.chevron.controller'])
+        .component('bbChevron', {
+            bindings: {
+                bbChevronDirection: '=?'
+            },
+            controller: 'BBChevronController',
+            templateUrl: 'sky/templates/chevron/chevron.component.html'
+        });
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+
     function BBChevronController(bbResources) {
         var vm = this;
 
@@ -1475,27 +1492,6 @@
 
     angular.module('sky.chevron.controller', ['sky.resources'])
         .controller('BBChevronController', BBChevronController);
-}());
-
-/*global angular */
-
-(function () {
-    'use strict';
-
-    function bbChevron() {
-        return {
-            bindToController: {
-                bbChevronDirection: '=?'
-            },
-            controller: 'BBChevronController',
-            controllerAs: 'bbChevron',
-            scope: {},
-            templateUrl: 'sky/templates/chevron/chevron.directive.html'
-        };
-    }
-
-    angular.module('sky.chevron.directive', ['sky.chevron.controller'])
-        .directive('bbChevron', bbChevron);
 }());
 
 /*global angular */
@@ -6742,25 +6738,26 @@
     function toggleOpen(el, action) {
         $(el)[action + 'Class']('open');
     }
-
+    
+    function Controller($element) {
+        
+        /*jslint unparam: true */
+        ($element).on('mouseenter', '.dropdown', function () {
+            toggleOpen(this, 'add');
+        }).on('mouseleave', '.dropdown', function () {
+            toggleOpen(this, 'remove');
+        }).on('click', '.dropdown-menu a', function () {
+            toggleOpen($('.dropdown', $element), 'remove');
+        });
+    }
+    
+    Controller.$inject = ['$element']; 
     angular.module('sky.navbar', [])
-        .directive('bbNavbar', function () {
-            return {
-                restrict: 'E',
-                replace: true,
-                transclude: true,
-                templateUrl: 'sky/templates/navbar/navbar.html',
-                link: function (scope, el) {
-                    /*jslint unparam: true */
-                    $(el).on('mouseenter', '.dropdown', function () {
-                        toggleOpen(this, 'add');
-                    }).on('mouseleave', '.dropdown', function () {
-                        toggleOpen(this, 'remove');
-                    }).on('click', '.dropdown-menu a', function () {
-                        toggleOpen($('.dropdown', el), 'remove');
-                    });
-                }
-            };
+        .component('bbNavbar', {
+            transclude: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/navbar/navbar.component.html', 
+            controller: Controller 
         });
 }(jQuery));
 
@@ -7458,6 +7455,115 @@ angular.module('sky.palette.config', [])
         }]);
 }());
 
+/*global angular */
+(function () {
+    'use strict';
+
+    var bbPhoneFieldConfig = {
+        countryIso2: 'us'
+    };
+
+    angular.module('sky.phonefield.config', [])
+        .constant('bbPhoneFieldConfig', bbPhoneFieldConfig);
+}());
+
+/* global angular, intlTelInputUtils*/
+(function () {
+    'use strict';
+
+    /**
+    * bbPhoneField directive controller for bb-phone-field
+    */
+    function bbPhoneField(bbPhoneFieldConfig) {
+        function link($scope, el, attrs, ctrls) {
+            // ** variables **
+            var input = el,
+                phoneField = ctrls[0],
+                ngModel = ctrls[1];
+
+            /**
+            * getFormattedNumber returns the national or internationally formatted phone number in the input
+            * based on the currently selected country and the default country
+            */
+            function getFormattedNumber() {
+                var formattedNumber = '',
+                    selectedCountryData = input.intlTelInput('getSelectedCountryData');
+
+                // Grab the plugin's version of the formatted phone number
+                if (input.val()) {
+                    formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
+                    // If the currently selected country is also the directive's default country, it is already formatted
+                    if (phoneField.props.countryIso2 === selectedCountryData.iso2) {
+                        return formattedNumber;
+                    } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
+                        return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
+                    }
+                }
+
+                return formattedNumber;
+            }
+
+            // ** intl-tel-input initilization **
+            // initialize the intl-tel-input plugin.
+            // nationalMode is true by default, which we want for easy formatting purposes.
+            input.intlTelInput();
+            // when the country changes, update the scope's bbPhoneFieldConfig property
+            input.on('countrychange', function (e, countryData) {
+                ngModel.$setViewValue(getFormattedNumber());
+                $scope.$apply(function () {
+                        phoneField.props.selectedCountry = countryData;
+                    });
+            });
+
+            // ** ng-model settings **
+            // anytime ng-model is updated, its final value should be the formatted phone number
+            ngModel.$parsers.unshift(function () {
+                return getFormattedNumber();
+            });
+            ngModel.$formatters.unshift(function (value) {
+                input.val(value);
+                return getFormattedNumber();
+            });
+            // tie ng-model's format validation to the plugin's validator
+            ngModel.$validators.bbPhoneFormat = function (modelValue) {
+                return modelValue && input.intlTelInput('isValidNumber');
+            };
+
+            // ** bbPhoneFieldConfig properties **
+            // if a default country as countryIso2 is not provided, we set it to bbPhoneFieldConfig's countryIso2
+            if (!phoneField.props.countryIso2) {
+                phoneField.props.countryIso2 = bbPhoneFieldConfig.countryIso2;
+            }
+            input.intlTelInput('setCountry', phoneField.props.countryIso2);
+            phoneField.props.selectedCountry = input.intlTelInput('getSelectedCountryData');
+
+            // ** ARIA (Accessibility Rich Internet Applications) **
+            // We hide the country dropdown from a screen reader because the "dropdown"
+            // is actually an unordered list which is not easily accessed without clicking or arrowing accordingly
+            angular.element('.selected-flag').attr('aria-hidden', true);
+            // If the screen-reader user does manage to get the dropdown going, we apply the ARIA tags so that they can header the countries
+            angular.element('.country-list').attr('role', 'listbox');
+            angular.element('.country').attr('role', 'option');
+        }
+
+        return {
+            bindToController: {
+                props: '=bbPhoneField'
+            },
+            controller: bbPhoneField,
+            controllerAs: "bbPhoneField",
+            link: link,
+            require: ['bbPhoneField', 'ngModel'],
+            restrict: 'A'
+        };
+    }
+
+    bbPhoneField.$inject = ['bbPhoneFieldConfig'];
+
+    angular.module('sky.phonefield.directive', ['sky.phonefield.config'])
+        .directive('bbPhoneField', bbPhoneField);
+}());
+
 /*global angular, jQuery */
 
 (function ($) {
@@ -7565,12 +7671,19 @@ angular.module('sky.palette.config', [])
 
 (function ($) {
     'use strict';
+    
+    var bbReorder;
 
-    function bbReorder($filter, $timeout) {
-        var bbAutonumericConfig = {
-            mDec: 0 // no decimals
-        };
-
+    function Controller($element, $filter, $scope, $timeout) {
+        var bbAutonumericConfig,
+            containerEl = $element.find('.bb-reorder-container'),
+            currentRepeaterItems, // the set of items from ng-repeat before sorting starts
+            currentSortItemIndex, // the index where the sorting item is currently being placed
+            finalIndex = -1, // the final index of the element being sorting after sorting has ended
+            originalSortItemIndex, // the original index of th item being sorted before sorting starts
+            sortableOptions, // jQuery sortable widget options
+            vm = this;
+        
         function applyNumberFormatting(index) {
             return $filter('bbAutonumeric')(index, bbAutonumericConfig);
         }
@@ -7593,171 +7706,168 @@ angular.module('sky.palette.config', [])
             }
         }
 
-        function link(scope, el, attrs, vm) {
-            var sortableOptions, // jQuery sortable widget options
-                originalSortItemIndex, // the original index of th item being sorted before sorting starts
-                currentSortItemIndex, // the index where the sorting item is currently being placed
-                finalIndex = -1, // the final index of the element being sorting after sorting has ended
-                currentRepeaterItems; // the set of items from ng-repeat before sorting starts
+        bbAutonumericConfig = {
+            mDec: 0 // no decimals
+        };
 
-            vm.sorting = false;
+        vm.sorting = false;
 
-            // sends an item to the top of the list with a rising animation
-            vm.pushToTop = function (item) {
-                var toTheTopEl,
-                    index,
-                    toTheTopElOffset,
-                    animateCloneEl;
+        // sends an item to the top of the list with a rising animation
+        vm.pushToTop = function (item) {
+            var animateCloneEl,
+                index,
+                toTheTopEl,
+                toTheTopElOffset;
 
-                index = vm.bbReorderItems.indexOf(item);
+            index = vm.bbReorderItems.indexOf(item);
 
-                el.sortable("disable"); // don't allow sorting during animation
+            containerEl.sortable("disable"); // don't allow sorting during animation
 
-                toTheTopEl = $(el.children()[index]);
-                toTheTopElOffset = toTheTopEl.position();
+            toTheTopEl = $(containerEl.children()[index]);
+            toTheTopElOffset = toTheTopEl.position();
 
-                // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
-                animateCloneEl = toTheTopEl.clone();
-                animateCloneEl.addClass('bb-reorder-animate-element');
-                animateCloneEl.css({top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px"});
+            // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
+            animateCloneEl = toTheTopEl.clone();
+            animateCloneEl.addClass('bb-reorder-animate-element');
+            animateCloneEl.css({top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px"});
 
-                el.append(animateCloneEl);
+            containerEl.append(animateCloneEl);
 
-                toTheTopEl.addClass('bb-reorder-list-row-placeholder');
+            toTheTopEl.addClass('bb-reorder-list-row-placeholder');
 
-                // animate that we are moving the item to the top of the list
-                $(animateCloneEl).fadeOut({duration: 500, queue: false, always: function () {
-                   toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
+            // animate that we are moving the item to the top of the list
+            $(animateCloneEl).fadeOut(
+                {
+                    duration: 500, 
+                    queue: false, 
+                    always: function () {
+                        toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
 
-                   animateCloneEl.remove();
-                   el.sortable("enable");
+                        animateCloneEl.remove();
+                        containerEl.sortable("enable");
 
-                   scope.$apply(function () {
-                       // perform the swap moving the item to the top of the list
-                       vm.bbReorderItems.splice(
-                         0, 0,
-                         vm.bbReorderItems.splice(index, 1)[0]);
-                   });
-               }});
-            };
-
-            //Setup jQuery sortable options for the items being sorted
-            sortableOptions = {
-                placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
-                axis: 'y', // constrain movement to the Y axis,
-                handle: '.bb-reorder-list-col-icon',
-                start: function (e, ui) {
-                    scope.$apply(function () {
-                        vm.sorting = true;
-                    });
-
-                    // need to keep track of the how the items were placed in the DOM since
-                    // the sortable is going to mess them up which breaks ng-repeat
-                    currentRepeaterItems = el.contents().not(ui.placeholder);
-
-                    ui.item.addClass('bb-reorder-list-sorting-item');
-
-                    originalSortItemIndex = ui.item.index();
-                    currentSortItemIndex = originalSortItemIndex;
-
-                    // need to set the height of the placeholder since we need to account for the padding on the row items
-                    ui.placeholder.height(ui.item.outerHeight());
-
-                    // set the current index of all rows for display purposes
-                    $.each(el.children('.bb-reorder-list-row'), function (i, item) {
-                        setPositionNumberText(item, i + 1);
-                    });
-                },
-                stop: function (e, ui) {
-                    // replace the repeater elements and comments so ng-repeat does not break
-                    currentRepeaterItems.appendTo(el);
-
-                    ui.item.removeClass('bb-reorder-list-sorting-item');
-
-                    if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
-                        scope.$apply(function () {
-                            // perform the swap that the user just performed
+                        $scope.$apply(function () {
+                            // perform the swap moving the item to the top of the list
                             vm.bbReorderItems.splice(
-                              finalIndex, 0,
-                              vm.bbReorderItems.splice(originalSortItemIndex, 1)[0]);
+                                0, 0,
+                                vm.bbReorderItems.splice(index, 1)[0]);
                         });
                     }
-
-                    scope.$apply(function () {
-                        vm.sorting = false;
-                    });
-
-                    originalSortItemIndex = null;
-                    currentSortItemIndex = null;
-                    finalIndex = -1;
-                    currentRepeaterItems = null;
-
-                    // once the ng-repeat has finished rendering the move, re-enable animations
-                    $timeout(function () {
-                        el.children().removeClass('bb-reorder-list-no-animate');
-                    });
-                },
-                update: function (e, ui) {
-                    // grab the final index of the item being sorted before we cancel
-                    // the sort and its position gets reset.
-                    finalIndex = ui.item.index();
-
-                    // don't animate the move when sorting
-                    el.children().addClass('bb-reorder-list-no-animate');
-
-                    // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
-                    el.sortable('cancel');
-                },
-                change: function (e, ui) {
-                    var displayIndex,
-                        newIndex;
-
-                    // Since the element being sorted is positioned absolute it remains in the
-                    // same position so we can't use its index. Instead use the placeholder since
-                    // that will be in the right position in the list.
-                    newIndex = ui.item.siblings().index(ui.placeholder);
-
-                    if (newIndex === currentSortItemIndex) {
-                        return;
-                    }
-
-                    // the display position shown to the user should start at 1, not 0
-                    displayIndex = newIndex + 1;
-
-                    // when we are sorting, change the position numbers on the rows
-                    if (newIndex > currentSortItemIndex) {
-                        // set the text of all previous siblings to account for change
-                        setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
-                    } else {
-                        // set the text of all next siblings to account for change
-                        setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
-                    }
-
-                    currentSortItemIndex = newIndex;
                 }
-            };
-
-            el.sortable(sortableOptions);
-        }
-
-        return {
-            replace: true,
-            restrict: 'E',
-            scope: {},
-            bindToController: {
-                bbReorderItems: '='
-            },
-            controller: angular.noop,
-            controllerAs: 'bbReorder',
-            templateUrl: 'sky/templates/reorder/reorder.directive.html',
-            link: link
+            );
         };
+
+        //Setup jQuery sortable options for the items being sorted
+        sortableOptions = {
+            placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
+            axis: 'y', // constrain movement to the Y axis,
+            handle: '.bb-reorder-list-col-icon',
+            start: function (e, ui) {
+                $scope.$apply(function () {
+                    vm.sorting = true;
+                });
+
+                // need to keep track of the how the items were placed in the DOM since
+                // the sortable is going to mess them up which breaks ng-repeat
+                currentRepeaterItems = containerEl.contents().not(ui.placeholder);
+
+                ui.item.addClass('bb-reorder-list-sorting-item');
+
+                originalSortItemIndex = ui.item.index();
+                currentSortItemIndex = originalSortItemIndex;
+
+                // need to set the height of the placeholder since we need to account for the padding on the row items
+                ui.placeholder.height(ui.item.outerHeight());
+
+                // set the current index of all rows for display purposes
+                $.each(containerEl.children('.bb-reorder-list-row'), function (i, item) {
+                    setPositionNumberText(item, i + 1);
+                });
+            },
+            stop: function (e, ui) {
+                // replace the repeater elements and comments so ng-repeat does not break
+                currentRepeaterItems.appendTo(containerEl);
+
+                ui.item.removeClass('bb-reorder-list-sorting-item');
+
+                if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
+                    $scope.$apply(function () {
+                        // perform the swap that the user just performed
+                        vm.bbReorderItems.splice(
+                            finalIndex, 0,
+                            vm.bbReorderItems.splice(originalSortItemIndex, 1)[0]);
+                    });
+                }
+
+                $scope.$apply(function () {
+                    vm.sorting = false;
+                });
+
+                originalSortItemIndex = null;
+                currentSortItemIndex = null;
+                finalIndex = -1;
+                currentRepeaterItems = null;
+
+                // once the ng-repeat has finished rendering the move, re-enable animations
+                $timeout(function () {
+                    containerEl.children().removeClass('bb-reorder-list-no-animate');
+                });
+            },
+            update: function (e, ui) {
+                // grab the final index of the item being sorted before we cancel
+                // the sort and its position gets reset.
+                finalIndex = ui.item.index();
+
+                // don't animate the move when sorting
+                containerEl.children().addClass('bb-reorder-list-no-animate');
+
+                // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
+                containerEl.sortable('cancel');
+            },
+            change: function (e, ui) {
+                var displayIndex,
+                    newIndex;
+
+                // Since the element being sorted is positioned absolute it remains in the
+                // same position so we can't use its index. Instead use the placeholder since
+                // that will be in the right position in the list.
+                newIndex = ui.item.siblings().index(ui.placeholder);
+
+                if (newIndex === currentSortItemIndex) {
+                    return;
+                }
+
+                // the display position shown to the user should start at 1, not 0
+                displayIndex = newIndex + 1;
+
+                // when we are sorting, change the position numbers on the rows
+                if (newIndex > currentSortItemIndex) {
+                    // set the text of all previous siblings to account for change
+                    setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
+                } else {
+                    // set the text of all next siblings to account for change
+                    setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
+                }
+
+                currentSortItemIndex = newIndex;
+            }
+        };
+
+        containerEl.sortable(sortableOptions);
     }
 
-    bbReorder.$inject = ['$filter', '$timeout'];
+    Controller.$inject = ['$element', '$filter', '$scope', '$timeout'];
+        
+    bbReorder = {
+        bindings: {
+            bbReorderItems: '='
+        },
+        controller: Controller,
+        templateUrl: 'sky/templates/reorder/reorder.component.html'
+    };
 
-    angular.module('sky.reorder.directive', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
-        .directive('bbReorder', bbReorder);
+    angular.module('sky.reorder.component', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
+        .component('bbReorder', bbReorder);
 }(jQuery));
 
 /*global angular */
@@ -10086,8 +10196,10 @@ angular.module('sky.palette.config', [])
     'use strict';
 
     var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed',
+        CLS_VIEWKEEPER_NO_OMNIBAR = 'bb-viewkeeper-no-omnibar',
         config = {
-            viewportMarginTop: 0
+            viewportMarginTop: 0,
+            hasOmnibar: true 
         },
         ViewKeeper;
 
@@ -10382,9 +10494,13 @@ angular.module('sky.palette.config', [])
             function mediaBreakpointHandler(breakpoints) {
                 //For user agents in which the omnibar follows you down the page, the ViewKeeper needs
                 //to adjust for the height of the omnibar.
-
-                //Ideally these values should be driven from a more appropriate source (omnibar js?)
-                bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
+                if (bbViewKeeperConfig.hasOmnibar) {
+                    //Ideally these values should be driven from a more appropriate source (omnibar js?)
+                    bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
+                    angular.element('body').removeClass(CLS_VIEWKEEPER_NO_OMNIBAR);
+                } else {
+                    angular.element('body').addClass(CLS_VIEWKEEPER_NO_OMNIBAR);
+                }
             }
 
             if (/iPad|iPod|iPhone/i.test($window.navigator.userAgent)) {
@@ -10438,7 +10554,6 @@ angular.module('sky.palette.config', [])
                     }
                 });
             }
-
             return {
                 link: link,
                 restrict: 'A',
@@ -11110,6 +11225,7 @@ angular.module('sky.palette.config', [])
         'sky.page',
         'sky.pagesummary',
         'sky.pagination',
+        'sky.phonefield',
         'sky.popover',
         'sky.reorder',
         'sky.repeater',
@@ -11203,27 +11319,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div ng-transclude></div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/avatar/avatar.directive.html',
-        '<div class="bb-avatar" ng-switch="bbAvatar.canChange">\n' +
+    $templateCache.put('sky/templates/avatar/avatar.component.html',
+        '<div class="bb-avatar" ng-switch="$ctrl.canChange">\n' +
         '  <div ng-switch-when="true">\n' +
         '    <div\n' +
         '       class="bb-avatar-file-drop"\n' +
         '       bb-file-drop\n' +
-        '       bb-file-drop-change="bbAvatar.photoDrop(files, rejectedFiles)"\n' +
+        '       bb-file-drop-change="$ctrl.photoDrop(files, rejectedFiles)"\n' +
         '       bb-file-drop-accept="\'image/*\'"\n' +
         '       >\n' +
-        '      <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '      <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="$ctrl.onTemplateLoad()"></ng-include>\n' +
         '    </div>\n' +
         '  </div>\n' +
         '  <div ng-switch-default>\n' +
-        '    <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="bbAvatar.onTemplateLoad()"></ng-include>\n' +
+        '    <ng-include src="\'sky/templates/avatar/avatarinner.include.html\'" onload="$ctrl.onTemplateLoad()"></ng-include>\n' +
         '  </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/avatar/avatarinner.include.html',
         '<div class="bb-avatar-wrapper">\n' +
-        '  <div class="bb-avatar-image" ng-show="bbAvatar.bbAvatarSrc"></div>\n' +
-        '  <canvas class="bb-avatar-initials" ng-show="bbAvatar.showInitials()"></canvas>\n' +
+        '  <div class="bb-avatar-image" ng-show="$ctrl.bbAvatarSrc"></div>\n' +
+        '  <canvas class="bb-avatar-initials" ng-show="$ctrl.showInitials()"></canvas>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/card/card.directive.html',
@@ -11346,8 +11462,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-checklist-list-description" bb-highlight="bbChecklist.searchText" ng-bind="item.description"></div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/chevron/chevron.directive.html',
-        '<button type="button" class="bb-chevron" ng-class="bbChevron.getCls()" ng-click="bbChevron.click($event)" aria-label="{{bbChevron.getLabel()}}">\n' +
+    $templateCache.put('sky/templates/chevron/chevron.component.html',
+        '<button type="button" class="bb-chevron" ng-class="$ctrl.getCls()" ng-click="$ctrl.click($event)" aria-label="{{$ctrl.getLabel()}}">\n' +
         '  <i class="bb-chevron-part bb-chevron-left"></i>\n' +
         '  <i class="bb-chevron-part bb-chevron-right"></i>\n' +
         '</button>\n' +
@@ -11842,7 +11958,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="clearfix"></div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/navbar/navbar.html',
+    $templateCache.put('sky/templates/navbar/navbar.component.html',
         '<nav class="navbar navbar-default bb-navbar" ng-transclude></nav>');
     $templateCache.put('sky/templates/page/page.html',
         '<section ng-if="locals.noPageStatusSpecified() || bbPageStatus === locals.pageStatuses.LOADED">\n' +
@@ -11905,26 +12021,31 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/reorder/reorder.directive.html',
+    $templateCache.put('sky/templates/reorder/reorder.component.html',
         '<div class="bb-reorder-container">\n' +
-        ' <div ng-repeat="item in bbReorder.bbReorderItems" class="bb-reorder-list-row">\n' +
-        '   <div class="bb-reorder-list-row-container">\n' +
-        '     <div class="bb-reorder-list-col bb-reorder-list-col-icon">\n' +
-        '       <i class="fa fa-arrows"></i>\n' +
-        '     </div>\n' +
-        '     <div class="bb-reorder-list-col bb-reorder-list-col-content">\n' +
-        '       <div class="bb-reorder-list-title">{{item.title}}</div>\n' +
-        '       <div class="bb-reorder-list-description">{{item.description}}</div>\n' +
-        '     </div>\n' +
-        '     <button type="button" ng-show="!$first &amp;&amp; !bbReorder.sorting" ng-click="bbReorder.pushToTop(item)" class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link">\n' +
-        '       <i class="fa fa-arrow-circle-up"></i>\n' +
-        '       <span>{{\'reorder_top\' | bbResources}}</span>\n' +
-        '     </button>\n' +
-        '     <div ng-show="bbReorder.sorting" class="bb-reorder-list-col">\n' +
-        '       <span class="bb-reorder-list-sorting-number"></span>\n' +
-        '     </div>\n' +
-        '   </div>\n' +
-        ' </div>\n' +
+        '  <div ng-repeat="item in $ctrl.bbReorderItems" class="bb-reorder-list-row">\n' +
+        '    <div class="bb-reorder-list-row-container">\n' +
+        '      <div class="bb-reorder-list-col bb-reorder-list-col-icon">\n' +
+        '        <i class="fa fa-arrows"></i>\n' +
+        '      </div>\n' +
+        '      <div class="bb-reorder-list-col bb-reorder-list-col-content">\n' +
+        '        <div class="bb-reorder-list-title">{{item.title}}</div>\n' +
+        '        <div class="bb-reorder-list-description">{{item.description}}</div>\n' +
+        '      </div>\n' +
+        '      <button \n' +
+        '          type="button" \n' +
+        '          ng-show="!$first &amp;&amp; !$ctrl.sorting" \n' +
+        '          ng-click="$ctrl.pushToTop(item)" \n' +
+        '          class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link"\n' +
+        '      >\n' +
+        '        <i class="fa fa-arrow-circle-up"></i>\n' +
+        '        <span>{{\'reorder_top\' | bbResources}}</span>\n' +
+        '      </button>\n' +
+        '      <div ng-show="$ctrl.sorting" class="bb-reorder-list-col">\n' +
+        '        <span class="bb-reorder-list-sorting-number"></span>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/repeater/repeater.directive.html',

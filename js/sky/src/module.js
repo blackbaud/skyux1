@@ -34,6 +34,7 @@
         'sky.page',
         'sky.pagesummary',
         'sky.pagination',
+        'sky.phonefield',
         'sky.popover',
         'sky.reorder',
         'sky.repeater',
