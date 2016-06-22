@@ -4,6 +4,7 @@
 (function ($) {
     'use strict';
 
+    angular.module('sky.wait', [])
         .factory('bbWait', ['$timeout', function ($timeout) {
 
             var addWait,
