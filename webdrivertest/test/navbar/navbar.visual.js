@@ -14,6 +14,7 @@ describe('navbar', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'navbar',
             selector: '#screenshot-navbar',
+            screenWidth: [480, 1280],
             done: done
         });
     });
