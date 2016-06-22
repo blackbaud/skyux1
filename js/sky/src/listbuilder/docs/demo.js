@@ -53,8 +53,6 @@
         self.onSearch = onSearch;
       
         self.data = data;
-
-
         
     }
     
