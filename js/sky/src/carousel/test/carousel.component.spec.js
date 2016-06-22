@@ -119,7 +119,7 @@ describe('Carousel component', function () {
         styleEl.remove();
     }));
 
-    it('should select a card when it is clicked', function () {
+    it('should select an item when it is clicked', function () {
         var $scope = $rootScope.$new(),
             el;
 
@@ -135,7 +135,7 @@ describe('Carousel component', function () {
         el.remove();
     });
 
-    it('should allow the user to navigate through cards with a swipe gesture', function () {
+    it('should allow the user to navigate through items with a swipe gesture', function () {
         var $scope = $rootScope.$new(),
             carouselEl,
             el;
@@ -157,7 +157,7 @@ describe('Carousel component', function () {
         el.remove();
     });
 
-    it('should allow the user to navigate through cards with the arrow buttons', function () {
+    it('should allow the user to navigate through items with the arrow buttons', function () {
         var $scope = $rootScope.$new(),
             el;
 
@@ -190,7 +190,7 @@ describe('Carousel component', function () {
         validateAriaLabel(getPreviousBtn(el), bbResources.carousel_button_label_previous);
     });
 
-    it('should show/hide arrows depending on the selected card', function () {
+    it('should show/hide arrows depending on the selected item', function () {
         var $scope = $rootScope.$new(),
             el,
             nextBtn,
@@ -223,7 +223,7 @@ describe('Carousel component', function () {
         el.remove();
     });
 
-    it('should allow the user to navigate through cards with the dot buttons', function () {
+    it('should allow the user to navigate through items with the dot buttons', function () {
         var $scope = $rootScope.$new(),
             el;
 
