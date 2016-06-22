@@ -11,6 +11,6 @@
         controller: 'BBListbuilderController'
     };
 
-    angular.module('sky.listbuilder.component', ['sky.listbuilder.controller'])
+    angular.module('sky.listbuilder.component', ['sky.listbuilder.controller', 'sky.card'])
         .component('bbListbuilder', listbuilderComponent);
 }());

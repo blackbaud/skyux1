@@ -12,6 +12,18 @@
             {
                 name: 'Second',
                 content: 'Content 2'
+            },
+            {
+                name: 'Third',
+                content: 'Content 3'
+            },
+            {
+                name: 'Fourth',
+                content: 'Content 4'
+            },
+            {
+                name: 'Fifth',
+                content: 'Content 5'
             }];
 
         function onSearch(searchText, highlightResults) {
@@ -32,13 +44,16 @@
 
             }
             self.data = filteredData;
-            highlightResults();
+            if (angular.isFunction(highlightResults)) {
+                highlightResults();
+            } 
 
         }
 
         self.onSearch = onSearch;
       
         self.data = data;
+
 
         
     }

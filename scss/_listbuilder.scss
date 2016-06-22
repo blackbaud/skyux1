@@ -35,3 +35,7 @@
 .bb-listbuilder-search-input:focus + .bb-listbuilder-search-button button:hover {
     z-index: auto;
 }
+
+.bb-listbuilder-content {
+    margin-top: $margin;
+}
