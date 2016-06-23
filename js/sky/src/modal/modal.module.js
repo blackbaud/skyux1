@@ -6,11 +6,11 @@
     angular.module('sky.modal', 
     ['sky.modal.directive', 
     'sky.modalbody.directive', 
-    'sky.modalfooter.directive', 
-    'sky.modalfooterbutton.directive', 
+    'sky.modalfooter.component', 
+    'sky.modalfooterbutton.component', 
     'sky.modalfooterbuttoncancel.directive',
-    'sky.modalfooterbuttonprimary.directive', 
-    'sky.modalheader.directive',  
+    'sky.modalfooterbuttonprimary.component', 
+    'sky.modalheader.component',  
     'sky.modal.factory']);
 
 }());
