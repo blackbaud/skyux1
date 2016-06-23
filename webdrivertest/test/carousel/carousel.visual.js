@@ -69,9 +69,10 @@ describe('Card', function () {
     it('should match previous screenshot when a dot button has focus', function (done) {
         doTest(
             function (result) {
-                result
-                    .moveToObject(CAROUSEL_SELECTOR_LARGE + ' .bb-carousel-dot-btn:first-child')
-                    .buttonDown();
+                common.focusElement(
+                    result, 
+                    CAROUSEL_SELECTOR_LARGE + ' .bb-carousel-dot-btn:first-child'
+                );
             }, 
             'carousel-dot-focus', 
             CAROUSEL_SELECTOR_LARGE + ' .bb-carousel-dots', 

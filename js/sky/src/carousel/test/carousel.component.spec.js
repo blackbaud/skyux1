@@ -28,7 +28,7 @@ describe('Carousel component', function () {
         for (i = 0; i < itemCount; i++) {
             html += 
                 '<bb-carousel-item>' +
-                    '<bb-card></bb-card>' +
+                    '<bb-card><button></button></bb-card>' +
                 '</bb-carousel-item>';
         }
          
@@ -130,6 +130,25 @@ describe('Carousel component', function () {
         $scope.$digest();
 
         clickCarouselItem(el, 1);
+        validateItemSelected(el, 1);
+
+        el.remove();
+    });
+
+    it('should select an item when a child element is focused', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 10);
+
+        el.appendTo(document.body);
+
+        $scope.$digest();
+
+        el.find('.bb-carousel-item').eq(1).focusin();
+
+        $scope.$digest();
+
         validateItemSelected(el, 1);
 
         el.remove();
@@ -314,7 +333,7 @@ describe('Carousel component', function () {
 
     it(
         'should set the selected dot when there are more items than dots and an item ' + 
-        ' is selected that is not precisely represented by a dot', 
+        'is selected that is not precisely represented by a dot', 
         function () {
             var $scope = $rootScope.$new(),
                 el;

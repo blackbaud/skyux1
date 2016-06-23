@@ -40,6 +40,9 @@
 }
 
 .bb-carousel-btn {
+    &:focus {
+        @include tab-focus;
+    }
     background-color: #fff;
     border: none;
     font-size: 40px;
@@ -78,14 +81,12 @@
 }
 
 .bb-carousel-dot-btn {
-    align-items: center;
+    &:focus {
+        @include tab-focus;
+    }
     background-color: transparent;
     border: none;
-    display: inline-flex;
-    height: 22px;
-    justify-content: center;
     padding: 0;
-    width: 22px;
 }
 
 .bb-carousel-dot-content {
@@ -93,6 +94,7 @@
     border-radius: 50%;
     height: 10px;
     width: 10px;
+    margin: 6px;
     transition: background-color $bb-transition-time-short;
 }
 
