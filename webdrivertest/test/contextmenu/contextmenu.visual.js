@@ -20,7 +20,7 @@ describe('contextmenu', function () {
 
         });
 
-        it('should match the baseline context menu sscreenshot when open', function (done) {
+        it('should match the baseline context menu screenshot when open', function (done) {
             var result,
                 common = require('../common');
 
