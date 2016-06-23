@@ -5,7 +5,7 @@
     'use strict';
 
     angular.module('sky.wait.directive', [])
-  .directive('bbWait', ['bbWait', function (bbWait) {
+        .directive('bbWait', ['bbWait', function (bbWait) {
             /// <summary>
             /// This directive provides an attribute that can be placed on elements indicating whether they should or shouldn't be blocked for waiting.
             /// </summary>
@@ -24,5 +24,4 @@
                 }
             };
         }]);
-
 }());
