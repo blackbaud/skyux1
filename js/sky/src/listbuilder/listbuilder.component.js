@@ -6,7 +6,8 @@
         templateUrl: 'sky/templates/listbuilder/listbuilder.component.html',
         transclude: {
             bbListbuilderToolbar: '?bbListbuilderToolbar',
-            bbListbuilderContent: '?bbListbuilderContent'
+            bbListbuilderContent: '?bbListbuilderContent',
+            bbListbuilderFooter: '?bbListbuilderFooter'
         },
         controller: 'BBListbuilderController'
     };

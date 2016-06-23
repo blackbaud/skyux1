@@ -1,0 +1,17 @@
+<div class="bb-listbuilder-footer">
+    <div class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="$ctrl.bbListbuilderShowMore" ng-click="$ctrl.loadMore()">
+        <span class="fa fa-cloud-download"></span>
+        <button type="button" class="btn btn-link">{{listbuilder_footer_load_more | bbResources}}</button>
+    </div>
+    <div class="bb-table-backtotop" data-bbauto-field="BackToTopButton" ng-show="$ctrl.listbuilderIsScrolled" ng-click="$ctrl.backToTop()">
+        <span style="float:left">
+            <span class="fa fa-arrow-up "></span>
+            <button type="button" class="btn btn-link">{{listbuilder_footer_back_to_top | bbResources}}</button>
+        </span>
+        <span style="float:right">
+            <span class="fa fa-arrow-up "></span>
+            <button type="button" class="btn btn-link">{{listbuilder_footer_back_to_top | bbResources}}</button>
+        </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
