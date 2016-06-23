@@ -3,17 +3,34 @@
 (function () {
     'use strict';
     describe('Listbuilder toolbar', function () {
-        
+        var $compile,
+            $scope,
+            simpleCardContentHtml = '<bb-listbuilder-content>' +
+                    '<bb-listbuilder-cards>' +
+                    '<bb-card>' +
+                    '<bb-card-title>' +
+                    'First' +
+                    '</bb-card-title>' +
+                    '<bb-card-content>' +
+                    'First Content' +
+                    '</bb-card-content>' +
+                    '</bb-card>' +
+                    '</bb-listbuilder-cards>' +
+                    '</bb-listbuilder-content>';
+
         beforeEach(module(
             'sky.listbuilder',
             'sky.templates'
         ));
+
+        beforeEach(inject(function (_$rootScope_, _$compile_) {
+            $scope = _$rootScope_.$new();
+            $compile = _$compile_;
+        }));
         
         
         describe('search', function () {
-            var $scope,
-                $compile,
-                $document,
+            var $document,
                 $timeout,
                 searchHtml,
                 localSearchText,
@@ -21,21 +38,10 @@
                     onSearch: function (searchText, highlightResults) {
                         localSearchText = searchText;
                         highlightResults();
-                    },
-                    data: [
-                    {
-                        name: 'First',
-                        content: 'Content 1'
-                    },
-                    {
-                        name: 'Second',
-                        content: 'Content 2'
-                    }]
+                    }
                 };
             
-            beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_) {
-                $scope = _$rootScope_.$new();
-                $compile = _$compile_;
+            beforeEach(inject(function (_$document_, _$timeout_) {
                 $document = _$document_;
                 $timeout = _$timeout_;
                 searchHtml = angular.element(
@@ -44,18 +50,7 @@
                     'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)" ' +
                     'bb-listbuilder-search-text="listCtrl.searchText">' +
                     '</bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-content>' +
-                    '<bb-listbuilder-cards>' +
-                    '<bb-card ng-repeat="item in listCtrl.data">' +
-                    '<bb-card-title>' +
-                    '{{item.name}}' +
-                    '</bb-card-title>' +
-                    '<bb-card-content>' +
-                    '{{item.content}}' +
-                    '</bb-card-content>' +
-                    '</bb-card>' +
-                    '</bb-listbuilder-cards>' +
-                    '</bb-listbuilder-content>' +
+                    simpleCardContentHtml +
                     '</bb-listbuilder>');
                 
             }));
@@ -179,6 +174,65 @@
 
                 el.remove();
             });
+        });
+
+        describe('viewkeeper', function () {
+            var viewKeeperHtml,
+                bbViewKeeperBuilder;
+
+            beforeEach(inject(function (_bbViewKeeperBuilder_) {
+                bbViewKeeperBuilder = _bbViewKeeperBuilder_;
+                viewKeeperHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' + 
+                    'bb-listbuilder-toolbar-offset-el-id="\'myoffsetid\'" ' + 
+                    'bb-listbuilder-toolbar-fixed="{{ctrl.isFixed}}">' +
+                    '</bb-listbuilder-toolbar>' +
+                    simpleCardContentHtml +
+                    '</bb-listbuilder>');
+                
+            }));
+
+
+            it('creates a view keeper on toolbar init', function () {
+                var el;
+
+                $scope.ctrl = {
+                    isFixed: false
+                };
+
+                spyOn(bbViewKeeperBuilder, 'create').and.callThrough();
+
+                el = $compile(viewKeeperHtml)($scope);
+                $scope.$digest();
+
+                expect(bbViewKeeperBuilder.create).toHaveBeenCalledWith(
+                    { 
+                        el: el.find('.bb-listbuilder-toolbar'),
+                        boundaryEl: el.find('.bb-listbuilder-content'),
+                        setWidth: true,
+                        verticalOffSetElId: 'myoffsetid' 
+                    }
+                );
+
+                $scope.$destroy();
+            });
+
+            it('will not create a view keeper if fixed is set to true', function () {
+                var el;
+
+                $scope.ctrl = {
+                    isFixed: true
+                };
+                spyOn(bbViewKeeperBuilder, 'create').and.callThrough();
+                $scope.$digest();
+
+                el = $compile(viewKeeperHtml)($scope);
+
+                expect(bbViewKeeperBuilder.create).not.toHaveBeenCalled();
+                $scope.$destroy();
+            });
+
         });
     });
 }());

@@ -8,10 +8,13 @@
         function highlightSearchText(searchText) {
             $timeout(function () {
                 var cardEl = $element.find('.bb-card');
-                bbHighlight.clear(cardEl);
-                if (searchText) {
-                    bbHighlight(cardEl.not('.bb-listbuilder-no-search'), searchText, 'highlight');
+                if (cardEl.length > 0) {
+                    bbHighlight.clear(cardEl);
+                    if (searchText) {
+                        bbHighlight(cardEl.not('.bb-listbuilder-no-search'), searchText, 'highlight');
+                    }
                 }
+                
             });
            
         }

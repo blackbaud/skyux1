@@ -30,7 +30,7 @@
 
         // Floating headers
         function setupViewKeeper() {
-            if (!ctrl.bbListbuilderToolbarFixed || ctrl.bbListbuilderToolbarFixed === 'false') {
+            if (ctrl.bbListbuilderToolbarFixed !== 'true') {
                 if (ctrl.vkToolbar) {
                     ctrl.vkToolbar.destroy();
                 }
