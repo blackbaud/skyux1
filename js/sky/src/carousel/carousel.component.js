@@ -155,7 +155,7 @@
 
     Controller.$inject = ['$scope', '$element', 'bbFormat', 'bbResources'];
 
-    angular.module('sky.carousel.component', ['ngTouch'])
+    angular.module('sky.carousel.component', ['ngTouch', 'sky.format', 'sky.resources'])
         .component('bbCarousel', {
             bindings: {
                 bbCarouselSelectedIndex: '<?',

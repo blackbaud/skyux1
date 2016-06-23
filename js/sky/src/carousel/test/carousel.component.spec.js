@@ -100,8 +100,6 @@ describe('Carousel component', function () {
         'ngMock',
         'sky.card',
         'sky.carousel',
-        'sky.format',
-        'sky.resources',
         'sky.templates'
     ));
 
