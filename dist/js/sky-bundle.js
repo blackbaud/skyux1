@@ -101361,7 +101361,7 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
 
-    angular.module('sky.repeater', ['sky.repeater.directive', 'sky.repeater.item.directive']);
+    angular.module('sky.repeater', ['sky.repeater.component', 'sky.repeater.item.directive']);
 }());
 
 /*global angular */
@@ -109117,6 +109117,22 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
+    angular.module('sky.repeater.component', ['sky.repeater.controller'])
+        .component('bbRepeater', {
+            bindings: {
+                bbRepeaterExpandMode: '@?'
+            },
+            controller: 'BBRepeaterController',
+            templateUrl: 'sky/templates/repeater/repeater.component.html',
+            transclude: true
+        });
+}());
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     function BBRepeaterController($scope) {
         var items = [],
             vm = this;
@@ -109190,33 +109206,6 @@ angular.module('sky.palette.config', [])
 
     angular.module('sky.repeater.controller', [])
         .controller('BBRepeaterController', BBRepeaterController);
-}());
-
-/*global angular */
-
-(function () {
-    'use strict';
-
-    function bbRepeater() {
-        function link() {
-
-        }
-
-        return {
-            scope: {},
-            bindToController: {
-                bbRepeaterExpandMode: '@?'
-            },
-            controller: 'BBRepeaterController',
-            controllerAs: 'bbRepeater',
-            link: link,
-            templateUrl: 'sky/templates/repeater/repeater.directive.html',
-            transclude: true
-        };
-    }
-
-    angular.module('sky.repeater.directive', ['sky.repeater.controller'])
-        .directive('bbRepeater', bbRepeater);
 }());
 
 /*global angular */
@@ -113300,7 +113289,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/repeater/repeater.directive.html',
+    $templateCache.put('sky/templates/repeater/repeater.component.html',
         '<div class="bb-repeater-component bb-repeater">\n' +
         '  <ng-transclude></ng-transclude>\n' +
         '</div>\n' +
