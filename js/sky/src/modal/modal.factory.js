@@ -6,7 +6,7 @@
 
     var openModalCount = 0;
 
-    angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+    angular.module('sky.modal.factory', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
         .factory('bbModal', ['$uibModal', '$window', function ($uibModal, $window) {
             return {
                 open: function (opts) {

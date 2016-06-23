@@ -3,6 +3,6 @@
 (function () {
     'use strict';
 
-    angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+    angular.module('sky.modal', ['sky.modal.directive', 'sky.modal.factory']);
 
 }());

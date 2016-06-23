@@ -4,7 +4,7 @@
 (function ($) {
     'use strict';
 
-    angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+    angular.module('sky.modal.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
         .directive('bbModal', ['$timeout', function ($timeout) {
             function getPixelValue(val) {
                 val = val || '0';
