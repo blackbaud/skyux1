@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function BBListbuilderToolbarController($element, $q) {
+    function BBListbuilderToolbarController($element, $q, bbViewKeeperBuilder) {
         var ctrl = this;
 
         function applySearchText(searchText) {
@@ -28,6 +28,23 @@
             
         }
 
+        // Floating headers
+        function setupViewKeeper() {
+            if (!ctrl.bbListbuilderToolbarFixed || ctrl.bbListbuilderToolbarFixed === 'false') {
+                if (ctrl.vkToolbar) {
+                    ctrl.vkToolbar.destroy();
+                }
+
+                ctrl.vkToolbar = new bbViewKeeperBuilder.create({
+                    el: $element.find('.bb-listbuilder-toolbar'),
+                    boundaryEl: ctrl.listbuilderCtrl.getContentContainer(),
+                    setWidth: true,
+                    verticalOffSetElId: ctrl.bbListbuilderToolbarOffsetElId
+                });
+            }
+           
+        }
+
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
         function bindingChanges(changesObj) {
             var searchText;
@@ -43,18 +60,28 @@
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
             }
+            
+            setupViewKeeper();
+
         }
 
-        ctrl.$onInit = initToolbar;
+        function destroyToolbar() {
+            if (ctrl.vkToolbar) {
+                ctrl.vkToolbar.destroy();
+            }
+        }
 
+        // Lifecycle hooks
+        ctrl.$onInit = initToolbar;
         ctrl.$onChanges = bindingChanges;
+        ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
 
     }
 
-    BBListbuilderToolbarController.$inject = ['$element', '$q'];
+    BBListbuilderToolbarController.$inject = ['$element', '$q', 'bbViewKeeperBuilder'];
 
-    angular.module('sky.listbuilder.toolbar.controller', ['sky.resources'])
+    angular.module('sky.listbuilder.toolbar.controller', ['sky.resources', 'sky.viewkeeper'])
         .controller('BBListbuilderToolbarController', BBListbuilderToolbarController);
 }());

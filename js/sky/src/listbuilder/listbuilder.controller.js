@@ -14,9 +14,14 @@
                 }
             });
            
+        }
+
+        function getContentContainer() {
+            return $element.find('.bb-listbuilder-content');
         }     
 
         ctrl.highlightSearchText = highlightSearchText;
+        ctrl.getContentContainer = getContentContainer;
     }
 
     BBListbuilderController.$inject = ['$element', 'bbHighlight', '$timeout'];

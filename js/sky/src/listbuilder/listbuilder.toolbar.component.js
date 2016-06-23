@@ -6,7 +6,9 @@
         templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
         bindings: {
             bbListbuilderOnSearch: '&?',
-            bbListbuilderSearchText: '<?'
+            bbListbuilderSearchText: '<?',
+            bbListbuilderToolbarOffsetElId: '<?',
+            bbListbuilderToolbarFixed: '@?'
         },
         controller: 'BBListbuilderToolbarController',
         require: {
