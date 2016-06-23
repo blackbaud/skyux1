@@ -101380,6 +101380,14 @@ global.easyXDM = easyXDM;
 
 }());
 
+/*jslint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.wait', ['sky.wait.directive', 'sky.wait.factory']);
+}());
 /*global angular */
 
 (function () {
@@ -111911,12 +111919,40 @@ angular.module('sky.palette.config', [])
 }());
 
 /*jslint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.wait.directive', [])
+        .directive('bbWait', ['bbWait', function (bbWait) {
+            /// <summary>
+            /// This directive provides an attribute that can be placed on elements indicating whether they should or shouldn't be blocked for waiting.
+            /// </summary>
+            return {
+                restrict: 'A',
+                link: function (scope, el, attrs) {
+                    var firstScopeLoad = true;
+                    scope.$watch(attrs.bbWait, function (value, oldValue) {
+                        if (value && (!oldValue || firstScopeLoad)) {
+                            bbWait.beginElWait(el);
+                        } else if (oldValue && !value) {
+                            bbWait.endElWait(el);
+                        }
+                        firstScopeLoad = false;
+                    });
+                }
+            };
+        }]);
+}());
+
+/*jslint browser: true */
 /*global angular, jQuery */
 
 (function ($) {
     'use strict';
 
-    angular.module('sky.wait', [])
+    angular.module('sky.wait.factory', [])
         .factory('bbWait', ['$timeout', function ($timeout) {
 
             var addWait,
@@ -112164,28 +112200,10 @@ angular.module('sky.palette.config', [])
                     removeWait(document.body, options);
                 }
             };
-        }])
-        .directive('bbWait', ['bbWait', function (bbWait) {
-            /// <summary>
-            /// This directive provides an attribute that can be placed on elements indicating whether they should or shouldn't be blocked for waiting.
-            /// </summary>
-            return {
-                restrict: 'A',
-                link: function (scope, el, attrs) {
-                    var firstScopeLoad = true;
-                    scope.$watch(attrs.bbWait, function (value, oldValue) {
-                        if (value && (!oldValue || firstScopeLoad)) {
-                            bbWait.beginElWait(el);
-                        } else if (oldValue && !value) {
-                            bbWait.endElWait(el);
-                        }
-                        firstScopeLoad = false;
-                    });
-                }
-            };
         }]);
 
 }(jQuery));
+
 
 /*global angular*/
 
