@@ -99,3 +99,7 @@ To display custom content, add the `bb-grid-custom-toolbar` attribute to the `bb
         - `index` &mdash; Specifies the index of the resized column.
         - `newWidth` &mdash; Specifies the width of the resized column.
     - `reInitGrid` &mdash; The grid reinitializes itself when it receives this event.
+
+### Viewkeeper configuration ###
+  - `bbViewKeeperConfig` &mdash; A global configuration object for a service that fixes the grid headers and toolbar in place when the browser window scrolls. 
+    - `hasOmnibar` &mdash; *(Optional.)* Indicates whether the viewkeeper leaves space for an omnibar. *(Default = `true`)* 

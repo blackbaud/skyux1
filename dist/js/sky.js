@@ -119,7 +119,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.reorder', ['sky.reorder.directive']);
+    angular.module('sky.reorder', ['sky.reorder.component']);
 }());
 
 /*global angular */
@@ -127,7 +127,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.repeater', ['sky.repeater.directive', 'sky.repeater.item.directive']);
+    angular.module('sky.repeater', ['sky.repeater.component', 'sky.repeater.item.directive']);
 }());
 
 /*global angular */
@@ -146,6 +146,14 @@
 
 }());
 
+/*jslint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.wait', ['sky.wait.directive', 'sky.wait.factory']);
+}());
 /*global angular */
 
 (function () {
@@ -7671,12 +7679,19 @@ angular.module('sky.palette.config', [])
 
 (function ($) {
     'use strict';
+    
+    var bbReorder;
 
-    function bbReorder($filter, $timeout) {
-        var bbAutonumericConfig = {
-            mDec: 0 // no decimals
-        };
-
+    function Controller($element, $filter, $scope, $timeout) {
+        var bbAutonumericConfig,
+            containerEl = $element.find('.bb-reorder-container'),
+            currentRepeaterItems, // the set of items from ng-repeat before sorting starts
+            currentSortItemIndex, // the index where the sorting item is currently being placed
+            finalIndex = -1, // the final index of the element being sorting after sorting has ended
+            originalSortItemIndex, // the original index of th item being sorted before sorting starts
+            sortableOptions, // jQuery sortable widget options
+            vm = this;
+        
         function applyNumberFormatting(index) {
             return $filter('bbAutonumeric')(index, bbAutonumericConfig);
         }
@@ -7699,172 +7714,185 @@ angular.module('sky.palette.config', [])
             }
         }
 
-        function link(scope, el, attrs, vm) {
-            var sortableOptions, // jQuery sortable widget options
-                originalSortItemIndex, // the original index of th item being sorted before sorting starts
-                currentSortItemIndex, // the index where the sorting item is currently being placed
-                finalIndex = -1, // the final index of the element being sorting after sorting has ended
-                currentRepeaterItems; // the set of items from ng-repeat before sorting starts
+        bbAutonumericConfig = {
+            mDec: 0 // no decimals
+        };
 
-            vm.sorting = false;
+        vm.sorting = false;
 
-            // sends an item to the top of the list with a rising animation
-            vm.pushToTop = function (item) {
-                var toTheTopEl,
-                    index,
-                    toTheTopElOffset,
-                    animateCloneEl;
+        // sends an item to the top of the list with a rising animation
+        vm.pushToTop = function (item) {
+            var animateCloneEl,
+                index,
+                toTheTopEl,
+                toTheTopElOffset;
 
-                index = vm.bbReorderItems.indexOf(item);
+            index = vm.bbReorderItems.indexOf(item);
 
-                el.sortable("disable"); // don't allow sorting during animation
+            containerEl.sortable("disable"); // don't allow sorting during animation
 
-                toTheTopEl = $(el.children()[index]);
-                toTheTopElOffset = toTheTopEl.position();
+            toTheTopEl = $(containerEl.children()[index]);
+            toTheTopElOffset = toTheTopEl.position();
 
-                // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
-                animateCloneEl = toTheTopEl.clone();
-                animateCloneEl.addClass('bb-reorder-animate-element');
-                animateCloneEl.css({top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px"});
+            // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
+            animateCloneEl = toTheTopEl.clone();
+            animateCloneEl.addClass('bb-reorder-animate-element');
+            animateCloneEl.css({top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px"});
 
-                el.append(animateCloneEl);
+            containerEl.append(animateCloneEl);
 
-                toTheTopEl.addClass('bb-reorder-list-row-placeholder');
+            toTheTopEl.addClass('bb-reorder-list-row-placeholder');
 
-                // animate that we are moving the item to the top of the list
-                $(animateCloneEl).fadeOut({duration: 500, queue: false, always: function () {
-                   toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
+            // animate that we are moving the item to the top of the list
+            $(animateCloneEl).fadeOut(
+                {
+                    duration: 500, 
+                    queue: false, 
+                    always: function () {
+                        toTheTopEl.removeClass('bb-reorder-list-row-placeholder');
 
-                   animateCloneEl.remove();
-                   el.sortable("enable");
+                        animateCloneEl.remove();
+                        containerEl.sortable("enable");
 
-                   scope.$apply(function () {
-                       // perform the swap moving the item to the top of the list
-                       vm.bbReorderItems.splice(
-                         0, 0,
-                         vm.bbReorderItems.splice(index, 1)[0]);
-                   });
-               }});
-            };
-
-            //Setup jQuery sortable options for the items being sorted
-            sortableOptions = {
-                placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
-                axis: 'y', // constrain movement to the Y axis,
-                handle: '.bb-reorder-list-col-icon',
-                start: function (e, ui) {
-                    scope.$apply(function () {
-                        vm.sorting = true;
-                    });
-
-                    // need to keep track of the how the items were placed in the DOM since
-                    // the sortable is going to mess them up which breaks ng-repeat
-                    currentRepeaterItems = el.contents().not(ui.placeholder);
-
-                    ui.item.addClass('bb-reorder-list-sorting-item');
-
-                    originalSortItemIndex = ui.item.index();
-                    currentSortItemIndex = originalSortItemIndex;
-
-                    // need to set the height of the placeholder since we need to account for the padding on the row items
-                    ui.placeholder.height(ui.item.outerHeight());
-
-                    // set the current index of all rows for display purposes
-                    $.each(el.children('.bb-reorder-list-row'), function (i, item) {
-                        setPositionNumberText(item, i + 1);
-                    });
-                },
-                stop: function (e, ui) {
-                    // replace the repeater elements and comments so ng-repeat does not break
-                    currentRepeaterItems.appendTo(el);
-
-                    ui.item.removeClass('bb-reorder-list-sorting-item');
-
-                    if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
-                        scope.$apply(function () {
-                            // perform the swap that the user just performed
+                        $scope.$apply(function () {
+                            // perform the swap moving the item to the top of the list
                             vm.bbReorderItems.splice(
-                              finalIndex, 0,
-                              vm.bbReorderItems.splice(originalSortItemIndex, 1)[0]);
+                                0, 0,
+                                vm.bbReorderItems.splice(index, 1)[0]);
                         });
                     }
-
-                    scope.$apply(function () {
-                        vm.sorting = false;
-                    });
-
-                    originalSortItemIndex = null;
-                    currentSortItemIndex = null;
-                    finalIndex = -1;
-                    currentRepeaterItems = null;
-
-                    // once the ng-repeat has finished rendering the move, re-enable animations
-                    $timeout(function () {
-                        el.children().removeClass('bb-reorder-list-no-animate');
-                    });
-                },
-                update: function (e, ui) {
-                    // grab the final index of the item being sorted before we cancel
-                    // the sort and its position gets reset.
-                    finalIndex = ui.item.index();
-
-                    // don't animate the move when sorting
-                    el.children().addClass('bb-reorder-list-no-animate');
-
-                    // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
-                    el.sortable('cancel');
-                },
-                change: function (e, ui) {
-                    var displayIndex,
-                        newIndex;
-
-                    // Since the element being sorted is positioned absolute it remains in the
-                    // same position so we can't use its index. Instead use the placeholder since
-                    // that will be in the right position in the list.
-                    newIndex = ui.item.siblings().index(ui.placeholder);
-
-                    if (newIndex === currentSortItemIndex) {
-                        return;
-                    }
-
-                    // the display position shown to the user should start at 1, not 0
-                    displayIndex = newIndex + 1;
-
-                    // when we are sorting, change the position numbers on the rows
-                    if (newIndex > currentSortItemIndex) {
-                        // set the text of all previous siblings to account for change
-                        setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
-                    } else {
-                        // set the text of all next siblings to account for change
-                        setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
-                    }
-
-                    currentSortItemIndex = newIndex;
                 }
-            };
-
-            el.sortable(sortableOptions);
-        }
-
-        return {
-            replace: true,
-            restrict: 'E',
-            scope: {},
-            bindToController: {
-                bbReorderItems: '='
-            },
-            controller: angular.noop,
-            controllerAs: 'bbReorder',
-            templateUrl: 'sky/templates/reorder/reorder.directive.html',
-            link: link
+            );
         };
+
+        //Setup jQuery sortable options for the items being sorted
+        sortableOptions = {
+            placeholder: 'bb-reorder-list-row-placeholder', // class to put on placeholder element
+            axis: 'y', // constrain movement to the Y axis,
+            handle: '.bb-reorder-list-col-icon',
+            start: function (e, ui) {
+                $scope.$apply(function () {
+                    vm.sorting = true;
+                });
+
+                // need to keep track of the how the items were placed in the DOM since
+                // the sortable is going to mess them up which breaks ng-repeat
+                currentRepeaterItems = containerEl.contents().not(ui.placeholder);
+
+                ui.item.addClass('bb-reorder-list-sorting-item');
+
+                originalSortItemIndex = ui.item.index();
+                currentSortItemIndex = originalSortItemIndex;
+
+                // need to set the height of the placeholder since we need to account for the padding on the row items
+                ui.placeholder.height(ui.item.outerHeight());
+
+                // set the current index of all rows for display purposes
+                $.each(containerEl.children('.bb-reorder-list-row'), function (i, item) {
+                    setPositionNumberText(item, i + 1);
+                });
+            },
+            stop: function (e, ui) {
+                // replace the repeater elements and comments so ng-repeat does not break
+                currentRepeaterItems.appendTo(containerEl);
+
+                ui.item.removeClass('bb-reorder-list-sorting-item');
+
+                if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
+                    $scope.$apply(function () {
+                        // perform the swap that the user just performed
+                        vm.bbReorderItems.splice(
+                            finalIndex, 0,
+                            vm.bbReorderItems.splice(originalSortItemIndex, 1)[0]);
+                    });
+                }
+
+                $scope.$apply(function () {
+                    vm.sorting = false;
+                });
+
+                originalSortItemIndex = null;
+                currentSortItemIndex = null;
+                finalIndex = -1;
+                currentRepeaterItems = null;
+
+                // once the ng-repeat has finished rendering the move, re-enable animations
+                $timeout(function () {
+                    containerEl.children().removeClass('bb-reorder-list-no-animate');
+                });
+            },
+            update: function (e, ui) {
+                // grab the final index of the item being sorted before we cancel
+                // the sort and its position gets reset.
+                finalIndex = ui.item.index();
+
+                // don't animate the move when sorting
+                containerEl.children().addClass('bb-reorder-list-no-animate');
+
+                // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
+                containerEl.sortable('cancel');
+            },
+            change: function (e, ui) {
+                var displayIndex,
+                    newIndex;
+
+                // Since the element being sorted is positioned absolute it remains in the
+                // same position so we can't use its index. Instead use the placeholder since
+                // that will be in the right position in the list.
+                newIndex = ui.item.siblings().index(ui.placeholder);
+
+                if (newIndex === currentSortItemIndex) {
+                    return;
+                }
+
+                // the display position shown to the user should start at 1, not 0
+                displayIndex = newIndex + 1;
+
+                // when we are sorting, change the position numbers on the rows
+                if (newIndex > currentSortItemIndex) {
+                    // set the text of all previous siblings to account for change
+                    setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
+                } else {
+                    // set the text of all next siblings to account for change
+                    setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
+                }
+
+                currentSortItemIndex = newIndex;
+            }
+        };
+
+        containerEl.sortable(sortableOptions);
     }
 
-    bbReorder.$inject = ['$filter', '$timeout'];
+    Controller.$inject = ['$element', '$filter', '$scope', '$timeout'];
+        
+    bbReorder = {
+        bindings: {
+            bbReorderItems: '='
+        },
+        controller: Controller,
+        templateUrl: 'sky/templates/reorder/reorder.component.html'
+    };
 
-    angular.module('sky.reorder.directive', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
-        .directive('bbReorder', bbReorder);
+    angular.module('sky.reorder.component', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
+        .component('bbReorder', bbReorder);
 }(jQuery));
+
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.repeater.component', ['sky.repeater.controller'])
+        .component('bbRepeater', {
+            bindings: {
+                bbRepeaterExpandMode: '@?'
+            },
+            controller: 'BBRepeaterController',
+            templateUrl: 'sky/templates/repeater/repeater.component.html',
+            transclude: true
+        });
+}());
 
 /*global angular */
 
@@ -7944,33 +7972,6 @@ angular.module('sky.palette.config', [])
 
     angular.module('sky.repeater.controller', [])
         .controller('BBRepeaterController', BBRepeaterController);
-}());
-
-/*global angular */
-
-(function () {
-    'use strict';
-
-    function bbRepeater() {
-        function link() {
-
-        }
-
-        return {
-            scope: {},
-            bindToController: {
-                bbRepeaterExpandMode: '@?'
-            },
-            controller: 'BBRepeaterController',
-            controllerAs: 'bbRepeater',
-            link: link,
-            templateUrl: 'sky/templates/repeater/repeater.directive.html',
-            transclude: true
-        };
-    }
-
-    angular.module('sky.repeater.directive', ['sky.repeater.controller'])
-        .directive('bbRepeater', bbRepeater);
 }());
 
 /*global angular */
@@ -10550,7 +10551,6 @@ angular.module('sky.palette.config', [])
                     }
                 });
             }
-
             return {
                 link: link,
                 restrict: 'A',
@@ -10674,12 +10674,40 @@ angular.module('sky.palette.config', [])
 }());
 
 /*jslint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.wait.directive', [])
+        .directive('bbWait', ['bbWait', function (bbWait) {
+            /// <summary>
+            /// This directive provides an attribute that can be placed on elements indicating whether they should or shouldn't be blocked for waiting.
+            /// </summary>
+            return {
+                restrict: 'A',
+                link: function (scope, el, attrs) {
+                    var firstScopeLoad = true;
+                    scope.$watch(attrs.bbWait, function (value, oldValue) {
+                        if (value && (!oldValue || firstScopeLoad)) {
+                            bbWait.beginElWait(el);
+                        } else if (oldValue && !value) {
+                            bbWait.endElWait(el);
+                        }
+                        firstScopeLoad = false;
+                    });
+                }
+            };
+        }]);
+}());
+
+/*jslint browser: true */
 /*global angular, jQuery */
 
 (function ($) {
     'use strict';
 
-    angular.module('sky.wait', [])
+    angular.module('sky.wait.factory', [])
         .factory('bbWait', ['$timeout', function ($timeout) {
 
             var addWait,
@@ -10927,28 +10955,10 @@ angular.module('sky.palette.config', [])
                     removeWait(document.body, options);
                 }
             };
-        }])
-        .directive('bbWait', ['bbWait', function (bbWait) {
-            /// <summary>
-            /// This directive provides an attribute that can be placed on elements indicating whether they should or shouldn't be blocked for waiting.
-            /// </summary>
-            return {
-                restrict: 'A',
-                link: function (scope, el, attrs) {
-                    var firstScopeLoad = true;
-                    scope.$watch(attrs.bbWait, function (value, oldValue) {
-                        if (value && (!oldValue || firstScopeLoad)) {
-                            bbWait.beginElWait(el);
-                        } else if (oldValue && !value) {
-                            bbWait.endElWait(el);
-                        }
-                        firstScopeLoad = false;
-                    });
-                }
-            };
         }]);
 
 }(jQuery));
+
 
 /*global angular*/
 
@@ -12018,29 +12028,34 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/reorder/reorder.directive.html',
+    $templateCache.put('sky/templates/reorder/reorder.component.html',
         '<div class="bb-reorder-container">\n' +
-        ' <div ng-repeat="item in bbReorder.bbReorderItems" class="bb-reorder-list-row">\n' +
-        '   <div class="bb-reorder-list-row-container">\n' +
-        '     <div class="bb-reorder-list-col bb-reorder-list-col-icon">\n' +
-        '       <i class="fa fa-arrows"></i>\n' +
-        '     </div>\n' +
-        '     <div class="bb-reorder-list-col bb-reorder-list-col-content">\n' +
-        '       <div class="bb-reorder-list-title">{{item.title}}</div>\n' +
-        '       <div class="bb-reorder-list-description">{{item.description}}</div>\n' +
-        '     </div>\n' +
-        '     <button type="button" ng-show="!$first &amp;&amp; !bbReorder.sorting" ng-click="bbReorder.pushToTop(item)" class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link">\n' +
-        '       <i class="fa fa-arrow-circle-up"></i>\n' +
-        '       <span>{{\'reorder_top\' | bbResources}}</span>\n' +
-        '     </button>\n' +
-        '     <div ng-show="bbReorder.sorting" class="bb-reorder-list-col">\n' +
-        '       <span class="bb-reorder-list-sorting-number"></span>\n' +
-        '     </div>\n' +
-        '   </div>\n' +
-        ' </div>\n' +
+        '  <div ng-repeat="item in $ctrl.bbReorderItems" class="bb-reorder-list-row">\n' +
+        '    <div class="bb-reorder-list-row-container">\n' +
+        '      <div class="bb-reorder-list-col bb-reorder-list-col-icon">\n' +
+        '        <i class="fa fa-arrows"></i>\n' +
+        '      </div>\n' +
+        '      <div class="bb-reorder-list-col bb-reorder-list-col-content">\n' +
+        '        <div class="bb-reorder-list-title">{{item.title}}</div>\n' +
+        '        <div class="bb-reorder-list-description">{{item.description}}</div>\n' +
+        '      </div>\n' +
+        '      <button \n' +
+        '          type="button" \n' +
+        '          ng-show="!$first &amp;&amp; !$ctrl.sorting" \n' +
+        '          ng-click="$ctrl.pushToTop(item)" \n' +
+        '          class="bb-reorder-list-col bb-reorder-list-col-top btn btn-link"\n' +
+        '      >\n' +
+        '        <i class="fa fa-arrow-circle-up"></i>\n' +
+        '        <span>{{\'reorder_top\' | bbResources}}</span>\n' +
+        '      </button>\n' +
+        '      <div ng-show="$ctrl.sorting" class="bb-reorder-list-col">\n' +
+        '        <span class="bb-reorder-list-sorting-number"></span>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/repeater/repeater.directive.html',
+    $templateCache.put('sky/templates/repeater/repeater.component.html',
         '<div class="bb-repeater-component bb-repeater">\n' +
         '  <ng-transclude></ng-transclude>\n' +
         '</div>\n' +

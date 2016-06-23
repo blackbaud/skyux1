@@ -4,7 +4,7 @@ icon: check-square
 summary: The repeater component creates a container to display formatted information for a list of objects.
 ---
 
-The repeater directive creates a container to display formatted information for a list of objects. As an alternative to [the grid layout](../grids), repeaters are particularly effective for mobile-intensive contexts and other scenarios where you need to display information compactly.
+The repeater component creates a container to display formatted information for a list of objects. As an alternative to [the grid layout](../grids), repeaters are particularly effective for mobile-intensive contexts and other scenarios where you need to display information compactly.
 
 When you create a repeater, you can specify whether to let users collapse and expand list items to hide and view their content. The default standard layout does not allow users to collapse items. The multiple-expand layout allows users to collapse and expand items as necessary. And the single-expand layout allows users to collapse and expand one item at a time.
 
@@ -22,5 +22,5 @@ When you create a repeater, you can specify whether to let users collapse and ex
         - `bb-repeater-item-context-menu` &mdash; Specifies a context menu to display beside the repeater title. To specify actions to include in the context menu, use [the `bb-context-menu` directive](../contextmenu) within this property.
         - `bb-repeater-item-title` &mdash; Specifies a title to identify an object in the repeater list. The title is particularly important for expandable repeater layouts because it remains visible when users collapse items.
         - `bb-repeater-item-content` &mdash; Specifies the content to display in the body of a repeater item. The content to display depends on the type of object and the use case that the repeater supports.
-       
+
 ---
