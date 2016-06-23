@@ -127,7 +127,7 @@
     }
 }
 
-bb-navbar.bb-navbar-showmobile {
+.bb-navbar-showmobile {
     .bb-navbar {
          @media (max-width: $screen-xs-max) {
             display: block;
