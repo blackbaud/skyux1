@@ -119,7 +119,7 @@
     }
 }
 
-.bb-context-menu .dropdown-menu {
+.bb-context-menu .dropdown-menu, .dropdown-menu bb-context-menu-item {
   
     li.disabled {
         pointer-events:none;  
