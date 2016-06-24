@@ -2,8 +2,9 @@
 (function () {
     'use strict';
 
-    function Controller($element, $q, bbViewKeeperBuilder) {
-        var ctrl = this;
+    function Controller($element, $q, $timeout, bbViewKeeperBuilder) {
+        var ctrl = this,
+            vkToolbar;
 
         function applySearchText(searchText) {
 
@@ -31,18 +32,28 @@
         // Floating headers
         function setupViewKeeper() {
             if (ctrl.bbListbuilderToolbarFixed !== 'true') {
-                if (ctrl.vkToolbar) {
-                    ctrl.vkToolbar.destroy();
+                if (vkToolbar) {
+                    vkToolbar.destroy();
                 }
 
-                ctrl.vkToolbar = new bbViewKeeperBuilder.create({
+                vkToolbar = new bbViewKeeperBuilder.create({
                     el: $element.find('.bb-listbuilder-toolbar'),
                     boundaryEl: ctrl.listbuilderCtrl.getContentContainer(),
                     setWidth: true,
-                    verticalOffSetElId: ctrl.bbListbuilderToolbarOffsetElId
+                    verticalOffSetElId: ctrl.listbuilderCtrl.bbListbuilderVerticalOffsetElId,
+                    onStateChanged: function () {
+                        $timeout(function () {
+                            ctrl.listbuilderCtrl.isScrolledChanged(vkToolbar.isFixed);
+                        });
+                        
+                    }
                 });
             }
            
+        }
+
+        function toolbarScrollToTop() {
+            vkToolbar.scrollToTop();
         }
 
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
@@ -63,11 +74,17 @@
             
             setupViewKeeper();
 
+            /*
+                Allow other listbuilder components to scroll to original
+                toolbar location.
+            */
+            ctrl.listbuilderCtrl.toolbarScrollToTop = toolbarScrollToTop;
+
         }
 
         function destroyToolbar() {
-            if (ctrl.vkToolbar) {
-                ctrl.vkToolbar.destroy();
+            if (vkToolbar) {
+                vkToolbar.destroy();
             }
         }
 
@@ -80,7 +97,7 @@
 
     }
 
-    Controller.$inject = ['$element', '$q', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', '$q', '$timeout', 'bbViewKeeperBuilder'];
 
     angular.module('sky.listbuilder.toolbar.component', ['sky.resources', 'sky.viewkeeper'])
         .component('bbListbuilderToolbar', {
@@ -88,7 +105,6 @@
             bindings: {
                 bbListbuilderOnSearch: '&?',
                 bbListbuilderSearchText: '<?',
-                bbListbuilderToolbarOffsetElId: '<?',
                 bbListbuilderToolbarFixed: '@?'
             },
             controller: Controller,

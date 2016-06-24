@@ -1,3 +1,4 @@
+/* Toolbar */
 .bb-listbuilder-toolbar {
     min-height: 39px;
     background-color: $bb-color-white;
@@ -36,10 +37,35 @@
     z-index: auto;
 }
 
+.bb-listbuilder-no-search span.highlight {
+  background-color: transparent;
+}
+
+/* Content */
 .bb-listbuilder-content {
     margin-top: $margin;
 }
 
-.bb-listbuilder-no-search span.highlight {
-  background-color: transparent;
+/* Footer */
+.bb-listbuilder-backtotop-left {
+    float: left;
 }
+
+.bb-listbuilder-backtotop-right {
+    float: right;
+}
+
+.bb-listbuilder-loadmore {
+    background-color: #eee; /* find variable */
+}
+
+.bb-listbuilder-loadmore, .bb-listbuilder-backtotop {
+    padding: $padding-half;
+    text-align: center;
+    @include bb-border(light, top, bottom, left, right);
+    margin-top: $margin-half;
+    cursor: pointer;    
+}
+
+
+

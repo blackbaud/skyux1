@@ -491,6 +491,18 @@
         "_description": "",
         "message": "Done"
     },
+    "listbuilder_footer_load_more": {
+        "_description": "Text for loading more data in a listbuilder",
+        "message": "Load more"
+    },
+    "listbuilder_footer_back_to_top": {
+        "_description": "Text for scrolling back to the top of the listbuilder",
+        "message": "Back to top"
+    },
+    "listbuilder_search_label": {
+        "_description": "Label for the listbuilder search functionality",
+        "message": "Listbuilder search"
+    },
     "searchfield_searching": {
         "_description": "text for ui-select search control while performing a remote search",
         "message": "Searching..."

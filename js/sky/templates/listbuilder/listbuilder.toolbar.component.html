@@ -6,13 +6,13 @@
             ng-model="$ctrl.bbListbuilderSearchText" 
             ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbListbuilderSearchText)" 
             data-bbauto-field="SearchBox"
-            aria-label="{{listbuilder_search_input_label | bbResources}}" />
+            aria-label="{{::'listbuilder_search_label' | bbResources}}" />
         <span class="input-group-btn bb-listbuilder-search-button">
             <button 
                 type="button"
                 class="btn"
                 ng-click="$ctrl.applySearchText($ctrl.bbListbuilderSearchText)"
-                aria-label="{{listbuilder_search_button_label | bbResources}}" >
+                aria-label="{{::'listbuilder_search_label' | bbResources}}" >
                 <i class="fa fa-search"></i>
             </button>
         </span>

@@ -21,10 +21,31 @@
 
         function getContentContainer() {
             return $element.find('.bb-listbuilder-content');
-        }     
+        }
+
+        function getListbuilderContainer() {
+            return $element.find('.bb-listbuilder');
+        }
+
+        function scrollToTop() {
+            /*
+                ctrl.toolbarScrollToTop() set in listbuilder.toolbar.component
+            */
+            if (angular.isFunction(ctrl.toolbarScrollToTop)) {
+                ctrl.toolbarScrollToTop();
+            }
+        }
+
+        function isScrolledChanged(isScrolled) {
+            ctrl.isScrolled = isScrolled;
+        }
 
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.getContentContainer = getContentContainer;
+        ctrl.getListbuilderContainer = getListbuilderContainer;
+        ctrl.scrollToTop = scrollToTop;
+        ctrl.isScrolledChanged = isScrolledChanged;
+
     }
 
     Controller.$inject = ['$element', 'bbHighlight', '$timeout'];
@@ -32,6 +53,9 @@
     angular.module('sky.listbuilder.component', ['sky.card', 'sky.highlight'])
         .component('bbListbuilder', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.component.html',
+            bindings: {
+                bbListbuilderVerticalOffsetElId: '<?'
+            },
             transclude: {
                 bbListbuilderToolbar: '?bbListbuilderToolbar',
                 bbListbuilderContent: '?bbListbuilderContent',
