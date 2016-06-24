@@ -35,6 +35,18 @@
         "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
         "message": "File is too large."
     },
+    "carousel_button_label_next": {
+        "_description": "The accessibility label for the carousel next button",
+        "message": "Go to next item"
+    },
+    "carousel_button_label_previous": {
+        "_description": "The accessibility label for the carousel previous button",
+        "message": "Go to previous item"
+    },
+    "carousel_dot_label": {
+        "_description": "The label for the carousel navigation dots",
+        "message": "Go to item {0}"
+    },
     "checklist_select_all": {
         "_description": "Text for the link in a checklist to select all items.",
         "message": "Select all"
