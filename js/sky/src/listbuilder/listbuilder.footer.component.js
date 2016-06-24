@@ -4,43 +4,38 @@
 
 
 
-    function Controller($element, bbViewKeeperBuilder) {
+    function Controller($element, $document) {
         var ctrl = this,
-            vkBackToTop;
+                    actionbarEl;
 
-        // Floating back to top button
-        function setupViewKeeper() {
-            if (vkBackToTop) {
-                vkBackToTop.destroy();
+        function setupActionbar() {
+            actionbarEl = $element.find('.bb-listbuilder-actionbar');
+            $document.find('body').append(actionbarEl);
+        }
+
+        function removeActionbar() {
+            if (actionbarEl) {
+                actionbarEl.remove();
             }
-
-            vkBackToTop = new bbViewKeeperBuilder.create({
-                el: $element.find('.bb-listbuilder-backtotop')[0],
-                boundaryEl: ctrl.listbuilderCtrl.getListbuilderContainer(),
-                setWidth: true,
-                verticalOffSetElId: ctrl.listbuilderCtrl.bbListbuilderVerticalOffSetElId,
-                fixToBottom: true
-            });
+            
         }
 
         function initFooter() {
-            setupViewKeeper();
+            setupActionbar();
         }
 
         function destroyFooter() {
-            if (vkBackToTop) {
-                vkBackToTop.destroy();
-            }
+            removeActionbar();
         }
 
-        ctrl.$onInit = initFooter;
+        ctrl.$postLink = initFooter;
         ctrl.$onDestroy = destroyFooter;
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', '$document'];
 
-    angular.module('sky.listbuilder.footer.component', ['sky.viewkeeper', 'sky.resources'])
+    angular.module('sky.listbuilder.footer.component', ['sky.resources'])
         .component('bbListbuilderFooter', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.footer.component.html',
             bindings: {

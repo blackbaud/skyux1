@@ -4,27 +4,26 @@
     
     function ListbuilderTestController() {
         var self = this,
-            data = [
-            {
-                name: 'First',
-                content: 'Content 1'
-            },
-            {
-                name: 'Second',
-                content: 'Content 2'
-            },
-            {
-                name: 'Third',
-                content: 'Content 3'
-            },
-            {
-                name: 'Fourth',
-                content: 'Content 4'
-            },
-            {
-                name: 'Fifth',
-                content: 'Content 5'
-            }];
+            contentCount = 1;
+
+        function createData(amount) {
+            var i,
+                newData = [],
+                dataIndex;
+
+            for (i = 0; i < amount; i++) {
+                newData.push(
+                    {
+                        name: (contentCount + ' Title'),
+                        content: (contentCount + ' Content')
+                    }
+                );
+                contentCount++;
+
+            }
+
+            return newData;
+        }
 
         function onSearch(searchText, highlightResults) {
             var filteredData = data;
@@ -50,9 +49,16 @@
 
         }
 
+        function onLoadMore() {
+            var newData = createData(5);
+
+            self.data = self.data.concat(newData);
+        }
+
         self.onSearch = onSearch;
+        self.onLoadMore = onLoadMore;
       
-        self.data = data;
+        self.data = createData(5);
         
     }
     

@@ -1,16 +1,33 @@
 <div class="bb-listbuilder-footer">
-    <div class="bb-listbuilder-loadmore" data-bbauto-field="LoadMoreButton" ng-show="$ctrl.bbListbuilderShowLoadMore" ng-click="$ctrl.bbListbuilderOnLoadMore()">
-        <span class="fa fa-cloud-download"></span>
-        <button type="button" class="btn btn-link">{{::'listbuilder_footer_load_more' | bbResources}}</button>
-    </div>
-    <div class="bb-listbuilder-backtotop" data-bbauto-field="BackToTopButton" ng-show="$ctrl.listbuilderCtrl.isScrolled" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
-        <span class="bb-listbuilder-backtotop-left">
+    <div class="bb-listbuilder-actionbar" ng-show="$ctrl.listbuilderCtrl.isScrolled || $ctrl.bbListbuilderShowLoadMore">
+        <span class="bb-listbuilder-backtotop-left" ng-show="$ctrl.listbuilderCtrl.isScrolled"  ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
             <span class="fa fa-arrow-up "></span>
-            <button type="button" class="btn btn-link">{{::'listbuilder_footer_back_to_top' | bbResources}}</button>
+            <button 
+                type="button" 
+                class="btn btn-link" 
+               >
+                {{::'listbuilder_footer_back_to_top' | bbResources}}
+            </button>
         </span>
-        <span class="bb-listbuilder-backtotop-right">
+        
+        <span class="bb-listbuilder-loadmore" ng-show="$ctrl.bbListbuilderShowLoadMore" ng-click="$ctrl.bbListbuilderOnLoadMore()">
+            <span class="fa fa-cloud-download"></span>
+            <button 
+                type="button" 
+                class="btn btn-link" 
+                >
+                {{::'listbuilder_footer_load_more' | bbResources}}
+            </button>
+        </span>
+        
+        <span class="bb-listbuilder-backtotop-right" ng-show="$ctrl.listbuilderCtrl.isScrolled" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
             <span class="fa fa-arrow-up "></span>
-            <button type="button" class="btn btn-link">{{::'listbuilder_footer_back_to_top' | bbResources}}</button>
+            <button 
+                type="button" 
+                class="btn btn-link" 
+                >
+                {{::'listbuilder_footer_back_to_top' | bbResources}}
+            </button>
         </span>
         <div class="clearfix"></div>
     </div>

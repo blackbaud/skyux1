@@ -14,7 +14,7 @@
     @include bb-border(light, top, bottom, left);
     border-right: none;
     transition: none;
-    @include box-shadow(none);
+    box-shadow: none;
     border-radius: 6px;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
@@ -55,17 +55,26 @@
     float: right;
 }
 
-.bb-listbuilder-loadmore {
-    background-color: #eee; /* find variable */
+.bb-listbuilder-backtotop-left, .bb-listbuilder-backtotop-right, .bb-listbuilder-loadmore {
+    cursor: pointer;
 }
 
-.bb-listbuilder-loadmore, .bb-listbuilder-backtotop {
-    padding: $padding-half;
+.bb-listbuilder-actionbar {
+    box-shadow: 0 -5px 5px 0 #ccc;
+    width: 100%;
+    background-color: $bb-color-white;
+    padding: $padding;
     text-align: center;
-    @include bb-border(light, top, bottom, left, right);
-    margin-top: $margin-half;
-    cursor: pointer;    
+    margin-top: $margin-half;  
+    
+    position: fixed;
+    bottom: 0;
+
+    .btn-link {
+        vertical-align: baseline; 
+    }
 }
+
 
 
 
