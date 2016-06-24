@@ -1,7 +1,7 @@
 /*jshint browser: true */
 /*global angular */
 
-(function () {
+(function ($) {
     'use strict';
 
     var openModalCount = 0;
