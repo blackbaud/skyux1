@@ -8,7 +8,7 @@
     'sky.modalbody.directive', 
     'sky.modalfooter.component', 
     'sky.modalfooterbutton.component', 
-    'sky.modalfooterbuttoncancel.directive',
+    'sky.modalfooterbuttoncancel.component',
     'sky.modalfooterbuttonprimary.component', 
     'sky.modalheader.component',  
     'sky.modal.factory']);
