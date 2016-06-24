@@ -1,5 +1,5 @@
 /*jshint browser: true */
-/*global angular, jQuery */
+/*global angular */
 
 (function () {
     'use strict';
@@ -57,4 +57,4 @@
                 }
             };
         }]);
-}(jQuery));
+}());
