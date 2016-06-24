@@ -80,6 +80,9 @@
         checkAccessibility: checkAccessibility,
         moveCursorOffScreen: function (browser) {
             return browser.moveToObject('body', 0, 0);
+        },
+        focusElement: function (browser, selector) {
+            browser.execute('document.querySelector("' + selector + '").focus()');
         }
     };
 }());
