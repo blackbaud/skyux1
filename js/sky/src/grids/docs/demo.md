@@ -68,7 +68,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `sortOptions` &mdash; Specifies options for column sorting.
             - `excludedColumns` &mdash; *(Optional.)* Specifies an array of the names of columns that users cannot use to sort the grid.
             - `column` &mdash; Specifies the name of the column to sort data by. Set by the `bb-grid` directive.
-            - `descending` &mdash; Indicates whether to sort in descending order. Set to `true' by the `bb-grid` directive to sort in descending order.
+            - `descending` &mdash; Indicates whether to sort in descending order. Set to `true` by the `bb-grid` directive to sort in descending order.
     - `bb-grid-pagination` &mdash; *(Optional.)* Specifies an object with the following properties to indicate that the grid uses pagination instead of infinite scrolling.
         - `currentPage` &mdash; *(Optional.)* Specifies the current page starting at 1. *(Default = 1)*
         - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default = 5)*
@@ -99,3 +99,7 @@ To display custom content, add the `bb-grid-custom-toolbar` attribute to the `bb
         - `index` &mdash; Specifies the index of the resized column.
         - `newWidth` &mdash; Specifies the width of the resized column.
     - `reInitGrid` &mdash; The grid reinitializes itself when it receives this event.
+
+### Viewkeeper configuration ###
+  - `bbViewKeeperConfig` &mdash; A global configuration object for a service that fixes the grid headers and toolbar in place when the browser window scrolls.
+    - `hasOmnibar` &mdash; *(Optional.)* Indicates whether the viewkeeper leaves space for an omnibar. *(Default = `true`)*

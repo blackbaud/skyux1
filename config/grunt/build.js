@@ -19,7 +19,8 @@ module.exports = function (grunt, env, utils) {
                 ],
                 libsCss: [
                     'node_modules/free-jqgrid/css/ui.jqgrid.css',
-                    'node_modules/angular-toastr/dist/angular-toastr.min.css'
+                    'node_modules/angular-toastr/dist/angular-toastr.min.css',
+                    'node_modules/intl-tel-input/build/css/intlTelInput.css'
                 ],
                 libsJs: [
                     'node_modules/jquery/dist/jquery.js',
@@ -30,6 +31,7 @@ module.exports = function (grunt, env, utils) {
                     'node_modules/angular/angular.js',
                     'node_modules/angular-animate/angular-animate.js',
                     'node_modules/angular-messages/angular-messages.js',
+                    'node_modules/angular-touch/angular-touch.js',
                     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
                     'node_modules/angular-ui-router/release/angular-ui-router.js',
                     'node_modules/moment/moment.js',
@@ -39,6 +41,8 @@ module.exports = function (grunt, env, utils) {
                     'node_modules/block-ui/jquery.blockUI.js',
                     'node_modules/fastclick/lib/fastclick.js',
                     'node_modules/ng-file-upload/dist/ng-file-upload.js',
+                    'node_modules/intl-tel-input/build/js/utils.js',
+                    'node_modules/intl-tel-input/build/js/intlTelInput.min.js',
                     'libs/easyXDM.js'
                 ]
             }
@@ -77,6 +81,13 @@ module.exports = function (grunt, env, utils) {
                     flatten: true,
                     src: ['images/*.svg', 'images/*.png'],
                     cwd: 'scss',
+                    dest: '<%= skyux.paths.dist %>css/images'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: ['images/*.png'],
+                    cwd: 'node_modules/intl-tel-input/build/img',
                     dest: '<%= skyux.paths.dist %>css/images'
                 }]
             }

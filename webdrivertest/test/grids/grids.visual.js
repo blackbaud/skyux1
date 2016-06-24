@@ -1,4 +1,4 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser, require, $ */
 
 describe('bb-grid component', function () {
     'use strict';
@@ -174,6 +174,30 @@ describe('bb-grid component', function () {
             done: done
         });
 
+    });
+
+    it('should match a baseline screenshot of a grid with context menu open', function (done) {
+        var common = require('../common'),
+            browserResult;
+
+        /*  We add this class to the body because the resizing that webdriverCss does 
+            while taking screenshots closes the context menu dropdown.
+        */
+        browserResult = browser
+            .url('/grids/fixtures/test.full.html')
+            .click('button.show-grid')
+            .waitForVisible('#screenshot-grid td .bb-context-menu-btn', 20000)
+            .execute(function () {
+                $('body').addClass('bb-test-open-dropdowns');
+            });
+        
+        common.compareScreenshot({
+            browserResult: browserResult,
+            prefix: common.getPrefix(browser),
+            screenshotName: 'grids_contextmenu_open',
+            selector: '#screenshot-grid',
+            done: done
+        });
     });
 
 

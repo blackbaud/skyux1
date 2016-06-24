@@ -9,6 +9,7 @@
         vm.expandMode = 'none';
         vm.showContextMenu = true;
         vm.showTitle = true;
+        vm.showCheck = false;
 
         vm.items = [
             {
@@ -18,7 +19,7 @@
                 statusType: 'success'
             },
             {
-                title: 'Send invitation to Spring Ball',
+                title: 'Send invitation to ball',
                 note: 'The Spring Ball is coming up soon.  Let\'s get those invitations out!',
                 status: 'Past due',
                 statusType: 'warning'

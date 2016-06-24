@@ -35,6 +35,18 @@
         "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
         "message": "File is too large."
     },
+    "carousel_button_label_next": {
+        "_description": "The accessibility label for the carousel next button",
+        "message": "Go to next item"
+    },
+    "carousel_button_label_previous": {
+        "_description": "The accessibility label for the carousel previous button",
+        "message": "Go to previous item"
+    },
+    "carousel_dot_label": {
+        "_description": "The label for the carousel navigation dots",
+        "message": "Go to item {0}"
+    },
     "checklist_select_all": {
         "_description": "Text for the link in a checklist to select all items.",
         "message": "Select all"
@@ -522,6 +534,10 @@
     "selectfieldpicker_clear": {
       "_description": "Text displayed on the button in single select mode to clear selection and close form",
       "message": "Clear selection"
+    },
+    "tile_chevron_label": {
+        "_description": "Label for the expand and collapse chevron in tiles",
+        "message": "Expand or collapse"
     },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",

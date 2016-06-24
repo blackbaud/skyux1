@@ -1,0 +1,105 @@
+@import "mixins";
+
+.bb-carousel-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.bb-carousel {
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+.bb-carousel-contents {
+    position: relative;
+}
+
+.bb-carousel-card {
+    .bb-carousel {
+        height: $bb-card-height;
+        width: $bb-card-width;
+    }
+}
+
+.bb-carousel-card-small {
+    .bb-carousel {
+        height: $bb-card-height-small;
+        width: $bb-card-width-small;
+    }
+}
+
+.bb-carousel-item {
+    display: inline-block;
+    list-style-type: none;
+    position: absolute;
+    white-space: normal;
+    transition: transform $bb-transition-time-short;
+    z-index: 0;
+}
+
+.bb-carousel-btn {
+    &:focus {
+        @include tab-focus;
+    }
+    background-color: #fff;
+    border: none;
+    font-size: 40px;
+    height: 60px;
+    margin-top: -30px;
+    opacity: 0.8;
+    position: absolute;
+    top: 50%;
+    transition: opacity $bb-transition-time-short;
+    z-index: 1;
+}
+
+@media (max-width: $screen-xs-max) {
+    .bb-carousel-btn {
+        display: none;
+    }
+}
+
+.bb-carousel-btn:hover {
+    opacity: 0.9;
+}
+
+.bb-carousel-btn-previous {
+    left: $margin-half;
+}
+
+.bb-carousel-btn-next {
+    right: $margin-half;
+}
+
+.bb-carousel-dots {
+    display: flex;
+    justify-content: center;
+    padding: $padding;
+    z-index: 1;
+}
+
+.bb-carousel-dot-btn {
+    &:focus {
+        @include tab-focus;
+    }
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.bb-carousel-dot-content {
+    background-color: $gray-lighter;
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    margin: 6px;
+    transition: background-color $bb-transition-time-short;
+}
+
+.bb-carousel-dot-btn-selected {
+    .bb-carousel-dot-content {
+        background-color: $gray;
+    }
+}

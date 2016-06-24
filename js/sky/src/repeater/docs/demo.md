@@ -4,7 +4,7 @@ icon: check-square
 summary: The repeater component creates a container to display formatted information for a list of objects.
 ---
 
-The repeater directive creates a container to display formatted information for a list of objects. As an alternative to [the grid layout](../grids), repeaters are particularly effective for mobile-intensive contexts and other scenarios where you need to display information compactly.
+The repeater component creates a container to display formatted information for a list of objects. As an alternative to [the grid layout](../grids), repeaters are particularly effective for mobile-intensive contexts and other scenarios where you need to display information compactly.
 
 When you create a repeater, you can specify whether to let users collapse and expand list items to hide and view their content. The default standard layout does not allow users to collapse items. The multiple-expand layout allows users to collapse and expand items as necessary. And the single-expand layout allows users to collapse and expand one item at a time.
 
@@ -16,7 +16,11 @@ When you create a repeater, you can specify whether to let users collapse and ex
         - `single` &mdash; Loads repeater items in a collapsed state by default and allows users to expand one item at a time. This single-expand layout provides the most compact view because users can only expand one item at a time. It is best-suited for scenarios where the most important information is the titles and users only occasionally need to view the content in the body of one repeater item at a time.
     - `bb-repeater-item` &mdash; Creates an item to display in the repeater list.
         - `bb-repeater-item-expanded` &mdash; *(Optional.)* Indicates whether to load an item in expanded mode. It can also specify to expand the item programmatically after the item loads. To load an item in expanded mode, set this flag to `true`. *(Default: `false`)*  
+        - `bb-repeater-item-selectable` &mdash; *(Optional.)* Indicates whether to display a checkbox in the left of the repeater item. *(Default: `false`)*  
+        - `bb-repeater-item-selected` &mdash; *(Optional.)* Specifies whether the repeater item is selected (i.e. its checkbox is checked). When the user selects the repeater item the specified property on your model will be updated accordingly.
+        - `bb-repeater-item-input-label` &mdash; *(Optional.)* Text applied to the `aria-label` of the repeater item checkbox when the repeater item is selectable. If not specified, any text contained in the `bb-repeater-item-title` will be applied to the `aria-label`.
         - `bb-repeater-item-context-menu` &mdash; Specifies a context menu to display beside the repeater title. To specify actions to include in the context menu, use [the `bb-context-menu` directive](../contextmenu) within this property.
         - `bb-repeater-item-title` &mdash; Specifies a title to identify an object in the repeater list. The title is particularly important for expandable repeater layouts because it remains visible when users collapse items.
         - `bb-repeater-item-content` &mdash; Specifies the content to display in the body of a repeater item. The content to display depends on the type of object and the use case that the repeater supports.
+
 ---

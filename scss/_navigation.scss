@@ -127,4 +127,13 @@
     }
 }
 
+.bb-navbar-showmobile {
+    .bb-navbar {
+         @media (max-width: $screen-xs-max) {
+            display: block;
+         }
+    }
+}
+
+
 /* NAVIGATION END */

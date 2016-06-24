@@ -104,6 +104,185 @@ describe('Repeater directive', function () {
         expect(getItems(el).eq(0)).toHaveClass('bb-repeater-item-with-context-menu');
     });
 
+    describe('repeater item multiselect', function () {
+
+        var repeaterMultiselectHtml; 
+
+        function getItemCheck(el) {
+            return el.find('.bb-repeater-item.bb-repeater-item-selectable .bb-repeater-item-left .bb-repeater-item-multiselect .bb-check-wrapper');
+        } 
+
+        beforeEach(function () {
+            repeaterMultiselectHtml = '<bb-repeater>' +
+                '<bb-repeater-item bb-repeater-item-selectable="{{locals.selectable}}" bb-repeater-item-input-label="locals.inputLabel" bb-repeater-item-selected="locals.selected">' +
+                '<bb-repeater-item-title>My Title</bb-repeater-item-title>' +
+                '<bb-repeater-item-content>My Content</bb-repeater-item-content>' +
+                '</bb-repeater-item>' +
+                '</bb-repeater>';
+        });
+
+        it('should display a checkbox when the selectable attribute is set to true', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            $scope.$digest();
+
+            expect(getItemCheck(el).length).toBe(1);
+        });
+
+        it('should display a checkbox when the selectable attribute is set to false', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: false
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            $scope.$digest();
+
+            expect(getItemCheck(el).length).toBe(0);
+        });
+
+        it('should use bbRepeaterItemInputLabel as aria-label when specified', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                inputLabel: 'Yo dawg'
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            $scope.$digest();
+
+            expect(getItemCheck(el).length).toBe(1);
+            expect(el.find('input').attr('aria-label')).toBe('Yo dawg');
+        });
+
+        it('should use the title contents as aria-label when bbRepeaterItemInputLabel is not specified', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            $scope.$digest();
+
+            expect(getItemCheck(el).length).toBe(1);
+            expect(el.find('input').attr('aria-label')).toBe('My Title');
+        });
+
+
+        it('should update the bound values the user clicks the checkbox', function () {
+            var $scope = $rootScope.$new(),
+                checkEl,
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            checkEl = el.find('.bb-check-wrapper input');
+
+            checkEl.click();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+
+            checkEl.click();
+
+            expect(el.find('.bb-repeater-item')).not.toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(false);
+
+            el.remove();
+        });
+
+        it('should allow the user to click the header or content to select the item when there is no collapse', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false
+            };
+
+            el = $compile(repeaterMultiselectHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-repeater-item-right').click();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+
+            el.find('.bb-repeater-item-header').click();
+
+            expect(el.find('.bb-repeater-item')).not.toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(false);
+            
+            el.remove();
+        });
+
+        it('should not allow the user to click the header to select the item when there is collapse', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false,
+                expanded: true
+            };
+
+            el = $compile(
+                '<bb-repeater bb-repeater-expand-mode="single">' +
+                '<bb-repeater-item bb-repeater-item-selectable="{{locals.selectable}}" bb-repeater-item-selected="locals.selected" bb-repeater-item-expanded="locals.expanded">' +
+                '<bb-repeater-item-title>My Title</bb-repeater-item-title>' +
+                '<bb-repeater-item-content>My Content</bb-repeater-item-content>' +
+                '</bb-repeater-item>' +
+                '</bb-repeater>'
+            )($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+            $scope.$digest();
+
+            el.find('.bb-repeater-item-right').click();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+
+            el.find('.bb-repeater-item-header').click();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+            
+            el.remove();
+        });
+    });
+
     it('should enable expand/collapse animation only after an item is initially rendered', function () {
         var $scope = $rootScope.$new(),
             animateSpy = spyOn($.fn, 'animate').and.callThrough(),
