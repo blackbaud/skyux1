@@ -1,0 +1,69 @@
+<div ng-controller="PhoneFieldDemoController as phonefieldCtl">
+  <form name="form">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="phone-field-input" class="control-label">
+            <h4>Phone field directive</h4>
+          </label>
+            <div>
+              <input bb-phone-field="phonefieldCtl.bbPhoneFieldConfig"
+                     class="form-control"
+                     id="phone-field-input"
+                     ng-model="phonefieldCtl.phoneNumber"/>
+            </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <label for="phone-field-input" class="control-label">
+          <h4>ng-model values</h4>
+        </label>
+        <div>
+        value:
+        <strong>
+          <span ng-bind="phonefieldCtl.phoneNumber"/>
+        </strong>
+        </div>
+        <div>
+        valid:
+        <strong>
+          <span ng-bind="form.$valid"
+                ng-class="form.$valid ? 'text-success' : 'text-danger'"/>
+        </strong>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <label class="control-label">
+          <h4>bbPhoneFieldConfig settings</h4>
+        </label>
+        <div>
+          countryIso2:
+          <strong>
+            <span ng-bind="phonefieldCtl.bbPhoneFieldConfig.countryIso2"/>
+          </strong>
+        </div>
+        selectedCountry:
+        <div style="margin-left: 15px;">
+          <div>
+            name:
+            <strong>
+              <span ng-bind="phonefieldCtl.bbPhoneFieldConfig.selectedCountry.name"/>
+            </strong>
+          </div>
+          <div>
+            io2:
+            <strong>
+              <span ng-bind="phonefieldCtl.bbPhoneFieldConfig.selectedCountry.iso2"/>
+            </strong>
+          </div>
+          <div>
+            dialCode:
+            <strong>
+              <span ng-bind="phonefieldCtl.bbPhoneFieldConfig.selectedCountry.dialCode"/>
+            </strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

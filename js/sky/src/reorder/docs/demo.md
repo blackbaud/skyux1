@@ -4,7 +4,7 @@ icon: arrows
 summary: The reorder component provides an interface to display a list where users can drag-and-drop rows into their preferred order.
 ---
 
-The reorder directive creates a list where users can drag-and-drop rows into their preferred order. The rows can display a title and description.
+The reorder component creates a list where users can drag-and-drop rows into their preferred order. The rows can display a title and description.
 
 ### Reorder settings ###
 - `bb-reorder` &mdash; Creates a list where users can drag-and-drop rows.
