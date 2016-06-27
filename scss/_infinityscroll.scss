@@ -1,0 +1,19 @@
+.bb-infinity-scroll {
+  position: relative;
+  bottom: 0;
+  height: 75px;
+  width: 75px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+  .blockUI.blockOverlay {
+    background-color: transparent;
+  }
+
+  .blockUI.blockMsg {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: transparent;
+  }
+}
