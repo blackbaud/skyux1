@@ -3,7 +3,7 @@
 
 (function () {
     'use strict';
-
+    
     angular.module('sky.modalbody.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
         .directive('bbModalBody', function () {
             return {
