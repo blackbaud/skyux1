@@ -396,9 +396,9 @@ describe('Modal', function () {
                 $scope.$digest();
 
                 btnEl = el.find('button.btn.btn-primary');
-
+                
                 expect(btnEl).toHaveAttr('type', 'submit');
-                expect(btnEl.find('span')).toHaveText(bbResources.modal_footer_primary_button);
+                expect(btnEl.find('span').text()).toBe(bbResources.modal_footer_primary_button);
 
                 el.remove();
             });
