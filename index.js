@@ -24,5 +24,7 @@ require("./dist/js/sky.js");
 require("./node_modules/free-jqgrid/css/ui.jqgrid.css");
 require("./node_modules/angular-toastr/dist/angular-toastr.min.css");
 require("./node_modules/intl-tel-input/build/css/intlTelInput.css");
+require("./dist/css/sky.css");
+
 
 module.exports="sky";

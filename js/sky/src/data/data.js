@@ -1,4 +1,4 @@
-/*global angular, jQuery, require */
+/*global angular, jQuery */
 
 (function ($) {
     'use strict';
