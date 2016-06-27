@@ -1,5 +1,5 @@
 /*jshint browser: true */
-/*global angular, jQuery */
+/*global angular */
 
 (function () {
     'use strict';
@@ -15,4 +15,4 @@
                 templateUrl: 'sky/templates/modal/modalfooter.html'
             };
         });
-}(jQuery));
+}());
