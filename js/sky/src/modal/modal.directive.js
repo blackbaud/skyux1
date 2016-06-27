@@ -1,7 +1,7 @@
 /*jshint browser: true */
 /*global angular, jQuery */
 
-(function ($) {
+(function () {
     'use strict';
 
     angular.module('sky.modal.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
