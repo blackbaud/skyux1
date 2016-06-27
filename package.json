@@ -13,7 +13,8 @@
   },
   "files": [
     "dist",
-    "scss"
+    "scss",
+    "libs"
   ],
   "keywords": [
     "Blackbaud",
@@ -98,5 +99,6 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "main": "index.js"
 }

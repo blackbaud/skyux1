@@ -60,7 +60,7 @@
         /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
-            require(['enquire'], registerEnquire);
+            require(['enquire.js'], registerEnquire);
         } else if ($window.enquire) {
             // Browser globals
             registerEnquire(enquire);

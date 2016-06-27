@@ -245,6 +245,30 @@ module.exports = function (grunt, env, utils) {
         grunt.file.write(configPath, template);
     });
 
+    grunt.registerTask('generateIndexJs', function () {
+        var libs = grunt.config.get('skyux').paths.libsJs,
+            indexFileContents = '';
+
+        //Add all JS Dependencies
+        libs.forEach(function (lib) {
+            indexFileContents += 'require("./' + lib + '");' + grunt.util.linefeed;
+        });
+
+        indexFileContents += 'require("./dist/js/sky.js");' + grunt.util.linefeed;
+        indexFileContents +=  grunt.util.linefeed;
+
+        //Add all css Dependencies
+        var cssLibs = grunt.config.get('skyux').paths.libsCss;
+        cssLibs.forEach(function(cssLib) {
+            indexFileContents += 'require("./' + cssLib + '");' + grunt.util.linefeed;
+        });
+
+        indexFileContents +=  grunt.util.linefeed;
+        indexFileContents += 'module.exports="sky";' + grunt.util.linefeed;
+
+        grunt.file.write('index.js', indexFileContents);
+    });
+
     grunt.registerTask('skybundlecss', function () {
         var destFile,
             i,
@@ -338,5 +362,5 @@ module.exports = function (grunt, env, utils) {
     });
 
     // Main build task
-    grunt.registerTask('build', ['styles', 'scripts', 'sri']);
+    grunt.registerTask('build', ['styles', 'scripts', 'sri', 'generateIndexJs']);
 };
