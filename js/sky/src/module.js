@@ -26,6 +26,7 @@
         'sky.highlight',
         'sky.keyinfo',
         'sky.mediabreakpoints',
+        'sky.microlayout', 
         'sky.modal',
         'sky.moment',
         'sky.navbar',

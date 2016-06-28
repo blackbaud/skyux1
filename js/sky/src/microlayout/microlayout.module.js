@@ -3,5 +3,5 @@
 (function () {
     'use strict';
 
-    angular.module('sky.microlayout', ['sky.microlayout.component']);
+    angular.module('sky.microlayout', ['sky.microlayout.component', 'sky.microlayoutcontent.component']);
 }());
