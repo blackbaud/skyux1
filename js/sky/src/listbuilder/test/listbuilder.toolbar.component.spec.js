@@ -63,9 +63,13 @@
                 return el.find('.bb-listbuilder-search-button button');
             }
 
-            function initListbuilderTest() {
+            function initListbuilderTest(customHtml) {
                 var el;
-                el = $compile(searchHtml)($scope);
+                if (customHtml) {
+                    el = $compile(customHtml)($scope);
+                } else {
+                    el = $compile(searchHtml)($scope);
+                }
 
                 $document.find('body').append(el);
 
@@ -94,15 +98,23 @@
                 
             }
 
-            function verifyCardTitleHighlight(el) {
-                expect(el.find('bb-card-title span')).toHaveClass('highlight');
+            function verifyCardTitleHighlight(el, hasHighlight) {
+
+                var cardTitleSpan = el.find('bb-card-title span');
+
+                if (hasHighlight) {
+                    expect(cardTitleSpan).toHaveClass('highlight');
+                } else {
+                    expect(cardTitleSpan.length).toBe(0);
+                }
+                
             }
 
             function verifySearchResults(el, val) {
                 expect(localSearchText).toBe(val);
 
                 $timeout.flush();
-                verifyCardTitleHighlight(el);
+                verifyCardTitleHighlight(el, true);
             }
 
             function verifyInputBinding(el, val) {
@@ -155,7 +167,13 @@
                 $scope.$digest();
                 $timeout.flush();
                 verifyInputBinding(el, 'First');
-                verifyCardTitleHighlight(el);
+                verifyCardTitleHighlight(el, true);
+
+                $scope.listCtrl.searchText = '';
+                $scope.$digest();
+                $timeout.flush();
+                verifyInputBinding(el, '');
+                verifyCardTitleHighlight(el, false);
 
                 el.remove();
 
@@ -170,7 +188,28 @@
                 $scope.$digest();
                 $timeout.flush();
                 verifyInputBinding(el, 'First');
-                verifyCardTitleHighlight(el);
+                verifyCardTitleHighlight(el, true);
+
+                el.remove();
+            });
+
+            it('does not apply highlight when card does not exist', function () {
+                var el,
+                    noCardHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText">' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
+                
+                $scope.listCtrl = listCtrl;
+                $scope.listCtrl.searchText = 'First';
+                el = initListbuilderTest(noCardHtml);
+                $scope.$digest();
+                $timeout.flush();
+                verifyInputBinding(el, 'First');
+                verifyCardTitleHighlight(el, false);
 
                 el.remove();
             });
@@ -221,9 +260,12 @@
                     isFixed: true
                 };
                 spyOn(bbViewKeeperBuilder, 'create').and.callThrough();
-                $scope.$digest();
 
                 el = $compile(viewKeeperHtml)($scope);
+                $scope.$digest();
+
+                $scope.ctrl.isFixed = false;
+                $scope.$digest();
 
                 expect(bbViewKeeperBuilder.create).not.toHaveBeenCalled();
                 $scope.$destroy();

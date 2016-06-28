@@ -7,6 +7,8 @@
             $scope,
             $timeout, 
             $window,
+            windowEl,
+            loadCalls,
             infinityHtml = '<div><bb-infinity-scroll ' + 
                 'bb-infinity-scroll-has-more="infinityCtrl.hasMore" ' +
                 'bb-infinity-scroll-load="infinityCtrl.loadFn(loadingComplete)">' +
@@ -37,6 +39,27 @@
             }
         }
 
+        function setupScrollInfinity(inView) {
+            var windowVal = 10,
+                offsetVal;
+            offsetVal = inView ? 0 : 30; 
+            spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
+            spyOn($.fn, 'height').and.returnValue(windowVal);
+            spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+        }
+
+        beforeEach(function () {
+            loadCalls = 0;
+            $scope.infinityCtrl = {
+                hasMore: true,
+                loadFn: function (loadingComplete) {
+                    loadCalls++;
+                    loadingComplete();
+                }
+            };
+            windowEl = angular.element($window);
+        });
+
         it('should set the infinity scroll button text', function () {
             var el,
                 buttonEl;
@@ -56,21 +79,9 @@
         });
 
         it('should call the loading callback if the component is in view', function () {
-            var el,
-                windowEl = angular.element($window),
-                loadCalls = 0;
+            var el;
             
-            $scope.infinityCtrl = {
-                hasMore: true,
-                loadFn: function (loadingComplete) {
-                    loadCalls++;
-                    loadingComplete();
-                }
-            };
-
-            spyOn($.fn, 'scrollTop').and.returnValue(10);
-            spyOn($.fn, 'height').and.returnValue(10);
-            spyOn($.fn, 'offset').and.returnValue({ top: 0 });
+            setupScrollInfinity(true);
             
             el = $compile(infinityHtml)($scope);
             $scope.$digest();
@@ -81,21 +92,9 @@
         });
 
         it('should not call the loading callback if the component is not in view', function () {
-            var el,
-                windowEl = angular.element($window),
-                loadCalls = 0;
-            
-            $scope.infinityCtrl = {
-                hasMore: true,
-                loadFn: function (loadingComplete) {
-                    loadCalls++;
-                    loadingComplete();
-                }
-            };
+            var el;
 
-            spyOn($.fn, 'scrollTop').and.returnValue(0);
-            spyOn($.fn, 'height').and.returnValue(0);
-            spyOn($.fn, 'offset').and.returnValue({ top: 10 });
+            setupScrollInfinity(false);
             
             el = $compile(infinityHtml)($scope);
             $scope.$digest();
@@ -106,22 +105,13 @@
         });
 
         it('should not call the loading callback if the component is already loading', function () {
-            var el,
-                windowEl = angular.element($window),
-                loadCalls = 0,
-                loadPromise;
+            var el;
             
-            $scope.infinityCtrl = {
-                hasMore: true,
-                loadFn: function (loadingComplete) {
-                    loadCalls++;
-                    loadPromise = loadingComplete;
-                }
+            $scope.infinityCtrl.loadFn = function () {
+                loadCalls++;
             };
 
-            spyOn($.fn, 'scrollTop').and.returnValue(10);
-            spyOn($.fn, 'height').and.returnValue(10);
-            spyOn($.fn, 'offset').and.returnValue({ top: 0 });
+            setupScrollInfinity(true);
             
             el = $compile(infinityHtml)($scope);
             $scope.$digest();
@@ -137,21 +127,11 @@
         });
 
         it('should not show the component if there are no more items available', function () {
-            var el,
-                windowEl = angular.element($window),
-                loadCalls = 0;
+            var el;
             
-            $scope.infinityCtrl = {
-                hasMore: false,
-                loadFn: function (loadingComplete) {
-                    loadCalls++;
-                    loadingComplete();
-                }
-            };
+            $scope.infinityCtrl.hasMore = false;
 
-            spyOn($.fn, 'scrollTop').and.returnValue(10);
-            spyOn($.fn, 'height').and.returnValue(10);
-            spyOn($.fn, 'offset').and.returnValue({ top: 0 });
+            setupScrollInfinity(true);
             
             el = $compile(infinityHtml)($scope);
             $scope.$digest();

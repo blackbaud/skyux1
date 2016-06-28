@@ -9,7 +9,7 @@
         function applySearchText(searchText) {
 
             //select input
-            var searchEl = $element.find('bb-listbuilder-search-input'),
+            var searchEl = $element.find('.bb-listbuilder-search-input'),
                 deferred = $q.defer(),
                 highlightPromise;
             highlightPromise = deferred.promise;
@@ -32,6 +32,9 @@
         // Floating headers
         function setupViewKeeper() {
             if (ctrl.bbListbuilderToolbarFixed !== 'true') {
+
+                /* istanbul ignore next */
+                /* sanity check */
                 if (vkToolbar) {
                     vkToolbar.destroy();
                 }
@@ -60,7 +63,9 @@
             var searchText;
             if (changesObj.bbListbuilderSearchText) {
                 searchText = changesObj.bbListbuilderSearchText;
-                if (searchText.currentValue && searchText.currentValue !== searchText.previousValue) {
+                /* istanbul ignore else */
+                /* sanity check */
+                if (searchText.currentValue !== searchText.previousValue) {
                     ctrl.listbuilderCtrl.highlightSearchText(searchText.currentValue);
                 }
             }
