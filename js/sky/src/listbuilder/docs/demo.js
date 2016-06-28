@@ -2,7 +2,7 @@
 (function () {
     'use strict';
     
-    function ListbuilderTestController() {
+    function ListbuilderTestController($timeout) {
         var self = this,
             contentCount = 1;
 
@@ -49,10 +49,14 @@
 
         }
 
-        function onLoadMore() {
-            var newData = createData(5);
+        function onLoadMore(loadingComplete) {
+            $timeout(function () {
+                var newData = createData(5);
 
-            self.data = self.data.concat(newData);
+                self.data = self.data.concat(newData);
+                loadingComplete();
+            }, 4000);
+            
         }
 
         self.onSearch = onSearch;
@@ -61,6 +65,8 @@
         self.data = createData(5);
         
     }
+
+    ListbuilderTestController.$inject = ['$timeout'];
     
     angular
         .module('stache')

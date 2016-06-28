@@ -23,10 +23,6 @@
             return $element.find('.bb-listbuilder-content');
         }
 
-        function getListbuilderContainer() {
-            return $element.find('.bb-listbuilder');
-        }
-
         function scrollToTop() {
             /*
                 ctrl.toolbarScrollToTop() set in listbuilder.toolbar.component
@@ -42,7 +38,6 @@
 
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.getContentContainer = getContentContainer;
-        ctrl.getListbuilderContainer = getListbuilderContainer;
         ctrl.scrollToTop = scrollToTop;
         ctrl.isScrolledChanged = isScrolledChanged;
 

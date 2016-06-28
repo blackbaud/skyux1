@@ -45,7 +45,6 @@
                         $timeout(function () {
                             ctrl.listbuilderCtrl.isScrolledChanged(vkToolbar.isFixed);
                         });
-                        
                     }
                 });
             }

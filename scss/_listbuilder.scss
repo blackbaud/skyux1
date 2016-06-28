@@ -44,6 +44,10 @@
 /* Content */
 .bb-listbuilder-content {
     margin-top: $margin;
+    .bb-card {
+        margin-right: 0;
+        width: 100%
+    }
 }
 
 /* Footer */

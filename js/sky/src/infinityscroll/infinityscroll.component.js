@@ -3,7 +3,7 @@
     'use strict';
     var nextId = 0;
 
-    function Controller($element, $window, $timeout, $q, bbResources) {
+    function Controller($element, $window, $timeout, $q) {
         var ctrl = this,
             windowEl = angular.element($window),
             componentId = 'bb-infinityscroll-' + nextId;
@@ -25,25 +25,16 @@
         }
 
         function onInit() {
-
-            if (!ctrl.bbInfinityScrollLoadMoreText) {
-                ctrl.bbInfinityScrollLoadMoreText = bbResources.infinity_scroll_load_more;
-            }
             
             ctrl.isLoading = false;
             
             windowEl.on('scroll.' + componentId, function () {
-                
-                if (ctrl.bbInfinityScrollHasMore && !ctrl.isLoading) {
+                if (ctrl.bbInfinityScrollHasMore && !ctrl.isLoading && infinityScrollInView()) {
                     ctrl.isLoading = true;
-                    
+
                     // Put in angular digest cycle
                     $timeout(function () {
-                        if (infinityScrollInView()) {
-                            startInfinityScrollLoad();
-                        } else {
-                            ctrl.isLoading = false;
-                        }
+                        startInfinityScrollLoad();
                     });
                 }
             });
@@ -60,15 +51,14 @@
         nextId++;     
     } 
 
-    Controller.$inject = ['$element', '$window', '$timeout', '$q', 'bbResources'];
+    Controller.$inject = ['$element', '$window', '$timeout', '$q'];
 
     angular.module('sky.infinityscroll.component', ['sky.resources', 'sky.wait'])
         .component('bbInfinityScroll', {
             templateUrl: 'sky/templates/infinityscroll/infinityscroll.component.html',
             bindings: {
                 bbInfinityScrollHasMore: '<',
-                bbInfinityScrollLoad: '&',
-                bbInfinityScrollLoadMoreText: '<?'
+                bbInfinityScrollLoad: '&'
             },
             controller: Controller
         

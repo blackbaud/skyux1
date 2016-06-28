@@ -1,6 +1,11 @@
 <div class="bb-listbuilder-footer">
-    <div class="bb-listbuilder-actionbar" ng-show="$ctrl.listbuilderCtrl.isScrolled || $ctrl.bbListbuilderShowLoadMore">
-        <span class="bb-listbuilder-backtotop-left" ng-show="$ctrl.listbuilderCtrl.isScrolled"  ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
+
+    <bb-infinity-scroll
+        bb-infinity-scroll-has-more="$ctrl.bbListbuilderShowLoadMore"
+        bb-infinity-scroll-load="$ctrl.loadCallback(loadingComplete)">
+    </bb-infinity-scroll>
+    <div class="bb-listbuilder-actionbar" ng-show="$ctrl.listbuilderCtrl.isScrolled">
+        <span class="bb-listbuilder-backtotop-left" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
             <span class="fa fa-arrow-up "></span>
             <button 
                 type="button" 
@@ -10,17 +15,7 @@
             </button>
         </span>
         
-        <span class="bb-listbuilder-loadmore" ng-show="$ctrl.bbListbuilderShowLoadMore" ng-click="$ctrl.bbListbuilderOnLoadMore()">
-            <span class="fa fa-cloud-download"></span>
-            <button 
-                type="button" 
-                class="btn btn-link" 
-                >
-                {{::'listbuilder_footer_load_more' | bbResources}}
-            </button>
-        </span>
-        
-        <span class="bb-listbuilder-backtotop-right" ng-show="$ctrl.listbuilderCtrl.isScrolled" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
+        <span class="bb-listbuilder-backtotop-right" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
             <span class="fa fa-arrow-up "></span>
             <button 
                 type="button" 

@@ -16,24 +16,27 @@
     </bb-listbuilder-toolbar>
     <bb-listbuilder-content>
       <bb-listbuilder-cards>
-        <bb-card ng-repeat="item in listCtrl.data">
-        <bb-card-title>
-        {{item.name}}
-        </bb-card-title>
-        <bb-card-content>
-          {{item.content}}
-        </bb-card-content>
-        <bb-card-actions>
-          <bb-context-menu>
-          <bb-context-menu-item>Action 1</bb-context-menu-item>
-          <bb-context-menu-item>Action 2</bb-context-menu-item>
-        </bb-context-menu>
-        </bb-card-actions>
-      </bb-card>
+        <bb-listbuilder-card ng-repeat="item in listCtrl.data">
+            <bb-card>
+            <bb-card-title>
+            {{item.name}}
+            </bb-card-title>
+            <bb-card-content>
+            {{item.content}}
+            </bb-card-content>
+            <bb-card-actions>
+                <bb-context-menu>
+                    <bb-context-menu-item>Action 1</bb-context-menu-item>
+                    <bb-context-menu-item>Action 2</bb-context-menu-item>
+                </bb-context-menu>
+            </bb-card-actions>
+        </bb-card>
+        </bb-listbuilder-card>
+       
       </bb-listbuilder-cards>
     </bb-listbuilder-content>
     <bb-listbuilder-footer
-        bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadMorePromise)"
+        bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)"
         bb-listbuilder-show-load-more="true">
     </bb-listbuilder-footer>
   </bb-listbuilder>

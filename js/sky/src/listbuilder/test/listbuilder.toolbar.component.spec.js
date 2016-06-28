@@ -183,19 +183,18 @@
             beforeEach(inject(function (_bbViewKeeperBuilder_) {
                 bbViewKeeperBuilder = _bbViewKeeperBuilder_;
                 viewKeeperHtml = angular.element(
-                    '<bb-listbuilder>' +
+                    '<bb-listbuilder bb-listbuilder-vertical-offset-el-id="\'myoffsetid\'">' +
                     '<bb-listbuilder-toolbar ' + 
-                    'bb-listbuilder-toolbar-offset-el-id="\'myoffsetid\'" ' + 
                     'bb-listbuilder-toolbar-fixed="{{ctrl.isFixed}}">' +
                     '</bb-listbuilder-toolbar>' +
                     simpleCardContentHtml +
                     '</bb-listbuilder>');
-                
             }));
 
 
             it('creates a view keeper on toolbar init', function () {
-                var el;
+                var el,
+                    spyArgs;
 
                 $scope.ctrl = {
                     isFixed: false
@@ -206,14 +205,11 @@
                 el = $compile(viewKeeperHtml)($scope);
                 $scope.$digest();
 
-                expect(bbViewKeeperBuilder.create).toHaveBeenCalledWith(
-                    { 
-                        el: el.find('.bb-listbuilder-toolbar'),
-                        boundaryEl: el.find('.bb-listbuilder-content'),
-                        setWidth: true,
-                        verticalOffSetElId: 'myoffsetid' 
-                    }
-                );
+                spyArgs = bbViewKeeperBuilder.create.calls.mostRecent().args[0];
+                expect(spyArgs.el).toEqual(el.find('.bb-listbuilder-toolbar'));
+                expect(spyArgs.boundaryEl).toEqual(el.find('.bb-listbuilder-content'));
+                expect(spyArgs.setWidth).toBe(true);
+                expect(spyArgs.verticalOffSetElId).toBe('myoffsetid');
 
                 $scope.$destroy();
             });
