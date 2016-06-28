@@ -3,7 +3,7 @@
 [![release](https://img.shields.io/bower/v/blackbaud-skyux.svg)](http://skyux.developer.blackbaud.com)
 [![status](https://travis-ci.org/blackbaud/skyux.svg?branch=master)](https://travis-ci.org/blackbaud/skyux)
 [![devDependencies](https://david-dm.org/blackbaud/skyux/dev-status.svg)](https://david-dm.org/blackbaud/skyux#info=devDependencies)
-[![coverage](https://codecov.io/github/blackbaud/skyux/coverage.svg?branch=master)](https://codecov.io/github/blackbaud/skyux/coverage.svg?branch=master)
+[![coverage](https://codecov.io/github/blackbaud/skyux/coverage.svg?branch=master)](https://codecov.io/github/blackbaud/skyux/)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/blackbaud/skyux/blob/master/LICENSE)
 [![Slack](https://blackbaud-skyux-slackin.herokuapp.com/badge.svg)](https://blackbaud-skyux-slackin.herokuapp.com/)
 
