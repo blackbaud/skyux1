@@ -2,6 +2,7 @@
 
 (function () {
     'use strict';
+
     
     angular.module('sky.microlayoutcontent.component', [])
         .component('bbMicrolayoutContent', {

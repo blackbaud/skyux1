@@ -1,14 +1,8 @@
 @import 'mixins';
 
-.bb-microlayout-item {
-    font-family: $bb-font-family-narrow;
-    font-size: $bb-alternate-font-size-lg;
-    font-weight: 100;
-    margin-bottom: $margin-plus-half;
-}
+
 
 .bb-microlayout-heading{
-   // @include bb-subsection-heading();
     margin-bottom: $margin-half;
 }
 
@@ -17,7 +11,6 @@
 }
 
 .bb-microlayout-label {
-    @include bb-field-label(); 
     margin-right: $margin;
     width: 50px;
 }
