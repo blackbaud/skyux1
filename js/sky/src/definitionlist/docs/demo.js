@@ -4,5 +4,5 @@
     'use strict';
 
     angular.module('stache')
-        .controller('MicrolayoutTestController', angular.noop);
+        .controller('DefinitionListTestController', angular.noop);
 }());
