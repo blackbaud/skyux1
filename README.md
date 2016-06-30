@@ -1,6 +1,7 @@
 # SKY UX
 
-[![release](https://img.shields.io/bower/v/blackbaud-skyux.svg)](http://skyux.developer.blackbaud.com)
+[![bower](https://img.shields.io/bower/v/blackbaud-skyux.svg)](https://github.com/blackbaud/skyux/releases)
+[![npm](https://img.shields.io/npm/v/blackbaud-skyux.svg)](https://www.npmjs.com/package/blackbaud-skyux)
 [![status](https://travis-ci.org/blackbaud/skyux.svg?branch=master)](https://travis-ci.org/blackbaud/skyux)
 [![devDependencies](https://david-dm.org/blackbaud/skyux/dev-status.svg)](https://david-dm.org/blackbaud/skyux#info=devDependencies)
 [![coverage](https://codecov.io/github/blackbaud/skyux/coverage.svg?branch=master)](https://codecov.io/github/blackbaud/skyux/)
