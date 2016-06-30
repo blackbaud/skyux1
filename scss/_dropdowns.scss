@@ -229,3 +229,9 @@ body.dropup {
         padding: 0;
     }
 }
+
+.uib-dropdown-open {
+    .dropdown-menu {
+        z-index: $bb-zindex-dropdown-append-to-body;
+    }
+}
