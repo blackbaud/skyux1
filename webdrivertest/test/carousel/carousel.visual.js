@@ -20,6 +20,8 @@ describe('Card', function () {
             testFn(result);
         }
 
+        common.moveCursorOffScreen(result);
+
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
@@ -40,7 +42,7 @@ describe('Card', function () {
                 result
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click(CAROUSEL_BTN_NEXT_LARGE)
-                    .click('body');
+                    .click('#remove-focus');
             }, 
             'carousel-middle-item', 
             CAROUSEL_SELECTOR_LARGE, 
@@ -54,7 +56,7 @@ describe('Card', function () {
                 result
                     .click('.bb-carousel-dot-btn:last-child')
                     .click(CAROUSEL_BTN_NEXT_LARGE)
-                    .click('body');
+                    .click('#remove-focus');
             }, 
             'carousel-last-item', 
             CAROUSEL_SELECTOR_LARGE, 
