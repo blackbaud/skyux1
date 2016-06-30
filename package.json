@@ -87,7 +87,6 @@
     "bootstrap": "3.3.5",
     "enquire.js": "git+https://github.com/WickyNilliams/enquire.js.git#v2.1.2",
     "fastclick": "1.0.6",
-    "flot-charts": "0.8.3",
     "free-jqgrid": "git+https://github.com/blackbaud/jqGrid.git#v4.7.0",
     "jquery": "2.1.3",
     "jquery-ui-bundle": "1.11.4",
