@@ -230,7 +230,7 @@ body.dropup {
     }
 }
 
-.uib-dropdown-open {
+.modal-open.uib-dropdown-open {
     .dropdown-menu {
         z-index: $bb-zindex-dropdown-append-to-body;
     }

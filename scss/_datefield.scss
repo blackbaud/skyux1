@@ -1,9 +1,13 @@
 @import "mixins";
+.modal-open {
+    ul.uib-datepicker-popup.dropdown-menu {
+        z-index: $bb-zindex-dropdown-append-to-body;
+    }
+}
 
 ul.uib-datepicker-popup.dropdown-menu {
     border: 1px solid #ddd;
-    border-radius: 5px;
-    z-index: $bb-zindex-dropdown-append-to-body;
+    border-radius: 5px;  
 }
 
 .bb-datefield.input-group, ul.uib-datepicker-popup.dropdown-menu {
