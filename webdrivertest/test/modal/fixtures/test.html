@@ -1,34 +1,82 @@
-<div id="screenshot-modal">
+<div>
   <div ng-controller="ModalTestController">
-    <div id="screenshot-modal-tiles">
-      <bb-modal>
-        <div class="modal-form">
-          <bb-modal-header bb-modal-help-key="'bb-security-users.html'">My Header</bb-modal-header>
-          <div bb-modal-body class="bb-modal-body-tiled">
-            <form>
-              <bb-tile bb-tile-header="'Tile Header'">
-                <div bb-tile-section>
-                  Test.
+    <div id="screenshot-modal-dropdown" ng-if="modalCtrl.isShown">
+        <div class="modal bb-modal fade in" style="display: block">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <bb-modal>
+                        <div class="modal-form">
+                        <bb-modal-header bb-modal-help-key="'bb-security-users.html'">My Header</bb-modal-header>
+                        <div bb-modal-body>
+                           <div class="bb-context-menu" uib-dropdown dropdown-append-to-body>
+                                <bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>
+                                <ul uib-dropdown-menu role="menu">
+
+                                <li role="presentation">
+                                    <a class="disabled" role="menuitem" href="javascript:void(0)">Action B</a>
+                                </li>
+
+                                <li role="presentation">
+                                    <bb-submenu>
+                                        <bb-submenu-heading>
+                                            Nested menu
+                                        </bb-submenu-heading>
+                                        <a role="menuitem" href="javascript:void(0)">Action A</a>
+                                        <a role="menuitem" href="javascript:void(0)">Action A Sub</a>
+                                    </bb-submenu>
+                                </li>
+
+                                <li role="presentation">
+                                    <a class="disabled" role="menuitem" href="javascript:void(0)">Action C</a>
+                                </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <bb-modal-footer>
+                            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+                            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+                        </bb-modal-footer>
+                        </div>
+                    </bb-modal>
                 </div>
-              </bb-tile>
-            </form>
-          </div>
-          <bb-modal-footer>
-            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
-            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
-          </bb-modal-footer>
+            </div>
         </div>
-      </bb-modal>
+        <div class="modal-backdrop fade in">
+        </div>
     </div>
-    <div id="screenshot-modal-help-key">
-      <bb-modal>
-          <bb-modal-header bb-modal-help-key="'helpkey.html'">My Header</bb-modal-header>
-      </bb-modal>
+    <button type="button" class="bb-test-dropdown btn btn-primary" ng-click="modalCtrl.isShown = true">Show Context</button>
+    <div id="screenshot-modal">
+        <div id="screenshot-modal-tiles"> 
+            <bb-modal>
+                <div class="modal-form">
+                <bb-modal-header bb-modal-help-key="'bb-security-users.html'">My Header</bb-modal-header>
+                <div bb-modal-body class="bb-modal-body-tiled">
+                    <form>
+                    <bb-tile bb-tile-header="'Tile Header'">
+                        <div bb-tile-section>
+                        Test.
+                        </div>
+                    </bb-tile>
+                    </form>
+                </div>
+                <bb-modal-footer>
+                    <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+                    <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+                </bb-modal-footer>
+                </div>
+            </bb-modal>
+        </div>
+        <div id="screenshot-modal-help-key">
+            <bb-modal>
+                <bb-modal-header bb-modal-help-key="'helpkey.html'">My Header</bb-modal-header>
+            </bb-modal>
+            </div>
+            <div id="screenshot-modal-no-help-key">
+            <bb-modal>
+                <bb-modal-header>My Header</bb-modal-header>
+            </bb-modal>
+        </div>
     </div>
-    <div id="screenshot-modal-no-help-key">
-      <bb-modal>
-          <bb-modal-header>My Header</bb-modal-header>
-      </bb-modal>
-    </div>
+    
   </div>
 </div>
