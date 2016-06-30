@@ -1,16 +1,21 @@
 @import 'mixins';
 
+.bb-definition-list {
+    margin-right: 50px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
-
-.bb-microlayout-heading{
+.bb-definition-list-heading{
     margin-bottom: $margin-half;
+    margin-bottom: 5px;
 }
 
-.bb-microlayout-value {
+.bb-definition-list-value {
     min-width: 215;
+    flex: 1;
 }
 
-.bb-microlayout-label {
+.bb-definition-list-label {
     margin-right: $margin;
-    width: 50px;
 }
