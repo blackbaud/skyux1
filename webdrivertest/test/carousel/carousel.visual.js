@@ -20,6 +20,8 @@ describe('Card', function () {
             testFn(result);
         }
 
+        common.moveCursorOffScreen(result);
+
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
