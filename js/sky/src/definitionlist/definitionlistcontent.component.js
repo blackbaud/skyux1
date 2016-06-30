@@ -7,9 +7,9 @@
         var vm = this;
         vm.hasValue = function () {
             if ($.trim($element.find('.bb-definition-list-value').text())) {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         };
     }
     
