@@ -24,9 +24,10 @@
     function checkAccessibility(options) {
         options.browserResult.executeAsync(function (done) {
             axe.a11yCheck(
-                document, 
+                document,
                 {
                     "rules": {
+                        "bypass": { enabled: false },
                         "color-contrast": { enabled: false }
                     }
                 },

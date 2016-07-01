@@ -15,6 +15,7 @@ describe('tabset', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'tabset',
             selector: '#screenshot-tabset-all',
+            checkAccessibility: true,
             done: done,
             screenWidth: [480, 1280]
         });
