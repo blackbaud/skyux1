@@ -33,5 +33,7 @@ describe('modals', function () {
             selector: '.modal-dialoag .modal-content',
             done: done
         });
+
+        browser.click('.modal-dialog .btn-link');
     });
 });
