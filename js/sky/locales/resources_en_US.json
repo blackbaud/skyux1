@@ -578,5 +578,13 @@
     "reorder_top": {
       "_description": "Text displayed to indicate that a row can be pushed to the top of the list",
       "message": "Top"
+    },
+    "tab_add": {
+      "_description": "Screen reader text for the add button on a tabset",
+      "message": "Add tab"
+    },
+    "tab_open": {
+        "_description": "Screen reader text for the open button on a tabset",
+        "message": "Open"
     }
 }

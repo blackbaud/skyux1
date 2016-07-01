@@ -9,7 +9,8 @@ describe('Tabset module', function () {
         dynamicTabsHtml,
         $scope,
         bbMediaBreakpoints,
-        $timeout;
+        $timeout,
+        bbResources;
 
     beforeEach(module(
         'ngMock',
@@ -19,12 +20,13 @@ describe('Tabset module', function () {
         'uib/template/tabs/tab.html'
     ));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_, _$timeout_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_, _$timeout_, _bbResources_) {
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
         $document = _$document_;
         bbMediaBreakpoints = _bbMediaBreakpoints_;
         $timeout = _$timeout_;
+        bbResources = _bbResources_;
 
         dynamicTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()">' +
                 '<uib-tab>' +
@@ -210,6 +212,17 @@ describe('Tabset module', function () {
             getLargeScreenAddButton(el).click();
             $scope.$digest();
             expect(tabAdded).toBe(true);
+        });
+
+        it('should allows the screen reader text for the add tab button to be localizable', function () {
+            var el;
+
+            bbResources.tab_add = '__test__add';
+
+            el = $compile(dynamicTabsHtml)($scope);
+            $scope.$digest();
+
+            expect(el.find('.bb-tab-button-add').attr('aria-label')).toContain(bbResources.tab_add);
         });
     });
 
