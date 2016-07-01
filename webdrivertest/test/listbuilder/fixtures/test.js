@@ -4,8 +4,7 @@
     
     function ListbuilderTestController($timeout) {
         var self = this,
-            contentCount = 1,
-            data;
+            contentCount = 1;
 
         function createData(amount) {
             var i,
@@ -29,11 +28,10 @@
         function onSearch(searchText, highlightResults) {
             var filteredData = data;
             if (searchText) {
-                debugger;
                 filteredData = data.filter(function (item) {
                     var property;
                     for (property in item) {
-                        if (item.hasOwnProperty(property) && (property === 'name' || property === 'content')) {
+                        if (item.hasOwnProperty(property)) {
                             if (item[property].indexOf(searchText) > -1) {
                                 return true;
                             }
@@ -55,8 +53,7 @@
             $timeout(function () {
                 var newData = createData(5);
 
-                data = data.concat(newData);
-                self.data = data;
+                self.data = self.data.concat(newData);
                 loadingComplete();
             }, 4000);
             
@@ -65,14 +62,13 @@
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
       
-        data = createData(5);
-        self.data = data;
+        self.data = createData(5);
         
     }
 
     ListbuilderTestController.$inject = ['$timeout'];
     
     angular
-        .module('stache')
+        .module('screenshots', ['sky'])
         .controller('ListbuilderTestController', ListbuilderTestController);
 }());
