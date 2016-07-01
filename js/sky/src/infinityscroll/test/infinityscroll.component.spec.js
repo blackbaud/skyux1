@@ -104,7 +104,21 @@
             expect(loadCalls).toBe(0);
         });
 
-        it('should not call the loading callback if the component is already loading', function () {
+        it('should call the loading callback if the load more button is pressed', function () {
+            var el;
+            
+            setupScrollInfinity(true);
+            
+            el = $compile(infinityHtml)($scope);
+            $scope.$digest();
+
+            el.find('.bb-btn-secondary').click();
+            timeoutFlushIfAvailable();
+            expect(loadCalls).toBe(1);
+        });
+
+
+        it('should not have the load more button visible if the component load more button is pressed and is already loading', function () {
             var el;
             
             $scope.infinityCtrl.loadFn = function () {
@@ -116,12 +130,10 @@
             el = $compile(infinityHtml)($scope);
             $scope.$digest();
 
-            windowEl.scroll();
+            el.find('.bb-btn-secondary').click();
             timeoutFlushIfAvailable();
             expect(loadCalls).toBe(1);
-            windowEl.scroll();
-            timeoutFlushIfAvailable();
-            expect(loadCalls).toBe(1);
+            expect(el.find('.bb-btn-secondary').length).toBe(0);
 
 
         });
