@@ -1,4 +1,4 @@
-/*global describe, it, browser, require, $ */
+/*global describe, it, browser, require, expect */
 
 describe('modals', function () {
     'use strict';
@@ -20,20 +20,31 @@ describe('modals', function () {
 
     it('match the baseline modal with context menu screenshot', function (done) {
         var result,
+            prefix,
+            screenshotName,
+            pageName,
             common = require('../common');
 
         result = browser.url('/modal/fixtures/test.full.html')
                         .click('.bb-test-dropdown')
                         .click('.bb-context-menu-btn');
 
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'modal_dropdown',
-            selector: '.modal-dialoag .modal-content',
-            done: done
-        });
+        prefix = common.getPrefix(browser);
+        screenshotName = 'modal_dropdown';
 
-        browser.click('.modal-dialog .btn-link');
+        pageName = prefix + '/' + prefix + '_' + screenshotName + '_full';
+
+        result
+            .webdrivercss(pageName, [
+                {
+                    name: screenshotName,
+                    elem: '.modal-dialoag .modal-content'
+                }
+            ], function (err, res) {
+                expect(err).toBe(undefined);
+                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
+            })
+            .click('.modal-dialog .close')
+            .call(done);
     });
 });
