@@ -24,16 +24,13 @@ describe('modals', function () {
 
         result = browser.url('/modal/fixtures/test.full.html')
                         .click('.bb-test-dropdown')
-                        .click('.bb-context-menu-btn')
-                        .execute(function () {
-                            $('body').addClass('modal-open');
-                        });
+                        .click('.bb-context-menu-btn');
 
         common.compareScreenshot({
             browserResult: result,
             prefix: common.getPrefix(browser),
             screenshotName: 'modal_dropdown',
-            selector: '#screenshot-modal-dropdown',
+            selector: '.modal-dialoag .modal-content',
             done: done
         });
     });

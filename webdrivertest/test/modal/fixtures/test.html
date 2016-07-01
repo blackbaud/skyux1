@@ -1,50 +1,7 @@
 <div>
-  <div ng-controller="ModalTestController">
-    <div id="screenshot-modal-dropdown" ng-if="modalCtrl.isShown">
-        <div class="modal bb-modal fade in" style="display: block">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <bb-modal>
-                        <div class="modal-form">
-                        <bb-modal-header bb-modal-help-key="'bb-security-users.html'">My Header</bb-modal-header>
-                        <div bb-modal-body>
-                           <div class="bb-context-menu" uib-dropdown dropdown-append-to-body>
-                                <bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>
-                                <ul uib-dropdown-menu role="menu">
-
-                                <li role="presentation">
-                                    <a class="disabled" role="menuitem" href="javascript:void(0)">Action B</a>
-                                </li>
-
-                                <li role="presentation">
-                                    <bb-submenu>
-                                        <bb-submenu-heading>
-                                            Nested menu
-                                        </bb-submenu-heading>
-                                        <a role="menuitem" href="javascript:void(0)">Action A</a>
-                                        <a role="menuitem" href="javascript:void(0)">Action A Sub</a>
-                                    </bb-submenu>
-                                </li>
-
-                                <li role="presentation">
-                                    <a class="disabled" role="menuitem" href="javascript:void(0)">Action C</a>
-                                </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <bb-modal-footer>
-                            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
-                            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
-                        </bb-modal-footer>
-                        </div>
-                    </bb-modal>
-                </div>
-            </div>
-        </div>
-        <div class="modal-backdrop fade in">
-        </div>
-    </div>
-    <button type="button" class="bb-test-dropdown btn btn-primary" ng-click="modalCtrl.isShown = true">Show Context</button>
+  <div ng-controller="ModalTestController as modalCtrl">
+    
+    <button type="button" class="bb-test-dropdown btn btn-primary" ng-click="modalCtrl.showModal()">Show Context</button>
     <div id="screenshot-modal">
         <div id="screenshot-modal-tiles"> 
             <bb-modal>
@@ -80,3 +37,40 @@
     
   </div>
 </div>
+
+<script type="text/ng-template" id="demo/modal/modalform.html">
+      <bb-modal>
+        <div class="modal-form">
+        <bb-modal-header bb-modal-help-key="'bb-security-users.html'">My Header</bb-modal-header>
+        <div bb-modal-body>
+            <div class="bb-context-menu" uib-dropdown dropdown-append-to-body>
+                <bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>
+                <ul uib-dropdown-menu role="menu">
+
+                <li role="presentation">
+                    <a class="disabled" role="menuitem" href="javascript:void(0)">Action B</a>
+                </li>
+
+                <li role="presentation">
+                    <bb-submenu>
+                        <bb-submenu-heading>
+                            Nested menu
+                        </bb-submenu-heading>
+                        <a role="menuitem" href="javascript:void(0)">Action A</a>
+                        <a role="menuitem" href="javascript:void(0)">Action A Sub</a>
+                    </bb-submenu>
+                </li>
+
+                <li role="presentation">
+                    <a class="disabled" role="menuitem" href="javascript:void(0)">Action C</a>
+                </li>
+                </ul>
+            </div>
+        </div>
+        <bb-modal-footer>
+            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
