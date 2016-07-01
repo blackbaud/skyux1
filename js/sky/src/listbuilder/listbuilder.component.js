@@ -48,9 +48,6 @@
     angular.module('sky.listbuilder.component', ['sky.card', 'sky.highlight'])
         .component('bbListbuilder', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.component.html',
-            bindings: {
-                bbListbuilderVerticalOffsetElId: '<?'
-            },
             transclude: {
                 bbListbuilderToolbar: '?bbListbuilderToolbar',
                 bbListbuilderContent: '?bbListbuilderContent',

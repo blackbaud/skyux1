@@ -12,7 +12,7 @@
             return windowEl.scrollTop() + windowEl.height() > $element.offset().top;
         }
 
-        function startInfinityScrollLoad() {
+        function callLoadCallback() {
             var deferred = $q.defer(),
                     loadingPromise;
             loadingPromise = deferred.promise;
@@ -24,20 +24,24 @@
             ctrl.bbInfinityScrollLoad({loadingComplete: deferred.resolve});
         }
 
+        function startInfinityScrollLoad() {
+            if (ctrl.bbInfinityScrollHasMore && !ctrl.isLoading && infinityScrollInView()) {
+                ctrl.isLoading = true;
+                // Put in angular digest cycle
+                $timeout(function () {
+                    callLoadCallback();
+                });
+            }
+        }
+
         function onInit() {
             
             ctrl.isLoading = false;
             
             windowEl.on('scroll.' + componentId, function () {
-                if (ctrl.bbInfinityScrollHasMore && !ctrl.isLoading && infinityScrollInView()) {
-                    ctrl.isLoading = true;
-
-                    // Put in angular digest cycle
-                    $timeout(function () {
-                        startInfinityScrollLoad();
-                    });
-                }
+                startInfinityScrollLoad();
             });
+                
         }
 
         function onDestroy() {

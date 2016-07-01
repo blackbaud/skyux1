@@ -222,8 +222,9 @@
             beforeEach(inject(function (_bbViewKeeperBuilder_) {
                 bbViewKeeperBuilder = _bbViewKeeperBuilder_;
                 viewKeeperHtml = angular.element(
-                    '<bb-listbuilder bb-listbuilder-vertical-offset-el-id="\'myoffsetid\'">' +
+                    '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' + 
+                    'bb-listbuilder-vertical-offset-el-id="\'myoffsetid\'" ' + 
                     'bb-listbuilder-toolbar-fixed="{{ctrl.isFixed}}">' +
                     '</bb-listbuilder-toolbar>' +
                     simpleCardContentHtml +

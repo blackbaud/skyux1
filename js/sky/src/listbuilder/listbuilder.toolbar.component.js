@@ -43,7 +43,7 @@
                     el: $element.find('.bb-listbuilder-toolbar'),
                     boundaryEl: ctrl.listbuilderCtrl.getContentContainer(),
                     setWidth: true,
-                    verticalOffSetElId: ctrl.listbuilderCtrl.bbListbuilderVerticalOffsetElId,
+                    verticalOffSetElId: ctrl.bbListbuilderVerticalOffsetElId,
                     onStateChanged: function () {
                         $timeout(function () {
                             ctrl.listbuilderCtrl.isScrolledChanged(vkToolbar.isFixed);
@@ -109,6 +109,7 @@
             bindings: {
                 bbListbuilderOnSearch: '&?',
                 bbListbuilderSearchText: '<?',
+                bbListbuilderVerticalOffsetElId: '<?',
                 bbListbuilderToolbarFixed: '@?'
             },
             controller: Controller,
