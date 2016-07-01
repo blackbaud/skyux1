@@ -38,7 +38,7 @@ describe('modals', function () {
             .webdrivercss(pageName, [
                 {
                     name: screenshotName,
-                    elem: '.modal-dialoag .modal-content'
+                    elem: '.modal-content'
                 }
             ], function (err, res) {
                 expect(err).toBe(undefined);
