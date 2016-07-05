@@ -9,22 +9,20 @@
             $timeout,
             bbViewKeeperBuilder,
             listbuilderHtml,
-            $window,
-            bbHighlight;
+            $window;
 
         beforeEach(module(
             'sky.listbuilder',
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _bbViewKeeperBuilder_, _$window_, _bbHighlight_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _bbViewKeeperBuilder_, _$window_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $document = _$document_;
             $timeout = _$timeout_;
             bbViewKeeperBuilder = _bbViewKeeperBuilder_;
             $window = _$window_;
-            bbHighlight = _bbHighlight_;
         }));
 
         function timeoutFlushIfAvailable() {
@@ -178,6 +176,8 @@
                 $scope.$digest();
             }
 
+           
+
             beforeEach(function () {
                 loadCalls = 0;
                 $scope.listCtrl = {
@@ -185,6 +185,9 @@
                     onLoadMore: function (loadingComplete) {
                         loadCalls++;
                         loadingComplete();
+                    },
+                    onSearch: function (searchText, highlightResults) {
+                        highlightResults();
                     }
                 };
                 windowEl = angular.element($window);
@@ -243,23 +246,61 @@
 
             it('should highlight using the last search text when load more promise is resolved', function () {
                 var el,
-                    searchButtonEl;
+                    searchButtonEl,
+                    highlightedEl;
 
-                spyOn(bbHighlight, 'bbHighlight').and.callThrough();
+                listbuilderHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-content>' +
+                    '<bb-listbuilder-cards>' +
+                    '<bb-card ng-repeat="card in listCtrl.cards">' +
+                    '<bb-card-title>' +
+                    '{{card.title}}' +
+                    '</bb-card-title>' +
+                    '<bb-card-content>' +
+                    '{{card.content}}' +
+                    '</bb-card-content>' +
+                    '</bb-card>' +
+                    '</bb-listbuilder-cards>' +
+                    '</bb-listbuilder-content>' +
+                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)" ' +
+                    'bb-listbuilder-show-load-more="listCtrl.showLoadMore">' +
+                    '</bb-listbuilder-footer>' + 
+                    '</bb-listbuilder>');
+
+                $scope.listCtrl.cards = [
+                    {
+                        title: 'First',
+                        content: 'Content'
+                    }
+                ];
                 
                 setupScrollInfinity(true);
+
+                $scope.listCtrl.onLoadMore = function (loadingComplete) {
+                    $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});
+                    loadingComplete();
+                };
+
                 el = $compile(listbuilderHtml)($scope);
                 el.appendTo($document.find('body'));
                 $scope.$digest();
 
-                changeInput(el, 'First');
+                changeInput(el, 'Content');
 
                 searchButtonEl = findSearchButton(el);
                 searchButtonEl.click();
                 $scope.$digest();
 
                 $timeout.flush();
-                expect(bbHighlight).toHaveBeenCalled();
+
+                windowEl.scroll();
+                timeoutFlushIfAvailable();
+                highlightedEl = el.find('span.highlight');
+                expect(highlightedEl.length).toBe(2);
 
 
                 el.remove();
