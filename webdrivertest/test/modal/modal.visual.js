@@ -18,6 +18,7 @@ describe('modals', function () {
         });
     });
 
+    /* For this test to run properly the webdrivercss screen resizing functionality must be fixed
     it('match the baseline modal with context menu screenshot', function (done) {
         var result,
             prefix,
@@ -46,5 +47,5 @@ describe('modals', function () {
             })
             .click('.modal-dialog .close')
             .call(done);
-    });
+    });*/
 });
