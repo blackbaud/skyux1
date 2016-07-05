@@ -2,7 +2,8 @@
 
 (function () {
     'use strict';
-    var os;
+    var os,
+    config;
     
     if (process.platform === 'win32') {
         os = 'WIN';
@@ -11,7 +12,7 @@
     }
 
     // Load our shared config
-    var config = require('./wdio.conf-shared.js');
+    config = require('./wdio.conf-shared.js');
 
     config.capabilities = [
         {
