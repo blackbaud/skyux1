@@ -1,35 +1,40 @@
 <div class="container">
-    <div ng-controller="ListbuilderTestController as listCtrl">
-        <bb-listbuilder>
-            <bb-listbuilder-toolbar 
-                bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"
-                bb-listbuilder-search-text="listCtrl.searchText">
-            </bb-listbuilder-toolbar>
-            <bb-listbuilder-content>
-            <bb-listbuilder-cards>
-                <bb-listbuilder-card ng-repeat="item in listCtrl.data">
-                    <bb-card>
-                    <bb-card-title>
-                    {{item.name}}
-                    </bb-card-title>
-                    <bb-card-content>
-                    {{item.content}}
-                    </bb-card-content>
-                    <bb-card-actions>
-                        <bb-context-menu>
-                            <bb-context-menu-item>Action 1</bb-context-menu-item>
-                            <bb-context-menu-item>Action 2</bb-context-menu-item>
-                        </bb-context-menu>
-                    </bb-card-actions>
-                </bb-card>
-                </bb-listbuilder-card>
-            
-            </bb-listbuilder-cards>
-            </bb-listbuilder-content>
-            <bb-listbuilder-footer
-                bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)"
-                bb-listbuilder-show-load-more="true">
-            </bb-listbuilder-footer>
-    </bb-listbuilder>
+    <div style="height: 100px; width: 100px;">
     </div>
+    <div id="screenshot-listbuilder">
+        <div ng-controller="ListbuilderTestController as listCtrl">
+            <bb-listbuilder>
+                <bb-listbuilder-toolbar 
+                    bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"
+                    bb-listbuilder-search-text="listCtrl.searchText">
+                </bb-listbuilder-toolbar>
+                <bb-listbuilder-content>
+                <bb-listbuilder-cards>
+                    <bb-listbuilder-card ng-repeat="item in listCtrl.data">
+                        <bb-card>
+                        <bb-card-title>
+                        {{item.name}}
+                        </bb-card-title>
+                        <bb-card-content>
+                        {{item.content}}
+                        </bb-card-content>
+                        <bb-card-actions>
+                            <bb-context-menu>
+                                <bb-context-menu-item>Action 1</bb-context-menu-item>
+                                <bb-context-menu-item>Action 2</bb-context-menu-item>
+                            </bb-context-menu>
+                        </bb-card-actions>
+                    </bb-card>
+                    </bb-listbuilder-card>
+                
+                </bb-listbuilder-cards>
+                </bb-listbuilder-content>
+                <bb-listbuilder-footer
+                    bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)"
+                    bb-listbuilder-show-load-more="true">
+                </bb-listbuilder-footer>
+            </bb-listbuilder>
+        </div>   
+    </div>
+    
 </div>

@@ -9,8 +9,7 @@
 
         function createData(amount) {
             var i,
-                newData = [],
-                dataIndex;
+                newData = [];
 
             for (i = 0; i < amount; i++) {
                 newData.push(
@@ -29,7 +28,6 @@
         function onSearch(searchText, highlightResults) {
             var filteredData = data;
             if (searchText) {
-                debugger;
                 filteredData = data.filter(function (item) {
                     var property;
                     for (property in item) {
