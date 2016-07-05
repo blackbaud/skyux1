@@ -9,20 +9,22 @@
             $timeout,
             bbViewKeeperBuilder,
             listbuilderHtml,
-            $window;
+            $window,
+            bbHighlight;
 
         beforeEach(module(
             'sky.listbuilder',
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _bbViewKeeperBuilder_, _$window_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _bbViewKeeperBuilder_, _$window_, _bbHighlight_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $document = _$document_;
             $timeout = _$timeout_;
             bbViewKeeperBuilder = _bbViewKeeperBuilder_;
             $window = _$window_;
+            bbHighlight = _bbHighlight_;
         }));
 
         function timeoutFlushIfAvailable() {
@@ -36,7 +38,8 @@
         beforeEach(function () {
             listbuilderHtml = angular.element(
                     '<bb-listbuilder>' +
-                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"> ' +
                     '</bb-listbuilder-toolbar>' +
                     '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)" ' +
                     'bb-listbuilder-show-load-more="listCtrl.showLoadMore">' +
@@ -148,6 +151,7 @@
         describe('load more', function () {
             var loadCalls,
                 windowEl;
+
             function setupScrollInfinity(inView) {
                 var windowVal = 10,
                     offsetVal;
@@ -155,6 +159,23 @@
                 spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
                 spyOn($.fn, 'height').and.returnValue(windowVal);
                 spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+            }
+
+
+            function findSearchInput(el) {
+                return el.find('.bb-listbuilder-search-input');
+            }
+
+            function findSearchButton(el) {
+                return el.find('.bb-listbuilder-search-button button');
+            }
+
+            function changeInput(el, val) {
+                var inputEl;
+                inputEl = findSearchInput(el);
+                inputEl.val(val);
+                inputEl.trigger('change');
+                $scope.$digest();
             }
 
             beforeEach(function () {
@@ -217,6 +238,31 @@
                 windowEl.scroll();
                 timeoutFlushIfAvailable();
                 expect(loadCalls).toBe(0);
+
+            });
+
+            it('should highlight using the last search text when load more promise is resolved', function () {
+                var el,
+                    searchButtonEl;
+
+                spyOn(bbHighlight, 'bbHighlight').and.callThrough();
+                
+                setupScrollInfinity(true);
+                el = $compile(listbuilderHtml)($scope);
+                el.appendTo($document.find('body'));
+                $scope.$digest();
+
+                changeInput(el, 'First');
+
+                searchButtonEl = findSearchButton(el);
+                searchButtonEl.click();
+                $scope.$digest();
+
+                $timeout.flush();
+                expect(bbHighlight).toHaveBeenCalled();
+
+
+                el.remove();
 
             });
         });

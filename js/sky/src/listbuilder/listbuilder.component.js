@@ -3,9 +3,11 @@
     'use strict';
 
     function Controller($element, bbHighlight, $timeout) {
-        var ctrl = this;
+        var ctrl = this,
+            lastSearchText;
 
         function highlightSearchText(searchText) {
+            lastSearchText = searchText;
             $timeout(function () {
                 var cardEl = $element.find('.bb-card');
                 if (cardEl.length > 0) {
@@ -16,7 +18,10 @@
                 }
                 
             });
-           
+        }
+
+        function highlightLastSearchText() {
+            highlightSearchText(lastSearchText);
         }
 
         function getContentContainer() {
@@ -37,6 +42,7 @@
         }
 
         ctrl.highlightSearchText = highlightSearchText;
+        ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.getContentContainer = getContentContainer;
         ctrl.scrollToTop = scrollToTop;
         ctrl.isScrolledChanged = isScrolledChanged;

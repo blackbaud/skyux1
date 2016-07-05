@@ -13,6 +13,7 @@
              
             loadingPromise.then(function () {
                 loadingComplete();
+                ctrl.listbuilderCtrl.highlightLastSearchText();
             });
 
             ctrl.bbListbuilderOnLoadMore({loadingComplete: deferred.resolve});
