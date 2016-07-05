@@ -19,14 +19,14 @@
                     }
                 );
                 contentCount++;
-
             }
-
             return newData;
         }
 
         function onSearch(searchText, highlightResults) {
+
             var filteredData = data;
+            self.searchText = searchText;
             if (searchText) {
                 filteredData = data.filter(function (item) {
                     var property;
@@ -55,6 +55,7 @@
 
                 data = data.concat(newData);
                 self.data = data;
+                onSearch(self.searchText);
                 loadingComplete();
             }, 4000);
             
