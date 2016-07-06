@@ -271,7 +271,40 @@
                 expect(bbViewKeeperBuilder.create).not.toHaveBeenCalled();
                 $scope.$destroy();
             });
+        });
 
+        describe('add button', function () {
+
+            function getAddButton(el) {
+                return el.find('.btn.btn-primary');
+            }
+
+            it('creates an add button when bb-listbuilder-add is specified', function () {
+                var addButtonHtml = '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-add bb-listbuilder-add-action="listCtrl.addAction()">My Add</bb-listbuilder-add>' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>',
+                    el,
+                    addCalled = false,
+                    addButtonEl;
+
+                $scope.listCtrl = {
+                    addAction: function () {
+                        addCalled = true;
+                    }
+                };
+
+                el = $compile(addButtonHtml)($scope);
+
+                $scope.$digest();
+
+                addButtonEl = getAddButton(el);
+
+                expect(addButtonEl.length).toBe(1);
+                addButtonEl.click();
+                expect(addCalled).toBe(true);
+            });
         });
     });
 }());

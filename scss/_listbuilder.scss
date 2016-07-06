@@ -6,8 +6,20 @@
     @include bb-border(light, top, bottom);
 }
 
+.bb-listbuilder-toolbar-item {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
 .bb-listbuilder-search-container {
-    max-width: 255px;
+    max-width: 150px;
+}
+
+@media (min-width: 768px) {
+    .bb-listbuilder-search-container {
+        max-width: 255px;
+    }
 }
 
 .bb-listbuilder-search-input {
@@ -78,6 +90,17 @@
         vertical-align: baseline; 
     }
 }
+
+.bb-listbuilder-add-label {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .bb-listbuilder-add-label {
+        display: inline-block;
+    }
+}
+
 
 
 

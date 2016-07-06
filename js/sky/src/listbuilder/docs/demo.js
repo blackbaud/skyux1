@@ -61,11 +61,17 @@
             
         }
 
+        function onAddClick() {
+            alert('Add button clicked');
+        }
+
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
-      
+        self.onAddClick = onAddClick;
+
         data = createData(5);
         self.data = data;
+        
         
     }
 
