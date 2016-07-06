@@ -1,417 +1,417 @@
 {
-  "_LRM_PKTAG831": "skyux-l10n_5_3 - CHANGES-ONLY",
+  "_LRM_PKTAG356": "skyux-l10n_5_15 - CHANGES-ONLY",
   "action_bar_actions": {
-    "message": "_End-point_"
+    "message": "Azioni"
   },
   "alert_close": {
-    "message": "_Reports_"
+    "message": "Chiudi"
   },
   "autonumeric_abbr_billions": {
-    "message": "bn"
+    "message": "b"
   },
   "autonumeric_abbr_millions": {
-    "message": "_a_"
+    "message": "m"
   },
   "autonumeric_abbr_thousands": {
-    "message": "_a_"
+    "message": "k"
   },
   "avatar_error_not_image_description": {
-    "message": "Please choose a file that is a valid image."
+    "message": "Scegliere un file immagine valido."
   },
   "avatar_error_not_image_title": {
-    "message": "File is not an image."
+    "message": "Il file non � un�immagine."
   },
   "avatar_error_too_large_description": {
-    "message": "Please choose an image that is less than {0}."
+    "message": "Scegliere un�immagine inferiore a {0}."
   },
   "avatar_error_too_large_title": {
-    "message": "File is too large."
+    "message": "Il file � troppo grande."
   },
   "checklist_categories_label": {
-    "message": "Categories"
+    "message": "Categorie"
   },
   "checklist_check_title": {
-    "message": "Select item"
+    "message": "Seleziona elemento"
   },
   "checklist_clear_all": {
-    "message": "Clear all checklist items"
+    "message": "Annulla tutto"
   },
   "checklist_no_items": {
-    "message": "No items found in this list"
+    "message": "Nessun elemento trovato"
   },
   "checklist_only_selected_items": {
-    "message": "Only show selected items"
+    "message": "Mostra solo gli elementi selezionati"
   },
   "checklist_search_label": {
-    "message": "Search"
+    "message": "Ricerca"
   },
   "checklist_select_all": {
-    "message": "Select all checklist items"
+    "message": "Seleziona tutto"
   },
   "chevron_collapse": {
-    "message": "Collapse"
+    "message": "Comprimi"
   },
   "chevron_expand": {
-    "message": "Expand"
+    "message": "Espandi"
   },
   "context_menu_default_label": {
-    "message": "Context menu"
+    "message": "Menu di scelta rapida"
   },
   "date_field_invalid_date_message": {
-    "message": "_Obtained onwards a tourist steer_"
+    "message": "Inserire una data valida"
   },
   "date_range_picker_at_any_time": {
-    "message": "_DaN caps brown_"
+    "message": "In qualunque momento"
   },
   "date_range_picker_filter_description_at_any_time": {
-    "message": "_{0} cut fact GREAT_"
+    "message": "{0} at any time"
   },
   "date_range_picker_filter_description_last_calendar_year": {
-    "message": "_{0} taken enjoy separating dairy_"
+    "message": "{0} from last calendar year"
   },
   "date_range_picker_filter_description_last_fiscal_year": {
-    "message": "{0} from last financial year"
+    "message": "{0} from last fiscal year"
   },
   "date_range_picker_filter_description_last_month": {
-    "message": "_{0} HOLDS Rumex drivers_"
+    "message": "{0} from last month"
   },
   "date_range_picker_filter_description_last_quarter": {
-    "message": "_{0} lorry beans cryoscope_"
+    "message": "{0} from last quarter"
   },
   "date_range_picker_filter_description_last_week": {
-    "message": "_{0} water mouth drink_"
+    "message": "{0} from last week"
   },
   "date_range_picker_filter_description_next_calendar_year": {
-    "message": "_{0} come moped timetables means_"
+    "message": "{0} for next calendar year"
   },
   "date_range_picker_filter_description_next_fiscal_year": {
-    "message": "{0} for next financial year"
+    "message": "{0} for next fiscal year"
   },
   "date_range_picker_filter_description_next_month": {
-    "message": "_{0} your pumps stirred_"
+    "message": "{0} for next month"
   },
   "date_range_picker_filter_description_next_quarter": {
-    "message": "_{0} land rails nutrition_"
+    "message": "{0} for next quarter"
   },
   "date_range_picker_filter_description_next_week": {
-    "message": "_{0} full nomos yeast_"
+    "message": "{0} for next week"
   },
   "date_range_picker_filter_description_specific_range": {
     "message": "{0} from {1} to {2}"
   },
   "date_range_picker_filter_description_this_calendar_year": {
-    "message": "_{0} sent mixed legibility flank_"
+    "message": "{0} for this calendar year"
   },
   "date_range_picker_filter_description_this_fiscal_year": {
-    "message": "{0} for this financial year"
+    "message": "{0} for this fiscal year"
   },
   "date_range_picker_filter_description_this_month": {
-    "message": "_{0} Once would entries_"
+    "message": "{0} for this month"
   },
   "date_range_picker_filter_description_this_quarter": {
-    "message": "_{0} seem broad warehouse_"
+    "message": "{0} for this quarter"
   },
   "date_range_picker_filter_description_this_week": {
-    "message": "_{0} dies ducks sends_"
+    "message": "{0} for this week"
   },
   "date_range_picker_filter_description_today": {
-    "message": "_{0} page gametes_"
+    "message": "{0} for today"
   },
   "date_range_picker_filter_description_tomorrow": {
-    "message": "_{0} INAM initiative_"
+    "message": "{0} for tomorrow"
   },
   "date_range_picker_filter_description_yesterday": {
-    "message": "_{0} river reproduction_"
+    "message": "{0} from yesterday"
   },
   "date_range_picker_from_date": {
-    "message": "From date"
+    "message": "Dalla data"
   },
   "date_range_picker_last_calendar_year": {
-    "message": "_Shell supplement drive_"
+    "message": "Scorso anno calendario"
   },
   "date_range_picker_last_fiscal_year": {
-    "message": "Last financial year"
+    "message": "Scorso anno fiscale"
   },
   "date_range_picker_last_month": {
-    "message": "_Vicia barrier_"
+    "message": "Scorso mese"
   },
   "date_range_picker_last_quarter": {
-    "message": "_Solid curvature_"
+    "message": "Scorso trimestre"
   },
   "date_range_picker_last_week": {
-    "message": "_Coast files_"
+    "message": "Settimana scorsa"
   },
   "date_range_picker_max_date_error": {
-    "message": "Start date must be before end date"
+    "message": "La data iniziale deve essere anteriore alla data finale"
   },
   "date_range_picker_min_date_error": {
-    "message": "End date must be after start date"
+    "message": "La data finale deve essere posteriore alla data iniziale"
   },
   "date_range_picker_next_calendar_year": {
-    "message": "_GREAT horizontal cease_"
+    "message": "Prossimo anno calendario"
   },
   "date_range_picker_next_fiscal_year": {
-    "message": "Next financial year"
+    "message": "Prossimo anno fiscale"
   },
   "date_range_picker_next_month": {
-    "message": "_Ovens stopper_"
+    "message": "Prossimo mese"
   },
   "date_range_picker_next_quarter": {
-    "message": "_Onset platforms_"
+    "message": "Prossimo trimestre"
   },
   "date_range_picker_next_week": {
-    "message": "_Brine trade_"
+    "message": "Prossima settimana"
   },
   "date_range_picker_specific_range": {
-    "message": "Specific range"
+    "message": "Specifica intervallo"
   },
   "date_range_picker_this_calendar_year": {
-    "message": "_Alter saturation Rumex_"
+    "message": "Questo anno calendario"
   },
   "date_range_picker_this_fiscal_year": {
-    "message": "This financial year"
+    "message": "Questo anno fiscale"
   },
   "date_range_picker_this_month": {
-    "message": "_Sheer failure_"
+    "message": "Questo mese"
   },
   "date_range_picker_this_quarter": {
-    "message": "_Large stipulate_"
+    "message": "Questo trimestre"
   },
   "date_range_picker_this_week": {
-    "message": "_Cease drink_"
+    "message": "Questa settimana"
   },
   "date_range_picker_to_date": {
-    "message": "To date"
+    "message": "Alla data"
   },
   "date_range_picker_today": {
-    "message": "_Pursued_"
+    "message": "Oggi"
   },
   "date_range_picker_tomorrow": {
-    "message": "_Persistent_"
+    "message": "Domani"
   },
   "date_range_picker_yesterday": {
-    "message": "_Substitution_"
+    "message": "Ieri"
   },
   "datepicker_clear": {
-    "message": "_Express_"
+    "message": "Cancella"
   },
   "datepicker_close": {
-    "message": "_Heads_"
+    "message": "Fine"
   },
   "datepicker_today": {
-    "message": "_Reading_"
+    "message": "Oggi"
   },
   "error_description_broken": {
-    "message": "Try to refresh this page or come back later."
+    "message": "Provare ad aggiornare la pagina o riprovare pi� tardi."
   },
   "error_description_construction": {
-    "message": "Thanks for your patience while improvements are being made!\nPlease check back in a little while."
+    "message": "Stiamo apportando dei miglioramenti!\nRitornare fra un po� di tempo."
   },
   "error_title_broken": {
-    "message": "Sorry, something went wrong."
+    "message": "Si � verificato un errore."
   },
   "error_title_construction": {
-    "message": "This page will return soon."
+    "message": "Questa pagina torner� presto disponibile."
   },
   "error_title_notfound": {
-    "message": "Sorry, we cannot reach that page."
+    "message": "Impossibile raggiungere quella pagina."
   },
   "errormodal_ok": {
     "message": "OK"
   },
   "file_size_b_plural": {
-    "message": "_{0} chilled_"
+    "message": "{0} bytes"
   },
   "file_size_b_singular": {
-    "message": "_{0} Union_"
+    "message": "{0} byte"
   },
   "file_size_gb": {
-    "message": "_{0} fee_"
+    "message": "{0} GB"
   },
   "file_size_kb": {
-    "message": "_{0} Fog_"
+    "message": "{0} KB"
   },
   "file_size_mb": {
-    "message": "_{0} het_"
+    "message": "{0} MB"
   },
   "file_upload_drag_file_here": {
-    "message": "_Phial a limit pages_"
+    "message": "Trascina qui il file"
   },
   "file_upload_drop_files_here": {
-    "message": "_LOCKS latches might_"
+    "message": "Rilascia i file qui"
   },
   "file_upload_invalid_file": {
-    "message": "_Areas boned sizes kgf justified_"
+    "message": "Questo tipo di file non è valido"
   },
   "file_upload_link_placeholder": {
-    "message": "_algae://lead.participants.gram/knots_"
+    "message": "http://www.something.com/file"
   },
   "file_upload_or_click_to_browse": {
-    "message": "_EEA Primary oat addition_"
+    "message": "O fare clic per sfogliare"
   },
   "file_upload_paste_link": {
-    "message": "_Diluent a items own a limit_"
+    "message": "Incolla un link a un file"
   },
   "file_upload_paste_link_done": {
-    "message": "_Gases_"
+    "message": "Fine"
   },
   "grid_action_bar_cancel_mobile_actions": {
-    "message": "_Tangible_"
+    "message": "Annulla"
   },
   "grid_action_bar_choose_action": {
-    "message": "_Networks COD analysed_"
+    "message": "Scegliere un’azione"
   },
   "grid_action_bar_clear_selection": {
-    "message": "_KINGDOM Subordinated_"
+    "message": "Cancella selezione"
   },
   "grid_back_to_top": {
-    "message": "_Bands CAS HERE_"
+    "message": "Torna su"
   },
   "grid_column_picker_all_categories": {
-    "message": "All categories"
+    "message": "Tutti"
   },
   "grid_column_picker_description_header": {
-    "message": "_Quantitatively_"
+    "message": "Descrizione"
   },
   "grid_column_picker_header": {
-    "message": "Choose the columns to show"
+    "message": "Scegliere le colonne da mostrare nell’elenco"
   },
   "grid_column_picker_name_header": {
-    "message": "_Scotland_"
+    "message": "Colonna"
   },
   "grid_column_picker_search_no_columns": {
-    "message": "_Way published aligned_"
+    "message": "Nessuna colonna trovata"
   },
   "grid_column_picker_search_placeholder": {
-    "message": "_Oxidized but falls_"
+    "message": "Ricerca per nome"
   },
   "grid_column_picker_submit": {
-    "message": "_Stopper conductor_"
+    "message": "Applica modifiche"
   },
   "grid_columns_button": {
-    "message": " _Sentence connector_"
+    "message": " Scegli colonne"
   },
   "grid_filters_apply": {
-    "message": "_Signals Republics_"
+    "message": "Applica filtri"
   },
   "grid_filters_button": {
-    "message": "_Emissions_"
+    "message": "Filtri"
   },
   "grid_filters_clear": {
-    "message": "_Imposes_"
+    "message": "Cancella"
   },
   "grid_filters_header": {
-    "message": "_Chapters_"
+    "message": "Filtro"
   },
   "grid_filters_hide": {
-    "message": "_Large_"
+    "message": "Nascondi"
   },
   "grid_filters_summary_header": {
-    "message": "_Emitting:_"
+    "message": "Filtro:"
   },
   "grid_load_more": {
-    "message": "_Disks texts_"
+    "message": "Carica altro"
   },
   "grid_search_placeholder": {
-    "message": "_Juice too patch moved_"
+    "message": "Trova in questo elenco"
   },
   "modal_footer_cancel_button": {
-    "message": "_Eggplant_"
+    "message": "Annulla"
   },
   "modal_footer_primary_button": {
-    "message": "_Finds_"
+    "message": "Salva"
   },
   "month_short_april": {
-    "message": "_They_"
+    "message": "Apr"
   },
   "month_short_august": {
-    "message": "_Home_"
+    "message": "Ago"
   },
   "month_short_december": {
-    "message": "_Only_"
+    "message": "Dic"
   },
   "month_short_february": {
-    "message": "_Left_"
+    "message": "Feb"
   },
   "month_short_january": {
-    "message": "_Wire_"
+    "message": "Gen"
   },
   "month_short_july": {
-    "message": "_Farm_"
+    "message": "Lug"
   },
   "month_short_june": {
-    "message": "_Tare_"
+    "message": "Giu"
   },
   "month_short_march": {
-    "message": "_Navy_"
+    "message": "Mar"
   },
   "month_short_may": {
-    "message": "_Land_"
+    "message": "Mag"
   },
   "month_short_november": {
-    "message": "_Hens_"
+    "message": "Nov"
   },
   "month_short_october": {
-    "message": "_Work_"
+    "message": "Ott"
   },
   "month_short_september": {
-    "message": "_Upon_"
+    "message": "Set"
   },
   "page_noaccess_button": {
-    "message": "_Opposite bis a gave-commissioning refer_"
+    "message": "Torna a una pagina non classificata"
   },
   "page_noaccess_description": {
-    "message": "_Located, hood cast'a river circular end parts Merck.lack show award onto filtrate, Pakistan political traps amicable spectrophotometer._"
+    "message": "Spiacenti, non si possiedono i diritti per questa pagina.\nSe si pensa di possedere i diritti, contattare l’amministratore del sistema."
   },
   "page_noaccess_header": {
-    "message": "_Shake rounded, Sailing'a Gibraltar leg mind yield_"
+    "message": "Procedere, qui non c’è nulla da vedere"
   },
   "reorder_top": {
-    "message": "Top"
+    "message": "In alto"
   },
   "searchfield_no_records": {
-    "message": "Sorry, no matching records found"
+    "message": "Non è stato trovato nessun record corrispondente"
   },
   "searchfield_searching": {
-    "message": "_Requirements..._"
+    "message": "Ricerca in corso..."
   },
   "selectfield_remove": {
-    "message": "Remove"
+    "message": "Rimuovi"
   },
   "selectfield_summary_text": {
-    "message": "{0} items selected"
+    "message": "{0} elementi selezionati"
   },
   "selectfieldpicker_clear": {
-    "message": "Clear selection"
+    "message": "Cancella selezione"
   },
   "selectfieldpicker_select": {
-    "message": "Select"
+    "message": "Seleziona"
   },
   "selectfieldpicker_select_value": {
-    "message": "Select value"
+    "message": "Seleziona valore"
   },
   "selectfieldpicker_select_values": {
-    "message": "Select values"
+    "message": "Seleziona valori"
   },
   "text_expand_close_text": {
-    "message": "Close"
+    "message": "Chiudi"
   },
   "text_expand_modal_title": {
-    "message": "_Complaints mg/kg_"
+    "message": "Visualizzazione espansa"
   },
   "text_expand_see_less": {
-    "message": "_Food style_"
+    "message": "Mostra meno elementi"
   },
   "text_expand_see_more": {
-    "message": "_Deem atoms_"
+    "message": "Mostra più elementi"
   },
   "wizard_navigator_finish": {
-    "message": "_Contains_"
+    "message": "Fine"
   },
   "wizard_navigator_next": {
-    "message": "_Those_"
+    "message": "Avanti"
   },
   "wizard_navigator_previous": {
-    "message": "_Explosives_"
+    "message": "Precedente"
   }
 }
