@@ -113,7 +113,7 @@ module.exports = function (grunt, env, utils) {
     }
 
     function cleanupWorkingScreenshots(root) {
-        var pattern = root + '/**/*px.png',
+        var pattern = root + '/**/*full.png',
             regressionPattern = root + '/**/*.regression.png';
         grunt.file.expand(
             {

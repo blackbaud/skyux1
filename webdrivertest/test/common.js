@@ -11,7 +11,7 @@
         if (browser.desiredCapabilities.os === 'OS X') {
             platform = 'MAC';
         } else {
-            platform = 'WIN'
+            platform = 'WIN';
         }
 
         return platform + '_' + browserName;
@@ -54,13 +54,32 @@
         }).call(options.done);
     }
 
+    function setupTest(browser, url, screenWidth) {
+        if (!screenWidth) {
+            screenWidth = 1280;
+        }
+        return browser.url(url)
+            .getViewportSize('height').then(function (height) {
+                return browser.setViewportSize({width: screenWidth, height: height}).then(function () {
+                    return;
+                });
+            });
+    }
+
     module.exports = {
         getPrefix: getPrefix,
         compareScreenshot: function (options) {
-            var pageName = options.prefix + '/' + options.prefix + '_' + options.screenshotName + '_full';
+            
 
-            options.browserResult
-                .webdrivercss(pageName, [
+            options.browserResult.getViewportSize('width').then(function (width) {
+                var pageName,
+                    widthString = '.' + width + 'px';
+                console.log(width);
+
+                pageName = options.prefix + '/' + options.prefix + '_' + options.screenshotName + '_full';
+                options.screenshotName = options.screenshotName + widthString;
+                
+                this.webdrivercss(pageName, [
                     {
                         name: options.screenshotName,
                         elem: options.selector,
@@ -77,7 +96,10 @@
                         options.done();
                     }
                 });
+            });
+                
         },
+        setupTest: setupTest,
         checkAccessibility: checkAccessibility,
         moveCursorOffScreen: function (browser) {
             return browser.moveToObject('body', 0, 0);

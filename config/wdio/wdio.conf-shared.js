@@ -1,9 +1,13 @@
-/*jshint node: true */
+/* jshint node: true */
+/* global browser */
 'use strict';
 
 /**
  * WebDriver configuration options shared between CI and local versions.
  */
+
+var common = require('../../webdrivertest/test/common.js');
+
 module.exports = {
     specs: [
         'webdrivertest/test/**/*.visual.js'
@@ -22,6 +26,9 @@ module.exports = {
     },
     before: function () {
         console.log('before test run');
+        browser.addCommand('setupTest', function async(url, screenWidth) {
+            return common.setupTest(this, url, screenWidth); 
+        });
     },
     after: function () {
         console.log('after test run');
