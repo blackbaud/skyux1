@@ -1,9 +1,9 @@
 <div class="bb-listbuilder-footer">
 
-    <bb-infinity-scroll
-        bb-infinity-scroll-has-more="$ctrl.bbListbuilderShowLoadMore"
-        bb-infinity-scroll-load="$ctrl.loadCallback(loadingComplete)">
-    </bb-infinity-scroll>
+    <bb-infinite-scroll
+        bb-infinite-scroll-has-more="$ctrl.bbListbuilderShowLoadMore"
+        bb-infinite-scroll-load="$ctrl.loadCallback(loadingComplete)">
+    </bb-infinite-scroll>
     <div class="bb-listbuilder-actionbar" ng-show="$ctrl.listbuilderCtrl.isScrolled">
         <span class="bb-listbuilder-backtotop-left" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
             <span class="fa fa-arrow-up "></span>

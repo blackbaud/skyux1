@@ -6,9 +6,9 @@
     function Controller($element, $window, $timeout, $q) {
         var ctrl = this,
             windowEl = angular.element($window),
-            componentId = 'bb-infinityscroll-' + nextId;
+            componentId = 'bb-infinitescroll-' + nextId;
 
-        function infinityScrollInView() {
+        function infiniteScrollInView() {
             return windowEl.scrollTop() + windowEl.height() > $element.offset().top;
         }
 
@@ -21,11 +21,11 @@
                 ctrl.isLoading = false;
             });
 
-            ctrl.bbInfinityScrollLoad({loadingComplete: deferred.resolve});
+            ctrl.bbInfiniteScrollLoad({loadingComplete: deferred.resolve});
         }
 
-        function startInfinityScrollLoad() {
-            if (ctrl.bbInfinityScrollHasMore && !ctrl.isLoading && infinityScrollInView()) {
+        function startInfiniteScrollLoad() {
+            if (ctrl.bbInfiniteScrollHasMore && !ctrl.isLoading && infiniteScrollInView()) {
                 ctrl.isLoading = true;
                 // Put in angular digest cycle
                 $timeout(function () {
@@ -39,7 +39,7 @@
             ctrl.isLoading = false;
             
             windowEl.on('scroll.' + componentId, function () {
-                startInfinityScrollLoad();
+                startInfiniteScrollLoad();
             });
                 
         }
@@ -51,18 +51,18 @@
         ctrl.$onInit = onInit;
         ctrl.$onDestroy = onDestroy;
 
-        ctrl.startInfinityScrollLoad = startInfinityScrollLoad;
+        ctrl.startInfiniteScrollLoad = startInfiniteScrollLoad;
         nextId++;     
     } 
 
     Controller.$inject = ['$element', '$window', '$timeout', '$q'];
 
-    angular.module('sky.infinityscroll.component', ['sky.resources', 'sky.wait'])
-        .component('bbInfinityScroll', {
-            templateUrl: 'sky/templates/infinityscroll/infinityscroll.component.html',
+    angular.module('sky.infinitescroll.component', ['sky.resources', 'sky.wait'])
+        .component('bbInfiniteScroll', {
+            templateUrl: 'sky/templates/infinitescroll/infinitescroll.component.html',
             bindings: {
-                bbInfinityScrollHasMore: '<',
-                bbInfinityScrollLoad: '&'
+                bbInfiniteScrollHasMore: '<',
+                bbInfiniteScrollLoad: '&'
             },
             controller: Controller
         

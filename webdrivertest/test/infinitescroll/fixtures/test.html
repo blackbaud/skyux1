@@ -1,7 +1,7 @@
 <div class="container bb-screenshot-noanim">
-    <div id="screenshot-infinityscroll" ng-controller="InfinityScrollTestController as infinityCtrl">
+    <div id="screenshot-infinitescroll" ng-controller="InfiniteScrollTestController as infiniteCtrl">
         <bb-repeater bb-repeater-expand-mode="none">
-            <bb-repeater-item ng-repeat="item in infinityCtrl.data">
+            <bb-repeater-item ng-repeat="item in infiniteCtrl.data">
             <bb-repeater-item-title>
                 {{item.name}}
             </bb-repeater-item-title>
@@ -10,9 +10,9 @@
             </bb-repeater-item-content>
             </bb-repeater-item>
         </bb-repeater>
-        <bb-infinity-scroll
-            bb-infinity-scroll-has-more="infinityCtrl.hasMore"
-            bb-infinity-scroll-load="infinityCtrl.loadFn(loadingComplete)">
-        </bb-infinity-scroll>
+        <bb-infinite-scroll
+            bb-infinite-scroll-has-more="infiniteCtrl.hasMore"
+            bb-infinite-scroll-load="infiniteCtrl.loadFn(loadingComplete)">
+        </bb-infinite-scroll>
     </div>
 </div>

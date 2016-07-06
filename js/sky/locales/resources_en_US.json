@@ -503,8 +503,8 @@
         "_description": "",
         "message": "Done"
     },
-    "infinity_scroll_load_more": {
-        "_description": "Text for loading more in the infinity scroll button",
+    "infinite_scroll_load_more": {
+        "_description": "Text for loading more in the infinite scroll button",
         "message": "Load more"
     },
     "listbuilder_footer_back_to_top": {

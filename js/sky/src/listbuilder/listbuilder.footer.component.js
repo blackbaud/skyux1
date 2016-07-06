@@ -44,12 +44,11 @@
         ctrl.$postLink = initFooter;
         ctrl.$onDestroy = destroyFooter;
         ctrl.loadCallback = loadCallback;
-
     }
 
     Controller.$inject = ['$element', '$document', '$q'];
 
-    angular.module('sky.listbuilder.footer.component', ['sky.resources', 'sky.infinityscroll'])
+    angular.module('sky.listbuilder.footer.component', ['sky.resources', 'sky.infinitescroll'])
         .component('bbListbuilderFooter', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.footer.component.html',
             bindings: {

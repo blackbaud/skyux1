@@ -14,9 +14,9 @@ The listbuilder component contains functionality for executing different actions
     - `bb-listbuilder-search-text` &mdash; *(Optional.)* Text that the user can provide to set the text in the toolbar's search input.
     - `bb-listbuilder-vertical-offset-id` &mdash; *(Optional.)* Id of the element that should float above the listbuilder toolbar when the window is scrolled.
     - `bb-listbuilder-toolbar-fixed` &mdash; *(Optional.)* Set to true if the toolbar should not float when the window is scrolled. *(Default = `false`)*
-  - `bb-listbuilder-footer` &mdash; Component for the listbuilder footer, which contains the ability to load data using infinity scroll.
+  - `bb-listbuilder-footer` &mdash; Component for the listbuilder footer, which contains the ability to load data using infinite scroll.
     - `bb-listbuilder-show-load-more` &mdash; When true, indicates that there is more data ready to be loaded by the listbuilder.
     - `bb-listbuilder-on-load-more` &mdash; Callback that will be executed when the listbuilder's load more functionality is invoked. Ih has the following arguments:
-      - `loadingComplete` &mdash; Promised provided by `bb-listbuilder` that should be called on load completion to end the infinity scroll loading sequence.
+      - `loadingComplete` &mdash; Promised provided by `bb-listbuilder` that should be called on load completion to end the infinite scroll loading sequence.
        
 ---

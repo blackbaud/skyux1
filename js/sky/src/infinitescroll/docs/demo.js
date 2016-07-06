@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function InfinityScrollDemoController($timeout) {
+    function InfiniteScrollDemoController($timeout) {
         var vm = this,
             idCount = 1;
 
@@ -38,8 +38,8 @@
         };
     }
 
-    InfinityScrollDemoController.$inject = ['$timeout'];
+    InfiniteScrollDemoController.$inject = ['$timeout'];
 
     angular.module('stache')
-        .controller('InfinityScrollDemoController', InfinityScrollDemoController);
+        .controller('InfiniteScrollDemoController', InfiniteScrollDemoController);
 }());

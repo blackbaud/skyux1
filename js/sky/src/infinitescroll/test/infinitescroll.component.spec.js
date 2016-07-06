@@ -2,20 +2,20 @@
 /* global module, angular, inject, $ */
 (function () {
     'use strict';
-    describe('Infinity scroll', function () {
+    describe('Infinite scroll', function () {
         var $compile,
             $scope,
             $timeout, 
             $window,
             windowEl,
             loadCalls,
-            infinityHtml = '<div><bb-infinity-scroll ' + 
-                'bb-infinity-scroll-has-more="infinityCtrl.hasMore" ' +
-                'bb-infinity-scroll-load="infinityCtrl.loadFn(loadingComplete)">' +
-                '</bb-infinity-scroll></div>';
+            infiniteHtml = '<div><bb-infinite-scroll ' + 
+                'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn(loadingComplete)">' +
+                '</bb-infinite-scroll></div>';
 
         beforeEach(module(
-            'sky.infinityscroll',
+            'sky.infinitescroll',
             'sky.templates'
         ));
 
@@ -39,7 +39,7 @@
             }
         }
 
-        function setupScrollInfinity(inView) {
+        function setupScrollInfinite(inView) {
             var windowVal = 10,
                 offsetVal;
             offsetVal = inView ? 0 : 30; 
@@ -50,7 +50,7 @@
 
         beforeEach(function () {
             loadCalls = 0;
-            $scope.infinityCtrl = {
+            $scope.infiniteCtrl = {
                 hasMore: true,
                 loadFn: function (loadingComplete) {
                     loadCalls++;
@@ -60,18 +60,18 @@
             windowEl = angular.element($window);
         });
 
-        it('should set the infinity scroll button text', function () {
+        it('should set the infinite scroll button text', function () {
             var el,
                 buttonEl;
             
-            $scope.infinityCtrl = {
+            $scope.infiniteCtrl = {
                 hasMore: true,
                 loadFn: function () {
                     angular.noop();
                 }
             };
             
-            el = $compile(infinityHtml)($scope);
+            el = $compile(infiniteHtml)($scope);
             $scope.$digest();
             buttonEl = getLoadMoreButton(el);
             expect(getLoadMoreButton(el)).toHaveText('Load more');
@@ -81,9 +81,9 @@
         it('should call the loading callback if the component is in view', function () {
             var el;
             
-            setupScrollInfinity(true);
+            setupScrollInfinite(true);
             
-            el = $compile(infinityHtml)($scope);
+            el = $compile(infiniteHtml)($scope);
             $scope.$digest();
 
             windowEl.scroll();
@@ -94,9 +94,9 @@
         it('should not call the loading callback if the component is not in view', function () {
             var el;
 
-            setupScrollInfinity(false);
+            setupScrollInfinite(false);
             
-            el = $compile(infinityHtml)($scope);
+            el = $compile(infiniteHtml)($scope);
             $scope.$digest();
             
             windowEl.scroll();
@@ -107,9 +107,9 @@
         it('should call the loading callback if the load more button is pressed', function () {
             var el;
             
-            setupScrollInfinity(true);
+            setupScrollInfinite(true);
             
-            el = $compile(infinityHtml)($scope);
+            el = $compile(infiniteHtml)($scope);
             $scope.$digest();
 
             el.find('.bb-btn-secondary').click();
@@ -121,13 +121,13 @@
         it('should not have the load more button visible if the component load more button is pressed and is already loading', function () {
             var el;
             
-            $scope.infinityCtrl.loadFn = function () {
+            $scope.infiniteCtrl.loadFn = function () {
                 loadCalls++;
             };
 
-            setupScrollInfinity(true);
+            setupScrollInfinite(true);
             
-            el = $compile(infinityHtml)($scope);
+            el = $compile(infiniteHtml)($scope);
             $scope.$digest();
 
             el.find('.bb-btn-secondary').click();
@@ -141,11 +141,11 @@
         it('should not show the component if there are no more items available', function () {
             var el;
             
-            $scope.infinityCtrl.hasMore = false;
+            $scope.infiniteCtrl.hasMore = false;
 
-            setupScrollInfinity(true);
+            setupScrollInfinite(true);
             
-            el = $compile(infinityHtml)($scope);
+            el = $compile(infiniteHtml)($scope);
             $scope.$digest();
 
             windowEl.scroll();

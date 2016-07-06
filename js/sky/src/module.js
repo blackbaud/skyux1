@@ -24,7 +24,7 @@
         'sky.help',
         'sky.helpbutton',
         'sky.highlight',
-        'sky.infinityscroll',
+        'sky.infinitescroll',
         'sky.keyinfo',
         'sky.listbuilder',
         'sky.mediabreakpoints',

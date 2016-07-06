@@ -150,7 +150,7 @@
             var loadCalls,
                 windowEl;
 
-            function setupScrollInfinity(inView) {
+            function setupScrollInfinite(inView) {
                 var windowVal = 10,
                     offsetVal;
                 offsetVal = inView ? 0 : 30; 
@@ -196,7 +196,7 @@
             it('should load more data when the footer is in view and bbListbuilderShowLoadMore is true', function () {
                 var el;
                 
-                setupScrollInfinity(true);
+                setupScrollInfinite(true);
                 
                 el = $compile(listbuilderHtml)($scope);
                 $scope.$digest();
@@ -213,7 +213,7 @@
             it('should not load more data when the footer is in view and bbListbuilderShowLoadMore is false', function () {
                 var el;
             
-                setupScrollInfinity(true);
+                setupScrollInfinite(true);
                 
                 el = $compile(listbuilderHtml)($scope);
                 $scope.$digest();
@@ -233,7 +233,7 @@
             it('should not load more data when the footer is not in view and bbListbuilderShowLoadMore is true', function () {
                 var el;
             
-                setupScrollInfinity(false);
+                setupScrollInfinite(false);
                 
                 el = $compile(listbuilderHtml)($scope);
                 $scope.$digest();
@@ -278,7 +278,7 @@
                     }
                 ];
                 
-                setupScrollInfinity(true);
+                setupScrollInfinite(true);
 
                 $scope.listCtrl.onLoadMore = function (loadingComplete) {
                     $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});

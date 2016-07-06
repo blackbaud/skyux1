@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function InfinityScrollTestController($timeout) {
+    function InfiniteScrollTestController($timeout) {
         var vm = this,
             idCount = 1;
 
@@ -32,8 +32,8 @@
         };
     }
 
-    InfinityScrollTestController.$inject = ['$timeout'];
+    InfiniteScrollTestController.$inject = ['$timeout'];
 
     angular.module('screenshots', ['sky'])
-        .controller('InfinityScrollTestController', InfinityScrollTestController);
+        .controller('InfiniteScrollTestController', InfiniteScrollTestController);
 }());
