@@ -1,0 +1,416 @@
+{
+  "action_bar_actions": {
+    "message": "[Åçţîöñš------- П國カ내]"
+  },
+  "alert_close": {
+    "message": "[Çļöšé--- П國カ내]"
+  },
+  "autonumeric_abbr_billions": {
+    "message": "[ƀ]"
+  },
+  "autonumeric_abbr_millions": {
+    "message": "[ɱ]"
+  },
+  "autonumeric_abbr_thousands": {
+    "message": "[ķ]"
+  },
+  "avatar_error_not_image_description": {
+    "message": "[Þļéåšé çĥööšé å ƒîļé ţĥåţ îš å ṽåļîð îɱåĝé.------------------ П國カ내]"
+  },
+  "avatar_error_not_image_title": {
+    "message": "[Ƒîļé îš ñöţ åñ îɱåĝé.--------- П國カ내]"
+  },
+  "avatar_error_too_large_description": {
+    "message": "[Þļéåšé çĥööšé åñ îɱåĝé ţĥåţ îš ļéšš ţĥåñ {0}.-------------------- П國カ내]"
+  },
+  "avatar_error_too_large_title": {
+    "message": "[Ƒîļé îš ţöö ļåŕĝé.----------- П國カ내]"
+  },
+  "checklist_select_all": {
+    "message": "[Šéļéçţ åļļ çĥéçķļîšţ îţéɱš------------- П國カ내]"
+  },
+  "checklist_clear_all": {
+    "message": "[Çļéåŕ åļļ çĥéçķļîšţ îţéɱš------------- П國カ내]"
+  },
+  "checklist_only_selected_items": {
+    "message": "[Öñļý šĥöŵ šéļéçţéð îţéɱš------------ П國カ내]"
+  },
+  "checklist_no_items": {
+    "message": "[Ñö îţéɱš ƒöûñð îñ ţĥîš ļîšţ-------------- П國カ내]"
+  },
+  "checklist_check_title": {
+    "message": "[Šéļéçţ îţéɱ---- П國カ내]"
+  },
+  "checklist_search_label": {
+    "message": "[Šéåŕçĥ----- П國カ내]"
+  },
+  "checklist_categories_label": {
+    "message": "[Çåţéĝöŕîéš------------- П國カ내]"
+  },
+  "chevron_collapse": {
+    "message": "[Çöļļåþšé--------- П國カ내]"
+  },
+  "chevron_expand": {
+    "message": "[Éẋþåñð----- П國カ내]"
+  },
+  "context_menu_default_label": {
+    "message": "[Çöñţéẋţ ɱéñû----- П國カ내]"
+  },
+  "grid_back_to_top": {
+    "message": "[Ɓåçķ ţö ţöþ---- П國カ내]"
+  },
+  "grid_column_picker_all_categories": {
+    "message": "[Åļļ çåţéĝöŕîéš------- П國カ내]"
+  },
+  "grid_column_picker_description_header": {
+    "message": "[Ðéšçŕîþţîöñ---- П國カ내]"
+  },
+  "grid_column_picker_header": {
+    "message": "[Çĥööšé ţĥé çöļûɱñš ţö šĥöŵ------------- П國カ내]"
+  },
+  "grid_column_picker_name_header": {
+    "message": "[Çöļûɱñ----- П國カ내]"
+  },
+  "grid_column_picker_search_placeholder": {
+    "message": "[Šéåŕçĥ ƀý ñåɱé------- П國カ내]"
+  },
+  "grid_column_picker_submit": {
+    "message": "[Åþþļý çĥåñĝéš------ П國カ내]"
+  },
+  "grid_columns_button": {
+    "message": "[ Çĥööšé çöļûɱñš-------- П國カ내]"
+  },
+  "grid_filters_apply": {
+    "message": "[Åþþļý ƒîļţéŕš------ П國カ내]"
+  },
+  "grid_filters_button": {
+    "message": "[Ƒîļţéŕš------- П國カ내]"
+  },
+  "grid_filters_clear": {
+    "message": "[Çļéåŕ--- П國カ내]"
+  },
+  "grid_filters_header": {
+    "message": "[Ƒîļţéŕ----- П國カ내]"
+  },
+  "grid_filters_hide": {
+    "message": "[Ĥîðé- П國カ내]"
+  },
+  "grid_filters_summary_header": {
+    "message": "[Ƒîļţéŕ:------- П國カ내]"
+  },
+  "grid_load_more": {
+    "message": "[Ļöåð ɱöŕé----------- П國カ내]"
+  },
+  "grid_search_placeholder": {
+    "message": "[Ƒîñð îñ ţĥîš ļîšţ---------- П國カ내]"
+  },
+  "grid_column_picker_search_no_columns": {
+    "message": "[Ñö çöļûɱñš ƒöûñð--------- П國カ내]"
+  },
+  "modal_footer_cancel_button": {
+    "message": "[Çåñçéļ----- П國カ내]"
+  },
+  "modal_footer_primary_button": {
+    "message": "[Šåṽé- П國カ내]"
+  },
+  "month_short_april": {
+    "message": "[Åþŕ П國カ]"
+  },
+  "month_short_august": {
+    "message": "[Åûĝ П國カ]"
+  },
+  "month_short_december": {
+    "message": "[Ðéç П國カ]"
+  },
+  "month_short_february": {
+    "message": "[Ƒéƀ П國カ]"
+  },
+  "month_short_january": {
+    "message": "[Ĵåñ П國カ]"
+  },
+  "month_short_july": {
+    "message": "[Ĵûļ П國カ]"
+  },
+  "month_short_june": {
+    "message": "[Ĵûñ П國カ]"
+  },
+  "month_short_march": {
+    "message": "[Ṁåŕ П國カ]"
+  },
+  "month_short_may": {
+    "message": "[Ṁåý П國カ]"
+  },
+  "month_short_november": {
+    "message": "[Ñöṽ П國カ]"
+  },
+  "month_short_october": {
+    "message": "[Öçţ П國カ]"
+  },
+  "month_short_september": {
+    "message": "[Šéþ П國カ]"
+  },
+  "page_noaccess_button": {
+    "message": "[Ŕéţûŕñ ţö å ñöñ-çļåššîƒîéð þåĝé----------- П國カ내]"
+  },
+  "page_noaccess_description": {
+    "message": "[Šöŕŕý, ýöû ðöñ'ţ ĥåṽé ŕîĝĥţš ţö ţĥîš þåĝé.\nÎƒ ýöû ƒééļ ýöû šĥöûļð, þļéåšé çöñţåçţ ýöûŕ šýšţéɱ åðɱîñîšţŕåţöŕ.------------------------- П國カ내]"
+  },
+  "page_noaccess_header": {
+    "message": "[Ṁöṽé åļöñĝ, ţĥéŕé'š ñöţĥîñĝ ţö šéé ĥéŕé---------------- П國カ내]"
+  },
+  "text_expand_see_less": {
+    "message": "[Šéé ļéšš--------- П國カ내]"
+  },
+  "text_expand_see_more": {
+    "message": "[Šéé ɱöŕé--------- П國カ내]"
+  },
+  "text_expand_modal_title": {
+    "message": "[Éẋþåñðéð ṽîéŵ------ П國カ내]"
+  },
+  "text_expand_close_text": {
+    "message": "[Çļöšé--- П國カ내]"
+  },
+  "grid_action_bar_clear_selection": {
+    "message": "[Çļéåŕ šéļéçţîöñ-------- П國カ내]"
+  },
+  "grid_action_bar_cancel_mobile_actions": {
+    "message": "[Çåñçéļ----- П國カ내]"
+  },
+  "grid_action_bar_choose_action": {
+    "message": "[Çĥööšé åñ åçţîöñ--------- П國カ내]"
+  },
+  "date_field_invalid_date_message": {
+    "message": "[Þļéåšé éñţéŕ å ṽåļîð ðåţé------------- П國カ내]"
+  },
+  "date_range_picker_this_week": {
+    "message": "[Ţĥîš ŵééķ----------- П國カ내]"
+  },
+  "date_range_picker_last_week": {
+    "message": "[Ļåšţ ŵééķ----------- П國カ내]"
+  },
+  "date_range_picker_next_week": {
+    "message": "[Ñéẋţ ŵééķ----------- П國カ내]"
+  },
+  "date_range_picker_this_month": {
+    "message": "[Ţĥîš ɱöñţĥ------------- П國カ내]"
+  },
+  "date_range_picker_last_month": {
+    "message": "[Ļåšţ ɱöñţĥ------------- П國カ내]"
+  },
+  "date_range_picker_next_month": {
+    "message": "[Ñéẋţ ɱöñţĥ------------- П國カ내]"
+  },
+  "date_range_picker_this_calendar_year": {
+    "message": "[Ţĥîš çåļéñðåŕ ýéåŕ----------- П國カ내]"
+  },
+  "date_range_picker_last_calendar_year": {
+    "message": "[Ļåšţ çåļéñðåŕ ýéåŕ----------- П國カ내]"
+  },
+  "date_range_picker_next_calendar_year": {
+    "message": "[Ñéẋţ çåļéñðåŕ ýéåŕ----------- П國カ내]"
+  },
+  "date_range_picker_this_fiscal_year": {
+    "message": "[Ţĥîš ƒîšçåļ ýéåŕ--------- П國カ내]"
+  },
+  "date_range_picker_last_fiscal_year": {
+    "message": "[Ļåšţ ƒîšçåļ ýéåŕ--------- П國カ내]"
+  },
+  "date_range_picker_next_fiscal_year": {
+    "message": "[Ñéẋţ ƒîšçåļ ýéåŕ--------- П國カ내]"
+  },
+  "date_range_picker_this_quarter": {
+    "message": "[Ţĥîš ǫûåŕţéŕ----- П國カ내]"
+  },
+  "date_range_picker_last_quarter": {
+    "message": "[Ļåšţ ǫûåŕţéŕ----- П國カ내]"
+  },
+  "date_range_picker_next_quarter": {
+    "message": "[Ñéẋţ ǫûåŕţéŕ----- П國カ내]"
+  },
+  "date_range_picker_at_any_time": {
+    "message": "[Åţ åñý ţîɱé---- П國カ내]"
+  },
+  "date_range_picker_today": {
+    "message": "[Ţöðåý--- П國カ내]"
+  },
+  "date_range_picker_tomorrow": {
+    "message": "[Ţöɱöŕŕöŵ--------- П國カ내]"
+  },
+  "date_range_picker_yesterday": {
+    "message": "[Ýéšţéŕðåý----------- П國カ내]"
+  },
+  "date_range_picker_specific_range": {
+    "message": "[Šþéçîƒîç ŕåñĝé------- П國カ내]"
+  },
+  "date_range_picker_filter_description_this_week": {
+    "message": "[{0} ƒöŕ ţĥîš ŵééķ---------- П國カ내]"
+  },
+  "date_range_picker_filter_description_last_week": {
+    "message": "[{0} ƒŕöɱ ļåšţ ŵééķ----------- П國カ내]"
+  },
+  "date_range_picker_filter_description_next_week": {
+    "message": "[{0} ƒöŕ ñéẋţ ŵééķ---------- П國カ내]"
+  },
+  "date_range_picker_filter_description_this_month": {
+    "message": "[{0} ƒöŕ ţĥîš ɱöñţĥ----------- П國カ내]"
+  },
+  "date_range_picker_filter_description_last_month": {
+    "message": "[{0} ƒŕöɱ ļåšţ ɱöñţĥ------------ П國カ내]"
+  },
+  "date_range_picker_filter_description_next_month": {
+    "message": "[{0} ƒöŕ ñéẋţ ɱöñţĥ----------- П國カ내]"
+  },
+  "date_range_picker_filter_description_this_calendar_year": {
+    "message": "[{0} ƒöŕ ţĥîš çåļéñðåŕ ýéåŕ------------- П國カ내]"
+  },
+  "date_range_picker_filter_description_last_calendar_year": {
+    "message": "[{0} ƒŕöɱ ļåšţ çåļéñðåŕ ýéåŕ-------------- П國カ내]"
+  },
+  "date_range_picker_filter_description_next_calendar_year": {
+    "message": "[{0} ƒöŕ ñéẋţ çåļéñðåŕ ýéåŕ------------- П國カ내]"
+  },
+  "date_range_picker_filter_description_this_fiscal_year": {
+    "message": "[{0} ƒöŕ ţĥîš ƒîšçåļ ýéåŕ------------ П國カ내]"
+  },
+  "date_range_picker_filter_description_last_fiscal_year": {
+    "message": "[{0} ƒŕöɱ ļåšţ ƒîšçåļ ýéåŕ------------- П國カ내]"
+  },
+  "date_range_picker_filter_description_next_fiscal_year": {
+    "message": "[{0} ƒöŕ ñéẋţ ƒîšçåļ ýéåŕ------------ П國カ내]"
+  },
+  "date_range_picker_filter_description_this_quarter": {
+    "message": "[{0} ƒöŕ ţĥîš ǫûåŕţéŕ------------- П國カ내]"
+  },
+  "date_range_picker_filter_description_last_quarter": {
+    "message": "[{0} ƒŕöɱ ļåšţ ǫûåŕţéŕ--------- П國カ내]"
+  },
+  "date_range_picker_filter_description_next_quarter": {
+    "message": "[{0} ƒöŕ ñéẋţ ǫûåŕţéŕ------------- П國カ내]"
+  },
+  "date_range_picker_filter_description_at_any_time": {
+    "message": "[{0} åţ åñý ţîɱé-------- П國カ내]"
+  },
+  "date_range_picker_filter_description_today": {
+    "message": "[{0} ƒöŕ ţöðåý------ П國カ내]"
+  },
+  "date_range_picker_filter_description_yesterday": {
+    "message": "[{0} ƒŕöɱ ýéšţéŕðåý----------- П國カ내]"
+  },
+  "date_range_picker_filter_description_tomorrow": {
+    "message": "[{0} ƒöŕ ţöɱöŕŕöŵ--------- П國カ내]"
+  },
+  "date_range_picker_filter_description_specific_range": {
+    "message": "[{0} ƒŕöɱ {1} ţö {2}------------ П國カ내]"
+  },
+  "date_range_picker_from_date": {
+    "message": "[Ƒŕöɱ ðåţé----------- П國カ내]"
+  },
+  "date_range_picker_to_date": {
+    "message": "[Ţö ðåţé------- П國カ내]"
+  },
+  "date_range_picker_min_date_error": {
+    "message": "[Éñð ðåţé ɱûšţ ƀé åƒţéŕ šţåŕţ ðåţé------------ П國カ내]"
+  },
+  "date_range_picker_max_date_error": {
+    "message": "[Šţåŕţ ðåţé ɱûšţ ƀé ƀéƒöŕé éñð ðåţé------------- П國カ내]"
+  },
+  "errormodal_ok": {
+    "message": "[ÖĶ П]"
+  },
+  "error_description_broken": {
+    "message": "[Ţŕý ţö ŕéƒŕéšĥ ţĥîš þåĝé öŕ çöɱé ƀåçķ ļåţéŕ.------------------- П國カ내]"
+  },
+  "error_description_construction": {
+    "message": "[Ţĥåñķš ƒöŕ ýöûŕ þåţîéñçé ŵĥîļé îɱþŕöṽéɱéñţš åŕé ɱåðé!\nÞļéåšé çĥéçķ ƀåçķ îñ å ļîţţļé ŵĥîļé.-------------------- П國カ내]"
+  },
+  "error_title_broken": {
+    "message": "[Šöŕŕý, šöɱéţĥîñĝ ŵéñţ ŵŕöñĝ.--------------- П國カ내]"
+  },
+  "error_title_construction": {
+    "message": "[Ţĥîš þåĝé ŵîļļ ŕéţûŕñ šööñ.-------------- П國カ내]"
+  },
+  "error_title_notfound": {
+    "message": "[Šöŕŕý, ŵé çåñ'ţ ŕéåçĥ ţĥåţ þåĝé.------------ П國カ내]"
+  },
+  "file_size_b_plural": {
+    "message": "[{0} ƀýţéš----------- П國カ내]"
+  },
+  "file_size_b_singular": {
+    "message": "[{0} ƀýţé--------- П國カ내]"
+  },
+  "file_size_kb": {
+    "message": "[{0} ĶƁ----- П國カ내]"
+  },
+  "file_size_mb": {
+    "message": "[{0} ṀƁ----- П國カ내]"
+  },
+  "file_size_gb": {
+    "message": "[{0} ĜƁ----- П國カ내]"
+  },
+  "file_upload_drag_file_here": {
+    "message": "[Ðŕåĝ å ƒîļé ĥéŕé--------- П國カ내]"
+  },
+  "file_upload_drop_files_here": {
+    "message": "[Ðŕöþ ƒîļéš ĥéŕé-------- П國カ내]"
+  },
+  "file_upload_invalid_file": {
+    "message": "[Ţĥîš ƒîļé ţýþé îš îñṽåļîð------------- П國カ내]"
+  },
+  "file_upload_link_placeholder": {
+    "message": "[ĥţţþ://ŵŵŵ.šöɱéţĥîñĝ.çöɱ/ƒîļé---------------- П國カ내]"
+  },
+  "file_upload_or_click_to_browse": {
+    "message": "[öŕ çļîçķ ţö ƀŕöŵšé----------- П國カ내]"
+  },
+  "file_upload_paste_link": {
+    "message": "[Þåšţé å ļîñķ ţö å ƒîļé---------- П國カ내]"
+  },
+  "file_upload_paste_link_done": {
+    "message": "[Ðöñé- П國カ내]"
+  },
+  "searchfield_searching": {
+    "message": "[Šéåŕçĥîñĝ...----- П國カ내]"
+  },
+  "searchfield_no_records": {
+    "message": "[Šöŕŕý, ñö ɱåţçĥîñĝ ŕéçöŕðš ƒöûñð------------ П國カ내]"
+  },
+  "selectfield_summary_text": {
+    "message": "[{0} îţéɱš šéļéçţéð----------- П國カ내]"
+  },
+  "selectfield_remove": {
+    "message": "[Ŕéɱöṽé----- П國カ내]"
+  },
+  "selectfieldpicker_select": {
+    "message": "[Šéļéçţ----- П國カ내]"
+  },
+  "selectfieldpicker_select_value": {
+    "message": "[Šéļéçţ ṽåļûé----- П國カ내]"
+  },
+  "selectfieldpicker_select_values": {
+    "message": "[Šéļéçţ ṽåļûéš------ П國カ내]"
+  },
+  "selectfieldpicker_clear": {
+    "message": "[Çļéåŕ šéļéçţîöñ-------- П國カ내]"
+  },
+  "wizard_navigator_finish": {
+    "message": "[Ƒîñîšĥ----- П國カ내]"
+  },
+  "wizard_navigator_next": {
+    "message": "[Ñéẋţ- П國カ내]"
+  },
+  "wizard_navigator_previous": {
+    "message": "[Þŕéṽîöûš--------- П國カ내]"
+  },
+  "datepicker_today": {
+    "message": "[Ţöðåý--- П國カ내]"
+  },
+  "datepicker_clear": {
+    "message": "[Çļéåŕ--- П國カ내]"
+  },
+  "datepicker_close": {
+    "message": "[Ðöñé- П國カ내]"
+  },
+  "reorder_top": {
+    "message": "[Ţöþ П國カ]"
+  }
+}

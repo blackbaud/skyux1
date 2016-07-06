@@ -1,417 +1,417 @@
 {
-  "_LRM_PKTAG831": "skyux-l10n_5_3 - CHANGES-ONLY",
+  "_LRM_PKTAG894": "skyux-l10n_5_16 - CHANGES-ONLY",
   "action_bar_actions": {
-    "message": "_End-point_"
+    "message": "Acties"
   },
   "alert_close": {
-    "message": "_Reports_"
+    "message": "Sluiten"
   },
   "autonumeric_abbr_billions": {
-    "message": "bn"
+    "message": "b"
   },
   "autonumeric_abbr_millions": {
-    "message": "_a_"
+    "message": "m"
   },
   "autonumeric_abbr_thousands": {
-    "message": "_a_"
+    "message": "k"
   },
   "avatar_error_not_image_description": {
-    "message": "Please choose a file that is a valid image."
+    "message": "Kies een bestand dat een geldige afbeelding is."
   },
   "avatar_error_not_image_title": {
-    "message": "File is not an image."
+    "message": "Bestand is geen afbeelding."
   },
   "avatar_error_too_large_description": {
-    "message": "Please choose an image that is less than {0}."
+    "message": "Kies een afbeelding die kleiner is dan {0}."
   },
   "avatar_error_too_large_title": {
-    "message": "File is too large."
+    "message": "Bestand is te groot."
   },
   "checklist_categories_label": {
-    "message": "Categories"
+    "message": "Categorie�n"
   },
   "checklist_check_title": {
-    "message": "Select item"
+    "message": "Selecteer item"
   },
   "checklist_clear_all": {
-    "message": "Clear all checklist items"
+    "message": "Alles wissen"
   },
   "checklist_no_items": {
-    "message": "No items found in this list"
+    "message": "Geen items gevonden"
   },
   "checklist_only_selected_items": {
-    "message": "Only show selected items"
+    "message": "Alleen geselecteerde items weergeven"
   },
   "checklist_search_label": {
-    "message": "Search"
+    "message": "Zoeken"
   },
   "checklist_select_all": {
-    "message": "Select all checklist items"
+    "message": "Alles selecteren"
   },
   "chevron_collapse": {
-    "message": "Collapse"
+    "message": "Dichtvouwen"
   },
   "chevron_expand": {
-    "message": "Expand"
+    "message": "Openvouwen"
   },
   "context_menu_default_label": {
-    "message": "Context menu"
+    "message": "Snelmenu"
   },
   "date_field_invalid_date_message": {
-    "message": "_Obtained onwards a tourist steer_"
+    "message": "Voer een geldige datum in"
   },
   "date_range_picker_at_any_time": {
-    "message": "_DaN caps brown_"
+    "message": "Ongeacht tijdstip"
   },
   "date_range_picker_filter_description_at_any_time": {
-    "message": "_{0} cut fact GREAT_"
+    "message": "{0} at any time"
   },
   "date_range_picker_filter_description_last_calendar_year": {
-    "message": "_{0} taken enjoy separating dairy_"
+    "message": "{0} from last calendar year"
   },
   "date_range_picker_filter_description_last_fiscal_year": {
-    "message": "{0} from last financial year"
+    "message": "{0} from last fiscal year"
   },
   "date_range_picker_filter_description_last_month": {
-    "message": "_{0} HOLDS Rumex drivers_"
+    "message": "{0} from last month"
   },
   "date_range_picker_filter_description_last_quarter": {
-    "message": "_{0} lorry beans cryoscope_"
+    "message": "{0} from last quarter"
   },
   "date_range_picker_filter_description_last_week": {
-    "message": "_{0} water mouth drink_"
+    "message": "{0} from last week"
   },
   "date_range_picker_filter_description_next_calendar_year": {
-    "message": "_{0} come moped timetables means_"
+    "message": "{0} for next calendar year"
   },
   "date_range_picker_filter_description_next_fiscal_year": {
-    "message": "{0} for next financial year"
+    "message": "{0} for next fiscal year"
   },
   "date_range_picker_filter_description_next_month": {
-    "message": "_{0} your pumps stirred_"
+    "message": "{0} for next month"
   },
   "date_range_picker_filter_description_next_quarter": {
-    "message": "_{0} land rails nutrition_"
+    "message": "{0} for next quarter"
   },
   "date_range_picker_filter_description_next_week": {
-    "message": "_{0} full nomos yeast_"
+    "message": "{0} for next week"
   },
   "date_range_picker_filter_description_specific_range": {
     "message": "{0} from {1} to {2}"
   },
   "date_range_picker_filter_description_this_calendar_year": {
-    "message": "_{0} sent mixed legibility flank_"
+    "message": "{0} for this calendar year"
   },
   "date_range_picker_filter_description_this_fiscal_year": {
-    "message": "{0} for this financial year"
+    "message": "{0} for this fiscal year"
   },
   "date_range_picker_filter_description_this_month": {
-    "message": "_{0} Once would entries_"
+    "message": "{0} for this month"
   },
   "date_range_picker_filter_description_this_quarter": {
-    "message": "_{0} seem broad warehouse_"
+    "message": "{0} for this quarter"
   },
   "date_range_picker_filter_description_this_week": {
-    "message": "_{0} dies ducks sends_"
+    "message": "{0} for this week"
   },
   "date_range_picker_filter_description_today": {
-    "message": "_{0} page gametes_"
+    "message": "{0} for today"
   },
   "date_range_picker_filter_description_tomorrow": {
-    "message": "_{0} INAM initiative_"
+    "message": "{0} for tomorrow"
   },
   "date_range_picker_filter_description_yesterday": {
-    "message": "_{0} river reproduction_"
+    "message": "{0} from yesterday"
   },
   "date_range_picker_from_date": {
-    "message": "From date"
+    "message": "Datum vanaf"
   },
   "date_range_picker_last_calendar_year": {
-    "message": "_Shell supplement drive_"
+    "message": "Vorig kalenderjaar"
   },
   "date_range_picker_last_fiscal_year": {
-    "message": "Last financial year"
+    "message": "Vorig fiscaal jaar"
   },
   "date_range_picker_last_month": {
-    "message": "_Vicia barrier_"
+    "message": "Vorige maand"
   },
   "date_range_picker_last_quarter": {
-    "message": "_Solid curvature_"
+    "message": "Vorig kwartaal"
   },
   "date_range_picker_last_week": {
-    "message": "_Coast files_"
+    "message": "Vorige week"
   },
   "date_range_picker_max_date_error": {
-    "message": "Start date must be before end date"
+    "message": "Begindatum moet voor einddatum vallen"
   },
   "date_range_picker_min_date_error": {
-    "message": "End date must be after start date"
+    "message": "Einddatum moet na begindatum vallen"
   },
   "date_range_picker_next_calendar_year": {
-    "message": "_GREAT horizontal cease_"
+    "message": "Volgend kalenderjaar"
   },
   "date_range_picker_next_fiscal_year": {
-    "message": "Next financial year"
+    "message": "Volgend fiscaal jaar"
   },
   "date_range_picker_next_month": {
-    "message": "_Ovens stopper_"
+    "message": "Volgende maand"
   },
   "date_range_picker_next_quarter": {
-    "message": "_Onset platforms_"
+    "message": "Volgend kwartaal"
   },
   "date_range_picker_next_week": {
-    "message": "_Brine trade_"
+    "message": "Volgende week"
   },
   "date_range_picker_specific_range": {
-    "message": "Specific range"
+    "message": "Specifiek bereik"
   },
   "date_range_picker_this_calendar_year": {
-    "message": "_Alter saturation Rumex_"
+    "message": "Dit kalenderjaar"
   },
   "date_range_picker_this_fiscal_year": {
-    "message": "This financial year"
+    "message": "Dit fiscale jaar"
   },
   "date_range_picker_this_month": {
-    "message": "_Sheer failure_"
+    "message": "Deze maand"
   },
   "date_range_picker_this_quarter": {
-    "message": "_Large stipulate_"
+    "message": "Dit kwartaal"
   },
   "date_range_picker_this_week": {
-    "message": "_Cease drink_"
+    "message": "Deze week"
   },
   "date_range_picker_to_date": {
-    "message": "To date"
+    "message": "Datum tot"
   },
   "date_range_picker_today": {
-    "message": "_Pursued_"
+    "message": "Today"
   },
   "date_range_picker_tomorrow": {
-    "message": "_Persistent_"
+    "message": "Morgen"
   },
   "date_range_picker_yesterday": {
-    "message": "_Substitution_"
+    "message": "Gisteren"
   },
   "datepicker_clear": {
-    "message": "_Express_"
+    "message": "Wissen"
   },
   "datepicker_close": {
-    "message": "_Heads_"
+    "message": "Gereed"
   },
   "datepicker_today": {
-    "message": "_Reading_"
+    "message": "Today"
   },
   "error_description_broken": {
-    "message": "Try to refresh this page or come back later."
+    "message": "Probeer deze pagina te vernieuwen of probeer het later opnieuw."
   },
   "error_description_construction": {
-    "message": "Thanks for your patience while improvements are being made!\nPlease check back in a little while."
+    "message": "Dank voor uw geduld terwijl we verbeteringen aanbrengen!\nProbeer het over een tijdje nog een keer."
   },
   "error_title_broken": {
-    "message": "Sorry, something went wrong."
+    "message": "Er is iets misgegaan."
   },
   "error_title_construction": {
-    "message": "This page will return soon."
+    "message": "Deze pagina is binnenkort weer bereikbaar."
   },
   "error_title_notfound": {
-    "message": "Sorry, we cannot reach that page."
+    "message": "We kunnen die pagina niet openen."
   },
   "errormodal_ok": {
     "message": "OK"
   },
   "file_size_b_plural": {
-    "message": "_{0} chilled_"
+    "message": "{0} bytes"
   },
   "file_size_b_singular": {
-    "message": "_{0} Union_"
+    "message": "{0} byte"
   },
   "file_size_gb": {
-    "message": "_{0} fee_"
+    "message": "{0} GB"
   },
   "file_size_kb": {
-    "message": "_{0} Fog_"
+    "message": "{0} KB"
   },
   "file_size_mb": {
-    "message": "_{0} het_"
+    "message": "{0} MB"
   },
   "file_upload_drag_file_here": {
-    "message": "_Phial a limit pages_"
+    "message": "Sleep een bestand hiernaartoe"
   },
   "file_upload_drop_files_here": {
-    "message": "_LOCKS latches might_"
+    "message": "Zet bestanden hier neer"
   },
   "file_upload_invalid_file": {
-    "message": "_Areas boned sizes kgf justified_"
+    "message": "Dit bestandstype is ongeldig"
   },
   "file_upload_link_placeholder": {
-    "message": "_algae://lead.participants.gram/knots_"
+    "message": "http://www.something.com/file"
   },
   "file_upload_or_click_to_browse": {
-    "message": "_EEA Primary oat addition_"
+    "message": "of klik om te bladeren"
   },
   "file_upload_paste_link": {
-    "message": "_Diluent a items own a limit_"
+    "message": "Plak een koppeling naar een bestand"
   },
   "file_upload_paste_link_done": {
-    "message": "_Gases_"
+    "message": "Gereed"
   },
   "grid_action_bar_cancel_mobile_actions": {
-    "message": "_Tangible_"
+    "message": "Annuleren"
   },
   "grid_action_bar_choose_action": {
-    "message": "_Networks COD analysed_"
+    "message": "Kies een actie"
   },
   "grid_action_bar_clear_selection": {
-    "message": "_KINGDOM Subordinated_"
+    "message": "Selectie wissen"
   },
   "grid_back_to_top": {
-    "message": "_Bands CAS HERE_"
+    "message": "Terug naar boven"
   },
   "grid_column_picker_all_categories": {
-    "message": "All categories"
+    "message": "Alle"
   },
   "grid_column_picker_description_header": {
-    "message": "_Quantitatively_"
+    "message": "Beschrijving"
   },
   "grid_column_picker_header": {
-    "message": "Choose the columns to show"
+    "message": "Kies kolommen om in de lijst weer te geven"
   },
   "grid_column_picker_name_header": {
-    "message": "_Scotland_"
+    "message": "Kolom"
   },
   "grid_column_picker_search_no_columns": {
-    "message": "_Way published aligned_"
+    "message": "Geen kolommen gevonden"
   },
   "grid_column_picker_search_placeholder": {
-    "message": "_Oxidized but falls_"
+    "message": "Zoeken op naam"
   },
   "grid_column_picker_submit": {
-    "message": "_Stopper conductor_"
+    "message": "Wijzigingen toepassen"
   },
   "grid_columns_button": {
-    "message": " _Sentence connector_"
+    "message": " Kolommen kiezen"
   },
   "grid_filters_apply": {
-    "message": "_Signals Republics_"
+    "message": "Filters toepassen"
   },
   "grid_filters_button": {
-    "message": "_Emissions_"
+    "message": "Filters"
   },
   "grid_filters_clear": {
-    "message": "_Imposes_"
+    "message": "Wissen"
   },
   "grid_filters_header": {
-    "message": "_Chapters_"
+    "message": "Filter"
   },
   "grid_filters_hide": {
-    "message": "_Large_"
+    "message": "Verbergen"
   },
   "grid_filters_summary_header": {
-    "message": "_Emitting:_"
+    "message": "Filter:"
   },
   "grid_load_more": {
-    "message": "_Disks texts_"
+    "message": "Meer laden"
   },
   "grid_search_placeholder": {
-    "message": "_Juice too patch moved_"
+    "message": "Zoeken in deze lijst"
   },
   "modal_footer_cancel_button": {
-    "message": "_Eggplant_"
+    "message": "Annuleren"
   },
   "modal_footer_primary_button": {
-    "message": "_Finds_"
+    "message": "Opslaan"
   },
   "month_short_april": {
-    "message": "_They_"
+    "message": "Apr"
   },
   "month_short_august": {
-    "message": "_Home_"
+    "message": "Aug"
   },
   "month_short_december": {
-    "message": "_Only_"
+    "message": "Dec"
   },
   "month_short_february": {
-    "message": "_Left_"
+    "message": "Feb"
   },
   "month_short_january": {
-    "message": "_Wire_"
+    "message": "Jan"
   },
   "month_short_july": {
-    "message": "_Farm_"
+    "message": "Jul"
   },
   "month_short_june": {
-    "message": "_Tare_"
+    "message": "Jun"
   },
   "month_short_march": {
-    "message": "_Navy_"
+    "message": "Mrt"
   },
   "month_short_may": {
-    "message": "_Land_"
+    "message": "Mei"
   },
   "month_short_november": {
-    "message": "_Hens_"
+    "message": "Nov"
   },
   "month_short_october": {
-    "message": "_Work_"
+    "message": "Okt"
   },
   "month_short_september": {
-    "message": "_Upon_"
+    "message": "Sep"
   },
   "page_noaccess_button": {
-    "message": "_Opposite bis a gave-commissioning refer_"
+    "message": "Terug naar ongeclassificeerde pagina"
   },
   "page_noaccess_description": {
-    "message": "_Located, hood cast'a river circular end parts Merck.lack show award onto filtrate, Pakistan political traps amicable spectrophotometer._"
+    "message": "U bent niet bevoegd om deze pagina te openen.\nNeem contact op met de systeembeheerder als dit volgens u niet juist is."
   },
   "page_noaccess_header": {
-    "message": "_Shake rounded, Sailing'a Gibraltar leg mind yield_"
+    "message": "Ga door, geen bijzonderheden hier"
   },
   "reorder_top": {
-    "message": "Top"
+    "message": "Boven"
   },
   "searchfield_no_records": {
-    "message": "Sorry, no matching records found"
+    "message": "Geen overeenkomende records gevonden"
   },
   "searchfield_searching": {
-    "message": "_Requirements..._"
+    "message": "Bezig met zoeken..."
   },
   "selectfield_remove": {
-    "message": "Remove"
+    "message": "Verwijderen"
   },
   "selectfield_summary_text": {
-    "message": "{0} items selected"
+    "message": "{0} items geselecteerd"
   },
   "selectfieldpicker_clear": {
-    "message": "Clear selection"
+    "message": "Wis selectie"
   },
   "selectfieldpicker_select": {
-    "message": "Select"
+    "message": "Selecteren"
   },
   "selectfieldpicker_select_value": {
-    "message": "Select value"
+    "message": "Selecteer waarde"
   },
   "selectfieldpicker_select_values": {
-    "message": "Select values"
+    "message": "Selecteer waarden"
   },
   "text_expand_close_text": {
-    "message": "Close"
+    "message": "Sluiten"
   },
   "text_expand_modal_title": {
-    "message": "_Complaints mg/kg_"
+    "message": "Uitgebreide weergave"
   },
   "text_expand_see_less": {
-    "message": "_Food style_"
+    "message": "Minder weergeven"
   },
   "text_expand_see_more": {
-    "message": "_Deem atoms_"
+    "message": "Meer weergeven"
   },
   "wizard_navigator_finish": {
-    "message": "_Contains_"
+    "message": "Voltooien"
   },
   "wizard_navigator_next": {
-    "message": "_Those_"
+    "message": "Volgende"
   },
   "wizard_navigator_previous": {
-    "message": "_Explosives_"
+    "message": "Vorige"
   }
 }

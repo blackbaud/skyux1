@@ -1,30 +1,417 @@
 {
-    "autonumeric_abbr_billions": {
-        "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
-        "message": "bn"
-    },
-    "date_range_picker_this_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "This financial year"
-    },
-    "date_range_picker_last_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "Last financial year"
-    },
-    "date_range_picker_next_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "Next financial year"
-    },
-    "date_range_picker_filter_description_this_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "{0} for this financial year"
-    },
-    "date_range_picker_filter_description_last_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "{0} from last financial year"
-    },
-    "date_range_picker_filter_description_next_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "{0} for next financial year"
-    }
+  "_LRM_PKTAG196": "skyux-l10n_5_5 - CHANGES-ONLY",
+  "action_bar_actions": {
+    "message": "_Initiated_"
+  },
+  "alert_close": {
+    "message": "_Melting_"
+  },
+  "autonumeric_abbr_billions": {
+    "message": "bn"
+  },
+  "autonumeric_abbr_millions": {
+    "message": "_a_"
+  },
+  "autonumeric_abbr_thousands": {
+    "message": "_a_"
+  },
+  "avatar_error_not_image_description": {
+    "message": "Please choose a file that is a valid image."
+  },
+  "avatar_error_not_image_title": {
+    "message": "File is not an image."
+  },
+  "avatar_error_too_large_description": {
+    "message": "Please choose an image that is less than {0}."
+  },
+  "avatar_error_too_large_title": {
+    "message": "File is too large."
+  },
+  "checklist_categories_label": {
+    "message": "Categories"
+  },
+  "checklist_check_title": {
+    "message": "Select item"
+  },
+  "checklist_clear_all": {
+    "message": "Clear all checklist items"
+  },
+  "checklist_no_items": {
+    "message": "No items found in this list"
+  },
+  "checklist_only_selected_items": {
+    "message": "Only show selected items"
+  },
+  "checklist_search_label": {
+    "message": "Search"
+  },
+  "checklist_select_all": {
+    "message": "Select all checklist items"
+  },
+  "chevron_collapse": {
+    "message": "Collapse"
+  },
+  "chevron_expand": {
+    "message": "Expand"
+  },
+  "context_menu_default_label": {
+    "message": "Context menu"
+  },
+  "date_field_invalid_date_message": {
+    "message": "_POSTPONE hygiene a aquatic South_"
+  },
+  "date_range_picker_at_any_time": {
+    "message": "_XIV rear abuse_"
+  },
+  "date_range_picker_filter_description_at_any_time": {
+    "message": "_{0} IRL BAND gears_"
+  },
+  "date_range_picker_filter_description_last_calendar_year": {
+    "message": "_{0} aside serum Cold-start enjoy_"
+  },
+  "date_range_picker_filter_description_last_fiscal_year": {
+    "message": "{0} from last financial year"
+  },
+  "date_range_picker_filter_description_last_month": {
+    "message": "_{0} slide enjoy prevail_"
+  },
+  "date_range_picker_filter_description_last_quarter": {
+    "message": "_{0} cocoa canal incapable_"
+  },
+  "date_range_picker_filter_description_last_week": {
+    "message": "_{0} lorry Paris grade_"
+  },
+  "date_range_picker_filter_description_next_calendar_year": {
+    "message": "_{0} lock vinyl completion gross_"
+  },
+  "date_range_picker_filter_description_next_fiscal_year": {
+    "message": "{0} for next financial year"
+  },
+  "date_range_picker_filter_description_next_month": {
+    "message": "_{0} rich scrap becomes_"
+  },
+  "date_range_picker_filter_description_next_quarter": {
+    "message": "_{0} oven fatua expressed_"
+  },
+  "date_range_picker_filter_description_next_week": {
+    "message": "_{0} leak Crush Prime_"
+  },
+  "date_range_picker_filter_description_specific_range": {
+    "message": "{0} from {1} to {2}"
+  },
+  "date_range_picker_filter_description_this_calendar_year": {
+    "message": "_{0} were Total determines bevis_"
+  },
+  "date_range_picker_filter_description_this_fiscal_year": {
+    "message": "{0} for this financial year"
+  },
+  "date_range_picker_filter_description_this_month": {
+    "message": "_{0} send occur drafted_"
+  },
+  "date_range_picker_filter_description_this_quarter": {
+    "message": "_{0} sent UCITS ascending_"
+  },
+  "date_range_picker_filter_description_this_week": {
+    "message": "_{0} navy speed solid_"
+  },
+  "date_range_picker_filter_description_today": {
+    "message": "_{0} tons legibly_"
+  },
+  "date_range_picker_filter_description_tomorrow": {
+    "message": "_{0} room L-ascorbic_"
+  },
+  "date_range_picker_filter_description_yesterday": {
+    "message": "_{0} cores forequarters_"
+  },
+  "date_range_picker_from_date": {
+    "message": "From date"
+  },
+  "date_range_picker_last_calendar_year": {
+    "message": "_Pages pesticides codes_"
+  },
+  "date_range_picker_last_fiscal_year": {
+    "message": "Last financial year"
+  },
+  "date_range_picker_last_month": {
+    "message": "_Dates variety_"
+  },
+  "date_range_picker_last_quarter": {
+    "message": "_Clock character_"
+  },
+  "date_range_picker_last_week": {
+    "message": "_Child board_"
+  },
+  "date_range_picker_max_date_error": {
+    "message": "Start date must be before end date"
+  },
+  "date_range_picker_min_date_error": {
+    "message": "End date must be after start date"
+  },
+  "date_range_picker_next_calendar_year": {
+    "message": "_Space occupation tests_"
+  },
+  "date_range_picker_next_fiscal_year": {
+    "message": "Next financial year"
+  },
+  "date_range_picker_next_month": {
+    "message": "_Thick mounted_"
+  },
+  "date_range_picker_next_quarter": {
+    "message": "_Plane preferred_"
+  },
+  "date_range_picker_next_week": {
+    "message": "_Occur lying_"
+  },
+  "date_range_picker_specific_range": {
+    "message": "Specific range"
+  },
+  "date_range_picker_this_calendar_year": {
+    "message": "_Rests determined drops_"
+  },
+  "date_range_picker_this_fiscal_year": {
+    "message": "This financial year"
+  },
+  "date_range_picker_this_month": {
+    "message": "_Flame steered_"
+  },
+  "date_range_picker_this_quarter": {
+    "message": "_Hulp- performed_"
+  },
+  "date_range_picker_this_week": {
+    "message": "_Cross SEATS_"
+  },
+  "date_range_picker_to_date": {
+    "message": "To date"
+  },
+  "date_range_picker_today": {
+    "message": "_Glacial_"
+  },
+  "date_range_picker_tomorrow": {
+    "message": "_Admissible_"
+  },
+  "date_range_picker_yesterday": {
+    "message": "_Conventional_"
+  },
+  "datepicker_clear": {
+    "message": "_Clients_"
+  },
+  "datepicker_close": {
+    "message": "_Ceuta_"
+  },
+  "datepicker_today": {
+    "message": "_Shaving_"
+  },
+  "error_description_broken": {
+    "message": "Try to refresh this page or come back later."
+  },
+  "error_description_construction": {
+    "message": "Thanks for your patience while improvements are made!\nPlease check back in a little while."
+  },
+  "error_title_broken": {
+    "message": "Sorry, something went wrong."
+  },
+  "error_title_construction": {
+    "message": "This page will return soon."
+  },
+  "error_title_notfound": {
+    "message": "Sorry, we can't reach that page."
+  },
+  "errormodal_ok": {
+    "message": "OK"
+  },
+  "file_size_b_plural": {
+    "message": "_{0} diluted_"
+  },
+  "file_size_b_singular": {
+    "message": "_{0} valid_"
+  },
+  "file_size_gb": {
+    "message": "_{0} can_"
+  },
+  "file_size_kb": {
+    "message": "_{0} TLC_"
+  },
+  "file_size_mb": {
+    "message": "_{0} tow_"
+  },
+  "file_upload_drag_file_here": {
+    "message": "_Vicia a shell GREAT_"
+  },
+  "file_upload_drop_files_here": {
+    "message": "_Purge married tread_"
+  },
+  "file_upload_invalid_file": {
+    "message": "_Flour rings fully fat apparatus_"
+  },
+  "file_upload_link_placeholder": {
+    "message": "_drops://plus.skimmed-milk.coal/frame_"
+  },
+  "file_upload_or_click_to_browse": {
+    "message": "_min private g/l claimant_"
+  },
+  "file_upload_paste_link": {
+    "message": "_Created a women par a panes_"
+  },
+  "file_upload_paste_link_done": {
+    "message": "_Alarm_"
+  },
+  "grid_action_bar_cancel_mobile_actions": {
+    "message": "_MANAGING_"
+  },
+  "grid_action_bar_choose_action": {
+    "message": "_Imposing gli effected_"
+  },
+  "grid_action_bar_clear_selection": {
+    "message": "_Pearled expatriation_"
+  },
+  "grid_back_to_top": {
+    "message": "_Type- low give_"
+  },
+  "grid_column_picker_all_categories": {
+    "message": "All categories"
+  },
+  "grid_column_picker_description_header": {
+    "message": "_Characteristic_"
+  },
+  "grid_column_picker_header": {
+    "message": "Choose the columns to show"
+  },
+  "grid_column_picker_name_header": {
+    "message": "_Reserves_"
+  },
+  "grid_column_picker_search_no_columns": {
+    "message": "_Del portfolio lightly_"
+  },
+  "grid_column_picker_search_placeholder": {
+    "message": "_Re-entry EVA MEETS_"
+  },
+  "grid_column_picker_submit": {
+    "message": "_Tensile officials_"
+  },
+  "grid_columns_button": {
+    "message": " _Superior liberated_"
+  },
+  "grid_filters_apply": {
+    "message": "_Somatic DISMISSAL_"
+  },
+  "grid_filters_button": {
+    "message": "_Exceeding_"
+  },
+  "grid_filters_clear": {
+    "message": "_Contact_"
+  },
+  "grid_filters_header": {
+    "message": "_Database_"
+  },
+  "grid_filters_hide": {
+    "message": "_Flash_"
+  },
+  "grid_filters_summary_header": {
+    "message": "_Approved:_"
+  },
+  "grid_load_more": {
+    "message": "_Wires strap_"
+  },
+  "grid_search_placeholder": {
+    "message": "_Range g/l boots price_"
+  },
+  "modal_footer_cancel_button": {
+    "message": "_Research_"
+  },
+  "modal_footer_primary_button": {
+    "message": "_There_"
+  },
+  "month_short_april": {
+    "message": "_OATH_"
+  },
+  "month_short_august": {
+    "message": "_Main_"
+  },
+  "month_short_december": {
+    "message": "_Pure_"
+  },
+  "month_short_february": {
+    "message": "_Navy_"
+  },
+  "month_short_january": {
+    "message": "_Lock_"
+  },
+  "month_short_july": {
+    "message": "_Rise_"
+  },
+  "month_short_june": {
+    "message": "_Good_"
+  },
+  "month_short_march": {
+    "message": "_Died_"
+  },
+  "month_short_may": {
+    "message": "_Body_"
+  },
+  "month_short_november": {
+    "message": "_Late_"
+  },
+  "month_short_october": {
+    "message": "_Hand_"
+  },
+  "month_short_september": {
+    "message": "_Mode_"
+  },
+  "page_noaccess_button": {
+    "message": "_Porosity gli a path-triglycerides teats_"
+  },
+  "page_noaccess_description": {
+    "message": "_Entails, CACM disk'a count Invasive CVS beams aside.\tear when berth cold starting, breeding existence VITAL guidance three-dimensional._"
+  },
+  "page_noaccess_header": {
+    "message": "_Early falling, improve'a notifying EEG bean turns_"
+  },
+  "reorder_top": {
+    "message": "Top"
+  },
+  "searchfield_no_records": {
+    "message": "Sorry, no matching records found"
+  },
+  "searchfield_searching": {
+    "message": "_Isoteniscope..._"
+  },
+  "selectfield_remove": {
+    "message": "Remove"
+  },
+  "selectfield_summary_text": {
+    "message": "{0} items selected"
+  },
+  "selectfieldpicker_clear": {
+    "message": "Clear selection"
+  },
+  "selectfieldpicker_select": {
+    "message": "Select"
+  },
+  "selectfieldpicker_select_value": {
+    "message": "Select value"
+  },
+  "selectfieldpicker_select_values": {
+    "message": "Select values"
+  },
+  "text_expand_close_text": {
+    "message": "Close"
+  },
+  "text_expand_modal_title": {
+    "message": "_Concerning early_"
+  },
+  "text_expand_see_less": {
+    "message": "_Legs DIFCO_"
+  },
+  "text_expand_see_more": {
+    "message": "_Tank these_"
+  },
+  "wizard_navigator_finish": {
+    "message": "_Residues_"
+  },
+  "wizard_navigator_next": {
+    "message": "_Titre_"
+  },
+  "wizard_navigator_previous": {
+    "message": "_Road-users_"
+  }
 }

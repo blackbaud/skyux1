@@ -1,14 +1,417 @@
 {
-    "autonumeric_abbr_billions": {
-        "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
-        "message": "B"
-    },
-    "autonumeric_abbr_millions": {
-        "_description": "The suffix to show after an abbreviated value in the millions (e.g. $1.2m)",
-        "message": "M"
-    },
-    "autonumeric_abbr_thousands": {
-        "_description": "The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)",
-        "message": "K"
-    }
+  "_LRM_PKTAG962": "skyux-l10n_5_4 - CHANGES-ONLY",
+  "action_bar_actions": {
+    "message": "_Flow-rate_"
+  },
+  "alert_close": {
+    "message": "_Sectors_"
+  },
+  "autonumeric_abbr_billions": {
+    "message": "B"
+  },
+  "autonumeric_abbr_millions": {
+    "message": "M"
+  },
+  "autonumeric_abbr_thousands": {
+    "message": "K"
+  },
+  "avatar_error_not_image_description": {
+    "message": "Please choose a file that is a valid image."
+  },
+  "avatar_error_not_image_title": {
+    "message": "File is not an image."
+  },
+  "avatar_error_too_large_description": {
+    "message": "Please choose an image that is less than {0}."
+  },
+  "avatar_error_too_large_title": {
+    "message": "File is too large."
+  },
+  "checklist_categories_label": {
+    "message": "Categories"
+  },
+  "checklist_check_title": {
+    "message": "Select item"
+  },
+  "checklist_clear_all": {
+    "message": "Clear all checklist items"
+  },
+  "checklist_no_items": {
+    "message": "No items found in this list"
+  },
+  "checklist_only_selected_items": {
+    "message": "Only show selected items"
+  },
+  "checklist_search_label": {
+    "message": "Search"
+  },
+  "checklist_select_all": {
+    "message": "Select all checklist items"
+  },
+  "chevron_collapse": {
+    "message": "Collapse"
+  },
+  "chevron_expand": {
+    "message": "Expand"
+  },
+  "context_menu_default_label": {
+    "message": "Context menu"
+  },
+  "date_field_invalid_date_message": {
+    "message": "_Breakage animals a premium shape_"
+  },
+  "date_range_picker_at_any_time": {
+    "message": "_Ppm like again_"
+  },
+  "date_range_picker_filter_description_at_any_time": {
+    "message": "_{0} und HERE issue_"
+  },
+  "date_range_picker_filter_description_last_calendar_year": {
+    "message": "_{0} exist fever investment Dutch_"
+  },
+  "date_range_picker_filter_description_last_fiscal_year": {
+    "message": "_{0} aimed discs survival human_"
+  },
+  "date_range_picker_filter_description_last_month": {
+    "message": "_{0} enjoy honey Journal_"
+  },
+  "date_range_picker_filter_description_last_quarter": {
+    "message": "_{0} house LAPSE Labelling_"
+  },
+  "date_range_picker_filter_description_last_week": {
+    "message": "_{0} Union proof Ecoin_"
+  },
+  "date_range_picker_filter_description_next_calendar_year": {
+    "message": "_{0} tube drawn determines valve_"
+  },
+  "date_range_picker_filter_description_next_fiscal_year": {
+    "message": "_{0} warm belts furnaces Amber_"
+  },
+  "date_range_picker_filter_description_next_month": {
+    "message": "_{0} wall whose showers_"
+  },
+  "date_range_picker_filter_description_next_quarter": {
+    "message": "_{0} Stir metal TRANSFERS_"
+  },
+  "date_range_picker_filter_description_next_week": {
+    "message": "_{0} owed beams abuse_"
+  },
+  "date_range_picker_filter_description_specific_range": {
+    "message": "{0} from {1} to {2}"
+  },
+  "date_range_picker_filter_description_this_calendar_year": {
+    "message": "_{0} draw comes tolerances tubes_"
+  },
+  "date_range_picker_filter_description_this_fiscal_year": {
+    "message": "_{0} cell gases together build_"
+  },
+  "date_range_picker_filter_description_this_month": {
+    "message": "_{0} sous broad ballast_"
+  },
+  "date_range_picker_filter_description_this_quarter": {
+    "message": "_{0} Iris belts OBTAINING_"
+  },
+  "date_range_picker_filter_description_this_week": {
+    "message": "_{0} melt widow local_"
+  },
+  "date_range_picker_filter_description_today": {
+    "message": "_{0} e.g. LOWERED_"
+  },
+  "date_range_picker_filter_description_tomorrow": {
+    "message": "_{0} room HEPTACHLOR_"
+  },
+  "date_range_picker_filter_description_yesterday": {
+    "message": "_{0} strap implications_"
+  },
+  "date_range_picker_from_date": {
+    "message": "From date"
+  },
+  "date_range_picker_last_calendar_year": {
+    "message": "_Naked Federation media_"
+  },
+  "date_range_picker_last_fiscal_year": {
+    "message": "_Apply Uncooked towed_"
+  },
+  "date_range_picker_last_month": {
+    "message": "_Limit protein_"
+  },
+  "date_range_picker_last_quarter": {
+    "message": "_Cells voluntary_"
+  },
+  "date_range_picker_last_week": {
+    "message": "_Boric cases_"
+  },
+  "date_range_picker_max_date_error": {
+    "message": "Start date must be before end date"
+  },
+  "date_range_picker_min_date_error": {
+    "message": "End date must be after start date"
+  },
+  "date_range_picker_next_calendar_year": {
+    "message": "_Joint negligence stock_"
+  },
+  "date_range_picker_next_fiscal_year": {
+    "message": "_Women mutually cones_"
+  },
+  "date_range_picker_next_month": {
+    "message": "_These coastal_"
+  },
+  "date_range_picker_next_quarter": {
+    "message": "_Sites naviguant_"
+  },
+  "date_range_picker_next_week": {
+    "message": "_Slots abide_"
+  },
+  "date_range_picker_specific_range": {
+    "message": "Specific range"
+  },
+  "date_range_picker_this_calendar_year": {
+    "message": "_Zaken stabilized audit_"
+  },
+  "date_range_picker_this_fiscal_year": {
+    "message": "_Taken definite waste_"
+  },
+  "date_range_picker_this_month": {
+    "message": "_These million_"
+  },
+  "date_range_picker_this_quarter": {
+    "message": "_Fifth employers_"
+  },
+  "date_range_picker_this_week": {
+    "message": "_Cause minor_"
+  },
+  "date_range_picker_to_date": {
+    "message": "To date"
+  },
+  "date_range_picker_today": {
+    "message": "_General_"
+  },
+  "date_range_picker_tomorrow": {
+    "message": "_Water-bath_"
+  },
+  "date_range_picker_yesterday": {
+    "message": "_Conciliation_"
+  },
+  "datepicker_clear": {
+    "message": "_Extends_"
+  },
+  "datepicker_close": {
+    "message": "_Belge_"
+  },
+  "datepicker_today": {
+    "message": "_Acetone_"
+  },
+  "error_description_broken": {
+    "message": "Try to refresh this page or come back later."
+  },
+  "error_description_construction": {
+    "message": "Thanks for your patience while improvements are made!\nPlease check back in a little while."
+  },
+  "error_title_broken": {
+    "message": "Sorry, something went wrong."
+  },
+  "error_title_construction": {
+    "message": "This page will return soon."
+  },
+  "error_title_notfound": {
+    "message": "Sorry, we can't reach that page."
+  },
+  "errormodal_ok": {
+    "message": "OK"
+  },
+  "file_size_b_plural": {
+    "message": "_{0} Uruguay_"
+  },
+  "file_size_b_singular": {
+    "message": "_{0} amino_"
+  },
+  "file_size_gb": {
+    "message": "_{0} lap_"
+  },
+  "file_size_kb": {
+    "message": "_{0} DIP_"
+  },
+  "file_size_mb": {
+    "message": "_{0} due_"
+  },
+  "file_upload_drag_file_here": {
+    "message": "_Rules a wells these_"
+  },
+  "file_upload_drop_files_here": {
+    "message": "_Discs Failing power_"
+  },
+  "file_upload_invalid_file": {
+    "message": "_Frame first nurse CRS unaltered_"
+  },
+  "file_upload_link_placeholder": {
+    "message": "_walls://cork.inapplicable.said/enter_"
+  },
+  "file_upload_or_click_to_browse": {
+    "message": "_EEG RIGIDLY bar DELEGATE_"
+  },
+  "file_upload_paste_link": {
+    "message": "_Payment a Amber hit a turns_"
+  },
+  "file_upload_paste_link_done": {
+    "message": "_Shoes_"
+  },
+  "grid_action_bar_cancel_mobile_actions": {
+    "message": "_Two-year_"
+  },
+  "grid_action_bar_choose_action": {
+    "message": "_November had detached_"
+  },
+  "grid_action_bar_clear_selection": {
+    "message": "_Movable Accumulators_"
+  },
+  "grid_back_to_top": {
+    "message": "_Times rib your_"
+  },
+  "grid_column_picker_all_categories": {
+    "message": "All categories"
+  },
+  "grid_column_picker_description_header": {
+    "message": "_Recommendation_"
+  },
+  "grid_column_picker_header": {
+    "message": "Choose the columns to show"
+  },
+  "grid_column_picker_name_header": {
+    "message": "_Entrance_"
+  },
+  "grid_column_picker_search_no_columns": {
+    "message": "_Oil tampering discard_"
+  },
+  "grid_column_picker_search_placeholder": {
+    "message": "_Disperse ICE Fruit_"
+  },
+  "grid_column_picker_submit": {
+    "message": "_Members forwarded_"
+  },
+  "grid_columns_button": {
+    "message": " _Likewise analysing_"
+  },
+  "grid_filters_apply": {
+    "message": "_Burdens architect_"
+  },
+  "grid_filters_button": {
+    "message": "_Commodity_"
+  },
+  "grid_filters_clear": {
+    "message": "_Lawyers_"
+  },
+  "grid_filters_header": {
+    "message": "_Divorced_"
+  },
+  "grid_filters_hide": {
+    "message": "_Mutua_"
+  },
+  "grid_filters_summary_header": {
+    "message": "_Filament:_"
+  },
+  "grid_load_more": {
+    "message": "_Pairs tests_"
+  },
+  "grid_search_placeholder": {
+    "message": "_Apart bag mixed guard_"
+  },
+  "modal_footer_cancel_button": {
+    "message": "_NUMERALS_"
+  },
+  "modal_footer_primary_button": {
+    "message": "_Moves_"
+  },
+  "month_short_april": {
+    "message": "_Game_"
+  },
+  "month_short_august": {
+    "message": "_Thus_"
+  },
+  "month_short_december": {
+    "message": "_Wife_"
+  },
+  "month_short_february": {
+    "message": "_CALL_"
+  },
+  "month_short_january": {
+    "message": "_Mark_"
+  },
+  "month_short_july": {
+    "message": "_Plan_"
+  },
+  "month_short_june": {
+    "message": "_EAEC_"
+  },
+  "month_short_march": {
+    "message": "_Wild_"
+  },
+  "month_short_may": {
+    "message": "_Arms_"
+  },
+  "month_short_november": {
+    "message": "_Boil_"
+  },
+  "month_short_october": {
+    "message": "_Some_"
+  },
+  "month_short_september": {
+    "message": "_Levy_"
+  },
+  "page_noaccess_button": {
+    "message": "_Received log a word-unforeseeable legal_"
+  },
+  "page_noaccess_description": {
+    "message": "_Strains, very gram'a blank seasonal OCT Leeks rules.PCTs bill deems hood academic, together untreated owing formerly Advocates-general._"
+  },
+  "page_noaccess_header": {
+    "message": "_NINTH vacancy, quickly'a submitted day leak RADAR_"
+  },
+  "reorder_top": {
+    "message": "Top"
+  },
+  "searchfield_no_records": {
+    "message": "Sorry, no matching records found"
+  },
+  "searchfield_searching": {
+    "message": "_Accumulation..._"
+  },
+  "selectfield_remove": {
+    "message": "Remove"
+  },
+  "selectfield_summary_text": {
+    "message": "{0} items selected"
+  },
+  "selectfieldpicker_clear": {
+    "message": "Clear selection"
+  },
+  "selectfieldpicker_select": {
+    "message": "Select"
+  },
+  "selectfieldpicker_select_value": {
+    "message": "Select value"
+  },
+  "selectfieldpicker_select_values": {
+    "message": "Select values"
+  },
+  "text_expand_close_text": {
+    "message": "Close"
+  },
+  "text_expand_modal_title": {
+    "message": "_SUBSCRIBED April_"
+  },
+  "text_expand_see_less": {
+    "message": "_Duly owned_"
+  },
+  "text_expand_see_more": {
+    "message": "_GAIN bases_"
+  },
+  "wizard_navigator_finish": {
+    "message": "_COMMERCE_"
+  },
+  "wizard_navigator_next": {
+    "message": "_Their_"
+  },
+  "wizard_navigator_previous": {
+    "message": "_Extraction_"
+  }
 }
