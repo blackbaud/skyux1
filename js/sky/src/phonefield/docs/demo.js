@@ -8,8 +8,6 @@
         self.bbPhoneFieldConfig = {
             countryIso2: 'us'
         };
-
-        self.phoneNumber = '01812-345678';
     }
 
     angular.module('stache')
