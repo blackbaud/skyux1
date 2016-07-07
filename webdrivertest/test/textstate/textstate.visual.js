@@ -5,18 +5,16 @@ describe('textstate', function () {
 
 
     it('should match the baseline text state screenshot', function (done) {
-        var result,
-            common = require('../common');
+        var common = require('../common');
 
-        result = browser.url('/textstate/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'textstate',
-            selector: '#screenshot-textstate',
-            done: done
-        });
+        browser
+            .setupTest('/textstate/fixtures/test.full.html')
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: 'textstate',
+                selector: '#screenshot-textstate'
+            })
+            .call(done);
     });
 
 });

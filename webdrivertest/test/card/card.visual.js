@@ -8,7 +8,7 @@ describe('Card', function () {
         var result,
             common = require('../common');
 
-        browser
+        result = browser
             .setupTest('/card/fixtures/test.full.html')
             .setValue('#screenshots-card-items', visibleComponents.join(',') + (selectable ? ':selectable' : ''));
 
