@@ -221,7 +221,6 @@ module.exports = function (grunt, env, utils) {
             break;
         case env.SUPPORTED.LOCAL:
             configName = 'wdio.conf-local.js';
-           
             break;
         default:
             utils.log('grunt visualtest is not configured to run in this environment.');
@@ -288,6 +287,7 @@ module.exports = function (grunt, env, utils) {
 
     }
 
+    //regular JSON.stringify does not capture functions
     function stringifyWithFunction(obj) {
         var placeholder = '____PLACEHOLDER____',
             fns = [],
@@ -360,9 +360,9 @@ module.exports = function (grunt, env, utils) {
         tasks.push('cleanupwebdrivertestfixtures');
         tasks.push('cleanupworkingscreenshots');
 
-        /*if (webdriverTask) {
+        if (webdriverTask) {
             tasks.push('cleanuptmp');
-        }*/
+        }
 
         grunt.task.run(tasks);
     });

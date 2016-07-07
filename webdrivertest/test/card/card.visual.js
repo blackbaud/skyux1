@@ -8,21 +8,21 @@ describe('Card', function () {
         var result,
             common = require('../common');
 
-        result = browser.url('/card/fixtures/test.full.html')
+        browser
+            .setupTest('/card/fixtures/test.full.html')
             .setValue('#screenshots-card-items', visibleComponents.join(',') + (selectable ? ':selectable' : ''));
 
         if (extraStep) {
             result = extraStep(result);
         }
 
-        common.compareScreenshot({
-            browserResult: result,
+        result.compareScreenshot({
             prefix: common.getPrefix(browser),
             screenshotName: ('card_' + screenshotName),
             selector: '#screenshots-card',
-            done: done,
             checkAccessibilty: true
-        });
+        })
+        .call(done);
     }
 
     it('should match previous screenshot when all components are present', function (done) {

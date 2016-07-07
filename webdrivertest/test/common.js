@@ -61,9 +61,7 @@
         }
         return browser.url(url)
             .getViewportSize('height').then(function (height) {
-                return browser.setViewportSize({width: screenWidth, height: height}).then(function () {
-                    return;
-                });
+                return browser.setViewportSize({width: screenWidth, height: height});
             });
     }
 
@@ -104,7 +102,7 @@
             return browser.moveToObject('body', 0, 0);
         },
         focusElement: function (browser, selector) {
-            browser.execute('document.querySelector("' + selector + '").focus()');
+            return browser.execute('document.querySelector("' + selector + '").focus()');
         }
     };
 }());

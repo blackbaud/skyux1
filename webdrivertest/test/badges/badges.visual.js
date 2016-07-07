@@ -4,19 +4,17 @@ describe('badges', function () {
     'use strict';
 
     it('should match the baseline badges screenshot', function (done) {
-        var result,
-            common = require('../common');
+        var common = require('../common');
 
-        result = browser.url('/badges/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'badges',
-            selector: '#screenshot-badges',
-            done: done,
-            checkAccessibility: true
-        });
+        browser
+            .setupTest('/badges/fixtures/test.full.html')
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: 'badges',
+                selector: '#screenshot-badges',
+                checkAccessibility: true
+            })
+            .call(done);
 
     });
 });

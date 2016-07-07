@@ -10,8 +10,7 @@ describe('actionbar', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'actionbar',
             selector: '#screenshot-actionbar',
-            checkAccessibility: true,
-            done: done
+            checkAccessibility: true
         };
     }
 
