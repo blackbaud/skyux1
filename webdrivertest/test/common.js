@@ -61,6 +61,7 @@
         }
         return browser.url(url)
             .getViewportSize('height').then(function (height) {
+            
                 return browser.setViewportSize({width: screenWidth, height: height});
             });
     }
@@ -79,8 +80,7 @@
                 return this.webdrivercss(pageName, [
                     {
                         name: options.screenshotName,
-                        elem: options.selector,
-                        screenWidth: options.screenWidth
+                        elem: options.selector
                     }
                 ], function (err, res) {
                     expect(err).toBe(undefined);

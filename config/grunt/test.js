@@ -317,7 +317,7 @@ module.exports = function (grunt, env, utils) {
     }
 
     grunt.registerTask('cleanuptmp', function () {
-        grunt.file.delete(tmpConfigName);
+        grunt.file.delete(tmpConfigName, { force: true });
     });
 
     // visualtest task supports an optional target.

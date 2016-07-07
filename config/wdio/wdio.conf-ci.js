@@ -19,7 +19,8 @@
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
-            build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+            build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
+            resolution: '1280x960'
         },
         {
             browserName: 'firefox',
@@ -31,7 +32,8 @@
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
-            build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER
+            build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
+            resolution: '1280x960'
         }
     ];
     shared.host = 'hub-cloud-us.browserstack.com';
@@ -40,8 +42,7 @@
         webdrivercss: {
             screenshotRoot: 'webdriver-screenshots',
             failedComparisonsRoot: 'webdriver-screenshots-diffs',
-            mismatchTolerance: 0.05,
-            screenWidth: [1280]
+            mismatchTolerance: 0.05
         }
     };
 

@@ -28,7 +28,7 @@ describe('modals', function () {
                 screenshotName: 'modal_dropdown',
                 selector: '.modal-content'
             })
-            .click('.modal-dialog .close')
+            .click('.bb-modal .modal-dialog .close')
             .call(done);
     });
 });
