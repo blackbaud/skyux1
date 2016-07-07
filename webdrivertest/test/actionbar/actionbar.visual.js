@@ -4,29 +4,32 @@
 describe('actionbar', function () {
     'use strict';
 
-    function actionbarScreenshot(browserResult, done) {
+    function createActionbarOptions(done) {
         var common = require('../common');
-        common.compareScreenshot({
-            browserResult: browserResult,
+        return {
             prefix: common.getPrefix(browser),
             screenshotName: 'actionbar',
             selector: '#screenshot-actionbar',
             checkAccessibility: true,
             done: done
-        });
+        };
     }
 
     it('should match the baseline actionbar screenshot on small screens', function (done) {
-        var browserResult;
+        var options = createActionbarOptions(done);
 
-        browserResult = browser.setupTest('/actionbar/fixtures/test.full.html');
-        actionbarScreenshot(browserResult, done);
+        browser
+            .setupTest('/actionbar/fixtures/test.full.html')
+            .compareScreenshot(options)
+            .call(done);
     });
 
     it('should match the baseline actionbar screenshot on small screens', function (done) {
-        var browserResult;
+        var options = createActionbarOptions(done);
 
-        browserResult = browser.setupTest('/actionbar/fixtures/test.full.html', 480);  
-        actionbarScreenshot(browserResult, done);
+        browser
+            .setupTest('/actionbar/fixtures/test.full.html', 480)
+            .compareScreenshot(options)
+            .call(done);
     });
 });

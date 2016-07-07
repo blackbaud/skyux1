@@ -1,7 +1,8 @@
 /*global module, require*/
 module.exports = function (grunt, env, utils) {
     'use strict';
-    var webdriverFolderRoot = 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'local' : '');
+    var webdriverFolderRoot = 'webdriver-screenshots' + (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'local' : ''),
+        tmpConfigName = 'config/wdio/tmpconfig.js';
     
     grunt.config.merge({
         skyux: {
@@ -79,7 +80,7 @@ module.exports = function (grunt, env, utils) {
                 configFile: './config/wdio/wdio.conf-local-browserstack.js'
             },
             component: {
-                configFile: './tmp/componentconfig.js'
+                configFile: './' + tmpConfigName
             }
         }
     });
@@ -287,19 +288,36 @@ module.exports = function (grunt, env, utils) {
 
     }
 
+    function stringifyWithFunction(obj) {
+        var placeholder = '____PLACEHOLDER____',
+            fns = [],
+            json = JSON.stringify(obj, function (key, value) {
+                if (typeof value === 'function') {
+                    fns.push(value);
+                    return placeholder;
+                }
+                return value;
+            }, 2);
+
+        json = json.replace(new RegExp('"' + placeholder + '"', 'g'), function () {
+            return fns.shift();
+        });
+        return json;
+    }
+    
     function writeSpecificComponentConfig() {
         var newConfig = getSpecificComponentConfig(),
             fileContents;
 
         if (newConfig) {
-            fileContents = 'exports.config = ' + JSON.stringify(newConfig) + ';';
-            grunt.file.write('tmp/componentconfig.js', fileContents);
+            fileContents = 'exports.config = ' + stringifyWithFunction(newConfig) + ';';
+            grunt.file.write(tmpConfigName, fileContents);
         }
 
     }
 
     grunt.registerTask('cleanuptmp', function () {
-        grunt.file.delete('tmp');
+        grunt.file.delete(tmpConfigName);
     });
 
     // visualtest task supports an optional target.
@@ -342,9 +360,9 @@ module.exports = function (grunt, env, utils) {
         tasks.push('cleanupwebdrivertestfixtures');
         tasks.push('cleanupworkingscreenshots');
 
-        if (webdriverTask) {
+        /*if (webdriverTask) {
             tasks.push('cleanuptmp');
-        }
+        }*/
 
         grunt.task.run(tasks);
     });

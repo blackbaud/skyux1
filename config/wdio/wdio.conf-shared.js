@@ -6,7 +6,7 @@
  * WebDriver configuration options shared between CI and local versions.
  */
 
-var common = require('../../webdrivertest/test/common.js');
+
 
 module.exports = {
     specs: [
@@ -25,9 +25,15 @@ module.exports = {
         console.log('preparing tests');
     },
     before: function () {
+        var common = require('../../webdrivertest/test/common.js');
         console.log('before test run');
         browser.addCommand('setupTest', function async(url, screenWidth) {
             return common.setupTest(this, url, screenWidth); 
+        });
+
+        browser.addCommand('compareScreenshot', function async(options) {
+            options.browserResult = this;
+            return common.compareScreenshot(options);
         });
     },
     after: function () {

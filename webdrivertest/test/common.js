@@ -21,8 +21,8 @@
         console.log('\x1b[31m', message);
     }
 
-    function checkAccessibility(options) {
-        options.browserResult.executeAsync(function (done) {
+    function checkAccessibility(browser, options) {
+        return browser.executeAsync(function (done) {
             axe.a11yCheck(
                 document,
                 {
@@ -51,7 +51,8 @@
                 }
                 expect(ret.value.violations.length).toBe(0, ' number of accessiblity violations');
             }
-        }).call(options.done);
+            return;
+        });
     }
 
     function setupTest(browser, url, screenWidth) {
@@ -70,16 +71,14 @@
         getPrefix: getPrefix,
         compareScreenshot: function (options) {
             
-
-            options.browserResult.getViewportSize('width').then(function (width) {
+            return options.browserResult.getViewportSize('width').then(function (width) {
                 var pageName,
                     widthString = '.' + width + 'px';
-                console.log(width);
 
                 pageName = options.prefix + '/' + options.prefix + '_' + options.screenshotName + '_full';
                 options.screenshotName = options.screenshotName + widthString;
                 
-                this.webdrivercss(pageName, [
+                return this.webdrivercss(pageName, [
                     {
                         name: options.screenshotName,
                         elem: options.selector,
@@ -91,9 +90,9 @@
                 })
                 .then(function () {
                     if (options.checkAccessibility) {
-                        checkAccessibility(options);
+                        return checkAccessibility(this, options);
                     } else {
-                        options.done();
+                        return;
                     }
                 });
             });
