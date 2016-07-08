@@ -1,0 +1,4 @@
+<div ng-controller="ResourcesTestController as resourcesCtrl">
+  <p>Financial year localized using constant: {{ resourcesCtrl.fiscal }}</p>
+  <p>Financial year localized using filter: {{ 'date_range_picker_this_fiscal_year' | bbResources }}</p>
+</div>

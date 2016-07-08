@@ -19,7 +19,8 @@
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
-            build: 'mac-chrome-webdriver-local'
+            build: 'mac-chrome-webdriver-local',
+            resolution: '1280x960'
         }/*,
         {
             browserName: 'firefox',
@@ -66,8 +67,7 @@
         webdrivercss: {
             screenshotRoot: 'webdriver-screenshotslocal',
             failedComparisonsRoot: 'webdriver-screenshotslocal-diffs',
-            mismatchTolerance: 0.05,
-            screenWidth: [1280]
+            mismatchTolerance: 0.05
         }
     };
 

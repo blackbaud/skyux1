@@ -5,19 +5,17 @@ describe('Avatar', function () {
     'use strict';
 
     function takeScreenshot(type, done) {
-        var result,
-            common = require('../common');
+        var common = require('../common');
 
-        result = browser.url('/avatar/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: ('avatar_' + type),
-            selector: ('#screenshot-avatar-' + type),
-            done: done,
-            checkAccessibility: true
-        });
+        browser
+            .setupTest('/avatar/fixtures/test.full.html')
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: ('avatar_' + type),
+                selector: ('#screenshot-avatar-' + type),
+                checkAccessibility: true
+            })
+            .call(done);
     }
 
     it('should match previous avatar screenshot where image is available', function (done) {

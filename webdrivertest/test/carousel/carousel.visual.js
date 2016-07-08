@@ -1,7 +1,7 @@
 
 /*global describe, it, browser,require */
 
-describe('Card', function () {
+describe('Carousel', function () {
     'use strict';
 
     var CAROUSEL_BTN_NEXT_LARGE,
@@ -14,22 +14,23 @@ describe('Card', function () {
     function doTest(testFn, screenshotName, selector, done) {
         var result;
 
-        result = browser.url('/carousel/fixtures/test.full.html');
+        result = 
+            browser
+                .setupTest('/carousel/fixtures/test.full.html');
 
         if (testFn) {
-            testFn(result);
+            result = testFn(result);
         }
 
-        common.moveCursorOffScreen(result);
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: screenshotName,
-            selector: selector,
-            done: done,
-            checkAccessibility: true
-        });
+        result
+            .moveCursorOffScreen()
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: screenshotName,
+                selector: selector,
+                checkAccessibility: true
+            })
+            .call(done);
     }
 
     it('should match previous screenshot when the first card is selected', function (done) {
@@ -39,7 +40,7 @@ describe('Card', function () {
     it('should match previous screenshot when a card in the middle is selected', function (done) {
         doTest(
             function (result) {
-                result
+                return result
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click('#remove-focus');
@@ -53,7 +54,7 @@ describe('Card', function () {
     it('should match previous screenshot when the last card is selected', function (done) {
         doTest(
             function (result) {
-                result
+                return result
                     .click('.bb-carousel-dot-btn:last-child')
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click('#remove-focus');
@@ -71,8 +72,7 @@ describe('Card', function () {
     it('should match previous screenshot when a dot button has focus', function (done) {
         doTest(
             function (result) {
-                common.focusElement(
-                    result, 
+                return result.focusElement(
                     CAROUSEL_SELECTOR_LARGE + ' .bb-carousel-dot-btn:first-child'
                 );
             }, 
