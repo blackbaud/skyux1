@@ -3,6 +3,7 @@
 .bb-definition-list {
     margin-right: 50px;
     margin-bottom: 20px;
+    display: inline-block;
 }
 
 .bb-definition-list-heading {
@@ -11,7 +12,6 @@
 }
 
 .bb-definition-list-value {
-    min-width: 215px;
     flex: 1;
     display: inline-block;
 }
@@ -19,6 +19,10 @@
 .bb-definition-list-label {
     margin-right: $margin;
     display: inline-block;
+}
+
+.list-value {
+    min-width: 215px;
 }
 
 .bb-deemphasized {
