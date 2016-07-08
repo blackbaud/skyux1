@@ -5,17 +5,15 @@ describe('type', function () {
 
 
     it('should match the baseline type sceenshot', function (done) {
-        var result,
-            common = require('../common');
+        var common = require('../common');
 
-        result = browser.url('/type/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'type',
-            selector: '#screenshot-type .bb-text-block',
-            done: done
-        });
+        browser
+            .setupTest('/type/fixtures/test.full.html')
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: 'type',
+                selector: '#screenshot-type .bb-text-block'
+            })
+            .call(done);
     });
 });

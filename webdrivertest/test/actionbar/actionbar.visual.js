@@ -4,21 +4,31 @@
 describe('actionbar', function () {
     'use strict';
 
-    it('should match the baseline actionbar screenshot', function (done) {
-        var browserResult,
-            common = require('../common');
-
-        browserResult = browser
-            .url('/actionbar/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: browserResult,
+    function createActionbarOptions(done) {
+        var common = require('../common');
+        return {
             prefix: common.getPrefix(browser),
             screenshotName: 'actionbar',
             selector: '#screenshot-actionbar',
-            screenWidth: [480, 1280],
-            checkAccessibility: true,
-            done: done
-        });
+            checkAccessibility: true
+        };
+    }
+
+    it('should match the baseline actionbar screenshot on small screens', function (done) {
+        var options = createActionbarOptions(done);
+
+        browser
+            .setupTest('/actionbar/fixtures/test.full.html')
+            .compareScreenshot(options)
+            .call(done);
+    });
+
+    it('should match the baseline actionbar screenshot on small screens', function (done) {
+        var options = createActionbarOptions(done);
+
+        browser
+            .setupTest('/actionbar/fixtures/test.full.html', 480)
+            .compareScreenshot(options)
+            .call(done);
     });
 });

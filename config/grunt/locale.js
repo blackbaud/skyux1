@@ -7,6 +7,11 @@ module.exports = function (grunt, env, utils) {
             defaultLocale: 'en-US',
             paths: {
                 locales: 'js/sky/locales/'
+            },
+            momentMap: {
+                'en-AU': 'en-au',
+                'en-CA': 'en-ca',
+                'en-GB': 'en-gb'
             }
         }
     });
@@ -17,11 +22,13 @@ module.exports = function (grunt, env, utils) {
         var RESOURCES_PREFIX = 'resources_',
             pathLocales = grunt.config.get('skyux.paths.locales'),
             pathDist = grunt.config.get('skyux.paths.dist'),
+            momentMap = grunt.config.get('skyux.momentMap'),
             template = grunt.file.read(pathLocales + 'template.js'),
             options = {
                 filter: 'isFile',
                 cwd: '.'
-            };
+            },
+            possibleMomentLocale;
 
         grunt.file.expand(options, pathLocales + RESOURCES_PREFIX + '*').forEach(function (path) {
             var destFile,
@@ -51,6 +58,15 @@ module.exports = function (grunt, env, utils) {
 
             js = 'bbResourcesOverrides = ' + JSON.stringify(stringsOut) + ';';
             js = template.replace('/*LOCALEJSON*/', js);
+
+            // Append the matching moment locale and initialize it globally.
+            if (momentMap[locale]) {
+                possibleMomentLocale = 'node_modules/moment/locale/' + momentMap[locale] + '.js';
+                if (grunt.file.exists(possibleMomentLocale)) {
+                    js += '\n' + grunt.file.read(possibleMomentLocale);
+                    js += '\n' + 'moment.locale(\'' + momentMap[locale] + '\');';
+                }
+            }
 
             destFile = pathDist + 'js/locales/sky-locale-' + locale + '.js';
 

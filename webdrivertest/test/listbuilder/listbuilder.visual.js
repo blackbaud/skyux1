@@ -3,19 +3,25 @@
 describe('listbuilder', function () {
     'use strict';
 
+
+    function listbuilderTest(screenWidth, done) {
+        var common = require('../common');
+
+        browser
+            .setupTest('/listbuilder/fixtures/test.full.html', screenWidth)
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: 'listbuilder',
+                selector: '#screenshot-listbuilder'
+            })
+            .call(done);
+    }
+
     it('match the baseline listbuilder screenshot', function (done) {
-        var result,
-            common = require('../common');
+        listbuilderTest(1280, done);
+    });
 
-        result = browser.url('/listbuilder/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'listbuilder',
-            screenWidth: [1280, 480],
-            selector: '#screenshot-listbuilder',
-            done: done
-        });
+    it('match the baseline listbuilder screenshot on small screens', function (done) {
+        listbuilderTest(480, done);
     });
 });
