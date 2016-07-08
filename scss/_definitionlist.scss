@@ -2,20 +2,26 @@
 
 .bb-definition-list {
     margin-right: 50px;
-    flex-wrap: wrap;
     margin-bottom: 20px;
 }
 
-.bb-definition-list-heading{
+.bb-definition-list-heading {
     margin-bottom: $margin-half;
     margin-bottom: 5px;
 }
 
 .bb-definition-list-value {
-    min-width: 215;
+    min-width: 215px;
     flex: 1;
+    display: inline-block;
 }
 
 .bb-definition-list-label {
     margin-right: $margin;
+    display: inline-block;
+}
+
+.bb-deemphasized {
+    display: inline-block;
+    min-width: 215px;
 }
