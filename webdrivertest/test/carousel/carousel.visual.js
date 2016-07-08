@@ -1,7 +1,7 @@
 
 /*global describe, it, browser,require */
 
-describe('Card', function () {
+describe('Carousel', function () {
     'use strict';
 
     var CAROUSEL_BTN_NEXT_LARGE,
@@ -14,22 +14,21 @@ describe('Card', function () {
     function doTest(testFn, screenshotName, selector, done) {
         var result;
 
-        result = browser.url('/carousel/fixtures/test.full.html');
+        result = browser.setupTest('/carousel/fixtures/test.full.html');
 
         if (testFn) {
             testFn(result);
         }
 
-        common.moveCursorOffScreen(result);
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: screenshotName,
-            selector: selector,
-            done: done,
-            checkAccessibility: true
-        });
+        result
+            .moveCursorOffScreen()
+            .compareScreenshot({
+                prefix: common.getPrefix(browser),
+                screenshotName: screenshotName,
+                selector: selector,
+                checkAccessibility: true
+            })
+            .call(done);
     }
 
     it('should match previous screenshot when the first card is selected', function (done) {

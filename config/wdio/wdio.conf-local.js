@@ -3,7 +3,7 @@
 (function () {
     'use strict';
     var os,
-    config;
+        config;
     
     if (process.platform === 'win32') {
         os = 'WIN';
@@ -25,8 +25,7 @@
         webdrivercss: {
             screenshotRoot: 'webdriver-screenshotslocal',
             failedComparisonsRoot: 'webdriver-screenshotslocal-diffs',
-            mismatchTolerance: 0.05,
-            screenWidth: [1280]
+            mismatchTolerance: 0.05
         }
     };
 
