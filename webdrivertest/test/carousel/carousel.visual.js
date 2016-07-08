@@ -14,10 +14,12 @@ describe('Carousel', function () {
     function doTest(testFn, screenshotName, selector, done) {
         var result;
 
-        result = browser.setupTest('/carousel/fixtures/test.full.html');
+        result = 
+            browser
+                .setupTest('/carousel/fixtures/test.full.html');
 
         if (testFn) {
-            testFn(result);
+            result = testFn(result);
         }
 
         result
@@ -38,7 +40,7 @@ describe('Carousel', function () {
     it('should match previous screenshot when a card in the middle is selected', function (done) {
         doTest(
             function (result) {
-                result
+                return result
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click('#remove-focus');
@@ -52,7 +54,7 @@ describe('Carousel', function () {
     it('should match previous screenshot when the last card is selected', function (done) {
         doTest(
             function (result) {
-                result
+                return result
                     .click('.bb-carousel-dot-btn:last-child')
                     .click(CAROUSEL_BTN_NEXT_LARGE)
                     .click('#remove-focus');
@@ -70,8 +72,7 @@ describe('Carousel', function () {
     it('should match previous screenshot when a dot button has focus', function (done) {
         doTest(
             function (result) {
-                common.focusElement(
-                    result, 
+                return result.focusElement(
                     CAROUSEL_SELECTOR_LARGE + ' .bb-carousel-dot-btn:first-child'
                 );
             }, 
