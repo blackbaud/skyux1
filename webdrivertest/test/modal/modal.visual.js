@@ -22,6 +22,7 @@ describe('modals', function () {
         browser
             .setupTest('/modal/fixtures/test.full.html')
             .click('.bb-test-dropdown')
+            .pause(1000)
             .click('.bb-context-menu-btn')
             .compareScreenshot({
                 prefix: common.getPrefix(browser),

@@ -7,7 +7,7 @@ describe('navbar', function () {
         var common = require('../common');
 
         browser
-            .setupTest('/navbar/fixtures/test.full.html'. screenWidth)
+            .setupTest('/navbar/fixtures/test.full.html', screenWidth)
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'navbar',
