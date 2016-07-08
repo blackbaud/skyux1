@@ -24,7 +24,7 @@
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
-                    if (phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
+                    if (selectedCountryData.iso2 && phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
@@ -40,10 +40,16 @@
                 return getFormattedNumber();
             });
             ngModel.$formatters.unshift(function (value) {
+                var formattedNumber;
                 if (value) {
                     input.intlTelInput('setNumber', value);
+                    if (input.intlTelInput('isValidNumber')) {
+                        formattedNumber = getFormattedNumber();
+                        ngModel.$setViewValue(formattedNumber);
+                        input.val(formattedNumber);
+                    }
                 }
-                return getFormattedNumber();
+                return formattedNumber;
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
