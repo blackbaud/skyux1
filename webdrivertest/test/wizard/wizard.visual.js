@@ -10,6 +10,7 @@ describe('wizard', function () {
         browser
             .setupTest('/wizard/fixtures/test.full.html')
             .click('#screenshots-wizard-open')
+            .pause(1000)
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'wizard',

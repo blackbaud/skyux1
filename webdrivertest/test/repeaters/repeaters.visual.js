@@ -68,6 +68,7 @@ describe('repeaters', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'repeaters_component_expanded_no_title',
+                selector: '#screenshot-repeaters-component-full',
                 checkAccessibility: true
             })
             .call(done);

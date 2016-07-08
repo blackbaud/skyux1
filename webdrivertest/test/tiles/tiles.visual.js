@@ -29,6 +29,7 @@ describe('tiles', function () {
             .click('#screenshot-tile-with-header-content-overflow .bb-tile-title')
             .click('#screenshot-tile-with-overflow-header-content-overflow .bb-tile-title')
             .click('#screenshot-tile-with-overflow-header-content .bb-tile-title')
+            .pause(1000)
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'tile_collapsed',

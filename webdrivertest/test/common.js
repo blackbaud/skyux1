@@ -60,9 +60,12 @@
             screenWidth = 1280;
         }
         return browser.url(url)
-            .getViewportSize('height').then(function (height) {
-            
-                return browser.setViewportSize({width: screenWidth, height: height});
+            .getViewportSize().then(function (size) {
+                if (size.width !== screenWidth) {
+                    return browser.setViewportSize({width: screenWidth, height: size.height});
+                } else {
+                    return;
+                }
             });
     }
 

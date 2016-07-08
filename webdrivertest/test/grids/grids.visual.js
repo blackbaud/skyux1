@@ -159,9 +159,7 @@ describe('bb-grid component', function () {
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid')
             .waitForVisible('#screenshot-grid td .bb-context-menu-btn', 20000)
-            .execute(function () {
-                $('body').addClass('bb-test-open-dropdowns');
-            })
+            .click('.bb-context-menu-btn')
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'grids_contextmenu_open',

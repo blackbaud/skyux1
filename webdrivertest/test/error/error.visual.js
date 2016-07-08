@@ -71,6 +71,7 @@ describe('error', function () {
             browser
                 .setupTest('/error/fixtures/test.full.html')
                 .click('#screenshot-error-show-modal')
+                .pause(1000)
                 .compareScreenshot({
                     prefix: common.getPrefix(browser),
                     screenshotName: 'error_modal',
