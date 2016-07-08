@@ -3,7 +3,7 @@
 .bb-definition-list {
     margin-right: 50px;
     margin-bottom: 20px;
-    display: inline-block;
+    flex: 1;
 }
 
 .bb-definition-list-heading {
@@ -11,21 +11,18 @@
     margin-bottom: 5px;
 }
 
-.bb-definition-list-value {
-    flex: 1;
-    display: inline-block;
+.bb-definition-list-content-component {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
 }
 
 .bb-definition-list-label {
     margin-right: $margin;
-    display: inline-block;
+    width: 50px;
 }
 
-.list-value {
+.bb-definition-list-no-value, .bb-definition-list-value {
     min-width: 215px;
-}
-
-.bb-deemphasized {
-    display: inline-block;
-    min-width: 215px;
-}
+    flex: 1;
+} 
