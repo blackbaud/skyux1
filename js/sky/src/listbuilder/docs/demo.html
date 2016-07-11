@@ -1,4 +1,11 @@
 <div ng-controller="ListbuilderTestController as listCtrl">
+  
+  <div>
+    <label>Fruit preference: {{listCtrl.appliedFilters.fruitType}}</label>
+  </div>
+  <div>
+    <label>Hide Vegetarian: {{listCtrl.appliedFilters.hideVege}}</label>    
+  </div>
   <bb-listbuilder>
     <bb-listbuilder-toolbar 
         bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"
@@ -7,7 +14,8 @@
         Add Stuff
       </bb-listbuilder-add>
       <bb-listbuilder-filter 
-        bb-listbuilder-modal-open="listCtrl.openObject"
+        bb-listbuilder-filter-modal-open="listCtrl.openObject"
+        bb-listbuilder-filter-apply="listCtrl.appliedFilterCallback(filters)"
       >
       </bb-listbuilder-filter>
       <bb-listbuilder-actions>
@@ -43,3 +51,29 @@
     </bb-listbuilder-footer>
   </bb-listbuilder>
 </div>
+<script type="text/ng-template" id="demo/listbuilder/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Food preferences</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <label>Fruit type</label>
+                    <select ng-model="filterCtrl.filters.fruitType" class="form-control">
+                        <option value="any">Any Fruit</option>
+                        <option value="citrus">Citrus</option>
+                        <option value="berry">Berry</option>
+                    </select>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.hideVege" />
+                        Hide vegetarian
+                    </label>
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary ng-click="filterCtrl.applyFilters()" >Apply filters</bb-modal-footer-button-primary>
+                <button type="button" class="btn btn-link" ng-click="filterCtrl.clearAllFilters()">Clear all filters</button>
+                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>

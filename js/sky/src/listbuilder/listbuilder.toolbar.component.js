@@ -102,7 +102,13 @@
 
     Controller.$inject = ['$element', '$q', '$timeout', 'bbViewKeeperBuilder'];
 
-    angular.module('sky.listbuilder.toolbar.component', ['sky.resources', 'sky.viewkeeper', 'sky.listbuilder.add.component'])
+    angular.module('sky.listbuilder.toolbar.component', 
+        [
+            'sky.resources', 
+            'sky.viewkeeper', 
+            'sky.listbuilder.add.component',       
+            'sky.listbuilder.filter.component'
+        ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
             bindings: {
@@ -112,7 +118,8 @@
                 bbListbuilderToolbarFixed: '@?'
             },
             transclude: {
-                bbListbuilderAdd: '?bbListbuilderAdd'
+                bbListbuilderAdd: '?bbListbuilderAdd',
+                bbListbuilderFilter: '?bbListbuilderFilter'
             },
             controller: Controller,
             require: {

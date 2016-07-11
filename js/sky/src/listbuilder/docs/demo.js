@@ -1,6 +1,38 @@
 /*global angular */
 (function () {
     'use strict';
+
+    function ListbuilderFilterController($uibModalInstance, filters) {
+        var self = this;
+
+        function clearAllFilters() {
+            self.filters = {
+                fruitType: 'any'
+            };
+        }
+
+        function applyFilters() {
+            $uibModalInstance.close(self.filters);
+        }
+        console.log(filters);
+
+
+        if (!filters) {
+            clearAllFilters();
+        } else {
+            self.filters = filters;
+        }
+
+        if (angular.isUndefined(self.filters.fruitType)) {
+            self.filters.fruitType = 'any';
+        }
+
+        self.clearAllFilters = clearAllFilters;
+        self.applyFilters = applyFilters;
+
+    }
+
+    ListbuilderFilterController.$inject = ['$uibModalInstance', 'filters'];
     
     function ListbuilderTestController($timeout) {
         var self = this,
@@ -69,6 +101,22 @@
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
 
+        self.openObject = {
+            controller: 'ListbuilderFilterController as filterCtrl',
+            templateUrl: 'demo/listbuilder/filters.html',
+            resolve: {
+                filters: {
+                    function () {
+                        return angular.copy(self.appliedFilters);
+                    }
+                }
+            }
+        };
+
+        self.appliedFilterCallback = function (filters) {
+            self.appliedFilters = filters;
+        };
+
         data = createData(5);
         self.data = data;
         
@@ -79,5 +127,6 @@
     
     angular
         .module('stache')
-        .controller('ListbuilderTestController', ListbuilderTestController);
+        .controller('ListbuilderTestController', ListbuilderTestController)
+        .controller('ListbuilderFilterController', ListbuilderFilterController);
 }());

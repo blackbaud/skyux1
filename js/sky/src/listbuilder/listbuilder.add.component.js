@@ -7,7 +7,6 @@
             templateUrl: 'sky/templates/listbuilder/listbuilder.add.component.html',
             bindings: {
                 bbListbuilderAddAction: '&?'
-            },
-            transclude: true
+            }
         });
 }());
