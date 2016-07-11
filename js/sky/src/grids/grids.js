@@ -1294,7 +1294,7 @@
                                     loadMorePromise = deferred.promise;
 
                                 loadMorePromise.then(function (moreRows) {
-                                    tableEl.addRowData('', moreRows);
+                                    tableDomEl.addJSONData(moreRows);
                                     $scope.options.data = $scope.options.data.concat(moreRows);
                                     setUpFancyCheckCell();
                                     doNotResetRows = true;
