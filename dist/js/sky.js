@@ -1952,7 +1952,7 @@
         .directive('bbSubmenuHeading', bbSubmenuHeading);
 }());
 
-/*global angular, jQuery, require */
+/*global angular, jQuery */
 
 (function ($) {
     'use strict';
@@ -2123,7 +2123,7 @@
 
                 // Grab the portion before the query string and get the fully-qualified URL.
                 url = parts.shift();
-                url = require.toUrl(url);
+                url = $window.require.toUrl(url);
 
                 // If there was anything after the first question mark, put it back.
                 url += '?' + parts.join('');
@@ -6676,7 +6676,7 @@
         /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
-            require(['enquire'], registerEnquire);
+            require(['enquire.js'], registerEnquire);
         } else if ($window.enquire) {
             // Browser globals
             registerEnquire(enquire);
