@@ -59,7 +59,8 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `hasMoreRows` &mdash; *(Optional.)* Indicates whether to display a button that exposes more rows if the grid does not use pagination. To display the button, set this property to `true`.
         - `hideColPicker` &mdash; *(Optional.)* Indicates whether to hide the column picker button in the toolbar. To hide the button, set this property to `true`.
         - `hideFilters` &mdash; *(Optional.)* Indicates whether to hide the filters button in the toolbar. To hide the button, set this property to `true`.
-        - `multiselect` &mdash; *(Optional.)* Indicates whether to add a multi-select checkbox column to the grid. To add the column, set this proprety to `true`.
+        - `loading` &mdash; *(Optional.)* When set to `true`, automatically displays a `bbWait` component over the grid's data.
+        - `multiselect` &mdash; *(Optional.)* Indicates whether to add a multi-select checkbox column to the grid. To add the column, set this property to `true`.
         - `onAddClick` &mdash; *(Optional.)* Specifies a function to be called when users click the add button in the toolbar. The add button only appears if the `onAddClick` property specifies a function.
         - `onAddClickLabel` &mdash; *(Optional.)* Specifies a label for the add button.
         - `resources` &mdash; *(Optional.)* Specifies the resource dictionary available in the scope of each `columns` property's `template_url` and `controller` properties.
