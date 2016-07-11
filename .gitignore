@@ -218,3 +218,6 @@ browserstack.env
 browserstack-binary/
 tmp/
 config/wdio/tmpconfig.js
+
+#IntelliJ Directories
+.idea/
