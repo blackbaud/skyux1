@@ -69,11 +69,10 @@
                     </label>
                 </form>
             </div>
-            <bb-modal-footer>
-                <bb-modal-footer-button-primary ng-click="filterCtrl.applyFilters()" >Apply filters</bb-modal-footer-button-primary>
-                <button type="button" class="btn btn-link" ng-click="filterCtrl.clearAllFilters()">Clear all filters</button>
-                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
-            </bb-modal-footer>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
         </div>
     </bb-modal>
 </script>

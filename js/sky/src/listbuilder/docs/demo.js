@@ -14,7 +14,6 @@
         function applyFilters() {
             $uibModalInstance.close(self.filters);
         }
-        console.log(filters);
 
 
         if (!filters) {
@@ -105,10 +104,8 @@
             controller: 'ListbuilderFilterController as filterCtrl',
             templateUrl: 'demo/listbuilder/filters.html',
             resolve: {
-                filters: {
-                    function () {
-                        return angular.copy(self.appliedFilters);
-                    }
+                filters: function () {
+                    return angular.copy(self.appliedFilters);
                 }
             }
         };

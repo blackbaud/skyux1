@@ -19,7 +19,7 @@
 
     Controller.$inject = ['bbModal'];
 
-    angular.module('sky.listbuilder.filter.component', ['sky.modal'])
+    angular.module('sky.listbuilder.filter.component', ['sky.modal', 'sky.resources'])
         .component('bbListbuilderFilter', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.filter.component.html',
             controller: Controller,

@@ -20,6 +20,7 @@
         'sky.daterangepicker',
         'sky.error',
         'sky.format',
+        'sky.filter',
         'sky.grids',
         'sky.help',
         'sky.helpbutton',
