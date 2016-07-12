@@ -103916,7 +103916,7 @@ global.easyXDM = easyXDM;
         .directive('bbSubmenuHeading', bbSubmenuHeading);
 }());
 
-/*global angular, jQuery, require */
+/*global angular, jQuery */
 
 (function ($) {
     'use strict';
@@ -104087,7 +104087,7 @@ global.easyXDM = easyXDM;
 
                 // Grab the portion before the query string and get the fully-qualified URL.
                 url = parts.shift();
-                url = require.toUrl(url);
+                url = $window.require.toUrl(url);
 
                 // If there was anything after the first question mark, put it back.
                 url += '?' + parts.join('');
@@ -105970,12 +105970,18 @@ global.easyXDM = easyXDM;
                             files: $files,
                             rejectedFiles: $invalidFiles
                         });
+                    },
+                    validate: function ($file) {
+                        return scope.bbFileDropValidateFn({
+                            file: $file
+                        });
                     }
                 };
             },
             scope: {
                 bbFileDropChange: '&',
-                bbFileDropLinkChange: '&'
+                bbFileDropLinkChange: '&',
+                bbFileDropValidateFn: '&'
             },
             template: function (el, attrs) {
                 var dropEl;
@@ -108640,7 +108646,7 @@ global.easyXDM = easyXDM;
         /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
-            require(['enquire'], registerEnquire);
+            require(['enquire.js'], registerEnquire);
         } else if ($window.enquire) {
             // Browser globals
             registerEnquire(enquire);
@@ -113928,6 +113934,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
         '             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"\n' +
+        '             ngf-validate-fn="bbFileDrop.validate($file)"\n' +
         '             >\n' +
         '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
         '                <div class="bb-file-drop-contents-not-over">\n' +

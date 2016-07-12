@@ -41,6 +41,12 @@
             removeFromArray(vm.allItems, file);
         };
 
+        vm.fileValidate = function (file) {
+            if (file.name.indexOf('a') === 0) {
+                return 'You may not upload a file that begins with the letter "a."';
+            }
+        };
+
         $scope.$watch(function () {
             return vm.alertClosed;
         }, function () {
