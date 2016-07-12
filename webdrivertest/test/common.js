@@ -70,14 +70,14 @@
     }
 
     module.exports = {
-        getPrefix: getPrefix,
         compareScreenshot: function (options) {
             
             return options.browserResult.getViewportSize('width').then(function (width) {
                 var pageName,
+                    prefix = getPrefix(this),
                     widthString = '.' + width + 'px';
 
-                pageName = options.prefix + '/' + options.prefix + '_' + options.screenshotName + '_full';
+                pageName = prefix + '/' + prefix + '_' + options.screenshotName + '_full';
                 options.screenshotName = options.screenshotName + widthString;
                 
                 return this.webdrivercss(pageName, [

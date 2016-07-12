@@ -4,13 +4,10 @@ describe('tabset', function () {
     'use strict';
 
     function tabsetTest(screenWidth, done) {
-        var common = require('../common');
-
         browser
             .setupTest('/tabset/fixtures/test.full.html', screenWidth)
             .moveToObject('#screenshot-tabset-open-add li:nth-child(2) a')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'tabset',
                 selector: '#screenshot-tabset-all',
                 checkAccessibility: true

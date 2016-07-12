@@ -4,12 +4,9 @@ describe('buttons', function () {
     'use strict';
 
     it('should match the baseline buttons screenshot', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/buttons/fixtures/test.full.html')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'buttons',
                 selector: '#screenshot-buttons',
                 checkAccessibility: true
@@ -23,14 +20,12 @@ describe('buttons', function () {
     }
 
     function clickTest(type, done, prefix) {
-        var common = require('../common'),
-            selector = getSelector(type, prefix);
+        var selector = getSelector(type, prefix);
 
         browser
             .setupTest('/buttons/fixtures/test.full.html')
             .click(selector)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: ('button_' + type + '_click'),
                 selector: ('#screenshots-buttons-' + type),
                 checkAccessibility: true

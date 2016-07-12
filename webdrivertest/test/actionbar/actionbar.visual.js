@@ -4,10 +4,8 @@
 describe('actionbar', function () {
     'use strict';
 
-    function createActionbarOptions(done) {
-        var common = require('../common');
+    function createActionbarOptions() {
         return {
-            prefix: common.getPrefix(browser),
             screenshotName: 'actionbar',
             selector: '#screenshot-actionbar',
             checkAccessibility: true
@@ -15,7 +13,7 @@ describe('actionbar', function () {
     }
 
     it('should match the baseline actionbar screenshot on small screens', function (done) {
-        var options = createActionbarOptions(done);
+        var options = createActionbarOptions();
 
         browser
             .setupTest('/actionbar/fixtures/test.full.html')
@@ -24,7 +22,7 @@ describe('actionbar', function () {
     });
 
     it('should match the baseline actionbar screenshot on small screens', function (done) {
-        var options = createActionbarOptions(done);
+        var options = createActionbarOptions();
 
         browser
             .setupTest('/actionbar/fixtures/test.full.html', 480)

@@ -5,8 +5,7 @@ describe('Card', function () {
     'use strict';
 
     function clickTest(screenshotName, visibleComponents, selectable, done, extraStep) {
-        var result,
-            common = require('../common');
+        var result;
 
         result = browser
             .setupTest('/card/fixtures/test.full.html')
@@ -17,7 +16,6 @@ describe('Card', function () {
         }
 
         result.compareScreenshot({
-            prefix: common.getPrefix(browser),
             screenshotName: ('card_' + screenshotName),
             selector: '#screenshots-card',
             checkAccessibilty: true
