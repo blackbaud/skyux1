@@ -105970,12 +105970,18 @@ global.easyXDM = easyXDM;
                             files: $files,
                             rejectedFiles: $invalidFiles
                         });
+                    },
+                    validate: function ($file) {
+                        return scope.bbFileDropValidateFn({
+                            file: $file
+                        });
                     }
                 };
             },
             scope: {
                 bbFileDropChange: '&',
-                bbFileDropLinkChange: '&'
+                bbFileDropLinkChange: '&',
+                bbFileDropValidateFn: '&'
             },
             template: function (el, attrs) {
                 var dropEl;
@@ -113928,6 +113934,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
         '             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"\n' +
+        '             ngf-validate-fn="bbFileDrop.validate($file)"\n' +
         '             >\n' +
         '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
         '                <div class="bb-file-drop-contents-not-over">\n' +
