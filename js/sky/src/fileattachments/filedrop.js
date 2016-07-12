@@ -34,12 +34,18 @@
                             files: $files,
                             rejectedFiles: $invalidFiles
                         });
+                    },
+                    validate: function ($file) {
+                        return scope.bbFileDropValidateFn({
+                            file: $file
+                        });
                     }
                 };
             },
             scope: {
                 bbFileDropChange: '&',
-                bbFileDropLinkChange: '&'
+                bbFileDropLinkChange: '&',
+                bbFileDropValidateFn: '&'
             },
             template: function (el, attrs) {
                 var dropEl;
