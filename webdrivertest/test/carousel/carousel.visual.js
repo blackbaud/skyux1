@@ -6,8 +6,7 @@ describe('Carousel', function () {
 
     var CAROUSEL_BTN_NEXT_LARGE,
         CAROUSEL_SELECTOR_LARGE = '#screenshot-carousel',
-        CAROUSEL_SELECTOR_SMALL = '#screenshot-carousel-small',
-        common = require('../common');
+        CAROUSEL_SELECTOR_SMALL = '#screenshot-carousel-small';
 
     CAROUSEL_BTN_NEXT_LARGE = '#screenshot-carousel .bb-carousel-btn-next';
 
@@ -25,7 +24,6 @@ describe('Carousel', function () {
         result
             .moveCursorOffScreen()
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: screenshotName,
                 selector: selector,
                 checkAccessibility: true
