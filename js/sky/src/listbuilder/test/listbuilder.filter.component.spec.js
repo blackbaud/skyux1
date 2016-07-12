@@ -61,7 +61,6 @@
 
             el.find('.btn.bb-btn-secondary').click();
 
-
             expect(actualOpen).toEqual($scope.listCtrl.openObject);
             expect(expectedFilters).toEqual(actualFilters);
         });

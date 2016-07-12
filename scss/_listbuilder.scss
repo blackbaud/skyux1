@@ -12,43 +12,6 @@
     vertical-align: middle;
 }
 
-.bb-listbuilder-search-container {
-    max-width: 150px;
-}
-
-@media (min-width: 768px) {
-    .bb-listbuilder-search-container {
-        max-width: 255px;
-    }
-}
-
-.bb-listbuilder-search-input {
-    @include bb-border(light, top, bottom, left);
-    border-right: none;
-    transition: none;
-    box-shadow: none;
-    border-radius: 6px;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-}
-
-.bb-listbuilder-search-button {
-    
-    button.btn {
-        background-color: $bb-color-white;
-        border: none;
-        height: auto;
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
-        border-left: none;
-        @include bb-border(light, top, bottom, right);
-    }
-}
-
-.bb-listbuilder-search-input:focus + .bb-listbuilder-search-button button:hover {
-    z-index: auto;
-}
-
 .bb-listbuilder-no-search span.highlight {
   background-color: transparent;
 }

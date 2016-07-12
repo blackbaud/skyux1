@@ -9,16 +9,10 @@
         function applySearchText(searchText) {
 
             //select input
-            var searchEl = $element.find('.bb-listbuilder-search-input'),
-                deferred = $q.defer(),
+            var deferred = $q.defer(),
                 highlightPromise;
             highlightPromise = deferred.promise;
             
-            /*istanbul ignore else */
-            /* sanity check */
-            if (angular.isFunction(searchEl.select) && searchEl.length > 0 && searchText) {
-                searchEl.eq(0).select();
-            }
             // Allow user to call highlight promise after applying search callback
             highlightPromise.then(function () {
                 ctrl.listbuilderCtrl.highlightSearchText(searchText);
@@ -107,7 +101,8 @@
             'sky.resources', 
             'sky.viewkeeper', 
             'sky.listbuilder.add.component',       
-            'sky.listbuilder.filter.component'
+            'sky.listbuilder.filter.component',
+            'sky.search'
         ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',

@@ -1,0 +1,36 @@
+.bb-search-container {
+    max-width: 150px;
+}
+
+@media (min-width: 768px) {
+    .bb-search-container {
+        max-width: 255px;
+    }
+}
+
+.bb-search-input {
+    @include bb-border(light, top, bottom, left);
+    border-right: none;
+    transition: none;
+    box-shadow: none;
+    border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.bb-search-button {
+    
+    button.btn {
+        background-color: $bb-color-white;
+        border: none;
+        height: auto;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        border-left: none;
+        @include bb-border(light, top, bottom, right);
+    }
+}
+
+.bb-search-input:focus + .bb-search-button button:hover {
+    z-index: auto;
+}
