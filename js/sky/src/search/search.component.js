@@ -2,8 +2,10 @@
 (function () {
     'use strict';
 
-    function Controller($element) {
-        var ctrl = this;
+    function Controller($element, bbMediaBreakpoints) {
+        var ctrl = this,
+            previousBreakpoint;
+        
         function applySearchText(searchText) {
 
             //select input
@@ -20,10 +22,34 @@
             
         }
 
+        function mediaBreakpointCallback(breakpoint) {
+            // Search input should be hidden if screen is xs and previous breakpoint was not xs
+            if (breakpoint.xs && (!previousBreakpoint || previousBreakpoint !== breakpoint.xs)) {
+                ctrl.searchInputVisible = false;
+            } else {
+                ctrl.searchInputVisible = true;
+            }
+            
+            previousBreakpoint = breakpoint;
+        }
+
+        function toggleSearchInput() {
+            ctrl.searchInputVisible = !ctrl.searchInputVisible;
+        }
+
+        function destroySearch() {
+            bbMediaBreakpoints.unregister(mediaBreakpointCallback);
+        }
+
+        bbMediaBreakpoints.register(mediaBreakpointCallback);
+
+        ctrl.$onDestroy = destroySearch;
+
         ctrl.applySearchText = applySearchText;
+        ctrl.toggleSearchInput = toggleSearchInput;
     }
 
-    Controller.$inject = ['$element'];
+    Controller.$inject = ['$element', 'bbMediaBreakpoints'];
 
     angular.module('sky.search.component', ['sky.resources'])
         .component('bbSearchInput', {

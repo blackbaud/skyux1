@@ -1,18 +1,25 @@
-<div class="bb-search-container input-group">
-    <input 
-        type="text" 
-        class="form-control bb-search-input"
-        ng-model="$ctrl.bbSearchText" 
-        ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
-        data-bbauto-field="SearchBox"
-        aria-label="{{::'search_label' | bbResources}}" />
-    <span class="input-group-btn bb-search-button">
-        <button 
-            type="button"
-            class="btn"
-            ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
-            aria-label="{{::'search_label' | bbResources}}" >
+<div>
+    <div ng-show="!$ctrl.searchInputVisible">
+        <button type="button" class="btn bb-btn-secondary" title="{{::'search_open' | bbResources}}" ng-click="$ctrl.toggleSearchInput()">
             <i class="fa fa-search"></i>
         </button>
-    </span>
+    </div>
+    <div ng-show="$ctrl.searchInputVisible" class="bb-search-container input-group">
+        <input 
+            type="text" 
+            class="form-control bb-search-input"
+            ng-model="$ctrl.bbSearchText" 
+            ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
+            data-bbauto-field="SearchBox"
+            aria-label="{{::'search_label' | bbResources}}" />
+        <span class="input-group-btn bb-search-button">
+            <button 
+                type="button"
+                class="btn"
+                ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
+                aria-label="{{::'search_label' | bbResources}}" >
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
 </div>
