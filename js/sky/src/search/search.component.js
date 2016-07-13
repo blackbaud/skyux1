@@ -23,13 +23,16 @@
 
         function mediaBreakpointCallback(breakpoint) {
 
-
-            
             // Search input should be hidden if screen is xs and previous breakpoint was not xs
             if (breakpoint.xs && (!ctrl.currentBreakpoint || ctrl.currentBreakpoint !== breakpoint.xs)) {
                 ctrl.searchInputVisible = false;
             } else {
                 ctrl.searchInputVisible = true;
+            }
+
+
+            if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
+                ctrl.bbOnSearchInputToggled({isVisible: false});
             }
             
             ctrl.currentBreakpoint = breakpoint;
@@ -37,6 +40,9 @@
 
         function toggleSearchInput() {
             ctrl.searchInputVisible = !ctrl.searchInputVisible;
+            if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
+                ctrl.bbOnSearchInputToggled({isVisible: ctrl.searchInputVisible});
+            }
         }
 
         function destroySearch() {
@@ -59,7 +65,8 @@
             controller: Controller,
             bindings: {
                 bbOnSearch: '&?',
-                bbSearchText: '<?'
+                bbSearchText: '<?',
+                bbOnSearchInputToggled: '&?'
             }
         });
 }());

@@ -4,7 +4,11 @@
             <i class="fa fa-search"></i>
         </button>
     </div>
-    <div class="bb-search-and-dismiss" ng-show="$ctrl.searchInputVisible">
+    <div 
+        ng-class="{'bb-search-slide': $ctrl.currentBreakpoint.xs && $ctrl.searchInputVisible}" 
+        class="bb-search-and-dismiss" 
+        ng-show="$ctrl.searchInputVisible">
+
         <div class="bb-search-item">
             <div class="bb-search-container input-group">
                 <input 
@@ -27,7 +31,7 @@
         </div>
         
         <div class="bb-search-item" ng-show="$ctrl.currentBreakpoint.xs">
-            <button type="button" class="btn bb-btn-secondary bb-search-btn-dismiss" ng-click="$ctrl.toggleSearchInput()">
+            <button type="button" title="{{::'search_dismiss' | bbResources}}" class="btn bb-btn-secondary bb-search-btn-dismiss" ng-click="$ctrl.toggleSearchInput()">
                 <i class="fa fa-chevron-circle-left fa-lg">
                 </i>
             </button>

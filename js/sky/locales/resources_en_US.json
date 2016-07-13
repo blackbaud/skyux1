@@ -516,8 +516,16 @@
         "message": "Add"
     },
     "search_label": {
-        "_description": "Label for the listbuilder search functionality",
-        "message": "Listbuilder search"
+        "_description": "Label for search component functionality",
+        "message": "Search items"
+    },
+    "search_open": {
+        "_description": "Label for opening search input",
+        "message": "Open search"
+    },
+    "search_dismiss": {
+        "_description": "Label for dismissing search input",
+        "message": "Dismiss search"
     },
     "searchfield_searching": {
         "_description": "text for ui-select search control while performing a remote search",

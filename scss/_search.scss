@@ -40,4 +40,16 @@
 
 .bb-search-and-dismiss {
     display: flex;
+    
+}
+
+.bb-search-slide {
+    transition: transform 300ms ease;
+    @include animation(fadeIn 500ms);
+}
+
+.bb-search-slide-add {
+    
+    -webkit-transform: translate3d(500px, 0, 0);
+    transform: translate3d(500px, 0, 0); 
 }
