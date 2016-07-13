@@ -3,8 +3,7 @@
     'use strict';
 
     function Controller($element, bbMediaBreakpoints) {
-        var ctrl = this,
-            previousBreakpoint;
+        var ctrl = this;
         
         function applySearchText(searchText) {
 
@@ -23,14 +22,17 @@
         }
 
         function mediaBreakpointCallback(breakpoint) {
+
+
+            
             // Search input should be hidden if screen is xs and previous breakpoint was not xs
-            if (breakpoint.xs && (!previousBreakpoint || previousBreakpoint !== breakpoint.xs)) {
+            if (breakpoint.xs && (!ctrl.currentBreakpoint || ctrl.currentBreakpoint !== breakpoint.xs)) {
                 ctrl.searchInputVisible = false;
             } else {
                 ctrl.searchInputVisible = true;
             }
             
-            previousBreakpoint = breakpoint;
+            ctrl.currentBreakpoint = breakpoint;
         }
 
         function toggleSearchInput() {

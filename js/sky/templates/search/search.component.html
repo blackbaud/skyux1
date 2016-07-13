@@ -4,22 +4,35 @@
             <i class="fa fa-search"></i>
         </button>
     </div>
-    <div ng-show="$ctrl.searchInputVisible" class="bb-search-container input-group">
-        <input 
-            type="text" 
-            class="form-control bb-search-input"
-            ng-model="$ctrl.bbSearchText" 
-            ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
-            data-bbauto-field="SearchBox"
-            aria-label="{{::'search_label' | bbResources}}" />
-        <span class="input-group-btn bb-search-button">
-            <button 
-                type="button"
-                class="btn"
-                ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
-                aria-label="{{::'search_label' | bbResources}}" >
-                <i class="fa fa-search"></i>
+    <div class="bb-search-and-dismiss" ng-show="$ctrl.searchInputVisible">
+        <div class="bb-search-item">
+            <div class="bb-search-container input-group">
+                <input 
+                    type="text" 
+                    class="form-control bb-search-input"
+                    ng-model="$ctrl.bbSearchText" 
+                    ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
+                    data-bbauto-field="SearchBox"
+                    aria-label="{{::'search_label' | bbResources}}" />
+                <span class="input-group-btn">
+                    <button 
+                        type="button"
+                        class="btn bb-search-btn-apply"
+                        ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
+                        aria-label="{{::'search_label' | bbResources}}" >
+                        <i class="fa fa-search fa-lg"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        
+        <div class="bb-search-item" ng-show="$ctrl.currentBreakpoint.xs">
+            <button type="button" class="btn bb-btn-secondary bb-search-btn-dismiss" ng-click="$ctrl.toggleSearchInput()">
+                <i class="fa fa-chevron-circle-left fa-lg">
+                </i>
             </button>
-        </span>
+        </div>
     </div>
+
+    
 </div>
