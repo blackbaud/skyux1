@@ -64,6 +64,30 @@
     }
 }
 
+.bb-modal-fullscreen {
+    opacity: 0;
+    transition: opacity $bb-transition-time-short;
+
+    &.in {
+        opacity: 1;
+    }
+
+    .modal-dialog {
+        margin: 0;
+        width: 100%;
+    }
+}
+
+.bb-modal-fullscreen-backdrop {
+    background-color: #fff;
+    opacity: 0;
+    transition: none;
+    
+    &.ng-leave {
+        opacity: 0;
+    }
+}
+
 .bb-modal-open-mobile {
     height: 100%;
     overflow: hidden;

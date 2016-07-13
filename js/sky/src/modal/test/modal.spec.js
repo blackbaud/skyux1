@@ -199,6 +199,67 @@ describe('Modal', function () {
             // Ensure the window resize listener is removed when the modal is closed.
             expect(getResizeListenerCount()).toBe(resizeListenerCount);
         });
+
+        it('should be displayed full-page when that option is specified', function () {
+            var modalInstance;
+
+            modalInstance = bbModal.open({
+                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+            }, true);
+
+            $rootScope.$digest();
+
+            $(window).resize();
+            $timeout.flush();
+
+            expect($('.modal-content').outerHeight()).toBe($(window).height());
+            expect($('.modal-content').outerWidth()).toBe($(window).width());
+
+            closeModalInstance(modalInstance);
+        });
+
+        it('should add a class to the body element when a full-page modal is opened', function () {
+            var bodyEl = $(document.body),
+                modalInstance;
+
+            modalInstance = bbModal.open({
+                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+            }, true);
+
+            $rootScope.$digest();
+
+            expect(bodyEl).toHaveClass('bb-modal-open-fullscreen');
+
+            closeModalInstance(modalInstance);
+
+            expect(bodyEl).not.toHaveClass('bb-modal-open-fullscreen');
+        });
+
+        it('should remove the full-page modal class from the body when the last full-page modal is closed', function () {
+            var bodyEl = $(document.body),
+                modalInstance1,
+                modalInstance2;
+
+            modalInstance1 = bbModal.open({
+                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+            }, true);
+
+            modalInstance2 = bbModal.open({
+                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+            }, true);
+
+            $rootScope.$digest();
+
+            expect(bodyEl).toHaveClass('bb-modal-open-fullscreen');
+
+            closeModalInstance(modalInstance2);
+
+            expect(bodyEl).toHaveClass('bb-modal-open-fullscreen');
+
+            closeModalInstance(modalInstance1);
+
+            expect(bodyEl).not.toHaveClass('bb-modal-open-fullscreen');
+        });
     });
 
     describe('body directive', function () {
@@ -535,14 +596,15 @@ describe('Modal service', function () {
 
         $rootScope.$digest();
 
-        expect(openSpy).toHaveBeenCalledWith({
+        expect(openSpy).toHaveBeenCalledWith(jasmine.objectContaining({
             template: 'a',
-            backdrop: 'static',
-            windowClass: 'bb-modal'
-        });
+            backdrop: 'static'
+        }));
+
+        // The second-half of the windowClass value varies for each modal, so just check
+        // that at least the bb-modal class is present.
+        expect(openSpy.calls.argsFor(0)[0].windowClass.indexOf('bb-modal ')).toBe(0);
     });
-
-
 
     describe('on mobile browsers', function () {
         it('should be styled differently to avoid some quirks with fixed position elements', function () {

@@ -4,11 +4,11 @@
 
     function ModalTestController(bbModal) {
         var self = this;
-        self.open = function () {
+        self.open = function (fullscreen) {
             bbModal.open({
                 controller: 'ModalContentController as contentCtrl',
                 templateUrl: 'demo/modal/modalform.html'
-            });
+            }, fullscreen);
         };
     }
 

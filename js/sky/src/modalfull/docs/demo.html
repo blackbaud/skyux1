@@ -1,0 +1,35 @@
+<div ng-controller="ModalFullTestController as modalCtrl">
+    
+</div>
+
+<script type="text/ng-template" id="demo/modal/modalformfull.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header bb-modal-help-key="'bb-security-users.html'">
+                Modal header
+            </bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <div class="form-group">
+                        <label class="control-label">{{::contentCtrl.textLabel}}</label>
+                        <input type="text" class="form-control" autofocus />
+                    </div>
+                    <div class="form-group">
+                        This example represents how a full-page form would be displayed on its
+                        own page.  Because it resides on its own page it can be opened directly
+                        via a URL just like any other page in your application.  To see how this
+                        works, click the "Show example code" button in the form's footer.
+                    </div>
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary ng-click="contentCtrl.save()">
+                </bb-modal-footer-button-primary>
+                <bb-modal-footer-button ng-click="contentCtrl.showCode()">
+                    Show example code
+                </bb-modal-footer-button>
+                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
