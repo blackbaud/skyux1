@@ -5,7 +5,7 @@
     /**
     * bbPhoneField directive controller for bb-phone-field
     */
-    function bbPhoneField(bbPhoneFieldConfig) {
+    function bbPhoneField(bbPhoneFieldConfig, $timeout) {
         function link($scope, el, attrs, ctrls) {
             // ** variables **
             var input = el,
@@ -24,7 +24,7 @@
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
-                    if (phoneField.props.countryIso2 === selectedCountryData.iso2) {
+                    if (selectedCountryData.iso2 && phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
@@ -34,30 +34,26 @@
                 return formattedNumber;
             }
 
-            // ** intl-tel-input initilization **
-            // initialize the intl-tel-input plugin.
-            // nationalMode is true by default, which we want for easy formatting purposes.
-            input.intlTelInput();
-            // when the country changes, update the scope's bbPhoneFieldConfig property
-            input.on('countrychange', function (e, countryData) {
-                ngModel.$setViewValue(getFormattedNumber());
-                $scope.$apply(function () {
-                        phoneField.props.selectedCountry = countryData;
-                    });
-            });
-
             // ** ng-model settings **
             // anytime ng-model is updated, its final value should be the formatted phone number
             ngModel.$parsers.unshift(function () {
                 return getFormattedNumber();
             });
             ngModel.$formatters.unshift(function (value) {
-                input.val(value);
-                return getFormattedNumber();
+                var formattedNumber;
+                if (value) {
+                    input.intlTelInput('setNumber', value);
+                    if (input.intlTelInput('isValidNumber')) {
+                        formattedNumber = getFormattedNumber();
+                        ngModel.$setViewValue(formattedNumber);
+                        input.val(formattedNumber);
+                    }
+                }
+                return formattedNumber;
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
-                return modelValue && input.intlTelInput('isValidNumber');
+                return ngModel.$pristine || (modelValue && input.intlTelInput('isValidNumber'));
             };
 
             // ** bbPhoneFieldConfig properties **
@@ -65,7 +61,22 @@
             if (!phoneField.props.countryIso2) {
                 phoneField.props.countryIso2 = bbPhoneFieldConfig.countryIso2;
             }
+
+            // ** intl-tel-input initilization **
+            // initialize the intl-tel-input plugin.
+            // nationalMode is true by default, which we want for easy formatting purposes.
+            // preferredCountries (the countries shown at the top of the dropdown) should match the scope's default country
+            input.intlTelInput({preferredCountries: [phoneField.props.countryIso2]});
+            // when the country changes, update the scope's bbPhoneFieldConfig property
+            input.on('countrychange', function (e, countryData) {
+                ngModel.$setViewValue(getFormattedNumber());
+                $timeout(function () {
+                        phoneField.props.selectedCountry = countryData;
+                    });
+            });
+            // set the input's selected country to the scope country
             input.intlTelInput('setCountry', phoneField.props.countryIso2);
+            // set the scope's selected country data to the input's selected country data
             phoneField.props.selectedCountry = input.intlTelInput('getSelectedCountryData');
 
             // ** ARIA (Accessibility Rich Internet Applications) **
@@ -89,7 +100,7 @@
         };
     }
 
-    bbPhoneField.$inject = ['bbPhoneFieldConfig'];
+    bbPhoneField.$inject = ['bbPhoneFieldConfig', '$timeout'];
 
     angular.module('sky.phonefield.directive', ['sky.phonefield.config'])
         .directive('bbPhoneField', bbPhoneField);

@@ -12,7 +12,8 @@ describe('Phone field directive', function () {
         internationalCountryData,
         setNumber,
         setCountry,
-        bbPhoneFieldConfig;
+        bbPhoneFieldConfig,
+        $timeout;
 
     directiveElements =
     {
@@ -28,11 +29,8 @@ describe('Phone field directive', function () {
         selected_flag: function (el) {
             return el.find('.selected-flag');
         },
-        dropdown: function (el) {
-            return el.find('.country-list');
-        },
-        dropdownItems: function (el) {
-            return el.find('.country');
+        preferred_country: function (el) {
+            return el.find('.preferred');
         }
     };
 
@@ -72,10 +70,11 @@ describe('Phone field directive', function () {
     beforeEach(module('ngMock'));
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.phonefield'));
-    beforeEach(inject(function (_$compile_, _$rootScope_, _bbPhoneFieldConfig_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _bbPhoneFieldConfig_, _$timeout_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         bbPhoneFieldConfig = _bbPhoneFieldConfig_;
+        $timeout = _$timeout_;
     }));
 
     it('should implement the intl-tel-input jQuery plugin and provide an intl-tel-input div container, input, and flag contianer.', function () {
@@ -98,7 +97,7 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
-    it('should set the selected country / flag based on bb-phone-number-local-country.', function () {
+    it('should set the selected country / flag based on phoneFieldConfig countryIso2.', function () {
         // ** arrange **
         var el,
             $scope = $rootScope.$new(),
@@ -136,6 +135,7 @@ describe('Phone field directive', function () {
 
         // ** act **
         setCountry(el, internationalCountryData.iso2);
+        $timeout.flush();
 
         // ** assert **
         expect($scope.phoneFieldConfig.selectedCountry.name).toBe(internationalCountryData.name);
@@ -231,6 +231,27 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
+    it('should not set the validation of the ng-model to false if the ng-model is not "dirty".', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+                countryIso2: nationalCountryData.iso2
+            };
+
+        // ** act **
+        $scope.phoneNumber = 'invalid_number';
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** assert **
+        expect($scope.form.$valid).toBeTruthy();
+
+        // ** clean up **
+        el.remove();
+    });
+
     it('should set the value provided to ng-model to a nationally formatted number when the input text is changed manually.', function () {
         // ** arrange **
         var el,
@@ -288,6 +309,71 @@ describe('Phone field directive', function () {
 
         // ** assert **
         expect($scope.phoneFieldConfig.countryIso2).toBe(bbPhoneFieldConfig.countryIso2);
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should set the preferred country / flag in the dropdown based on phoneFieldConfig countryIso2.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: internationalCountryData.iso2
+        };
+
+        // ** act ***
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+        directiveElements.selected_flag(el).click();
+
+        // ** assert **
+        expect(directiveElements.preferred_country(el).attr('data-country-code')).toBe(internationalCountryData.iso2);
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should set input text and selected country based on the ng-model if the ng-model has a value when initialized.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+
+        // ** act ***
+        $scope.phoneNumber = internationalCountryData.formattedTestNumber;
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+        $timeout.flush();
+
+        // ** assert **
+        expect(directiveElements.selected_flag(el).attr('title')).toBe(internationalCountryData.name + ': +' + internationalCountryData.dialCode);
+        expect(directiveElements.input(el).val()).toBe(internationalCountryData.formattedTestNumber);
+
+        // ** clean up **
+        el.remove();
+    });
+
+    it('should format the ng-model value if it is not formatted but is a valid phone number upon its intial load.', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+
+        // ** act ***
+        $scope.phoneNumber = nationalCountryData.unformattedTestNumber;
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** assert **
+        expect($scope.phoneNumber).toBe(nationalCountryData.formattedTestNumber);
 
         // ** clean up **
         el.remove();
