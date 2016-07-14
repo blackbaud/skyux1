@@ -11,7 +11,8 @@ describe('palette', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'palette',
-                selector: '#screenshot-palette'
+                selector: '#screenshot-palette',
+                checkAccessibility: true
             })
             .call(done);
     });
