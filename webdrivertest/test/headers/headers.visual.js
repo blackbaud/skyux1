@@ -11,7 +11,8 @@ describe('headers', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'header',
-                selector: '#screenshot-headers'
+                selector: '#screenshot-headers',
+                checkAccessibility: true
             })
             .call(done);
     });
