@@ -358,25 +358,4 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
-    it('should format the ng-model value if it is not formatted but is a valid phone number upon its intial load.', function () {
-        // ** arrange **
-        var el,
-            $scope = $rootScope.$new();
-        $scope.phoneFieldConfig = {
-            countryIso2: nationalCountryData.iso2
-        };
-
-        // ** act ***
-        $scope.phoneNumber = nationalCountryData.unformattedTestNumber;
-        el = compileDirective($scope);
-        el.appendTo(document.body);
-        $scope.$digest();
-
-        // ** assert **
-        expect($scope.phoneNumber).toBe(nationalCountryData.formattedTestNumber);
-
-        // ** clean up **
-        el.remove();
-    });
-
 });
