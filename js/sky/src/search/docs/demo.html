@@ -1,0 +1,16 @@
+<div ng-controller="SearchTestController as searchCtrl">
+    <div>
+        <div style="display: inline-block; margin-bottom: 0; vertical-align: middle;" ng-show="!searchCtrl.dismissableSearchShown">
+            <button type="button" class="btn bb-btn-secondary">My button</button>    
+        </div>
+        <div style="display: inline-block; margin-bottom: 0; vertical-align: middle;">
+             <bb-search-input
+                bb-search-text="searchCtrl.searchText"
+                bb-on-search="searchCtrl.applySearchText(searchText)"
+                bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)">
+            </bb-search-input>
+        </div>    
+    </div>
+    
+   
+</div>

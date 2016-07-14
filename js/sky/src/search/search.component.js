@@ -9,6 +9,8 @@
 
             //select input
             var searchEl = $element.find('.bb-search-input');
+
+            ctrl.showClear = searchText && searchText !== '';
             
             /*istanbul ignore else */
             /* sanity check */
@@ -19,6 +21,25 @@
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
             
+        }
+
+        function clearSearchText() {
+            var inputEl = $element.find('input');
+
+            ctrl.bbSearchText = '';
+            if (!ctrl.currentBreakpoint.xs || inputEl.is(':focus')) {
+                inputEl.focus();
+            }
+            
+            ctrl.showClear = false;
+            ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
+            
+        }
+
+        function inputChanged() {
+            if (!ctrl.bbSearchText || ctrl.bbSearchText === '') {
+                ctrl.showClear = false;
+            }
         }
 
         function mediaBreakpointCallback(breakpoint) {
@@ -45,15 +66,38 @@
             }
         }
 
+        // Trigger highlight if bbListbuilderSearchText binding changes from parent.
+        function bindingChanges(changesObj) {
+            var searchText;
+            if (changesObj.bbSearchText) {
+                searchText = changesObj.bbSearchText;
+                /* istanbul ignore else */
+                /* sanity check */
+                if (searchText.currentValue !== searchText.previousValue) {
+                    ctrl.showClear = true;
+                }
+            }
+        }
+
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
         }
 
+        function initSearch() {
+            if (ctrl.bbSearchText) {
+                ctrl.showClear = true;
+            }
+        }
+
         bbMediaBreakpoints.register(mediaBreakpointCallback);
 
+        ctrl.$onInit = initSearch;
+        ctrl.$onChanges = bindingChanges;
         ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
+        ctrl.clearSearchText = clearSearchText;
+        ctrl.inputChanged = inputChanged;
         ctrl.toggleSearchInput = toggleSearchInput;
     }
 

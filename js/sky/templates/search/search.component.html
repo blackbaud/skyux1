@@ -14,17 +14,27 @@
                 <input 
                     type="text" 
                     class="form-control bb-search-input"
-                    ng-model="$ctrl.bbSearchText" 
+                    ng-model="$ctrl.bbSearchText"
+                    ng-change="$ctrl.inputChanged()" 
                     ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
                     data-bbauto-field="SearchBox"
                     aria-label="{{::'search_label' | bbResources}}" />
                 <span class="input-group-btn">
-                    <button 
+                    <button
+                        ng-show="!$ctrl.showClear" 
                         type="button"
-                        class="btn bb-search-btn-apply"
+                        class="btn bb-search-btn-input-group"
                         ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
                         aria-label="{{::'search_label' | bbResources}}" >
                         <i class="fa fa-search fa-lg"></i>
+                    </button>
+                    <button
+                        ng-show="$ctrl.showClear" 
+                        type="button"
+                        class="btn bb-search-btn-input-group"
+                        ng-click="$ctrl.clearSearchText()"
+                        aria-label="{{::'search_clear' | bbResources}}" >
+                        <i class="fa fa-times fa-lg"></i>
                     </button>
                 </span>
             </div>
