@@ -12,7 +12,8 @@ describe('tabs', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'tabs',
-                selector: '#screenshot-tabs'
+                selector: '#screenshot-tabs',
+                checkAccessibility: true
             })
             .call(done);
     });
