@@ -12,7 +12,8 @@ describe('selectfield', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'selectfield_multiple',
-                selector: '#screenshot-selectfield-multiple'
+                selector: '#screenshot-selectfield-multiple',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -25,7 +26,8 @@ describe('selectfield', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'selectfield_single',
-                selector: '#screenshot-selectfield-single'
+                selector: '#screenshot-selectfield-single',
+                checkAccessibility: true
             })
             .call(done);
     });
