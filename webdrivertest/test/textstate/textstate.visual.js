@@ -12,7 +12,8 @@ describe('textstate', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'textstate',
-                selector: '#screenshot-textstate'
+                selector: '#screenshot-textstate',
+                checkAccessibility: true
             })
             .call(done);
     });
