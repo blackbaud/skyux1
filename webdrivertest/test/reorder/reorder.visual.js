@@ -12,7 +12,8 @@ describe('Reorder', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'reorder_default',
-                selector: '#screenshot-reorder'
+                selector: '#screenshot-reorder',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -28,7 +29,8 @@ describe('Reorder', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'reorder_sorting',
-                selector: '#screenshot-reorder'
+                selector: '#screenshot-reorder',
+                checkAccessibility: true
             })
             .buttonUp()
             .call(done);
