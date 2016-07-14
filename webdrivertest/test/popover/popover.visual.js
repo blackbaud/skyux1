@@ -12,7 +12,8 @@ describe('popover', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'popover_title',
-                selector: '#screenshot-popover-title'
+                selector: '#screenshot-popover-title',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -26,7 +27,8 @@ describe('popover', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'popover_no_title',
-                selector: '#screenshot-popover-no-title'
+                selector: '#screenshot-popover-no-title',
+                checkAccessibility: true
             })
             .call(done);
 
@@ -41,7 +43,8 @@ describe('popover', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'popover_top',
-                selector: '#screenshot-popover-top'
+                selector: '#screenshot-popover-top',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -55,7 +58,8 @@ describe('popover', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'popover_bottom',
-                selector: '#screenshot-popover-bottom'
+                selector: '#screenshot-popover-bottom',
+                checkAccessibility: true
             })
             .call(done);
 
@@ -70,7 +74,8 @@ describe('popover', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'popover_left',
-                selector: '#screenshot-popover-left'
+                selector: '#screenshot-popover-left',
+                checkAccessibility: true
             })
             .call(done);
 
@@ -85,7 +90,8 @@ describe('popover', function () {
             .compareScreenshot({
                 prefix: common.getPrefix(browser),
                 screenshotName: 'popover_right',
-                selector: '#screenshot-popover-right'
+                selector: '#screenshot-popover-right',
+                checkAccessibility: true
             })
             .call(done);
     });
