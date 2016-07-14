@@ -14,8 +14,7 @@ describe('datepicker', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_closed',
             selector: '#screenshot-datepickers',
-            done: done,
-            checkAccessibility: true
+            done: done
         });
 
     });
@@ -33,8 +32,7 @@ describe('datepicker', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_open',
             selector: '#screenshot-datepicker',
-            done: done,
-            checkAccessibility: true
+            done: done
         });
 
     });
@@ -52,8 +50,7 @@ describe('datepicker', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'datepicker_open_append',
             selector: '#screenshot-datepicker-append-to-body',
-            done: done,
-            checkAccessibility: true
+            done: done
         });
     });
 
