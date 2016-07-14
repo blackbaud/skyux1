@@ -10,7 +10,8 @@ describe('wait', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'wait',
-                selector: '#screenshot-wait'
+                selector: '#screenshot-wait',
+                checkAccessibility: true
             })
             .call(done);
     });
