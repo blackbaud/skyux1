@@ -27,10 +27,9 @@
             var inputEl = $element.find('input');
 
             ctrl.bbSearchText = '';
-            if (!ctrl.currentBreakpoint.xs || inputEl.is(':focus')) {
-                inputEl.focus();
-            }
             
+            inputEl.focus();
+
             ctrl.showClear = false;
             ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
             
@@ -75,6 +74,10 @@
                 /* sanity check */
                 if (searchText.currentValue !== searchText.previousValue) {
                     ctrl.showClear = true;
+                    ctrl.searchInputVisible = true;
+                    if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
+                        ctrl.bbOnSearchInputToggled({isVisible: ctrl.searchInputVisible});
+                    }
                 }
             }
         }
@@ -86,6 +89,10 @@
         function initSearch() {
             if (ctrl.bbSearchText) {
                 ctrl.showClear = true;
+                ctrl.searchInputVisible = true;
+                if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
+                    ctrl.bbOnSearchInputToggled({isVisible: ctrl.searchInputVisible});
+                }
             }
         }
 
