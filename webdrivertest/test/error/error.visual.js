@@ -16,7 +16,8 @@ describe('error', function () {
             prefix: common.getPrefix(browser),
             screenshotName: 'error',
             selector: '#screenshot-error',
-            done: done
+            done: done,
+            checkAccessibility: true
         });
     });
 
@@ -34,7 +35,8 @@ describe('error', function () {
                 prefix: common.getPrefix(browser),
                 screenshotName: 'error_broken',
                 selector: '#screenshot-error-type',
-                done: done
+                done: done,
+                checkAccessibility: true
             });
         });
 
@@ -50,7 +52,8 @@ describe('error', function () {
                 prefix: common.getPrefix(browser),
                 screenshotName: 'error_construction',
                 selector: '#screenshot-error-type',
-                done: done
+                done: done,
+                checkAccessibility: true
             });
         });
 
@@ -66,7 +69,8 @@ describe('error', function () {
                 prefix: common.getPrefix(browser),
                 screenshotName: 'error_notfound',
                 selector: '#screenshot-error-type',
-                done: done
+                done: done,
+                checkAccessibility: true
             });
         });
 
@@ -84,7 +88,8 @@ describe('error', function () {
                 prefix: common.getPrefix(browser),
                 screenshotName: 'error_modal',
                 selector: '.modal-dialog',
-                done: done
+                done: done,
+                checkAccessibility: true
             });
         });
     });
