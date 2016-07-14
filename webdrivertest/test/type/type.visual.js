@@ -8,7 +8,8 @@ describe('type', function () {
             .setupTest('/type/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'type',
-                selector: '#screenshot-type .bb-text-block'
+                selector: '#screenshot-type .bb-text-block',
+                checkAccessibility: true
             })
             .call(done);
     });
