@@ -9,7 +9,8 @@ describe('selectfield', function () {
             .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'selectfield_multiple',
-                selector: '#screenshot-selectfield-multiple'
+                selector: '#screenshot-selectfield-multiple',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -19,7 +20,8 @@ describe('selectfield', function () {
             .setupTest('/selectfield/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'selectfield_single',
-                selector: '#screenshot-selectfield-single'
+                selector: '#screenshot-selectfield-single',
+                checkAccessibility: true
             })
             .call(done);
     });

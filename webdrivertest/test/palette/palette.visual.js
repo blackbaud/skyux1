@@ -8,7 +8,8 @@ describe('palette', function () {
             .setupTest('/palette/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'palette',
-                selector: '#screenshot-palette'
+                selector: '#screenshot-palette',
+                checkAccessibility: true
             })
             .call(done);
     });

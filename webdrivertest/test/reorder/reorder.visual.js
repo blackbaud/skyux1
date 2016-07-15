@@ -9,7 +9,8 @@ describe('Reorder', function () {
             .setupTest('/reorder/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'reorder_default',
-                selector: '#screenshot-reorder'
+                selector: '#screenshot-reorder',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -22,7 +23,8 @@ describe('Reorder', function () {
             .moveToObject('#screenshot-reorder .bb-reorder-list-row:nth-child(2)', 0, -35)
             .compareScreenshot({
                 screenshotName: 'reorder_sorting',
-                selector: '#screenshot-reorder'
+                selector: '#screenshot-reorder',
+                checkAccessibility: true
             })
             .buttonUp()
             .call(done);
