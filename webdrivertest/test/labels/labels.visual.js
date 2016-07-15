@@ -8,7 +8,8 @@ describe('labels', function () {
             .setupTest('/labels/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'labels',
-                selector: '#screenshot-labels'
+                selector: '#screenshot-labels',
+                checkAccessibility: true
             })
             .call(done);
     });
