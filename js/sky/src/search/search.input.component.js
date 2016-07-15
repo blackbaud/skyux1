@@ -6,7 +6,6 @@
         var ctrl = this;
         
         function applySearchText(searchText) {
-
             //select input
             var searchEl = $element.find('.bb-search-input');
 
@@ -43,8 +42,8 @@
 
         function mediaBreakpointCallback(breakpoint) {
 
-            // Search input should be hidden if screen is xs and previous breakpoint was not xs
-            if (breakpoint.xs && (!ctrl.currentBreakpoint || ctrl.currentBreakpoint !== breakpoint.xs)) {
+            // Search input should be hidden if screen is xs
+            if (breakpoint.xs) {
                 ctrl.searchInputVisible = false;
             } else {
                 ctrl.searchInputVisible = true;
@@ -52,6 +51,7 @@
 
 
             if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
+                //Dismissable search input is not visible on screen change.
                 ctrl.bbOnSearchInputToggled({isVisible: false});
             }
             
@@ -65,35 +65,37 @@
             }
         }
 
+        function searchTextBindingChanged() {
+            ctrl.showClear = true;
+            ctrl.searchInputVisible = true;
+            if (angular.isFunction(ctrl.bbOnSearchInputToggled) && ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
+                ctrl.bbOnSearchInputToggled({isVisible: true});
+            }
+        }
+
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
         function bindingChanges(changesObj) {
             var searchText;
+            /* istanbul ignore else */
+            /* sanity check */
             if (changesObj.bbSearchText) {
                 searchText = changesObj.bbSearchText;
                 /* istanbul ignore else */
                 /* sanity check */
                 if (searchText.currentValue !== searchText.previousValue) {
-                    ctrl.showClear = true;
-                    ctrl.searchInputVisible = true;
-                    if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
-                        ctrl.bbOnSearchInputToggled({isVisible: ctrl.searchInputVisible});
-                    }
+                    searchTextBindingChanged();
                 }
+            }
+        }
+
+        function initSearch() {
+            if (ctrl.bbSearchText) {
+                searchTextBindingChanged();
             }
         }
 
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
-        }
-
-        function initSearch() {
-            if (ctrl.bbSearchText) {
-                ctrl.showClear = true;
-                ctrl.searchInputVisible = true;
-                if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
-                    ctrl.bbOnSearchInputToggled({isVisible: ctrl.searchInputVisible});
-                }
-            }
         }
 
         bbMediaBreakpoints.register(mediaBreakpointCallback);
@@ -110,9 +112,9 @@
 
     Controller.$inject = ['$element', 'bbMediaBreakpoints'];
 
-    angular.module('sky.search.component', ['sky.resources'])
+    angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
-            templateUrl: 'sky/templates/search/search.component.html',
+            templateUrl: 'sky/templates/search/search.input.component.html',
             controller: Controller,
             bindings: {
                 bbOnSearch: '&?',

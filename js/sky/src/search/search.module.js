@@ -5,6 +5,6 @@
 
     angular.module('sky.search', 
         [
-            'sky.search.component'
+            'sky.search.input.component'
         ]);
 }());

@@ -56,11 +56,11 @@
             }));
 
             function findSearchInput(el) {
-                return el.find('.bb-listbuilder-search-input');
+                return el.find('.bb-search-input');
             }
 
             function findSearchButton(el) {
-                return el.find('.bb-listbuilder-search-button button');
+                return el.find('.bb-search-btn-apply');
             }
 
             function initListbuilderTest(customHtml) {
@@ -124,7 +124,7 @@
                 expect(inputEl).toHaveValue(val);
             }
 
-            it('selects the input, calls the search callback, and resolves highlight promise on input enter', function () {
+            it('calls the search callback, and resolves highlight promise on input enter', function () {
                 var el;
 
                 $scope.listCtrl = listCtrl;

@@ -161,11 +161,11 @@
 
 
             function findSearchInput(el) {
-                return el.find('.bb-listbuilder-search-input');
+                return el.find('.bb-search-input');
             }
 
             function findSearchButton(el) {
-                return el.find('.bb-listbuilder-search-button button');
+                return el.find('.bb-search-btn-apply');
             }
 
             function changeInput(el, val) {
