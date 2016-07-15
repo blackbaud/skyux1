@@ -8,7 +8,8 @@ describe('modals', function () {
             .setupTest('/modal/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'modal',
-                selector: '#screenshot-modal'
+                selector: '#screenshot-modal',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -21,7 +22,8 @@ describe('modals', function () {
             .click('.bb-context-menu-btn')
             .compareScreenshot({
                 screenshotName: 'modal_dropdown',
-                selector: '.modal-content'
+                selector: '.modal-content',
+                checkAccessibility: true
             })
             .click('.bb-modal .modal-dialog .close')
             .call(done);

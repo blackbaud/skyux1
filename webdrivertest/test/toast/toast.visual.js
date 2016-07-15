@@ -10,7 +10,8 @@ describe('toast', function () {
             .waitForVisible('#toast-container')
             .compareScreenshot({
                 screenshotName: 'toast',
-                selector: '#toast-container'
+                selector: '#toast-container',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -22,7 +23,8 @@ describe('toast', function () {
             .waitForVisible('#toast-container')
             .compareScreenshot({
                 screenshotName: 'toast_info',
-                selector: '#toast-container'
+                selector: '#toast-container',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -34,7 +36,8 @@ describe('toast', function () {
             .waitForVisible('#toast-container')
             .compareScreenshot({
                 screenshotName: 'toast_success',
-                selector: '#toast-container'
+                selector: '#toast-container',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -46,7 +49,8 @@ describe('toast', function () {
             .waitForVisible('#toast-container')
             .compareScreenshot({
                 screenshotName: 'toast_warning',
-                selector: '#toast-container'
+                selector: '#toast-container',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -58,7 +62,8 @@ describe('toast', function () {
             .waitForVisible('#toast-container')
             .compareScreenshot({
                 screenshotName: 'toast_danger',
-                selector: '#toast-container'
+                selector: '#toast-container',
+                checkAccessibility: true
             })
             .call(done);
     });

@@ -9,7 +9,8 @@ describe('highlight', function () {
             .setupTest('/highlight/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'highlight',
-                selector: '#screenshot-highlight'
+                selector: '#screenshot-highlight',
+                checkAccessibility: true
             })
             .call(done);
     });
