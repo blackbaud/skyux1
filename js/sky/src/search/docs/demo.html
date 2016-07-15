@@ -1,0 +1,33 @@
+<style type="text/css">
+    .bb-search-docs-inline {
+        display: inline-block;
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
+</style>
+<div ng-controller="SearchTestController as searchCtrl">
+    <div>
+        <div class="bb-search-docs-inline" ng-show="!searchCtrl.dismissableSearchShown">
+            <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Set search text</button>    
+        </div>
+        <div class="bb-search-docs-inline">
+             <bb-search-input
+                bb-search-text="searchCtrl.searchText"
+                bb-on-search="searchCtrl.applySearchText(searchText)"
+                bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)">
+            </bb-search-input>
+        </div>    
+    </div>
+    <bb-repeater bb-repeater-expand-mode="none">
+        <bb-repeater-item ng-repeat="item in searchCtrl.items">
+          <bb-repeater-item-title>
+              {{item.title}}
+          </bb-repeater-item-title>
+          <bb-repeater-item-content>
+            <div>
+              {{item.note}}
+            </div>
+          </bb-repeater-item-content>
+        </bb-repeater-item>
+      </bb-repeater>
+</div>
