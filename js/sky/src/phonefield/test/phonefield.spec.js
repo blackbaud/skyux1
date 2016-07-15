@@ -379,4 +379,26 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
+    it('should show whatever value is in the ng-model in the textbox no matter its validity as a phone number.', function () {
+        //** arrange **
+        var el,
+            $scope = $rootScope.$new(),
+            invalid = 'invalid_number';
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+
+        // ** act ***
+        $scope.phoneNumber = invalid;
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** assert **
+        expect(directiveElements.input(el).val()).toBe(invalid);
+
+        // ** clean up **
+        el.remove();
+    });
+
 });
