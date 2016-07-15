@@ -40,6 +40,7 @@
         'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',
+        'sky.search',
         'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
