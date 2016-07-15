@@ -43,11 +43,11 @@
                 var formattedNumber;
                 if (value) {
                     input.intlTelInput('setNumber', value);
+                    formattedNumber = getFormattedNumber();
                     if (input.intlTelInput('isValidNumber')) {
-                        formattedNumber = getFormattedNumber();
                         ngModel.$setViewValue(formattedNumber);
-                        input.val(formattedNumber);
                     }
+                    input.val(formattedNumber);
                 }
                 return formattedNumber;
             });
