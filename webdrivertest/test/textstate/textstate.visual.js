@@ -8,7 +8,8 @@ describe('textstate', function () {
             .setupTest('/textstate/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'textstate',
-                selector: '#screenshot-textstate'
+                selector: '#screenshot-textstate',
+                checkAccessibility: true
             })
             .call(done);
     });
