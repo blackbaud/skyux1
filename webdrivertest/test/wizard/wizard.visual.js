@@ -11,7 +11,8 @@ describe('wizard', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'wizard',
-                selector: '.modal-content'
+                selector: '.modal-content',
+                checkAccessibility: true
             })
             .call(done);
     });
