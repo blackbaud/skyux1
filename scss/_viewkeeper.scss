@@ -17,12 +17,20 @@ body:not(.bb-viewkeeper-ignore-fixed) {
         .bb-viewkeeper-fixed,
         .viewkeeper-fixed {
             margin-top: $viewkeeper-margin-top;
+            
+            &.bb-viewkeeper-child-scroll {
+                margin-top: 0;
+            }
         }
 
         @media(min-width:$screen-sm-min) {
             .bb-viewkeeper-fixed,
             .viewkeeper-fixed {
                 margin-top: $viewkeeper-margin-top-small;
+            
+                &.bb-viewkeeper-child-scroll {
+                    margin-top: 0;
+                }
             }
         }
     }

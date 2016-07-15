@@ -12,6 +12,14 @@
         },
         ViewKeeper;
 
+    function getReservedMarginTop(vk) {
+        if (vk.scrollableParentIsWindow) {
+            return config.viewportMarginTop;
+        }
+
+        return 0;
+    }
+
     function nextId() {
         nextId.index = nextId.index || 0;
         nextId.index++;
@@ -22,12 +30,20 @@
         return vk.id + "-spacer";
     }
 
-    function setElPosition(elQ, left, top, bottom, width) {
+    function setElPosition(vk, elQ, left, top, bottom, width) {
         elQ.css({
             "top": top,
             "bottom": bottom,
             "left": left
         });
+
+        if (!vk.scrollableParentIsWindow) {
+            if (top === '') {
+                elQ.css('position', 'static');
+            } else {
+                elQ.css('position', 'absolute');
+            }
+        }
 
         /*istanbul ignore else*/
         /* sanity check */
@@ -68,6 +84,7 @@
         }
 
         setElPosition(
+            vk,
             elQ, 
             fixedStyles.elFixedLeft, 
             fixedStyles.elFixedTop, 
@@ -92,7 +109,7 @@
         if (vk.setWidth) {
             width = "auto";
         }
-        setElPosition(elQ, "", "", "", width);
+        setElPosition(vk, elQ, "", "", "", width);
     }
 
     function calculateVerticalOffset(vk) {
@@ -144,8 +161,13 @@
         boundaryTop = boundaryOffset.top;
         boundaryBottom = boundaryTop + boundaryQ.height();
 
-        scrollLeft = documentQ.scrollLeft();
-        scrollTop = documentQ.scrollTop();
+        if (vk.scrollableParentIsWindow) {
+            scrollLeft = documentQ.scrollLeft();
+            scrollTop = documentQ.scrollTop();
+        } else {
+            scrollLeft = vk.scrollableParentEl.scrollLeft();
+            scrollTop = vk.scrollableParentEl.scrollTop();
+        }
 
         elHeight = elQ.outerHeight(true);
 
@@ -161,10 +183,22 @@
         };
     }
 
+    function isScrollingOutOfView(vk, boundaryInfo, anchorTop, verticalOffSet) {
+        var retVal;
+
+        if (vk.scrollableParentIsWindow) {
+            retVal = boundaryInfo.scrollTop + verticalOffSet + getReservedMarginTop(vk) > anchorTop;
+        } else {
+            retVal = vk.scrollableParentEl.offset().top + getReservedMarginTop(vk) + parseInt(vk.scrollableParentEl.css('padding-top'), 10) > anchorTop;
+        }
+
+        return retVal;
+    }
+
     function shouldFixEl(vk, boundaryInfo, verticalOffSet) {
         var anchorHeight,
             anchorTop,
-            doFixEl,
+            fixEl,
             elQ;
 
         elQ = angular.element(vk.el);
@@ -179,12 +213,13 @@
 
         if (vk.fixToBottom) {
             //Fix el if the natural bottom of the element would not be on the screen
-            doFixEl = (anchorTop + anchorHeight > boundaryInfo.scrollTop + window.innerHeight);
+            fixEl = anchorTop + anchorHeight > boundaryInfo.scrollTop + window.innerHeight;
         } else {
-            doFixEl = boundaryInfo.scrollTop + verticalOffSet + config.viewportMarginTop > anchorTop;
+            console.log('scroll top: ' + boundaryInfo.scrollTop + ' anchor top: ' + anchorTop);
+            fixEl = isScrollingOutOfView(vk, boundaryInfo, anchorTop, verticalOffSet);
         }
 
-        return doFixEl;
+        return fixEl;
     }
 
     function getFixedStyles(vk, boundaryInfo, verticalOffSet) {
@@ -200,14 +235,28 @@
             // will be 0 (fully visible) unless the user is scrolling the boundary out of view.  
             // In that case, the element should begin to scroll out of view with the
             // rest of the boundary by setting its top position to a negative value.
-            elFixedTop = Math.min(
-                (boundaryInfo.boundaryBottom - boundaryInfo.elHeight) - boundaryInfo.scrollTop, 
-                verticalOffSet
-            );
+            if (vk.scrollableParentIsWindow) {
+                elFixedTop = Math.min(
+                    (boundaryInfo.boundaryBottom - boundaryInfo.elHeight) - boundaryInfo.scrollTop, 
+                    verticalOffSet
+                );
+            } else {
+                elFixedTop = -angular.element(vk.el).offsetParent().position().top + parseInt(vk.scrollableParentEl.css('padding-top'), 10);
+
+                elFixedTop = Math.min(
+                    elFixedTop, 
+                    elFixedTop + verticalOffSet
+                );
+            }
         }
 
         elFixedWidth = boundaryInfo.boundaryQ.width();
-        elFixedLeft = boundaryInfo.boundaryOffset.left - boundaryInfo.scrollLeft;
+
+        if (vk.scrollableParentIsWindow) {
+            elFixedLeft = boundaryInfo.boundaryOffset.left - boundaryInfo.scrollLeft;
+        } else {
+            elFixedLeft = 0;
+        }
 
         return {
             elFixedBottom: elFixedBottom,
@@ -240,6 +289,34 @@
         return true;
     }
 
+    function getScrollableParentEl(el) {
+        var parentEl = angular.element(el).parent();
+
+        while (parentEl.length > 0 && !parentEl.is('body')) {
+            switch (parentEl.css('overflow-y')) {
+            case 'auto':
+            case 'scroll':
+                return parentEl;
+            }
+
+            parentEl = parentEl.parent();
+        }
+
+        return angular.element(window);
+    }
+
+    function addListeners(vk) {
+        var id = vk.id;
+
+        angular.element(window).on("resize." + id + ", orientationchange." + id, function () {
+            vk.syncElPosition();
+        });
+
+        vk.scrollableParentEl.on("scroll." + id, function () {
+            vk.syncElPosition();
+        });
+    }
+
     ViewKeeper = function (options) {
         var id,
             vk = this;
@@ -255,6 +332,12 @@
         vk.setPlaceholderHeight = (options.setPlaceholderHeight !== false);
         vk.onStateChanged = options.onStateChanged;
         vk.isFixed = false;
+        vk.scrollableParentEl = getScrollableParentEl(options.el);
+        vk.scrollableParentIsWindow = vk.scrollableParentEl.is(window);
+
+        if (!vk.scrollableParentIsWindow) {
+            angular.element(options.el).addClass('bb-viewkeeper-child-scroll');
+        }
 
         if (options.verticalOffSetElId) {
             vk.verticalOffSetEl = angular.element('#' + options.verticalOffSetElId);
@@ -264,9 +347,7 @@
             });
         }
 
-        angular.element(window).on("scroll." + id + ", resize." + id + ", orientationchange." + id, function () {
-            vk.syncElPosition();
-        });
+        addListeners(vk);
     };
 
     ViewKeeper.prototype = {
@@ -335,7 +416,7 @@
                 anchorTop = elQ.offset().top;
             }
 
-            documentQ.scrollTop(anchorTop - verticalOffset - config.viewportMarginTop);
+            documentQ.scrollTop(anchorTop - verticalOffset - getReservedMarginTop(vk));
         },
 
         destroy: function () {
