@@ -8,7 +8,8 @@ describe('headers', function () {
             .setupTest('/headers/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'header',
-                selector: '#screenshot-headers'
+                selector: '#screenshot-headers',
+                checkAccessibility: true
             })
             .call(done);
     });
