@@ -40,10 +40,16 @@
                 return getFormattedNumber();
             });
             ngModel.$formatters.unshift(function (value) {
+                var formattedNumber;
                 if (value) {
                     input.intlTelInput('setNumber', value);
+                    formattedNumber = getFormattedNumber();
+                    if (input.intlTelInput('isValidNumber')) {
+                        ngModel.$setViewValue(formattedNumber);
+                    }
+                    input.val(formattedNumber);
                 }
-                return getFormattedNumber();
+                return formattedNumber;
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
