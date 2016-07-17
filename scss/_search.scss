@@ -1,5 +1,5 @@
 @media (min-width: $screen-sm-min) {
-    .bb-search-container {
+    .bb-search-input-container {
         max-width: 250px;
     }
 }
@@ -14,7 +14,7 @@
     border-top-right-radius: 0;
 }
 
-.bb-search-container.input-group .input-group-btn {
+.bb-search-input-container.input-group .input-group-btn {
     .btn.bb-search-btn-input-group {
         background-color: $bb-color-white;
         border: none;
