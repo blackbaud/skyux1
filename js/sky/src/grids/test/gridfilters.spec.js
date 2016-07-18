@@ -425,7 +425,7 @@ describe('Grid filters', function () {
         it('can hide the close button', function () {
             var closeEl,
                 filterSummaryGridHtml = summaryTemplateFirst +
-                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filter-summary-dismissable="false">' +
+                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filters-summary-dismissable="false">' +
                 summaryTemplateThird;
 
 
@@ -438,7 +438,7 @@ describe('Grid filters', function () {
         it('shows the close button by default', function () {
             var closeEl,
                 filterSummaryGridHtml = summaryTemplateFirst +
-                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filter-summary-dismissable="true">' +
+                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filters-summary-dismissable="true">' +
                 summaryTemplateThird;
 
             el = setUpGrid(filterSummaryGridHtml);

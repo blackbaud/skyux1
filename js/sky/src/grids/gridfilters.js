@@ -131,7 +131,7 @@
             },
             bindToController: {
                 bbOptions: '=',
-                bbGridFilterSummaryDismissable: '=?'
+                bbGridFiltersSummaryDismissable: '=?'
             },
             controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
@@ -147,8 +147,8 @@
                     }
                 };
 
-                if (angular.isUndefined(ctrl.bbGridFilterSummaryDismissable)) {
-                    ctrl.bbGridFilterSummaryDismissable = true;
+                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                    ctrl.bbGridFiltersSummaryDismissable = true;
                 }
 
                 $scope.resources = bbResources;

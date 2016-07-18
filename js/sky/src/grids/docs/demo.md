@@ -23,7 +23,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
     - `bb-grid-filters-summary` &mdash; *(Optional.)* Creates a summary toolbar for applied filters within the `bb-grid` directive.
         - `bb-options` &mdash; Specifies an options object for the `bb-grid-filters-summary` directive.
             - `clearFilters` &mdash; Specifies a function to be called when users click the button to clear filters. You can set `args.filters` to pass updated filters to `bb-grid`.
-        - `bb-grid-filter-summary-dismissable` &mdash; *(Optional.)* Specifies whether the filter summary can be dismissed. *(Default: true)*
+        - `bb-grid-filters-summary-dismissable` &mdash; *(Optional.)* Specifies whether the filter summary can be dismissed. *(Default: true)*
     - `bb-grid-options` &mdash; Specifies an object with the following properties for the `bb-grid` directive.
         - `columns` &mdash; An array of available columns. Each column can have the following properties:
             - `allow_see_more` &mdash; *(Optional.)* Indicates whether to include a link for users to view overflow content. To display the link, set this property to `true`.
