@@ -4648,18 +4648,28 @@
             transclude: true,
             restrict: 'E',
             scope: {
-                bbOptions: "="
             },
+            bindToController: {
+                bbOptions: '=',
+                bbGridFiltersSummaryDismissable: '=?'
+            },
+            controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
+                var ctrl = this;
+
                 $scope.clearFilters = function () {
                     var args = {},
-                        options = $scope.bbOptions;
+                        options = ctrl.bbOptions;
 
                     if (options && options.clearFilters) {
                         options.clearFilters(args);
                         $scope.updateFilters(args.filters);
                     }
                 };
+
+                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                    ctrl.bbGridFiltersSummaryDismissable = true;
+                }
 
                 $scope.resources = bbResources;
 
@@ -12153,9 +12163,20 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <span>{{resources.grid_filters_summary_header}}</span>\n' +
         '    </div>\n' +
         '    <div class="bb-applied-filter-content-container">\n' +
-        '      <div tabindex="0" role="button" class="bb-applied-filter-content" ng-click="openFilterMenu()">\n' +
+        '      <div \n' +
+        '        ng-class="{\'bb-applied-filter-content-no-dismiss\': !gridFilterSummary.bbGridFiltersSummaryDismissable}"\n' +
+        '        tabindex="0" \n' +
+        '        role="button" \n' +
+        '        class="bb-applied-filter-content" \n' +
+        '        ng-click="openFilterMenu()">\n' +
         '          <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
-        '          <span tabindex="0" role="button" class="fa fa-times close" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
+        '          <span \n' +
+        '            tabindex="0" \n' +
+        '            role="button" \n' +
+        '            class="fa fa-times close" \n' +
+        '            data-bbauto-field="FilterSummaryRemove" \n' +
+        '            ng-click="clearFilters(); $event.stopPropagation();">\n' +
+        '        </span>\n' +
         '      </div>\n' +
         '    </div>\n' +
         '\n' +
