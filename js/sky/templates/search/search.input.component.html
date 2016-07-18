@@ -1,7 +1,7 @@
 <div>
     <div ng-show="!$ctrl.searchInputVisible">
         <button type="button" class="btn bb-btn-secondary bb-search-open" title="{{::'search_open' | bbResources}}" ng-click="$ctrl.toggleSearchInput()">
-            <i class="fa fa-search"></i>
+            <i class="fa fa-search fa-lg"></i>
         </button>
     </div>
     <div 
@@ -15,27 +15,28 @@
                     type="text" 
                     class="form-control bb-search-input"
                     ng-model="$ctrl.bbSearchText"
-                    ng-change="$ctrl.inputChanged()" 
                     ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
                     data-bbauto-field="SearchBox"
                     aria-label="{{::'search_label' | bbResources}}" />
                 <span class="input-group-btn">
-                    <button
-                        ng-show="!$ctrl.showClear" 
-                        type="button"
-                        class="btn bb-search-btn-input-group bb-search-btn-apply"
-                        ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
-                        aria-label="{{::'search_label' | bbResources}}" >
-                        <i class="fa fa-search fa-lg"></i>
-                    </button>
                     <button
                         ng-show="$ctrl.showClear" 
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-clear"
                         ng-click="$ctrl.clearSearchText()"
                         aria-label="{{::'search_clear' | bbResources}}" >
-                        <i class="fa fa-times fa-lg"></i>
+                        <i class="fa fa-times"></i>
                     </button>
+
+                    <button
+                        type="button"
+                        tabindex="-1"
+                        class="btn bb-search-btn-input-group bb-search-btn-apply"
+                        ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
+                        aria-label="{{::'search_label' | bbResources}}" >
+                        <i class="fa fa-search fa-lg"></i>
+                    </button>
+                    
                 </span>
             </div>
         </div>

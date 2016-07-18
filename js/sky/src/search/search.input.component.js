@@ -34,12 +34,6 @@
             
         }
 
-        function inputChanged() {
-            if (!ctrl.bbSearchText || ctrl.bbSearchText === '') {
-                ctrl.showClear = false;
-            }
-        }
-
         function mediaBreakpointCallback(breakpoint) {
 
             // Search input should be hidden if screen is xs
@@ -106,7 +100,6 @@
 
         ctrl.applySearchText = applySearchText;
         ctrl.clearSearchText = clearSearchText;
-        ctrl.inputChanged = inputChanged;
         ctrl.toggleSearchInput = toggleSearchInput;
     }
 
