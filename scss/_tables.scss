@@ -114,6 +114,26 @@
                       float: right;
                   }
               }
+              .bb-applied-filter-content.bb-applied-filter-content-no-dismiss {
+                 .bb-applied-filter-text {
+
+                      max-width: 100%;
+                      padding-right: 0;
+
+                      @media (max-width: ($screen-md-max)) {
+                        max-width: 100%;
+                      }
+                      @media (max-width: ($screen-xs-max)) {
+                        max-width: 100%;
+                      }
+                  }
+                 
+                  .close {
+                      display: none;
+                  }
+              }
+
+              
             }
 
         }
