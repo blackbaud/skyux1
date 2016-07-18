@@ -9,7 +9,9 @@
             if ($.trim($element.find('.bb-definition-list-value').text())) {
                 return true;
             }
-            return false;
+            else{
+                return false;
+            }
         };
     }
     
