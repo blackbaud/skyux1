@@ -4,14 +4,13 @@
     </div>
     <div class="bb-applied-filter-content-container">
       <div 
-        ng-class="{gridFilterSummary.bbGridFilterDismissable: 'bb-applied-filter-content-dismissable'}"
+        ng-class="{'bb-applied-filter-content-no-dismiss': !gridFilterSummary.bbGridFilterSummaryDismissable}"
         tabindex="0" 
         role="button" 
         class="bb-applied-filter-content" 
         ng-click="openFilterMenu()">
           <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>
           <span 
-            ng-show="gridFilterSummary.bbGridFilterSummaryDismissable" 
             tabindex="0" 
             role="button" 
             class="fa fa-times close" 
