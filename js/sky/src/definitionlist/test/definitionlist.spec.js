@@ -60,4 +60,19 @@ describe('Definition list component', function () {
         
         expect(el.find('.bb-definition-list-label')).toHaveText(label);
     });
+    
+    it('value should be empty', function () {
+        var el,
+            $scope = $rootScope.$new(),
+            header = 'head',
+            label = 'bar';
+
+        el = $compile('<bb-definition-list><bb-definition-list-heading>' + header + '</bb-definition-list-heading><bb-definition-list-content><bb-definition-list-value></bb-definition-list-value><bb-definition-list-label>' + label + '</bb-definition-list-label></bb-definition-list-content></bb-definition-list>')($scope);
+
+        $scope.$digest();
+
+        
+        expect(el.find('.bb-definition-list-no-value')).toHaveText('None found');
+        expect(el.find('.bb-definition-list-value')).toHaveText('');
+    });
 }); 
