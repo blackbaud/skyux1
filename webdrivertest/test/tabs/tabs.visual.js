@@ -9,7 +9,8 @@ describe('tabs', function () {
             .moveToObject('#screenshot-tab-2')
             .compareScreenshot({
                 screenshotName: 'tabs',
-                selector: '#screenshot-tabs'
+                selector: '#screenshot-tabs',
+                checkAccessibility: true
             })
             .call(done);
     });
