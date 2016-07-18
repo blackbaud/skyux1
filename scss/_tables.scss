@@ -83,7 +83,7 @@
               flex-basis: 95%;
               min-width: 0;
 
-              .bb-applied-filter-content {
+              .bb-applied-filter-content.bb-applied-filter-content-dismissable {
                   background-color: $alert-warning-bg;
                   border: 1px solid $alert-warning-border;
                   border-radius: 4px;
@@ -114,6 +114,13 @@
                       float: right;
                   }
               }
+              .bb-applied-filter-content {
+                  .close {
+                      display: none;
+                  }
+              }
+
+              
             }
 
         }

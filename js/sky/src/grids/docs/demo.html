@@ -20,7 +20,14 @@
     <h3>Grid with vertical loading</h3>
 
     <div ng-controller="GridTestController as gridCtrl">
-      <button class="btn btn-primary" style="margin-bottom: 10px;" ng-click="gridCtrl.setSelections()">Set drum selection</button>
+      <button type="button" class="btn btn-primary" style="margin-bottom: 10px;" ng-click="gridCtrl.setSelections()">Set drum selection</button>
+      <button 
+        class="btn  bb-btn-secondary" 
+        style="margin-bottom: 10px;" 
+        ng-click="gridCtrl.isDismissable = !gridCtrl.isDismissable" 
+        type="button">
+        Toggle dismissable
+    </button>
 
       <div style="margin-top: 10px; margin-bottom: 10px;">
           <button ng-click="gridCtrl.gridOptions.loading = true;">Begin loading</button>
@@ -28,7 +35,11 @@
       </div>
 
       <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-multiselect-actions="gridCtrl.gridActions" bb-selections-updated="gridCtrl.updateActions(selections)" bb-selected-rows="gridCtrl.selectedRows" bb-grid-custom-toolbar>
-          <bb-grid-filters-summary ng-show="gridCtrl.appliedFilters.instruments.length > 0" bb-options="gridCtrl.filterOptions">
+          <bb-grid-filters-summary 
+            ng-show="gridCtrl.appliedFilters.instruments.length > 0" 
+            bb-options="gridCtrl.filterOptions"
+            bb-grid-filter-summary-dismissable="gridCtrl.isDismissable"
+            >
               <span ng-repeat="item in gridCtrl.appliedFilters.instruments">{{item.name}}<span ng-if="!$last">, </span></span>
           </bb-grid-filters-summary>
           <bb-grid-filters bb-options="gridCtrl.filterOptions">
