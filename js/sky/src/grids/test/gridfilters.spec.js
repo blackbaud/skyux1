@@ -13,6 +13,16 @@ describe('Grid filters', function () {
         filterGridHtml,
         fxOff,
         locals,
+        summaryTemplateFirst = '<div><bb-grid bb-grid-options="locals.gridOptions">',
+        summaryTemplateSecond = '<bb-grid-filters-summary bb-options="locals.filterOptions">',
+        summaryTemplateThird = '<span>Applied Filter</span>' +
+                '</bb-grid-filters-summary>' +
+                '<bb-grid-filters bb-options="locals.filterOptions">' +
+                '<bb-grid-filters-group bb-grid-filters-group-label="\'Filter group\'">' +
+                '<label>Some content</label>' +
+                '</bb-grid-filters-group>' +
+                '</bb-grid-filters>' +
+                '</bb-grid></div>',
         $scope;
 
     function setUpGrid(gridHtml, setLocals) {
@@ -389,16 +399,9 @@ describe('Grid filters', function () {
             var filterToolBarEl,
                 headerEl,
                 contentEl,
-                filterSummaryGridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions">' +
-                '<bb-grid-filters-summary bb-options="locals.filterOptions">' +
-                '<span>Applied Filter</span>' +
-                '</bb-grid-filters-summary>' +
-                '<bb-grid-filters bb-options="locals.filterOptions">' +
-                '<bb-grid-filters-group bb-grid-filters-group-label="\'Filter group\'">' +
-                '<label>Some content</label>' +
-                '</bb-grid-filters-group>' +
-                '</bb-grid-filters>' +
-                '</bb-grid></div>';
+                filterSummaryGridHtml = summaryTemplateFirst + 
+                    summaryTemplateSecond + 
+                    summaryTemplateThird;
 
             el = setUpGrid(filterSummaryGridHtml);
 
@@ -413,6 +416,35 @@ describe('Grid filters', function () {
 
             expect(contentEl.eq(0)).toHaveText('Applied Filter');
 
+        });
+
+        function findCloseEl(el) {
+            return el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.bb-applied-filter-bar .close');
+        }
+
+        it('can hide the close button', function () {
+            var closeEl,
+                filterSummaryGridHtml = summaryTemplateFirst +
+                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filter-summary-dismissable="false">' +
+                summaryTemplateThird;
+
+
+            el = setUpGrid(filterSummaryGridHtml);
+
+            closeEl = findCloseEl(el);
+            expect(closeEl).not.toBeVisible();
+        });
+
+        it('shows the close button by default', function () {
+            var closeEl,
+                filterSummaryGridHtml = summaryTemplateFirst +
+                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filter-summary-dismissable="true">' +
+                summaryTemplateThird;
+
+            el = setUpGrid(filterSummaryGridHtml);
+
+            closeEl = findCloseEl(el);
+            expect(closeEl).toBeVisible();
         });
 
         it('can clear the filters by clicking on the close icon', function () {
