@@ -7,8 +7,10 @@
         // purposes we'll just manually put the template in the cache.
         $templateCache.put('bbPopoverTemplate/samples/samplepopover.html',
             '<div class="tooltip-container">' +
+                '<label>' +
                 '<div>Select a beverage:</div>' +
                 '<div><select ng-model="popCtrl.selectedItem" ng-options="item as item for item in popCtrl.items"></select></div>' +
+                '</label>' +
                 '<a ng-click="hide()">Close me</a>' +
             '</div>');
     }
