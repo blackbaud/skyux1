@@ -13,10 +13,10 @@
     .run(['$templateCache', function ($templateCache) {
         $templateCache.put('bbPopoverTemplate/samples/samplepopover.html',
                           '<div class="tooltip-container">' + 
-                          '<label>' +
+                          '<div><label>' +
                           '<div>Select a beverage: </div>' + 
                           '<div><select ng-model="popCtrl.selectedItem" ng-options="item as item for item in items"></select></div>' +
-                          '</label>' +
+                          '</label></div>' +
                           '<a ng-click="hide()">Clost me</a>' + 
                           '</div>');
     }])
