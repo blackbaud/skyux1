@@ -2,8 +2,9 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbMediaBreakpoints) {
-        var ctrl = this;
+    function Controller($element, $animate, $timeout, bbMediaBreakpoints) {
+        var ctrl = this,
+            animateEl;
         
         function applySearchText(searchText) {
             //select input
@@ -34,29 +35,55 @@
             
         }
 
+        function toggleCallback(isVisible) {
+            if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
+                ctrl.bbOnSearchInputToggled({isVisible: isVisible});
+            }
+        }
+
         function mediaBreakpointCallback(breakpoint) {
 
             // Search input should be hidden if screen is xs
             if (breakpoint.xs) {
+                ctrl.openButtonShown = true;
                 ctrl.searchInputVisible = false;
             } else {
+                ctrl.openButtonShown = false;
                 ctrl.searchInputVisible = true;
+                
             }
 
-
-            if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
-                //Dismissable search input is not visible on screen change.
-                ctrl.bbOnSearchInputToggled({isVisible: false});
-            }
+            //Dismissable search input is not visible on screen change.
+            toggleCallback(false);
             
             ctrl.currentBreakpoint = breakpoint;
         }
 
-        function toggleSearchInput() {
-            ctrl.searchInputVisible = !ctrl.searchInputVisible;
-            if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
-                ctrl.bbOnSearchInputToggled({isVisible: ctrl.searchInputVisible});
-            }
+        
+
+        function openSearchInput() {
+            toggleCallback(true);
+            ctrl.searchInputVisible = true;
+            $timeout(function () {
+                $animate.removeClass(animateEl, 'bb-search-animate').then(function () {
+                    ctrl.openButtonShown = false;
+                    
+                });
+            });
+           
+
+        }
+
+        function dismissSearchInput() { 
+            ctrl.openButtonShown = true;
+            $timeout(function () {
+                $animate.addClass(animateEl, 'bb-search-animate').then(function () {
+                    ctrl.searchInputVisible = false;
+                    
+                    toggleCallback(false);
+                });
+            });
+            
         }
 
         function searchTextBindingChanged() {
@@ -83,9 +110,14 @@
         }
 
         function initSearch() {
+            
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
+        }
+
+        function postLink() {
+            animateEl = $element.find('.bb-search-open');
         }
 
         function destroySearch() {
@@ -95,15 +127,17 @@
         bbMediaBreakpoints.register(mediaBreakpointCallback);
 
         ctrl.$onInit = initSearch;
+        ctrl.$postLink = postLink;
         ctrl.$onChanges = bindingChanges;
         ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
         ctrl.clearSearchText = clearSearchText;
-        ctrl.toggleSearchInput = toggleSearchInput;
+        ctrl.openSearchInput = openSearchInput;
+        ctrl.dismissSearchInput = dismissSearchInput;
     }
 
-    Controller.$inject = ['$element', 'bbMediaBreakpoints'];
+    Controller.$inject = ['$element', '$animate', '$timeout', 'bbMediaBreakpoints'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {

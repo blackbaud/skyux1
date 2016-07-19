@@ -1,9 +1,5 @@
 <style type="text/css">
-    .bb-search-docs-inline {
-        display: inline-block;
-        margin-bottom: 0;
-        vertical-align: middle;
-    }
+
 </style>
 <div ng-controller="SearchTestController as searchCtrl">
     <div>
@@ -18,16 +14,20 @@
             </bb-search-input>
         </div>    
     </div>
-    <bb-repeater bb-repeater-expand-mode="none">
-        <bb-repeater-item ng-repeat="item in searchCtrl.items">
-          <bb-repeater-item-title>
-              {{item.title}}
-          </bb-repeater-item-title>
-          <bb-repeater-item-content>
-            <div>
-              {{item.note}}
-            </div>
-          </bb-repeater-item-content>
-        </bb-repeater-item>
-      </bb-repeater>
+    <div class="clearfix">
+    </div>
+    <div>
+        <bb-repeater bb-repeater-expand-mode="none">
+            <bb-repeater-item ng-repeat="item in searchCtrl.items">
+            <bb-repeater-item-title>
+                {{item.title}}
+            </bb-repeater-item-title>
+            <bb-repeater-item-content>
+                <div>
+                {{item.note}}
+                </div>
+            </bb-repeater-item-content>
+            </bb-repeater-item>
+        </bb-repeater>
+      </div>
 </div>

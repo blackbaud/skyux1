@@ -227,7 +227,7 @@
             $scope.$digest();
             
             expect(clearButtonEl).toBeVisible();
-            expect(searchButtonEl).not.toBeVisible();
+            expect(searchButtonEl).toBeVisible();
 
             clearButtonEl.click();
             $scope.$digest();
@@ -238,6 +238,7 @@
             changeInput(searchEl, 'anotherText');
             searchButtonEl.click();
             changeInput(searchEl, '');
+            searchButtonEl.click();
             expect(clearButtonEl).not.toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
@@ -276,7 +277,7 @@
 
             verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible,  true);
             expect(clearButtonEl).toBeVisible();
-            expect(searchButtonEl).not.toBeVisible();
+            expect(searchButtonEl).toBeVisible();
 
             clearButtonEl.click();
             $scope.$digest();
@@ -288,7 +289,7 @@
 
             verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible,  true);
             expect(clearButtonEl).toBeVisible();
-            expect(searchButtonEl).not.toBeVisible();
+            expect(searchButtonEl).toBeVisible();
 
             searchCallback({xs: false});
             $scope.$digest();
@@ -297,7 +298,7 @@
 
             verifyLargeScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible);
             expect(clearButtonEl).toBeVisible();
-            expect(searchButtonEl).not.toBeVisible();
+            expect(searchButtonEl).toBeVisible();
 
             searchEl.remove();
         });
