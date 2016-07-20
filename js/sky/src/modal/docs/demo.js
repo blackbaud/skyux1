@@ -4,11 +4,11 @@
 
     function ModalTestController(bbModal) {
         var self = this;
-        self.open = function (fullscreen) {
+        self.open = function (fullPage) {
             bbModal.open({
                 controller: 'ModalContentController as contentCtrl',
                 templateUrl: 'demo/modal/modalform.html'
-            }, fullscreen);
+            }, fullPage);
         };
     }
 
@@ -16,6 +16,24 @@
         var vm = this;
 
         vm.textLabel = 'Sample text box';
+
+        vm.gridActions = [{
+            automationId: 'Action1Button',
+            isPrimary: true,
+            selections: [],
+            title: 'Guitar action'
+        }, {
+            automationId: 'Action2Button',
+            isPrimary: false,
+            selections: [],
+            title: 'Drum action'
+        }];
+
+        vm.updateActions = function (selections) {
+            vm.gridActions[0].selections = vm.gridActions[1].selections = selections;
+        };
+
+        vm.selectedRows = [];
 
         vm.gridOptions = {
             columns: [
@@ -80,7 +98,8 @@
                 ]
             },
             hasInlineFilters: true,
-            filters: {}
+            filters: {},
+            multiselect: true
         };
     }
 

@@ -4,15 +4,15 @@
 (function ($) {
     'use strict';
 
-    var CLS_BODY_FULLSCREEN = 'bb-modal-open-fullscreen',
+    var CLS_BODY_FULLPAGE = 'bb-modal-open-fullpage',
         CLS_BODY_MOBILE = 'bb-modal-open-mobile',
         modalCount = 0,
-        openFullscreenModalCount = 0,
+        openFullPageModalCount = 0,
         openModalCount = 0;
 
     function bbModal($uibModal, $window) {
         return {
-            open: function (opts, fullscreen) {
+            open: function (opts, fullPage) {
                 var animation = true,
                     backdropClass,
                     bodyEl,
@@ -27,11 +27,11 @@
 
                     openModalCount--;
 
-                    if (fullscreen) {
-                        openFullscreenModalCount--;
+                    if (fullPage) {
+                        openFullPageModalCount--;
 
-                        if (openFullscreenModalCount === 0) {
-                            bodyEl.removeClass(CLS_BODY_FULLSCREEN);
+                        if (openFullPageModalCount === 0) {
+                            bodyEl.removeClass(CLS_BODY_FULLPAGE);
                         }
                     }
 
@@ -49,9 +49,9 @@
 
                 windowClass += ' ' + idCls;
 
-                if (fullscreen) {
-                    windowClass += ' bb-modal-fullscreen';
-                    backdropClass = 'bb-modal-fullscreen-backdrop';
+                if (fullPage) {
+                    windowClass += ' bb-modal-fullpage';
+                    backdropClass = 'bb-modal-fullpage-backdrop';
                     animation = false;
                 }
 
@@ -79,9 +79,9 @@
                     bodyEl.addClass(CLS_BODY_MOBILE);
                 }
 
-                if (fullscreen) {
-                    bodyEl.addClass(CLS_BODY_FULLSCREEN);
-                    openFullscreenModalCount++;
+                if (fullPage) {
+                    bodyEl.addClass(CLS_BODY_FULLPAGE);
+                    openFullPageModalCount++;
                 }
 
                 modalInstance = $uibModal.open(opts);

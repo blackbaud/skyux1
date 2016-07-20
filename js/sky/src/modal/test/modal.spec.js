@@ -212,8 +212,8 @@ describe('Modal', function () {
             $(window).resize();
             $timeout.flush();
 
-            expect($('.modal-content').outerHeight()).toBe($(window).height());
-            expect($('.modal-content').outerWidth()).toBe($(window).width());
+            expect($('.modal-content').outerHeight()).toBe($(document).height());
+            expect($('.modal-content').outerWidth()).toBe($(document).width());
 
             closeModalInstance(modalInstance);
         });
@@ -228,11 +228,11 @@ describe('Modal', function () {
 
             $rootScope.$digest();
 
-            expect(bodyEl).toHaveClass('bb-modal-open-fullscreen');
+            expect(bodyEl).toHaveClass('bb-modal-open-fullpage');
 
             closeModalInstance(modalInstance);
 
-            expect(bodyEl).not.toHaveClass('bb-modal-open-fullscreen');
+            expect(bodyEl).not.toHaveClass('bb-modal-open-fullpage');
         });
 
         it('should remove the full-page modal class from the body when the last full-page modal is closed', function () {
@@ -250,15 +250,15 @@ describe('Modal', function () {
 
             $rootScope.$digest();
 
-            expect(bodyEl).toHaveClass('bb-modal-open-fullscreen');
+            expect(bodyEl).toHaveClass('bb-modal-open-fullpage');
 
             closeModalInstance(modalInstance2);
 
-            expect(bodyEl).toHaveClass('bb-modal-open-fullscreen');
+            expect(bodyEl).toHaveClass('bb-modal-open-fullpage');
 
             closeModalInstance(modalInstance1);
 
-            expect(bodyEl).not.toHaveClass('bb-modal-open-fullscreen');
+            expect(bodyEl).not.toHaveClass('bb-modal-open-fullpage');
         });
     });
 

@@ -88,3 +88,8 @@
     font: 400 $font-size-base $font-family-sans-serif;
     color: $bb-text-deemphasized-color;
 }
+
+@mixin bb-section-heading {
+    font: 300 22px $bb-font-family-narrow;
+    color: $text-color;
+}

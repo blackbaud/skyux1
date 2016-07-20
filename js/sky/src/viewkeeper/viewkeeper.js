@@ -6,9 +6,31 @@
 
     var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed',
         CLS_VIEWKEEPER_NO_OMNIBAR = 'bb-viewkeeper-no-omnibar',
+        marginBottomOverrides = [],
+        marginTopOverrides = [],
         config = {
             viewportMarginTop: 0,
-            hasOmnibar: true 
+            hasOmnibar: true,
+            addViewportMarginBottomOverride: function (value) {
+                marginBottomOverrides.push(value);
+            },
+            removeViewportMarginBottomOverride: function (value) {
+                var index = marginBottomOverrides.indexOf(value);
+
+                if (index > -1) {
+                    marginBottomOverrides.splice(index, 1);
+                }
+            },
+            addViewportMarginTopOverride: function (value) {
+                marginTopOverrides.push(value);
+            },
+            removeViewportMarginTopOverride: function (value) {
+                var index = marginTopOverrides.indexOf(value);
+
+                if (index > -1) {
+                    marginTopOverrides.splice(index, 1);
+                }
+            }
         },
         ViewKeeper;
 
@@ -95,6 +117,18 @@
         setElPosition(elQ, "", "", "", width);
     }
 
+    function getViewportMarginTop() {
+        return marginTopOverrides.length > 0 ? 
+            marginTopOverrides[marginTopOverrides.length - 1].margin : 
+            config.viewportMarginTop;
+    }
+
+    function getViewportMarginBottom() {
+        return marginBottomOverrides.length > 0 ? 
+            marginBottomOverrides[marginBottomOverrides.length - 1].margin : 
+            0;
+    }
+
     function calculateVerticalOffset(vk) {
         var offset,
             verticalOffSetElTop;
@@ -179,9 +213,11 @@
 
         if (vk.fixToBottom) {
             //Fix el if the natural bottom of the element would not be on the screen
-            doFixEl = (anchorTop + anchorHeight > boundaryInfo.scrollTop + window.innerHeight);
+            doFixEl = 
+                anchorTop + anchorHeight > 
+                boundaryInfo.scrollTop + (window.innerHeight - getViewportMarginBottom());
         } else {
-            doFixEl = boundaryInfo.scrollTop + verticalOffSet + config.viewportMarginTop > anchorTop;
+            doFixEl = boundaryInfo.scrollTop + verticalOffSet + getViewportMarginTop() > anchorTop;
         }
 
         return doFixEl;
@@ -194,7 +230,7 @@
             elFixedWidth;
 
         if (vk.fixToBottom) {
-            elFixedBottom = 0;
+            elFixedBottom = getViewportMarginBottom();
         } else {
             // If the element needs to be fixed, this will calculate its position.  The position 
             // will be 0 (fully visible) unless the user is scrolling the boundary out of view.  
@@ -255,7 +291,7 @@
         vk.setPlaceholderHeight = (options.setPlaceholderHeight !== false);
         vk.onStateChanged = options.onStateChanged;
         vk.isFixed = false;
-
+        
         if (options.verticalOffSetElId) {
             vk.verticalOffSetEl = angular.element('#' + options.verticalOffSetElId);
 
@@ -335,7 +371,7 @@
                 anchorTop = elQ.offset().top;
             }
 
-            documentQ.scrollTop(anchorTop - verticalOffset - config.viewportMarginTop);
+            documentQ.scrollTop(anchorTop - verticalOffset - getViewportMarginTop());
         },
 
         destroy: function () {
@@ -459,10 +495,14 @@
                             return;
                         }
 
-                        if (angular.element('.bb-omnibar>.desktop').is(':visible')) {
-                            verticalOffset = angular.element('.bb-omnibar>.desktop>.bar').outerHeight();
+                        if (marginTopOverrides.length > 0) {
+                            verticalOffset = marginTopOverrides[marginTopOverrides.length - 1].margin;
                         } else {
-                            verticalOffset = 0;
+                            if (angular.element('.bb-omnibar>.desktop').is(':visible')) {
+                                verticalOffset = angular.element('.bb-omnibar>.desktop>.bar').outerHeight();
+                            } else {
+                                verticalOffset = 0;
+                            }
                         }
 
                         if (scope.bbScrollingViewKeeper && scope.bbScrollingViewKeeper.viewKeeperOffsetElId) {
