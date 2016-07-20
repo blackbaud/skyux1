@@ -1,5 +1,15 @@
 <div>
 
+    <button 
+        type="button" 
+        ng-if="$ctrl.openButtonShown"
+        class="btn bb-btn-secondary bb-search-open" 
+        title="{{::'search_open' | bbResources}}" 
+        ng-click="$ctrl.openSearchInput()">
+        <i class="fa fa-search fa-lg"></i>
+    </button>
+
+
     <div class="bb-search-and-dismiss">
 
         <div class="bb-search-item">
@@ -13,15 +23,7 @@
                     aria-label="{{::'search_label' | bbResources}}" />    
 
                 <span class="input-group-btn">
-                    <button 
-                        type="button" 
-                        ng-if="$ctrl.openButtonShown"
-                        class="btn bb-btn-secondary bb-search-open bb-search-btn-apply bb-search-btn-input-group" 
-                        title="{{::'search_open' | bbResources}}" 
-                        ng-click="$ctrl.openSearchInput()">
-                        <i class="fa fa-search fa-lg"></i>
-                    </button>
-
+                    
                     <button  
                         tabindex="-1"
                         aria-hidden="true"
@@ -32,8 +34,7 @@
                         <i class="fa fa-times"></i>
                     </button>
 
-                    <button     
-                        ng-show="!$ctrl.openButtonShown"            
+                    <button          
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-apply"
                         ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
@@ -46,8 +47,9 @@
             </div>
         </div>
         
-        <div class="bb-search-item" ng-show="$ctrl.searchInputVisible &amp;&amp; $ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown">
+        <div class="bb-search-item">
             <button 
+                ng-show="$ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown"
                 type="button" 
                 title="{{::'search_dismiss' | bbResources}}" 
                 class="btn bb-btn-secondary bb-search-btn-dismiss" 

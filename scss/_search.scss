@@ -41,15 +41,14 @@
     z-index: auto;
 }
 
-.bb-search-item {
-    display: inline-block;
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
 .bb-search-btn-dismiss, .bb-search-btn-dismiss:hover {
     border: 1px transparent solid;
     background-color: transparent;
+    transition: opacity $bb-transition-time-short ease-in;
+}
+
+.bb-search-btn-dismiss.ng-hide {
+    opacity: 0;
 }
 
 .bb-search-and-dismiss {
@@ -61,21 +60,7 @@
 }
 
 .bb-search-input-container {
-    transition: width $bb-transition-time-long ease-in;
     width: 100%;
-}
-
-.input-group.bb-search-input-container.bb-search-small {
-    width: 42px;
-    input {
-        padding: 0;
-        border: transparent;
-    }
-    .btn.bb-search-open {
-        @include bb-border(light, top, bottom, left, right);
-        border-radius: 4px;
-        padding-left: 12px;
-    }
 }
 
 .bb-search-btn-clear {
@@ -85,5 +70,13 @@
 
 .bb-search-btn-apply {
     padding-left: 6px;
+}
+
+.bb-search-and-dismiss-absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 

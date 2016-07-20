@@ -1,29 +1,18 @@
 <style type="text/css">
+.bb-search-docs-toolbar {
+    position: relative;
+}
 .bb-search-docs-toolbar-item {
    	display: inline-block;
     vertical-align: middle;
     margin-bottom: 0;
-     
 }
 
-.bb-search-docs-custom-button {
-    width: 120px;
-    transition: width 150ms ease-in, opacity 150ms ease-in;  
-}
-
-.bb-search-docs-custom-button.bb-search-docs-animate {
-    width: 0;
-    height: 0;
-    opacity: 0;
-    overflow: hidden
-}
 </style>
 <div ng-controller="SearchTestController as searchCtrl">
-    <div>
-        <div class="bb-search-docs-toolbar-item bb-search-docs-custom-button" ng-class="{'bb-search-docs-animate': searchCtrl.dismissableSearchShown}">
-            <!--<div class="bb-search-docs-custom-button" ng-class="{'bb-search-docs-animate': searchCtrl.dismissableSearchShown}">-->
+    <div class="bb-search-docs-toolbar">
+        <div class="bb-search-docs-toolbar-item">
             <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Custom button</button>  
-            <!--</div>  -->
         </div>
         <div class="bb-search-docs-toolbar-item">
              <bb-search-input

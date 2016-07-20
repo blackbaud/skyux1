@@ -34,12 +34,6 @@
             
         }
 
-        function toggleCallback(isVisible) {
-            if (angular.isFunction(ctrl.bbOnSearchInputToggled)) {
-                ctrl.bbOnSearchInputToggled({isVisible: isVisible});
-            }
-        }
-
         function mediaBreakpointCallback(breakpoint) {
 
             // Search input should be hidden if screen is xs
@@ -48,37 +42,72 @@
             } else {
                 openSearchInput();
             }
-
-            //Dismissable search input is not visible on screen change.
-            toggleCallback(false);
             
             ctrl.currentBreakpoint = breakpoint;
         }
 
-        
-
         function openSearchInput() {
-            var animateEl = $element.find('.bb-search-input-container');
 
-            toggleCallback(true);
-            $animate.removeClass(animateEl, 'bb-search-small').then(
-                function () {
-                    ctrl.searchInputVisible = true;
-                    ctrl.openButtonShown = false;
-                }   
+            var openEl, 
+                containerEl,
+                inputContainerEl,
+                offset,
+                dismissBtnEl = $element.find('.bb-search-btn-dismiss'),
+                buttonWidth;
+                
+                
+            openEl = $element.find('.bb-search-open');
+            containerEl = $element.find('.bb-search-and-dismiss');
+            inputContainerEl = $element.find('.bb-search-input-container');
+            
+            offset = $element.position();
+            buttonWidth = openEl.outerWidth();
+            containerEl.addClass('bb-search-and-dismiss-absolute');
+            inputContainerEl.width(offset.left + buttonWidth);
+            inputContainerEl.css('opacity', '0');
+            inputContainerEl.css('display', '');
+            dismissBtnEl.css('visibility', '');
+            ctrl.openButtonShown = false;
+            inputContainerEl.animate(
+                {
+                    width: '100%',
+                    opacity: 1
+                }, 
+                150,
+                'linear'
+                
             );
+
         }
 
         function dismissSearchInput() {
-            var animateEl = $element.find('.bb-search-input-container');
-            $animate.addClass(animateEl, 'bb-search-small').then(
+            var inputContainerEl = $element.find('.bb-search-input-container'),
+                containerEl = $element.find('.bb-search-and-dismiss'),
+                openEl = $element.find('.bb-search-open'),
+                dismissBtnEl = $element.find('.bb-search-btn-dismiss'),
+                buttonWidth,
+                widthString,
+                offset;
+
+            offset = $element.position();
+            buttonWidth = openEl.outerWidth();
+            widthString = (offset.left + buttonWidth) + 'px';
+            dismissBtnEl.css('visibility', 'hidden');
+            ctrl.openButtonShown = true;
+            inputContainerEl.animate(
+                {
+                    opacity: 0,
+                    width: widthString
+                },
+                150,
+                'linear',
                 function () {
-                    ctrl.openButtonShown = true;
-                    ctrl.searchInputVisible = false;
-                    
-                    toggleCallback(false);
+                    containerEl.removeClass('bb-search-and-dismiss-absolute');
+                    inputContainerEl.css('display', 'none');
                 }
-            ); 
+            );
+
+
         }
 
         function searchTextBindingChanged() {
