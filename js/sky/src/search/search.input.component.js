@@ -35,7 +35,7 @@
         }
 
         function mediaBreakpointCallback(breakpoint) {
-
+            ctrl.currentBreakpoint = breakpoint;
             // Search input should be hidden if screen is xs
             if (breakpoint.xs) {
                 dismissSearchInput();
@@ -62,7 +62,10 @@
             
             offset = $element.position();
             buttonWidth = openEl.outerWidth();
-            containerEl.addClass('bb-search-and-dismiss-absolute');
+            if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
+                containerEl.addClass('bb-search-and-dismiss-absolute');
+            }
+            
             inputContainerEl.width(offset.left + buttonWidth);
             inputContainerEl.css('opacity', '0');
             inputContainerEl.css('display', '');
@@ -74,9 +77,13 @@
                     opacity: 1
                 }, 
                 150,
-                'linear'
+                'linear', 
+                function () {
+                    
+                }
                 
             );
+            $element.find('input').focus();
 
         }
 
