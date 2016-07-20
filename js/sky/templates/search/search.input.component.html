@@ -3,36 +3,37 @@
     <div class="bb-search-and-dismiss">
 
         <div class="bb-search-item">
-            <div class="bb-search-input-container" ng-class="{'bb-search-small': !$ctrl.searchInputVisible}">
+            <div class="bb-search-input-container input-group">
                 <input
                     type="text" 
                     class="form-control bb-search-input"
                     ng-model="$ctrl.bbSearchText"
                     ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
                     data-bbauto-field="SearchBox"
-                    aria-label="{{::'search_label' | bbResources}}" />
-            
-                <button 
-                    type="button" 
-                    ng-if="$ctrl.openButtonShown"
-                    class="btn bb-btn-secondary bb-search-open bb-search-input-icon" 
-                    title="{{::'search_open' | bbResources}}" 
-                    ng-click="$ctrl.openSearchInput()">
-                    <i class="fa fa-search fa-lg"></i>
-                </button>
+                    aria-label="{{::'search_label' | bbResources}}" />    
 
-                <span class="input-group-btn" ng-if="!$ctrl.openButtonShown">
+                <span class="input-group-btn">
+                    <button 
+                        type="button" 
+                        ng-if="$ctrl.openButtonShown"
+                        class="btn bb-btn-secondary bb-search-open bb-search-btn-apply bb-search-btn-input-group" 
+                        title="{{::'search_open' | bbResources}}" 
+                        ng-click="$ctrl.openSearchInput()">
+                        <i class="fa fa-search fa-lg"></i>
+                    </button>
+
                     <button  
                         tabindex="-1"
                         aria-hidden="true"
-                        ng-show="$ctrl.showClear" 
+                        ng-show="$ctrl.showClear && !$ctrl.openButtonShown" 
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-clear"
                         ng-click="$ctrl.clearSearchText()">
                         <i class="fa fa-times"></i>
                     </button>
 
-                    <button                 
+                    <button     
+                        ng-show="!$ctrl.openButtonShown"            
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-apply"
                         ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"

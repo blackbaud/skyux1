@@ -3,8 +3,7 @@
     'use strict';
 
     function Controller($element, $animate, $timeout, bbMediaBreakpoints) {
-        var ctrl = this,
-            animateEl;
+        var ctrl = this;
         
         function applySearchText(searchText) {
             //select input
@@ -45,12 +44,9 @@
 
             // Search input should be hidden if screen is xs
             if (breakpoint.xs) {
-                ctrl.openButtonShown = true;
-                ctrl.searchInputVisible = false;
+                dismissSearchInput();
             } else {
-                ctrl.openButtonShown = false;
-                ctrl.searchInputVisible = true;
-                
+                openSearchInput();
             }
 
             //Dismissable search input is not visible on screen change.
@@ -62,35 +58,34 @@
         
 
         function openSearchInput() {
-            toggleCallback(true);
-            ctrl.searchInputVisible = true;
-            $timeout(function () {
-                $animate.removeClass(animateEl, 'bb-search-animate').then(function () {
-                    ctrl.openButtonShown = false;
-                    
-                });
-            });
-           
+            var animateEl = $element.find('.bb-search-input-container');
 
+            toggleCallback(true);
+            $animate.removeClass(animateEl, 'bb-search-small').then(
+                function () {
+                    ctrl.searchInputVisible = true;
+                    ctrl.openButtonShown = false;
+                }   
+            );
         }
 
-        function dismissSearchInput() { 
-            ctrl.openButtonShown = true;
-            $timeout(function () {
-                $animate.addClass(animateEl, 'bb-search-animate').then(function () {
+        function dismissSearchInput() {
+            var animateEl = $element.find('.bb-search-input-container');
+            $animate.addClass(animateEl, 'bb-search-small').then(
+                function () {
+                    ctrl.openButtonShown = true;
                     ctrl.searchInputVisible = false;
                     
                     toggleCallback(false);
-                });
-            });
-            
+                }
+            ); 
         }
 
         function searchTextBindingChanged() {
             ctrl.showClear = true;
-            ctrl.searchInputVisible = true;
-            if (angular.isFunction(ctrl.bbOnSearchInputToggled) && ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
-                ctrl.bbOnSearchInputToggled({isVisible: true});
+            
+            if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
+                openSearchInput();
             }
         }
 
@@ -116,9 +111,6 @@
             }
         }
 
-        function postLink() {
-            animateEl = $element.find('.bb-search-open');
-        }
 
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
@@ -127,7 +119,6 @@
         bbMediaBreakpoints.register(mediaBreakpointCallback);
 
         ctrl.$onInit = initSearch;
-        ctrl.$postLink = postLink;
         ctrl.$onChanges = bindingChanges;
         ctrl.$onDestroy = destroySearch;
 
