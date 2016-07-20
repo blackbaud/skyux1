@@ -64,6 +64,8 @@
             buttonWidth = openEl.outerWidth();
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
                 containerEl.addClass('bb-search-and-dismiss-absolute');
+            } else {
+                containerEl.removeClass('bb-search-and-dismiss-absolute');
             }
             
             inputContainerEl.width(offset.left + buttonWidth);
