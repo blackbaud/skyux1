@@ -1,0 +1,78 @@
+<div ng-controller="ListbuilderTestController as listCtrl">
+  
+  <div>
+    <label>Fruit preference: {{listCtrl.appliedFilters.fruitType}}</label>
+  </div>
+  <div>
+    <label>Hide Vegetarian: {{listCtrl.appliedFilters.hideVege}}</label>    
+  </div>
+  <bb-listbuilder>
+    <bb-listbuilder-toolbar 
+        bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"
+        bb-listbuilder-search-text="listCtrl.searchText">
+      <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
+        Add Stuff
+      </bb-listbuilder-add>
+      <bb-listbuilder-filter 
+        bb-listbuilder-filter-modal-open="listCtrl.openObject"
+        bb-listbuilder-filter-apply="listCtrl.appliedFilterCallback(filters)"
+      >
+      </bb-listbuilder-filter>
+      <bb-listbuilder-actions>
+        <bb-listbuilder-action ng-click="listCtrl.onActionClick()">
+          My action
+        </bb-listbuilder-action>
+      </bb-listbuilder-actions>
+    </bb-listbuilder-toolbar>
+    <bb-listbuilder-content>
+      <bb-listbuilder-cards>
+        <bb-listbuilder-card ng-repeat="item in listCtrl.data">
+            <bb-card>
+            <bb-card-title>
+            {{item.name}}
+            </bb-card-title>
+            <bb-card-content>
+            {{item.content}}
+            </bb-card-content>
+            <bb-card-actions>
+                <bb-context-menu>
+                    <bb-context-menu-item>Action 1</bb-context-menu-item>
+                    <bb-context-menu-item>Action 2</bb-context-menu-item>
+                </bb-context-menu>
+            </bb-card-actions>
+        </bb-card>
+        </bb-listbuilder-card>
+       
+      </bb-listbuilder-cards>
+    </bb-listbuilder-content>
+    <bb-listbuilder-footer
+        bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)"
+        bb-listbuilder-show-load-more="true">
+    </bb-listbuilder-footer>
+  </bb-listbuilder>
+</div>
+<script type="text/ng-template" id="demo/listbuilder/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Food preferences</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <label>Fruit type</label>
+                    <select ng-model="filterCtrl.filters.fruitType" class="form-control">
+                        <option value="any">Any Fruit</option>
+                        <option value="citrus">Citrus</option>
+                        <option value="berry">Berry</option>
+                    </select>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.hideVege" />
+                        Hide vegetarian
+                    </label>
+                </form>
+            </div>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>

@@ -1,0 +1,16 @@
+<div ng-controller="InfiniteScrollDemoController as infiniteCtrl">
+  <bb-repeater bb-repeater-expand-mode="none">
+    <bb-repeater-item ng-repeat="item in infiniteCtrl.data">
+      <bb-repeater-item-title>
+        {{item.name}}
+      </bb-repeater-item-title>
+      <bb-repeater-item-content>
+        {{item.description}}
+      </bb-repeater-item-content>
+    </bb-repeater-item>
+  </bb-repeater>
+  <bb-infinite-scroll
+    bb-infinite-scroll-has-more="infiniteCtrl.hasMore"
+    bb-infinite-scroll-load="infiniteCtrl.loadFn(loadingComplete)">
+  </bb-infinite-scroll>
+</div>

@@ -1,0 +1,29 @@
+<div class="bb-listbuilder-footer">
+
+    <bb-infinite-scroll
+        bb-infinite-scroll-has-more="$ctrl.bbListbuilderShowLoadMore"
+        bb-infinite-scroll-load="$ctrl.loadCallback(loadingComplete)">
+    </bb-infinite-scroll>
+    <div class="bb-listbuilder-actionbar" ng-show="$ctrl.listbuilderCtrl.isScrolled">
+        <span class="bb-listbuilder-backtotop-left" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
+            <span class="fa fa-arrow-up "></span>
+            <button 
+                type="button" 
+                class="btn btn-link" 
+               >
+                {{::'listbuilder_footer_back_to_top' | bbResources}}
+            </button>
+        </span>
+        
+        <span class="bb-listbuilder-backtotop-right" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">
+            <span class="fa fa-arrow-up "></span>
+            <button 
+                type="button" 
+                class="btn btn-link" 
+                >
+                {{::'listbuilder_footer_back_to_top' | bbResources}}
+            </button>
+        </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
