@@ -4,6 +4,12 @@
     }
 }
 
+@media (max-width: $screen-xs-max) {
+    .bb-search-input {
+        font-size: 16px;
+    }
+}
+
 .bb-search-input {
     @include bb-border(light, top, bottom, left);
     border-right: none;
@@ -12,6 +18,7 @@
     border-radius: 6px;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
+    -webkit-appearance: none;
 
 }
 
@@ -56,11 +63,12 @@
 }
 
 .bb-search-item-input {
-    flex-grow: 1;
+    flex-basis: 95%;
 }
 
 .bb-search-input-container {
     width: 100%;
+    border: 1px transparent solid;
 }
 
 .bb-search-btn-clear {
@@ -74,9 +82,27 @@
 
 .bb-search-and-dismiss-absolute {
     position: absolute;
+    background-color: $bb-color-white;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
 }
+
+.input-group.bb-search-input-container.bb-search-input-focused {
+
+    border: 1px solid #1f90d8;
+    box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
+    border-radius: 6px;
+
+    .input-group-btn .bb-search-btn-input-group {
+        border: 1px solid transparent;
+    }
+} 
+
+.form-control.bb-search-input:focus {
+    border: 1px solid transparent;
+    box-shadow: none; 
+}
+
 

@@ -48,7 +48,7 @@
             ctrl.currentBreakpoint = breakpoint;
         }
 
-        function openSearchInput() {
+        function openSearchInput(focusInput) {
 
             var openEl, 
                 containerEl,
@@ -88,7 +88,12 @@
                 }
                 
             );
-            $element.find('input').focus();
+            
+            if (focusInput) {
+                $element.find('input').focus();
+            }
+            
+            
 
         }
 
@@ -124,11 +129,20 @@
 
         }
 
+        function inputFocused(isFocused) {
+            var inputContainerEl = $element.find('.bb-search-input-container');
+            if (isFocused) {
+                inputContainerEl.addClass('bb-search-input-focused');
+            } else {
+                inputContainerEl.removeClass('bb-search-input-focused');
+            }
+        }
+
         function searchTextBindingChanged() {
             ctrl.showClear = true;
             
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
-                openSearchInput();
+                openSearchInput(true);
             }
         }
 
@@ -169,6 +183,7 @@
         ctrl.clearSearchText = clearSearchText;
         ctrl.openSearchInput = openSearchInput;
         ctrl.dismissSearchInput = dismissSearchInput;
+        ctrl.inputFocused = inputFocused;
     }
 
     Controller.$inject = ['$element', '$animate', '$timeout', 'bbMediaBreakpoints'];
