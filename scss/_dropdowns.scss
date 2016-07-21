@@ -7,6 +7,7 @@
   font-size: 12px;
   left: 0;
   list-style: none outside none;
+  margin-bottom: $margin-half;
   padding: 0;
   position: absolute;
   text-shadow: none;
@@ -39,8 +40,8 @@
     border-color: #c1c1c1;
     border-radius: 50%;
     padding: 0;
-    height: 24px;
-    width: 24px;
+    height: $bb-context-menu-size;
+    width: $bb-context-menu-size;
 
     &:hover,
     &:focus,
@@ -48,6 +49,19 @@
     &.active {
         border-color: #b0b0b0;
     }
+
+    &:focus {
+      //default
+      outline: thin dotted;
+
+      //webkit
+      outline: -webkit-focus-ring-color auto 5px;
+      outline-offset: -2px;
+    }
+}
+
+.open > .bb-context-menu-btn:focus {
+  outline: none;
 }
 
 .open .dropdown-toggle.bb-btn-secondary.bb-context-menu-btn {
@@ -105,7 +119,11 @@
     }
 }
 
-.bb-context-menu .dropdown-menu {
+.bb-context-menu .dropdown-menu, .dropdown-menu bb-context-menu-item {
+  
+    li.disabled {
+        pointer-events:none;  
+    }
 
     li > a {
         border-radius: 3px;
@@ -209,5 +227,11 @@ body.dropup {
     ul {
         list-style: none outside none;
         padding: 0;
+    }
+}
+
+.modal-open.uib-dropdown-open {
+    .dropdown-menu {
+        z-index: $bb-zindex-dropdown-append-to-body;
     }
 }

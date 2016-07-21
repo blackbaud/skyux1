@@ -13,7 +13,7 @@ body:not(.bb-viewkeeper-ignore-fixed) {
         overflow: hidden;
     }
 
-    &:not(.omnibar-not-fixed) {
+    &:not(.omnibar-not-fixed):not(.bb-viewkeeper-no-omnibar) {
         .bb-viewkeeper-fixed,
         .viewkeeper-fixed {
             margin-top: $viewkeeper-margin-top;

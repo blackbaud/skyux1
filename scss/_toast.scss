@@ -1,7 +1,103 @@
 @import "mixins";
 
-#toast-container .bb-toast {
-    background-image: none;
-    padding: $padding;
-    background-color: rgba(39,58,75,0.8);
+#toast-container {
+    .bb-toast {
+        background-image: none;
+        border-radius: $alert-border-radius;
+        box-shadow: none;
+        display: -webkit-flex; /* iOS 8 support */
+        display: flex;
+        padding: 0;
+        background-color: transparent;
+        border: solid 1px $bb-color-blue;
+
+        .toast-message {
+            background-color: $bb-color-blue;
+            padding: $padding;
+        }
+
+        .toast-close-button {
+            background-color: scale-color($bb-color-blue, $lightness: 90%);
+            color: $bb-color-blue;
+            order: 1;
+            opacity: 1;
+            position: static;
+            top: 0;
+            right: 0;
+            float: none;
+            font-size: 24px;
+            min-width: 40px;
+            text-shadow: none;
+            transition: background-color 250ms;
+
+            &:hover {
+                background-color: scale-color($bb-color-blue, $lightness: 80%);
+                transition: background-color 250ms;
+            }
+        }
+
+        // This is the only thing that identifies the message container
+        div {
+            width: 100%;
+        }
+
+        &.ng-enter {
+            @include animation(bounceIn 500ms);
+        }
+
+        &.ng-leave {
+            @include animation(bounceOut 500ms);
+        }
+    }
+
+    .bb-toast-success {
+        border-color: $bb-color-green;
+
+        .toast-message {
+            background-color: $bb-color-green;
+        }
+
+        .toast-close-button {
+            background-color: scale-color($bb-color-green, $lightness: 90%);
+            color: $bb-color-green;
+
+            &:hover {
+                background-color: scale-color($bb-color-green, $lightness: 80%);
+            }
+        }
+    }
+
+    .bb-toast-warning {
+        border-color: $bb-color-yellow;
+
+        .toast-message {
+            background-color: $bb-color-yellow;
+        }
+
+        .toast-close-button {
+            background-color: scale-color($bb-color-yellow, $lightness: 90%);
+            color: $bb-color-yellow;
+
+            &:hover {
+                background-color: scale-color($bb-color-yellow, $lightness: 80%);
+            }
+        }
+    }
+
+    .bb-toast-error {
+        border-color: $bb-color-red;
+
+        .toast-message {
+            background-color: $bb-color-red;
+        }
+
+        .toast-close-button {
+            background-color: scale-color($bb-color-red, $lightness: 90%);
+            color: $bb-color-red;
+
+            &:hover {
+                background-color: scale-color($bb-color-red, $lightness: 80%);
+            }
+        }
+    }
 }

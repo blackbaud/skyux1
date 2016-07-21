@@ -18,6 +18,7 @@ describe('Autonumeric', function () {
             $timeout = _$timeout_;
         }));
 
+
         afterEach(function () {
             $scope.$destroy();
         });
@@ -117,6 +118,8 @@ describe('Autonumeric', function () {
 
 
             if (angular.isFunction(el[0].setSelectionRange)) {
+                el.focus();
+
                 $timeout.flush();
                 //setSelectionRange does not impact firefox sets to 0
                 if (el[0].selectionStart !== 0) {
@@ -127,6 +130,36 @@ describe('Autonumeric', function () {
             }
 
             expect(el.val()).toBe('3.00');
+            el.remove();
+
+        });
+
+        it('should only set selection if element is focused', function () {
+            var el = $compile('<div><input class="bb-test-nonnumeric" type="text" ng-model="numericValue"/><input class="bb-test-numeric" type="text" ng-model="numericValue" bb-autonumeric />')($scope),
+                numericEl,
+                nonNumericEl;
+            el.appendTo(document.body);
+
+            numericEl = el.find('.bb-test-numeric');
+            nonNumericEl = el.find('.bb-test-nonnumeric');
+
+            $scope.numericValue = 123456.78;
+
+            $scope.$digest();
+
+            $scope.numericValue = 3;
+            numericEl[0].selectionStart = 1;
+
+            $scope.$digest();
+
+            if (angular.isFunction(numericEl[0].setSelectionRange)) {
+                nonNumericEl.focus();
+                spyOn(numericEl[0], 'setSelectionRange');
+                $timeout.flush();
+                expect(numericEl[0].setSelectionRange).not.toHaveBeenCalled();
+            }
+
+            expect(numericEl.val()).toBe('3.00');
             el.remove();
 
         });
@@ -294,6 +327,16 @@ describe('Autonumeric', function () {
 
                 expect(el.val()).toBe('$123*456.78');
             });
+
+            it('should cascade from "number" to "percent"', function () {
+                var el = $compile('<input type="text" ng-model="numericValue" bb-autonumeric="percent" />')($scope);
+
+                $scope.numericValue = 99;
+
+                $scope.$digest();
+
+                expect(el.val()).toBe('99%');
+            });
         });
     });
 
@@ -329,6 +372,18 @@ describe('Autonumeric', function () {
             var formattedValue = $filter('bbAutonumeric')(123456.78);
 
             expect(formattedValue).toBe('123,456.78');
+        });
+
+        it('should allow a config object to be used', function () {
+            var formattedValue = $filter('bbAutonumeric')(100, { mDec: 0 });
+
+            expect(formattedValue).toBe('100');
+        });
+
+        it('should format value with percent sign when percent config type is specified', function () {
+            var formattedValue = $filter('bbAutonumeric')(100, 'percent');
+
+            expect(formattedValue).toBe('100%');
         });
 
         it('should not abbreviate values that round to less than 10,000', function () {

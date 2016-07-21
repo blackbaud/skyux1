@@ -1,11 +1,5 @@
 /*global angular, define, require */
 
-/** @module Moment
-@icon clock-o
-@summary The moment module use the moment.js library to parse, validate, manipulate, or display dates.
-@description The moment module allows you to use the [moment](http://momentjs.com/) library.
-*/
-
 (function () {
     'use strict';
 
@@ -15,9 +9,11 @@
 
     bbMoment.$inject = ['$window'];
 
-    /*istanbul ignore next boilerplate require gunk */
+    /*istanbul ignore next */
+    /* boilerplate require gunk */
     function runRegisterMoment($window) {
 
+        /*istanbul ignore next */
         function registerMoment(moment) {
             $window.moment = moment;
         }

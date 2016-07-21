@@ -1,28 +1,47 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require, $ */
 
 describe('navbar', function () {
     'use strict';
 
-    var options = {};
+    function testNavbar(screenWidth, done) {
+        browser
+            .setupTest('/navbar/fixtures/test.full.html', screenWidth)
+            .compareScreenshot({
+                screenshotName: 'navbar',
+                selector: '#screenshot-navbar'
+            })
+            .call(done);
+    }
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+    it('should match the baseline navbar screenshot', function (done) {
+        testNavbar(1280, done);
     });
 
+    it('should match the baseline navbar screenshot on small screens', function (done) {
+        testNavbar(480, done);
+    });
 
-    it('should take navbar screenshots', function (done) {
-        var screenshotName = 'navbar',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline navbar screenshot with the dropdown open', function (done) {
         browser
-            .url('/navbar/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-navbar'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .setupTest('/navbar/fixtures/test.full.html')
+            .moveToObject('.nav li.dropdown a')
+            .compareScreenshot({
+                screenshotName: 'navbar_dropdown',
+                selector: '#screenshot-navbar-dropdown'
+            })
+            .call(done);
+    });
+
+    it('should match the baseline navbar screenshot with the dropdown open and not active', function (done) {
+        browser
+            .setupTest('/navbar/fixtures/test.full.html')
+            .execute(function () {
+                $('.dropdown').addClass('open');
+            })
+            .compareScreenshot({
+                screenshotName: 'navbar_dropdown_open',
+                selector: '#screenshot-navbar-dropdown'
+            })
+            .call(done);
     });
 });

@@ -39,3 +39,52 @@
     /* Make the element inline-block so that it spins in place. */
     display: inline-block;
 }
+
+@mixin bb-border($type, $sides...) {
+
+    @if(length($sides) == 0) {
+        @if($type != "tile") {
+            $sides: "bottom";
+        } @else {
+            $sides: "top";
+        }
+    }
+
+    @each $side in $sides {
+      @if($type == "light") {
+          border-#{$side}: 1px solid $border-color;
+      }
+
+      @if($type == "dark") {
+          border-#{$side}: 1px solid $gray-lighter;
+      }
+
+      @if($type == "nav") {
+          border-#{$side}: $bb-nav-selected-border-width solid $bb-color-blue;
+      }
+
+      @if($type == "tab") {
+          border-#{$side}: 2px solid $bb-color-blue;
+      }
+
+      @if($type == "tile") {
+          border-top: 4px solid $border-color;
+      }
+
+      @if($type == "row") {
+          border-#{$side}: 1px dotted $gray-lighter;
+      }
+    }
+
+
+}
+
+@mixin bb-headline {
+    font: 400 $bb-alternate-font-size-sm $bb-font-family-narrow;
+    color: $text-color;
+}
+
+@mixin bb-field-label {
+    font: 400 $font-size-base $font-family-sans-serif;
+    color: $bb-text-deemphasized-color;
+}

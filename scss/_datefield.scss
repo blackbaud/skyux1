@@ -1,12 +1,16 @@
 @import "mixins";
-
-ul.bb-datefield.dropdown-menu {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    z-index: 5000;
+.modal-open {
+    ul.uib-datepicker-popup.dropdown-menu {
+        z-index: $bb-zindex-dropdown-append-to-body;
+    }
 }
 
-.bb-datefield.input-group, ul.bb-datefield.dropdown-menu {
+ul.uib-datepicker-popup.dropdown-menu {
+    border: 1px solid #ddd;
+    border-radius: 5px;  
+}
+
+.bb-datefield.input-group, ul.uib-datepicker-popup.dropdown-menu {
 
     .btn-default {
         color: $text-color;

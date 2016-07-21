@@ -1,13 +1,14 @@
-<div ng-controller="TabSrefTestController as tabSrefCtrl">
-  <uib-tabset>
-    <uib-tab heading="Tab 1" active="tabSrefCtrl.tab1Active" bb-tab-sref="TabState1">
-      Content
-  </uib-tab>
-    <uib-tab heading="Tab 2" active="tabSrefCtrl.tab2Active" bb-tab-sref="TabState2">
-      Content 2
-  </uib-tab>
-    <uib-tab heading="Tab 3" active="tabSrefCtrl.tab3Active" bb-tab-sref="TabState3">
-      Content 3
-  </uib-tab>
-  </uib-tabset>
+
+<div>
+  <ui-view>
+  </ui-view>
+
+  <script type="text/ng-template" id="demo/tabsref/tabset.html">
+    <uib-tabset>
+      <uib-tab heading="Tab 1" bb-tab-sref="TabState1">Content</uib-tab>
+      <uib-tab heading="Tab 2" bb-tab-sref="TabState2">Content 2</uib-tab>
+      <uib-tab heading="Tab 3" bb-tab-sref="TabState3">Content 3</uib-tab>
+    </uib-tabset>
+  </script>
+
 </div>

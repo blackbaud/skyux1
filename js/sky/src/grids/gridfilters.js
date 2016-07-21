@@ -68,13 +68,11 @@
                 };
 
                 bbGrid.scope.$watch('gridCreated', function (newValue) {
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (newValue) {
                         element.parents('.bb-grid-container').prepend(element);
                         element.show();
-
-                        if ($scope.locals.expanded) {
-                            animateFilters($scope.locals.expanded);
-                        }
                     }
                 });
 
@@ -130,18 +128,28 @@
             transclude: true,
             restrict: 'E',
             scope: {
-                bbOptions: "="
             },
+            bindToController: {
+                bbOptions: '=',
+                bbGridFiltersSummaryDismissable: '=?'
+            },
+            controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
+                var ctrl = this;
+
                 $scope.clearFilters = function () {
                     var args = {},
-                        options = $scope.bbOptions;
+                        options = ctrl.bbOptions;
 
                     if (options && options.clearFilters) {
                         options.clearFilters(args);
                         $scope.updateFilters(args.filters);
                     }
                 };
+
+                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                    ctrl.bbGridFiltersSummaryDismissable = true;
+                }
 
                 $scope.resources = bbResources;
 

@@ -1,30 +1,17 @@
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('tabs', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
-
-
-    it('should take tab screenshots', function (done) {
-        var screenshotName = 'tabs',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline tab screenshot', function (done) {
         browser
-            .url('/tabs/fixtures/test.full.html')
+            .setupTest('/tabs/fixtures/test.full.html')
             .moveToObject('#screenshot-tab-2')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-tabs'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .compareScreenshot({
+                screenshotName: 'tabs',
+                selector: '#screenshot-tabs',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 });

@@ -1,17 +1,6 @@
 /*jshint browser: true */
 /*global angular */
 
-/** @module Scroll into View
-@icon eye
-@summary The scroll-into-view component causes an element to scroll into the viewport when its bound value changes.
- @description The scroll-into-view directive causes an element to scroll into the viewport whenever its bound value changes.
-
-### Scroll-into-view Settings ###
-
- - `bb-scroll-into-view` The value that triggers the scroll.
- - `bb-scroll-into-view-highlight` A Boolean indicating whether the element should be highlighted when scrolling completes.
-*/
-
 (function () {
     'use strict';
 
@@ -53,7 +42,8 @@
 
                     overflowY = parentEl.css('overflow-y');
 
-                    /*istanbul ignore else: sanity check (the computed overflow property will likely never return a non-string value) */
+                    /*istanbul ignore else */
+                    /* sanity check (the computed overflow property will likely never return a non-string value) */
                     if (angular.isString(overflowY)) {
                         switch (overflowY.toUpperCase()) {
                         case 'AUTO':
@@ -188,7 +178,8 @@
                         retryCount = 0;
                     }
 
-                    /*istanbul ignore else: hard to reach in a unit test */
+                    /*istanbul ignore else*/
+                    /* hard to reach in a unit test */
                     if (el.is(':visible') && el.children('.collapsing').length === 0) {
                         options = angular.extend({}, bbScrollIntoViewConfig);
 
@@ -204,7 +195,8 @@
                     }
                 }
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (attrs.bbScrollIntoView) {
                     scope.$watch(attrs.bbScrollIntoView, function (newValue, oldValue) {
                         if (newValue && newValue !== oldValue) {

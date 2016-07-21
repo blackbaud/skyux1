@@ -11,10 +11,17 @@
             'Open for <span>{{templateToastCtrl.timeOpen}}</span> seconds' +
             '</div>' +
             '<br />' +
-            '<div>{{templateToastCtrl.message}}</div');
+            '<div>{{templateToastCtrl.message}} <button type="button" class="btn btn-link">Link</button></div>');
 
         self.openMessage = function () {
             bbToast.open({ message: "A simple message in which <html> is ignored." });
+        };
+
+        self.openMessageInfinite = function () {
+            bbToast.open({
+                message: 'This message will remain visible until the user clicks the close button.',
+                timeout: 'infinite'
+            });
         };
 
         self.openTemplate = function () {
@@ -28,6 +35,13 @@
                 }
             });
         };
+
+        self.openWithType = function (toastType) {
+            bbToast.open({
+                message: "This is a message of type " + toastType,
+                toastType: toastType
+            });
+        }
     }
 
     function TemplatedToastController($interval, message) {
@@ -38,7 +52,7 @@
 
         $interval(function () {
             self.timeOpen += 1;
-        }, 20000);
+        }, 1000);
     }
 
     ToastTestController.$inject = ['bbToast', '$templateCache'];

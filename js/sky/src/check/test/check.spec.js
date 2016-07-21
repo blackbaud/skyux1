@@ -45,6 +45,8 @@ describe('Check directive', function () {
             el = angular.element('<div><label><input type="checkbox" bb-check /> Some Label Words</label></div>');
 
             verifyFancyCheck(el);
+
+            expect(el.find('label span.bb-check-label-text')).toHaveText('Some Label Words');
         });
     });
 
@@ -66,9 +68,7 @@ describe('Check directive', function () {
         }
 
         it('wraps the input in a label if no parent label exists and adds a bb-check-radio element after', function () {
-
             el = angular.element('<div><input type="radio" bb-check /></div>');
-
             verifyFancyRadio(el);
         });
 
@@ -76,6 +76,7 @@ describe('Check directive', function () {
             el = angular.element('<div><label><input type="radio" bb-check /> Some Label Words</label></div>');
 
             verifyFancyRadio(el);
+            expect(el.find('label span.bb-check-label-text')).toHaveText('Some Label Words');
         });
     });
 });

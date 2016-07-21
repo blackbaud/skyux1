@@ -1,0 +1,32 @@
+@import 'mixins';
+
+.bb-key-info-item {
+    font-family: $bb-font-family-narrow;
+    font-size: $bb-alternate-font-size-lg;
+    font-weight: 100;
+    margin-bottom: $margin-plus-half;
+}
+
+.bb-key-info {
+    display: inline-block;
+    margin-right: $margin-triple;
+}
+
+.bb-key-info-value {
+    @include bb-headline();
+}
+
+.bb-key-info-label {
+    @include bb-field-label();
+}
+
+.bb-key-info-horizontal {
+    .bb-key-info-value, 
+    .bb-key-info-label {
+        display: inline-block;  
+    }
+    
+    .bb-key-info-label {
+        margin-left: $margin-half;    
+    }
+}

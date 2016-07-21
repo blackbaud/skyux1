@@ -1,26 +1,23 @@
 /*jshint browser: true */
-
 /*global angular */
-
-/** @module Check
-@icon check-square
-@summary The check applies a commonly styled selector to a checkbox or radio button.
- @description The check directive allows you to change an input element of type checkbox or radio button into a commonly-styled selector. The value that is selected is driven through the `ng-model` attribute specified on the input element. For radio button input types, the value to set on the `ng-model` can be specified by the value attribute.
-
----
-
- */
 
 (function () {
     'use strict';
     angular.module('sky.check', [])
-        .directive('bbCheck', ['$templateCache', function ($templateCache) {
-            function createEl(name) {
-                return angular.element($templateCache.get('sky/templates/check/' + name + '.html'));
+        .directive('bbCheck', ['$templateCache', '$compile', function ($templateCache, $compile) {
+            function createEl(name, scope) {
+                var templateHtml;
+                
+                templateHtml = $templateCache.get('sky/templates/check/' + name + '.html');
+                if (scope) {
+                    templateHtml = $compile(templateHtml)(scope);
+                }
+                return angular.element(templateHtml);
             }
 
             return {
-                link: function (scope, el, attr) {
+                require: '?ngModel',
+                link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
                         styledEl,
                         typeClass;
@@ -29,14 +26,33 @@
                         el.wrap(createEl('wrapper'));
                     } else {
                         labelEl.addClass('bb-check-wrapper');
+
+                        /*  wrap non-whitespace label text to set
+                            vertical-align middle properly */ 
+                        labelEl.contents()
+                        .filter(function () {
+                            return this.nodeType === 3 && /\S/.test(this.textContent);
+                        })
+                        .wrap(createEl('labeltext'));
                     }
+                    
+                    scope.checkModel = ngModel;
+                    
                     if (attr.type === 'radio') {
+
+                        scope.$watch(function () {
+                            return scope.$eval(attr.ngValue);
+                        }, function (newValue) {
+                            scope.checkValue = newValue; 
+                        });
+
                         typeClass = 'bb-check-radio';
                     } else {
                         typeClass = 'bb-check-checkbox';
                     }
-
-                    styledEl = createEl('styled');
+                    
+                    styledEl = createEl(('styled' + attr.type), scope);
+                    
                     styledEl.addClass(typeClass);
 
                     el.after(styledEl);

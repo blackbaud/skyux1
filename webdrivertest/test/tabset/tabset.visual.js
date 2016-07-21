@@ -1,28 +1,25 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser,require */
 
 describe('tabset', function () {
     'use strict';
 
-    var options = {};
+    function tabsetTest(screenWidth, done) {
+        browser
+            .setupTest('/tabset/fixtures/test.full.html', screenWidth)
+            .moveToObject('#screenshot-tabset-open-add li:nth-child(2) a')
+            .compareScreenshot({
+                screenshotName: 'tabset',
+                selector: '#screenshot-tabset-all',
+                checkAccessibility: true
+            })
+            .call(done);
+    }
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+    it('should match the baseline tabset screenshot', function (done) {
+        tabsetTest(1280, done);
     });
 
-    it('should take tabset screenshots', function (done) {
-        var screenshotName = 'tabset',
-            pageName = options.prefix + screenshotName + '_full';
-        browser
-            .url('/tabset/fixtures/test.full.html')
-            .moveToObject('#screenshot-tabset-open-add li:nth-child(2) a')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-tabset-all'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+    it('should match the baseline tabset screenshot on small screens', function (done) {
+        tabsetTest(480, done);
     });
 });

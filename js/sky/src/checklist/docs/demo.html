@@ -8,11 +8,15 @@
                 bb-checklist-no-items-message="No columns found"
                 bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
                 bb-checklist-mode="list"
+                bb-checklist-subset-label="'Hide inactive'"
+                bb-checklist-subset-property="inactive"
+                bb-checklist-subset-exclude
+                bb-checklist-only-selected
                 bb-checklist-filter-local>
   </bb-checklist>
   <p></p>
   <label>
-    <input bb-check type="checkbox" ng-model="checklistCtrl.includeSearch" /> Include searchbox
+    <input bb-check type="checkbox" ng-model="checklistCtrl.includeSearch" /> Include search text box
   </label>
   <p></p>
   <hr>
@@ -21,6 +25,29 @@
     <label>Selected items:</label>
     <ul>
       <li ng-repeat="item in checklistCtrl.selectedListItems">{{item.title}}</li>
+    </ul>
+  </div>
+  <h3>Single select example</h3>
+  <bb-checklist
+                bb-checklist-items="checklistCtrl.listItemsSingle"
+                bb-checklist-selected-items="checklistCtrl.selectedSingleItem"
+                bb-checklist-include-search="checklistCtrl.includeSearch"
+                bb-checklist-search-placeholder="Search for columns"
+                bb-checklist-no-items-message="No columns found"
+                bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']"
+                bb-checklist-mode="list"
+                bb-checklist-select-style="single"
+                bb-checklist-subset-label="'Show inactive'"
+                bb-checklist-subset-property="inactive"
+                bb-checklist-filter-local>
+  </bb-checklist>
+  <p></p>
+  <hr>
+  <p></p>
+  <div>
+    <label>Selected item:</label>
+    <ul>
+      <li ng-repeat="item in checklistCtrl.selectedSingleItem">{{item.title}}</li>
     </ul>
   </div>
   <h3>Grid example</h3>
@@ -44,6 +71,7 @@
       </bb-checklist-column>
     </bb-checklist-columns>
   </bb-checklist>
+  <br>
   <div>
     <label>Selected items:</label>
     <ul>

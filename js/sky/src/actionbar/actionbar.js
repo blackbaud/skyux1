@@ -1,17 +1,5 @@
 /*global angular */
 
-/** @module Action Bar
-@icon bolt
-@summary The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
-@description The action bar creates a SKY UX-themed container for buttons. It includes the option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
-### Action Bar Settings ###
-    - `bb-action-bar` &mdash; Wraps the content in the action bar.
-    - `bb-action-bar-item` &mdash; Wraps the content in an action button. Any `ng-click` applied to this directive is applied to the action button.
-    - `bb-action-bar-item-group` &mdash; Wraps `bb-action-bar-item` directives to collapse the buttons into a dropdown in extra-small mode. You can also pass an optional `bb-action-bar-item-group-title` to edit the default **Actions** label for the dropdown.
-
-To apply action bar stylying to more complicated scenarios (hiding and showing buttons at breakpoints other than xs, collapsing dropdowns into submenus), you can place content in a `div` with the `bb-action-bar` class. Bootstrap convenience classes to  show/hide arbitrary content include the `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg` classes. For more information about these classes, see the [Bootstrap](http://getbootstrap.com/css/#responsive-utilities-classes) documentation.
-*/
-
 (function () {
     'use strict';
 
@@ -29,7 +17,6 @@ To apply action bar stylying to more complicated scenarios (hiding and showing b
 
     function bbActionBarItemGroup(bbResources, bbMediaBreakpoints) {
         return {
-            replace: true,
             transclude: true,
             controller: function () {
                 var vm = this;
@@ -70,7 +57,9 @@ To apply action bar stylying to more complicated scenarios (hiding and showing b
             replace: true,
             controller: angular.noop,
             controllerAs: 'bbActionBarItem',
-            bindToController: true,
+            bindToController: {
+                bbActionBarItemLabel: '@'
+            },
             scope: {},
             require: '?^bbActionBarItemGroup',
             transclude: true,

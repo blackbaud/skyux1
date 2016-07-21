@@ -20,14 +20,15 @@
         steps = [
             {
                 heading: '1. Step 1',
+                heading_xs: '1',
                 templateUrl: 'demo/wizard/step1.html',
                 complete: function () {
                     return !!self.requiredValue1;
-                },
-                active: true
+                }
             },
             {
                 heading: '2. Step 2',
+                heading_xs: '2',
                 templateUrl: 'demo/wizard/step2.html',
                 complete: function () {
                     return !!self.requiredValue2;
@@ -38,6 +39,7 @@
             },
             {
                 heading: '3. Step 3',
+                heading_xs: '3',
                 templateUrl: 'demo/wizard/step3.html',
                 complete: function () {
                     return !!self.requiredValue3;
@@ -48,13 +50,16 @@
             }
         ];
 
+        self.options = {
+            steps: steps,
+            finish: function () {
+                $window.alert('Finished!');
+            },
+            active: 0
+        };
+
         wizardNav = bbWizardNavigator.init(
-            {
-                steps: steps,
-                finish: function () {
-                    $window.alert('Finished!');
-                }
-            }
+            self.options
         );
 
         self.steps = steps;
@@ -68,6 +73,7 @@
         self.secondStepComplete = function () {
             return !!self.requiredValue2;
         };
+
     }
 
     WizardTestController.$inject = ['bbModal'];

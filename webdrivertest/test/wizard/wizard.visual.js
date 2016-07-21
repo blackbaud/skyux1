@@ -1,29 +1,18 @@
 
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('wizard', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
-
-    it('should take the wizard screenshot', function (done) {
-        var screenshotName = 'wizard',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline wizard screenshot', function (done) {
         browser
-            .url('/wizard/fixtures/test.full.html')
+            .setupTest('/wizard/fixtures/test.full.html')
             .click('#screenshots-wizard-open')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '.modal-content'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'wizard',
+                selector: '.modal-content'
+            })
+            .call(done);
     });
 });

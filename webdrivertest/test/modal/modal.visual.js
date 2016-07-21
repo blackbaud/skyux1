@@ -1,29 +1,31 @@
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require, expect */
 
 describe('modals', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+    it('match the baseline modal screenshot', function (done) {
+        browser
+            .setupTest('/modal/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'modal',
+                selector: '#screenshot-modal',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
-
-    it('should take modal screenshots', function (done) {
-        var screenshotName = 'modal',
-            pageName = options.prefix + screenshotName + '_full';
+    it('match the baseline modal with context menu screenshot', function (done) {
         browser
-            .url('/modal/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-modal'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .setupTest('/modal/fixtures/test.full.html')
+            .click('.bb-test-dropdown')
+            .pause(1000)
+            .click('.bb-context-menu-btn')
+            .compareScreenshot({
+                screenshotName: 'modal_dropdown',
+                selector: '.modal-content',
+                checkAccessibility: true
+            })
+            .click('.bb-modal .modal-dialog .close')
+            .call(done);
     });
 });

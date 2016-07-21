@@ -1,0 +1,45 @@
+.bb-error-description-container span {
+  white-space: pre-wrap;
+}
+
+.bb-error-title-container {
+  font-weight: bold;
+}
+
+.bb-error-image-container {
+  display: inline-block;
+}
+
+.bb-error-image {
+  margin-bottom: $margin-half;
+}
+
+.bb-error-action {
+  margin-top: $margin;
+}
+
+.bb-error {
+  padding-bottom: $padding;
+}
+
+.bb-error-image-broken {
+  background-image: url('images/broken.svg');
+  background-repeat: no-repeat;
+  width: 182px;
+  height: 189px;
+}
+
+.bb-error-image-construction {
+  background-image: url('images/construction.svg');
+  background-repeat: no-repeat;
+  width: 182px;
+  height: 189px;
+}
+
+.bb-error-image-notfound {
+  background-image: url('images/notFound.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 328px;
+  height: 303px;
+}

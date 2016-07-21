@@ -1,13 +1,12 @@
 <div ng-controller="ActionButtonBarTestController as actionCtrl">
     <script type="text/ng-template" id="actionbarList.html">
-    <li>
-        <a ng-click="actionCtrl.subAction1()">Sub Action 1</a>
-    </li>
-    <li>
-        <a ng-click="actionCtrl.subAction2()">Sub Action 2</a>
-    </li>
+      <li>
+        <a ng-click="actionCtrl.subAction1()">Sub-action 1</a>
+      </li>
+      <li>
+        <a ng-click="actionCtrl.subAction2()">Sub-action 2</a>
+      </li>
     </script>
-
   <bb-action-bar>
     <div class="row">
         <div class="col-xs-8 col-md-10">
@@ -31,17 +30,20 @@
   </bb-action-bar>
   <p></p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle Action 2</button>
+        Last action clicked: <strong>{{actionCtrl.lastAction}}</strong>
   </p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add Action</button>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle action 2</button>
   </p>
   <p>
-        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add action</button>
   </p>
+</div>
 
-  <p style="margin-top: 20px; margin-bottom: 20px;">Action Bar Classes for More Complicated Content</p>
+<div ng-controller="ActionButtonBarTestController as actionCtrl">
 
+  <h3 style="margin-top: 20px; margin-bottom: 20px;">Action bar classes for more complicated content</h3>
+  
   <div class="bb-action-bar">
     <div class="row">
         <div class="col-xs-8 col-md-10">
@@ -89,13 +91,13 @@
 </div>
   <p></p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle Action 2</button>
+        Last action clicked: <strong>{{actionCtrl.lastAction}}</strong>
   </p>
   <p>
-        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add Action</button>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.items[1].visible = !actionCtrl.items[1].visible">Toggle action 2</button>
   </p>
   <p>
-        Last Action Clicked: <strong>{{actionCtrl.lastAction}}</strong>
+        <button type="button" class="btn btn-primary" ng-click="actionCtrl.addItem()">Add action</button>
   </p>
 
 </div>

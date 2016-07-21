@@ -34,7 +34,7 @@ describe('Grid toolbars', function () {
     }
 
     function getAddButton(el) {
-        return el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-toolbar-btn.btn-success');
+        return el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-toolbar-btn.btn-primary');
     }
 
     function setGridData(data) {
@@ -359,6 +359,25 @@ describe('Grid toolbars', function () {
 
             expect($scope.locals.gridOptions.searchText).toBe('John');
 
+        });
+
+        it('responds to consumer searchText change', function () {
+            var searchEl;
+
+            el = setUpGrid(basicGridHtml);
+            setOptions(options);
+
+            setGridData(dataSet1);
+
+            searchEl = el.find('.bb-grid-toolbar-container .bb-search-container input');
+
+            expect(searchEl).toHaveValue('');
+
+            $scope.locals.gridOptions.searchText = 'John';
+
+            $scope.$digest();
+
+            expect(searchEl).toHaveValue('John');
         });
     });
 

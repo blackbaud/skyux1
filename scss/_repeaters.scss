@@ -1,3 +1,5 @@
+// Legacy support for those using CSS classes instead of the directive.  All of this should be
+// removed once we require consumers to use the directive.
 .bb-repeater {
     padding: $padding-plus-half;
 }
@@ -8,7 +10,7 @@
 
 .bb-repeater-item {
     padding: $padding;
-    border-bottom: dotted 1px #ccc;
+    @include bb-border(row);
 
     &:first-child {
         padding-top: 0;
@@ -17,4 +19,90 @@
 
 .bb-repeater-item-title {
     margin: 0 0 10px;
+}
+// End legacy support
+
+// When the above code is removed, also remove the bb-repeater-component class.
+.bb-repeater-component {
+    &.bb-repeater {
+        padding: 0;
+    }
+
+    .bb-repeater-item {
+        display: flex;
+        padding: $padding;
+        @include bb-border(row);
+    }
+
+    .bb-repeater-item-right {
+        flex-grow: 1;
+    }
+
+    .bb-repeater-item-left {
+        display: flex;
+        align-items: baseline;
+        padding-top: $padding-half;
+    }
+
+    .bb-repeater-item-header {
+        align-items: center;
+        display: flex;
+    }
+
+    .bb-repeater-item-content {
+        display: block;
+        margin-bottom: 0;
+        font-weight: normal;
+    }
+
+    .bb-repeater-item-context-menu {
+        padding: 0 $padding 0 0;
+        display: inline-block;
+    }
+
+    .bb-repeater-item-title {
+        font-family: $font-family-base;
+        font-size: $bb-font-size-lg;
+        font-weight: bold;
+        margin: $margin 0;
+        flex-grow: 1;
+    }
+
+    .bb-repeater-item-collapsible {
+        .bb-repeater-item-header {
+            cursor: pointer;
+
+            .bb-chevron {
+                display: block;
+                margin-left: $margin;
+            }
+        }
+
+        .bb-repeater-item-content {
+            padding-right: $bb-context-menu-size + $padding;
+        }
+    }
+
+    .bb-repeater-item-collapsed {
+        .bb-repeater-item-content {
+            display: none;
+        }
+    }
+
+    .bb-repeater-item-selected {
+        background-color: $bb-selected-color;
+        transition: background-color $bb-transition-time-short;
+    }
+
+    .bb-repeater-item-selectable {
+        .bb-repeater-item-right {
+            cursor: pointer;
+        }
+    }
+
+    .bb-repeater-item-multiselect {
+        display: inline-block;
+        padding-right: $padding;
+    }
+
 }

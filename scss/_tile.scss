@@ -1,5 +1,4 @@
 @import "mixins";
-@import "animation/animate";
 
 .bb-tile {
     clear: both;
@@ -13,10 +12,7 @@
         -moz-border-right-colors: none;
         -moz-border-top-colors: none;
         background-color: #fff;
-        border-color: $border-color;
-        border-image: none;
-        border-style: solid solid none;
-        border-width: 4px 0px 0;
+        @include bb-border(tile);
         color: inherit;
         margin-bottom: 0;
         height: 48px;
@@ -107,14 +103,13 @@
     max-width: 50%;
 }
 
- .bb-tile.collapsed .bb-tile-header-content {
-     @include transition(opacity 0.5s);
+.bb-tile.collapsed .bb-tile-header-content {
      opacity: 1;
 }
 
-.bb-tile.collapsible .bb-tile-header-content {
-    @include transition(opacity 0.5s);
+.bb-tile-header-content {
     opacity: 0;
+    transition: 0.5s linear all;
 }
 
 .bb-tile-header-check {
@@ -124,7 +119,7 @@
 .bb-tile-content {
     background-color: #fff;
     color: inherit;
-    border-color: $border-color;
+    @include bb-border(light, top, bottom);
     border-image: none;
     border-style: solid solid none;
     border-width: 1px 0;
@@ -183,10 +178,10 @@ tiles behave within a column of tiles.*/
 
 .toolbar {
     &.bb-tile-toolbar {
-        border: 1px solid $border-color;
-        border-right: none;
-        border-left: none;
-        border-top: none;
+       @include bb-border(light);
+       border-top: none;
+       border-left: none;
+       border-right: none;
     }
 }
 
@@ -194,19 +189,27 @@ tiles behave within a column of tiles.*/
 .bb-tile-settings {
     color: #D1DADE;
     float: left;
-    margin: 1px 0;
-    padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
+    margin: 16px $tile-header-tool-padding 16px 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
 }
 
 .modal-body {
     .bb-tile-chevron {
         padding-top: 0;
         padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 
 .bb-tile-content-section {
     padding: 15px;
+}
+
+.bb-tile-content-section:not(:last-child) {
+  @include bb-border(light);
 }
 
 .bb-tile-grab-handle {

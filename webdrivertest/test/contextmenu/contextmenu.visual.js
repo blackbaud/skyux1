@@ -1,84 +1,54 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('contextmenu', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
-
     describe('context menu', function () {
-        it('should take contextmenu closed screenshot', function (done) {
-            var screenshotName = 'contextmenu_closed',
-                pageName = options.prefix + screenshotName + '_full';
+        it('should match the baseline context menu screenshot when closed', function (done) {
             browser
-                .url('/contextmenu/fixtures/test.full.html')
-                .webdrivercss(pageName, [
-                    {
-                        name: screenshotName,
-                        elem: '#screenshot-contextmenu'
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
+                .setupTest('/contextmenu/fixtures/test.full.html')
+                .compareScreenshot({
+                    screenshotName: 'contextmenu_closed',
+                    selector: '#screenshot-contextmenu'
+                })
+                .call(done);
         });
 
-        it('should take contextmenu open screenshot', function (done) {
-            var screenshotName = 'contextmenu_open',
-                pageName = options.prefix + screenshotName + '_full';
+        it('should match the baseline context menu screenshot when open', function (done) {
             browser
-                .url('/contextmenu/fixtures/test.full.html')
+                .setupTest('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-contextmenu button.bb-context-menu-btn')
-                .webdrivercss(pageName, [
-                    {
-                        name: screenshotName,
-                        elem: '#screenshot-contextmenu'
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
+                .compareScreenshot({
+                    screenshotName: 'contextmenu_open',
+                    selector: '#screenshot-contextmenu'
+                })
+                .call(done);
         });
 
     });
 
     describe('submenu', function () {
-        it('should take the submenu collapsed screenshot', function (done) {
-            var screenshotName = 'submenumenu_collapsed',
-                pageName = options.prefix + screenshotName + '_full';
+        it('should match the baseline screenshot when a collapsed submenu exists', function (done) {
             browser
-                .url('/contextmenu/fixtures/test.full.html')
+                .setupTest('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-submenu button.bb-context-menu-btn')
-                .webdrivercss(pageName, [
-                    {
-                        name: screenshotName,
-                        elem: '#screenshot-submenu'
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
+                .compareScreenshot({
+                    screenshotName: 'submenumenu_collapsed',
+                    selector: '#screenshot-submenu'
+                })
+                .call(done);
         });
 
-        it('should take the submenu expanded screenshot', function (done) {
-            var screenshotName = 'submenumenu_expanded',
-                pageName = options.prefix + screenshotName + '_full';
+        it('should match the baseline screenshot when an expanded submenu exists', function (done) {
             browser
-                .url('/contextmenu/fixtures/test.full.html')
+                .setupTest('/contextmenu/fixtures/test.full.html')
                 .click('#screenshot-submenu button.bb-context-menu-btn')
                 .click('#screenshot-submenu .bb-submenu .panel-title .accordion-toggle > span > div')
-                .webdrivercss(pageName, [
-                    {
-                        name: screenshotName,
-                        elem: '#screenshot-submenu'
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                }).call(done);
+                .compareScreenshot({
+                    screenshotName: 'submenumenu_expanded',
+                    selector: '#screenshot-submenu'
+                })
+                .call(done);
         });
 
     });

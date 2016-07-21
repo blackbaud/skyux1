@@ -1,28 +1,42 @@
-/*global describe, it, browser, beforeEach, expect, require */
+
+/*global describe, it, browser, require */
 
 describe('checklist', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+    it('match the baseline screenshot for the checklist in grid mode', function (done) {
+        browser
+            .setupTest('/checklist/fixtures/test.full.html')
+            .click('button.show-grid')
+            .compareScreenshot({
+                screenshotName: 'checklist_grid',
+                selector: '#screenshot-checklist-grid',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
-
-    it('should take checklist screenshots', function (done) {
-        var screenshotName = 'checklist',
-            pageName = options.prefix + screenshotName + '_full';
+    it('match the baseline screenshot for the checklist in list mode', function (done) {
         browser
-            .url('/checklist/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-checklist'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .setupTest('/checklist/fixtures/test.full.html')
+            .click('button.show-list')
+            .compareScreenshot({
+                screenshotName: 'checklist_list',
+                selector: '#screenshot-checklist-list',
+                checkAccessibility: true
+            })
+            .call(done);
+    });
+
+    it('match the baseline screenshot for the checklist in single select mode', function (done) {
+        browser
+            .setupTest('/checklist/fixtures/test.full.html')
+            .click('button.show-single')
+            .compareScreenshot({
+                screenshotName: 'checklist_single',
+                selector: '#screenshot-checklist-single',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 });

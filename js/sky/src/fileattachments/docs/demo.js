@@ -1,45 +1,65 @@
 /*global angular */
 (function () {
     'use strict';
-    angular.module('stache')
-        .controller('FileAttachmentDemoController', function () {
-            var self = this;
 
-            function removeFromArray(items, obj) {
-                var i,
-                    n;
+    function FileAttachmentDemoController($scope) {
+        var vm = this;
 
-                if (items) {
-                    for (i = 0, n = items.length; i < n; i++) {
-                        if (items[i] === obj) {
-                            items.splice(i, 1);
-                            break;
-                        }
+        function removeFromArray(items, obj) {
+            var i,
+                n;
+
+            if (items) {
+                for (i = 0, n = items.length; i < n; i++) {
+                    if (items[i] === obj) {
+                        items.splice(i, 1);
+                        break;
                     }
                 }
             }
+        }
 
-            self.attachments = [];
-            self.links = [];
-            self.rejected = [];
-            self.allItems = [];
+        vm.attachments = [];
+        vm.links = [];
+        vm.rejected = [];
+        vm.allItems = [];
 
-            self.fileDropped = function (files, rejectedFiles) {
-                self.attachments = self.attachments.concat(files);
-                self.allItems = self.allItems.concat(files);
-                self.rejected = rejectedFiles;
-            };
+        vm.fileDropped = function (files, rejectedFiles) {
+            vm.attachments = vm.attachments.concat(files);
+            vm.allItems = vm.allItems.concat(files);
+            vm.rejected = rejectedFiles;
+        };
 
-            self.fileLinked = function (link) {
-                self.links.push(link);
-                self.allItems.push(link);
-            };
-            
-            self.deleteAttachment = function (file) {
-                removeFromArray(self.links, file);
-                removeFromArray(self.attachments, file);
-                removeFromArray(self.allItems, file);
-            };
+        vm.fileLinked = function (link) {
+            vm.links.push(link);
+            vm.allItems.push(link);
+        };
+
+        vm.deleteAttachment = function (file) {
+            removeFromArray(vm.links, file);
+            removeFromArray(vm.attachments, file);
+            removeFromArray(vm.allItems, file);
+        };
+
+        vm.fileValidate = function (file) {
+            if (file.name.indexOf('a') === 0) {
+                return 'You may not upload a file that begins with the letter "a."';
+            }
+        };
+
+        $scope.$watch(function () {
+            return vm.alertClosed;
+        }, function () {
+            if (vm.alertClosed) {
+                vm.rejected = null;
+                vm.alertClosed = false;
+            }
         });
+    }
+
+    FileAttachmentDemoController.$inject = ['$scope'];
+
+    angular.module('stache')
+        .controller('FileAttachmentDemoController', FileAttachmentDemoController);
 
 }());

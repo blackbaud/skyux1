@@ -5,8 +5,10 @@
     'use strict';
 
     var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed',
+        CLS_VIEWKEEPER_NO_OMNIBAR = 'bb-viewkeeper-no-omnibar',
         config = {
-            viewportMarginTop: 0
+            viewportMarginTop: 0,
+            hasOmnibar: true 
         },
         ViewKeeper;
 
@@ -27,7 +29,8 @@
             "left": left
         });
 
-        /*istanbul ignore else: sanity check */
+        /*istanbul ignore else*/
+        /* sanity check */
         if (width !== null) {
             elQ.css({ "width": width });
         }
@@ -61,7 +64,8 @@
         if (vk.verticalOffSetEl) {
             verticalOffSetElTop = vk.verticalOffSetEl.css('top');
 
-            /*istanbul ignore else: sanity check */
+            /*istanbul ignore else*/
+            /* sanity check */
             if (verticalOffSetElTop) {
                 verticalOffSetElTop = parseInt(verticalOffSetElTop, 10);
                 if (isNaN(verticalOffSetElTop)) {
@@ -299,9 +303,13 @@
             function mediaBreakpointHandler(breakpoints) {
                 //For user agents in which the omnibar follows you down the page, the ViewKeeper needs
                 //to adjust for the height of the omnibar.
-
-                //Ideally these values should be driven from a more appropriate source (omnibar js?)
-                bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
+                if (bbViewKeeperConfig.hasOmnibar) {
+                    //Ideally these values should be driven from a more appropriate source (omnibar js?)
+                    bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
+                    angular.element('body').removeClass(CLS_VIEWKEEPER_NO_OMNIBAR);
+                } else {
+                    angular.element('body').addClass(CLS_VIEWKEEPER_NO_OMNIBAR);
+                }
             }
 
             if (/iPad|iPod|iPhone/i.test($window.navigator.userAgent)) {
@@ -355,7 +363,6 @@
                     }
                 });
             }
-
             return {
                 link: link,
                 restrict: 'A',
@@ -415,7 +422,8 @@
                                 });
                             } else if (scrollingDown) {
                                 if (element.offset().top + element.height() >= scrollPos + $window.innerHeight) {
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else*/
+                                    /* sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
@@ -434,7 +442,8 @@
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
-                                    /*istanbul ignore else: sanity check */
+                                    /*istanbul ignore else*/
+                                    /* sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }

@@ -3,6 +3,12 @@
 (function () {
     'use strict';
 
+    function RunTemplateCache($templateCache) {
+        $templateCache.put('bbGrid/samples/date.html', '<div>{{data | date: \'medium\'}}</div>');
+    }
+
+    RunTemplateCache.$inject = ['$templateCache'];
+
     function GridTestController($scope, $filter) {
         var self = this,
             action1,
@@ -128,6 +134,29 @@
             }
             ];
 
+        self.showGrid = false;
+        self.showWait = false;
+        self.showPaged = false;
+        self.showLoading = false;
+
+        function showGridClicked(showOptions) {
+            if (showOptions.screenshot_grid) {
+                self.showGrid = !self.showGrid;
+            }
+            if (showOptions.screenshot_grid_page) {
+                self.showPaged = !self.showPaged;
+            }
+            if (showOptions.screenshot_grid_wait) {
+                self.showWait = !self.showWait;
+            }
+            if (showOptions.screenshot_grid_loading) {
+
+                self.showLoading = !self.showLoading;
+            }
+        }
+
+        self.showGridClicked = showGridClicked;
+
         function applyFilters() {
             self.appliedFilters.instruments = [];
             if (self.guitarFilter) {
@@ -233,7 +262,15 @@
                     jsonmap: 'mydate',
                     id: 5,
                     name: 'mydate',
-                    width_all: 200
+                    width_all: 200,
+                    template_url: 'bbGrid/samples/date.html'
+                },
+                {
+                    caption: 'Caption with reaaaaaaaaaaly long name like reeeeediculous',
+                    jsonmap: 'long',
+                    name: 'long',
+                    id: 6,
+                    description: 'This description is long tooo like it is the longest thing I have ever seen.'
                 }
             ],
             data: dataSetBand,
@@ -255,8 +292,7 @@
                 excludedColumns: ['bio']
             },
             selectedColumnIds: [1, 2, 3, 5],
-            columnPickerHelpKey: 'bb-security-users.html',
-            columnPickerMode: 'list'
+            columnPickerHelpKey: 'bb-security-users.html'
         };
 
         self.gridOptions2 = {
@@ -297,6 +333,12 @@
             },
             hasInlineFilters: true,
             filters: {}
+        };
+
+        self.gridOptions3 = {
+            columns: self.gridOptions2.columns,
+            selectedColumnIds: self.gridOptions2.selectedColumnIds,
+            loading: true
         };
 
         self.paginationOptions = {
@@ -386,6 +428,7 @@
     GridTestController.$inject = ['$scope', '$filter'];
 
     angular.module('screenshots', ['sky'])
+    .run(RunTemplateCache)
     .controller('GridTestController', GridTestController);
 
 }());

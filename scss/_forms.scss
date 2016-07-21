@@ -2,6 +2,10 @@
 
 
 /* FORMS START */
+.has-error {
+  @include form-control-validation($state-danger-text, $bb-color-red, $state-danger-bg);
+}
+
 .tile-form {
     background: $tile-form-background;
     border-top: 1px solid $form-border-color;
@@ -146,6 +150,17 @@ select.ng-invalid.submitted,
   padding: 6px 12px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
   width: 100%;
+}
+
+.form-control::-ms-expand {
+    border: none;
+    background-color: #fff;
+}
+
+.control-label.required:after {
+    content: "*";
+    color: $bb-error-color;
+    padding-left: 5px;
 }
 
 /* FORMS END */

@@ -1,28 +1,16 @@
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('palette', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
-
-
-    it('should take palette screenshots', function (done) {
-        var screenshotName = 'palette',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline palette screenshot', function (done) {
         browser
-            .url('/palette/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-palette'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .setupTest('/palette/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'palette',
+                selector: '#screenshot-palette',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 });

@@ -2,60 +2,60 @@
 
     <div id="screenshot-tabset-all">
         <div id="screenshot-tabset-open-add">
-            <tabset bb-tabset-open="tabsetCtrl.open()" bb-tabset-add="tabsetCtrl.add()">
-                <tab class="bb-tab-close">
-                    <tab-heading>
-                        Tab 1
-                        <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
-                    Content 1
-                </tab>
-                <tab class="bb-tab-close">
-                    <tab-heading>
-                        Tab 2
-                        <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
-                    Content 2
-                </tab>
-            </tabset>
+            <uib-tabset bb-tabset-open="tabsetCtrl.open()" bb-tabset-add="tabsetCtrl.add()" bb-tabset-collapsible>
+              <uib-tab class="bb-tab-close" bb-tab-collapse-header="'Tab 1'">
+                  <uib-tab-heading>
+                      Tab 1
+                      <i class="bb-tab-close-icon"></i>
+                  </uib-tab-heading>
+                  Content 1
+              </uib-tab>
+              <uib-tab class="bb-tab-close">
+                  <uib-tab-heading>
+                      Tab 2
+                      <i class="bb-tab-close-icon"></i>
+                  </uib-tab-heading>
+                  Content 2
+              </uib-tab>
+            </uib-tabset>
         </div>
 
         <div id="screenshot-tabset-open">
-            <tabset bb-tabset-open="tabsetCtrl.open()">
-                <tab class="bb-tab-close">
-                    <tab-heading>
+            <uib-tabset bb-tabset-open="tabsetCtrl.open()">
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
                         Tab 1
                         <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
+                    </uib-tab-heading>
                     Content 1
-                </tab>
-                <tab class="bb-tab-close">
-                    <tab-heading>
+                </uib-tab>
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
                         Tab 2
                         <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
+                    </uib-tab-heading>
                     Content 2
-                </tab>
-            </tabset>
+                </uib-tab>
+            </uib-tabset>
         </div>
 
         <div id="screenshot-tabset-add">
-            <tabset bb-tabset-add="tabsetCtrl.add()">
-                <tab class="bb-tab-close">
-                    <tab-heading>
+            <uib-tabset bb-tabset-add="tabsetCtrl.add()">
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
                         Tab 1
                         <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
+                    </uib-tab-heading>
                     Content 1
-                </tab>
-                <tab class="bb-tab-close">
-                    <tab-heading>
+                </uib-tab>
+                <uib-tab class="bb-tab-close">
+                    <uib-tab-heading>
                         Tab 2
                         <i class="bb-tab-close-icon"></i>
-                    </tab-heading>
+                    </uib-tab-heading>
                     Content 2
-                </tab>
-            </tabset>
+                </uib-tab>
+            </uib-tabset>
         </div>
 
     </div>

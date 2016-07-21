@@ -1,28 +1,16 @@
-
-/*global describe, it, browser, beforeEach, expect, require */
+/*global describe, it, browser, require */
 
 describe('check', function () {
     'use strict';
 
-    var options = {};
-
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
-
-    it('should take check screenshots', function (done) {
-        var screenshotName = 'check',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline check screenshot', function (done) {
         browser
-            .url('/check/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-check'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .setupTest('/check/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'check',
+                selector: '#screenshot-check',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 });

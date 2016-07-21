@@ -60,7 +60,7 @@ describe('Toast service', function () {
             message: myMessage
         });
 
-        expect(toastr.info).toHaveBeenCalledWith(myMessage, '', {iconClass: 'bb-toast'});
+        expect(toastr.info).toHaveBeenCalledWith(myMessage, '', {iconClass: 'bb-toast-info'});
     });
 
 
@@ -97,7 +97,7 @@ describe('Toast service', function () {
 
         $scope.$digest();
 
-        expect(toastr.info).toHaveBeenCalledWith("<div id='bbtoast-1'></div>", '', {allowHtml: true, iconClass: 'bb-toast'});
+        expect(toastr.info).toHaveBeenCalledWith("<div id='bbtoast-1'></div>", '', {allowHtml: true, iconClass: 'bb-toast-info'});
 
         $animate.flush();
 
@@ -215,5 +215,62 @@ describe('Toast service', function () {
         expect(toastr.info).toHaveBeenCalled();
         expect(angular.isDefined(messageGuy)).toBe(false);
 
+    });
+
+    it('should display the specified toast type', function () {
+        function validateToastType(toastType, classSuffix) {
+            classSuffix = classSuffix || toastType;
+
+            bbToast.open({
+                message: toastType + ' test',
+                toastType: toastType
+            });
+
+            $animate.flush();
+            $scope.$digest();
+
+            expect($document.find('#toast-container .bb-toast-' + classSuffix + ' .toast-message').text()).toBe(toastType + ' test');
+
+            $document.find('#toast-container .bb-toast').remove();
+        }
+
+        validateToastType('info');
+        validateToastType('success');
+        validateToastType('warning');
+
+        // Angular Toastr uses "error" instead of "danger", so we support both and just
+        // normalize to "error".
+        validateToastType('error');
+        validateToastType('danger', 'error');
+    });
+
+    it('should show a toast indefinitely when inifnite is specified for the timeout option', function () {
+        var myMessage = 'This is a message.';
+
+        bbToast.open({
+            message: myMessage,
+            timeout: 'infinite'
+        });
+
+        expect(toastr.info).toHaveBeenCalledWith(myMessage, '', {
+            iconClass: 'bb-toast-info',
+            timeOut: 0,
+            extendedTimeOut: 0
+        });
+    });
+
+    it('should allow a specific time in milliseconds to be specified for the timeout option', function () {
+        var myMessage = 'This is a message.';
+
+        bbToast.open({
+            message: myMessage,
+            timeout: 60000
+        });
+
+        expect(toastr.info).toHaveBeenCalledWith(myMessage, '', {
+            iconClass: 'bb-toast-info',
+            timeOut: 60000,
+            extendedTimeOut: 60000
+        });
     });
 });

@@ -1,0 +1,17 @@
+<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">
+  <div class="bb-repeater-item-left">
+    <div class="bb-repeater-item-multiselect" ng-show="bbRepeaterItem.itemIsSelectable()">
+      <input ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" type="checkbox" bb-check ng-model="bbRepeaterItem.bbRepeaterItemSelected" />
+    </div>
+    <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">
+    </div>
+  </div>
+  <div class="bb-repeater-item-right" ng-click="bbRepeaterItem.selectItem()">
+    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick($event)">
+      <h1 class="bb-repeater-item-title" ng-show="bbRepeaterItem.titleElExists()" ng-transclude="bbRepeaterItemTitle"></h1>
+      <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>
+    </header>
+    <div class="bb-repeater-item-content" ng-transclude="bbRepeaterItemContent">
+    </div>
+  </div>
+</section>

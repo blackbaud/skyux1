@@ -1,0 +1,17 @@
+<bb-modal>
+  <div class="modal-form">
+    <div bb-modal-body>
+      <bb-error>
+        <bb-error-title>
+          {{bbErrorModal.options.errorTitle}}
+        </bb-error-title>
+        <bb-error-description>
+          {{bbErrorModal.options.errorDescription}}
+        </bb-error-description>
+        <bb-error-action>
+          <button type="button" class="btn btn-primary" ng-click="bbErrorModal.close()">{{'errormodal_ok' | bbResources}}</button>
+        </bb-error-action>
+      </bb-error>
+    </div>
+  </div>
+</bb-modal>

@@ -1,28 +1,17 @@
-/*global describe, it, browser, beforeAll, expect, require */
+/*global describe, it, browser, require */
 
 describe('textstate', function () {
     'use strict';
 
-    var options = {};
-
-    beforeAll(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
-    });
-
-    it('should take textstate screenshots', function (done) {
-        var screenshotName = 'textstate',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline text state screenshot', function (done) {
         browser
-            .url('/textstate/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-textstate'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            }).call(done);
+            .setupTest('/textstate/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'textstate',
+                selector: '#screenshot-textstate',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
 });

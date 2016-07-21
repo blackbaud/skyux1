@@ -10,11 +10,11 @@
           <bb-modal-header bb-modal-help-key="'helpkey.html'">Wizard example</bb-modal-header>
           <form ng-submit="locals.save()">
             <div bb-modal-body>
-              <tabset bb-wizard>
-                <tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
+              <uib-tabset bb-wizard active="options.active">
+                <uib-tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
                   <ng-include src="step.templateUrl"></ng-include>
-                </tab>
-              </tabset>
+                </uib-tab>
+              </uib-tabset>
             </div>
             <bb-modal-footer>
               <bb-modal-footer-button ng-click="locals.wizardNav.goToPrevious()" ng-disabled="locals.wizardNav.previousDisabled()">{{locals.wizardNav.previousText()}}</bb-modal-footer-button>

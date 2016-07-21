@@ -25,6 +25,14 @@ describe('File drop directive', function () {
         return el;
     }
 
+    function getDropWithValidateEl($scope) {
+        var el = $compile('<div bb-file-drop bb-file-drop-link bb-file-drop-validate-fn="validate(file)"></div>')($scope);
+
+        $scope.$digest();
+
+        return el;
+    }
+
     function getLinkEl(el) {
         return el.find('.bb-file-drop-link');
     }
@@ -161,7 +169,15 @@ describe('File drop directive', function () {
 
         for (p in attrs) {
             if (attrs.hasOwnProperty(p)) {
-                ngfProp = p.replace('bb-file-drop-', 'ngf-');
+                // When we upgraded to ng-file-upload 12.0.4 some attribute names no longer align.
+                switch (p) {
+                case 'bb-file-drop-accept':
+                    ngfProp = 'ngf-pattern';
+                    break;
+                default:
+                    ngfProp = p.replace('bb-file-drop-', 'ngf-');
+                }
+
                 expect(fileDropEl).toHaveAttr(ngfProp, attrs[p]);
             }
         }
@@ -195,6 +211,30 @@ describe('File drop directive', function () {
         el.isolateScope().bbFileDrop.fileChange(files, {}, rejectedFiles);
 
         expect(fileDroppedSpy).toHaveBeenCalledWith(files, rejectedFiles);
+    });
+
+    it('should call the specified callback when a file is validated', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            file,
+            validateSpy;
+
+        file = [
+            {
+                name: 'xyz.jpg',
+                $errorParam: 'Your file name may not start with an "x."'
+            }
+        ];
+
+        $scope.validate = angular.noop;
+
+        validateSpy = spyOn($scope, 'validate');
+
+        el = getDropWithValidateEl($scope);
+
+        el.isolateScope().bbFileDrop.validate(file);
+
+        expect(validateSpy).toHaveBeenCalledWith(file);
     });
 
     it('should allow for custom HTML content to replace the default drop zone HTML', function () {

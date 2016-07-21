@@ -1,29 +1,32 @@
-/* global describe, it, browser, beforeEach,  expect, require */
+/* global describe, it, browser, require */
 
 
 describe('actionbar', function () {
     'use strict';
 
-    var options = {};
+    function createActionbarOptions() {
+        return {
+            screenshotName: 'actionbar',
+            selector: '#screenshot-actionbar',
+            checkAccessibility: true
+        };
+    }
 
-    beforeEach(function (done) {
-        require('../common').initWebdriverCss(browser, options, done);
+    it('should match the baseline actionbar screenshot on small screens', function (done) {
+        var options = createActionbarOptions();
+
+        browser
+            .setupTest('/actionbar/fixtures/test.full.html')
+            .compareScreenshot(options)
+            .call(done);
     });
 
-    it('should take an actionbar screenshot', function (done) {
-        var screenshotName = 'actionbar',
-            pageName = options.prefix + screenshotName + '_full';
+    it('should match the baseline actionbar screenshot on small screens', function (done) {
+        var options = createActionbarOptions();
+
         browser
-            .url('/actionbar/fixtures/test.full.html')
-            .webdrivercss(pageName, [
-                {
-                    name: screenshotName,
-                    elem: '#screenshot-actionbar'
-                }
-            ], function (err, res) {
-                expect(err).toBe(undefined);
-                expect(res[screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-            })
+            .setupTest('/actionbar/fixtures/test.full.html', 480)
+            .compareScreenshot(options)
             .call(done);
     });
 });

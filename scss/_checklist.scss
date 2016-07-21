@@ -2,6 +2,7 @@
 
 .bb-checklist-wrapper {
     overflow-y: auto;
+    min-height: 75px;
 
     table {
         margin: 0;
@@ -46,17 +47,31 @@
         }
     }
 
+    .bb-checklist-clear {
+        margin-right: 15px;
+    }
+
     .btn-primary {
         font-size: 12px;
         font-weight: normal;
     }
 
-    input {
+    input.bb-checklist-search-box {
         background-color: #fff;
         width: 100%;
         outline: none;
         border: none;
         -webkit-appearance: none;
+        height: auto;
+        box-shadow: none;
+
+    }
+
+    .bb-search-disabled {
+      .bb-checklist-search-box, .bb-checklist-search-icon {
+          background-color: $input-bg-disabled;
+          cursor: not-allowed;
+      }
     }
 }
 
@@ -68,6 +83,22 @@
 .bb-checklist-category-bar {
     white-space: nowrap;
     overflow: auto;
+    .form-control {
+        margin-right: $margin-plus-half;
+    }
+    .control-label {
+        margin-bottom: 0;
+    }
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    @media (max-width: $screen-sm-max) {
+      .form-group + .form-group {
+          margin-bottom: 0;
+          margin-top: 5px;
+      }
+    }
 }
 
 .bb-checklist-search {
@@ -93,11 +124,16 @@
 }
 
 .bb-checklist-list-row {
+    background-color: transparent;
+    border: none;
     border-bottom: dotted 1px $gray-lighter;
     cursor: pointer;
     display: table;
     margin-bottom: 0;
     padding: $padding;
+    outline-offset: -5px;
+    table-layout: fixed;
+    text-align: left;
     width: 100%;
 
     &:last-child {
@@ -110,6 +146,7 @@
     font-weight: normal;
     padding-right: $padding;
     vertical-align: middle;
+    word-wrap: break-word;
 }
 
 .bb-checklist-list-col-checkbox {
@@ -118,4 +155,14 @@
 
 .bb-checklist-list-title {
     font-weight: 700;
+}
+
+.bb-checklist-single {
+    .bb-checklist-row-selected {
+        background-color:#eeeffb; //TODO: Figure out if this needs to go into a variable
+    }
+
+    .bb-checklist-list-col-checkbox {
+        //display: none;
+    }
 }

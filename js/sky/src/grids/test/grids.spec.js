@@ -28,7 +28,7 @@ describe('Grid directive', function () {
     }
 
     function searchTextChanged() {
-        if (angular.isDefined($scope.locals.gridOptions.searchText) && $scope.locals.gridOptions !== '') {
+        if (angular.isDefined($scope.locals.gridOptions.searchText) && $scope.locals.gridOptions.searchText !== '') {
             $scope.locals.gridOptions.data = [dataSet1[0]];
         } else {
             $scope.locals.gridOptions.data = dataSet1;
@@ -321,6 +321,25 @@ describe('Grid directive', function () {
 
     });
 
+    it('reinitializes the grid in response to a reInitGrid event', function () {
+        var gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        locals.gridOptions.columns[0].width_all = 200;
+        locals.gridOptions.columns[1].width_all = 200;
+        locals.gridOptions.columns[2].width_all = 200;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        expect(el.find("td").eq(0).outerWidth()).toEqual(200);
+
+        locals.gridOptions.columns[0].width_all = 100;
+
+        $scope.$broadcast("reInitGrid");
+
+        expect(el.find("td").eq(0).outerWidth()).toEqual(100);
+
+    });
+
     describe('fixed headers', function () {
         it('has the option to fix header and toolbar', function () {
             locals.gridOptions.fixedToolbar = true;
@@ -461,6 +480,66 @@ describe('Grid directive', function () {
 
         });
 
+        it('loads a grid with pagination with the custom currentPage', function () {
+            var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-pagination="locals.paginationOptions"></bb-grid></div>',
+                pagedData1 = [
+                    {
+                        name: 'John',
+                        instrument: 'Rhythm guitar'
+                    },
+                    {
+                        name: 'Paul',
+                        instrument: 'Bass',
+                        bio: 'Lorem'
+                    },
+                    {
+                        name: 'George',
+                        instrument: 'Lead guitar'
+                    },
+                    {
+                        name: 'Ringo',
+                        instrument: 'Drums'
+                    }
+                ],
+                paginationContainerEl,
+                paginationEl;
+
+            el = setUpGrid(gridHtml);
+
+            $scope.$on('loadMoreRows', getTopAndSkipFromLoadMore);
+
+            $scope.locals.paginationOptions = {
+                recordCount: 30,
+                currentPage: 2
+            };
+
+            setGridData(pagedData1);
+
+            paginationContainerEl = el.find('.bb-grid-pagination-container');
+
+            expect(paginationContainerEl.length).toBe(1);
+
+            paginationEl = paginationContainerEl.eq(0).find('li');
+
+            //default max of 5 pages shown with two arrow elements
+            expect(paginationEl.length).toBe(7);
+
+            //expect the correct numbers to be shown in pagination
+            expect(paginationEl.eq(1)).toHaveText(1);
+            expect(paginationEl.eq(2)).toHaveClass('active');
+            expect(paginationEl.eq(2)).toHaveText(2);
+            expect(paginationEl.eq(3)).toHaveText(3);
+            expect(paginationEl.eq(4)).toHaveText(4);
+            expect(paginationEl.eq(5)).toHaveText(5);
+
+            //expect movement to behave correctly
+            paginationEl.eq(6).find('a').click();
+
+            expect(top).toBe(5);
+            expect(skip).toBe(10);
+
+        });
+
     });
 
 
@@ -570,6 +649,77 @@ describe('Grid directive', function () {
             spanEl = rowEl.eq(0).find('span');
             expect(spanEl.eq(0)).toHaveClass('highlight');
 
+        });
+
+        it('highlights searched items in rows if search text is set and data is not reloaded', function () {
+            var rowEl,
+                searchEl,
+                searchIconEl,
+                spanEl;
+
+            $scope.$watch('locals.gridOptions.searchText', function () {
+                $scope.locals.gridOptions.data = dataSet1;
+            });
+
+            el = setUpGrid(basicGridHtml);
+
+            setGridData(dataSet1);
+
+            searchEl = getSearchBox(el);
+
+            searchEl.eq(0).val('John').trigger('change');
+
+            searchIconEl = getSearchIcon(el);
+            searchIconEl.eq(0).click();
+
+            $scope.$digest();
+
+            $timeout.flush();
+
+            rowEl = getGridRows(el);
+
+            spanEl = rowEl.eq(0).find('span');
+            expect(spanEl.eq(0)).toHaveClass('highlight');
+        });
+
+        it('clears searched item highlight when data set is not reloaded and items are searched again', function () {
+            var rowEl,
+                searchEl,
+                searchIconEl,
+                spanEl;
+
+            $scope.$watch('locals.gridOptions.searchText', function () {
+                $scope.locals.gridOptions.data = dataSet1;
+            });
+
+            el = setUpGrid(basicGridHtml);
+
+            setGridData(dataSet1);
+
+            searchEl = getSearchBox(el);
+
+            searchEl.eq(0).val('John').trigger('change');
+
+            searchIconEl = getSearchIcon(el);
+            searchIconEl.eq(0).click();
+
+            $scope.$digest();
+
+            $timeout.flush();
+
+            searchEl.eq(0).val('Paul').trigger('change');
+
+            searchIconEl = getSearchIcon(el);
+            searchIconEl.eq(0).click();
+            $scope.$digest();
+
+            rowEl = getGridRows(el);
+
+            spanEl = rowEl.eq(0).find('span');
+            expect(spanEl.eq(0)).not.toHaveClass('highlight');
+
+            spanEl = rowEl.eq(1).find('span');
+            expect(spanEl.eq(0)).toHaveClass('highlight');
         });
 
         it('can exclude columns from search', function () {
@@ -1175,6 +1325,89 @@ describe('Grid directive', function () {
         });
     });
 
+    it('will emit a `columnsResized` event when columns are resized', function () {
+        var tableEl,
+            resizeHappened = false,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function () {
+            resizeHappened = true;
+        });
+
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 0);
+        tableEl[0].p.resizeStop(50, 0);
+
+        expect(resizeHappened).toBe(true);
+
+    });
+
+    it('will adjust the column index in the `columnsResized` event when there is a contextmenu', function () {
+        var tableEl,
+            colIndex,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function (event, data) {
+            colIndex = data.index;
+        });
+
+        locals.gridOptions.getContextMenuItems = getContextMenuItems;
+
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 2);
+        tableEl[0].p.resizeStop(50, 2);
+
+        expect(colIndex).toBe(1);
+
+    });
+
+    it('will adjust the column index in the `columnsResized` event when multiselect and contextmenu is present', function () {
+        var tableEl,
+            colIndex,
+            gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+
+        $scope.$on("columnsResized", function (event, data) {
+            colIndex = data.index;
+        });
+
+        locals.gridOptions.getContextMenuItems = getContextMenuItems;
+        locals.gridOptions.multiselect = true;
+
+        locals.gridOptions.columns[0].width_all = 100;
+        locals.gridOptions.columns[1].width_all = 100;
+        locals.gridOptions.columns[2].width_all = 100;
+
+        el = setUpGrid(gridWrapperHtml, locals);
+
+        setGridData(dataSet1);
+
+        tableEl = el.find('.table-responsive .bb-grid-table');
+
+        tableEl[0].p.resizeStart({}, 2);
+        tableEl[0].p.resizeStop(50, 2);
+
+        expect(colIndex).toBe(0);
+
+    });
+
     describe('media breakpoint column resizing', function () {
         it('can have xs, sm, md, and lg breakpoints set', function () {
             var callback,
@@ -1311,6 +1544,8 @@ describe('Grid directive', function () {
             expect($scope.locals.gridOptions.selectedColumnIds[0]).toBe(2);
             expect($scope.locals.gridOptions.selectedColumnIds[1]).toBe(1);
             expect($scope.locals.gridOptions.selectedColumnIds[2]).toBe(3);
+
+            expect(tableEl[0].p.sortable.options.helper).toBe('clone');
 
             headerEl = getHeaders(el);
 

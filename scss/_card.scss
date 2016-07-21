@@ -1,0 +1,99 @@
+@import "mixins";
+
+.bb-card {
+    background-color: #fff;
+    @include bb-border(dark, top, bottom, left, right);
+    display: inline-flex;
+    flex-direction: column;
+    height: $bb-card-height;
+    margin: 0 $margin $margin 0;
+    transition: background-color $bb-transition-time-short;
+    // This keeps cards with varying contents (such as one card with a header and another with no header)
+    // vertically aligned with one another.  Otherwise because of the inline nature of the card the browser
+    // will attempt to vertically align the cards based on the baselines of the text in each card.
+    vertical-align: top;
+    width: $bb-card-width;
+    @include shadow();
+}
+
+.bb-card-small {
+    height: $bb-card-height-small;
+    width: $bb-card-width-small;
+}
+
+.bb-card-selectable {
+    .bb-card-header,
+    .bb-card-content {
+        cursor: pointer;
+    }
+}
+
+.bb-card-selected {
+    background-color: $bb-selected-color;
+    transition: background-color $bb-transition-time-short;
+}
+
+.bb-card-header {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    margin: 0;
+    // Use padding so the area between the header and content is still clickable.
+    padding: $padding 0 0 0;
+}
+
+.bb-card-heading-left,
+.bb-card-heading-right {
+    @include ellipsis();
+    font-weight: normal;
+    max-width: 34px;
+}
+
+.bb-card-heading-left {
+    padding-left: $padding;
+}
+
+.bb-card-heading-right {
+    padding-right: $padding;
+}
+
+.bb-card-heading-middle {
+    flex-grow: 1;
+    padding: 0 $padding;
+}
+
+.bb-card-title {
+    font-family: $bb-font-family-narrow;
+    font-size: $bb-alternate-font-size-sm;
+    margin: 0;
+}
+
+.bb-card-check {
+    flex-shrink: 0;
+    padding-right: $padding;
+
+    .bb-check-wrapper {
+        margin-bottom: 2px;
+    }
+}
+
+.bb-card-content {
+    flex-grow: 1;
+    font-weight: normal;
+    margin: 0;
+    padding: $padding;
+    overflow: hidden;
+}
+
+.bb-card-actions {
+    @include bb-border(dark, top);
+    bottom: 0;
+    flex-shrink: 0;
+    padding: $padding-3_4 0;
+    text-align: center;
+
+    .bb-context-menu-btn {
+        height: 32px;
+        width: 32px;
+    }
+}

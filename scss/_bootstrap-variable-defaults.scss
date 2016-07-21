@@ -2,6 +2,10 @@
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 
+
+$zindex-dropdown: $z-index-flyout + 1;
+
+$zindex-modal: $bb-zindex-dropdown-append-to-body - 1;
 $border-color: #e7eaec;
 
 $icon-font-path: 'sky/bootstrap/fonts/' !default;

@@ -225,16 +225,13 @@ describe('Grid column picker', function () {
         expect(getChecklistItemTitleEl(modalRowsEl, 5)).toHaveText('Name');
 
         //get categories
-        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar button');
+        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar select option');
 
-        expect(categoryEl.eq(0)).toHaveText('All');
-        expect(categoryEl.eq(0)).toHaveClass('btn-primary');
+        expect(categoryEl.eq(0)).toHaveText('All categories');
 
         expect(categoryEl.eq(1)).toHaveText('Specialness');
-        expect(categoryEl.eq(1)).toHaveClass('btn-default');
 
         expect(categoryEl.eq(2)).toHaveText('Nonesense');
-        expect(categoryEl.eq(2)).toHaveClass('btn-default');
 
         closeModal(modalEl.eq(0));
     });
@@ -242,7 +239,7 @@ describe('Grid column picker', function () {
     it('applies search and category filters', function () {
         var modalEl,
             modalRowsEl,
-            categoryEl,
+            selectEl,
             columnChooserButtonEl,
             searchEl;
 
@@ -261,9 +258,8 @@ describe('Grid column picker', function () {
         modalEl = getModal();
 
         //get categories
-        categoryEl = modalEl.eq(0).find('.bb-checklist-filter-bar button');
-
-        categoryEl.eq(1).click();
+        selectEl = modalEl.eq(0).find('.bb-checklist-filter-bar select');
+        selectEl.val('Specialness').change();
 
         $scope.$digest();
 
@@ -291,7 +287,7 @@ describe('Grid column picker', function () {
         expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
 
         searchEl.eq(0).val('').trigger('change');
-        categoryEl.eq(0).click();
+        selectEl.val('bbChecklistAllCategories').change();
 
         modalRowsEl = getColumnChooserRows(modalEl);
 
@@ -339,6 +335,113 @@ describe('Grid column picker', function () {
 
         expect(headerEl.eq(0)).toHaveText('Instrument');
         expect(headerEl.eq(1)).toHaveText('Biography');
+    });
+
+    it('can add a subset filter', function () {
+        var modalEl,
+            modalRowsEl,
+            columnChooserButtonEl,
+            subsetLabel;
+
+        locals.gridOptions.columns[0].inactive = 'true';
+        locals.gridOptions.columnPickerSubsetProperty = 'inactive';
+        locals.gridOptions.columnPickerSubsetLabel = 'Show inactive';
+
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        columnChooserButtonEl = getColumnChooserButton(el);
+
+        columnChooserButtonEl.click();
+
+        $scope.$digest();
+
+        modalEl = getModal();
+
+        //make sure the expected check boxes are here
+        modalRowsEl = getColumnChooserRows(modalEl.eq(0));
+
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+
+        expect(modalRowsEl.length).toBe(2);
+
+        subsetLabel = modalEl.find('.bb-checklist-category-bar .bb-check-wrapper .bb-check-label-text');
+        expect(subsetLabel).toHaveText('Show inactive');
+
+        closeModal(modalEl.eq(0));
+
+    });
+
+    it('can use the exclude option with the subset filter', function () {
+        var modalEl,
+            modalRowsEl,
+            columnChooserButtonEl,
+            subsetLabel;
+
+        locals.gridOptions.columns[0].inactive = 'true';
+
+        locals.gridOptions.columnPickerSubsetLabel = 'Hide inactive';
+        locals.gridOptions.columnPickerSubsetProperty = 'inactive';
+        locals.gridOptions.columnPickerSubsetExclude = true;
+
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        columnChooserButtonEl = getColumnChooserButton(el);
+
+        columnChooserButtonEl.click();
+
+        $scope.$digest();
+
+        modalEl = getModal();
+
+        //make sure the expected check boxes are here
+        modalRowsEl = getColumnChooserRows(modalEl.eq(0));
+
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+        expect(getChecklistItemTitleEl(modalRowsEl, 2)).toHaveText('Name');
+
+        expect(modalRowsEl.length).toBe(3);
+
+        subsetLabel = modalEl.find('.bb-checklist-category-bar .bb-check-wrapper .bb-check-label-text');
+        expect(subsetLabel).toHaveText('Hide inactive');
+
+        closeModal(modalEl.eq(0));
+    });
+
+    it('can show only selected', function () {
+        var modalEl,
+            modalRowsEl,
+            columnChooserButtonEl,
+            selectedLabel;
+
+        locals.gridOptions.columnPickerOnlySelected = true;
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        columnChooserButtonEl = getColumnChooserButton(el);
+
+        columnChooserButtonEl.click();
+
+        $scope.$digest();
+
+        modalEl = getModal();
+
+        //make sure the expected check boxes are here
+        modalRowsEl = getColumnChooserRows(modalEl.eq(0));
+
+        expect(getChecklistItemTitleEl(modalRowsEl, 0)).toHaveText('Biography');
+        expect(getChecklistItemTitleEl(modalRowsEl, 1)).toHaveText('Instrument');
+        expect(getChecklistItemTitleEl(modalRowsEl, 2)).toHaveText('Name');
+
+        expect(modalRowsEl.length).toBe(3);
+
+        selectedLabel = modalEl.find('.bb-checklist-select-all-bar .bb-check-wrapper');
+        expect(selectedLabel).toHaveText('Only show selected items');
+
+        closeModal(modalEl.eq(0));
     });
 
 

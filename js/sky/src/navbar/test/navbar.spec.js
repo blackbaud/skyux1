@@ -1,7 +1,7 @@
 /*jshint browser: true, jasmine: true */
 /*global inject, module */
 
-describe('Navbar directive', function () {
+describe('Navbar component', function () {
     'use strict';
 
     var $compile,
@@ -53,6 +53,12 @@ describe('Navbar directive', function () {
             dropdownMenuEl.find('a').click();
 
             expect(dropdownEl).not.toHaveClass('open');
+        });
+        
+
+        it('should show/hide subnav on click events', function () {
+            expect(dropdownEl.click()).toHaveClass('open');
+            expect(dropdownEl.click()).not.toHaveClass('open');
         });
     });
 });

@@ -18,12 +18,19 @@
                     var searchEl;
 
                     searchEl = el.find('.bb-search-container input');
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
                         searchEl.eq(0).select();
                     }
 
                     $scope.options.searchText = $scope.searchText;
+
+                    /*istanbul ignore else */
+                    /* sanity check */
+                    if (bbGrid !== null) {
+                        bbGrid.highlightSearchText();
+                    }
                 }
 
                 function openColumnPicker() {
@@ -40,8 +47,17 @@
                             columnPickerHelpKey: function () {
                                 return $scope.options.columnPickerHelpKey;
                             },
-                            listMode: function () {
-                                return $scope.options.columnPickerMode;
+                            subsetLabel: function () {
+                                return $scope.options.columnPickerSubsetLabel;
+                            },
+                            subsetProperty: function () {
+                                return $scope.options.columnPickerSubsetProperty;
+                            },
+                            subsetExclude: function () {
+                                return $scope.options.columnPickerSubsetExclude;
+                            },
+                            onlySelected: function () {
+                                return $scope.options.columnPickerOnlySelected;
                             }
                         }
                     }).result.then(function (selectedColumnIds) {
@@ -56,7 +72,8 @@
                         } else {
                             $scope.toolbarLocals.filtersVisible = !$scope.toolbarLocals.filtersVisible;
                         }
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     } else if (bbGrid !== null && angular.isFunction(bbGrid.toggleFilterMenu)) {
                         bbGrid.toggleFilterMenu(isOpen);
                     }
@@ -76,7 +93,8 @@
 
                 $scope.resources = bbResources;
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (bbGrid !== null && angular.isUndefined($scope.options)) {
                     $scope.$watch(function () {
                         return bbGrid.scope.options;
@@ -95,7 +113,8 @@
                             moveInlineFilters();
                         }
 
-                        /*istanbul ignore else: sanity check */
+                        /*istanbul ignore else */
+                        /* sanity check */
                         if (bbGrid !== null) {
                             bbGrid.applySearchText = applySearchText;
                         }
@@ -106,13 +125,20 @@
                     }
                 }, true);
 
+                $scope.$watch('options.searchText', function (newValue) {
+                    if (newValue !== $scope.searchText) {
+                        $scope.searchText = newValue;
+                    }
+                });
+
                 $scope.$watch('options.filtersOpen', function (newValue) {
                     if (angular.isDefined(newValue)) {
                         toggleFilterMenu(newValue);
                     }
                 });
 
-                /*istanbul ignore else: sanity check */
+                /*istanbul ignore else */
+                /* sanity check */
                 if (bbGrid !== null) {
                     topScrollbarEl.on('scroll', function () {
                         bbGrid.syncGridHeaderScrollToTopScrollbar();
@@ -120,7 +146,8 @@
                 }
 
                 $scope.$on('$destroy', function () {
-                    /*istanbul ignore else: sanity check */
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (bbGrid !== null) {
                         topScrollbarEl.off();
                     }

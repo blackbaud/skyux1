@@ -17,13 +17,16 @@
     //////////////////////////////////////////////////////////////
     thead {
         border: 0;
-        border-bottom: 1px solid $gray-lighter;
+        @include bb-border(dark);
         white-space: nowrap;
         background-color: $bb-color-white;
     }
 
     .ui-jqgrid-view {
         font-size: $font-size-base;
+        button.bb-btn-link-inline {
+            font-size: inherit;
+        }
     }
 
     .ui-jqgrid-htable th, tr.jqgrow td {
@@ -50,6 +53,10 @@
         tr.ui-state-highlight {
             background-color: #eeeffb;
             border: 1px solid #dadbf6;
+
+            &:nth-child(2) {
+              border-top: none;
+            }
         }
     }
 
@@ -60,7 +67,7 @@
             border-top: 0;
             border-left: 0;
             border-right: 0;
-            border-bottom: 1px dotted $gray-lighter;
+            @include bb-border(row);
             @include ellipsis(false);
             .bb-check-checkbox.checked:before {
                 padding-left: 0;
