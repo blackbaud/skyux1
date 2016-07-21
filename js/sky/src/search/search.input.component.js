@@ -2,8 +2,10 @@
 (function () {
     'use strict';
 
+
     function Controller($element, $animate, $timeout, bbMediaBreakpoints) {
-        var ctrl = this;
+        var ctrl = this,
+            animationSpeed = 150;
         
         function applySearchText(searchText) {
             //select input
@@ -69,8 +71,9 @@
             }
             
             inputContainerEl.width(offset.left + buttonWidth);
-            inputContainerEl.css('opacity', '0');
             inputContainerEl.css('display', '');
+            inputContainerEl.css('opacity', '0');
+            dismissBtnEl.css('display', '');
             dismissBtnEl.css('visibility', '');
             ctrl.openButtonShown = false;
             inputContainerEl.animate(
@@ -78,7 +81,7 @@
                     width: '100%',
                     opacity: 1
                 }, 
-                150,
+                animationSpeed,
                 'linear', 
                 function () {
                     
@@ -108,11 +111,13 @@
                     opacity: 0,
                     width: widthString
                 },
-                150,
+                animationSpeed,
                 'linear',
                 function () {
+                    
                     containerEl.removeClass('bb-search-and-dismiss-absolute');
                     inputContainerEl.css('display', 'none');
+                    dismissBtnEl.css('display', 'none');
                 }
             );
 

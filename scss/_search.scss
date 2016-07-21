@@ -19,7 +19,7 @@
     .btn.bb-search-btn-input-group {
         background-color: $bb-color-white;
         border: none;
-        height: auto;
+        height: 32px;
     }
     .btn.bb-search-btn-apply {
         border-top-right-radius: 6px;
@@ -55,7 +55,7 @@
     display: flex;
 }
 
-.bb-search-item {
+.bb-search-item-input {
     flex-grow: 1;
 }
 
