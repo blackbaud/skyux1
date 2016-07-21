@@ -49,9 +49,8 @@
             </div>
         </div>
         
-        <div>
+        <div class="bb-search-item-dismiss" ng-show="$ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown">
             <button 
-                ng-show="$ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown"
                 type="button" 
                 title="{{::'search_dismiss' | bbResources}}" 
                 class="btn bb-btn-secondary bb-search-btn-dismiss" 

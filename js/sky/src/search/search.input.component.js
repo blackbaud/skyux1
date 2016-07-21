@@ -89,6 +89,7 @@
                 
             );
             
+            //Do not focus input on mediabreakpoint change, only on actual interaction
             if (focusInput) {
                 $element.find('input').focus();
             }

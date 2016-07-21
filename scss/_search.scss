@@ -22,6 +22,10 @@
 
 }
 
+.bb-search-input::-ms-clear {
+    display: none;
+}
+
 .input-group.bb-search-input-container .input-group-btn {
     .btn.bb-search-btn-input-group {
         background-color: $bb-color-white;
@@ -62,8 +66,18 @@
     display: flex;
 }
 
+.bb-search-item-dismiss {
+    flex-shrink: 0;
+}
+
 .bb-search-item-input {
-    flex-basis: 95%;
+    flex-grow: 1;
+}
+
+@media (min-width: $screen-sm-min) {
+    .bb-search-item-input {
+        flex-shrink: 0;
+    }
 }
 
 .bb-search-input-container {
@@ -95,13 +109,24 @@
     box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
     border-radius: 6px;
 
-    .input-group-btn .bb-search-btn-input-group {
-        border: 1px solid transparent;
+    .btn.bb-search-btn-apply {
+        border-right: 1px transparent solid;
+        border-top: 1px transparent solid;
+        border-bottom: 1px transparent solid;
     }
+
+    .btn.bb-search-btn-clear {
+        border-top: 1px transparent solid;
+        border-bottom: 1px transparent solid;
+    }
+
 } 
 
 .form-control.bb-search-input:focus {
-    border: 1px solid transparent;
+    border-top: 1px transparent solid;
+    border-bottom: 1px transparent solid;
+    border-left: 1px transparent solid;
+    border-right: none;
     box-shadow: none; 
 }
 
