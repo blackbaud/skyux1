@@ -4,6 +4,9 @@
     }
 }
 
+/*  On iOS, the input will zoom when focused, 
+    setting the font-size to 16px prevents this
+*/
 @media (max-width: $screen-xs-max) {
     .bb-search-input {
         font-size: 16px;
@@ -22,6 +25,9 @@
 
 }
 
+/*  Prevents the IE clear icon from displaying in the input
+    because our search control already includes a clear icon
+*/
 .bb-search-input::-ms-clear {
     display: none;
 }
@@ -77,6 +83,9 @@
     flex-grow: 1;
 }
 
+/*  This is needed or else the input will be tiny
+    on Safari
+*/
 @media (min-width: $screen-sm-min) {
     .bb-search-item-input {
         flex-shrink: 0;
@@ -109,8 +118,8 @@
 
 .input-group.bb-search-input-container.bb-search-input-focused {
 
-    border: 1px solid #1f90d8;
-    box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
+    border: 1px solid $bb-focus-border-color;
+    box-shadow: 0 0 8px $bb-focus-shadow-color;
     border-radius: 6px;
 
     .btn.bb-search-btn-apply {
