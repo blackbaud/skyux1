@@ -130,4 +130,14 @@
     box-shadow: none; 
 }
 
+.bb-search-open-applied {
+    color: $bb-color-green;
+    border: 2px solid $bb-color-green;
+}
+
+.bb-search-open-applied:hover {
+    color: $text-color;
+    border: 2px solid $bb-color-green;
+}
+
 
