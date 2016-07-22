@@ -66,8 +66,10 @@
             buttonWidth = openEl.outerWidth();
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
                 containerEl.addClass('bb-search-and-dismiss-absolute');
+                $element.parents('.bb-search-input-component-container').addClass('bb-search-input-component-container-hidden');
             } else {
                 containerEl.removeClass('bb-search-and-dismiss-absolute');
+                $element.parents('.bb-search-input-component-container').removeClass('bb-search-input-component-container-hidden');
             }
             
             inputContainerEl.width(offset.left + buttonWidth);
@@ -82,10 +84,7 @@
                     opacity: 1
                 }, 
                 animationSpeed,
-                'linear', 
-                function () {
-                    
-                }
+                'linear'
                 
             );
             
@@ -122,8 +121,10 @@
                 function () {
                     
                     containerEl.removeClass('bb-search-and-dismiss-absolute');
+                    $element.parents('.bb-search-input-component-container').removeClass('bb-search-input-component-container-hidden');
                     inputContainerEl.css('display', 'none');
                     dismissBtnEl.css('display', 'none');
+                    
                 }
             );
 

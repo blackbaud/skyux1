@@ -101,6 +101,7 @@
     left: 0;
     bottom: 0;
     right: 0;
+    visibility: visible;
 }
 
 .input-group.bb-search-input-container.bb-search-input-focused {
@@ -138,6 +139,14 @@
 .bb-search-open-applied:hover {
     color: $text-color;
     border: 2px solid $bb-color-green;
+}
+
+.bb-search-input-component-container {
+    position: relative;
+}
+
+.bb-search-input-component-container-hidden > * {
+    visibility: hidden;
 }
 
 
