@@ -5,7 +5,8 @@
 
     function Controller($element, $animate, $timeout, bbMediaBreakpoints) {
         var ctrl = this,
-            animationSpeed = 150;
+            animationSpeed = 150,
+            animationEase = 'linear';
         
         function applySearchText(searchText) {
             //select input
@@ -24,12 +25,14 @@
             
         }
 
-        function clearSearchText() {
-            var inputEl = $element.find('input');
+        function setInputFocus() {
+            $element.find('input').focus();
+        }
 
+        function clearSearchText() {
             ctrl.bbSearchText = '';
             
-            inputEl.focus();
+            setInputFocus();
 
             ctrl.showClear = false;
             ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
@@ -44,72 +47,129 @@
             } else {
                 openSearchInput();
             }
+        }
+
+        function findDismissEl() {
+            return $element.find('.bb-search-btn-dismiss');
+        }
+
+        function findOpenEl() {
+            return $element.find('.bb-search-open');
+        }
+
+        function findSearchAndDismissEl() {
+            return $element.find('.bb-search-and-dismiss');
+        }
+
+        function findInputContainerEl() {
+            return $element.find('.bb-search-input-container');
+        }
+
+        function findComponentContainerEl() {
+            return $element.parents('.bb-search-input-component-container');
+        }
+
+        function getExpectedInputWidth() {
+            var openEl,
+                offset,
+                buttonWidth;
             
-            ctrl.currentBreakpoint = breakpoint;
+            openEl = findOpenEl();
+            offset = $element.position();
+            buttonWidth = openEl.outerWidth();
+            
+            return offset.left + buttonWidth;
+        }
+
+        function toggleMobileInputVisible(isVisible) {
+            var searchAndDismissEl = findSearchAndDismissEl(),
+                absolutePositionClass = 'bb-search-and-dismiss-absolute',
+                containerHiddenClass = 'bb-search-input-component-container-hidden',
+                containerEl = findComponentContainerEl();
+
+            if (isVisible) {
+                searchAndDismissEl.addClass(absolutePositionClass);
+                if (containerEl.length > 0) {
+                    containerEl.addClass(containerHiddenClass);
+                }
+            } else {
+                searchAndDismissEl.removeClass(absolutePositionClass);
+                if (containerEl.length > 0) {
+                    containerEl.removeClass(containerHiddenClass);
+                }
+            }
+        }
+
+        function toggleInputShown(isVisible) {
+            var inputContainerEl = findInputContainerEl(),
+                inputHiddenClass = 'bb-search-input-container-hidden'; 
+
+            if (isVisible) {
+                inputContainerEl.removeClass(inputHiddenClass);
+            } else {
+                inputContainerEl.addClass(inputHiddenClass);
+            }
+        }
+
+
+        function setupInputAnimation(inputContainerEl, expectedWidth) {
+            inputContainerEl.width(expectedWidth);
+            toggleInputShown(true);
+
+            // Set opacity to 0 to fade in input initially
+            inputContainerEl.css('opacity', '0');
+        }
+
+        function toggleDismissShown(isVisible) {
+            var dismissBtnEl = findDismissEl(),
+                dismissHiddenClass = 'bb-search-btn-dismiss-hidden';
+            if (isVisible) {
+                dismissBtnEl.removeClass(dismissHiddenClass);
+            } else {
+                dismissBtnEl.addClass(dismissHiddenClass);
+            }
         }
 
         function openSearchInput(focusInput) {
 
-            var openEl, 
-                containerEl,
-                inputContainerEl,
-                offset,
-                dismissBtnEl = $element.find('.bb-search-btn-dismiss'),
-                buttonWidth;
+            var inputContainerEl,
+                expectedWidth = getExpectedInputWidth();
                 
-                
-            openEl = $element.find('.bb-search-open');
-            containerEl = $element.find('.bb-search-and-dismiss');
-            inputContainerEl = $element.find('.bb-search-input-container');
+            inputContainerEl = findInputContainerEl();   
             
-            offset = $element.position();
-            buttonWidth = openEl.outerWidth();
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
-                containerEl.addClass('bb-search-and-dismiss-absolute');
-                $element.parents('.bb-search-input-component-container').addClass('bb-search-input-component-container-hidden');
+                toggleMobileInputVisible(true);
             } else {
-                containerEl.removeClass('bb-search-and-dismiss-absolute');
-                $element.parents('.bb-search-input-component-container').removeClass('bb-search-input-component-container-hidden');
+                toggleMobileInputVisible(false);
             }
             
-            inputContainerEl.width(offset.left + buttonWidth);
-            inputContainerEl.css('display', '');
-            inputContainerEl.css('opacity', '0');
-            dismissBtnEl.css('display', '');
-            dismissBtnEl.css('visibility', '');
+            setupInputAnimation(inputContainerEl, expectedWidth);
+            toggleDismissShown(true);
             ctrl.openButtonShown = false;
+            
             inputContainerEl.animate(
                 {
                     width: '100%',
                     opacity: 1
                 }, 
                 animationSpeed,
-                'linear'
-                
+                animationEase
             );
             
             //Do not focus input on mediabreakpoint change, only on actual interaction
             if (focusInput) {
-                $element.find('input').focus();
+                setInputFocus();
             }
             
-            
-
         }
 
         function dismissSearchInput() {
-            var inputContainerEl = $element.find('.bb-search-input-container'),
-                containerEl = $element.find('.bb-search-and-dismiss'),
-                openEl = $element.find('.bb-search-open'),
-                dismissBtnEl = $element.find('.bb-search-btn-dismiss'),
-                buttonWidth,
-                widthString,
-                offset;
+            var inputContainerEl = findInputContainerEl(),
+                expectedWidth = getExpectedInputWidth(),
+                widthString;
 
-            offset = $element.position();
-            buttonWidth = openEl.outerWidth();
-            widthString = (offset.left + buttonWidth) + 'px';
-            dismissBtnEl.css('visibility', 'hidden');
+            widthString = expectedWidth + 'px';
+            toggleDismissShown(false);
             ctrl.openButtonShown = true;
             inputContainerEl.animate(
                 {
@@ -117,14 +177,10 @@
                     width: widthString
                 },
                 animationSpeed,
-                'linear',
+                animationEase,
                 function () {
-                    
-                    containerEl.removeClass('bb-search-and-dismiss-absolute');
-                    $element.parents('.bb-search-input-component-container').removeClass('bb-search-input-component-container-hidden');
-                    inputContainerEl.css('display', 'none');
-                    dismissBtnEl.css('display', 'none');
-                    
+                    toggleMobileInputVisible(false);
+                    toggleInputShown(false);
                 }
             );
 
@@ -132,11 +188,12 @@
         }
 
         function inputFocused(isFocused) {
-            var inputContainerEl = $element.find('.bb-search-input-container');
+            var inputContainerEl = findInputContainerEl(),
+                focusedClass = 'bb-search-input-focused';
             if (isFocused) {
-                inputContainerEl.addClass('bb-search-input-focused');
+                inputContainerEl.addClass(focusedClass);
             } else {
-                inputContainerEl.removeClass('bb-search-input-focused');
+                inputContainerEl.removeClass(focusedClass);
             }
         }
 

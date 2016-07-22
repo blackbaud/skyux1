@@ -1,14 +1,17 @@
 <div>
+    <div 
+        class="bb-search-open-wrapper"
+        ng-show="$ctrl.currentBreakpoint.xs"
+        ng-class="{'bb-search-open-applied': $ctrl.showClear, 'bb-search-open-hidden': !$ctrl.openButtonShown}">
 
-    <button 
-        ng-class="{'bb-search-open-applied': $ctrl.showClear}"
-        type="button" 
-        ng-if="$ctrl.openButtonShown"
-        class="btn bb-btn-secondary bb-search-open" 
-        title="{{::'search_open' | bbResources}}" 
-        ng-click="$ctrl.openSearchInput(true)">
-        <i class="fa fa-search fa-lg"></i>
-    </button>
+        <button 
+            type="button" 
+            class="btn bb-btn-secondary bb-search-open" 
+            title="{{::'search_open' | bbResources}}" 
+            ng-click="$ctrl.openSearchInput(true)">
+            <i class="fa fa-search fa-lg"></i>
+        </button>
+    </div>
 
 
     <div class="bb-search-and-dismiss">

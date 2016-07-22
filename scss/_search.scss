@@ -55,11 +55,14 @@
 .bb-search-btn-dismiss, .bb-search-btn-dismiss:hover {
     border: 1px transparent solid;
     background-color: transparent;
-    transition: opacity $bb-transition-time-short ease-in;
 }
 
-.bb-search-btn-dismiss.ng-hide {
-    opacity: 0;
+.bb-search-btn-dismiss-hidden {
+    display: none;
+}
+
+.bb-search-btn-dismiss-hidden {
+    display: none;
 }
 
 .bb-search-and-dismiss {
@@ -131,14 +134,27 @@
     box-shadow: none; 
 }
 
-.bb-search-open-applied {
-    color: $bb-color-green;
-    border: 2px solid $bb-color-green;
+.bb-search-open-wrapper {
+    border: 1px transparent solid;
 }
 
-.bb-search-open-applied:hover {
-    color: $text-color;
-    border: 2px solid $bb-color-green;
+.bb-search-open-applied {
+    border: none;
+    .bb-search-open {
+        color: $bb-color-green;
+        border: 2px solid $bb-color-green;
+    }
+}
+
+.bb-search-open-applied {
+    .bb-search-open:hover {
+        color: $text-color;
+        border: 2px solid $bb-color-green;
+    }
+}
+
+.bb-search-open-hidden {
+    visibility: hidden;
 }
 
 .bb-search-input-component-container {
