@@ -7,11 +7,14 @@
             $scope,
             $document,
             bbMediaBreakpoints,
-            searchHtml = '<bb-search-input ' +
+            searchHtml = '<div bb-search-container>' +
+                '<div class="bb-test-other-item"></div>' +
+                '<bb-search-input ' +
                 'bb-search-text="searchCtrl.searchText" ' +
                 'bb-on-search="searchCtrl.applySearchText(searchText)" ' +
                 'bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)"> ' +
-            '</bb-search-input>';
+            '</bb-search-input>' +
+            '</div>';
 
         beforeEach(module(
             'sky.search',

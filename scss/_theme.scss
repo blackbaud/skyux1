@@ -127,7 +127,7 @@ input:-moz-placeholder { /* Firefox 18- */
 
 .form-control:focus, .form-control:focus.ng-invalid {
     box-shadow: 0 0 8px $bb-focus-shadow-color;
-    border: 1px solid $bb-focus-borders-color;
+    border: 1px solid $bb-focus-border-color;
 }
 
 .checkbox {
