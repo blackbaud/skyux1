@@ -8,7 +8,8 @@ describe('textexpand', function () {
             .setupTest('/textexpand/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'textexpand_collapsed',
-                selector: '#screenshot-text-expand-all'
+                selector: '#screenshot-text-expand-all',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -22,7 +23,8 @@ describe('textexpand', function () {
             .click('#screenshot-text-expand-no-word-break .bb-text-expand-see-more')
             .compareScreenshot({
                 screenshotName: 'textexpand_expanded',
-                selector: '#screenshot-text-expand-all'
+                selector: '#screenshot-text-expand-all', 
+                checkAccessibility: true
             })
             .call(done);
     });
