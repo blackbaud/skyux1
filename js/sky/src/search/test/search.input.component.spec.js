@@ -7,14 +7,14 @@
             $scope,
             $document,
             bbMediaBreakpoints,
-            searchHtml = '<div bb-search-container>' +
-                '<div class="bb-test-other-item"></div>' +
+            searchHtml = '<div><div bb-search-container>' +
+                '<div class="bb-test-other-item">Another Item</div>' +
                 '<bb-search-input ' +
                 'bb-search-text="searchCtrl.searchText" ' +
-                'bb-on-search="searchCtrl.applySearchText(searchText)" ' +
-                'bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)"> ' +
+                'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
             '</bb-search-input>' +
-            '</div>';
+            '</div></div>',
+            fxOff;
 
         beforeEach(module(
             'sky.search',
@@ -26,7 +26,13 @@
             $compile = _$compile_;
             $document = _$document_;
             bbMediaBreakpoints = _bbMediaBreakpoints_;
+            fxOff = $.fx.off;
+            $.fx.off = true;
         }));
+
+        afterEach(function () {
+            $.fx.off = fxOff;
+        });
 
         function initSearch(template) {
             var searchEl = $compile(template)($scope);
@@ -55,6 +61,14 @@
             return el.find('.bb-search-btn-clear');
         }
 
+        function findContainerEl(el) {
+            return el.find('.bb-search-input-component-container');
+        }
+
+        function findOpenButtonWrapper(el) {
+            return el.find('.bb-search-open-wrapper'); 
+        }
+
         function triggerEnterKeyup(el) {
             var e,
                 inputEl;
@@ -75,25 +89,26 @@
             $scope.$digest();
         }
 
-        function verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible, isVisible) {
+        function verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, componentContainerEl, isVisible) {
             if (isVisible) {
-                expect(openButtonEl).not.toBeVisible();
+                expect(componentContainerEl).toHaveClass('bb-search-input-component-container-hidden');
+                expect(openButtonEl).toHaveClass('bb-search-open-hidden');
                 expect(inputEl).toBeVisible();
                 expect(dismissEl).toBeVisible();
             } else {
-                expect(openButtonEl).toBeVisible();
+                expect(componentContainerEl).not.toHaveClass('bb-search-input-component-container-hidden');
+                expect(openButtonEl).not.toHaveClass('bb-search-open-hidden');
                 expect(inputEl).not.toBeVisible();
                 expect(dismissEl).not.toBeVisible();
             }
-            expect(dismissableInputVisible).toBe(isVisible);
             
         }
 
-        function verifyLargeScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible) {
+        function verifyLargeScreenDismissable(openButtonEl, inputEl, dismissEl, componentContainerEl) {
             expect(openButtonEl).not.toBeVisible();
             expect(inputEl).toBeVisible();
             expect(dismissEl).not.toBeVisible();
-            expect(dismissableInputVisible).toBe(false);
+            expect(componentContainerEl).not.toHaveClass('bb-search-input-component-container-hidden');
         }
 
         it('creates an input that will execute a callback on enter press or search button click', function () {
@@ -152,19 +167,14 @@
             searchEl.remove();
         });
 
-        it('will create a dismissable search input on mobile breakpoints that will execute a callback on dismiss toggle', function () {
+        it('will create a dismissable search input on mobile breakpoints that will toggle input shown', function () {
             var searchCallback,
                 searchEl,
                 inputEl,
                 openButtonEl,
+                openButtonWrapperEl,
                 dismissEl,
-                dismissableInputVisible;
-
-            $scope.searchCtrl = {
-                searchInputToggled: function (isVisible) {
-                    dismissableInputVisible = isVisible;
-                }
-            };
+                containerEl;
             
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
                 searchCallback = callback;
@@ -178,29 +188,34 @@
             openButtonEl = findSearchOpen(searchEl);
             inputEl = findSearchInput(searchEl);
             dismissEl = findDismissButton(searchEl);
+            containerEl = findContainerEl(searchEl);
+            openButtonWrapperEl = findOpenButtonWrapper(searchEl);
 
-            verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible,  false);
-
+            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl,  false);
 
             openButtonEl.click();
             $scope.$digest();
             
-            verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible, true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl, true);
+            expect(inputEl).toBeFocused();
 
             dismissEl.click();
             $scope.$digest();
 
-            verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible, false);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl, false);
 
+            inputEl.blur();
             searchCallback({xs: false});
             $scope.$digest();
 
-            verifyLargeScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible);
+            verifyLargeScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl);
+            expect(inputEl).not.toBeFocused();
 
             searchCallback({xs: true});
             $scope.$digest();
+            
 
-            verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible, false);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl, false);
             
             searchEl.remove();
 
@@ -210,6 +225,7 @@
             var actualSearchText,
                 searchEl,
                 searchButtonEl,
+                inputEl,
                 clearButtonEl;
             
             $scope.searchCtrl = {
@@ -224,6 +240,7 @@
 
             searchButtonEl = findSearchButton(searchEl);
             clearButtonEl = findClearButton(searchEl);
+            inputEl = findSearchInput(searchEl);
             expect(clearButtonEl).not.toBeVisible();
 
             searchButtonEl.click();
@@ -237,6 +254,7 @@
             expect(actualSearchText).toBe('');
             expect(clearButtonEl).not.toBeVisible();
             expect(searchButtonEl).toBeVisible();
+            expect(inputEl).toBeFocused();
 
             changeInput(searchEl, 'anotherText');
             searchButtonEl.click();
@@ -253,16 +271,14 @@
                 searchEl,
                 searchButtonEl,
                 openButtonEl,
+                openButtonWrapperEl,
                 dismissEl,
-                dismissableInputVisible,
+                containerEl,
                 clearButtonEl,
                 searchCallback;
             
             $scope.searchCtrl = {
-                searchText: 'myText',
-                searchInputToggled: function (isVisible) {
-                    dismissableInputVisible = isVisible;
-                }
+                searchText: 'myText'
             };
 
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
@@ -277,8 +293,10 @@
             dismissEl = findDismissButton(searchEl);
             clearButtonEl = findClearButton(searchEl);
             searchButtonEl = findSearchButton(searchEl);
+            containerEl = findContainerEl(searchEl);
+            openButtonWrapperEl = findOpenButtonWrapper(searchEl);
 
-            verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl,  true);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
@@ -290,52 +308,22 @@
             $scope.searchCtrl.searchText = 'yourText';
             $scope.$digest();
 
-            verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl,  true);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
+            expect(inputEl).toBeFocused();
 
             searchCallback({xs: false});
             $scope.$digest();
             $scope.searchCtrl.searchText = 'aText';
             $scope.$digest();
 
-            verifyLargeScreenDismissable(openButtonEl, inputEl, dismissEl, dismissableInputVisible);
+
+            verifyLargeScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
             searchEl.remove();
-        });
-
-        it('does not explode when bbOnSearchToggled is not defined', function () {
-            var searchEl,
-                searchCallback,
-                dismissEl;
-
-            $scope.searchCtrl = {
-                searchText: 'myText'
-            };
-
-            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
-                searchCallback = callback;
-                searchCallback({xs: true});
-            });
-            
-            searchHtml = '<bb-search-input ' +
-                'bb-search-text="searchCtrl.searchText" ' +
-                'bb-on-search="searchCtrl.applySearchText(searchText)" ' +
-            '</bb-search-input>';
-
-            searchEl = initSearch(searchHtml);
-
-            dismissEl = findDismissButton(searchEl);
-            dismissEl.click();
-            $scope.$digest();
-
-            $scope.searchCtrl.applySearchText = function () {
-                angular.noop();
-            };
-            $scope.$digest();
-
         });
     });
 })();
