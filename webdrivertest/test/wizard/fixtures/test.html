@@ -8,7 +8,7 @@
       <bb-modal>
         <div class="modal-form" aria-label="wizard example" ng-controller="WizardTestModalController">
           <bb-modal-header bb-modal-help-key="'helpkey.html'">Wizard example</bb-modal-header>
-          <form aria-label "save" ng-submit="locals.save()">
+          <form ng-submit="locals.save()">
             <div bb-modal-body>
               <uib-tabset bb-wizard active="options.active">
                 <uib-tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
