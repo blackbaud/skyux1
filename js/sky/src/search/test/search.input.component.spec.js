@@ -251,6 +251,8 @@
             dismissEl.click();
             $scope.$digest();
 
+            searchEl.remove();
+
         });
 
         it('can clear search text after it is applied using the clear search button', function () {
@@ -377,6 +379,8 @@
             $scope.$digest();
 
             expect(inputContainerEl).not.toHaveClass('bb-search-input-focused');
+
+            searchEl.remove();
 
         });
     });
