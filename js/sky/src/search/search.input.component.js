@@ -136,12 +136,8 @@
                 expectedWidth = getExpectedInputWidth();
                 
             inputContainerEl = findInputContainerEl();   
-            
-            if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
-                toggleMobileInputVisible(true);
-            } else {
-                toggleMobileInputVisible(false);
-            }
+
+            toggleMobileInputVisible(ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs);
             
             setupInputAnimation(inputContainerEl, expectedWidth);
             toggleDismissShown(true);

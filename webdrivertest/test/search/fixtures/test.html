@@ -8,15 +8,16 @@
 
 <div class="container" ng-controller="SearchTestController as searchCtrl">
     <div id="screenshot-search-full">
-        <div class="bb-search-docs-inline" ng-show="!searchCtrl.dismissableSearchShown">
-            <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Set search text</button>    
+        <div bb-search-container>
+            <div class="bb-search-docs-inline">
+                <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Set search text</button>    
+            </div>
+            <div class="bb-search-docs-inline">
+                <bb-search-input
+                    bb-search-text="searchCtrl.searchText"
+                    bb-on-search="searchCtrl.applySearchText(searchText)">
+                </bb-search-input>
+            </div>    
         </div>
-        <div class="bb-search-docs-inline">
-             <bb-search-input
-                bb-search-text="searchCtrl.searchText"
-                bb-on-search="searchCtrl.applySearchText(searchText)"
-                bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)">
-            </bb-search-input>
-        </div>    
     </div>
 </div>

@@ -7,11 +7,13 @@
             $scope,
             $document,
             bbMediaBreakpoints,
-            searchHtml = '<div><div bb-search-container>' +
-                '<div class="bb-test-other-item">Another Item</div>' +
-                '<bb-search-input ' +
+            noContainerHtml =  '<bb-search-input ' +
                 'bb-search-text="searchCtrl.searchText" ' +
                 'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+            '</bb-search-input>',
+            searchHtml = '<div><div bb-search-container>' +
+                '<div class="bb-test-other-item">Another Item</div>' +
+                noContainerHtml +
             '</bb-search-input>' +
             '</div></div>',
             fxOff;
@@ -50,7 +52,7 @@
         }
 
         function findSearchOpen(el) {
-            return el.find('.bb-search-open');
+            return el.find('.bb-search-btn-open');
         }
 
         function findDismissButton(el) {
@@ -67,6 +69,10 @@
 
         function findOpenButtonWrapper(el) {
             return el.find('.bb-search-open-wrapper'); 
+        }
+
+        function findInputContainerEl(el) {
+            return el.find('.bb-search-input-container');
         }
 
         function triggerEnterKeyup(el) {
@@ -221,6 +227,32 @@
 
         });
 
+        it('does not error on toggling input shown if container is not specified', function () {
+            var searchEl,
+                searchCallback,
+                dismissEl,
+                openButtonEl;
+
+            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
+                searchCallback = callback;
+            });
+
+            searchEl = initSearch(noContainerHtml);
+
+            searchCallback({xs: true});
+            $scope.$digest();
+
+            openButtonEl = findSearchOpen(searchEl);
+            dismissEl = findDismissButton(searchEl);
+
+            openButtonEl.click();
+            $scope.$digest();
+
+            dismissEl.click();
+            $scope.$digest();
+
+        });
+
         it('can clear search text after it is applied using the clear search button', function () {
             var actualSearchText,
                 searchEl,
@@ -324,6 +356,28 @@
             expect(searchButtonEl).toBeVisible();
 
             searchEl.remove();
+        });
+
+        it('adds and removes the appropriate class on focus', function () {
+            var searchEl,
+                inputContainerEl,
+                inputEl;
+
+            searchEl = initSearch(searchHtml);
+
+            inputEl = findSearchInput(searchEl);
+            inputContainerEl = findInputContainerEl(searchEl);
+
+            inputEl.focus();
+            $scope.$digest();
+
+            expect(inputContainerEl).toHaveClass('bb-search-input-focused');
+
+            inputEl.blur();
+            $scope.$digest();
+
+            expect(inputContainerEl).not.toHaveClass('bb-search-input-focused');
+
         });
     });
 })();
