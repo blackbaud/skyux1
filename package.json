@@ -9,7 +9,7 @@
   "homepage": "http://skyux.developer.blackbaud.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blacbkaud/skyux/issues"
+    "url": "https://github.com/blackbaud/skyux/issues"
   },
   "files": [
     "dist",
