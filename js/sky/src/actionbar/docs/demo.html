@@ -60,11 +60,11 @@
             </div>
 
             <div uib-dropdown class="visible-xs">
-                <button class="btn bb-btn-secondary"  uib-dropdown-toggle type="button" href="javascript:void(0)">
+                <button id="bb-actionbar-custom-id" class="btn bb-btn-secondary"  uib-dropdown-toggle type="button" href="javascript:void(0)">
                     {{actionCtrl.collapsedText}} <span class="caret"/>
                 </button>
 
-                <ul uib-dropdown-menu>
+                <ul aria-labelledby="bb-actionbar-custom-id" uib-dropdown-menu>
                     <li ng-repeat="item in actionCtrl.items" ng-show="item.visible">
                         <a ng-click="item.action()">{{item.actionText}}</a>
                     </li>

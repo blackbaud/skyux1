@@ -116,6 +116,10 @@ describe('Actionbar directive', function () {
                         title: 'Second Item'
                     }
                 ],
+                toggleEl,
+                dropdownEl,
+                labelledBy,
+                toggleId,
                 callbacks = [];
 
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (actionBarCallback) {
@@ -149,6 +153,13 @@ describe('Actionbar directive', function () {
             items.forEach(function (el, index, arr) {
                 validateDropdown(el, index, arr, element);
             });
+
+            toggleEl = element.find('.bb-btn-secondary.dropdown-toggle');
+            toggleId = toggleEl.attr('id');
+            dropdownEl = element.find('ul.dropdown-menu');
+            labelledBy = dropdownEl.attr('aria-labelledby');
+            expect(labelledBy).toEqual(toggleId);
+
         });
 
         it('should be able to handle interpolated values in the dropdown', function () {
