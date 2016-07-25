@@ -370,7 +370,7 @@
             inputEl = findSearchInput(searchEl);
             inputContainerEl = findInputContainerEl(searchEl);
 
-            inputEl.focus();
+            inputEl.trigger('focus');
             $scope.$digest();
 
             expect(inputContainerEl).toHaveClass('bb-search-input-focused');
