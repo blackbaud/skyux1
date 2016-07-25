@@ -6,9 +6,9 @@
 
     <script type="text/ng-template" id="demo/wizard/wizardform.html">
       <bb-modal>
-        <div class="modal-form" ng-controller="WizardTestModalController">
+        <div class="modal-form" aria-label="wizard example" ng-controller="WizardTestModalController">
           <bb-modal-header bb-modal-help-key="'helpkey.html'">Wizard example</bb-modal-header>
-          <form ng-submit="locals.save()">
+          <form aria-label "save" ng-submit="locals.save()">
             <div bb-modal-body>
               <uib-tabset bb-wizard active="options.active">
                 <uib-tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disable="step.disabled()" bb-wizard-step-complete="step.complete()">
@@ -28,14 +28,14 @@
     </script>
 
     <script type="text/ng-template" id="demo/wizard/step1.html">
-      <div class=" form-group">
+      <div class=" form-group" aria-label="Enter text here to continue">
         <label>Enter text here to continue.</label>
-        <input type="text" id="screenshots-text1" class="form-control" ng-model="locals.requiredValue1" />
+        <input type="text" id="screenshots-text1" aria-label= "screenshots text 1" class="form-control" ng-model="locals.requiredValue1" />
       </div>
     </script>
 
     <script type="text/ng-template" id="demo/wizard/step2.html">
-      <div class=" form-group">
+      <div class=" form-group" aria-label="Check this box to enable step 3">
         <label>
           <input type="checkbox" id="screenshots-checkbox1" bb-check ng-model="locals.requiredValue2" />
           Check this box to enable step 3.
@@ -44,7 +44,7 @@
     </script>
 
     <script type="text/ng-template" id="demo/wizard/step3.html">
-      <div class=" form-group">
+      <div class=" form-group" aria-label="Some other content">
         Some other content.
       </div>
     </script>
