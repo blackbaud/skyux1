@@ -10,27 +10,7 @@
         marginTopOverrides = [],
         config = {
             viewportMarginTop: 0,
-            hasOmnibar: true,
-            addViewportMarginBottomOverride: function (value) {
-                marginBottomOverrides.push(value);
-            },
-            removeViewportMarginBottomOverride: function (value) {
-                var index = marginBottomOverrides.indexOf(value);
-
-                if (index > -1) {
-                    marginBottomOverrides.splice(index, 1);
-                }
-            },
-            addViewportMarginTopOverride: function (value) {
-                marginTopOverrides.push(value);
-            },
-            removeViewportMarginTopOverride: function (value) {
-                var index = marginTopOverrides.indexOf(value);
-
-                if (index > -1) {
-                    marginTopOverrides.splice(index, 1);
-                }
-            }
+            hasOmnibar: true
         },
         ViewKeeper;
 
@@ -401,6 +381,28 @@
             return {
                 create: function (options) {
                     return new ViewKeeper(options);
+                },
+                addViewportMarginBottomOverride: function (value) {
+                    marginBottomOverrides.push(value);
+                },
+                removeViewportMarginBottomOverride: function (value) {
+                    var index = marginBottomOverrides.indexOf(value);
+
+                    /*istanbul ignore else */
+                    if (index > -1) {
+                        marginBottomOverrides.splice(index, 1);
+                    }
+                },
+                addViewportMarginTopOverride: function (value) {
+                    marginTopOverrides.push(value);
+                },
+                removeViewportMarginTopOverride: function (value) {
+                    var index = marginTopOverrides.indexOf(value);
+
+                    /*istanbul ignore else */
+                    if (index > -1) {
+                        marginTopOverrides.splice(index, 1);
+                    }
                 }
             };
         })

@@ -4,19 +4,7 @@
 (function ($) {
     'use strict';
 
-    function bbModal($timeout, bbViewKeeperConfig) {
-        var marginStyleEl,
-            viewkeeperMarginBottomOverride,
-            viewkeeperMarginTopOverride;
-
-        function setViewkeeperMarginTop(margin) {
-            if (!marginStyleEl) {
-                marginStyleEl = $('<style></style>').appendTo(document.body);
-            }
-
-            marginStyleEl.text('.bb-modal-fullpage .bb-viewkeeper-fixed {margin-top: ' + margin + 'px !important;}');
-        }
-
+    function bbModal($timeout, bbViewKeeperBuilder) {
         function getPixelValue(val) {
             val = val || '0';
 
@@ -42,8 +30,19 @@
         
         function link($scope, el) {
             var bodyEl,
+                marginStyleEl,
                 resizeTimeout,
+                viewkeeperMarginBottomOverride,
+                viewkeeperMarginTopOverride,
                 windowEl = $(window);
+
+            function setViewkeeperMarginTop(margin) {
+                if (!marginStyleEl) {
+                    marginStyleEl = $('<style></style>').appendTo(document.body);
+                }
+
+                marginStyleEl.text('.bb-modal-fullpage .bb-viewkeeper-fixed {margin-top: ' + margin + 'px !important;}');
+            }
 
             function isFullPage() {
                 var modalDialogEl = el.parents('.modal-dialog');
@@ -58,7 +57,6 @@
                     margin,
                     modalDialogEl,
                     newMaxHeight,
-                    newMinHeight,
                     reservedHeight;
 
                 if (bodyEl && bodyEl.length > 0) {
@@ -70,20 +68,10 @@
                         fullPage = isFullPage();
 
                         if (fullPage) {
-                            newMinHeight = $(document).height() - (
-                                headerHeight + 
-                                footerHeight +
-                                getModalBodyWrapperMargin(el, fullPage)
-                            );
-
-                            bodyEl
-                                .hide()
-                                .css({
-                                    'min-height': newMinHeight,
-                                    'margin-top': headerHeight,
-                                    'margin-bottom': footerHeight
-                                })
-                                .show();
+                            bodyEl.css({
+                                'margin-top': headerHeight,
+                                'margin-bottom': footerHeight
+                            });
                         } else {
                             margin = getPixelValue(modalDialogEl.css('margin-bottom')) + 
                                 getPixelValue(modalDialogEl.css('margin-top'));
@@ -115,7 +103,10 @@
                 if (isFullPage()) {
                     if (!viewkeeperMarginTopOverride) {
                         viewkeeperMarginTopOverride = {};
-                        bbViewKeeperConfig.addViewportMarginTopOverride(viewkeeperMarginTopOverride);
+                        
+                        bbViewKeeperBuilder.addViewportMarginTopOverride(
+                            viewkeeperMarginTopOverride
+                        );
                     }
                     
                     viewkeeperMarginTopOverride.margin = newValue;
@@ -132,7 +123,10 @@
                 if (isFullPage()) {
                     if (!viewkeeperMarginBottomOverride) {
                         viewkeeperMarginBottomOverride = {};
-                        bbViewKeeperConfig.addViewportMarginBottomOverride(viewkeeperMarginBottomOverride);
+                        
+                        bbViewKeeperBuilder.addViewportMarginBottomOverride(
+                            viewkeeperMarginBottomOverride
+                        );
                     }
                     
                     viewkeeperMarginBottomOverride.margin = newValue;
@@ -155,19 +149,20 @@
                 windowEl.off('.bbModal' + $scope.$id);
 
                 if (viewkeeperMarginBottomOverride) {
-                    bbViewKeeperConfig.removeViewportMarginBottomOverride(
+                    bbViewKeeperBuilder.removeViewportMarginBottomOverride(
                         viewkeeperMarginBottomOverride
                     );
                 }
 
                 if (viewkeeperMarginTopOverride) {
-                    bbViewKeeperConfig.removeViewportMarginTopOverride(
+                    bbViewKeeperBuilder.removeViewportMarginTopOverride(
                         viewkeeperMarginTopOverride
                     );
                 }
 
                 if (marginStyleEl) {
                     marginStyleEl.remove();
+                    marginStyleEl = null;
                 }
             });
         }
@@ -198,7 +193,7 @@
         };
     }
 
-    bbModal.$inject = ['$timeout', 'bbViewKeeperConfig'];
+    bbModal.$inject = ['$timeout', 'bbViewKeeperBuilder'];
 
     angular.module('sky.modal.directive', ['sky.viewkeeper'])
         .directive('bbModal', bbModal);
