@@ -7,18 +7,20 @@ describe('Scrolling viewkeeper', function () {
     var $compile,
         $document,
         $rootScope,
-        $window;
+        $window,
+        bbViewKeeperBuilder;
     
     beforeEach(module(
         'ngMock',
         'sky.viewkeeper'
     ));
     
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _$window_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _$window_, _bbViewKeeperBuilder_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $document = _$document_;
         $window = _$window_;
+        bbViewKeeperBuilder = _bbViewKeeperBuilder_;
     }));
     
     describe('directive', function () {
@@ -119,6 +121,8 @@ describe('Scrolling viewkeeper', function () {
         });
         
         describe('scrolling down', function () {
+            var fixedBottomHtml = '<div style="top: 0"><div class="bb-omnibar"><div class="desktop"><div class="bar" style="height: 20px"></div></div></div><div id="myVerticalOffset" style="display: block; width: 20px;"></div><div class="my-element" bb-scrolling-view-keeper="vkOptions" style="width: 20px; height: 100px;"></div><div style="height: 1000px; width: 20px;"></div></div>';
+            
             it('removes the fixed bottom and top classes and sets the top of the scrolling element to the top subtracted from the start top value when scrolling down and the height and top of the scrollable element is greater than the scroll position and height of the window', function () {
                 var scrollEl,
                     verticalOffsetEl,
@@ -183,10 +187,9 @@ describe('Scrolling viewkeeper', function () {
         
             it('removes the fixed top class and adds the fixed bottom class when scrolling down and the height and top of the scrollable element is less than the scroll position and height of the window', function () {
                 var scrollEl,
-                    verticalOffsetEl,
-                    vkHtml = '<div style="top: 0"><div class="bb-omnibar"><div class="desktop"><div class="bar" style="height: 20px"></div></div></div><div id="myVerticalOffset" style="display: block; width: 20px;"></div><div class="my-element" bb-scrolling-view-keeper="vkOptions" style="width: 20px; height: 100px;"></div><div style="height: 1000px; width: 20px;"></div></div>';
+                    verticalOffsetEl;
             
-                el = angular.element(vkHtml);
+                el = angular.element(fixedBottomHtml);
             
                 $document.find('body').eq(0).prepend(el);           
             
@@ -206,6 +209,42 @@ describe('Scrolling viewkeeper', function () {
             
                 expect(scrollEl).toHaveClass('bb-grid-filters-fixed-bottom');
                 expect(scrollEl).not.toHaveClass('bb-grid-filters-fixed-top');
+            });
+        
+            it('fixes the element to the correct position when the bototm margin is overridden', function () {
+                var marginBottomOverride,
+                    scrollEl,
+                    verticalOffsetEl;
+            
+                el = angular.element(fixedBottomHtml);
+            
+                $document.find('body').eq(0).prepend(el);           
+            
+                $compile(el)($scope);
+            
+                $scope.vkOptions = { viewKeeperOffsetElId: 'myVerticalOffset' };
+                
+                verticalOffsetEl = el.find('#myVerticalOffset');
+                verticalOffsetEl.height(windowHeight);
+            
+                scrollEl = el.find('.my-element');
+                $scope.$digest();
+
+                marginBottomOverride = {
+                    margin: 100
+                };
+
+                bbViewKeeperBuilder.addViewportMarginBottomOverride(marginBottomOverride);
+                
+                $window.scroll(0, (windowHeight));
+            
+                $($window).trigger('scroll');
+            
+                expect(scrollEl).toHaveClass('bb-grid-filters-fixed-bottom');
+
+                expect(scrollEl.css('bottom')).toBe('100px');
+
+                bbViewKeeperBuilder.removeViewportMarginBottomOverride(marginBottomOverride);
             });
         });
         
@@ -273,7 +312,41 @@ describe('Scrolling viewkeeper', function () {
             
                 expect(scrollEl).not.toHaveClass('bb-grid-filters-fixed-bottom');
                 expect(scrollEl).toHaveClass('bb-grid-filters-fixed-top');
+            });
+        
+            it('removes the fixed bottom class and adds the fixed top class and sets the top of the scrolling element to the vertical offset when scrolling up and the top value of the scrolling element is greater than or equal to the scroll position and vertical offset', function () {
+                var marginTopOverride,
+                    scrollEl,
+                    vkHtml = '<div style="top: 5px;"><div id="myVerticalOffset" style="height: 20px;"></div><div class="my-element" bb-scrolling-view-keeper="vkOptions" style="width: 20px;"></div></div>';
+                el = angular.element(vkHtml);
+            
+                $document.find('body').eq(0).prepend(el);
+            
+                $compile(el)($scope);
+                        
+                scrollEl = el.find('.my-element');
+                scrollEl.height((windowHeight * 2));
+                $scope.$digest();
+            
+                marginTopOverride = {
+                    margin: 40
+                };
                 
+                bbViewKeeperBuilder.addViewportMarginTopOverride(marginTopOverride);
+
+                $window.scroll(0, windowHeight);
+            
+                $($window).trigger('scroll');
+                
+                $window.scroll(0, 0);
+                
+                $($window).trigger('scroll');
+                
+                expect(scrollEl[0].style.top).toBe("40px");
+            
+                expect(scrollEl).toHaveClass('bb-grid-filters-fixed-top');
+
+                bbViewKeeperBuilder.removeViewportMarginTopOverride(marginTopOverride);
             });
         });  
     });

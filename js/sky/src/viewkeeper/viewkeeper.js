@@ -484,7 +484,8 @@
                     bbScrollingViewKeeper: "="
                 },
                 link: function (scope, element) {
-                    var elementStart,
+                    var bottomMargin,
+                        elementStart,
                         scrollPos,
                         prevScroll,
                         scrollingDown = true,
@@ -493,18 +494,26 @@
                         id = scope.$id;
 
                     function scroll() {
+                        var availableWindowHeight = $window.innerHeight;
+
                         if (!element.is(':visible')) {
                             return;
                         }
 
                         if (marginTopOverrides.length > 0) {
                             verticalOffset = marginTopOverrides[marginTopOverrides.length - 1].margin;
+                            availableWindowHeight -= verticalOffset;
                         } else {
                             if (angular.element('.bb-omnibar>.desktop').is(':visible')) {
                                 verticalOffset = angular.element('.bb-omnibar>.desktop>.bar').outerHeight();
                             } else {
                                 verticalOffset = 0;
                             }
+                        }
+
+                        if (marginBottomOverrides.length > 0) {
+                            bottomMargin = marginBottomOverrides[marginBottomOverrides.length - 1].margin;
+                            availableWindowHeight -= bottomMargin;
                         }
 
                         if (scope.bbScrollingViewKeeper && scope.bbScrollingViewKeeper.viewKeeperOffsetElId) {
@@ -523,7 +532,7 @@
                         prevScroll = scrollPos;
 
                         if (scrollPos >= elementStart - verticalOffset && element.height() + verticalOffset <= $window.document.body.offsetHeight) {
-                            if (element.height() + verticalOffset < $window.innerHeight) {
+                            if (element.height() + verticalOffset < availableWindowHeight) {
                                 tempTop = 0;
 
                                 element.removeClass('bb-grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top');
@@ -532,7 +541,7 @@
                                     top: verticalOffset + 'px'
                                 });
                             } else if (scrollingDown) {
-                                if (element.offset().top + element.height() >= scrollPos + $window.innerHeight) {
+                                if (element.offset().top + element.height() >= scrollPos + availableWindowHeight) {
                                     /*istanbul ignore else*/
                                     /* sanity check */
                                     if (!tempTop) {
@@ -550,6 +559,10 @@
                                         top: ''
                                     });
                                     element.removeClass('bb-grid-filters-fixed-top').addClass('bb-grid-filters-fixed-bottom');
+
+                                    element.css({
+                                        bottom: bottomMargin + 'px'
+                                    });
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
