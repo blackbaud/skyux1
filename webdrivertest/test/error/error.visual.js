@@ -5,12 +5,14 @@ describe('error', function () {
     'use strict';
 
     it('should match the custom baseline error image', function (done) {
+
         browser
             .setupTest('/error/fixtures/test.full.html')
             .selectByValue('#select-error-type', 'custom')
             .compareScreenshot({
                 screenshotName: 'error',
-                selector: '#screenshot-error'
+                selector: '#screenshot-error',
+                checkAccessibility: true
             })
             .call(done);
     });
@@ -23,7 +25,8 @@ describe('error', function () {
                 .selectByValue('#select-error-type', 'broken')
                 .compareScreenshot({
                     screenshotName: 'error_broken',
-                    selector: '#screenshot-error-type'
+                    selector: '#screenshot-error-type',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
@@ -34,7 +37,8 @@ describe('error', function () {
                 .selectByValue('#select-error-type', 'construction')
                 .compareScreenshot({
                     screenshotName: 'error_construction',
-                    selector: '#screenshot-error-type'
+                    selector: '#screenshot-error-type',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
@@ -45,7 +49,8 @@ describe('error', function () {
                 .selectByValue('#select-error-type', 'notFound')
                 .compareScreenshot({
                     screenshotName: 'error_notfound',
-                    selector: '#screenshot-error-type'
+                    selector: '#screenshot-error-type',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
@@ -60,7 +65,8 @@ describe('error', function () {
                 .pause(1000)
                 .compareScreenshot({
                     screenshotName: 'error_modal',
-                    selector: '.modal-dialog'
+                    selector: '.modal-dialog',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
