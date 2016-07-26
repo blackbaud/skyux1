@@ -118,8 +118,8 @@ describe('Actionbar directive', function () {
                 ],
                 toggleEl,
                 dropdownEl,
-                labelledBy,
-                toggleId,
+                ariaControls,
+                dropdownId,
                 callbacks = [];
 
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (actionBarCallback) {
@@ -155,10 +155,12 @@ describe('Actionbar directive', function () {
             });
 
             toggleEl = element.find('.bb-btn-secondary.dropdown-toggle');
-            toggleId = toggleEl.attr('id');
+            ariaControls = toggleEl.attr('aria-controls');
             dropdownEl = element.find('ul.dropdown-menu');
-            labelledBy = dropdownEl.attr('aria-labelledby');
-            expect(labelledBy).toEqual(toggleId);
+            dropdownId = dropdownEl.attr('id');
+
+            
+            expect(dropdownId).toEqual(ariaControls);
 
         });
 
