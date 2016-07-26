@@ -23,6 +23,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
     - `bb-grid-filters-summary` &mdash; *(Optional.)* Creates a summary toolbar for applied filters within the `bb-grid` directive.
         - `bb-options` &mdash; Specifies an options object for the `bb-grid-filters-summary` directive.
             - `clearFilters` &mdash; Specifies a function to be called when users click the button to clear filters. You can set `args.filters` to pass updated filters to `bb-grid`.
+        - `bb-grid-filters-summary-dismissable` &mdash; *(Optional.)* Specifies whether the filter summary can be dismissed. *(Default: true)*
     - `bb-grid-options` &mdash; Specifies an object with the following properties for the `bb-grid` directive.
         - `columns` &mdash; An array of available columns. Each column can have the following properties:
             - `allow_see_more` &mdash; *(Optional.)* Indicates whether to include a link for users to view overflow content. To display the link, set this property to `true`.
@@ -59,7 +60,8 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `hasMoreRows` &mdash; *(Optional.)* Indicates whether to display a button that exposes more rows if the grid does not use pagination. To display the button, set this property to `true`.
         - `hideColPicker` &mdash; *(Optional.)* Indicates whether to hide the column picker button in the toolbar. To hide the button, set this property to `true`.
         - `hideFilters` &mdash; *(Optional.)* Indicates whether to hide the filters button in the toolbar. To hide the button, set this property to `true`.
-        - `multiselect` &mdash; *(Optional.)* Indicates whether to add a multi-select checkbox column to the grid. To add the column, set this proprety to `true`.
+        - `loading` &mdash; *(Optional.)* When set to `true`, automatically displays a `bbWait` component over the grid's data.
+        - `multiselect` &mdash; *(Optional.)* Indicates whether to add a multi-select checkbox column to the grid. To add the column, set this property to `true`.
         - `onAddClick` &mdash; *(Optional.)* Specifies a function to be called when users click the add button in the toolbar. The add button only appears if the `onAddClick` property specifies a function.
         - `onAddClickLabel` &mdash; *(Optional.)* Specifies a label for the add button.
         - `resources` &mdash; *(Optional.)* Specifies the resource dictionary available in the scope of each `columns` property's `template_url` and `controller` properties.

@@ -312,7 +312,7 @@
 
     bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
 
-    angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
+    angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints', 'sky.resources'])
         .directive('uibTabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)

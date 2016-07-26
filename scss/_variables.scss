@@ -62,6 +62,9 @@ $bb-text-color-danger: $bb-color-red !default;
 
 
 // Bootstrap overrides
+
+$navbar-default-link-active-bg: $bb-nav-selected-bg-color;
+
 $body-bg: #f3f3f4;
 
 $gray-darker: lighten(#000, 13.5%); // #222
@@ -232,6 +235,7 @@ $z-index-control: 10000;
 $zindex-modal-background: 1040;
 $help-widget-zindex: $zindex-modal-background + 1000 !default;
 $omnibar-zindex: $zindex-modal-background - 1 !default;
+$bb-zindex-dropdown-append-to-body: 1051;
 //end omnibar/help widget
 
 //begin tile

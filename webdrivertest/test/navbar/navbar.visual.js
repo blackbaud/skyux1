@@ -1,38 +1,47 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser, require, $ */
 
 describe('navbar', function () {
     'use strict';
 
+    function testNavbar(screenWidth, done) {
+        browser
+            .setupTest('/navbar/fixtures/test.full.html', screenWidth)
+            .compareScreenshot({
+                screenshotName: 'navbar',
+                selector: '#screenshot-navbar'
+            })
+            .call(done);
+    }
+
     it('should match the baseline navbar screenshot', function (done) {
-        var result,
-            common = require('../common');
+        testNavbar(1280, done);
+    });
 
-        result = browser.url('/navbar/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'navbar',
-            selector: '#screenshot-navbar',
-            screenWidth: [480, 1280],
-            done: done
-        });
+    it('should match the baseline navbar screenshot on small screens', function (done) {
+        testNavbar(480, done);
     });
 
     it('should match the baseline navbar screenshot with the dropdown open', function (done) {
-        var result,
-            common = require('../common');
+        browser
+            .setupTest('/navbar/fixtures/test.full.html')
+            .moveToObject('.nav li.dropdown a')
+            .compareScreenshot({
+                screenshotName: 'navbar_dropdown',
+                selector: '#screenshot-navbar-dropdown'
+            })
+            .call(done);
+    });
 
-        result = browser
-                    .url('/navbar/fixtures/test.full.html')
-                    .moveToObject('.nav li.dropdown a');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'navbar_dropdown',
-            selector: '#screenshot-navbar-dropdown',
-            done: done
-        });
+    it('should match the baseline navbar screenshot with the dropdown open and not active', function (done) {
+        browser
+            .setupTest('/navbar/fixtures/test.full.html')
+            .execute(function () {
+                $('.dropdown').addClass('open');
+            })
+            .compareScreenshot({
+                screenshotName: 'navbar_dropdown_open',
+                selector: '#screenshot-navbar-dropdown'
+            })
+            .call(done);
     });
 });

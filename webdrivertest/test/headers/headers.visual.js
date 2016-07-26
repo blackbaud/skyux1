@@ -4,17 +4,13 @@ describe('headers', function () {
     'use strict';
 
     it('match the baseline header screenshot', function (done) {
-        var result,
-            common = require('../common');
-
-        result = browser.url('/headers/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'header',
-            selector: '#screenshot-headers',
-            done: done
-        });
+        browser
+            .setupTest('/headers/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'header',
+                selector: '#screenshot-headers',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 });

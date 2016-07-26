@@ -4,39 +4,26 @@ describe('selectfield', function () {
     'use strict';
 
     it('should match the baseline screenshot of the multiple select field', function (done) {
-        var browserResult,
-            common = require('../common'),
-            result;
-
-        browserResult = browser
-            .url('/selectfield/fixtures/test.full.html');
-
-        result = common.moveCursorOffScreen(browserResult);
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'selectfield_multiple',
-            selector: '#screenshot-selectfield-multiple',
-            done: done
-        });
+        browser
+            .setupTest('/selectfield/fixtures/test.full.html')
+            .moveCursorOffScreen()
+            .compareScreenshot({
+                screenshotName: 'selectfield_multiple',
+                selector: '#screenshot-selectfield-multiple',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
     it('should match the baseline screenshot of the single select field', function (done) {
-        var browserResult,
-            common = require('../common');
-
-        browserResult = browser
-            .url('/selectfield/fixtures/test.full.html');
-
-
-        common.compareScreenshot({
-            browserResult: browserResult,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'selectfield_single',
-            selector: '#screenshot-selectfield-single',
-            done: done
-        });
+        browser
+            .setupTest('/selectfield/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'selectfield_single',
+                selector: '#screenshot-selectfield-single',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
 });

@@ -54,5 +54,11 @@ describe('Navbar component', function () {
 
             expect(dropdownEl).not.toHaveClass('open');
         });
+        
+
+        it('should show/hide subnav on click events', function () {
+            expect(dropdownEl.click()).toHaveClass('open');
+            expect(dropdownEl.click()).not.toHaveClass('open');
+        });
     });
 });

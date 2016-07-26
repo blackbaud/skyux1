@@ -41,8 +41,6 @@ before_install:
 # Install a few additional things outside those listed in package.json
 before_script:
   - npm install -g grunt-cli
-  - npm install -g bower
-  - bower install
 
 # We want deployment failures to fail the build
 script: npm test && ./scripts/update-skyux.sh && ./scripts/update-skyux-releases.sh && ./scripts/update-skyux-docs.sh
@@ -67,7 +65,6 @@ branches:
 cache:
   directories:
     - node_modules
-    - bower_components
     - $BROWSER_STACK_BINARY_BASE_PATH
 
 notifications:
