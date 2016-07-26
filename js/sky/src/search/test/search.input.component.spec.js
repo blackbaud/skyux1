@@ -23,6 +23,7 @@
             'sky.templates'
         ));
 
+
         beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbMediaBreakpoints_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
@@ -95,24 +96,24 @@
             $scope.$digest();
         }
 
-        function verifySmallScreenDismissable(openButtonEl, inputEl, dismissEl, componentContainerEl, isVisible) {
+        function verifySmallScreenDismissable(openButtonEl, inputContainerEl, dismissEl, componentContainerEl, isVisible) {
             if (isVisible) {
                 expect(componentContainerEl).toHaveClass('bb-search-input-component-container-hidden');
                 expect(openButtonEl).toHaveClass('bb-search-open-hidden');
-                expect(inputEl).toBeVisible();
+                expect(inputContainerEl).not.toHaveClass('bb-search-input-container-hidden');
                 expect(dismissEl).toBeVisible();
             } else {
                 expect(componentContainerEl).not.toHaveClass('bb-search-input-component-container-hidden');
                 expect(openButtonEl).not.toHaveClass('bb-search-open-hidden');
-                expect(inputEl).not.toBeVisible();
+                expect(inputContainerEl).toHaveClass('bb-search-input-container-hidden');
                 expect(dismissEl).not.toBeVisible();
             }
             
         }
 
-        function verifyLargeScreenDismissable(openButtonEl, inputEl, dismissEl, componentContainerEl) {
+        function verifyLargeScreenDismissable(openButtonEl, inputContainerEl, dismissEl, componentContainerEl) {
             expect(openButtonEl).not.toBeVisible();
-            expect(inputEl).toBeVisible();
+            expect(inputContainerEl).not.toHaveClass('bb-search-input-container-hidden');
             expect(dismissEl).not.toBeVisible();
             expect(componentContainerEl).not.toHaveClass('bb-search-input-component-container-hidden');
         }
@@ -177,6 +178,7 @@
             var searchCallback,
                 searchEl,
                 inputEl,
+                inputContainerEl,
                 openButtonEl,
                 openButtonWrapperEl,
                 dismissEl,
@@ -195,33 +197,34 @@
             inputEl = findSearchInput(searchEl);
             dismissEl = findDismissButton(searchEl);
             containerEl = findContainerEl(searchEl);
+            inputContainerEl = findInputContainerEl(searchEl);
             openButtonWrapperEl = findOpenButtonWrapper(searchEl);
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl,  false);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  false);
 
             openButtonEl.click();
             $scope.$digest();
             
-            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl, true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, true);
             expect(inputEl).toBeFocused();
 
             dismissEl.click();
             $scope.$digest();
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl, false);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, false);
 
             inputEl.blur();
             searchCallback({xs: false});
             $scope.$digest();
 
-            verifyLargeScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl);
+            verifyLargeScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl);
             expect(inputEl).not.toBeFocused();
 
             searchCallback({xs: true});
             $scope.$digest();
             
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl, false);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, false);
             
             searchEl.remove();
 
@@ -309,6 +312,7 @@
                 dismissEl,
                 containerEl,
                 clearButtonEl,
+                inputContainerEl,
                 searchCallback;
             
             $scope.searchCtrl = {
@@ -328,9 +332,10 @@
             clearButtonEl = findClearButton(searchEl);
             searchButtonEl = findSearchButton(searchEl);
             containerEl = findContainerEl(searchEl);
+            inputContainerEl = findInputContainerEl(searchEl);
             openButtonWrapperEl = findOpenButtonWrapper(searchEl);
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
@@ -342,7 +347,7 @@
             $scope.searchCtrl.searchText = 'yourText';
             $scope.$digest();
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
             expect(inputEl).toBeFocused();
@@ -353,7 +358,7 @@
             $scope.$digest();
 
 
-            verifyLargeScreenDismissable(openButtonWrapperEl, inputEl, dismissEl, containerEl);
+            verifyLargeScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
@@ -369,14 +374,21 @@
 
             inputEl = findSearchInput(searchEl);
             inputContainerEl = findInputContainerEl(searchEl);
-
-            inputEl.trigger('focus');
+            inputEl.focus();
+            inputEl.triggerHandler('focus');
             $scope.$digest();
+
+            expect(inputEl).toBeFocused();
+
+            inputContainerEl = findInputContainerEl(searchEl);
 
             expect(inputContainerEl).toHaveClass('bb-search-input-focused');
 
             inputEl.blur();
+            inputEl.triggerHandler('blur');
             $scope.$digest();
+
+            inputContainerEl = findInputContainerEl(searchEl);
 
             expect(inputContainerEl).not.toHaveClass('bb-search-input-focused');
 

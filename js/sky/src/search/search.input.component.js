@@ -3,7 +3,7 @@
     'use strict';
 
 
-    function Controller($element, $animate, $timeout, bbMediaBreakpoints) {
+    function Controller($element, $animate, bbMediaBreakpoints) {
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
@@ -186,6 +186,7 @@
         function inputFocused(isFocused) {
             var inputContainerEl = findInputContainerEl(),
                 focusedClass = 'bb-search-input-focused';
+
             if (isFocused) {
                 inputContainerEl.addClass(focusedClass);
             } else {
@@ -241,7 +242,7 @@
         ctrl.inputFocused = inputFocused;
     }
 
-    Controller.$inject = ['$element', '$animate', '$timeout', 'bbMediaBreakpoints'];
+    Controller.$inject = ['$element', '$animate', 'bbMediaBreakpoints'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
