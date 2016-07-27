@@ -133,7 +133,8 @@ describe('Grid directive', function () {
                         caption: 'Name',
                         jsonmap: 'name',
                         id: 1,
-                        name: 'name'
+                        name: 'name',
+                        title: false
                     },
                     {
                         caption: 'Instrument',
@@ -243,7 +244,9 @@ describe('Grid directive', function () {
         expect(cellEl.length).toBe(3);
 
         expect(cellEl.eq(0)).toHaveText('Paul');
+        expect(cellEl.eq(0)).not.toHaveAttr('title', 'Paul');
         expect(cellEl.eq(1)).toHaveText('Bass');
+        expect(cellEl.eq(1)).toHaveAttr('title', 'Bass');
         expect(cellEl.eq(2)).toHaveText('Lorem');
 
         cellEl = rowEl.eq(2).find('td');

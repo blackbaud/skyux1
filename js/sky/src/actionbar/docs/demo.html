@@ -18,10 +18,10 @@
         </div>
         <div class="col-xs-4 col-md-2">
             <div class="pull-right">
-                <bb-action-bar-item ng-click="actionCtrl.rightAction1()">
+                <bb-action-bar-item ng-click="actionCtrl.rightAction1()" bb-action-bar-item-label="Open tiles">
                     <span class="fa fa-angle-double-up"></span>
                 </bb-action-bar-item>
-                <bb-action-bar-item ng-click="actionCtrl.rightAction2()">
+                <bb-action-bar-item ng-click="actionCtrl.rightAction2()" bb-action-bar-item-label="Close tiles">
                     <span class="fa fa-angle-double-down"></span>
                 </bb-action-bar-item>
             </div>
@@ -60,11 +60,11 @@
             </div>
 
             <div uib-dropdown class="visible-xs">
-                <button class="btn bb-btn-secondary"  uib-dropdown-toggle type="button" href="javascript:void(0)">
+                <button aria-controls="bb-actionbar-custom-id" class="btn bb-btn-secondary"  uib-dropdown-toggle type="button" href="javascript:void(0)">
                     {{actionCtrl.collapsedText}} <span class="caret"/>
                 </button>
 
-                <ul uib-dropdown-menu>
+                <ul id="bb-actionbar-custom-id" uib-dropdown-menu>
                     <li ng-repeat="item in actionCtrl.items" ng-show="item.visible">
                         <a ng-click="item.action()">{{item.actionText}}</a>
                     </li>
@@ -79,10 +79,10 @@
 
         <div class="col-xs-4 col-md-2">
             <div class="pull-right">
-                <button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-click="actionCtrl.rightAction1()">
+                <button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-click="actionCtrl.rightAction1()" aria-label="Open tiles">
                     <span class="fa fa-angle-double-up"></span>
                 </button>
-                <button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-click="actionCtrl.rightAction2()">
+                <button class="btn bb-btn-secondary bb-action-bar-item-button" type="button" ng-click="actionCtrl.rightAction2()" aria-label="Close tiles">
                     <span class="fa fa-angle-double-down"></span>
                 </button>
             </div>

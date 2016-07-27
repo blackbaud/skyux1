@@ -23,6 +23,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
     - `bb-grid-filters-summary` &mdash; *(Optional.)* Creates a summary toolbar for applied filters within the `bb-grid` directive.
         - `bb-options` &mdash; Specifies an options object for the `bb-grid-filters-summary` directive.
             - `clearFilters` &mdash; Specifies a function to be called when users click the button to clear filters. You can set `args.filters` to pass updated filters to `bb-grid`.
+        - `bb-grid-filters-summary-dismissable` &mdash; *(Optional.)* Specifies whether the filter summary can be dismissed. *(Default: true)*
     - `bb-grid-options` &mdash; Specifies an object with the following properties for the `bb-grid` directive.
         - `columns` &mdash; An array of available columns. Each column can have the following properties:
             - `allow_see_more` &mdash; *(Optional.)* Indicates whether to include a link for users to view overflow content. To display the link, set this property to `true`.
@@ -37,6 +38,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `name` &mdash; Specifies a unique name for the column. If the `name` value is different than the `jsonmap` value, then it must not match the value for any properties in the `bb-grid-option` property's `data` property.
             - `right_align` &mdash; *(Optional.)* Indicates whether to right-align the content in the column. To right-align content, set this property to `true`. By default, content is left-aligned.
             - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data object, use the format `data.property_name`.
+            - `title` &mdash; *(Optional.)* Indicates whether the cells for the column should display the content in a title. Set to false if the column should not set the title attribute. *(Default: true)*
             - `width_all` &mdash; *(Optional.)* Sets the default column width (in pixels). To override the default column width for certain screen sizes, you can set breakpoint-specific column widths with the `width_xs`, `width_sm`, `width_md`, and `width_lg` properties. When columns do not take up the entire the grid, the last column extends beyond its default width to take up the remaining space. *(Default: 150px)*
             - `width_xs` &mdash; *(Optional.)* Sets the column width for screen sizes less than 768px.
             - `width_sm` &mdash; *(Optional.)* Sets the column width for screen sizes from 768px to 991px.

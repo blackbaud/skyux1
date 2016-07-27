@@ -4,12 +4,9 @@ describe('navbar', function () {
     'use strict';
 
     function testNavbar(screenWidth, done) {
-        var common = require('../common');
-
         browser
             .setupTest('/navbar/fixtures/test.full.html', screenWidth)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'navbar',
                 selector: '#screenshot-navbar'
             })
@@ -25,13 +22,10 @@ describe('navbar', function () {
     });
 
     it('should match the baseline navbar screenshot with the dropdown open', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/navbar/fixtures/test.full.html')
             .moveToObject('.nav li.dropdown a')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'navbar_dropdown',
                 selector: '#screenshot-navbar-dropdown'
             })
@@ -39,15 +33,12 @@ describe('navbar', function () {
     });
 
     it('should match the baseline navbar screenshot with the dropdown open and not active', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/navbar/fixtures/test.full.html')
             .execute(function () {
                 $('.dropdown').addClass('open');
             })
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'navbar_dropdown_open',
                 selector: '#screenshot-navbar-dropdown'
             })

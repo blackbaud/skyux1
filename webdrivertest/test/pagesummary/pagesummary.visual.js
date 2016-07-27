@@ -5,13 +5,10 @@ describe('Page summary', function () {
     'use strict';
 
     function clickTest(screenshotName, visibleComponents, done, screenWidth) {
-        var common = require('../common');
-
         browser
             .setupTest('/pagesummary/fixtures/test.full.html', screenWidth)
             .setValue('#screenshots-pagesummary-items', visibleComponents.join(','))
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: ('pagesummary_' + screenshotName),
                 selector: '#screenshots-pagesummary'
             })

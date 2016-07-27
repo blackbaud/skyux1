@@ -1,51 +1,62 @@
 <div>
-    <div ng-show="!$ctrl.searchInputVisible">
-        <button type="button" class="btn bb-btn-secondary bb-search-open" title="{{::'search_open' | bbResources}}" ng-click="$ctrl.toggleSearchInput()">
-            <i class="fa fa-search"></i>
+    <div 
+        class="bb-search-open-wrapper"
+        ng-show="$ctrl.currentBreakpoint.xs"
+        ng-class="{'bb-search-open-applied': $ctrl.showClear, 'bb-search-open-hidden': !$ctrl.openButtonShown}">
+
+        <button 
+            type="button" 
+            class="btn bb-btn-secondary bb-search-btn-open" 
+            title="{{::'search_open' | bbResources}}" 
+            ng-click="$ctrl.openSearchInput(true)">
+            <i class="fa fa-search fa-lg"></i>
         </button>
     </div>
-    <div 
-        ng-class="{'bb-search-slide': $ctrl.currentBreakpoint.xs && $ctrl.searchInputVisible}" 
-        class="bb-search-and-dismiss" 
-        ng-show="$ctrl.searchInputVisible">
+    <div class="bb-search-and-dismiss">
 
-        <div class="bb-search-item">
-            <div class="bb-search-container input-group">
-                <input 
+        <div class="bb-search-item-input">
+            <div class="bb-search-input-container input-group">
+                <input
                     type="text" 
                     class="form-control bb-search-input"
                     ng-model="$ctrl.bbSearchText"
-                    ng-change="$ctrl.inputChanged()" 
                     ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
+                    ng-focus="$ctrl.inputFocused(true)"
+                    ng-blur="$ctrl.inputFocused(false)"
                     data-bbauto-field="SearchBox"
-                    aria-label="{{::'search_label' | bbResources}}" />
+                    aria-label="{{::'search_label' | bbResources}}" />    
+
                 <span class="input-group-btn">
-                    <button
-                        ng-show="!$ctrl.showClear" 
+                    
+                    <button  
+                        tabindex="-1"
+                        aria-hidden="true"
+                        ng-show="$ctrl.showClear && !$ctrl.openButtonShown" 
+                        type="button"
+                        class="btn bb-search-btn-input-group bb-search-btn-clear"
+                        ng-click="$ctrl.clearSearchText()">
+                        <i class="fa fa-times"></i>
+                    </button>
+
+                    <button          
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-apply"
                         ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
                         aria-label="{{::'search_label' | bbResources}}" >
                         <i class="fa fa-search fa-lg"></i>
                     </button>
-                    <button
-                        ng-show="$ctrl.showClear" 
-                        type="button"
-                        class="btn bb-search-btn-input-group bb-search-btn-clear"
-                        ng-click="$ctrl.clearSearchText()"
-                        aria-label="{{::'search_clear' | bbResources}}" >
-                        <i class="fa fa-times fa-lg"></i>
-                    </button>
+                    
                 </span>
+                
             </div>
         </div>
         
-        <div class="bb-search-item" ng-show="$ctrl.currentBreakpoint.xs">
+        <div class="bb-search-item-dismiss" ng-show="$ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown">
             <button 
                 type="button" 
                 title="{{::'search_dismiss' | bbResources}}" 
                 class="btn bb-btn-secondary bb-search-btn-dismiss" 
-                ng-click="$ctrl.toggleSearchInput()">
+                ng-click="$ctrl.dismissSearchInput()">
                 <i class="fa fa-chevron-circle-left fa-lg">
                 </i>
             </button>
