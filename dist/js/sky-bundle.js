@@ -102107,6 +102107,17 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
 
+    angular.module('sky.search', 
+        [
+            'sky.search.input.component',
+            'sky.search.container.directive'
+        ]);
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module(
         'sky.selectfield',
         [
@@ -102158,8 +102169,9 @@ global.easyXDM = easyXDM;
                 title: '=?bbActionBarItemGroupTitle'
             },
             restrict: 'E',
+            require: 'bbActionBarItemGroup',
             scope: {},
-            link: function ($scope, el) {
+            link: function ($scope, el, attr, vm) {
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         el.find('.bb-action-bar-buttons > ng-transclude').appendTo(el.find('.bb-action-bar-dropdown > .dropdown > ul'));
@@ -102173,6 +102185,8 @@ global.easyXDM = easyXDM;
                 $scope.$on('$destroy', function () {
                     bbMediaBreakpoints.unregister(mediaBreakpointHandler);
                 });
+
+                vm.toggleId = 'bb-action-bar-item-group-' + $scope.$id;
             },
             templateUrl: 'sky/templates/actionbar/actionbaritemgroup.html'
         };
@@ -107049,6 +107063,7 @@ global.easyXDM = easyXDM;
                                             template_url: column.template_url,
                                             jsonmap: column.jsonmap,
                                             allow_see_more: column.allow_see_more,
+                                            title: angular.isUndefined(column.title) || column.title,
                                             width: colWidth
                                         };
 
@@ -110635,6 +110650,282 @@ angular.module('sky.palette.config', [])
         }]);
 }());
 
+/* global angular */
+
+(function () {
+    'use strict';
+
+    function linkFn($scope, el) {
+        el.addClass('bb-search-input-component-container');
+    }
+
+    angular.module('sky.search.container.directive', [])
+        .directive('bbSearchContainer', function () {
+            return {
+                restrict: 'A',
+                link: linkFn
+            };
+        });
+}());
+
+
+/* global angular */
+(function () {
+    'use strict';
+
+
+    function Controller($element, $animate, bbMediaBreakpoints) {
+        var ctrl = this,
+            animationSpeed = 150,
+            animationEase = 'linear';
+        
+        function applySearchText(searchText) {
+            //select input
+            var searchEl = $element.find('.bb-search-input');
+
+            ctrl.showClear = searchText && searchText !== '';
+            
+            /*istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(searchEl.select) && searchEl.length > 0 && searchText) {
+                searchEl.eq(0).select();
+            }
+
+            //search callback
+            ctrl.bbOnSearch({searchText: searchText});
+            
+        }
+
+        function setInputFocus() {
+            $element.find('input').focus();
+        }
+
+        function clearSearchText() {
+            ctrl.bbSearchText = '';
+            
+            setInputFocus();
+
+            ctrl.showClear = false;
+            ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
+            
+        }
+
+        function mediaBreakpointCallback(breakpoint) {
+            ctrl.currentBreakpoint = breakpoint;
+            // Search input should be hidden if screen is xs
+            if (breakpoint.xs) {
+                dismissSearchInput();
+            } else {
+                openSearchInput();
+            }
+        }
+
+        function findDismissEl() {
+            return $element.find('.bb-search-btn-dismiss');
+        }
+
+        function findOpenEl() {
+            return $element.find('.bb-search-open');
+        }
+
+        function findSearchAndDismissEl() {
+            return $element.find('.bb-search-and-dismiss');
+        }
+
+        function findInputContainerEl() {
+            return $element.find('.bb-search-input-container');
+        }
+
+        function findComponentContainerEl() {
+            return $element.parents('.bb-search-input-component-container');
+        }
+
+        function getExpectedInputWidth() {
+            var openEl,
+                offset,
+                buttonWidth;
+            
+            openEl = findOpenEl();
+            offset = $element.position();
+            buttonWidth = openEl.outerWidth();
+            
+            return offset.left + buttonWidth;
+        }
+
+        function toggleMobileInputVisible(isVisible) {
+            var searchAndDismissEl = findSearchAndDismissEl(),
+                absolutePositionClass = 'bb-search-and-dismiss-absolute',
+                containerHiddenClass = 'bb-search-input-component-container-hidden',
+                containerEl = findComponentContainerEl();
+
+            if (isVisible) {
+                searchAndDismissEl.addClass(absolutePositionClass);
+                if (containerEl.length > 0) {
+                    containerEl.addClass(containerHiddenClass);
+                }
+            } else {
+                searchAndDismissEl.removeClass(absolutePositionClass);
+                if (containerEl.length > 0) {
+                    containerEl.removeClass(containerHiddenClass);
+                }
+            }
+        }
+
+        function toggleInputShown(isVisible) {
+            var inputContainerEl = findInputContainerEl(),
+                inputHiddenClass = 'bb-search-input-container-hidden'; 
+
+            if (isVisible) {
+                inputContainerEl.removeClass(inputHiddenClass);
+            } else {
+                inputContainerEl.addClass(inputHiddenClass);
+            }
+        }
+
+
+        function setupInputAnimation(inputContainerEl, expectedWidth) {
+            inputContainerEl.width(expectedWidth);
+            toggleInputShown(true);
+
+            // Set opacity to 0 to fade in input initially
+            inputContainerEl.css('opacity', '0');
+        }
+
+        function toggleDismissShown(isVisible) {
+            var dismissBtnEl = findDismissEl(),
+                dismissHiddenClass = 'bb-search-btn-dismiss-hidden';
+            if (isVisible) {
+                dismissBtnEl.removeClass(dismissHiddenClass);
+            } else {
+                dismissBtnEl.addClass(dismissHiddenClass);
+            }
+        }
+
+        function openSearchInput(focusInput) {
+
+            var inputContainerEl,
+                expectedWidth = getExpectedInputWidth();
+                
+            inputContainerEl = findInputContainerEl();   
+
+            toggleMobileInputVisible(ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs);
+            
+            setupInputAnimation(inputContainerEl, expectedWidth);
+            toggleDismissShown(true);
+            ctrl.openButtonShown = false;
+            
+            inputContainerEl.animate(
+                {
+                    width: '100%',
+                    opacity: 1
+                }, 
+                animationSpeed,
+                animationEase
+            );
+            
+            //Do not focus input on mediabreakpoint change, only on actual interaction
+            if (focusInput) {
+                setInputFocus();
+            }
+            
+        }
+
+        function dismissSearchInput() {
+            var inputContainerEl = findInputContainerEl(),
+                expectedWidth = getExpectedInputWidth(),
+                widthString;
+
+            widthString = expectedWidth + 'px';
+            toggleDismissShown(false);
+            ctrl.openButtonShown = true;
+            inputContainerEl.animate(
+                {
+                    opacity: 0,
+                    width: widthString
+                },
+                animationSpeed,
+                animationEase,
+                function () {
+                    toggleMobileInputVisible(false);
+                    toggleInputShown(false);
+                }
+            );
+
+
+        }
+
+        function inputFocused(isFocused) {
+            var inputContainerEl = findInputContainerEl(),
+                focusedClass = 'bb-search-input-focused';
+
+            if (isFocused) {
+                inputContainerEl.addClass(focusedClass);
+            } else {
+                inputContainerEl.removeClass(focusedClass);
+            }
+        }
+
+        function searchTextBindingChanged() {
+            ctrl.showClear = true;
+            
+            if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
+                openSearchInput(true);
+            }
+        }
+
+        // Trigger highlight if bbListbuilderSearchText binding changes from parent.
+        function bindingChanges(changesObj) {
+            var searchText;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbSearchText) {
+                searchText = changesObj.bbSearchText;
+                /* istanbul ignore else */
+                /* sanity check */
+                if (searchText.currentValue !== searchText.previousValue) {
+                    searchTextBindingChanged();
+                }
+            }
+        }
+
+        function initSearch() {
+            
+            if (ctrl.bbSearchText) {
+                searchTextBindingChanged();
+            }
+        }
+
+
+        function destroySearch() {
+            bbMediaBreakpoints.unregister(mediaBreakpointCallback);
+        }
+
+        bbMediaBreakpoints.register(mediaBreakpointCallback);
+
+        ctrl.$onInit = initSearch;
+        ctrl.$onChanges = bindingChanges;
+        ctrl.$onDestroy = destroySearch;
+
+        ctrl.applySearchText = applySearchText;
+        ctrl.clearSearchText = clearSearchText;
+        ctrl.openSearchInput = openSearchInput;
+        ctrl.dismissSearchInput = dismissSearchInput;
+        ctrl.inputFocused = inputFocused;
+    }
+
+    Controller.$inject = ['$element', '$animate', 'bbMediaBreakpoints'];
+
+    angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
+        .component('bbSearchInput', {
+            templateUrl: 'sky/templates/search/search.input.component.html',
+            controller: Controller,
+            bindings: {
+                bbOnSearch: '&?',
+                bbSearchText: '<?',
+                bbOnSearchInputToggled: '&?'
+            }
+        });
+}());
 /*global angular */
 
 (function () {
@@ -113466,6 +113757,7 @@ angular.module('sky.palette.config', [])
         'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',
+        'sky.search',
         'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
@@ -113508,7 +113800,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -113534,11 +113826,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '    <div class="bb-action-bar-dropdown hidden-sm hidden-md hidden-lg">\n' +
         '        <div uib-dropdown>\n' +
-        '             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+        '             <button ng-attr-aria-controls="{{bbActionBarItemGroup.toggleId}}" class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" >\n' +
         '            {{bbActionBarItemGroup.title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '\n' +
-        '            <ul uib-dropdown-menu>\n' +
+        '            <ul uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">\n' +
         '\n' +
         '            </ul>\n' +
         '        </div>\n' +
@@ -114373,6 +114665,75 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '  </div>\n' +
         '</section>\n' +
+        '');
+    $templateCache.put('sky/templates/search/search.input.component.html',
+        '<div>\n' +
+        '    <div \n' +
+        '        class="bb-search-open-wrapper"\n' +
+        '        ng-show="$ctrl.currentBreakpoint.xs"\n' +
+        '        ng-class="{\'bb-search-open-applied\': $ctrl.showClear, \'bb-search-open-hidden\': !$ctrl.openButtonShown}">\n' +
+        '\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            class="btn bb-btn-secondary bb-search-btn-open" \n' +
+        '            title="{{::\'search_open\' | bbResources}}" \n' +
+        '            ng-click="$ctrl.openSearchInput(true)">\n' +
+        '            <i class="fa fa-search fa-lg"></i>\n' +
+        '        </button>\n' +
+        '    </div>\n' +
+        '    <div class="bb-search-and-dismiss">\n' +
+        '\n' +
+        '        <div class="bb-search-item-input">\n' +
+        '            <div class="bb-search-input-container input-group">\n' +
+        '                <input\n' +
+        '                    type="text" \n' +
+        '                    class="form-control bb-search-input"\n' +
+        '                    ng-model="$ctrl.bbSearchText"\n' +
+        '                    ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" \n' +
+        '                    ng-focus="$ctrl.inputFocused(true)"\n' +
+        '                    ng-blur="$ctrl.inputFocused(false)"\n' +
+        '                    data-bbauto-field="SearchBox"\n' +
+        '                    aria-label="{{::\'search_label\' | bbResources}}" />    \n' +
+        '\n' +
+        '                <span class="input-group-btn">\n' +
+        '                    \n' +
+        '                    <button  \n' +
+        '                        tabindex="-1"\n' +
+        '                        aria-hidden="true"\n' +
+        '                        ng-show="$ctrl.showClear && !$ctrl.openButtonShown" \n' +
+        '                        type="button"\n' +
+        '                        class="btn bb-search-btn-input-group bb-search-btn-clear"\n' +
+        '                        ng-click="$ctrl.clearSearchText()">\n' +
+        '                        <i class="fa fa-times"></i>\n' +
+        '                    </button>\n' +
+        '\n' +
+        '                    <button          \n' +
+        '                        type="button"\n' +
+        '                        class="btn bb-search-btn-input-group bb-search-btn-apply"\n' +
+        '                        ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"\n' +
+        '                        aria-label="{{::\'search_label\' | bbResources}}" >\n' +
+        '                        <i class="fa fa-search fa-lg"></i>\n' +
+        '                    </button>\n' +
+        '                    \n' +
+        '                </span>\n' +
+        '                \n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '        \n' +
+        '        <div class="bb-search-item-dismiss" ng-show="$ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown">\n' +
+        '            <button \n' +
+        '                type="button" \n' +
+        '                title="{{::\'search_dismiss\' | bbResources}}" \n' +
+        '                class="btn bb-btn-secondary bb-search-btn-dismiss" \n' +
+        '                ng-click="$ctrl.dismissSearchInput()">\n' +
+        '                <i class="fa fa-chevron-circle-left fa-lg">\n' +
+        '                </i>\n' +
+        '            </button>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '\n' +
+        '    \n' +
+        '</div>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfield.directive.html',
         '<ng-include src="bbSelectField.getFieldInclude()"></ng-include>\n' +
