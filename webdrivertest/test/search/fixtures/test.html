@@ -1,0 +1,23 @@
+<style type="text/css">
+    .bb-search-docs-inline {
+        display: inline-block;
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="container" ng-controller="SearchTestController as searchCtrl">
+    <div id="screenshot-search-full">
+        <div bb-search-container>
+            <div class="bb-search-docs-inline">
+                <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Set search text</button>    
+            </div>
+            <div class="bb-search-docs-inline">
+                <bb-search-input
+                    bb-search-text="searchCtrl.searchText"
+                    bb-on-search="searchCtrl.applySearchText(searchText)">
+                </bb-search-input>
+            </div>    
+        </div>
+    </div>
+</div>

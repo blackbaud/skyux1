@@ -1,0 +1,38 @@
+<style type="text/css">
+
+.bb-search-docs-toolbar-item {
+   	display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+
+</style>
+<div ng-controller="SearchTestController as searchCtrl">
+    <div class="bb-search-docs-toolbar" bb-search-container>
+        <div class="bb-search-docs-toolbar-item">
+            <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Custom button</button>  
+        </div>
+        <div class="bb-search-docs-toolbar-item">
+            <bb-search-input
+                bb-search-text="searchCtrl.searchText"
+                bb-on-search="searchCtrl.applySearchText(searchText)"
+                bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)">
+            </bb-search-input>
+        </div>
+    </div>    
+    <div>
+        <bb-repeater bb-repeater-expand-mode="none">
+            <bb-repeater-item ng-repeat="item in searchCtrl.items">
+            <bb-repeater-item-title>
+                {{item.title}}
+            </bb-repeater-item-title>
+            <bb-repeater-item-content>
+                <div>
+                {{item.note}}
+                </div>
+            </bb-repeater-item-content>
+            </bb-repeater-item>
+        </bb-repeater>
+      </div>
+</div>
