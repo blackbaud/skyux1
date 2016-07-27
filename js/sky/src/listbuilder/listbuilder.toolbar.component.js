@@ -51,10 +51,6 @@
             vkToolbar.scrollToTop();
         }
 
-        function searchInputToggled(isVisible) {
-            ctrl.searchToggled = isVisible;
-        }
-
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
         function bindingChanges(changesObj) {
             var searchText;
@@ -95,7 +91,6 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
-        ctrl.searchInputToggled = searchInputToggled;
 
     }
 

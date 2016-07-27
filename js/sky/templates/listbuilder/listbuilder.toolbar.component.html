@@ -1,14 +1,14 @@
-<div class="bb-listbuilder-toolbar">
-    <div ng-show="!$ctrl.searchToggled" class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">
+<div class="bb-listbuilder-toolbar" bb-search-container>
+    <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">
     </div>
     <div class="bb-listbuilder-toolbar-item">
         <bb-search-input
             bb-search-text="$ctrl.bbListbuilderSearchText"
             bb-on-search="$ctrl.applySearchText(searchText)"
-            bb-on-search-input-toggled="$ctrl.searchInputToggled(isVisible)">
+            >
         </bb-search-input>
     </div>
-    <div ng-show="!$ctrl.searchToggled" class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderFilter">
+    <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderFilter">
 
     </div>    
 </div>
