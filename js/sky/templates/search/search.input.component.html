@@ -24,7 +24,9 @@
                     ng-focus="$ctrl.inputFocused(true)"
                     ng-blur="$ctrl.inputFocused(false)"
                     data-bbauto-field="SearchBox"
-                    aria-label="{{::'search_label' | bbResources}}" />    
+                    ng-attr-aria-label="{{::'search_label' | bbResources}}" 
+                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"
+                    />    
 
                 <span class="input-group-btn">
                     

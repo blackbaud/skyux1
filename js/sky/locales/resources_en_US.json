@@ -515,6 +515,10 @@
         "_description": "Label for dismissing search input",
         "message": "Dismiss search"
     },
+    "search_placeholder": {
+        "_description": "Placeholder text for search input component",
+        "message": "Find in this list"
+    },
     "searchfield_searching": {
         "_description": "text for ui-select search control while performing a remote search",
         "message": "Searching..."

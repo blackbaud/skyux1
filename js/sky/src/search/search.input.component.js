@@ -3,7 +3,7 @@
     'use strict';
 
 
-    function Controller($element, $animate, bbMediaBreakpoints) {
+    function Controller($element, bbMediaBreakpoints, bbResources) {
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
@@ -222,6 +222,10 @@
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
+
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
+                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            }
         }
 
 
@@ -242,7 +246,7 @@
         ctrl.inputFocused = inputFocused;
     }
 
-    Controller.$inject = ['$element', '$animate', 'bbMediaBreakpoints'];
+    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
@@ -251,7 +255,7 @@
             bindings: {
                 bbOnSearch: '&?',
                 bbSearchText: '<?',
-                bbOnSearchInputToggled: '&?'
+                bbSearchPlaceholder: '<?'
             }
         });
 }());
