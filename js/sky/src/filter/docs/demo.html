@@ -1,7 +1,9 @@
 <div ng-controller="FilterTestController as filterCtrl">
-    <button type="button" class="btn bb-btn-secondary" ng-click="filterCtrl.openModal()">
-        Open filters
-    </button>
+    <bb-filter-button 
+        bb-filter-button-modal-open="filterCtrl.openObject" 
+        bb-filter-button-apply="filterCtrl.appliedFilterCallback(filters)">
+
+    </bb-filter-button>
     <div>
         <label>Fruit preference: {{filterCtrl.appliedFilters.fruitType}}</label>
     </div>

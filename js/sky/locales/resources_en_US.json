@@ -586,5 +586,17 @@
     "tab_open": {
         "_description": "Screen reader text for the open button on a tabset",
         "message": "Open"
+    },
+    "filter_modal_apply": {
+        "_description": "Text for button to apply filters",
+        "message": "Apply filters"
+    },
+    "filter_modal_clear": {
+        "_description": "Text for button to clear filters",
+        "message": "Clear all filters"
+    },
+    "filter_button_title": {
+        "_description": "Text for the filter button title",
+        "message": "Filters"
     }
 }

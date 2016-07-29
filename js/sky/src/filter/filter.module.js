@@ -5,6 +5,7 @@
 
     angular.module('sky.filter', 
         [
-            'sky.filter.modal.footer.component'
+            'sky.filter.modal.footer.component',
+            'sky.filter.button.component'
         ]);
 }());

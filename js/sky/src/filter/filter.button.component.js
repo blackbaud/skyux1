@@ -7,10 +7,10 @@
 
         function openFilterModal() {
             bbModal
-                .open(ctrl.bbListbuilderFilterModalOpen)
+                .open(ctrl.bbFilterButtonModalOpen)
                 .result
                 .then(function (result) {
-                    ctrl.bbListbuilderFilterApply({filters: angular.copy(result)});
+                    ctrl.bbFilterButtonApply({filters: angular.copy(result)});
                 });
         }
 
@@ -19,14 +19,13 @@
 
     Controller.$inject = ['bbModal'];
 
-    angular.module('sky.listbuilder.filter.component', ['sky.modal', 'sky.resources'])
+    angular.module('sky.filter.button.component', ['sky.modal', 'sky.resources'])
         .component('bbFilterButton', {
             templateUrl: 'sky/templates/filter/filter.button.component.html',
             controller: Controller,
             bindings: {
                 bbFilterButtonModalOpen: '<',
-                bbFilterButtonApply: '&',
-                bbFilterButtonIsApplied: '<?'
+                bbFilterButtonApply: '&'
             }
         });
 }());

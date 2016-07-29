@@ -33,29 +33,25 @@
 
     FilterModalController.$inject = ['$uibModalInstance', 'existingFilters'];
     
-    function FilterTestController($timeout, bbModal) {
+    function FilterTestController() {
         var self = this;
         
-        function openModal() {
-            bbModal.open({
-                controller: 'FilterModalController as modalCtrl',
-                templateUrl: 'demo/filter/filters.html',
-                resolve: {
-                    existingFilters: function () {
-                        return angular.copy(self.appliedFilters);
-                    }
+        self.openObject = {
+            controller: 'FilterModalController as modalCtrl',
+            templateUrl: 'demo/filter/filters.html',
+            resolve: {
+                existingFilters: function () {
+                    return angular.copy(self.appliedFilters);
                 }
-            }).result.then(function (filters) {
-                self.appliedFilters = angular.copy(filters);
-            });
-        }
+            }
+        };
 
-        self.openModal = openModal;
+        self.appliedFilterCallback = function (filters) {
+            self.appliedFilters = filters;
+        };
        
         
     }
-
-    FilterTestController.$inject = ['$timeout', 'bbModal'];
     
     angular
         .module('stache')
