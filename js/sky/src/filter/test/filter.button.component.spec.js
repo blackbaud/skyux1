@@ -2,13 +2,13 @@
 /* global module, inject*/
 (function () {
     'use strict';
-    describe('Listbuilder filter', function () {
+    describe('Filter button', function () {
         var $compile,
             $scope,
             bbModal;
 
         beforeEach(module(
-            'sky.listbuilder',
+            'sky.filter',
             'sky.templates'
         ));
 
@@ -19,15 +19,12 @@
         }));
 
         it('should create a filter button which launches a modal with the appropriate object', function () {
-            var filterBtnHtml = ' <bb-listbuilder> ' +
-                    '<bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-filter ' +
-                        'bb-listbuilder-filter-modal-open="listCtrl.openObject" ' +
-                        'bb-listbuilder-filter-apply="listCtrl.appliedFilterCallback(filters)" ' +
+            var filterBtnHtml = ' <div> ' +
+                    '<bb-filter-button ' +
+                        'bb-filter-button-modal-open="filterCtrl.openObject" ' +
+                        'bb-filter-button-apply="filterCtrl.appliedFilterCallback(filters)" ' +
                     '>' +
-                    '</bb-listbuilder-filter>' +
-                    '</bb-listbuilder-toolbar>' +
-                    '</bb-listbuilder>',
+                    '</div>',
                     actualFilters = {
                         filter: 'blue'
                     },
@@ -46,7 +43,7 @@
                 };
             });
 
-            $scope.listCtrl = {
+            $scope.filterCtrl = {
                 openObject: {
                     templateUrl: 'myUrl',
                     controller: 'myController'
@@ -61,7 +58,7 @@
 
             el.find('.btn.bb-btn-secondary').click();
 
-            expect(actualOpen).toEqual($scope.listCtrl.openObject);
+            expect(actualOpen).toEqual($scope.filterCtrl.openObject);
             expect(expectedFilters).toEqual(actualFilters);
         });
         
