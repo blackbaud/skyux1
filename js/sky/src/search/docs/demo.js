@@ -26,11 +26,6 @@
             self.items = filteredItems;
         }
 
-        function searchInputToggled(isVisible) {
-            self.dismissableSearchShown = isVisible;
-        }
-
-
         items = [
             {
                 title: 'Call Robert Hernandez',
@@ -55,7 +50,6 @@
         ];
 
         self.applySearchText = applySearchText;
-        self.searchInputToggled = searchInputToggled;
         self.items = items;
     }
 

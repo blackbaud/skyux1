@@ -395,5 +395,57 @@
             searchEl.remove();
 
         });
+
+        describe('placeholder text', function () {
+            it('has no placeholder text when bbSearchPlaceholder is undefined', function () {
+                var searchEl,
+                    inputEl;
+                
+                searchEl = initSearch(searchHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).not.toHaveAttr('placeholder');
+
+                searchEl.remove();
+            });
+
+            it('has predefined placeholder text when bbSearchPlaceholder is defined', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-placeholder ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+                
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                searchEl.remove();
+            });
+
+            it('has user defined placeholder text when bbSearchPlaceholder has a string', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-placeholder="searchCtrl.placeholder" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                $scope.searchCtrl = {
+                    placeholder: 'Search'
+                };
+                
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('placeholder', 'Search');
+                searchEl.remove();
+            });
+        });
     });
 })();
