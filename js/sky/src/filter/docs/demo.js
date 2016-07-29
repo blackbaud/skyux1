@@ -33,28 +33,33 @@
 
     FilterModalController.$inject = ['$uibModalInstance', 'existingFilters'];
     
-    function FilterTestController() {
+    function FilterTestController(bbModal) {
         var self = this;
-        
-        self.openObject = {
-            controller: 'FilterModalController as modalCtrl',
-            templateUrl: 'demo/filter/filters.html',
-            resolve: {
-                existingFilters: function () {
-                    return angular.copy(self.appliedFilters);
-                }
-            }
-        };
 
-        self.appliedFilterCallback = function (filters) {
-            self.appliedFilters = filters;
+        self.filterButtonClicked = function () {
+            bbModal
+                .open({
+                    controller: 'FilterModalController as modalCtrl',
+                    templateUrl: 'demo/filter/filters.html',
+                    resolve: {
+                        existingFilters: function () {
+                            return angular.copy(self.appliedFilters);
+                        }
+                    }
+                })
+                .result
+                .then(function (result) {
+                    self.appliedFilters = angular.copy(filters);
+                });
         };
        
         
     }
+
+    FilterTestController.$inject = ['bbModal'];
     
     angular
         .module('stache')
         .controller('FilterTestController', FilterTestController)
         .controller('FilterModalController', FilterModalController);
-}());
+})();

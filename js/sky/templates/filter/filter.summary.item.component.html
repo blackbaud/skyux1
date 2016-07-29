@@ -1,0 +1,10 @@
+<div role="button" tabindex="0" class="bb-filter-summary-item">
+    <ng-transclude></ng-transclude>
+    <span 
+        ng-if="$ctrl.bbFilterItemIsDismissable" 
+        role="button" 
+        tabindex="0" 
+        class="fa fa-times close" 
+        ng-click="$ctrl.clearFilter($event)">
+    </span>
+</div>

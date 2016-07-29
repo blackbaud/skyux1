@@ -254,4 +254,4 @@
                 bbOnSearchInputToggled: '&?'
             }
         });
-}());
+})();

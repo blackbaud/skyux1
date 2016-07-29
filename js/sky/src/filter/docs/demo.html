@@ -1,7 +1,6 @@
 <div ng-controller="FilterTestController as filterCtrl">
     <bb-filter-button 
-        bb-filter-button-modal-open="filterCtrl.openObject" 
-        bb-filter-button-apply="filterCtrl.appliedFilterCallback(filters)">
+        bb-filter-button-on-click=filterCtrl.filterButtonClicked()"">
 
     </bb-filter-button>
     <div>

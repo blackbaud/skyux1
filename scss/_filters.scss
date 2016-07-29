@@ -14,3 +14,11 @@
 .toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover {
     color: $text-color;
 }
+
+
+.bb-filter-summary {
+    background-color: #fff;
+    min-height: 39px;
+    overflow-x: auto;
+    
+}
