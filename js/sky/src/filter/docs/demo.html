@@ -1,14 +1,17 @@
 <div ng-controller="FilterTestController as filterCtrl">
-    <bb-filter-button 
-        bb-filter-button-on-click=filterCtrl.filterButtonClicked()"">
-
-    </bb-filter-button>
-    <div>
-        <label>Fruit preference: {{filterCtrl.appliedFilters.fruitType}}</label>
+    <div style="margin-bottom: 5px;">
+        <bb-filter-button 
+            bb-filter-button-on-click="filterCtrl.filterButtonClicked()">
+        </bb-filter-button>
     </div>
-    <div>
-        <label>Hide Vegetarian: {{filterCtrl.appliedFilters.hideVege}}</label>    
-    </div>
+    <bb-filter-summary ng-show="filterCtrl.appliedFilters && filterCtrl.appliedFilters.length > 0">
+        <bb-filter-summary-item 
+            ng-repeat="item in filterCtrl.appliedFilters" 
+            bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()"
+            bb-filter-summary-item-on-dismiss="filterCtrl.onDismiss($index)">
+            {{item.label}}
+        </bb-filter-summary-item>
+    </bb-filter-summary>
 </div>
 <script type="text/ng-template" id="demo/filter/filters.html">
     <bb-modal>

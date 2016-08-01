@@ -2,22 +2,29 @@
 (function () {
     'use strict';
 
-    function Controller(bbModal) {
+    function Controller() {
         var ctrl = this;
 
-        function openFilterModal() {
-            bbModal
-                .open(ctrl.bbFilterButtonModalOpen)
-                .result
-                .then(function (result) {
-                    ctrl.bbFilterButtonApply({filters: angular.copy(result)});
-                });
+        function summaryItemInit() {
+            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable)) {
+                ctrl.bbFilterSummaryItemIsDismissable = true;
+            }
         }
 
-        ctrl.openFilterModal = openFilterModal;
+        function clearFilter($event) {
+            $event.stopPropagation();
+            if (angular.isFunction(ctrl.bbFilterSummaryItemOnDismiss)) {
+                ctrl.bbFilterSummaryItemOnDismiss();
+            }
+            
+        }
+
+        ctrl.$onInit = summaryItemInit;
+
+        ctrl.clearFilter = clearFilter;
     }
 
-    angular.module('sky.filter.summary.component', [])
+    angular.module('sky.filter.summary.item.component', [])
         .component('bbFilterSummaryItem', {
             templateUrl: 'sky/templates/filter/filter.summary.item.component.html',
             controller: Controller,

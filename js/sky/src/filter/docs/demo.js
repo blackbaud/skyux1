@@ -10,16 +10,48 @@
                 fruitType: 'any'
             };
         }
+        
+        function transformFiltersToArray(filters) {
+            var result = [];
+
+            if (filters.fruitType && filters.fruitType !== 'any') {
+                result.push({name: 'fruitType', value: filters.fruitType, label: filters.fruitType});
+            }
+
+            if (filters.hideVege) {
+                result.push({name: 'hideVege', value: true, label: 'Vegetables hidden'});
+            }
+
+            return result;
+        }
+
+        function transformArrayToFilters(array) {
+            var i,
+                filters = {};
+
+            for (i = 0; i < array.length; i++) {
+                if (array[i].name === 'fruitType') {
+                    filters.fruitType = array[i].value;
+                }
+
+                if (array[i].name === 'hideVege') {
+                    filters.hideVege = array[i].value;
+                }
+            }
+
+            return filters;
+        }
 
         function applyFilters() {
-            $uibModalInstance.close(self.filters);
+            var result = transformFiltersToArray(self.filters);
+            $uibModalInstance.close(result);
         }
 
 
         if (!existingFilters) {
             clearAllFilters();
         } else {
-            self.filters = existingFilters;
+            self.filters = transformArrayToFilters(existingFilters);
         }
 
         if (angular.isUndefined(self.filters.fruitType)) {
@@ -49,9 +81,13 @@
                 })
                 .result
                 .then(function (result) {
-                    self.appliedFilters = angular.copy(filters);
+                    self.appliedFilters = angular.copy(result);
                 });
         };
+
+        self.onDismiss = function (index) {
+            self.appliedFilters.splice(index, 1);
+        }
        
         
     }

@@ -17,8 +17,31 @@
 
 
 .bb-filter-summary {
-    background-color: #fff;
+    background-color: $bb-color-white;
     min-height: 39px;
-    overflow-x: auto;
-    
+    overflow-x: auto; 
+    display: flex;
+    align-items: center;
+    @include bb-border(light, top, bottom);
+}
+
+.bb-filter-summary-item {
+    display: inline-block;
+    background-color: $alert-warning-bg;
+    border: 1px solid $alert-warning-border;
+    border-radius: 4px;
+    padding: 3px;
+    color: $alert-warning-text;
+    margin-right: $margin-half;
+
+    .close {
+        color: $alert-warning-text;
+        padding-left: $padding-half;
+        float: none;
+    }
+}
+
+.bb-filter-summary-header {
+    margin-right: $margin;
+    font-weight: 600;
 }

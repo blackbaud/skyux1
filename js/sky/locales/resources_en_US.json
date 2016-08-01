@@ -598,5 +598,9 @@
     "filter_button_title": {
         "_description": "Text for the filter button title",
         "message": "Filters"
+    },
+    "filter_summary_header": {
+        "_description": "Text for the filter summary component",
+        "message": "Filter"
     }
 }

@@ -1,7 +1,7 @@
-<div role="button" tabindex="0" class="bb-filter-summary-item">
+<div role="button" tabindex="0" class="bb-filter-summary-item" ng-click="$ctrl.bbFilterSummaryItemOnClick()">
     <ng-transclude></ng-transclude>
     <span 
-        ng-if="$ctrl.bbFilterItemIsDismissable" 
+        ng-if="$ctrl.bbFilterSummaryItemIsDismissable" 
         role="button" 
         tabindex="0" 
         class="fa fa-times close" 
