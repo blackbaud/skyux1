@@ -8,7 +8,7 @@
         <bb-filter-summary-item 
             ng-repeat="item in filterCtrl.appliedFilters" 
             bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()"
-            bb-filter-summary-item-on-dismiss="filterCtrl.onDismiss($index)">
+            bb-filter-summary-item-on-dismiss="filterCtrl.onDismiss($index)" >
             {{item.label}}
         </bb-filter-summary-item>
     </bb-filter-summary>
