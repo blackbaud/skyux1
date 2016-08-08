@@ -20,7 +20,6 @@
                 vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
                 };
-
             },
             transclude: true,
             templateUrl: 'sky/templates/contextmenu/submenuheading.html'
