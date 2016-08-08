@@ -18,8 +18,8 @@
                 result.push({name: 'fruitType', value: filters.fruitType, label: filters.fruitType});
             }
 
-            if (filters.hideVege) {
-                result.push({name: 'hideVege', value: true, label: 'Vegetables hidden'});
+            if (filters.hideOrange) {
+                result.push({name: 'hideOrange', value: true, label: 'Orange fruits hidden'});
             }
 
             return result;
@@ -34,8 +34,8 @@
                     filters.fruitType = array[i].value;
                 }
 
-                if (array[i].name === 'hideVege') {
-                    filters.hideVege = array[i].value;
+                if (array[i].name === 'hideOrange') {
+                    filters.hideOrange = array[i].value;
                 }
             }
 
@@ -66,7 +66,80 @@
     FilterModalController.$inject = ['$uibModalInstance', 'existingFilters'];
     
     function FilterTestController(bbModal) {
-        var self = this;
+        var self = this,
+            items = [
+                {
+                    name: 'Orange',
+                    description: 'An orange round fruit',
+                    type: 'citrus',
+                    color: 'orange'
+                },
+                {
+                    name: 'Mango',
+                    description: 'Delicious in smoothies, don\'t eat the skin',
+                    type: 'other',
+                    color: 'orange'
+                },
+                {
+                    name: 'Lime',
+                    description: 'A green sour fruit used in many drinks',
+                    type: 'citrus',
+                    color: 'green'
+                },
+                {
+                    name: 'Strawberry',
+                    description: 'A red fruit that can be included with shortcake',
+                    type: 'berry',
+                    color: 'red'
+                },
+                {
+                    name: 'Blueberry',
+                    description: 'A small blue fruit, found often in muffins',
+                    type: 'berry',
+                    color: 'blue'
+                }
+            
+            ];
+
+        function orangeFilterFailed(filter, item) {
+            return filter.name === 'hideOrange' && filter.value && item.color === 'orange';
+        }
+
+        function fruitTypeFilterFailed(filter, item) {
+            return filter.name === 'fruitType' && filter.value !== 'any' && filter.value !== item.type;
+        }
+
+        function itemIsShown(filters, item) {
+            var passesFilter = true,
+                j;
+
+            for (j = 0; j < filters.length; j++) {
+                if (orangeFilterFailed(filters[j], item)) {
+                    passesFilter = false
+                } else if (fruitTypeFilterFailed(filters[j], item)) {
+                    passesFilter = false
+                }
+            }
+
+            return passesFilter;
+        }
+
+        function filterItems(items, filters) {
+            var i,
+                passesFilter,
+                result = [];
+
+            for (i = 0; i < items.length; i++) {
+                passesFilter = itemIsShown(filters, items[i]);
+                if (passesFilter) {
+                    result.push(items[i]);
+                }
+            }
+
+            return result;
+        }
+
+        self.filteredItems = items;
 
         self.filterButtonClicked = function () {
             bbModal
@@ -81,15 +154,19 @@
                 })
                 .result
                 .then(function (result) {
+
                     self.appliedFilters = angular.copy(result);
+
+                    self.filteredItems = filterItems(items, self.appliedFilters);
+
                 });
         };
 
         self.onDismiss = function (index) {
             self.appliedFilters.splice(index, 1);
+            self.filteredItems = filterItems(items, self.appliedFilters);
         }
        
-        
     }
 
     FilterTestController.$inject = ['bbModal'];

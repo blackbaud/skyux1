@@ -1,5 +1,5 @@
 <div ng-controller="FilterTestController as filterCtrl">
-    <div style="margin-bottom: 5px;">
+    <div style="padding: 5px;">
         <bb-filter-button 
             bb-filter-button-on-click="filterCtrl.filterButtonClicked()">
         </bb-filter-button>
@@ -12,6 +12,21 @@
             {{item.label}}
         </bb-filter-summary-item>
     </bb-filter-summary>
+
+    <div>
+        <bb-repeater bb-repeater-expand-mode="none">
+            <bb-repeater-item ng-repeat="item in filterCtrl.filteredItems">
+            <bb-repeater-item-title>
+                {{item.name}}
+            </bb-repeater-item-title>
+            <bb-repeater-item-content>
+                <div>
+                {{item.description}}
+                </div>
+            </bb-repeater-item-content>
+            </bb-repeater-item>
+        </bb-repeater>
+      </div>
 </div>
 <script type="text/ng-template" id="demo/filter/filters.html">
     <bb-modal>
@@ -26,8 +41,8 @@
                         <option value="berry">Berry</option>
                     </select>
                     <label style="margin-top: 15px;">
-                        <input type="checkbox" bb-check ng-model="modalCtrl.filters.hideVege" />
-                        Hide vegetarian
+                        <input type="checkbox" bb-check ng-model="modalCtrl.filters.hideOrange" />
+                        Hide orange fruits
                     </label>
                 </form>
             </div>
