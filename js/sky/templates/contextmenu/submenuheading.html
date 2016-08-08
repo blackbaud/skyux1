@@ -1,6 +1,6 @@
 <uib-accordion-heading>
-    <div ng-click="bbSubmenuHeading.toggleAccordion($event)">
+    <div role="button" ng-click="bbSubmenuHeading.toggleAccordion($event)">
         <ng-transclude></ng-transclude>
-        <i ng-class="'fa-chevron-' + (bbSubmenuHeading.accordionOpen ? 'up' : 'down')" class="fa bb-submenu-chevron"></i>
+        <i ng-class="'fa-chevron-' + (bbSubmenuHeading.submenuCtrl.accordionOpen ? 'up' : 'down')" class="fa bb-submenu-chevron"></i>
     </div>
 </uib-accordion-heading>
