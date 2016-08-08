@@ -1,4 +1,4 @@
-/*global describe, it, browser, require, $ */
+/*global describe, it, browser */
 
 describe('bb-grid component', function () {
     'use strict';

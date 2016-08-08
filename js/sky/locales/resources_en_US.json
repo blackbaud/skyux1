@@ -602,5 +602,9 @@
     "filter_summary_header": {
         "_description": "Text for the filter summary component",
         "message": "Filter"
+    },
+    "filter_summary_close": {
+        "_description": "Text for the label for the filter summary close icon",
+        "message": "Close"
     }
 }

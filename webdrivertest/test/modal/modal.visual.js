@@ -1,4 +1,4 @@
-/*global describe, it, browser, require, expect */
+/*global describe, it, browser */
 
 describe('modals', function () {
     'use strict';
