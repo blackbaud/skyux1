@@ -102225,7 +102225,7 @@ global.easyXDM = easyXDM;
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         if (!el.parent().is('li')) {
-                            el.wrap('<li></li>');
+                            el.wrap('<li role="menuitem"></li>');
                         }
 
                     } else {
@@ -103930,6 +103930,8 @@ global.easyXDM = easyXDM;
             link: function ($scope, el, attrs, ctrls) {
                 var submenuCtrl = ctrls[1],
                     vm = ctrls[0];
+
+                vm.submenuCtrl = submenuCtrl;
 
                 vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
@@ -113922,7 +113924,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            {{bbActionBarItemGroup.title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '\n' +
-        '            <ul uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">\n' +
+        '            <ul role="menu" uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">\n' +
         '\n' +
         '            </ul>\n' +
         '        </div>\n' +
@@ -114162,12 +114164,23 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </a>\n' +
         '</li>\n' +
         '');
+    $templateCache.put('sky/templates/contextmenu/submenu.accordiongroup.html',
+        '<div class="panel" ng-class="panelClass || \'panel-default\'">\n' +
+        '  <div role="tab" id="{{::headingId}}" aria-selected="{{isOpen}}" class="panel-heading" tabindex="0" ng-keypress="toggleOpen()">\n' +
+        '    <h4 class="panel-title">\n' +
+        '      <div data-toggle="collapse" aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" class="accordion-toggle" uib-accordion-transclude="heading"><span uib-accordion-header ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></a>\n' +
+        '    </h4>\n' +
+        '  </div>\n' +
+        '  <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!isOpen}}" role="tabpanel" class="panel-collapse collapse" uib-collapse="!isOpen">\n' +
+        '    <div class="panel-body" ng-transclude></div>\n' +
+        '  </div>\n' +
+        '</div>');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <uib-accordion>\n' +
-        '        <uib-accordion-group is-open="bbSubmenu.accordionOpen">\n' +
+        '        <uib-accordion-group template-url="sky/templates/contextmenu/submenu.accordiongroup.html" is-open="bbSubmenu.accordionOpen">\n' +
         '            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">\n' +
-        '                <div ng-click="bbSubmenu.toggleAccordion($event)">\n' +
+        '                <div role="button" ng-click="bbSubmenu.toggleAccordion($event)">\n' +
         '                    <span>\n' +
         '                        {{bbSubmenu.heading}}\n' +
         '                    <span>\n' +
@@ -114181,9 +114194,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenuheading.html',
         '<uib-accordion-heading>\n' +
-        '    <div ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
+        '    <div role="button" ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.submenuCtrl.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '    </div>\n' +
         '</uib-accordion-heading>\n' +
         '');
