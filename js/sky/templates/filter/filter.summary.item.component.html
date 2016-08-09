@@ -1,4 +1,9 @@
-<div role="button" tabindex="0" class="bb-filter-summary-item" ng-click="$ctrl.bbFilterSummaryItemOnClick()">
+<div 
+    role="button" 
+    tabindex="0" 
+    class="bb-filter-summary-item" 
+    ng-click="$ctrl.bbFilterSummaryItemOnClick()"
+    ng-keypress="$event.keyCode === 13 &amp;&amp; $ctrl.bbFilterSummaryItemOnClick()">
     <ng-transclude></ng-transclude>
     <span 
         ng-attr-aria-label="{{'filter_summary_close' | bbResources}}"
@@ -6,6 +11,7 @@
         role="button" 
         tabindex="0" 
         class="fa fa-times close" 
-        ng-click="$ctrl.clearFilter($event)">
+        ng-click="$ctrl.clearFilter($event)"
+        ng-keypress="$event.keyCode === 13 &amp;&amp; $ctrl.clearFilter($event)">
     </span>
 </div>

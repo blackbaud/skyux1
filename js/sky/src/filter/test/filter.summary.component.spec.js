@@ -1,5 +1,5 @@
 /* jshint jasmine: true */
-/* global module, inject*/
+/* global module, inject, $*/
 (function () {
     'use strict';
     describe('Filter summary', function () {
@@ -20,6 +20,10 @@
 
         function findDismissEl(el) {
             return el.find('.bb-filter-summary-item .close');
+        }
+
+        function findSummaryItemEl(el) {
+            return el.find('.bb-filter-summary .bb-filter-summary-item');
         }
 
         it('should create a filter summary with header label', function () {
@@ -44,6 +48,8 @@
                 '</bb-filter-summary>',
                 summaryEl,
                 dismissEl,
+                itemEl,
+                e,
                 itemClicked = false,
                 itemDismissed = false;
 
@@ -63,14 +69,33 @@
 
             $scope.$digest();
 
-            expect(summaryEl.find('.bb-filter-summary .bb-filter-summary-item')).toHaveText('filterName');
-            summaryEl.find('.bb-filter-summary .bb-filter-summary-item').click();
+            itemEl =  findSummaryItemEl(summaryEl);
+
+            expect(itemEl).toHaveText('filterName');
+            itemEl.click();
+            expect(itemClicked).toEqual(true);
+
+            itemClicked = false;
+
+            e = $.Event('keypress');
+            e.which = 13;
+            e.keyCode = 13;
+
+            itemEl.trigger(e);
+            $scope.$digest();
+
             expect(itemClicked).toEqual(true);
 
             dismissEl = findDismissEl(summaryEl);
             expect(dismissEl).toBeVisible();
             dismissEl.click();
-            expect(itemDismissed).toBe(true);
+            expect(itemDismissed).toEqual(true);
+
+            itemDismissed = false;
+            dismissEl.trigger(e);
+            $scope.$digest();
+
+            expect(itemDismissed).toEqual(true);
 
             summaryEl.remove();
 
