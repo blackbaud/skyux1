@@ -1,10 +1,10 @@
 <div ng-controller="ActionButtonBarTestController as actionCtrl">
     <script type="text/ng-template" id="actionbarList.html">
       <li>
-        <a ng-click="actionCtrl.subAction1()">Sub-action 1</a>
+        <a href ng-click="actionCtrl.subAction1()">Sub-action 1</a>
       </li>
       <li>
-        <a ng-click="actionCtrl.subAction2()">Sub-action 2</a>
+        <a href ng-click="actionCtrl.subAction2()">Sub-action 2</a>
       </li>
     </script>
   <bb-action-bar>
@@ -66,7 +66,7 @@
 
                 <ul id="bb-actionbar-custom-id" uib-dropdown-menu>
                     <li ng-repeat="item in actionCtrl.items" ng-show="item.visible">
-                        <a ng-click="item.action()">{{item.actionText}}</a>
+                        <a href ng-click="item.action()">{{item.actionText}}</a>
                     </li>
                     <li>
                         <bb-submenu bb-submenu-heading="actionCtrl.dropdownText">

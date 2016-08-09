@@ -72,7 +72,7 @@
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         if (!el.parent().is('li')) {
-                            el.wrap('<li></li>');
+                            el.wrap('<li role="menuitem"></li>');
                         }
 
                     } else {

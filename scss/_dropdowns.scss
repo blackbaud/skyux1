@@ -207,7 +207,7 @@ body.dropup {
     }
 
     .panel-title {
-        > a {
+        > .accordion-toggle {
             outline: none;
             font-weight: normal;
         }
