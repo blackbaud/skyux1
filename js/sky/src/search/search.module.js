@@ -8,4 +8,4 @@
             'sky.search.input.component',
             'sky.search.container.directive'
         ]);
-}());
+})();

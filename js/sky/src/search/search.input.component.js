@@ -258,4 +258,4 @@
                 bbSearchPlaceholder: '<?'
             }
         });
-}());
+})();
