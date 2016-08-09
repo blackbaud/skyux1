@@ -14,4 +14,7 @@ The tab sref directive adds the ability to change the page's URL when the user c
 
 ### Tab sref settings ###
 
- - `bb-tab-sref` &mdash; The name of the state where the application should navigate when the tab is selected.
+ - `bb-tab-sref="stateName"` &mdash; The name of the state where the application should navigate when the tab is selected.
+
+Optional state parameters can be provided
+  - `bb-tab-sref="stateName({param: value, param: value})"` &mdash; Navigate to state, with params.

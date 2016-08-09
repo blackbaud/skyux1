@@ -6,7 +6,8 @@
         $stateProvider
             .state('rootState', {
                 url: '/',
-                templateUrl: 'demo/tabsref/tabset.html'
+                templateUrl: 'demo/tabsref/tabset.html',
+                params: { username: '' }
             })
             .state('TabState1', {
                 parent: 'rootState',
@@ -14,20 +15,24 @@
             })
             .state('TabState2', {
                 parent: 'rootState',
-                url: 'tabsref/tab2'
+                url: 'tabsref/tab2',
+                params: { username: '' }
             })
             .state('TabState3', {
                 parent: 'rootState',
                 url: 'tabsref/tab3'
             });
 
-        $urlRouterProvider.when('', '/tabsref/tab2');
+        $urlRouterProvider.when('', '/');
     }
 
+    TabSrefTestController.$inject = ['$scope', '$stateParams'];
+    function TabSrefTestController($scope, $stateParams) {
+        $scope.username = $stateParams.username;
+    }
 
     TabSrefConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
-
     angular.module('stache')
         .config(TabSrefConfig)
-        .controller('TabSrefTestController', angular.noop);
+        .controller('TabSrefTestController', TabSrefTestController);
 }());
