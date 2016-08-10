@@ -3,6 +3,63 @@
 (function () {
     'use strict';
 
+    function evaluateAngularExpression(exp, scope) {
+        return angular.copy(scope.$eval(exp)) || null;
+    }
+
+    function checkForAndWrapRefWithStateName(ref, $state) {
+        var newRef,
+            parsedRef;
+
+        // Match against statename({ param: value }) syntax, as specified for ui-sref in angular-ui-router v0.2.15
+        // Produces the following matches, in this order, if no statename is present:
+        //   - original string, Ex: statename({ param: value })
+        //   - parameter object string, Ex: { param: value }
+        parsedRef = ref.match(/^\s*({[^}]*})\s*$/);
+
+        // Wrap the parameter string with the current statename if no statename was provided
+        if (parsedRef && $state.current) {
+            newRef = $state.current.name + '(' + parsedRef[1] + ')';
+        }
+
+        return newRef || ref;
+    }
+
+    function parseAndValidateRef(ref) {
+        // Match against statename({ param: value }) syntax, as specified for ui-sref in angular-ui-router v0.2.15
+        // Produces the following matches in this order:
+        //   - original string, Ex: statename({ param: value })
+        //   - state name, Ex: statename
+        //   - parameter object string w/ wrapping parenthesis, Ex: ({ param: value })
+        //   - parameter object string, Ex: { param: value }
+        var parsedRefSubstrings = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
+
+        if (!parsedRefSubstrings || parsedRefSubstrings.length !== 4) {
+            throw new Error("Invalid state ref '" + ref + "'");
+        }
+
+        return parsedRefSubstrings;
+    }
+
+    function parseStateRef(ref, scope, $state) {
+        var parsedRef;
+
+        ref = checkForAndWrapRefWithStateName(ref, $state);
+
+        parsedRef = parseAndValidateRef(ref);
+
+        return {
+            state: parsedRef[1],
+            params: evaluateAngularExpression(parsedRef[3], scope)
+        };
+    }
+
+    function setActiveTab(sref, el, tabsetCtrl, $state) {
+        if ($state.includes(sref.state)) {
+            tabsetCtrl.select(el.isolateScope().index);
+        }
+    }
+
     angular.module('sky.tabsref', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
@@ -41,48 +98,4 @@
                 }
             };
         }]);
-
-    function parseStateRef(ref, scope, $state) {
-        var parsedRef;
-
-        ref = checkForAndWrapRefWithStateName(ref, $state);
-
-        parsedRef = parseAndValidateRef(ref);
-
-        return {
-            state: parsedRef[1],
-            params: evaluateAngularExpression(parsedRef[3], scope)
-        };
-    }
-
-    function checkForAndWrapRefWithStateName(ref, $state) {
-        var newRef,
-            preparsedRef = ref.match(/^\s*({[^}]*})\s*$/);
-
-        if (preparsedRef && $state.current) {
-            newRef = $state.current.name + '(' + preparsedRef[1] + ')';
-        }
-
-        return newRef || ref;
-    }
-
-    function parseAndValidateRef(ref) {
-        var parsedRef = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
-
-        if (!parsedRef || parsedRef.length !== 4) {
-            throw new Error("Invalid state ref '" + parsedRef + "'");
-        }
-
-        return parsedRef;
-    }
-
-    function evaluateAngularExpression(exp, scope) {
-        return angular.copy(scope.$eval(exp)) || null;
-    }
-
-    function setActiveTab(sref, el, tabsetCtrl, $state) {
-        if ($state.includes(sref.state)) {
-            tabsetCtrl.select(el.isolateScope().index);
-        }
-    }
 }());
