@@ -15,7 +15,7 @@
             })
             .state('TabState2', {
                 parent: 'rootState',
-                url: 'tabsref/tab2',
+                url: 'tabsref/tab2/:username',
                 params: { username: '' }
             })
             .state('TabState3', {
