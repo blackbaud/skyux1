@@ -130,6 +130,36 @@
 
             summaryEl.remove();
         });
+
+        it('should not blow up if a dismiss function is not provided', function () {
+            var summaryHtml = '<bb-filter-summary >' +
+                '<bb-filter-summary-item ' +
+                    'bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()"> ' +
+                    '{{filterCtrl.appliedName}} ' +
+                '</bb-filter-summary-item> ' +
+                '</bb-filter-summary>',
+                summaryEl,
+                dismissEl,
+                itemClicked = false;
+
+            $scope.filterCtrl = {
+                filterButtonClicked: function () {
+                    itemClicked = true;
+                },
+                appliedName: 'filterName'
+            };
+
+            summaryEl = $compile(summaryHtml)($scope);
+            summaryEl.appendTo($document.find('body'));
+
+            $scope.$digest();
+
+            dismissEl = findDismissEl(summaryEl);
+            dismissEl.click();
+            $scope.$digest();
+
+            summaryEl.remove();
+        });
         
     });
 })();
