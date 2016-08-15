@@ -3,20 +3,15 @@
 describe('textstate', function () {
     'use strict';
 
-
     it('should match the baseline text state screenshot', function (done) {
-        var result,
-            common = require('../common');
-
-        result = browser.url('/textstate/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'textstate',
-            selector: '#screenshot-textstate',
-            done: done
-        });
+        browser
+            .setupTest('/textstate/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'textstate',
+                selector: '#screenshot-textstate',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
 });

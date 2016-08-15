@@ -5,24 +5,22 @@ describe('Card', function () {
     'use strict';
 
     function clickTest(screenshotName, visibleComponents, selectable, done, extraStep) {
-        var result,
-            common = require('../common');
+        var result;
 
-        result = browser.url('/card/fixtures/test.full.html')
+        result = browser
+            .setupTest('/card/fixtures/test.full.html')
             .setValue('#screenshots-card-items', visibleComponents.join(',') + (selectable ? ':selectable' : ''));
 
         if (extraStep) {
             result = extraStep(result);
         }
 
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
+        result.compareScreenshot({
             screenshotName: ('card_' + screenshotName),
             selector: '#screenshots-card',
-            done: done,
             checkAccessibilty: true
-        });
+        })
+        .call(done);
     }
 
     it('should match previous screenshot when all components are present', function (done) {

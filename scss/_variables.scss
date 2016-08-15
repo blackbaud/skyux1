@@ -30,6 +30,10 @@ $bb-nav-selected-border-width: 4px !default;
 $bb-error-color: #ca2a2a !default;
 $bb-selected-color: #eeeffb !default;
 
+$bb-focus-border-color: #1f90d8 !default;
+$bb-focus-shadow-color: rgba(28, 132, 198, 0.6) !default;
+
+
 $font-family-sans-serif: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 $font-family-serif: BenchNine, Trebuchet, serif !default;
@@ -62,6 +66,9 @@ $bb-text-color-danger: $bb-color-red !default;
 
 
 // Bootstrap overrides
+
+$navbar-default-link-active-bg: $bb-nav-selected-bg-color;
+
 $body-bg: #f3f3f4;
 
 $gray-darker: lighten(#000, 13.5%); // #222
@@ -232,6 +239,7 @@ $z-index-control: 10000;
 $zindex-modal-background: 1040;
 $help-widget-zindex: $zindex-modal-background + 1000 !default;
 $omnibar-zindex: $zindex-modal-background - 1 !default;
+$bb-zindex-dropdown-append-to-body: 1051;
 //end omnibar/help widget
 
 //begin tile

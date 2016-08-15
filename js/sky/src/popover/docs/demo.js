@@ -8,7 +8,7 @@
         $templateCache.put('bbPopoverTemplate/samples/samplepopover.html',
             '<div class="tooltip-container">' +
                 '<div>Select a beverage:</div>' +
-                '<div><select ng-model="popCtrl.selectedItem" ng-options="item as item for item in popCtrl.items"></select></div>' +
+                '<div><select ng-model="popCtrl.selectedItem" aria-label="Choose a soda" ng-options="item as item for item in popCtrl.items"></select></div>' +
                 '<a ng-click="hide()">Close me</a>' +
             '</div>');
     }

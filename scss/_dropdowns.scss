@@ -207,7 +207,7 @@ body.dropup {
     }
 
     .panel-title {
-        > a {
+        > .accordion-toggle {
             outline: none;
             font-weight: normal;
         }
@@ -227,5 +227,11 @@ body.dropup {
     ul {
         list-style: none outside none;
         padding: 0;
+    }
+}
+
+.modal-open.uib-dropdown-open {
+    .dropdown-menu {
+        z-index: $bb-zindex-dropdown-append-to-body;
     }
 }

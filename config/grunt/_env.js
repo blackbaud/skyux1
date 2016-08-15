@@ -52,7 +52,7 @@ module.exports = function (grunt, utils) {
 
     // Determine which environment we're running in.
     // Travis environment variables are strings representing booleans.
-    // Supports the "--browserstack" flag for running browserstack localy.
+    // Supports the "--browserstack" flag for running browserstack locally.
     // Supports the "--env=*" flag for manually setting the environment.
     function setDefault() {
         var environment = SUPPORTED.LOCAL;

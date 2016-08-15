@@ -221,6 +221,20 @@ module.exports = function (grunt, env, utils) {
         return libCss.substr(libCss.lastIndexOf('/') + 1).replace('.css', '.scss');
     }
 
+    function generateRequires(depList, skyContents) {
+        var contents = '',
+            distDirectory = 'dist/';
+
+        depList.forEach(function (dep) {
+            contents += 'require("./' + dep + '");' + grunt.util.linefeed;
+        });
+
+        contents += 'require("./' + distDirectory + skyContents + '");' + grunt.util.linefeed;
+        contents +=  grunt.util.linefeed;
+
+        return contents;
+    }
+
     // Generate our JS config for the bbPalette service
     grunt.registerTask('buildpaletteservice', function () {
         var template = grunt.file.read(grunt.config('skyux.paths.paletteTemplate') + 'template.js'),
@@ -243,6 +257,20 @@ module.exports = function (grunt, env, utils) {
         json = JSON.stringify(matches, null, 4);
         template = template.replace('/*PALETTE_CONFIG*/', 'bbPaletteConfig = ' + json + ';');
         grunt.file.write(configPath, template);
+    });
+
+    grunt.registerTask('generateIndexJs', function () {
+        var libs = grunt.config.get('skyux').paths.libsJs,
+            cssLibs = grunt.config.get('skyux').paths.libsCss,
+            indexFileContents = '';
+
+        indexFileContents += generateRequires(libs, 'js/sky.js');
+        indexFileContents += generateRequires(cssLibs, 'css/sky.css');
+
+        indexFileContents +=  grunt.util.linefeed;
+        indexFileContents += 'module.exports="sky";' + grunt.util.linefeed;
+
+        grunt.file.write('index.js', indexFileContents);
     });
 
     grunt.registerTask('skybundlecss', function () {
@@ -338,5 +366,5 @@ module.exports = function (grunt, env, utils) {
     });
 
     // Main build task
-    grunt.registerTask('build', ['styles', 'scripts', 'sri']);
+    grunt.registerTask('build', ['styles', 'scripts', 'sri', 'generateIndexJs']);
 };

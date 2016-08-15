@@ -4,11 +4,11 @@
     </div>
     <div class="bb-action-bar-dropdown hidden-sm hidden-md hidden-lg">
         <div uib-dropdown>
-             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+             <button ng-attr-aria-controls="{{bbActionBarItemGroup.toggleId}}" class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" >
             {{bbActionBarItemGroup.title}}<span class="caret"/>
             </button>
 
-            <ul uib-dropdown-menu>
+            <ul role="menu" uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">
 
             </ul>
         </div>

@@ -377,6 +377,7 @@
                                             template_url: column.template_url,
                                             jsonmap: column.jsonmap,
                                             allow_see_more: column.allow_see_more,
+                                            title: angular.isUndefined(column.title) || column.title,
                                             width: colWidth
                                         };
 

@@ -102068,6 +102068,20 @@ global.easyXDM = easyXDM;
 (function () {
     'use strict';
 
+    angular.module('sky.filter', 
+        [
+            'sky.filter.modal.footer.component',
+            'sky.filter.button.component',
+            'sky.filter.summary.component',
+            'sky.filter.summary.item.component'
+        ]);
+})();
+
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module('sky.keyinfo', ['sky.keyinfo.component']);
 }());
 /*global angular */
@@ -102102,6 +102116,17 @@ global.easyXDM = easyXDM;
     angular.module('sky.repeater', ['sky.repeater.component', 'sky.repeater.item.directive']);
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.search', 
+        [
+            'sky.search.input.component',
+            'sky.search.container.directive'
+        ]);
+})();
 /*global angular */
 
 (function () {
@@ -102158,8 +102183,9 @@ global.easyXDM = easyXDM;
                 title: '=?bbActionBarItemGroupTitle'
             },
             restrict: 'E',
+            require: 'bbActionBarItemGroup',
             scope: {},
-            link: function ($scope, el) {
+            link: function ($scope, el, attr, vm) {
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         el.find('.bb-action-bar-buttons > ng-transclude').appendTo(el.find('.bb-action-bar-dropdown > .dropdown > ul'));
@@ -102173,6 +102199,8 @@ global.easyXDM = easyXDM;
                 $scope.$on('$destroy', function () {
                     bbMediaBreakpoints.unregister(mediaBreakpointHandler);
                 });
+
+                vm.toggleId = 'bb-action-bar-item-group-' + $scope.$id;
             },
             templateUrl: 'sky/templates/actionbar/actionbaritemgroup.html'
         };
@@ -102197,7 +102225,7 @@ global.easyXDM = easyXDM;
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         if (!el.parent().is('li')) {
-                            el.wrap('<li></li>');
+                            el.wrap('<li role="menuitem"></li>');
                         }
 
                     } else {
@@ -103903,6 +103931,8 @@ global.easyXDM = easyXDM;
                 var submenuCtrl = ctrls[1],
                     vm = ctrls[0];
 
+                vm.submenuCtrl = submenuCtrl;
+
                 vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
                 };
@@ -103916,7 +103946,7 @@ global.easyXDM = easyXDM;
         .directive('bbSubmenuHeading', bbSubmenuHeading);
 }());
 
-/*global angular, jQuery, require */
+/*global angular, jQuery */
 
 (function ($) {
     'use strict';
@@ -104087,7 +104117,7 @@ global.easyXDM = easyXDM;
 
                 // Grab the portion before the query string and get the fully-qualified URL.
                 url = parts.shift();
-                url = require.toUrl(url);
+                url = $window.require.toUrl(url);
 
                 // If there was anything after the first question mark, put it back.
                 url += '?' + parts.join('');
@@ -105970,12 +106000,18 @@ global.easyXDM = easyXDM;
                             files: $files,
                             rejectedFiles: $invalidFiles
                         });
+                    },
+                    validate: function ($file) {
+                        return scope.bbFileDropValidateFn({
+                            file: $file
+                        });
                     }
                 };
             },
             scope: {
                 bbFileDropChange: '&',
-                bbFileDropLinkChange: '&'
+                bbFileDropLinkChange: '&',
+                bbFileDropValidateFn: '&'
             },
             template: function (el, attrs) {
                 var dropEl;
@@ -106188,6 +106224,79 @@ global.easyXDM = easyXDM;
     angular.module('sky.fileattachments.filesize', ['sky.format', 'sky.resources'])
         .filter('bbFileSize', bbFileSize);
 }());
+/* global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.filter.button.component', ['sky.resources'])
+        .component('bbFilterButton', {
+            templateUrl: 'sky/templates/filter/filter.button.component.html',
+            bindings: {
+                bbFilterButtonOnClick: '&'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.filter.modal.footer.component', ['sky.resources', 'sky.modal'])
+        .component('bbFilterModalFooter', {
+            templateUrl: 'sky/templates/filter/filter.modal.footer.component.html',
+            bindings: {
+                bbFilterModalApply: '&',
+                bbFilterModalClear: '&'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.filter.summary.component', ['sky.resources'])
+        .component('bbFilterSummary', {
+            templateUrl: 'sky/templates/filter/filter.summary.component.html',
+            transclude: true
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this;
+
+        function summaryItemInit() {
+            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable)) {
+                ctrl.bbFilterSummaryItemIsDismissable = true;
+            }
+        }
+
+        function clearFilter($event) {
+            $event.stopPropagation();
+            if (angular.isFunction(ctrl.bbFilterSummaryItemOnDismiss)) {
+                ctrl.bbFilterSummaryItemOnDismiss();
+            }
+            
+        }
+
+        ctrl.$onInit = summaryItemInit;
+
+        ctrl.clearFilter = clearFilter;
+    }
+
+    angular.module('sky.filter.summary.item.component', [])
+        .component('bbFilterSummaryItem', {
+            templateUrl: 'sky/templates/filter/filter.summary.item.component.html',
+            controller: Controller,
+            bindings: {
+                bbFilterSummaryItemOnClick: '&?',
+                bbFilterSummaryItemOnDismiss: '&?',
+                bbFilterSummaryItemIsDismissable: '<?'
+            },
+            transclude: true
+        });
+})();
 /*global angular */
 
 (function () {
@@ -106606,18 +106715,28 @@ global.easyXDM = easyXDM;
             transclude: true,
             restrict: 'E',
             scope: {
-                bbOptions: "="
             },
+            bindToController: {
+                bbOptions: '=',
+                bbGridFiltersSummaryDismissable: '=?'
+            },
+            controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
+                var ctrl = this;
+
                 $scope.clearFilters = function () {
                     var args = {},
-                        options = $scope.bbOptions;
+                        options = ctrl.bbOptions;
 
                     if (options && options.clearFilters) {
                         options.clearFilters(args);
                         $scope.updateFilters(args.filters);
                     }
                 };
+
+                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                    ctrl.bbGridFiltersSummaryDismissable = true;
+                }
 
                 $scope.resources = bbResources;
 
@@ -107033,6 +107152,7 @@ global.easyXDM = easyXDM;
                                             template_url: column.template_url,
                                             jsonmap: column.jsonmap,
                                             allow_see_more: column.allow_see_more,
+                                            title: angular.isUndefined(column.title) || column.title,
                                             width: colWidth
                                         };
 
@@ -108640,7 +108760,7 @@ global.easyXDM = easyXDM;
         /* boilerplate RequireJS detection */
         if (typeof define === 'function' && define.amd) {
             // AMD. Register as an anonymous module.
-            require(['enquire'], registerEnquire);
+            require(['enquire.js'], registerEnquire);
         } else if ($window.enquire) {
             // Browser globals
             registerEnquire(enquire);
@@ -108934,16 +109054,29 @@ global.easyXDM = easyXDM;
     function toggleOpen(el, action) {
         $(el)[action + 'Class']('open');
     }
+
+    function toggleClick(el) {
+        var isOpen = $(el).hasClass('open'),
+            action;
+
+        action = isOpen ? 'remove' : 'add';
+        toggleOpen(el, action);
+
+    }
     
     function Controller($element) {
         
         /*jslint unparam: true */
-        ($element).on('mouseenter', '.dropdown', function () {
+        ($element)
+        .on('mouseenter', '.dropdown', function () {
             toggleOpen(this, 'add');
         }).on('mouseleave', '.dropdown', function () {
             toggleOpen(this, 'remove');
-        }).on('click', '.dropdown-menu a', function () {
+        }).on('click', '.dropdown', function () {
+            toggleClick(this);
+        }).on('click', '.dropdown-menu a', function ($event) {
             toggleOpen($('.dropdown', $element), 'remove');
+            $event.stopPropagation();
         });
     }
     
@@ -108951,7 +109084,6 @@ global.easyXDM = easyXDM;
     angular.module('sky.navbar', [])
         .component('bbNavbar', {
             transclude: true,
-            restrict: 'E',
             templateUrl: 'sky/templates/navbar/navbar.component.html', 
             controller: Controller 
         });
@@ -109670,7 +109802,7 @@ angular.module('sky.palette.config', [])
     /**
     * bbPhoneField directive controller for bb-phone-field
     */
-    function bbPhoneField(bbPhoneFieldConfig) {
+    function bbPhoneField(bbPhoneFieldConfig, $timeout) {
         function link($scope, el, attrs, ctrls) {
             // ** variables **
             var input = el,
@@ -109689,7 +109821,7 @@ angular.module('sky.palette.config', [])
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
-                    if (phoneField.props.countryIso2 === selectedCountryData.iso2) {
+                    if (selectedCountryData.iso2 && phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
@@ -109699,30 +109831,26 @@ angular.module('sky.palette.config', [])
                 return formattedNumber;
             }
 
-            // ** intl-tel-input initilization **
-            // initialize the intl-tel-input plugin.
-            // nationalMode is true by default, which we want for easy formatting purposes.
-            input.intlTelInput();
-            // when the country changes, update the scope's bbPhoneFieldConfig property
-            input.on('countrychange', function (e, countryData) {
-                ngModel.$setViewValue(getFormattedNumber());
-                $scope.$apply(function () {
-                        phoneField.props.selectedCountry = countryData;
-                    });
-            });
-
             // ** ng-model settings **
             // anytime ng-model is updated, its final value should be the formatted phone number
             ngModel.$parsers.unshift(function () {
                 return getFormattedNumber();
             });
             ngModel.$formatters.unshift(function (value) {
-                input.val(value);
-                return getFormattedNumber();
+                var formattedNumber;
+                if (value) {
+                    input.intlTelInput('setNumber', value);
+                    formattedNumber = getFormattedNumber();
+                    if (input.intlTelInput('isValidNumber')) {
+                        ngModel.$setViewValue(formattedNumber);
+                    }
+                    input.val(formattedNumber);
+                }
+                return formattedNumber;
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
-                return modelValue && input.intlTelInput('isValidNumber');
+                return ngModel.$pristine || (modelValue && input.intlTelInput('isValidNumber'));
             };
 
             // ** bbPhoneFieldConfig properties **
@@ -109730,7 +109858,22 @@ angular.module('sky.palette.config', [])
             if (!phoneField.props.countryIso2) {
                 phoneField.props.countryIso2 = bbPhoneFieldConfig.countryIso2;
             }
+
+            // ** intl-tel-input initilization **
+            // initialize the intl-tel-input plugin.
+            // nationalMode is true by default, which we want for easy formatting purposes.
+            // preferredCountries (the countries shown at the top of the dropdown) should match the scope's default country
+            input.intlTelInput({preferredCountries: [phoneField.props.countryIso2]});
+            // when the country changes, update the scope's bbPhoneFieldConfig property
+            input.on('countrychange', function (e, countryData) {
+                ngModel.$setViewValue(getFormattedNumber());
+                $timeout(function () {
+                        phoneField.props.selectedCountry = countryData;
+                    });
+            });
+            // set the input's selected country to the scope country
             input.intlTelInput('setCountry', phoneField.props.countryIso2);
+            // set the scope's selected country data to the input's selected country data
             phoneField.props.selectedCountry = input.intlTelInput('getSelectedCountryData');
 
             // ** ARIA (Accessibility Rich Internet Applications) **
@@ -109754,7 +109897,7 @@ angular.module('sky.palette.config', [])
         };
     }
 
-    bbPhoneField.$inject = ['bbPhoneFieldConfig'];
+    bbPhoneField.$inject = ['bbPhoneFieldConfig', '$timeout'];
 
     angular.module('sky.phonefield.directive', ['sky.phonefield.config'])
         .directive('bbPhoneField', bbPhoneField);
@@ -110596,6 +110739,286 @@ angular.module('sky.palette.config', [])
         }]);
 }());
 
+/* global angular */
+
+(function () {
+    'use strict';
+
+    function linkFn($scope, el) {
+        el.addClass('bb-search-input-component-container');
+    }
+
+    angular.module('sky.search.container.directive', [])
+        .directive('bbSearchContainer', function () {
+            return {
+                restrict: 'A',
+                link: linkFn
+            };
+        });
+})();
+
+
+/* global angular */
+(function () {
+    'use strict';
+
+
+    function Controller($element, bbMediaBreakpoints, bbResources) {
+        var ctrl = this,
+            animationSpeed = 150,
+            animationEase = 'linear';
+        
+        function applySearchText(searchText) {
+            //select input
+            var searchEl = $element.find('.bb-search-input');
+
+            ctrl.showClear = searchText && searchText !== '';
+            
+            /*istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(searchEl.select) && searchEl.length > 0 && searchText) {
+                searchEl.eq(0).select();
+            }
+
+            //search callback
+            ctrl.bbOnSearch({searchText: searchText});
+            
+        }
+
+        function setInputFocus() {
+            $element.find('input').focus();
+        }
+
+        function clearSearchText() {
+            ctrl.bbSearchText = '';
+            
+            setInputFocus();
+
+            ctrl.showClear = false;
+            ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
+            
+        }
+
+        function mediaBreakpointCallback(breakpoint) {
+            ctrl.currentBreakpoint = breakpoint;
+            // Search input should be hidden if screen is xs
+            if (breakpoint.xs) {
+                dismissSearchInput();
+            } else {
+                openSearchInput();
+            }
+        }
+
+        function findDismissEl() {
+            return $element.find('.bb-search-btn-dismiss');
+        }
+
+        function findOpenEl() {
+            return $element.find('.bb-search-open');
+        }
+
+        function findSearchAndDismissEl() {
+            return $element.find('.bb-search-and-dismiss');
+        }
+
+        function findInputContainerEl() {
+            return $element.find('.bb-search-input-container');
+        }
+
+        function findComponentContainerEl() {
+            return $element.parents('.bb-search-input-component-container');
+        }
+
+        function getExpectedInputWidth() {
+            var openEl,
+                offset,
+                buttonWidth;
+            
+            openEl = findOpenEl();
+            offset = $element.position();
+            buttonWidth = openEl.outerWidth();
+            
+            return offset.left + buttonWidth;
+        }
+
+        function toggleMobileInputVisible(isVisible) {
+            var searchAndDismissEl = findSearchAndDismissEl(),
+                absolutePositionClass = 'bb-search-and-dismiss-absolute',
+                containerHiddenClass = 'bb-search-input-component-container-hidden',
+                containerEl = findComponentContainerEl();
+
+            if (isVisible) {
+                searchAndDismissEl.addClass(absolutePositionClass);
+                if (containerEl.length > 0) {
+                    containerEl.addClass(containerHiddenClass);
+                }
+            } else {
+                searchAndDismissEl.removeClass(absolutePositionClass);
+                if (containerEl.length > 0) {
+                    containerEl.removeClass(containerHiddenClass);
+                }
+            }
+        }
+
+        function toggleInputShown(isVisible) {
+            var inputContainerEl = findInputContainerEl(),
+                inputHiddenClass = 'bb-search-input-container-hidden'; 
+
+            if (isVisible) {
+                inputContainerEl.removeClass(inputHiddenClass);
+            } else {
+                inputContainerEl.addClass(inputHiddenClass);
+            }
+        }
+
+
+        function setupInputAnimation(inputContainerEl, expectedWidth) {
+            inputContainerEl.width(expectedWidth);
+            toggleInputShown(true);
+
+            // Set opacity to 0 to fade in input initially
+            inputContainerEl.css('opacity', '0');
+        }
+
+        function toggleDismissShown(isVisible) {
+            var dismissBtnEl = findDismissEl(),
+                dismissHiddenClass = 'bb-search-btn-dismiss-hidden';
+            if (isVisible) {
+                dismissBtnEl.removeClass(dismissHiddenClass);
+            } else {
+                dismissBtnEl.addClass(dismissHiddenClass);
+            }
+        }
+
+        function openSearchInput(focusInput) {
+
+            var inputContainerEl,
+                expectedWidth = getExpectedInputWidth();
+                
+            inputContainerEl = findInputContainerEl();   
+
+            toggleMobileInputVisible(ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs);
+            
+            setupInputAnimation(inputContainerEl, expectedWidth);
+            toggleDismissShown(true);
+            ctrl.openButtonShown = false;
+            
+            inputContainerEl.animate(
+                {
+                    width: '100%',
+                    opacity: 1
+                }, 
+                animationSpeed,
+                animationEase
+            );
+            
+            //Do not focus input on mediabreakpoint change, only on actual interaction
+            if (focusInput) {
+                setInputFocus();
+            }
+            
+        }
+
+        function dismissSearchInput() {
+            var inputContainerEl = findInputContainerEl(),
+                expectedWidth = getExpectedInputWidth(),
+                widthString;
+
+            widthString = expectedWidth + 'px';
+            toggleDismissShown(false);
+            ctrl.openButtonShown = true;
+            inputContainerEl.animate(
+                {
+                    opacity: 0,
+                    width: widthString
+                },
+                animationSpeed,
+                animationEase,
+                function () {
+                    toggleMobileInputVisible(false);
+                    toggleInputShown(false);
+                }
+            );
+
+
+        }
+
+        function inputFocused(isFocused) {
+            var inputContainerEl = findInputContainerEl(),
+                focusedClass = 'bb-search-input-focused';
+
+            if (isFocused) {
+                inputContainerEl.addClass(focusedClass);
+            } else {
+                inputContainerEl.removeClass(focusedClass);
+            }
+        }
+
+        function searchTextBindingChanged() {
+            ctrl.showClear = true;
+            
+            if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
+                openSearchInput(true);
+            }
+        }
+
+        // Trigger highlight if bbListbuilderSearchText binding changes from parent.
+        function bindingChanges(changesObj) {
+            var searchText;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbSearchText) {
+                searchText = changesObj.bbSearchText;
+                /* istanbul ignore else */
+                /* sanity check */
+                if (searchText.currentValue !== searchText.previousValue) {
+                    searchTextBindingChanged();
+                }
+            }
+        }
+
+        function initSearch() {
+            
+            if (ctrl.bbSearchText) {
+                searchTextBindingChanged();
+            }
+
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
+                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            }
+        }
+
+
+        function destroySearch() {
+            bbMediaBreakpoints.unregister(mediaBreakpointCallback);
+        }
+
+        bbMediaBreakpoints.register(mediaBreakpointCallback);
+
+        ctrl.$onInit = initSearch;
+        ctrl.$onChanges = bindingChanges;
+        ctrl.$onDestroy = destroySearch;
+
+        ctrl.applySearchText = applySearchText;
+        ctrl.clearSearchText = clearSearchText;
+        ctrl.openSearchInput = openSearchInput;
+        ctrl.dismissSearchInput = dismissSearchInput;
+        ctrl.inputFocused = inputFocused;
+    }
+
+    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources'];
+
+    angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
+        .component('bbSearchInput', {
+            templateUrl: 'sky/templates/search/search.input.component.html',
+            controller: Controller,
+            bindings: {
+                bbOnSearch: '&?',
+                bbSearchText: '<?',
+                bbSearchPlaceholder: '<?'
+            }
+        });
+})();
 /*global angular */
 
 (function () {
@@ -111362,7 +111785,7 @@ angular.module('sky.palette.config', [])
 
     bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
 
-    angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints'])
+    angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints', 'sky.resources'])
         .directive('uibTabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
@@ -111376,39 +111799,90 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
+    function evaluateAngularExpression(exp, scope) {
+        return angular.copy(scope.$eval(exp)) || null;
+    }
+
+    function checkForAndWrapRefWithStateName(ref, $state) {
+        var newRef,
+            parsedRef;
+
+        // Match against statename({ param: value }) syntax, as specified for ui-sref in angular-ui-router v0.2.15
+        // Produces the following matches, in this order, if no statename is present:
+        //   - original string, Ex: statename({ param: value })
+        //   - parameter object string, Ex: { param: value }
+        parsedRef = ref.match(/^\s*({[^}]*})\s*$/);
+
+        // Wrap the parameter string with the current statename if no statename was provided
+        if (parsedRef && $state.current) {
+            newRef = $state.current.name + '(' + parsedRef[1] + ')';
+        }
+
+        return newRef || ref;
+    }
+
+    function parseAndValidateRef(ref) {
+        // Match against statename({ param: value }) syntax, as specified for ui-sref in angular-ui-router v0.2.15
+        // Produces the following matches in this order:
+        //   - original string, Ex: statename({ param: value })
+        //   - state name, Ex: statename
+        //   - parameter object string w/ wrapping parenthesis, Ex: ({ param: value })
+        //   - parameter object string, Ex: { param: value }
+        var parsedRefSubstrings = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
+
+        if (!parsedRefSubstrings || parsedRefSubstrings.length !== 4) {
+            throw new Error("Invalid state ref '" + ref + "'");
+        }
+
+        return parsedRefSubstrings;
+    }
+
+    function parseStateRef(ref, scope, $state) {
+        var parsedRef;
+
+        ref = checkForAndWrapRefWithStateName(ref, $state);
+
+        parsedRef = parseAndValidateRef(ref);
+
+        return {
+            state: parsedRef[1],
+            params: evaluateAngularExpression(parsedRef[3], scope)
+        };
+    }
+
+    function setActiveTab(sref, el, tabsetCtrl, $state) {
+        if ($state.includes(sref.state)) {
+            tabsetCtrl.select(el.isolateScope().index);
+        }
+    }
+
     angular.module('sky.tabsref', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
                 require: '^uibTabset',
                 link: function (scope, el, attrs, tabsetCtrl) {
-                    var sref = attrs.bbTabSref,
+                    var sref = parseStateRef(attrs.bbTabSref, scope, $state),
                         stateChangeDeregistration;
-
-                    function checkCurrentState() {
-                        if ($state.includes(sref)) {
-                            tabsetCtrl.select(el.isolateScope().index);
-                        }
-                    }
 
                     /*istanbul ignore else */
                     /* sanity check */
-                    if (sref) {
-                        checkCurrentState();
+                    if (sref.state) {
+                        setActiveTab(sref, el, tabsetCtrl, $state);
 
                         stateChangeDeregistration = $rootScope.$on('$stateChangeSuccess', function () {
-                            checkCurrentState();
+                            setActiveTab(sref, el, tabsetCtrl, $state);
                         });
 
                         scope.$watch(function () {
                             return tabsetCtrl.active;
                         }, function (newValue) {
-                            if (newValue === el.isolateScope().index && !$state.includes(sref)) {
+                            if (newValue === el.isolateScope().index && !$state.includes(sref.state)) {
                                 // JPB - Delay calling state.go because the state change will fail
                                 // if it is triggered while in the middle of processing of another state change.
                                 // This can happen if you browse to the page without specifying the state of a particular tab
                                 // and then this code tries to switch you over to the state of the first tab.
                                 $timeout(function () {
-                                    $state.go(sref);
+                                    $state.go(sref.state, sref.params);
                                 });
                             }
                         });
@@ -113407,6 +113881,7 @@ angular.module('sky.palette.config', [])
         'sky.daterangepicker',
         'sky.error',
         'sky.format',
+        'sky.filter',
         'sky.grids',
         'sky.help',
         'sky.helpbutton',
@@ -113427,6 +113902,7 @@ angular.module('sky.palette.config', [])
         'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',
+        'sky.search',
         'sky.selectfield',
         'sky.tabscroll',
         'sky.tabset',
@@ -113469,7 +113945,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -113495,11 +113971,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '    <div class="bb-action-bar-dropdown hidden-sm hidden-md hidden-lg">\n' +
         '        <div uib-dropdown>\n' +
-        '             <button class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+        '             <button ng-attr-aria-controls="{{bbActionBarItemGroup.toggleId}}" class="btn bb-btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" >\n' +
         '            {{bbActionBarItemGroup.title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '\n' +
-        '            <ul uib-dropdown-menu>\n' +
+        '            <ul role="menu" uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">\n' +
         '\n' +
         '            </ul>\n' +
         '        </div>\n' +
@@ -113739,12 +114215,23 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </a>\n' +
         '</li>\n' +
         '');
+    $templateCache.put('sky/templates/contextmenu/submenu.accordiongroup.html',
+        '<div class="panel" ng-class="panelClass || \'panel-default\'">\n' +
+        '  <div role="tab" id="{{::headingId}}" aria-selected="{{isOpen}}" class="panel-heading" tabindex="0" ng-keypress="toggleOpen()">\n' +
+        '    <h4 class="panel-title">\n' +
+        '      <div data-toggle="collapse" aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" class="accordion-toggle" uib-accordion-transclude="heading"><span uib-accordion-header ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></a>\n' +
+        '    </h4>\n' +
+        '  </div>\n' +
+        '  <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!isOpen}}" role="tabpanel" class="panel-collapse collapse" uib-collapse="!isOpen">\n' +
+        '    <div class="panel-body" ng-transclude></div>\n' +
+        '  </div>\n' +
+        '</div>');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <uib-accordion>\n' +
-        '        <uib-accordion-group is-open="bbSubmenu.accordionOpen">\n' +
+        '        <uib-accordion-group template-url="sky/templates/contextmenu/submenu.accordiongroup.html" is-open="bbSubmenu.accordionOpen">\n' +
         '            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">\n' +
-        '                <div ng-click="bbSubmenu.toggleAccordion($event)">\n' +
+        '                <div role="button" ng-click="bbSubmenu.toggleAccordion($event)">\n' +
         '                    <span>\n' +
         '                        {{bbSubmenu.heading}}\n' +
         '                    <span>\n' +
@@ -113758,9 +114245,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenuheading.html',
         '<uib-accordion-heading>\n' +
-        '    <div ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
+        '    <div role="button" ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.submenuCtrl.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '    </div>\n' +
         '</uib-accordion-heading>\n' +
         '');
@@ -113916,6 +114403,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
         '             ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"\n' +
+        '             ngf-validate-fn="bbFileDrop.validate($file)"\n' +
         '             >\n' +
         '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
         '                <div class="bb-file-drop-contents-not-over">\n' +
@@ -113990,6 +114478,43 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/filter/filter.button.component.html',
+        '<button \n' +
+        '    ng-attr-title="{{\'filter_button_title\' | bbResources}}" \n' +
+        '    type="button" \n' +
+        '    class="btn bb-btn-secondary" \n' +
+        '    ng-click="$ctrl.bbFilterButtonOnClick()">\n' +
+        '    <i class="fa fa-lg fa-filter"></i>\n' +
+        '</button>');
+    $templateCache.put('sky/templates/filter/filter.modal.footer.component.html',
+        '<bb-modal-footer>\n' +
+        '    <bb-modal-footer-button-primary ng-click="$ctrl.bbFilterModalApply()" >{{\'filter_modal_apply\' | bbResources}}</bb-modal-footer-button-primary>\n' +
+        '    <button type="button" class="btn btn-link" ng-click="$ctrl.bbFilterModalClear()">{{\'filter_modal_clear\' | bbResources}}</button>\n' +
+        '    <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>\n' +
+        '</bb-modal-footer>');
+    $templateCache.put('sky/templates/filter/filter.summary.component.html',
+        '<div class="bb-filter-summary">\n' +
+        '    <span class="bb-filter-summary-header">{{::\'filter_summary_header\' | bbResources}}:</span>\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/filter/filter.summary.item.component.html',
+        '<div \n' +
+        '    role="button" \n' +
+        '    tabindex="0" \n' +
+        '    class="bb-filter-summary-item" \n' +
+        '    ng-click="$ctrl.bbFilterSummaryItemOnClick()"\n' +
+        '    ng-keypress="$event.keyCode === 13 &amp;&amp; $ctrl.bbFilterSummaryItemOnClick()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '    <span \n' +
+        '        ng-attr-aria-label="{{\'filter_summary_close\' | bbResources}}"\n' +
+        '        ng-if="$ctrl.bbFilterSummaryItemIsDismissable" \n' +
+        '        role="button" \n' +
+        '        tabindex="0" \n' +
+        '        class="fa fa-times close" \n' +
+        '        ng-click="$ctrl.clearFilter($event)"\n' +
+        '        ng-keypress="$event.keyCode === 13 &amp;&amp; $ctrl.clearFilter($event)">\n' +
+        '    </span>\n' +
+        '</div>');
     $templateCache.put('sky/templates/grids/actionbar.html',
         '<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">\n' +
         '    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar">\n' +
@@ -114087,9 +114612,20 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <span>{{resources.grid_filters_summary_header}}</span>\n' +
         '    </div>\n' +
         '    <div class="bb-applied-filter-content-container">\n' +
-        '      <div tabindex="0" role="button" class="bb-applied-filter-content" ng-click="openFilterMenu()">\n' +
+        '      <div \n' +
+        '        ng-class="{\'bb-applied-filter-content-no-dismiss\': !gridFilterSummary.bbGridFiltersSummaryDismissable}"\n' +
+        '        tabindex="0" \n' +
+        '        role="button" \n' +
+        '        class="bb-applied-filter-content" \n' +
+        '        ng-click="openFilterMenu()">\n' +
         '          <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
-        '          <span tabindex="0" role="button" class="fa fa-times close" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
+        '          <span \n' +
+        '            tabindex="0" \n' +
+        '            role="button" \n' +
+        '            class="fa fa-times close" \n' +
+        '            data-bbauto-field="FilterSummaryRemove" \n' +
+        '            ng-click="clearFilters(); $event.stopPropagation();">\n' +
+        '        </span>\n' +
         '      </div>\n' +
         '    </div>\n' +
         '\n' +
@@ -114323,6 +114859,77 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</section>\n' +
         '');
+    $templateCache.put('sky/templates/search/search.input.component.html',
+        '<div>\n' +
+        '    <div \n' +
+        '        class="bb-search-open-wrapper"\n' +
+        '        ng-show="$ctrl.currentBreakpoint.xs"\n' +
+        '        ng-class="{\'bb-search-open-applied\': $ctrl.showClear, \'bb-search-open-hidden\': !$ctrl.openButtonShown}">\n' +
+        '\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            class="btn bb-btn-secondary bb-search-btn-open" \n' +
+        '            title="{{::\'search_open\' | bbResources}}" \n' +
+        '            ng-click="$ctrl.openSearchInput(true)">\n' +
+        '            <i class="fa fa-search fa-lg"></i>\n' +
+        '        </button>\n' +
+        '    </div>\n' +
+        '    <div class="bb-search-and-dismiss">\n' +
+        '\n' +
+        '        <div class="bb-search-item-input">\n' +
+        '            <div class="bb-search-input-container input-group">\n' +
+        '                <input\n' +
+        '                    type="text" \n' +
+        '                    class="form-control bb-search-input"\n' +
+        '                    ng-model="$ctrl.bbSearchText"\n' +
+        '                    ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" \n' +
+        '                    ng-focus="$ctrl.inputFocused(true)"\n' +
+        '                    ng-blur="$ctrl.inputFocused(false)"\n' +
+        '                    data-bbauto-field="SearchBox"\n' +
+        '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
+        '                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"\n' +
+        '                    />    \n' +
+        '\n' +
+        '                <span class="input-group-btn">\n' +
+        '                    \n' +
+        '                    <button  \n' +
+        '                        tabindex="-1"\n' +
+        '                        aria-hidden="true"\n' +
+        '                        ng-show="$ctrl.showClear && !$ctrl.openButtonShown" \n' +
+        '                        type="button"\n' +
+        '                        class="btn bb-search-btn-input-group bb-search-btn-clear"\n' +
+        '                        ng-click="$ctrl.clearSearchText()">\n' +
+        '                        <i class="fa fa-times"></i>\n' +
+        '                    </button>\n' +
+        '\n' +
+        '                    <button          \n' +
+        '                        type="button"\n' +
+        '                        class="btn bb-search-btn-input-group bb-search-btn-apply"\n' +
+        '                        ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"\n' +
+        '                        aria-label="{{::\'search_label\' | bbResources}}" >\n' +
+        '                        <i class="fa fa-search fa-lg"></i>\n' +
+        '                    </button>\n' +
+        '                    \n' +
+        '                </span>\n' +
+        '                \n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '        \n' +
+        '        <div class="bb-search-item-dismiss" ng-show="$ctrl.currentBreakpoint.xs &amp;&amp; !$ctrl.openButtonShown">\n' +
+        '            <button \n' +
+        '                type="button" \n' +
+        '                title="{{::\'search_dismiss\' | bbResources}}" \n' +
+        '                class="btn bb-btn-secondary bb-search-btn-dismiss" \n' +
+        '                ng-click="$ctrl.dismissSearchInput()">\n' +
+        '                <i class="fa fa-chevron-circle-left fa-lg">\n' +
+        '                </i>\n' +
+        '            </button>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '\n' +
+        '    \n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/selectfield/selectfield.directive.html',
         '<ng-include src="bbSelectField.getFieldInclude()"></ng-include>\n' +
         '<div ng-transclude></div>\n' +
@@ -114384,7 +114991,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</button>\n' +
         '');
     $templateCache.put('sky/templates/tabset/addbutton.html',
-        '<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary">\n' +
+        '<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary" aria-label="{{\'tab_add\' | bbResources}}">\n' +
         '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span>\n' +
         '</button>\n' +
         '');
@@ -114397,7 +115004,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="hidden-xs"></div>\n' +
         '');
     $templateCache.put('sky/templates/tabset/openbutton.html',
-        '<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary">\n' +
+        '<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn bb-btn-secondary" aria-label="{{\'tab_open\' | bbResources}}">\n' +
         '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-folder-open-o"></i></span>\n' +
         '</button>\n' +
         '');

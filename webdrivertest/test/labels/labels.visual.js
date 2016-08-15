@@ -4,18 +4,13 @@ describe('labels', function () {
     'use strict';
 
     it('match the baseline label screenshot', function (done) {
-        var result,
-            common = require('../common');
-
-        result = browser.url('/labels/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'labels',
-            selector: '#screenshot-labels',
-            screenWidth: [1280],
-            done: done
-        });
+        browser
+            .setupTest('/labels/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'labels',
+                selector: '#screenshot-labels',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 });

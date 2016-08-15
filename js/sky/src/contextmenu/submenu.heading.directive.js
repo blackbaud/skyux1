@@ -15,6 +15,8 @@
                 var submenuCtrl = ctrls[1],
                     vm = ctrls[0];
 
+                vm.submenuCtrl = submenuCtrl;
+
                 vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
                 };

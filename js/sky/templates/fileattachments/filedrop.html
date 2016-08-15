@@ -6,6 +6,7 @@
              ngf-keep="false"
              ngf-drag-over-class="{accept: 'bb-file-drop-accept', reject: 'bb-file-drop-reject'}"
              ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"
+             ngf-validate-fn="bbFileDrop.validate($file)"
              >
             <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">
                 <div class="bb-file-drop-contents-not-over">

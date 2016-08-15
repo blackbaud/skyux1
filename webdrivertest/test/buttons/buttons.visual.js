@@ -4,19 +4,14 @@ describe('buttons', function () {
     'use strict';
 
     it('should match the baseline buttons screenshot', function (done) {
-        var result,
-            common = require('../common');
-
-        result = browser.url('/buttons/fixtures/test.full.html');
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: 'buttons',
-            selector: '#screenshot-buttons',
-            done: done,
-            checkAccessibility: true
-        });
+        browser
+            .setupTest('/buttons/fixtures/test.full.html')
+            .compareScreenshot({
+                screenshotName: 'buttons',
+                selector: '#screenshot-buttons',
+                checkAccessibility: true
+            })
+            .call(done);
     });
 
     function getSelector(type, prefix) {
@@ -25,21 +20,17 @@ describe('buttons', function () {
     }
 
     function clickTest(type, done, prefix) {
-        var result,
-            common = require('../common'),
-            selector = getSelector(type, prefix);
+        var selector = getSelector(type, prefix);
 
-        result = browser.url('/buttons/fixtures/test.full.html').
-                    click(selector);
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: ('button_' + type + '_click'),
-            selector: ('#screenshots-buttons-' + type),
-            done: done,
-            checkAccessibility: true
-        });
+        browser
+            .setupTest('/buttons/fixtures/test.full.html')
+            .click(selector)
+            .compareScreenshot({
+                screenshotName: ('button_' + type + '_click'),
+                selector: ('#screenshots-buttons-' + type),
+                checkAccessibility: true
+            })
+            .call(done);
     }
 
     it('should match the baseline screenshot while clicking a default button', function (done) {

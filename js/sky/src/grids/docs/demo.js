@@ -449,7 +449,8 @@
                     id: 1,
                     name: 'name',
                     width_xs: 100,
-                    width_all: 300
+                    width_all: 300,
+                    title: false
                 },
                 {
                     caption: 'Skills',

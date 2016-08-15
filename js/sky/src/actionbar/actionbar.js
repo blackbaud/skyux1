@@ -30,8 +30,9 @@
                 title: '=?bbActionBarItemGroupTitle'
             },
             restrict: 'E',
+            require: 'bbActionBarItemGroup',
             scope: {},
-            link: function ($scope, el) {
+            link: function ($scope, el, attr, vm) {
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         el.find('.bb-action-bar-buttons > ng-transclude').appendTo(el.find('.bb-action-bar-dropdown > .dropdown > ul'));
@@ -45,6 +46,8 @@
                 $scope.$on('$destroy', function () {
                     bbMediaBreakpoints.unregister(mediaBreakpointHandler);
                 });
+
+                vm.toggleId = 'bb-action-bar-item-group-' + $scope.$id;
             },
             templateUrl: 'sky/templates/actionbar/actionbaritemgroup.html'
         };
@@ -69,7 +72,7 @@
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         if (!el.parent().is('li')) {
-                            el.wrap('<li></li>');
+                            el.wrap('<li role="menuitem"></li>');
                         }
 
                     } else {

@@ -1,0 +1,178 @@
+@media (min-width: $screen-sm-min) {
+    .bb-search-input-container {
+        max-width: 300px;
+    }
+}
+
+/*  On iOS, the input will zoom when focused, 
+    setting the font-size to 16px prevents this
+*/
+@media (max-width: $screen-xs-max) {
+    .bb-search-input {
+        font-size: 16px;
+    }
+}
+
+.bb-search-input {
+    @include bb-border(light, top, bottom, left);
+    border-right: none;
+    transition: none;
+    box-shadow: none;
+    border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    -webkit-appearance: none;
+
+}
+
+/*  Prevents the IE clear icon from displaying in the input
+    because our search control already includes a clear icon
+*/
+.bb-search-input::-ms-clear {
+    display: none;
+}
+
+.input-group.bb-search-input-container .input-group-btn {
+    .btn.bb-search-btn-input-group {
+        background-color: $bb-color-white;
+        border: none;
+        height: 32px;
+    }
+    .btn.bb-search-btn-apply {
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        border-left: none;
+        @include bb-border(light, top, bottom, right);
+    }
+    .btn.bb-search-btn-clear {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+        border-left: none;
+        @include bb-border(light, top, bottom);
+    }
+}
+
+
+.bb-search-input:focus + .input-group-btn button:hover.bb-search-btn-input-group  {
+    z-index: auto;
+}
+
+.bb-search-btn-dismiss, .bb-search-btn-dismiss:hover {
+    border: 1px transparent solid;
+    background-color: transparent;
+}
+
+.bb-search-btn-dismiss-hidden {
+    display: none;
+}
+
+.bb-search-input-container-hidden {
+    display: none;
+}
+
+.bb-search-and-dismiss {
+    display: flex;
+}
+
+.bb-search-item-dismiss {
+    flex-shrink: 0;
+}
+
+.bb-search-item-input {
+    flex-grow: 1;
+}
+
+/*  This is needed or else the input will be tiny
+    on Safari
+*/
+@media (min-width: $screen-sm-min) {
+    .bb-search-item-input {
+        flex-shrink: 0;
+    }
+}
+
+.bb-search-input-container {
+    width: 100%;
+    border: 1px transparent solid;
+}
+
+.bb-search-btn-clear {
+    padding-right: 6px;
+    padding-left: 18px;
+}
+
+.bb-search-btn-apply {
+    padding-left: 6px;
+}
+
+.bb-search-and-dismiss-absolute {
+    position: absolute;
+    background-color: $bb-color-white;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    visibility: visible;
+    padding: $padding-half;
+}
+
+.input-group.bb-search-input-container.bb-search-input-focused {
+
+    border: 1px solid $bb-focus-border-color;
+    box-shadow: 0 0 8px $bb-focus-shadow-color;
+    border-radius: 6px;
+
+    .btn.bb-search-btn-apply {
+        border-right: 1px transparent solid;
+        border-top: 1px transparent solid;
+        border-bottom: 1px transparent solid;
+    }
+
+    .btn.bb-search-btn-clear {
+        border-top: 1px transparent solid;
+        border-bottom: 1px transparent solid;
+    }
+
+} 
+
+.form-control.bb-search-input:focus {
+    border-top: 1px transparent solid;
+    border-bottom: 1px transparent solid;
+    border-left: 1px transparent solid;
+    border-right: none;
+    box-shadow: none; 
+}
+
+.bb-search-open-wrapper {
+    border: 1px transparent solid;
+}
+
+.bb-search-open-applied {
+    border: none;
+    .bb-search-btn-open {
+        color: $bb-color-green;
+        border: 2px solid $bb-color-green;
+    }
+}
+
+.bb-search-open-applied {
+    .bb-search-btn-open:hover {
+        color: $text-color;
+        border: 2px solid $bb-color-green;
+    }
+}
+
+.bb-search-open-hidden {
+    visibility: hidden;
+}
+
+.bb-search-input-component-container {
+    position: relative;
+}
+
+.bb-search-input-component-container-hidden > * {
+    visibility: hidden;
+}
+
+

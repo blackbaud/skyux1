@@ -16,12 +16,12 @@ module.exports = function (config) {
                 os: 'Windows',
                 os_version: '10'
             },
-            /*bs_windows_edge: {
+            bs_windows_edge: {
                 base: base,
                 browser: 'edge',
                 os: 'Windows',
                 os_version: '10'
-            },*/
+            },
             bs_windows_chrome_latest: {
                 base: base,
                 browser: 'chrome',

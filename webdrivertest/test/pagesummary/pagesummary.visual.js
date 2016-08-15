@@ -5,20 +5,14 @@ describe('Page summary', function () {
     'use strict';
 
     function clickTest(screenshotName, visibleComponents, done, screenWidth) {
-        var result,
-            common = require('../common');
-
-        result = browser.url('/pagesummary/fixtures/test.full.html')
-            .setValue('#screenshots-pagesummary-items', visibleComponents.join(','));
-
-        common.compareScreenshot({
-            browserResult: result,
-            prefix: common.getPrefix(browser),
-            screenshotName: ('pagesummary_' + screenshotName),
-            selector: '#screenshots-pagesummary',
-            done: done,
-            screenWidth: screenWidth
-        });
+        browser
+            .setupTest('/pagesummary/fixtures/test.full.html', screenWidth)
+            .setValue('#screenshots-pagesummary-items', visibleComponents.join(','))
+            .compareScreenshot({
+                screenshotName: ('pagesummary_' + screenshotName),
+                selector: '#screenshots-pagesummary'
+            })
+            .call(done);
     }
 
     it('should match previous pagesummary screenshot when all components are present', function (done) {
@@ -33,8 +27,24 @@ describe('Page summary', function () {
                 'Content',
                 'Alert'
             ],
+            done
+        );
+    });
+
+    it('should match previous pagesummary screenshot when all components are present on small screens', function (done) {
+        clickTest(
+            'all',
+            [
+                'Title',
+                'Subtitle',
+                'Image',
+                'Status',
+                'KeyInfo',
+                'Content',
+                'Alert'
+            ],
             done,
-            [480, 1280]
+            480
         );
     });
 
@@ -136,8 +146,20 @@ describe('Page summary', function () {
                 'Subtitle',
                 'Image'
             ],
+            done
+        );
+    });
+
+    it('should match previous pagesummary screenshot when only image, title, and subtitle are present on small screens', function (done) {
+        clickTest(
+            'image_title_subtitle',
+            [
+                'Title',
+                'Subtitle',
+                'Image'
+            ],
             done,
-            [480, 1280]
+            480
         );
     });
 
