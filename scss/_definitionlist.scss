@@ -3,23 +3,22 @@
 .bb-definition-list {
     margin-right: 50px;
     margin-bottom: 20px;
-    flex: 1;
 }
 
 .bb-definition-list-heading {
     margin-bottom: $margin-half;
-    margin-bottom: 5px;
 }
 
 .bb-definition-list-content-component {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 5px;
+    margin-bottom: $margin-half;
 }
 
 .bb-definition-list-label {
     margin-right: $margin;
     width: 90px;
+    word-wrap: break-word;
 }
 
 .bb-definition-list-no-value, .bb-definition-list-value {
