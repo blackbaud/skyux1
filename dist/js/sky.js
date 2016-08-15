@@ -88,7 +88,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.datepicker', ['sky.datepicker.directive']);
+    angular.module('sky.datepicker', ['sky.datepicker.directive', 'sky.datepicker.hide']);
 }());
 
 /*global angular */
@@ -2946,6 +2946,38 @@
 
 }());
 
+/* global angular */
+(function () {
+    'use strict';
+
+    /*  This directive addresses a positioning problem that occurs in uib-datepicker when the datepicker popup
+        attempts to position itself after a mode change while ng-if has not fully processed. This directive watches
+        the mode change, hides the element if necessary, and kicks off the event that positions the popup again */
+    function Controller($scope, $element) {
+        var ctrl = this;
+
+        function emitModeChange() {
+            $element[ctrl.bbDatepickerHideMode !== ctrl.bbDatepickerHideModeMatch ? 'addClass' : 'removeClass']('ng-hide');
+            $scope.$emit('uib:datepicker.mode');
+        }
+
+        ctrl.$onChanges = emitModeChange;
+    }
+
+    Controller.$inject = ['$scope', '$element'];
+
+    angular.module('sky.datepicker.hide', [])
+        .component('bbDatepickerHide', 
+        {
+            bindings: {
+                bbDatepickerHideMode: '<',
+                bbDatepickerHideModeMatch: '@'
+            },
+            controller: Controller,
+            transclude: true,
+            template: '<ng-transclude></ng-transclude>'
+        });
+})();
 /* global angular */
 (function () {
     'use strict';
@@ -12317,6 +12349,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                datepicker-append-to-body="{{bbDatepicker.appendToBody}}"\n' +
         '                close-on-date-selection="{{bbDatepicker.closeOnSelection}}"\n' +
         '                alt-input-formats="bbDatepicker.altInputFormats"\n' +
+        '                datepicker-template-url="sky/templates/datepicker/uibdatepicker.html"\n' +
         '\n' +
         '                bb-datepicker-custom-validate="{{bbDatepicker.hasCustomValidation}}"\n' +
         '                bb-datepicker-min-date\n' +
@@ -12331,6 +12364,22 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/datepicker/uibdatepicker.html',
+        '<div class="uib-datepicker" role="application" ng-keydown="keydown($event)">\n' +
+        '  \n' +
+        '  <bb-datepicker-hide  bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="day">\n' +
+        '    <uib-daypicker ng-if="datepickerMode === \'day\'" tabindex="0"></uib-daypicker>\n' +
+        '  </bb-datepicker-hide>\n' +
+        '\n' +
+        '  <bb-datepicker-hide  bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="month">\n' +
+        '    <uib-monthpicker ng-if="datepickerMode === \'month\'" tabindex="0"></uib-monthpicker>\n' +
+        '  </bb-datepicker-hide>\n' +
+        '\n' +
+        '  <bb-datepicker-hide bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="year">\n' +
+        '    <uib-yearpicker ng-if="datepickerMode === \'year\'" tabindex="0"></uib-yearpicker>\n' +
+        '  </bb-datepicker-hide>\n' +
+        '  \n' +
+        '</div>');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
         '<div class="form-inline" ng-form="bbDateRangePickerCtrl.dateRangeForm">\n' +
         '    <div class="form-group bb-date-range-picker-form-group">\n' +
