@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbResources) {
+    function Controller($element) {
         var vm = this;
 
         function listHasValue() {
@@ -14,20 +14,12 @@
             return false;
         }
 
-        function onInit() {
-            if (!vm.definitionCtrl.bbDefinitionListDefaultValue) {
-                vm.definitionCtrl.bbDefinitionListDefaultValue = bbResources.definition_list_none_found;
-            }
-        }
-
-        vm.$onInit = onInit;
-
         vm.hasValue = listHasValue;
     }
     
-    Controller.$inject = ['$element', 'bbResources'];
+    Controller.$inject = ['$element'];
 
-    angular.module('sky.definitionlistcontent.component', ['sky.resources'])
+    angular.module('sky.definitionlistcontent.component', [])
         .component('bbDefinitionListContent', {
             require: {
                 definitionCtrl: '^bbDefinitionList'

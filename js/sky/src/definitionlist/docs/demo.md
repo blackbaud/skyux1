@@ -12,5 +12,5 @@ The definition list component enables you to present a list of related label-val
       - `bb-definition-list-default-value` &mdash; *(Optional.)* Text that appears when no value is specified for the definition. *(Default: 'None found')*
       - `bb-definition-list-heading` &mdash; Specifies the heading to display, if any.
       - `bb-definition-list-content` &mdash; Includes the value and label of the content.
-        - `bb-definition-list-value` &mdash; *(Optional.)* Specifies the primary content to display.
         - `bb-definition-list-label` &mdash; Specifies a label to display beside the primary value.
+        - `bb-definition-list-value` &mdash; *(Optional.)* Specifies the primary content to display.

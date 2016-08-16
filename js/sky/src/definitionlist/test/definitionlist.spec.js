@@ -61,7 +61,7 @@ describe('Definition list component', function () {
         expect(el.find('.bb-definition-list-label')).toHaveText(label);
     });
     
-    it('value should be empty', function () {
+    it('should have the correct default value when empty', function () {
         var el,
             $scope = $rootScope.$new(),
             header = 'head',
@@ -74,5 +74,50 @@ describe('Definition list component', function () {
         
         expect(el.find('.bb-definition-list-no-value')).toHaveText('None found');
         expect(el.find('.bb-definition-list-value')).toHaveText('');
+    });
+
+    it('should allow the user to define a default value when empty', function () {
+        var el,
+            $scope = $rootScope.$new(),
+            header = 'head',
+            label = 'bar';
+
+        $scope.listCtrl = {};
+
+        el = $compile('<bb-definition-list bb-definition-list-default-value="listCtrl.defaultValue">' + 
+        '<bb-definition-list-heading>' + header + '</bb-definition-list-heading>' + 
+        '<bb-definition-list-content>' +
+        '<bb-definition-list-value></bb-definition-list-value>' + 
+        '<bb-definition-list-label>' + label + '</bb-definition-list-label>' + 
+        '</bb-definition-list-content></bb-definition-list>')($scope);
+
+
+        $scope.listCtrl = {
+            defaultValue: 'Nothing'
+        };
+
+        $scope.$digest();
+
+        expect(el.find('.bb-definition-list-no-value')).toHaveText('Nothing');
+        expect(el.find('.bb-definition-list-value')).toHaveText('');
+    });
+
+    it('should allow the user to define a width for the label', function () {
+        var el,
+            $scope = $rootScope.$new(),
+            header = 'head',
+            label = 'bar';
+
+        el = $compile('<bb-definition-list bb-definition-list-label-width="200px">' + 
+        '<bb-definition-list-heading>' + header + '</bb-definition-list-heading>' + 
+        '<bb-definition-list-content>' +
+        '<bb-definition-list-value></bb-definition-list-value>' + 
+        '<bb-definition-list-label>' + label + '</bb-definition-list-label>' + 
+        '</bb-definition-list-content></bb-definition-list>')($scope);
+
+        $scope.$digest();
+
+        expect(el.find('.bb-definition-list-label')).toHaveCss({width: '200px'});
+        
     });
 }); 

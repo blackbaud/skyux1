@@ -1,4 +1,4 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('datepicker', function () {
     'use strict';
