@@ -16,12 +16,28 @@
             <span class="fa fa-columns"></span>
             <span class="bb-toolbar-btn-label">{{resources.grid_columns_button}}</span>
         </button>
-        <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" ng-class="{'bb-filters-inline-active': options.filtersAreActive}" data-bbauto-field="FilterButton" ng-show="!options.hideFilters" ng-click="toolbarLocals.toggleFilterMenu()">
+        <button 
+            type="button" 
+            class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" 
+            ng-class="{'bb-filters-inline-active': options.filtersAreActive}" 
+            data-bbauto-field="FilterButton" 
+            ng-show="!options.hideFilters &amp;&amp; !bbFilterOnClick" 
+            ng-click="toolbarLocals.toggleFilterMenu()">
+            
             <span class="fa fa-filter"></span>
             <span class="bb-toolbar-btn-label">{{resources.grid_filters_button}}</span>
+        
         </button>
+        
+        <bb-filter-button 
+            ng-if="!options.hideFilters &amp;&amp; bbFilterOnClick"
+            bb-filter-button-on-click="bbFilterOnClick()"
+            >
+        </bb-filter-button>
     </div>
     <div class="bb-grid-filter-summary-container">
+        <div ng-transclude="bbFilterSummary">
+        </div>
     </div>
     <div class="bb-grid-filter-inline-container" ng-hide="options.hasInlineFilters && !toolbarLocals.filtersVisible">
     </div>

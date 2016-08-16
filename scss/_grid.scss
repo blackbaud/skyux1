@@ -237,7 +237,8 @@ body:not(.bb-viewkeeper-ignore-fixed) {
 .bb-grid-toolbar-container {
     .toolbar {
         .bb-grid-toolbar-btn {
-            float: left;
+            display: inline-block;
+            vertical-align: middle;
             font-size: 12px;
             margin: 0 5px 0 0;
             padding: 3px 6px;
@@ -269,11 +270,17 @@ body:not(.bb-viewkeeper-ignore-fixed) {
 }
 
 .bb-grid-toolbar-button-container {
-    float: left;
     font-size: 12px;
     display: inline-block;
+    vertical-align: middle;
 }
 
 .bb-grid-no-search span.highlight {
   background-color: transparent;
+}
+
+.bb-grid-filter-summary-container {
+    .bb-filter-summary {
+        border-top: none;
+    }
 }

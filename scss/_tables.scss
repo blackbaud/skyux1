@@ -140,6 +140,8 @@
 
         .bb-search-container {
             background-color: white;
+            display: inline-block;
+            vertical-align: middle;
 
             input {
                 float: left;

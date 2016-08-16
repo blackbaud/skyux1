@@ -25,7 +25,62 @@
         };
     }
 
-    function GridTestController($scope, $filter, $timeout) {
+    function GridFilterController($uibModalInstance, existingFilters) {
+        var self = this;
+
+        function clearAllFilters() {
+            self.filters = {
+            };
+        }
+        
+        function transformFiltersToArray(filters) {
+            var result = [];
+
+            if (filters.playsGuitar) {
+                result.push({name: 'guitar', value: true, label: 'plays guitar'});
+            }
+
+            if (filters.playsDrums) {
+                result.push({name: 'drums', value: true, label: 'plays drums'});
+            }
+
+            return result;
+        }
+
+        function transformArrayToFilters(array) {
+            var i,
+                filters = {};
+
+            for (i = 0; i < array.length; i++) {
+                if (array[i].name === 'guitar') {
+                    filters.playsGuitar = array[i].value;
+                }
+
+                if (array[i].name === 'drums') {
+                    filters.playsDrums = array[i].value;
+                }
+            }
+
+            return filters;
+        }
+
+        function applyFilters() {
+            var result = transformFiltersToArray(self.filters);
+            $uibModalInstance.close(result);
+        }
+
+
+        if (!existingFilters) {
+            clearAllFilters();
+        } else {
+            self.filters = transformArrayToFilters(existingFilters);
+        }
+
+        self.clearAllFilters = clearAllFilters;
+        self.applyFilters = applyFilters;
+    }
+
+    function GridTestController($scope, $filter, $timeout, bbModal) {
 
         var newDataFlag = 0,
             action1,
@@ -77,16 +132,6 @@
                 }
             ],
             self = this;
-
-        function applyFilters() {
-            self.appliedFilters.instruments = [];
-            if (self.guitarFilter) {
-                self.appliedFilters.instruments.push({name: 'guitars'});
-            }
-            if (self.drumsFilter) {
-                self.appliedFilters.instruments.push({name: 'drums'});
-            }
-        }
 
         function updateActions(selections) {
             var i,
@@ -142,25 +187,9 @@
             title: 'Drum action'
         };
 
-        self.appliedFilters = {
-            instruments: []
-        };
 
         self.clickCustom = function () {
             alert('custom button clicked');
-        };
-
-        self.filterOptions = {
-            applyFilters: function (args) {
-                applyFilters();
-                args.filters = angular.copy(self.appliedFilters);
-            },
-            clearFilters: function (args) {
-                self.guitarFilter = false;
-                self.drumsFilter = false;
-                applyFilters();
-                args.filters = angular.copy(self.appliedFilters);
-            }
         };
 
         self.gridActions = [
@@ -240,15 +269,44 @@
                 columnPickerHelpKey: 'bb-security-users.html'
             };
 
-            self.guitarFilter = false;
-
-            self.drumsFilter = false;
 
             self.updateActions = updateActions;
 
             self.setSelections = setSelections;
 
             self.selectedRows = [dataSetBand[1]];
+
+            function onDismissFilter(index) {
+                self.appliedFilters.splice(index, 1);
+                filterAndSearch();
+            }
+
+            function openFilters() {
+                console.log('open filters');
+                bbModal
+                    .open({
+                        controller: 'GridFilterController as filterCtrl',
+                        templateUrl: 'demo/grids/filters.html',
+                        resolve: {
+                            existingFilters: function () {
+                                
+                                return angular.copy(self.appliedFilters);
+                            }
+                        }
+                    })
+                    .result
+                    .then(function (result) {
+                        console.log('returned filters ', result);
+                        self.appliedFilters = angular.copy(result);
+
+                        filterAndSearch();
+
+                    });
+            }
+
+            self.openFilters = openFilters;
+
+            self.onDismissFilter = onDismissFilter;
 
             function setSelections() {
                 self.selectedRows = [dataSetBand[3]];
@@ -290,10 +348,10 @@
                 var i,
                     item,
                     newData = [];
-                if (angular.isDefined(filters) && filters.instruments && filters.instruments.length > 0) {
-                    for (i = 0; i < filters.instruments.length; i++) {
-                        item = filters.instruments[i];
-                        if (item.name === 'guitars') {
+                if (angular.isDefined(filters) &&  filters.length > 0) {
+                    for (i = 0; i < filters.length; i++) {
+                        item = filters[i];
+                        if (item.name === 'guitar') {
                             newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
                         }
                         if (item.name === 'drums') {
@@ -310,20 +368,13 @@
                 var filteredData = [],
                     searchedData = [];
 
-                filteredData = filter(dataSetBand, self.gridOptions.filters);
+                filteredData = filter(dataSetBand, self.appliedFilters);
                 searchedData = search(filteredData, self.gridOptions.searchText);
                 self.gridOptions.data = searchedData;
-
             }
 
             $scope.$watch(function () {
                 return self.gridOptions.searchText;
-            }, function () {
-                filterAndSearch();
-            });
-
-            $scope.$watch(function () {
-                return self.gridOptions.filters;
             }, function () {
                 filterAndSearch();
             });
@@ -556,12 +607,15 @@
 
     TemplateController.$inject = ['$scope'];
 
-    GridTestController.$inject = ['$scope', '$filter', '$timeout'];
+    GridFilterController.$inject = ['$uibModalInstance', 'existingFilters']
+
+    GridTestController.$inject = ['$scope', '$filter', '$timeout', 'bbModal'];
 
     angular.module('stache')
     .run(RunTemplateCache)
     .controller('TemplateController', TemplateController)
     .controller('GridTestController', GridTestController)
+    .controller('GridFilterController', GridFilterController)
     .controller('PaginationGridTestController', PaginationGridTestController);
 
 }());

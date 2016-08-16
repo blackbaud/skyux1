@@ -33,15 +33,19 @@
           <button class="btn bb-btn-secondary" ng-click="gridCtrl.gridOptions.loading = false;">End loading</button>
       </div>
 
-      <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-multiselect-actions="gridCtrl.gridActions" bb-selections-updated="gridCtrl.updateActions(selections)" bb-selected-rows="gridCtrl.selectedRows" bb-grid-custom-toolbar>
-          <bb-grid-filters-summary 
+      <bb-grid 
+        bb-grid-options="gridCtrl.gridOptions" 
+        bb-multiselect-actions="gridCtrl.gridActions" 
+        bb-selections-updated="gridCtrl.updateActions(selections)" 
+        bb-selected-rows="gridCtrl.selectedRows" bb-grid-custom-toolbar>
+          <!--<bb-grid-filters-summary 
             ng-show="gridCtrl.appliedFilters.instruments.length > 0" 
             bb-options="gridCtrl.filterOptions"
             bb-grid-filters-summary-dismissable="gridCtrl.summaryIsDismissable"
             >
               <span ng-repeat="item in gridCtrl.appliedFilters.instruments">{{item.name}}<span ng-if="!$last">, </span></span>
-          </bb-grid-filters-summary>
-          <bb-grid-filters bb-options="gridCtrl.filterOptions">
+          </bb-grid-filters-summary>-->
+          <!--<bb-grid-filters bb-options="gridCtrl.filterOptions">
               <bb-grid-filters-group bb-grid-filters-group-label="'Filter group'">
                   <div>
                       <label><input type="checkbox" ng-model="gridCtrl.guitarFilter"/> Show guitars</label>
@@ -50,9 +54,20 @@
                       <label><input type="checkbox" ng-model="gridCtrl.drumsFilter"/> Show drums</label>
                   </div>
               </bb-grid-filters-group>
-          </bb-grid-filters>
-          <bb-grid-toolbar>
+          </bb-grid-filters>-->
+          <bb-grid-toolbar
+            bb-filter-on-click="gridCtrl.openFilters()">
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
+              <bb-filter-summary ng-show="gridCtrl.appliedFilters.length > 0">
+                  <bb-filter-summary-item
+                    ng-repeat="item in gridCtrl.appliedFilters"
+                    bb-filter-summary-item-on-click="gridCtrl.openFilters()"
+                    bb-filter-summary-item-on-dismiss="gridCtrl.onDismissFilter($index)"
+                  >
+                      {{item.label}}
+                  </bb-filter-summary-item>
+                  
+              </bb-filter-summary>
           </bb-grid-toolbar>
       </bb-grid>
 
@@ -60,3 +75,25 @@
     </div>
 
 </div>
+
+<script type="text/ng-template" id="demo/grids/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Instrument filter</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <div>
+                      <label><input bb-check type="checkbox" ng-model="filterCtrl.filters.playsGuitar"/> Show guitar players</label>
+                    </div>
+                    <div>
+                      <label><input  bb-check type="checkbox" ng-model="filterCtrl.filters.playsDrums"/> Show drum players</label>
+                    </div>
+                </form>
+            </div>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>

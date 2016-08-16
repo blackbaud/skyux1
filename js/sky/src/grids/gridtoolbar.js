@@ -8,9 +8,12 @@
         return {
             require: '?^bbGrid',
             scope: {
-                options: '=?bbToolbarOptions'
+                options: '=?bbToolbarOptions',
+                bbFilterOnClick: '&?bbFilterOnClick'
             },
-            transclude: true,
+            transclude: {
+                'bbFilterSummary': '?bbFilterSummary'    
+            },
             link: function ($scope, el, attr, bbGrid) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
