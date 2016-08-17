@@ -164,6 +164,6 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());

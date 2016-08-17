@@ -2,10 +2,14 @@
 (function () {
     'use strict';
 
-    function Controller() {
+    function Controller($log) {
         var ctrl = this;
 
         function summaryItemInit() {
+            if (angular.isDefined(ctrl.bbFilterSummaryItemIsDismissable)) {
+                $log.warn('bb-filter-summary-item-is-dismissable is deprecated, use bb-filter-summary-item-is-dismissible instead.');
+            }
+
             if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable) && angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissible)) {
                 ctrl.bbFilterSummaryItemIsDismissible = true;
             }

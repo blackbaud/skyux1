@@ -121,8 +121,7 @@ describe('Grid filters', function () {
 
             filterButtonEl = getFilterButton(el);
 
-            expect(filterButtonEl.length).toBe(1);
-            expect(filterButtonEl.eq(0)).toHaveCss({"display": "none"});
+            expect(filterButtonEl.length).toBe(0);
         });
 
         it('can have the filter button and filter icon open a filter flyout menu', function () {
@@ -150,6 +149,10 @@ describe('Grid filters', function () {
             //confirm that flyout pane is not there
             expect(filterFlyoutEl.length).toBe(1);
             expect(filterFlyoutEl.eq(0)).toHaveCss({"display": "none"});
+        });
+
+        it('can have the filter button and filter icon open a filter flyout menu when using a custom toolbar', function () {
+
         });
 
         it('can set filters open and closed using options.filtersOpen', function () {

@@ -392,9 +392,64 @@ describe('Grid toolbars', function () {
             el = setUpGrid(customToolbarGridHtml, locals);
             setOptions(options);
 
-            el.find('.bb-test-button').click();
+            el.find('.bb-grid-toolbar-button-container .bb-test-button').click();
 
             expect(customClicked).toBe(true);
         });
+
+        describe('Filter button', function () {
+            it('will create a filter button with an onClick event', function () {
+                var filterButtonClicked = false,
+                    customToolbarGridHtml = '<div>' +
+                    '<bb-grid bb-grid-options="locals.gridOptions">' +
+                    '<bb-grid-toolbar bb-filter-on-click="locals.clickFilter()">' +
+                    '</bb-grid-toolbar>' +
+                    '</bb-grid>' +
+                    '</div>';
+
+                locals.clickFilter = function () {
+                    filterButtonClicked = true;
+                };
+
+                el = setUpGrid(customToolbarGridHtml, locals);
+                setOptions(options);
+                expect(el.find('.bb-grid-toolbar-btn.bb-filter-btn').length).toBe(0);
+
+                el.find('.bb-filter-btn .bb-btn-secondary').click();
+                $scope.$digest();
+                expect(filterButtonClicked).toBe(true);
+                
+            });
+
+        });
+
+        describe('Filter summary', function () {
+            it('will place a filter summary in the summary section', function () {
+                var customToolbarGridHtml = '<div>' +
+                    '<bb-grid bb-grid-options="locals.gridOptions">' +
+                    '<bb-grid-toolbar bb-filter-on-click="locals.clickFilter()">' +
+                    '<bb-grid-toolbar-filter-summary>' + 
+                    '<bb-filter-summary>' +
+                    '<bb-filter-summary-item>' + 
+                    'One filter' +
+                    '</bb-filter-summary-item>' +
+                    '</bb-filter-summary>' +
+                    '</bb-grid-toolbar-filter-summary>' +
+                    '</bb-grid-toolbar>' +
+                    '</bb-grid>' +
+                    '</div>',
+                    summaryContainerEl;
+
+                el = setUpGrid(customToolbarGridHtml, locals);
+                setOptions(options);
+
+                summaryContainerEl = el.find('.bb-grid-filter-summary-container');
+                expect(summaryContainerEl.find('.bb-filter-summary .bb-filter-summary-item')).toHaveText('One filter');
+                
+            });
+        });
     });
+
+   
+
 });

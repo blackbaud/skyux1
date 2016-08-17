@@ -6,8 +6,11 @@
             <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">
                 <ng-transclude></ng-transclude>
             </bb-grid-toolbar>
-            <ng-transclude ng-transclude-slot="bbGridToolbar">
-            </ng-transclude>
+            <div ng-if="customToolbar.hasCustomToolbar">
+                <ng-transclude ng-transclude-slot="bbGridToolbar">
+                </ng-transclude>
+                <ng-transclude></ng-transclude>
+            </div>
         </div>
     </div>
 
