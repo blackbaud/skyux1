@@ -1,6 +1,6 @@
 ---
 name: Definition list
-icon: fa-list-alt
+icon: list-alt
 summary: The definition list component enables you to present a list of related label-value pairs.
 ---
 
