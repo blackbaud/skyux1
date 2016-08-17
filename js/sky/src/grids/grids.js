@@ -961,6 +961,10 @@
                                         $scope.paginationOptions.currentPage = 1;
                                     }
 
+                                    if (!$scope.paginationOptions.boundaryLinks) {
+                                        $scope.paginationOptions.boundaryLinks = false;
+                                    }
+
                                     $scope.paginationOptions.pageChanged = pageChanged;
 
 

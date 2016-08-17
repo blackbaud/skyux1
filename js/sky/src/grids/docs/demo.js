@@ -487,13 +487,14 @@
         };
 
         self.paginationOptions = {
-            recordCount: 30
+            recordCount: 60,
+            boundaryLinks: true
         };
 
         function getPaginationDataSet(top, skip) {
-            if (skip === 0 || skip === 15) {
+            if (skip === 0 || skip === 15 || skip === 30 || skip === 45) {
                 return dataSet1;
-            } else if (skip === 5 || skip === 20) {
+            } else if (skip === 5 || skip === 20 || skip === 35 || skip === 50) {
                 return dataSet2;
             } else {
                 return dataSet3;
@@ -541,7 +542,7 @@
                 }
             }
             self.gridOptions2.data = dataSet1;
-            self.paginationOptions.recordCount = 30;
+            self.paginationOptions.recordCount = 60;
 
         }, true);
 
