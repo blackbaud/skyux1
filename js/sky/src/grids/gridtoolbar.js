@@ -12,7 +12,7 @@
                 bbFilterOnClick: '&?bbFilterOnClick'
             },
             transclude: {
-                'bbFilterSummary': '?bbFilterSummary'    
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
             },
             link: function ($scope, el, attr, bbGrid) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');

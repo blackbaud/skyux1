@@ -24,8 +24,8 @@
       <button 
         type="button"
         class="btn bb-btn-secondary"
-        ng-click="gridCtrl.summaryIsDismissable = !gridCtrl.summaryIsDismissable">
-        Toggle summary dismissable
+        ng-click="gridCtrl.summaryIsDismissible = !gridCtrl.summaryIsDismissible">
+        Toggle summary dismissible
     </button>
 
       <div style="margin-top: 10px; margin-bottom: 10px;">
@@ -37,21 +37,23 @@
         bb-grid-options="gridCtrl.gridOptions" 
         bb-multiselect-actions="gridCtrl.gridActions" 
         bb-selections-updated="gridCtrl.updateActions(selections)" 
-        bb-selected-rows="gridCtrl.selectedRows" bb-grid-custom-toolbar>
+        bb-selected-rows="gridCtrl.selectedRows">
           <bb-grid-toolbar
             bb-filter-on-click="gridCtrl.openFilters()">
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
-              <bb-filter-summary ng-show="gridCtrl.appliedFilters.length > 0">
-                  <bb-filter-summary-item
-                    ng-repeat="item in gridCtrl.appliedFilters"
-                    bb-filter-summary-item-on-click="gridCtrl.openFilters()"
-                    bb-filter-summary-item-on-dismiss="gridCtrl.onDismissFilter($index)"
-                    bb-filter-summary-item-is-dismissable="gridCtrl.summaryIsDismissable"
-                  >
-                      {{item.label}}
-                  </bb-filter-summary-item>
-                  
-              </bb-filter-summary>
+              <bb-grid-toolbar-filter-summary>
+                  <bb-filter-summary ng-show="gridCtrl.appliedFilters.length > 0">
+                    <bb-filter-summary-item
+                        ng-repeat="item in gridCtrl.appliedFilters"
+                        bb-filter-summary-item-on-click="gridCtrl.openFilters()"
+                        bb-filter-summary-item-on-dismiss="gridCtrl.onDismissFilter($index)"
+                        bb-filter-summary-item-is-dismissible="gridCtrl.summaryIsDismissible"
+                        >
+                        {{item.label}}
+                    </bb-filter-summary-item>
+                </bb-filter-summary>
+              </bb-grid-toolbar-filter-summary>
+              
           </bb-grid-toolbar>
       </bb-grid>
 

@@ -170,6 +170,51 @@
             alert(message);
         }
 
+        function search(array, text) {
+                if (angular.isDefined(text) && text !== '') {
+                    return array.filter(function (element) {
+                        var check = ((element.name.indexOf(text) > -1) ||
+                               (element.instrument.indexOf(text) > -1) ||
+                               (element.bio.indexOf(text) > -1) ||
+                               (element.templated.info.indexOf(text) !== -1) ||
+                               (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
+                        return check;
+                    });
+
+                } else {
+                    return array;
+                }
+            }
+
+        function filter(array, filters) {
+            var i,
+                item,
+                newData = [];
+            if (angular.isDefined(filters) &&  filters.length > 0) {
+                for (i = 0; i < filters.length; i++) {
+                    item = filters[i];
+                    if (item.name === 'guitar') {
+                        newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
+                    }
+                    if (item.name === 'drums') {
+                        newData.push(dataSetBand[3]);
+                    }
+                }
+                return newData;
+            } else {
+                return array;
+            }
+        }
+
+        function filterAndSearch() {
+            var filteredData = [],
+                searchedData = [];
+
+            filteredData = filter(dataSetBand, self.appliedFilters);
+            searchedData = search(filteredData, self.gridOptions.searchText);
+            self.gridOptions.data = searchedData;
+        }
+
         function onDismissFilter(index) {
                 self.appliedFilters.splice(index, 1);
                 filterAndSearch();
@@ -192,9 +237,7 @@
                 .then(function (result) {
                     console.log('returned filters ', result);
                     self.appliedFilters = angular.copy(result);
-
                     filterAndSearch();
-
                 });
         }
 
@@ -202,8 +245,7 @@
 
         self.onDismissFilter = onDismissFilter;
 
-        self.summaryIsDismissable = true;
-
+        self.summaryIsDismissible = true;
 
         action1 = {
             actionCallback: action1Clicked,
@@ -331,51 +373,6 @@
                     }
                 });
             }, true);
-
-            function search(array, text) {
-                if (angular.isDefined(text) && text !== '') {
-                    return array.filter(function (element) {
-                        var check = ((element.name.indexOf(text) > -1) ||
-                               (element.instrument.indexOf(text) > -1) ||
-                               (element.bio.indexOf(text) > -1) ||
-                               (element.templated.info.indexOf(text) !== -1) ||
-                               (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
-                        return check;
-                    });
-
-                } else {
-                    return array;
-                }
-            }
-
-            function filter(array, filters) {
-                var i,
-                    item,
-                    newData = [];
-                if (angular.isDefined(filters) &&  filters.length > 0) {
-                    for (i = 0; i < filters.length; i++) {
-                        item = filters[i];
-                        if (item.name === 'guitar') {
-                            newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
-                        }
-                        if (item.name === 'drums') {
-                            newData.push(dataSetBand[3]);
-                        }
-                    }
-                    return newData;
-                } else {
-                    return array;
-                }
-            }
-
-            function filterAndSearch() {
-                var filteredData = [],
-                    searchedData = [];
-
-                filteredData = filter(dataSetBand, self.appliedFilters);
-                searchedData = search(filteredData, self.gridOptions.searchText);
-                self.gridOptions.data = searchedData;
-            }
 
             $scope.$watch(function () {
                 return self.gridOptions.searchText;

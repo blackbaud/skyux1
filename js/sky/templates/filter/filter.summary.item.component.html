@@ -7,7 +7,7 @@
     <ng-transclude></ng-transclude>
     <span 
         ng-attr-aria-label="{{'filter_summary_close' | bbResources}}"
-        ng-if="$ctrl.bbFilterSummaryItemIsDismissable" 
+        ng-if="$ctrl.bbFilterSummaryItemIsDismissable || $ctrl.bbFilterSummaryItemIsDismissible" 
         role="button" 
         tabindex="0" 
         class="fa fa-times close" 

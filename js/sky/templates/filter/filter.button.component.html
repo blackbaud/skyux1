@@ -1,5 +1,7 @@
 <button 
     ng-attr-title="{{'filter_button_title' | bbResources}}" 
+    ng-class="{'bb-filter-btn-active': $ctrl.bbFilterButtonActive}" 
+    data-bbauto-field="FilterButton" 
     type="button" 
     class="btn bb-btn-secondary" 
     ng-click="$ctrl.bbFilterButtonOnClick()">

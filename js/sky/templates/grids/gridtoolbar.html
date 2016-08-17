@@ -31,7 +31,7 @@
             class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" 
             ng-class="{'bb-filters-inline-active': options.filtersAreActive}" 
             data-bbauto-field="FilterButton" 
-            ng-show="!options.hideFilters &amp;&amp; !bbFilterOnClick" 
+            ng-if="!options.hideFilters &amp;&amp; !bbFilterOnClick" 
             ng-click="toolbarLocals.toggleFilterMenu()">
             
             <span class="fa fa-lg fa-filter"></span>
@@ -42,11 +42,12 @@
             class="bb-filter-btn"
             ng-if="!options.hideFilters &amp;&amp; bbFilterOnClick"
             bb-filter-button-on-click="bbFilterOnClick()"
+            bb-filter-button-active="options.filtersAreActive"
             >
         </bb-filter-button>
     </div>
     <div class="bb-grid-filter-summary-container">
-        <div ng-transclude="bbFilterSummary">
+        <div ng-transclude="bbGridToolbarFilterSummary">
         </div>
     </div>
     <div class="bb-grid-filter-inline-container" ng-hide="options.hasInlineFilters && !toolbarLocals.filtersVisible">

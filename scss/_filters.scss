@@ -5,17 +5,16 @@
     padding: $padding;
 }
 
-.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active {
+.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active, .bb-filter-btn-active, .bb-filter-btn-active:hover{
     color: $bb-color-green;
     border: 2px solid $bb-color-green;
     border-radius: 3px;
     padding: 5px 11px; /* offset the thicker border to avoid button size change */
 }
 
-.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover {
+.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover, .bb-filter-btn-active:hover {
     color: $text-color;
 }
-
 
 .bb-filter-summary {
     background-color: $bb-color-white;
@@ -24,6 +23,10 @@
     display: flex;
     align-items: center;
     @include bb-border(dark, top, bottom);
+}
+
+.bb-filter-summary-items {
+    white-space: nowrap;
 }
 
 .bb-filter-summary-item {

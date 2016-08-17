@@ -6,8 +6,8 @@
         var ctrl = this;
 
         function summaryItemInit() {
-            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable)) {
-                ctrl.bbFilterSummaryItemIsDismissable = true;
+            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable) && angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissible)) {
+                ctrl.bbFilterSummaryItemIsDismissible = true;
             }
         }
 
@@ -31,7 +31,8 @@
             bindings: {
                 bbFilterSummaryItemOnClick: '&?',
                 bbFilterSummaryItemOnDismiss: '&?',
-                bbFilterSummaryItemIsDismissable: '<?'
+                bbFilterSummaryItemIsDismissable: '<?',
+                bbFilterSummaryItemIsDismissible: '<?'
             },
             transclude: true
         });

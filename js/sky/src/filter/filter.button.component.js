@@ -6,7 +6,8 @@
         .component('bbFilterButton', {
             templateUrl: 'sky/templates/filter/filter.button.component.html',
             bindings: {
-                bbFilterButtonOnClick: '&'
+                bbFilterButtonOnClick: '&',
+                bbFilterButtonActive: '<?'
             }
         });
 })();

@@ -16,13 +16,14 @@ The filter modal footer component wraps the `bb-modal-footer` directive with fil
 The filter button component creates a styled button that launches a modal which can contain filtering options.
 - `bb-filter-button`
   - `bb-filter-button-on-click` &mdash; Specifies a function to be called when the filter button is clicked. 
+  - `bb-filter-button-active` &mdash; *(Optional.)* Specifies whether the filter button should be given active indication. This property should be set when indication of filtering is not visible to the user, such as no filter summary visible. *(Default=false)*
 
 ## Filter Summary
 The filter summary component displays information about applied filters.
 - `bb-filter-summary` &mdash; A component that contains filter summary items.
   - `bb-filter-summary-item` &mdash; A component for a filter summary item.
     - `bb-filter-summary-item-on-click` &mdash; *(Optional.)* Specifies a function to be called when the filter summary item is clicked.
-    - `bb-filter-summary-item-is-dismissable` &mdash; *(Optional.)* Specifies whether the filter summary has a close icon.
+    - `bb-filter-summary-item-is-dismissible` &mdash; *(Optional.)* Specifies whether the filter summary has a close icon.
     - `bb-filter-summary-item-on-dismiss` &mdash; *(Optional.)* Specifies a function to be called when close icon is clicked.
 
 ---

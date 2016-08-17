@@ -2,18 +2,12 @@
 
 
     <div class="bb-grid-toolbar-viewkeeper">
-        <div ng-if="!customToolbar.hasCustomToolbar">
-            <div ng-show="locals.showToolbar">
-                <bb-grid-toolbar>
-                    <ng-transclude></ng-transclude>
-                </bb-grid-toolbar>
-            </div>
-        </div>
-
-        <div ng-if="customToolbar.hasCustomToolbar">
-            <div ng-show="locals.showToolbar">
+        <div ng-show="locals.showToolbar">
+            <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">
                 <ng-transclude></ng-transclude>
-            </div>
+            </bb-grid-toolbar>
+            <ng-transclude ng-transclude-slot="bbGridToolbar">
+            </ng-transclude>
         </div>
     </div>
 
