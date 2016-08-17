@@ -8,7 +8,8 @@
 .toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active {
     color: $bb-color-green;
     border: 2px solid $bb-color-green;
-    border-radius: 3px
+    border-radius: 3px;
+    padding: 5px 11px; /* offset the thicker border to avoid button size change */
 }
 
 .toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover {

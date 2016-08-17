@@ -1,7 +1,13 @@
 
 <div class="bb-grid-toolbar-container">
     <div class="clearfix toolbar bb-table-toolbar">
-        <button type="button" data-bbauto-field="AddButton" class="bb-grid-toolbar-btn btn-primary btn" ng-show="toolbarLocals.hasAdd" ng-click="options.onAddClick()">
+        <button 
+            type="button" 
+            ng-attr-title="{{options.onAddClickLabel}}"
+            data-bbauto-field="AddButton" 
+            class="bb-grid-toolbar-btn btn-primary btn" 
+            ng-show="toolbarLocals.hasAdd" 
+            ng-click="options.onAddClick()">
             <i class="fa fa-lg fa-plus-circle"></i>
         </button>
         <div class="bb-grid-toolbar-button-container">
@@ -11,7 +17,13 @@
             <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" data-bbauto-field="SearchBox" />
             <div class="bb-search-icon fa fa-lg fa-search" data-bbauto-field="SearchButton" ng-click="toolbarLocals.applySearchText()"></div>
         </div>
-        <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn" data-bbauto-field="ColumnPickerButton" ng-show="!options.hideColPicker" ng-click="toolbarLocals.openColumnPicker()">
+        <button 
+            type="button" 
+            class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn"
+            ng-attr-title="{{::'grid_columns_button' | bbResources}}"       
+            data-bbauto-field="ColumnPickerButton" 
+            ng-show="!options.hideColPicker" 
+            ng-click="toolbarLocals.openColumnPicker()">
             <span class="fa fa-lg fa-columns"></span>
         </button>
         <button 

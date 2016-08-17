@@ -170,6 +170,40 @@
             alert(message);
         }
 
+        function onDismissFilter(index) {
+                self.appliedFilters.splice(index, 1);
+                filterAndSearch();
+            }
+
+        function openFilters() {
+            console.log('open filters');
+            bbModal
+                .open({
+                    controller: 'GridFilterController as filterCtrl',
+                    templateUrl: 'demo/grids/filters.html',
+                    resolve: {
+                        existingFilters: function () {
+                            
+                            return angular.copy(self.appliedFilters);
+                        }
+                    }
+                })
+                .result
+                .then(function (result) {
+                    console.log('returned filters ', result);
+                    self.appliedFilters = angular.copy(result);
+
+                    filterAndSearch();
+
+                });
+        }
+
+        self.openFilters = openFilters;
+
+        self.onDismissFilter = onDismissFilter;
+
+        self.summaryIsDismissable = true;
+
 
         action1 = {
             actionCallback: action1Clicked,
@@ -276,37 +310,7 @@
 
             self.selectedRows = [dataSetBand[1]];
 
-            function onDismissFilter(index) {
-                self.appliedFilters.splice(index, 1);
-                filterAndSearch();
-            }
-
-            function openFilters() {
-                console.log('open filters');
-                bbModal
-                    .open({
-                        controller: 'GridFilterController as filterCtrl',
-                        templateUrl: 'demo/grids/filters.html',
-                        resolve: {
-                            existingFilters: function () {
-                                
-                                return angular.copy(self.appliedFilters);
-                            }
-                        }
-                    })
-                    .result
-                    .then(function (result) {
-                        console.log('returned filters ', result);
-                        self.appliedFilters = angular.copy(result);
-
-                        filterAndSearch();
-
-                    });
-            }
-
-            self.openFilters = openFilters;
-
-            self.onDismissFilter = onDismissFilter;
+            
 
             function setSelections() {
                 self.selectedRows = [dataSetBand[3]];
