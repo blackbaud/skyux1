@@ -87,6 +87,10 @@
         "_description": "The label on the context menu button used for screen readers when the consumer has not specified a label",
         "message": "Context menu"
     },
+    "definition_list_none_found": {
+        "_description": "The default text to show when a definition list item has no value",
+        "message": "None found"
+    },
     "grid_back_to_top": {
         "_description": "Text for link in grid to scroll back to the top.",
         "message": "Back to top"
