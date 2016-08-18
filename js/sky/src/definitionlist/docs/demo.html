@@ -1,0 +1,34 @@
+<div ng-controller="DefinitionListTestController as definitionListCtrl">
+  <div class="row">
+      <div class="col-sm-6">
+        <bb-definition-list>
+            <bb-definition-list-heading>
+                Personal Information
+            </bb-definition-list-heading>
+            <bb-definition-list-content ng-repeat="item in definitionListCtrl.personalInfo">
+                <bb-definition-list-label>
+                    {{item.label}}
+                </bb-definition-list-label>
+                <bb-definition-list-value>
+                    {{item.value}}
+                </bb-definition-list-value>
+            </bb-definition-list-content>
+          </bb-definition-list>
+      </div>
+      <div class="col-sm-6">
+        <bb-definition-list bb-definition-list-label-width="150px" bb-definition-list-default-value="'No information found'">
+            <bb-definition-list-heading>
+                System Information
+            </bb-definition-list-heading>
+            <bb-definition-list-content ng-repeat="item in definitionListCtrl.systemInfo">
+                <bb-definition-list-label>
+                    {{item.label}}
+                </bb-definition-list-label>
+                <bb-definition-list-value>
+                    {{item.value}}
+                </bb-definition-list-value>
+            </bb-definition-list-content>
+        </bb-definition-list>    
+      </div>
+  </div>
+</div>

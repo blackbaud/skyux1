@@ -18,6 +18,7 @@
         'sky.data',
         'sky.datepicker',
         'sky.daterangepicker',
+        'sky.definitionlist', 
         'sky.error',
         'sky.format',
         'sky.filter',

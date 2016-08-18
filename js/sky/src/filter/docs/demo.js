@@ -19,7 +19,7 @@
             }
 
             if (filters.hideOrange) {
-                result.push({name: 'hideOrange', value: true, label: 'Orange fruits hidden'});
+                result.push({name: 'hideOrange', value: true, label: 'hide orange fruits'});
             }
 
             return result;
@@ -70,31 +70,31 @@
             items = [
                 {
                     name: 'Orange',
-                    description: 'An orange round fruit',
+                    description: 'A round, orange fruit.',
                     type: 'citrus',
                     color: 'orange'
                 },
                 {
                     name: 'Mango',
-                    description: 'Delicious in smoothies, don\'t eat the skin',
+                    description: 'Delicious in smoothies, but don\'t eat the skin.',
                     type: 'other',
                     color: 'orange'
                 },
                 {
                     name: 'Lime',
-                    description: 'A green sour fruit used in many drinks',
+                    description: 'A sour, green fruit used in many drinks.',
                     type: 'citrus',
                     color: 'green'
                 },
                 {
                     name: 'Strawberry',
-                    description: 'A red fruit that can be included with shortcake',
+                    description: 'A red fruit that goes well with shortcake.',
                     type: 'berry',
                     color: 'red'
                 },
                 {
                     name: 'Blueberry',
-                    description: 'A small blue fruit, found often in muffins',
+                    description: 'A small, blue fruit often found in muffins.',
                     type: 'berry',
                     color: 'blue'
                 }
