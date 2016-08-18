@@ -28,6 +28,8 @@
         ctrl.clearFilter = clearFilter;
     }
 
+    Controller.$inject = ['$log'];
+
     angular.module('sky.filter.summary.item.component', [])
         .component('bbFilterSummaryItem', {
             templateUrl: 'sky/templates/filter/filter.summary.item.component.html',

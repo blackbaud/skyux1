@@ -101,15 +101,8 @@
 
         });
 
-        it('should not show the close icon on filter summary items when bbFilterSummaryItemIsDismissable is false', function () {
-            var summaryHtml = '<bb-filter-summary >' +
-                '<bb-filter-summary-item ' +
-                    'bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()" ' +
-                    'bb-filter-summary-item-is-dismissable="false"> ' +
-                    '{{filterCtrl.appliedName}} ' +
-                '</bb-filter-summary-item> ' +
-                '</bb-filter-summary>',
-                summaryEl,
+        function dismissibleTest(testHtml) {
+            var summaryEl,
                 dismissEl,
                 itemClicked = false;
 
@@ -120,7 +113,7 @@
                 appliedName: 'filterName'
             };
 
-            summaryEl = $compile(summaryHtml)($scope);
+            summaryEl = $compile(testHtml)($scope);
             summaryEl.appendTo($document.find('body'));
 
             $scope.$digest();
@@ -129,6 +122,30 @@
             expect(dismissEl).not.toBeVisible();
 
             summaryEl.remove();
+        }
+
+        it('should not show the close icon on filter summary items when bbFilterSummaryItemIsDismissable is false', function () {
+            var summaryHtml = '<bb-filter-summary >' +
+                '<bb-filter-summary-item ' +
+                    'bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()" ' +
+                    'bb-filter-summary-item-is-dismissable="false"> ' +
+                    '{{filterCtrl.appliedName}} ' +
+                '</bb-filter-summary-item> ' +
+                '</bb-filter-summary>';
+
+            dismissibleTest(summaryHtml);
+        });
+
+        it('should not show the close icon on filter summary items when bbFilterSummaryItemIsDismissible is false', function () {
+            var summaryHtml = '<bb-filter-summary >' +
+                '<bb-filter-summary-item ' +
+                    'bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()" ' +
+                    'bb-filter-summary-item-is-dismissible="false"> ' +
+                    '{{filterCtrl.appliedName}} ' +
+                '</bb-filter-summary-item> ' +
+                '</bb-filter-summary>';
+
+            dismissibleTest(summaryHtml);
         });
 
         it('should not blow up if a dismiss function is not provided', function () {

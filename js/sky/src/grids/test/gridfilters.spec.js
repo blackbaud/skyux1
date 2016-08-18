@@ -124,12 +124,12 @@ describe('Grid filters', function () {
             expect(filterButtonEl.length).toBe(0);
         });
 
-        it('can have the filter button and filter icon open a filter flyout menu', function () {
+        function testBasicFilters(filterHtml) {
             var filterButtonEl,
                 filterFlyoutEl,
                 filterIconEl;
 
-            el = setUpGrid(filterGridHtml);
+            el = setUpGrid(filterHtml);
 
             //confirm that flyout icon is there
             filterIconEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-icon');
@@ -149,10 +149,22 @@ describe('Grid filters', function () {
             //confirm that flyout pane is not there
             expect(filterFlyoutEl.length).toBe(1);
             expect(filterFlyoutEl.eq(0)).toHaveCss({"display": "none"});
+        }
+
+        it('can have the filter button and filter icon open a filter flyout menu', function () {
+            testBasicFilters(filterGridHtml);
         });
+        
 
         it('can have the filter button and filter icon open a filter flyout menu when using a custom toolbar', function () {
-
+            var customHtml = '<div><bb-grid bb-grid-options="locals.gridOptions">' +
+                '<bb-grid-filters bb-options="locals.filterOptions">' +
+                '</bb-grid-filters>' +
+                '<bb-grid-toolbar>' + 
+                '<button>Great button</button>' +
+                '</bb-grid-toolbar>' +
+                '</bb-grid></div>';
+            testBasicFilters(customHtml);
         });
 
         it('can set filters open and closed using options.filtersOpen', function () {

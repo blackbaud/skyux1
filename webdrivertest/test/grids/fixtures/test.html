@@ -23,6 +23,34 @@
             </bb-grid>
         </div>
         <div class="clearfix"></div>
+
+        <button type="button" class="btn btn-primary show-grid-no-flyout" ng-click="gridCtrl.showGridClicked({screenshot_grid_no_flyout: true})">Show Grid No Flyout</button>
+        <div id="screenshot-grid-no-flyout" ng-if="gridCtrl.showNoFlyout">
+            <bb-grid 
+                bb-grid-options="gridCtrl.gridOptions" 
+                bb-multiselect-actions="gridCtrl.gridActions" 
+                bb-selections-updated="gridCtrl.updateActions(selections)" 
+                bb-selected-rows="gridCtrl.selectedRows">
+                <bb-grid-toolbar
+                    bb-filter-on-click="gridCtrl.openFilters()">
+                    <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
+                    <bb-grid-toolbar-filter-summary>
+                        <bb-filter-summary ng-show="gridCtrl.appliedFilters.instruments.length > 0">
+                            <bb-filter-summary-item
+                                ng-repeat="item in gridCtrl.appliedFilters.instruments"
+                                bb-filter-summary-item-on-click="gridCtrl.openFilters()"
+                                bb-filter-summary-item-on-dismiss="gridCtrl.onDismissFilter($index)"
+                                >
+                                {{item.label}}
+                            </bb-filter-summary-item>
+                        </bb-filter-summary>
+                    </bb-grid-toolbar-filter-summary>
+                    
+                </bb-grid-toolbar>
+            </bb-grid>
+        </div>
+        <div class="clearfix"></div>
+
         <button type="button" class="btn btn-primary show-grid-page" ng-click="gridCtrl.showGridClicked({screenshot_grid_page: true})">Show paged grid</button>
         <div id="screenshot-grid-pagination" ng-if="gridCtrl.showPaged">
             <bb-grid bb-grid-options="gridCtrl.gridOptions2" bb-grid-pagination="gridCtrl.paginationOptions" bb-grid-custom-toolbar>
@@ -61,3 +89,26 @@
     </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="demo/grids/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Instrument filter</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <div>
+                      <label class="bb-test-guitar" ><input bb-check type="checkbox" ng-model="filterCtrl.filters.playsGuitar"/> Show guitar players</label>
+                    </div>
+                    <div>
+                      <label class="bb-test-drum"><input  bb-check type="checkbox" ng-model="filterCtrl.filters.playsDrums"/> Show drum players</label>
+                    </div>
+                </form>
+            </div>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>
+

@@ -216,12 +216,11 @@
         }
 
         function onDismissFilter(index) {
-                self.appliedFilters.splice(index, 1);
-                filterAndSearch();
-            }
+            self.appliedFilters.splice(index, 1);
+            filterAndSearch();
+        }
 
         function openFilters() {
-            console.log('open filters');
             bbModal
                 .open({
                     controller: 'GridFilterController as filterCtrl',
@@ -235,7 +234,6 @@
                 })
                 .result
                 .then(function (result) {
-                    console.log('returned filters ', result);
                     self.appliedFilters = angular.copy(result);
                     filterAndSearch();
                 });
