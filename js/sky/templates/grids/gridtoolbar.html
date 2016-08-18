@@ -1,6 +1,6 @@
 
 <div class="bb-grid-toolbar-container">
-    <div class="clearfix toolbar bb-table-toolbar">
+    <div class="clearfix toolbar bb-table-toolbar" bb-search-container>
         <button 
             type="button" 
             ng-attr-title="{{options.onAddClickLabel}}"
@@ -13,10 +13,20 @@
         <div class="bb-grid-toolbar-button-container">
             <ng-transclude></ng-transclude>
         </div>
-        <div class="bb-search-container">
+        <div ng-if="!bbGridOnSearch" class="bb-search-container">
             <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" data-bbauto-field="SearchBox" />
             <div class="bb-search-icon fa fa-lg fa-search" data-bbauto-field="SearchButton" ng-click="toolbarLocals.applySearchText()"></div>
         </div>
+
+        <bb-search-input 
+            ng-if="bbGridOnSearch"
+            bb-search-text="bbGridSearchText"
+            bb-on-search="bbGridOnSearch()"
+            bb-search-placeholder="resources.grid_search_placeholder"
+            >
+
+        </bb-search-input>
+
         <button 
             type="button" 
             class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn"
@@ -31,7 +41,7 @@
             class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" 
             ng-class="{'bb-filters-inline-active': options.filtersAreActive}" 
             data-bbauto-field="FilterButton" 
-            ng-if="!options.hideFilters &amp;&amp; !bbFilterOnClick" 
+            ng-if="!options.hideFilters &amp;&amp; !bbGridFilterOnClick" 
             ng-click="toolbarLocals.toggleFilterMenu()">
             
             <span class="fa fa-lg fa-filter"></span>
@@ -40,8 +50,8 @@
         
         <bb-filter-button 
             class="bb-filter-btn"
-            ng-if="!options.hideFilters &amp;&amp; bbFilterOnClick"
-            bb-filter-button-on-click="bbFilterOnClick()"
+            ng-if="!options.hideFilters &amp;&amp; bbGridFilterOnClick"
+            bb-filter-button-on-click="bbGridFilterOnClick()"
             bb-filter-button-active="options.filtersAreActive"
             >
         </bb-filter-button>
