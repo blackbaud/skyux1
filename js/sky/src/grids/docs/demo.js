@@ -219,7 +219,7 @@
 
         function onDismissFilter(index) {
             self.appliedFilters.splice(index, 1);
-            filterAndSearch(self.searchText, self.appliedFilters);
+            filterAndSearch(self.gridOptions.searchText, self.appliedFilters);
         }
 
         function openFilters() {
@@ -237,13 +237,13 @@
                 .result
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
-                    filterAndSearch();
+                    filterAndSearch(self.gridOptions.searchText, self.appliedFilters);
                 });
         }
 
         function onGridSearch(searchText) {
-            self.searchText = searchText;
-            filterAndSearch(self.searchText, self.appliedFilters);
+            self.gridOptions.searchText = searchText;
+            filterAndSearch(self.gridOptions.searchText, self.appliedFilters);
         }
 
         self.onGridSearch = onGridSearch;
