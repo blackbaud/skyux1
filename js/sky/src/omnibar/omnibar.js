@@ -54,8 +54,8 @@
                         });
 
                         searchBox.on('click', function () {
-							scope.$emit('searchBoxClicked');
-						});
+                            scope.$emit('searchBoxClicked');
+                        });
 
                         scope.$watch('searching', function (searching) {
                             if (searching) {
