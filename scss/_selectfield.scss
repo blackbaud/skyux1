@@ -8,7 +8,6 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
   @include field-invalid;
 }
 
-.bb-select-field-multiple-item,
 .bb-select-field-single-inner {
     // The select field "inner" class is needed because setting display: flex on a button element doesn't work
     // as expected in Firefox.  Therefore we need a div inside the button that has this attribute.
@@ -54,6 +53,9 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
     border-radius: 4px;
     padding: 0 0 0 $padding;
     margin-top: $margin;
+    display: inline-flex;
+    align-items: center;
+    margin-right: $margin;
 }
 
 .bb-select-field-multiple-item-title {
