@@ -206,18 +206,20 @@
             }
         }
 
-        function filterAndSearch() {
+       
+
+        function filterAndSearch(searchText, filters) {
             var filteredData = [],
                 searchedData = [];
 
-            filteredData = filter(dataSetBand, self.appliedFilters);
-            searchedData = search(filteredData, self.gridOptions.searchText);
+            filteredData = filter(dataSetBand, filters);
+            searchedData = search(filteredData, searchText);
             self.gridOptions.data = searchedData;
         }
 
         function onDismissFilter(index) {
             self.appliedFilters.splice(index, 1);
-            filterAndSearch();
+            filterAndSearch(self.searchText, self.appliedFilters);
         }
 
         function openFilters() {
@@ -238,6 +240,13 @@
                     filterAndSearch();
                 });
         }
+
+        function onGridSearch(searchText) {
+            self.searchText = searchText;
+            filterAndSearch(self.searchText, self.appliedFilters);
+        }
+
+        self.onGridSearch = onGridSearch;
 
         self.openFilters = openFilters;
 
@@ -371,12 +380,6 @@
                     }
                 });
             }, true);
-
-            $scope.$watch(function () {
-                return self.gridOptions.searchText;
-            }, function () {
-                filterAndSearch();
-            });
 
             self.gridOptions.hasMoreRows = true;
 
