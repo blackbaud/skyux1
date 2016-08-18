@@ -402,7 +402,7 @@ describe('Grid toolbars', function () {
                 var filterButtonClicked = false,
                     customToolbarGridHtml = '<div>' +
                     '<bb-grid bb-grid-options="locals.gridOptions">' +
-                    '<bb-grid-toolbar bb-filter-on-click="locals.clickFilter()">' +
+                    '<bb-grid-toolbar bb-grid-filter-on-click="locals.clickFilter()">' +
                     '</bb-grid-toolbar>' +
                     '</bb-grid>' +
                     '</div>';
