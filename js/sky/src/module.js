@@ -1,6 +1,6 @@
 /*jslint browser: true */
 /*global angular */
-/* PLEASE IGNORE PR 234 */
+/* PLEASE IGNORE PR 2345 */
 (function () {
     'use strict';
 
