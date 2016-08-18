@@ -961,8 +961,6 @@
                                         $scope.paginationOptions.currentPage = 1;
                                     }
 
-                                    $scope.paginationOptions.boundaryLinks = false;
-
                                     $scope.paginationOptions.pageChanged = pageChanged;
 
 
