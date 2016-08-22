@@ -491,16 +491,23 @@
                 .result
                 .then(function (result) {
                     self.appliedFilters.instruments = angular.copy(result);
-                    filterAndSearch(self.appliedFilters, self.gridOptions.searchText);
+                    filterAndSearch(self.appliedFilters, self.searchText);
                 });
         }
 
         self.openFilters = openFilters;
 
+        function onGridSearch(searchText) {
+            self.searchText = searchText;
+            filterAndSearch(self.searchText, self.appliedFilters);
+        }
+
+        self.onGridSearch = onGridSearch;
+
         $scope.$watch(function () {
             return self.gridOptions.filters;
         }, function () {
-            filterAndSearch(self.gridOptions.filters, self.gridOptions.searchText);
+            filterAndSearch(self.gridOptions.filters, self.searchText);
         });
 
     }

@@ -171,20 +171,20 @@
         }
 
         function search(array, text) {
-                if (angular.isDefined(text) && text !== '') {
-                    return array.filter(function (element) {
-                        var check = ((element.name.indexOf(text) > -1) ||
-                               (element.instrument.indexOf(text) > -1) ||
-                               (element.bio.indexOf(text) > -1) ||
-                               (element.templated.info.indexOf(text) !== -1) ||
-                               (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
-                        return check;
-                    });
+            if (angular.isDefined(text) && text !== '') {
+                return array.filter(function (element) {
+                    var check = ((element.name.indexOf(text) > -1) ||
+                            (element.instrument.indexOf(text) > -1) ||
+                            (element.bio.indexOf(text) > -1) ||
+                            (element.templated.info.indexOf(text) !== -1) ||
+                            (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
+                    return check;
+                });
 
-                } else {
-                    return array;
-                }
+            } else {
+                return array;
             }
+        }
 
         function filter(array, filters) {
             var i,
@@ -205,8 +205,6 @@
                 return array;
             }
         }
-
-       
 
         function filterAndSearch(searchText, filters) {
             var filteredData = [],
@@ -553,22 +551,19 @@
             }
         }
 
-        $scope.$watch(function () {
-            return self.gridOptions2.filters;
-        }, function (newValue) {
+        function filterItems(filters) {
+            self.gridOptions2.filtersAreActive = filters && (filters.checkFilter || filters.selectFilter);
 
-            self.gridOptions2.filtersAreActive = newValue && (newValue.checkFilter || newValue.selectFilter);
+            if (angular.isDefined(filters)) {
 
-            if (angular.isDefined(newValue)) {
-
-                if (newValue.checkFilter) {
+                if (filters.checkFilter) {
                     self.gridOptions2.data = [dataSet1[2]];
                     self.paginationOptions.recordCount = 1;
                 }
 
-                if (newValue.selectFilter) {
-                    if (newValue.selectFilter === 'option1') {
-                        if (newValue.checkFilter) {
+                if (filters.selectFilter) {
+                    if (filters.selectFilter === 'option1') {
+                        if (filters.checkFilter) {
                             self.gridOptions2.data = [dataSet1[0], dataSet1[2]];
                         } else {
                             self.gridOptions2.data = [dataSet1[0]];
@@ -576,9 +571,9 @@
 
                         self.paginationOptions.recordCount = self.gridOptions2.data.length;
                         return;
-                    } else if (newValue.selectFilter === 'option2') {
+                    } else if (filters.selectFilter === 'option2') {
 
-                        if (newValue.checkFilter) {
+                        if (filters.checkFilter) {
                             self.gridOptions2.data = [dataSet1[1], dataSet1[2]];
                         } else {
                             self.gridOptions2.data = [dataSet1[1]];
@@ -587,7 +582,7 @@
                         self.paginationOptions.recordCount = self.gridOptions2.data.length;
                         return;
                     }
-                } else if (newValue.checkFilter) {
+                } else if (filters.checkFilter) {
                     self.gridOptions2.data = [dataSet1[2]];
                     self.paginationOptions.recordCount = self.gridOptions2.data.length;
                     return;
@@ -595,8 +590,45 @@
             }
             self.gridOptions2.data = dataSet1;
             self.paginationOptions.recordCount = 30;
+        }
 
+        function search(array, text) {
+            var result;
+            if (angular.isDefined(text) && text !== '') {
+                result = array.filter(function (element) {
+                    var check = ((element.name.indexOf(text) > -1) ||
+                            (element.skills.indexOf(text) > -1) ||
+                            (element.cats && element.cats.indexOf(text) > -1));
+                    return check;
+                });
+
+                self.paginationOptions.recordCount = result.length;
+                return result;
+            } else {
+                return array;
+            }
+        }
+
+        function filterAndSearch(searchText, filters) {
+            var searchedData = [];
+            debugger;
+
+            filterItems(filters);
+            searchedData = search(self.gridOptions2.data, searchText);
+            self.gridOptions2.data = searchedData;
+        }
+
+        $scope.$watch(function () {
+            return self.gridOptions2.filters;
+        }, function (newValue) {
+            filterAndSearch(self.searchText, self.gridOptions2.filters)
         }, true);
+
+        function onGridSearch(searchText) {
+            self.searchText = searchText;
+            filterAndSearch(self.searchText, self.gridOptions2.filters);
+        }
+        self.onGridSearch = onGridSearch;
 
         $scope.$on('loadMoreRows', function (event, data) {
             self.gridOptions2.data = getPaginationDataSet(data.top, data.skip);
