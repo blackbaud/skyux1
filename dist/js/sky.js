@@ -7286,6 +7286,10 @@
                             scope.$emit('searchBoxKeyUp', event.keyCode);
                         });
 
+                        searchBox.on('click', function () {
+                            scope.$emit('searchBoxClicked');
+                        });
+
                         scope.$watch('searching', function (searching) {
                             if (searching) {
                                 searchContainer.addClass('searching');
@@ -12836,7 +12840,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
-        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
+        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +

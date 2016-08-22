@@ -464,7 +464,7 @@ describe('Grid directive', function () {
 
             paginationEl = paginationContainerEl.eq(0).find('li');
 
-            //default max of 5 pages shown with two arrow elements
+            //1 page shown with two arrow elements
             expect(paginationEl.length).toBe(3);
 
             //expect the correct numbers to be shown in pagination
@@ -480,6 +480,74 @@ describe('Grid directive', function () {
             expect(paginationEl.eq(1)).toHaveText(2);
 
             expect(paginationEl.eq(2)).toHaveClass('disabled');
+
+        });
+
+        it('loads a grid with pagination with boundary links enabled', function () {
+            var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-pagination="locals.paginationOptions"></bb-grid></div>',
+                pagedData1 = [
+                    {
+                        name: 'John',
+                        instrument: 'Rhythm guitar'
+                    },
+                    {
+                        name: 'Paul',
+                        instrument: 'Bass',
+                        bio: 'Lorem'
+                    },
+                    {
+                        name: 'George',
+                        instrument: 'Lead guitar'
+                    },
+                    {
+                        name: 'Ringo',
+                        instrument: 'Drums'
+                    }
+                ],
+                paginationContainerEl,
+                paginationEl;
+
+            el = setUpGrid(gridHtml);
+
+            $scope.$on('loadMoreRows', getTopAndSkipFromLoadMore);
+
+            $scope.locals.paginationOptions = {
+                recordCount: 60,
+                boundaryLinks: true,
+                itemsPerPage: 4
+            };
+
+            setGridData(pagedData1);
+
+            paginationContainerEl = el.find('.bb-grid-pagination-container');
+
+            expect(paginationContainerEl.length).toBe(1);
+
+            paginationEl = paginationContainerEl.eq(0).find('li');
+
+            //5 pages shown with arrow elements, ellipses, and final page
+            expect(paginationEl.length).toBe(9);
+
+            //expect the correct numbers to be shown in pagination
+            expect(paginationEl.eq(1)).toHaveText(1);
+            expect(paginationEl.eq(1)).toHaveClass('active');
+
+            //expect the ellipses to be shown properly
+            expect(paginationEl.eq(6)).toHaveText('...');
+
+            //expect movement to behave correctly
+            paginationEl.eq(5).find('a').click();
+            paginationEl = paginationContainerEl.eq(0).find('li');
+            expect(paginationEl.length).toBe(11);
+            expect(paginationEl.eq(2)).toHaveText(2);
+
+            paginationEl.eq(10).find('a').click();
+            paginationEl = paginationContainerEl.eq(0).find('li');
+            expect(paginationEl.eq(2)).toHaveText('...');
+            expect(paginationEl.eq(3)).toHaveText(4);
+
+            expect(top).toBe(4);
+            expect(skip).toBe(20);
 
         });
 
