@@ -40,8 +40,7 @@
         bb-selected-rows="gridCtrl.selectedRows">
           <bb-grid-toolbar
             bb-grid-filter-on-click="gridCtrl.openFilters()"
-            bb-grid-on-search="gridCtrl.onGridSearch(searchText)"
-            bb-grid-search-text="gridCtrl.gridOptions.searchText">
+            bb-grid-on-search="gridCtrl.onGridSearch(searchText)">
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
               <bb-grid-toolbar-filter-summary>
                   <bb-filter-summary ng-show="gridCtrl.appliedFilters.length > 0">

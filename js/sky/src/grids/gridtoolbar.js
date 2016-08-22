@@ -38,6 +38,14 @@
                     }
                 }
 
+                function toolbarOnSearch(searchText) {
+                    $scope.bbGridOnSearch({searchText: searchText});
+
+                    if (bbGrid !== null) {
+                        bbGrid.searchApplied(searchText);
+                    }
+                }
+
                 function openColumnPicker() {
                     bbModal.open({
                         templateUrl: 'sky/templates/grids/columnpicker.html',
@@ -93,7 +101,8 @@
                 $scope.toolbarLocals = {
                     applySearchText: applySearchText,
                     openColumnPicker: openColumnPicker,
-                    toggleFilterMenu: toggleFilterMenu
+                    toggleFilterMenu: toggleFilterMenu,
+                    toolbarOnSearch: toolbarOnSearch
                 };
 
                 $scope.resources = bbResources;
