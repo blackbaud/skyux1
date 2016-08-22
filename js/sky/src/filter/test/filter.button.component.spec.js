@@ -58,13 +58,13 @@
 
             buttonEl = el.find('.btn.bb-btn-secondary');
 
-            expect(buttonEl).not.toHaveClass('.bb-filter-btn-active');
+            expect(buttonEl).not.toHaveClass('bb-filter-btn-active');
 
             $scope.filterCtrl.isActive = true;
 
             $scope.$digest();
 
-            expect(buttonEl).toHaveClass('.bb-filter-btn-active');
+            expect(buttonEl).toHaveClass('bb-filter-btn-active');
 
         });
         
