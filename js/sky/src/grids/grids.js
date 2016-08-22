@@ -69,6 +69,8 @@
 
                         function searchApplied(searchText) {
                             locals.appliedSearchText = searchText;
+                            /*istanbul ignore else */
+                            /* sanity check */
                             if (angular.isFunction(locals.highlightSearchText)) {
                                 locals.highlightSearchText(locals.appliedSearchText);
                             }

@@ -47,6 +47,10 @@ describe('Grid toolbars', function () {
         $scope.$digest();
     }
 
+    function getGridRows(el) {
+        return el.find('.ui-jqgrid-bdiv tr.ui-row-ltr');
+    }
+
     beforeEach(module('ngMock'));
     beforeEach(module(
         'sky.grids',
@@ -379,6 +383,7 @@ describe('Grid toolbars', function () {
 
             expect(searchEl).toHaveValue('John');
         });
+
     });
 
     describe('custom toolbar', function () {
@@ -397,59 +402,139 @@ describe('Grid toolbars', function () {
             expect(customClicked).toBe(true);
         });
 
-        describe('Filter button', function () {
-            it('will create a filter button with an onClick event', function () {
-                var filterButtonClicked = false,
-                    customToolbarGridHtml = '<div>' +
-                    '<bb-grid bb-grid-options="locals.gridOptions">' +
-                    '<bb-grid-toolbar bb-filter-on-click="locals.clickFilter()">' +
-                    '</bb-grid-toolbar>' +
-                    '</bb-grid>' +
-                    '</div>';
+        describe('filters', function () {
+            describe('Filter button', function () {
+                it('will create a filter button with an onClick event', function () {
+                    var filterButtonClicked = false,
+                        customToolbarGridHtml = '<div>' +
+                        '<bb-grid bb-grid-options="locals.gridOptions">' +
+                        '<bb-grid-toolbar bb-grid-filter-on-click="locals.clickFilter()">' +
+                        '</bb-grid-toolbar>' +
+                        '</bb-grid>' +
+                        '</div>';
 
-                locals.clickFilter = function () {
-                    filterButtonClicked = true;
+                    locals.clickFilter = function () {
+                        filterButtonClicked = true;
+                    };
+
+                    el = setUpGrid(customToolbarGridHtml, locals);
+                    setOptions(options);
+                    expect(el.find('.bb-grid-toolbar-btn.bb-filter-btn').length).toBe(0);
+
+                    el.find('.bb-filter-btn .bb-btn-secondary').click();
+                    $scope.$digest();
+                    expect(filterButtonClicked).toBe(true);
+                    
+                });
+
+            });
+
+            describe('Filter summary', function () {
+                it('will place a filter summary in the summary section', function () {
+                    var customToolbarGridHtml = '<div>' +
+                        '<bb-grid bb-grid-options="locals.gridOptions">' +
+                        '<bb-grid-toolbar bb-grid-filter-on-click="locals.clickFilter()">' +
+                        '<bb-grid-toolbar-filter-summary>' + 
+                        '<bb-filter-summary>' +
+                        '<bb-filter-summary-item>' + 
+                        'One filter' +
+                        '</bb-filter-summary-item>' +
+                        '</bb-filter-summary>' +
+                        '</bb-grid-toolbar-filter-summary>' +
+                        '</bb-grid-toolbar>' +
+                        '</bb-grid>' +
+                        '</div>',
+                        summaryContainerEl;
+
+                    el = setUpGrid(customToolbarGridHtml, locals);
+                    setOptions(options);
+
+                    summaryContainerEl = el.find('.bb-grid-filter-summary-container');
+                    expect(summaryContainerEl.find('.bb-filter-summary .bb-filter-summary-item')).toHaveText('One filter');
+                    
+                });
+            });
+        });
+
+        describe('searching', function () {
+
+            var searchGridHtml;
+            
+            
+            beforeEach(function () {
+                searchGridHtml = '<div>' +
+                        '<bb-grid bb-grid-options="locals.gridOptions">' +
+                        '<bb-grid-toolbar bb-grid-search-text="locals.searchText" ' +
+                            'bb-grid-on-search="locals.onSearch(searchText)" ' +
+                            '>' +
+                        '</bb-grid-toolbar>' +
+                        '</bb-grid>' +
+                        '</div>';
+            });
+
+            
+
+            it('sets searchText on search', function () {
+                var searchEl,
+                    actualSearchText,
+                    searchIconEl,
+                    rowEl,
+                    spanEl;
+
+                locals.onSearch = function (searchText) {
+                    actualSearchText = searchText;
                 };
 
-                el = setUpGrid(customToolbarGridHtml, locals);
+                el = setUpGrid(searchGridHtml, locals);
                 setOptions(options);
-                expect(el.find('.bb-grid-toolbar-btn.bb-filter-btn').length).toBe(0);
 
-                el.find('.bb-filter-btn .bb-btn-secondary').click();
+                setGridData(dataSet1);
+
+                searchEl = el.find('.bb-search-input');
+
+                searchEl.eq(0).val('John').trigger('change');
                 $scope.$digest();
-                expect(filterButtonClicked).toBe(true);
-                
+
+                searchIconEl = el.find('.bb-search-btn-apply');
+                searchIconEl.eq(0).click();
+
+                $scope.$digest();
+
+                expect(actualSearchText).toBe('John');
+
+                rowEl = getGridRows(el);
+
+                spanEl = rowEl.eq(0).find('span');
+                expect(spanEl.eq(0)).toHaveClass('highlight');
+
             });
 
-        });
 
-        describe('Filter summary', function () {
-            it('will place a filter summary in the summary section', function () {
-                var customToolbarGridHtml = '<div>' +
-                    '<bb-grid bb-grid-options="locals.gridOptions">' +
-                    '<bb-grid-toolbar bb-filter-on-click="locals.clickFilter()">' +
-                    '<bb-grid-toolbar-filter-summary>' + 
-                    '<bb-filter-summary>' +
-                    '<bb-filter-summary-item>' + 
-                    'One filter' +
-                    '</bb-filter-summary-item>' +
-                    '</bb-filter-summary>' +
-                    '</bb-grid-toolbar-filter-summary>' +
-                    '</bb-grid-toolbar>' +
-                    '</bb-grid>' +
-                    '</div>',
-                    summaryContainerEl;
+            it('responds to consumer searchText change', function () {
+                var searchEl, actualSearchText;
 
-                el = setUpGrid(customToolbarGridHtml, locals);
+                locals.onSearch = function (searchText) {
+                    actualSearchText = searchText;
+                };
+
+                el = setUpGrid(searchGridHtml, locals);
                 setOptions(options);
 
-                summaryContainerEl = el.find('.bb-grid-filter-summary-container');
-                expect(summaryContainerEl.find('.bb-filter-summary .bb-filter-summary-item')).toHaveText('One filter');
-                
+                setGridData(dataSet1);
+
+                searchEl = el.find('.bb-search-input');
+
+                expect(searchEl).toHaveValue('');
+
+                $scope.locals.searchText = 'John';
+
+                $scope.$digest();
+
+                expect(searchEl).toHaveValue('John');
             });
         });
-    });
 
-   
+        
+    });
 
 });

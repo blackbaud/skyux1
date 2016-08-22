@@ -14,8 +14,16 @@
             <ng-transclude></ng-transclude>
         </div>
         <div ng-if="!bbGridOnSearch" class="bb-search-container">
-            <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" data-bbauto-field="SearchBox" />
-            <div class="bb-search-icon fa fa-lg fa-search" data-bbauto-field="SearchButton" ng-click="toolbarLocals.applySearchText()"></div>
+            <input 
+                type="text" 
+                placeholder="{{resources.grid_search_placeholder}}" 
+                ng-model="toolbarLocals.searchText" 
+                ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" 
+                data-bbauto-field="SearchBox" />
+            <div 
+                class="bb-search-icon fa fa-lg fa-search" 
+                data-bbauto-field="SearchButton" 
+                ng-click="toolbarLocals.applySearchText()"></div>
         </div>
 
         <bb-search-input 

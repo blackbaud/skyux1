@@ -25,11 +25,11 @@
                     searchEl = el.find('.bb-search-container input');
                     /*istanbul ignore else */
                     /* sanity check */
-                    if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
+                    if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.toolbarLocals.searchText) {
                         searchEl.eq(0).select();
                     }
 
-                    $scope.options.searchText = $scope.searchText;
+                    $scope.options.searchText = $scope.toolbarLocals.searchText;
 
                     /*istanbul ignore else */
                     /* sanity check */
@@ -41,9 +41,12 @@
                 function toolbarOnSearch(searchText) {
                     $scope.bbGridOnSearch({searchText: searchText});
 
+                    /*istanbul ignore else */
+                    /* sanity check */
                     if (bbGrid !== null) {
                         bbGrid.searchApplied(searchText);
                     }
+                    
                 }
 
                 function openColumnPicker() {
@@ -121,7 +124,7 @@
                 $scope.$watch('options.selectedColumnIds', function (newValue) {
                     if (angular.isDefined(newValue)) {
 
-                        $scope.searchText = $scope.options.searchText;
+                        $scope.toolbarLocals.searchText = $scope.options.searchText;
 
                         if ($scope.options.hasInlineFilters) {
                             moveInlineFilters();
@@ -140,8 +143,8 @@
                 }, true);
 
                 $scope.$watch('options.searchText', function (newValue) {
-                    if (newValue !== $scope.searchText) {
-                        $scope.searchText = newValue;
+                    if (newValue !== $scope.toolbarLocals.searchText) {
+                        $scope.toolbarLocals.searchText = newValue;
                     }
                 });
 
@@ -175,6 +178,6 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
