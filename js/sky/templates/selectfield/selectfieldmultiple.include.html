@@ -2,8 +2,8 @@
   <i class="fa fa-plus-circle"></i> <span class="bb-select-field-multiple-title">{{bbSelectField.bbSelectFieldText}}</span>
 </button>
 <div>
-  <ul class="list-unstyled bb-select-field-multiple-items">
-    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">
+  <div class="bb-select-field-multiple-items">
+    <span class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">
       <div class="bb-select-field-multiple-item-title">
         {{selectedItem.title}}
       </div>
@@ -11,8 +11,8 @@
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">{{'selectfield_remove' | bbResources}}</span>
       </button>
-    </li>
-    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">
+    </span>
+    <span class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">
       <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">
         {{bbSelectField.getSummaryCountText()}}
       </div>
@@ -20,6 +20,6 @@
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">{{'selectfield_remove' | bbResources}}</span>
       </button>
-    </li>
+    </span>
   </ul>
 </div>

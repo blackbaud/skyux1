@@ -7286,6 +7286,10 @@
                             scope.$emit('searchBoxKeyUp', event.keyCode);
                         });
 
+                        searchBox.on('click', function () {
+                            scope.$emit('searchBoxClicked');
+                        });
+
                         scope.$watch('searching', function (searching) {
                             if (searching) {
                                 searchContainer.addClass('searching');
@@ -9287,8 +9291,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
     function bbSelectFieldMultipleItemAnimation() {
-        var duration = 250,
-            slideOptions;
+        var duration = 250;
 
         function getFadeOptions(doneFn) {
             return {
@@ -9298,30 +9301,22 @@ angular.module('sky.palette.config', [])
             };
         }
 
-        slideOptions = {
-            duration: duration,
-            queue: false
-        };
-
         return {
             enter: function (el, doneFn) {
                 el
                     .css({
-                        display: 'none',
                         opacity: 0
                     })
-                    .slideDown(slideOptions)
                     .animate({
-                        opacity: 1
+                        opacity: 1,
+                        display: 'inline-flex'
                     }, getFadeOptions(doneFn));
             },
             leave: function (el, doneFn) {
                 // Take focus off the close button
                 el.find('.close').blur();
 
-                el
-                    .slideUp(slideOptions)
-                    .fadeOut(getFadeOptions(doneFn));
+                el.fadeOut(getFadeOptions(doneFn));
             }
         };
     }
@@ -12836,7 +12831,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
-        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
+        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
@@ -13111,8 +13106,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <i class="fa fa-plus-circle"></i> <span class="bb-select-field-multiple-title">{{bbSelectField.bbSelectFieldText}}</span>\n' +
         '</button>\n' +
         '<div>\n' +
-        '  <ul class="list-unstyled bb-select-field-multiple-items">\n' +
-        '    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">\n' +
+        '  <div class="bb-select-field-multiple-items">\n' +
+        '    <span class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">\n' +
         '      <div class="bb-select-field-multiple-item-title">\n' +
         '        {{selectedItem.title}}\n' +
         '      </div>\n' +
@@ -13120,8 +13115,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
         '      </button>\n' +
-        '    </li>\n' +
-        '    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">\n' +
+        '    </span>\n' +
+        '    <span class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">\n' +
         '      <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">\n' +
         '        {{bbSelectField.getSummaryCountText()}}\n' +
         '      </div>\n' +
@@ -13129,7 +13124,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
         '      </button>\n' +
-        '    </li>\n' +
+        '    </span>\n' +
         '  </ul>\n' +
         '</div>\n' +
         '');

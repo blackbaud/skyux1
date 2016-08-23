@@ -81,6 +81,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `currentPage` &mdash; *(Optional.)* Specifies the current page starting at 1. *(Default = 1)*
         - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default = 5)*
         - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar. *(Default = 5)*
+        - `boundaryLinks` &mdash; *(Optional.)* Specifies whether or not to show the first and last page numbers with ellipses in the pagination bar. *(Default = `false`)*
         - `recordCount` &mdash; Specifies the total number of records available through pagination.
     - `bb-multiselect-actions` &mdash; *(Optional.)* Specifies an array of actions with the following properties to display in the multi-select action bar.
         - `actionCallback` &mdash; Specifies a function to be called when users click the action.

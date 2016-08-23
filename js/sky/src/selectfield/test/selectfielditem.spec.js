@@ -40,15 +40,13 @@ describe('Select field item animation', function () {
 
     it('should animate in', function () {
         var animateSpy,
-            el,
-            slideDownSpy;
+            el;
 
         el = $('<div class="bb-select-field-multiple-item">Test <button class="close"></button></div>').appendTo($rootElement);
 
         $rootScope.$digest();
 
         animateSpy = spyOn($.fn, 'animate').and.callThrough();
-        slideDownSpy = spyOn($.fn, 'slideDown').and.callThrough();
 
         $animate.enter(el, $rootElement);
 
@@ -65,27 +63,23 @@ describe('Select field item animation', function () {
             jasmine.anything()
         );
 
-        expect(slideDownSpy.calls.mostRecent().object[0]).toBe(el[0]);
     });
 
     it('should animate out', function () {
         var el,
-            fadeOutSpy,
-            slideUpSpy;
+            fadeOutSpy;
 
         el = $('<div class="bb-select-field-multiple-item">Test <button class="close"></button></div>').appendTo($rootElement);
 
         $rootScope.$digest();
 
         fadeOutSpy = spyOn($.fn, 'fadeOut').and.callThrough();
-        slideUpSpy = spyOn($.fn, 'slideUp').and.callThrough();
 
         $animate.leave(el, $rootElement);
 
         $rootScope.$digest();
 
         expect(fadeOutSpy.calls.mostRecent().object[0]).toBe(el[0]);
-        expect(slideUpSpy.calls.mostRecent().object[0]).toBe(el[0]);
     });
 
     it('should remove focus on close button when animating out', function () {

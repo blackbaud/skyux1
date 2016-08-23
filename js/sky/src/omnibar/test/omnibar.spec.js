@@ -129,12 +129,14 @@ describe('Omnibar', function () {
                     emitSpy = spyOn($scope, '$emit');
 
                     searchBoxEl
+                        .click()
                         .val('a')
                         .keyup();
 
                     $scope.$digest();
 
                     expect(emitSpy).toHaveBeenCalledWith('searchBoxKeyUp', undefined);
+                    expect(emitSpy).toHaveBeenCalledWith('searchBoxClicked');
 
                     expect($scope.searchText).toBe('a');
                 }
