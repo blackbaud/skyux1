@@ -186,6 +186,7 @@
             }
         }
 
+
         function filter(array, filters) {
             var i,
                 item,
@@ -611,7 +612,6 @@
 
         function filterAndSearch(searchText, filters) {
             var searchedData = [];
-            debugger;
 
             filterItems(filters);
             searchedData = search(self.gridOptions2.data, searchText);

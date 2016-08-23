@@ -532,9 +532,6 @@ describe('Grid toolbars', function () {
 
                 expect(searchEl).toHaveValue('John');
             });
-        });
-
-        
+        });     
     });
-
 });

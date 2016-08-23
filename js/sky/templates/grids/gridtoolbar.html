@@ -1,6 +1,7 @@
 
 <div class="bb-grid-toolbar-container">
     <div class="clearfix toolbar bb-table-toolbar" bb-search-container>
+
         <button 
             type="button" 
             ng-attr-title="{{options.onAddClickLabel}}"
@@ -13,6 +14,7 @@
         <div class="bb-grid-toolbar-button-container">
             <ng-transclude></ng-transclude>
         </div>
+
         <div ng-if="!bbGridSearch" class="bb-search-container">
             <input 
                 type="text" 
@@ -32,7 +34,6 @@
             bb-on-search="toolbarLocals.toolbarSearch(searchText)"
             bb-search-placeholder
             >
-
         </bb-search-input>
 
         <button 

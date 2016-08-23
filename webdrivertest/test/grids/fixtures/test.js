@@ -492,6 +492,7 @@
                 .then(function (result) {
                     self.appliedFilters.instruments = angular.copy(result);
                     filterAndSearch(self.appliedFilters, self.searchText);
+
                 });
         }
 

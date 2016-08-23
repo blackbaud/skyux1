@@ -4374,7 +4374,8 @@
         .component('bbFilterButton', {
             templateUrl: 'sky/templates/filter/filter.button.component.html',
             bindings: {
-                bbFilterButtonOnClick: '&'
+                bbFilterButtonOnClick: '&',
+                bbFilterButtonActive: '<?'
             }
         });
 })();
@@ -4405,12 +4406,16 @@
 (function () {
     'use strict';
 
-    function Controller() {
+    function Controller($log) {
         var ctrl = this;
 
         function summaryItemInit() {
-            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable)) {
-                ctrl.bbFilterSummaryItemIsDismissable = true;
+            if (angular.isDefined(ctrl.bbFilterSummaryItemIsDismissable)) {
+                $log.warn('bb-filter-summary-item-is-dismissable is deprecated, use bb-filter-summary-item-is-dismissible instead.');
+            }
+
+            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable) && angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissible)) {
+                ctrl.bbFilterSummaryItemIsDismissible = true;
             }
         }
 
@@ -4427,6 +4432,8 @@
         ctrl.clearFilter = clearFilter;
     }
 
+    Controller.$inject = ['$log'];
+
     angular.module('sky.filter.summary.item.component', [])
         .component('bbFilterSummaryItem', {
             templateUrl: 'sky/templates/filter/filter.summary.item.component.html',
@@ -4434,7 +4441,8 @@
             bindings: {
                 bbFilterSummaryItemOnClick: '&?',
                 bbFilterSummaryItemOnDismiss: '&?',
-                bbFilterSummaryItemIsDismissable: '<?'
+                bbFilterSummaryItemIsDismissable: '<?',
+                bbFilterSummaryItemIsDismissible: '<?'
             },
             transclude: true
         });
@@ -4741,7 +4749,10 @@
             scope: {
                 bbOptions: "="
             },
-            controller: ['$scope', function ($scope) {
+            controller: ['$scope', '$log', function ($scope, $log) {
+
+                $log.warn('The bb-grid-filters directive is deprecated. Use a filter modal instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
+
                 $scope.applyFilters = function () {
                     var args = {},
                         options = $scope.bbOptions;
@@ -4850,7 +4861,7 @@
             templateUrl: 'sky/templates/grids/filtersgroup.html'
         };
     })
-    .directive('bbGridFiltersSummary', ['bbResources', function (bbResources) {
+    .directive('bbGridFiltersSummary', ['bbResources', '$log', function (bbResources, $log) {
         return {
             require: '^bbGrid',
             replace: true,
@@ -4865,6 +4876,8 @@
             controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
                 var ctrl = this;
+
+                $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
 
                 $scope.clearFilters = function () {
                     var args = {},
@@ -4967,7 +4980,9 @@
             function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
-                    transclude: true,
+                    transclude: {
+                        'bbGridToolbar': '?bbGridToolbar'    
+                    },
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -5076,11 +5091,11 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
-                        $scope.customToolbar.hasCustomToolbar = angular.isDefined(attr.bbGridCustomToolbar);
+                        $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
                         $scope.$watch('locals.hasCustomToolbar', function () {
                             var breakpoints = {},
@@ -6423,9 +6438,12 @@
         return {
             require: '?^bbGrid',
             scope: {
-                options: '=?bbToolbarOptions'
+                options: '=?bbToolbarOptions',
+                bbGridFilterClick: '&?bbGridFilterClick'
             },
-            transclude: true,
+            transclude: {
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
+            },
             link: function ($scope, el, attr, bbGrid) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
@@ -6576,7 +6594,7 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
 
@@ -12648,6 +12666,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/filter/filter.button.component.html',
         '<button \n' +
         '    ng-attr-title="{{\'filter_button_title\' | bbResources}}" \n' +
+        '    ng-class="{\'bb-filter-btn-active\': $ctrl.bbFilterButtonActive}" \n' +
+        '    data-bbauto-field="FilterButton" \n' +
         '    type="button" \n' +
         '    class="btn bb-btn-secondary" \n' +
         '    ng-click="$ctrl.bbFilterButtonOnClick()">\n' +
@@ -12662,7 +12682,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/filter/filter.summary.component.html',
         '<div class="bb-filter-summary">\n' +
         '    <span class="bb-filter-summary-header">{{::\'filter_summary_header\' | bbResources}}:</span>\n' +
-        '    <ng-transclude></ng-transclude>\n' +
+        '    <div class="bb-filter-summary-items">\n' +
+        '        <ng-transclude></ng-transclude>\n' +
+        '    </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/filter/filter.summary.item.component.html',
         '<div \n' +
@@ -12674,7 +12696,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <ng-transclude></ng-transclude>\n' +
         '    <span \n' +
         '        ng-attr-aria-label="{{\'filter_summary_close\' | bbResources}}"\n' +
-        '        ng-if="$ctrl.bbFilterSummaryItemIsDismissable" \n' +
+        '        ng-if="$ctrl.bbFilterSummaryItemIsDismissable || $ctrl.bbFilterSummaryItemIsDismissible" \n' +
         '        role="button" \n' +
         '        tabindex="0" \n' +
         '        class="fa fa-times close" \n' +
@@ -12803,16 +12825,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '\n' +
         '    <div class="bb-grid-toolbar-viewkeeper">\n' +
-        '        <div ng-if="!customToolbar.hasCustomToolbar">\n' +
-        '            <div ng-show="locals.showToolbar">\n' +
-        '                <bb-grid-toolbar>\n' +
-        '                    <ng-transclude></ng-transclude>\n' +
-        '                </bb-grid-toolbar>\n' +
-        '            </div>\n' +
-        '        </div>\n' +
-        '\n' +
-        '        <div ng-if="customToolbar.hasCustomToolbar">\n' +
-        '            <div ng-show="locals.showToolbar">\n' +
+        '        <div ng-show="locals.showToolbar">\n' +
+        '            <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">\n' +
+        '                <ng-transclude></ng-transclude>\n' +
+        '            </bb-grid-toolbar>\n' +
+        '            <div ng-if="customToolbar.hasCustomToolbar">\n' +
+        '                <ng-transclude ng-transclude-slot="bbGridToolbar">\n' +
+        '                </ng-transclude>\n' +
         '                <ng-transclude></ng-transclude>\n' +
         '            </div>\n' +
         '        </div>\n' +
@@ -12855,27 +12874,54 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/gridtoolbar.html',
         '<div class="bb-grid-toolbar-container">\n' +
         '    <div class="clearfix toolbar bb-table-toolbar">\n' +
-        '        <button type="button" data-bbauto-field="AddButton" class="bb-grid-toolbar-btn btn-primary btn" ng-show="toolbarLocals.hasAdd" ng-click="options.onAddClick()">\n' +
-        '            <i class="fa fa-plus-circle"></i>\n' +
-        '            <span class="bb-toolbar-btn-label" ng-show="options.onAddClickLabel">{{options.onAddClickLabel}}</span>\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            ng-attr-title="{{options.onAddClickLabel}}"\n' +
+        '            data-bbauto-field="AddButton" \n' +
+        '            class="bb-grid-toolbar-btn btn-primary btn" \n' +
+        '            ng-show="toolbarLocals.hasAdd" \n' +
+        '            ng-click="options.onAddClick()">\n' +
+        '            <i class="fa fa-lg fa-plus-circle"></i>\n' +
         '        </button>\n' +
         '        <div class="bb-grid-toolbar-button-container">\n' +
         '            <ng-transclude></ng-transclude>\n' +
         '        </div>\n' +
-        '        <div class="bb-search-container search-container">\n' +
+        '        <div class="bb-search-container">\n' +
         '            <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" data-bbauto-field="SearchBox" />\n' +
-        '            <div class="bb-search-icon fa fa-search" data-bbauto-field="SearchButton" ng-click="toolbarLocals.applySearchText()"></div>\n' +
+        '            <div class="bb-search-icon fa fa-lg fa-search" data-bbauto-field="SearchButton" ng-click="toolbarLocals.applySearchText()"></div>\n' +
         '        </div>\n' +
-        '        <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn" data-bbauto-field="ColumnPickerButton" ng-show="!options.hideColPicker" ng-click="toolbarLocals.openColumnPicker()">\n' +
-        '            <span class="fa fa-columns"></span>\n' +
-        '            <span class="bb-toolbar-btn-label">{{resources.grid_columns_button}}</span>\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn"\n' +
+        '            ng-attr-title="{{::\'grid_columns_button\' | bbResources}}"       \n' +
+        '            data-bbauto-field="ColumnPickerButton" \n' +
+        '            ng-show="!options.hideColPicker" \n' +
+        '            ng-click="toolbarLocals.openColumnPicker()">\n' +
+        '            <span class="fa fa-lg fa-columns"></span>\n' +
         '        </button>\n' +
-        '        <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" ng-class="{\'bb-filters-inline-active\': options.filtersAreActive}" data-bbauto-field="FilterButton" ng-show="!options.hideFilters" ng-click="toolbarLocals.toggleFilterMenu()">\n' +
-        '            <span class="fa fa-filter"></span>\n' +
-        '            <span class="bb-toolbar-btn-label">{{resources.grid_filters_button}}</span>\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" \n' +
+        '            ng-class="{\'bb-filters-inline-active\': options.filtersAreActive}" \n' +
+        '            data-bbauto-field="FilterButton" \n' +
+        '            ng-if="!options.hideFilters &amp;&amp; !bbGridFilterClick" \n' +
+        '            ng-click="toolbarLocals.toggleFilterMenu()">\n' +
+        '            \n' +
+        '            <span class="fa fa-lg fa-filter"></span>\n' +
+        '        \n' +
         '        </button>\n' +
+        '        \n' +
+        '        <bb-filter-button \n' +
+        '            class="bb-filter-btn"\n' +
+        '            ng-if="!options.hideFilters &amp;&amp; bbGridFilterClick"\n' +
+        '            bb-filter-button-on-click="bbGridFilterClick()"\n' +
+        '            bb-filter-button-active="options.filtersAreActive"\n' +
+        '            >\n' +
+        '        </bb-filter-button>\n' +
         '    </div>\n' +
         '    <div class="bb-grid-filter-summary-container">\n' +
+        '        <div ng-transclude="bbGridToolbarFilterSummary">\n' +
+        '        </div>\n' +
         '    </div>\n' +
         '    <div class="bb-grid-filter-inline-container" ng-hide="options.hasInlineFilters && !toolbarLocals.filtersVisible">\n' +
         '    </div>\n' +
