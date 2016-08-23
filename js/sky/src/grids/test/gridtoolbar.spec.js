@@ -402,7 +402,7 @@ describe('Grid toolbars', function () {
                 var filterButtonClicked = false,
                     customToolbarGridHtml = '<div>' +
                     '<bb-grid bb-grid-options="locals.gridOptions">' +
-                    '<bb-grid-toolbar bb-grid-filter-on-click="locals.clickFilter()">' +
+                    '<bb-grid-toolbar bb-grid-filter-click="locals.clickFilter()">' +
                     '</bb-grid-toolbar>' +
                     '</bb-grid>' +
                     '</div>';
@@ -427,7 +427,7 @@ describe('Grid toolbars', function () {
             it('will place a filter summary in the summary section', function () {
                 var customToolbarGridHtml = '<div>' +
                     '<bb-grid bb-grid-options="locals.gridOptions">' +
-                    '<bb-grid-toolbar bb-grid-filter-on-click="locals.clickFilter()">' +
+                    '<bb-grid-toolbar bb-grid-filter-click="locals.clickFilter()">' +
                     '<bb-grid-toolbar-filter-summary>' + 
                     '<bb-filter-summary>' +
                     '<bb-filter-summary-item>' + 

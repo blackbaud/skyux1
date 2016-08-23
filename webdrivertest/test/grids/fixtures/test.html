@@ -32,7 +32,7 @@
                 bb-selections-updated="gridCtrl.updateActions(selections)" 
                 bb-selected-rows="gridCtrl.selectedRows">
                 <bb-grid-toolbar
-                    bb-grid-filter-on-click="gridCtrl.openFilters()">
+                    bb-grid-filter-click="gridCtrl.openFilters()">
                     <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
                     <bb-grid-toolbar-filter-summary>
                         <bb-filter-summary ng-show="gridCtrl.appliedFilters.instruments.length > 0">

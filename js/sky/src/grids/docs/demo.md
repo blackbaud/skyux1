@@ -15,7 +15,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
 ### Grid settings ###
 - `bb-grid ` &mdash; Creates a full-featured grid that includes a search box, column picker, and filter form.
     - `bb-grid-toolbar` &mdash; Directive that contains the filter summary and custom content for the grid toolbar. Custom content will be displayed between the add button and the search input.
-      - `bb-grid-filter-on-click` &mdash; *(Optional.)* Specifies a function to be called when the filter button is clicked.
+      - `bb-grid-filter-click` &mdash; *(Optional.)* Specifies a function to be called when the filter button is clicked.
       - `bb-grid-toolbar-filter-summary` &mdash; *(Optional.)* Contains content that will be placed in the filter summary section of the grid toolbar. See the [filter](../filter) module for the `bb-filter-summary` component which can be placed inside of here.
     - `bb-grid-filters` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>*(Optional.)* Creates a flyout filter menu within the `bb-grid` directive.</s>
         - `bb-options` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Specifies an object with the following properties for the `bb-grid-filters` directive.</s>

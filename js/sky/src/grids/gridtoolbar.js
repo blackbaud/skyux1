@@ -9,7 +9,7 @@
             require: '?^bbGrid',
             scope: {
                 options: '=?bbToolbarOptions',
-                bbGridFilterOnClick: '&?bbGridFilterOnClick'
+                bbGridFilterClick: '&?bbGridFilterClick'
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
