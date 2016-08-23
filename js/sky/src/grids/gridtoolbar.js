@@ -9,8 +9,8 @@
             require: '?^bbGrid',
             scope: {
                 options: '=?bbToolbarOptions',
-                bbGridFilterOnClick: '&?bbGridFilterOnClick',
-                bbGridOnSearch: '&?bbGridOnSearch',
+                bbGridFilterClick: '&?bbGridFilterClick',
+                bbGridSearch: '&?bbGridSearch',
                 bbGridSearchText: '<?bbGridSearchText'
             },
             transclude: {
@@ -38,8 +38,8 @@
                     }
                 }
 
-                function toolbarOnSearch(searchText) {
-                    $scope.bbGridOnSearch({searchText: searchText});
+                function toolbarSearch(searchText) {
+                    $scope.bbGridSearch({searchText: searchText});
 
                     /*istanbul ignore else */
                     /* sanity check */
@@ -105,7 +105,7 @@
                     applySearchText: applySearchText,
                     openColumnPicker: openColumnPicker,
                     toggleFilterMenu: toggleFilterMenu,
-                    toolbarOnSearch: toolbarOnSearch
+                    toolbarSearch: toolbarSearch
                 };
 
                 $scope.resources = bbResources;

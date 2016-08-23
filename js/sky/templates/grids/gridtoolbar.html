@@ -13,7 +13,7 @@
         <div class="bb-grid-toolbar-button-container">
             <ng-transclude></ng-transclude>
         </div>
-        <div ng-if="!bbGridOnSearch" class="bb-search-container">
+        <div ng-if="!bbGridSearch" class="bb-search-container">
             <input 
                 type="text" 
                 placeholder="{{resources.grid_search_placeholder}}" 
@@ -27,9 +27,9 @@
         </div>
 
         <bb-search-input 
-            ng-if="bbGridOnSearch"
+            ng-if="bbGridSearch"
             bb-search-text="bbGridSearchText"
-            bb-on-search="toolbarLocals.toolbarOnSearch(searchText)"
+            bb-on-search="toolbarLocals.toolbarSearch(searchText)"
             bb-search-placeholder
             >
 
@@ -49,7 +49,7 @@
             class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" 
             ng-class="{'bb-filters-inline-active': options.filtersAreActive}" 
             data-bbauto-field="FilterButton" 
-            ng-if="!options.hideFilters &amp;&amp; !bbGridFilterOnClick" 
+            ng-if="!options.hideFilters &amp;&amp; !bbGridFilterClick" 
             ng-click="toolbarLocals.toggleFilterMenu()">
             
             <span class="fa fa-lg fa-filter"></span>
@@ -58,8 +58,8 @@
         
         <bb-filter-button 
             class="bb-filter-btn"
-            ng-if="!options.hideFilters &amp;&amp; bbGridFilterOnClick"
-            bb-filter-button-on-click="bbGridFilterOnClick()"
+            ng-if="!options.hideFilters &amp;&amp; bbGridFilterClick"
+            bb-filter-button-on-click="bbGridFilterClick()"
             bb-filter-button-active="options.filtersAreActive"
             >
         </bb-filter-button>
