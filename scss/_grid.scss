@@ -93,7 +93,7 @@ body:not(.bb-viewkeeper-ignore-fixed) {
     @include border-left-radius(20px);
     background: $bb-color-blue;
     float: left;
-    padding: 7px 10px 7px 13px;
+    padding: 10px 10px 10px 13px;
     font-size: 16px;
     width: 40px;
     color: #fff;
@@ -234,22 +234,6 @@ body:not(.bb-viewkeeper-ignore-fixed) {
     padding-left: 15px;
 }
 
-.bb-grid-toolbar-container {
-    .toolbar {
-        .bb-grid-toolbar-btn {
-            float: left;
-            font-size: 12px;
-            margin: 0 5px 0 0;
-            padding: 3px 6px;
-        }
-
-        .bb-column-picker-btn, .bb-filter-btn {
-            margin-right: 0;
-            margin-left: 5px;
-        }
-    }
-}
-
 // Center the multiselect checkbox in the header since jqGrid doesn't do it for us.  This fixes an issue where
 // the header checkbox and the row checkboxes are misaligned when an explicit width is set on the checkbox column.
 .bb-grid-multiselect {
@@ -259,21 +243,9 @@ body:not(.bb-viewkeeper-ignore-fixed) {
         }
     }
 }
-.bb-grid-toolbar-container {
-    .toolbar {
-        &.bb-table-toolbar {
-            height: auto;
-            min-height: 39px;
-        }
-    }
-}
-
-.bb-grid-toolbar-button-container {
-    float: left;
-    font-size: 12px;
-    display: inline-block;
-}
 
 .bb-grid-no-search span.highlight {
   background-color: transparent;
 }
+
+

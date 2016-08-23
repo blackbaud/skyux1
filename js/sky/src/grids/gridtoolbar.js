@@ -8,9 +8,12 @@
         return {
             require: '?^bbGrid',
             scope: {
-                options: '=?bbToolbarOptions'
+                options: '=?bbToolbarOptions',
+                bbGridFilterClick: '&?bbGridFilterClick'
             },
-            transclude: true,
+            transclude: {
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
+            },
             link: function ($scope, el, attr, bbGrid) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
@@ -161,6 +164,6 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());

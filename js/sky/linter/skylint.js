@@ -497,7 +497,9 @@
         ['tooltip-html', 'uib-tooltip-html'],
         ['typeahead', 'uib-typeahead'],
         ['typeahead-popup', 'uib-typeahead-popup'],
-        ['typeahead-match', 'uib-typeahead-match']
+        ['typeahead-match', 'uib-typeahead-match'],
+        ['bb-grid-filters', null, 'Use bb-filter-button in conjunction with bb-filter-modal-footer to place filters in modals instead of the flyout'],
+        ['bb-grid-filters-summary', null, 'bb-filter-summary']
 
     ];
 

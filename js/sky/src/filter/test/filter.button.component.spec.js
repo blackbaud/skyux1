@@ -38,6 +38,35 @@
 
             expect(filterCalled).toBe(true);
         });
+
+        it('will have the active class applied when specified', function () {
+            var filterBtnHtml = ' <div> ' +
+                    '<bb-filter-button ' +
+                        'bb-filter-button-on-click="filterCtrl.appliedFilterCallback()" ' +
+                        'bb-filter-button-active="filterCtrl.isActive" ' +
+                    '>' +
+                    '</div>',
+                    buttonEl,
+                    el;
+
+            $scope.filterCtrl = {
+                isActive: false
+            };
+
+            el = $compile(filterBtnHtml)($scope);
+            $scope.$digest();
+
+            buttonEl = el.find('.btn.bb-btn-secondary');
+
+            expect(buttonEl).not.toHaveClass('bb-filter-btn-active');
+
+            $scope.filterCtrl.isActive = true;
+
+            $scope.$digest();
+
+            expect(buttonEl).toHaveClass('bb-filter-btn-active');
+
+        });
         
     });
 })();

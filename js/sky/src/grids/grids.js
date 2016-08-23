@@ -50,7 +50,9 @@
             function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
-                    transclude: true,
+                    transclude: {
+                        'bbGridToolbar': '?bbGridToolbar'    
+                    },
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -159,11 +161,11 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
-                        $scope.customToolbar.hasCustomToolbar = angular.isDefined(attr.bbGridCustomToolbar);
+                        $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
                         $scope.$watch('locals.hasCustomToolbar', function () {
                             var breakpoints = {},
