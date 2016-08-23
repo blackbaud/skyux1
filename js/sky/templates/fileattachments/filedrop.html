@@ -1,6 +1,6 @@
 <div class="row bb-file-drop-row">
     <div class="col-xs-12 bb-file-drop-col" ng-class="{'col-sm-6': bbFileDrop.allowLinks}">
-        <div
+        <button
              class="bb-file-drop bb-file-drop-target"
              ngf-drop
              ngf-keep="false"
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="bb-file-drop-contents-custom" ng-transclude></div>
-        </div>
+        </button>
     </div>
     <div class="col-sm-6 col-xs-12 bb-file-drop-col" ng-if="bbFileDrop.allowLinks">
         <div class="bb-file-drop-contents">
