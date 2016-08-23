@@ -5,11 +5,20 @@
 
     function Controller($element, $window, $timeout) {
         var ctrl = this,
-            windowEl = angular.element($window),
+            scrollableParentEl,
+            scrollableParentIsWindow = false,
             componentId = 'bb-infinitescroll-' + nextId;
 
         function infiniteScrollInView() {
-            return windowEl.scrollTop() + windowEl.height() > $element.offset().top;
+            if (scrollableParentIsWindow) {
+                return scrollableParentEl.scrollTop() + scrollableParentEl.height() > $element.offset().top;
+            } else {
+                return scrollableParentEl.scrollTop() + scrollableParentEl.height() > $element.position().top;
+            }
+        }
+
+        function loadComplete() {
+            ctrl.isLoading = false;
         }
 
         function callLoadCallback() {
@@ -19,10 +28,10 @@
 
             if (loadPromise && angular.isFunction(loadPromise.then)) {
                 loadPromise.then(function () {
-                    ctrl.isLoading = false;
+                    loadComplete();
                 });
             } else {
-                ctrl.isLoading = false;
+                loadComplete();
             }
         }
 
@@ -34,11 +43,29 @@
             }
         }
 
+        function getScrollableParentEl(el) {
+            var parentEl = angular.element(el).parent();
+
+            while (parentEl.length > 0 && !parentEl.is('body')) {
+                switch (parentEl.css('overflow-y')) {
+                    case 'auto':
+                    case 'scroll':
+                        return parentEl;
+                }
+
+                parentEl = parentEl.parent();
+            }
+            scrollableParentIsWindow = true;
+            return angular.element($window);
+        }
+
         function onInit() {
             
             ctrl.isLoading = false;
+
+            scrollableParentEl = getScrollableParentEl($element);
             
-            windowEl.on('scroll.' + componentId, function () {
+            scrollableParentEl.on('scroll.' + componentId, function () {
                 // Put in angular digest cycle
                 $timeout(function () {
                     startInfiniteScrollLoad();
@@ -48,7 +75,7 @@
         }
 
         function onDestroy() {
-            windowEl.off('scroll.' + componentId);
+            scrollableParentEl.off('scroll.' + componentId);
         }
 
         ctrl.$onInit = onInit;
@@ -58,7 +85,7 @@
         nextId++;     
     } 
 
-    Controller.$inject = ['$element', '$window', '$timeout', '$q'];
+    Controller.$inject = ['$element', '$window', '$timeout'];
 
     angular.module('sky.infinitescroll.component', ['sky.resources', 'sky.wait'])
         .component('bbInfiniteScroll', {

@@ -39,13 +39,20 @@
             }
         }
 
-        function setupScrollInfinite(inView) {
+        function setupScrollInfinite(inView, parentScrollable) {
             var windowVal = 10,
                 offsetVal;
             offsetVal = inView ? 0 : 30; 
+
             spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
             spyOn($.fn, 'height').and.returnValue(windowVal);
-            spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+            
+            if (!parentScrollable) {
+                spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+            } else {
+                spyOn($.fn, 'position').and.returnValue({ top: offsetVal });
+            }
+
         }
 
         beforeEach(function () {
@@ -116,7 +123,6 @@
             expect(loadCalls).toBe(1);
         });
 
-
         it('should not have the load more button visible if the component load more button is pressed and is already loading', function () {
             var el,
                 loadCallback;
@@ -157,6 +163,42 @@
             windowEl.scroll();
             timeoutFlushIfAvailable();
             expect(loadCalls).toBe(0);
+        });
+
+        it('should handle a scrollable parent properly', function () {
+            var parentHtml = '<div style="overflow-y: scroll;"><bb-infinite-scroll ' + 
+                'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn()">' +
+                '</bb-infinite-scroll></div>',
+                el;
+            
+            setupScrollInfinite(true, true);
+            
+            el = $compile(parentHtml)($scope);
+            $scope.$digest();
+
+            el.scroll();
+            timeoutFlushIfAvailable();
+            expect(loadCalls).toBe(1);
+            
+        });
+
+        it('should handle an auto parent properly', function () {
+            var parentHtml = '<div style="overflow-y: auto;"><bb-infinite-scroll ' + 
+                'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn()">' +
+                '</bb-infinite-scroll></div>',
+                el;
+            
+            setupScrollInfinite(true, true);
+            
+            el = $compile(parentHtml)($scope);
+            $scope.$digest();
+
+            el.scroll();
+            timeoutFlushIfAvailable();
+            expect(loadCalls).toBe(1);
+            
         });
       
     });
