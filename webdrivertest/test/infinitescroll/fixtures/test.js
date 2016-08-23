@@ -25,7 +25,7 @@
         vm.hasMore = true;
 
         vm.loadFn = function () {
-            $timeout(function () {
+            return $timeout(function () {
 
             }, 4000);
 

@@ -11,7 +11,7 @@
             loadCalls,
             infiniteHtml = '<div><bb-infinite-scroll ' + 
                 'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
-                'bb-infinite-scroll-load="infiniteCtrl.loadFn(loadingComplete)">' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn()">' +
                 '</bb-infinite-scroll></div>';
 
         beforeEach(module(
@@ -52,9 +52,8 @@
             loadCalls = 0;
             $scope.infiniteCtrl = {
                 hasMore: true,
-                loadFn: function (loadingComplete) {
+                loadFn: function () {
                     loadCalls++;
-                    loadingComplete();
                 }
             };
             windowEl = angular.element($window);
@@ -119,10 +118,15 @@
 
 
         it('should not have the load more button visible if the component load more button is pressed and is already loading', function () {
-            var el;
+            var el,
+                loadCallback;
             
             $scope.infiniteCtrl.loadFn = function () {
-                loadCalls++;
+                return {
+                    then: function (callback) {
+                        loadCallback = callback;
+                    }
+                };     
             };
 
             setupScrollInfinite(true);
@@ -132,9 +136,11 @@
 
             el.find('.bb-btn-secondary').click();
             timeoutFlushIfAvailable();
-            expect(loadCalls).toBe(1);
             expect(el.find('.bb-btn-secondary').length).toBe(0);
 
+            loadCallback();
+            $scope.$digest();
+            expect(el.find('.bb-btn-secondary').length).toBe(1);
 
         });
 
@@ -154,4 +160,4 @@
         });
       
     });
-}());
+})();

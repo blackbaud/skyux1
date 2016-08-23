@@ -3,7 +3,7 @@
     'use strict';
     var nextId = 0;
 
-    function Controller($element, $window, $timeout, $q) {
+    function Controller($element, $window, $timeout) {
         var ctrl = this,
             windowEl = angular.element($window),
             componentId = 'bb-infinitescroll-' + nextId;
@@ -13,24 +13,24 @@
         }
 
         function callLoadCallback() {
-            var deferred = $q.defer(),
-                    loadingPromise;
-            loadingPromise = deferred.promise;
-             
-            loadingPromise.then(function () {
-                ctrl.isLoading = false;
-            });
+            var loadPromise;
 
-            ctrl.bbInfiniteScrollLoad({loadingComplete: deferred.resolve});
+            loadPromise = ctrl.bbInfiniteScrollLoad();
+
+            if (loadPromise && angular.isFunction(loadPromise.then)) {
+                loadPromise.then(function () {
+                    ctrl.isLoading = false;
+                });
+            } else {
+                ctrl.isLoading = false;
+            }
         }
 
         function startInfiniteScrollLoad() {
             if (ctrl.bbInfiniteScrollHasMore && !ctrl.isLoading && infiniteScrollInView()) {
                 ctrl.isLoading = true;
-                // Put in angular digest cycle
-                $timeout(function () {
-                    callLoadCallback();
-                });
+                
+                callLoadCallback();
             }
         }
 
@@ -39,7 +39,10 @@
             ctrl.isLoading = false;
             
             windowEl.on('scroll.' + componentId, function () {
-                startInfiniteScrollLoad();
+                // Put in angular digest cycle
+                $timeout(function () {
+                    startInfiniteScrollLoad();
+                });
             });
                 
         }
