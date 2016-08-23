@@ -4,8 +4,7 @@
     'use strict';
 
     function bbSelectFieldMultipleItemAnimation() {
-        var duration = 250,
-            slideOptions;
+        var duration = 250;
 
         function getFadeOptions(doneFn) {
             return {
@@ -15,30 +14,22 @@
             };
         }
 
-        slideOptions = {
-            duration: duration,
-            queue: false
-        };
-
         return {
             enter: function (el, doneFn) {
                 el
                     .css({
-                        display: 'none',
                         opacity: 0
                     })
-                    .slideDown(slideOptions)
                     .animate({
-                        opacity: 1
+                        opacity: 1,
+                        display: 'inline-flex'
                     }, getFadeOptions(doneFn));
             },
             leave: function (el, doneFn) {
                 // Take focus off the close button
                 el.find('.close').blur();
 
-                el
-                    .slideUp(slideOptions)
-                    .fadeOut(getFadeOptions(doneFn));
+                el.fadeOut(getFadeOptions(doneFn));
             }
         };
     }

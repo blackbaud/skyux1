@@ -40,7 +40,7 @@
         ];
 
 
-        vm.selectedItems = vm.listItems.slice(0, 2);
+        vm.selectedItems = vm.listItems.slice(0, 4);
     }
     angular.module('screenshots', ['sky'])
         .controller('SelectFieldTestController', SelectFieldTestController);
