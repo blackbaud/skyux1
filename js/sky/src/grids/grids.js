@@ -65,6 +65,19 @@
                         var locals,
                             self = this;
 
+
+
+                        function searchApplied(searchText) {
+                            locals.appliedSearchText = searchText;
+                            /*istanbul ignore else */
+                            /* sanity check */
+                            if (angular.isFunction(locals.highlightSearchText)) {
+                                locals.highlightSearchText(locals.appliedSearchText);
+                            }
+                        }
+
+                        self.searchApplied = searchApplied;
+
                         self.setFilters = function (filters) {
                             /*istanbul ignore else */
                             /* sanity check */
@@ -134,6 +147,8 @@
                                 locals.highlightSearchText();
                             }
                         };
+
+                        
 
                         self.scope = $scope;
 
@@ -671,11 +686,16 @@
                                 return true;
                             }
 
-                            function highlightSearchText() {
+                            function highlightSearchText(highlightText) {
                                 var options = $scope.options;
+                                
+                                if (!highlightText && options && options.searchText) {
+                                    highlightText = options.searchText;
+                                }
+
                                 bbHighlight.clear(tableEl);
-                                if (options && options.searchText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
+                                if (highlightText) {
+                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
                                 }
                             }
 
@@ -1226,7 +1246,9 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(highlightSearchText);
+                                        $timeout(function () {
+                                            highlightSearchText(locals.appliedSearchText);
+                                        });
                                         handleTableWrapperResize();
                                         /*istanbul ignore next */
                                         /* sanity check */

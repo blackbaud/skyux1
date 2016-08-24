@@ -1,4 +1,4 @@
-<div>
+<div class="bb-search-input-inline">
     <div 
         class="bb-search-open-wrapper"
         ng-show="$ctrl.currentBreakpoint.xs"
@@ -40,7 +40,8 @@
                         <i class="fa fa-times"></i>
                     </button>
 
-                    <button          
+                    <button
+                        data-bbauto-field="SearchButton"          
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-apply"
                         ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"
