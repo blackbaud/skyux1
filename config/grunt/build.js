@@ -96,7 +96,8 @@ module.exports = function (grunt, env, utils) {
             options: {
                 shorthandCompacting: false,
                 roundingPrecision: -1,
-                sourceMap: true
+                sourceMap: true,
+                sourceMapInlineSources: true
             },
             dist: {
                 files: {
@@ -120,7 +121,8 @@ module.exports = function (grunt, env, utils) {
         sass: {
             dist: {
                 options: {
-                    style: 'compressed'
+                    style: 'compressed',
+                    sourcemap: 'inline'
                 },
                 files: {
                     '<%= skyux.paths.dist %>css/sky.css': 'scss/sky.scss'
@@ -137,6 +139,7 @@ module.exports = function (grunt, env, utils) {
             },
             skybundle: {
                 options: {
+                    sourcemap: 'inline',
                     style: 'compressed'
                 },
                 files: {
