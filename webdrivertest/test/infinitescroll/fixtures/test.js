@@ -27,7 +27,7 @@
         vm.loadFn = function () {
             return $timeout(function () {
 
-            }, 4000);
+            }, 10000);
 
         };
     }
