@@ -483,6 +483,10 @@
         "_description": "",
         "message": "{0} GB"
     },
+    "file_upload_drag_or_click" : {
+        "_description": "Label for file drop",
+        "message": "Drag a file here or click to browse"
+    },
     "file_upload_drag_file_here": {
         "_description": "",
         "message": "Drag a file here"
