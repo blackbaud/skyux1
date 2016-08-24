@@ -16,6 +16,8 @@ The grid directive builds a full-featured grid with a search box, column picker,
 - `bb-grid ` &mdash; Creates a full-featured grid that includes a search box, column picker, and filter form.
     - `bb-grid-toolbar` &mdash; Directive that contains the filter summary and custom content for the grid toolbar. Custom content will be displayed between the add button and the search input.
       - `bb-grid-filter-click` &mdash; *(Optional.)* Specifies a function to be called when the filter button is clicked.
+      - `bb-grid-search` &mdash; *(Optional.)* Specifies a function to be called when search text is applied.
+      - `bb-grid-search-text` &mdash; *(Optional.)* Specifies search text that users can supply to the grid search box.
       - `bb-grid-toolbar-filter-summary` &mdash; *(Optional.)* Contains content that will be placed in the filter summary section of the grid toolbar. See the [filter](../filter) module for the `bb-filter-summary` component which can be placed inside of here.
     - `bb-grid-filters` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>*(Optional.)* Creates a flyout filter menu within the `bb-grid` directive.</s>
         - `bb-options` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Specifies an object with the following properties for the `bb-grid-filters` directive.</s>
@@ -69,7 +71,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `onAddClick` &mdash; *(Optional.)* Specifies a function to be called when users click the add button in the toolbar. The add button only appears if the `onAddClick` property specifies a function.
         - `onAddClickLabel` &mdash; *(Optional.)* Specifies a label for the add button.
         - `resources` &mdash; *(Optional.)* Specifies the resource dictionary available in the scope of each `columns` property's `template_url` and `controller` properties.
-        - `searchText` &mdash; The text that users enter in the grid search box. Set by the `bb-grid` directive.
+        - `searchText` &mdash; *(Deprecated.)* Use `bb-grid-toolbar` with the `bb-grid-on-search` function instead. <s>The text that users enter in the grid search box. Set by the `bb-grid` directive.</s>
         - `selectedColumnIds` &mdash; An array of unique identifiers that indicates the visible columns in their display order.
         - `sortOptions` &mdash; Specifies options for column sorting.
             - `excludedColumns` &mdash; *(Optional.)* Specifies an array of the names of columns that users cannot use to sort the grid.

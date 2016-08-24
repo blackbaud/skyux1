@@ -159,6 +159,10 @@
         "_description": "Displays when no columns are found for the specified search text.",
         "message": "No columns found"
     },
+    "infinite_scroll_load_more": {
+        "_description": "Text for loading more in the infinite scroll button",
+        "message": "Load more"
+    },
     "modal_footer_cancel_button": {
         "_description": "Default lable text for modal cancel button",
         "message": "Cancel"
