@@ -37,7 +37,7 @@ describe('modals', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'modal_fullpage',
-                selector: 'body',
+                selector: 'html',
                 checkAccessibility: true
             })
             .click('.bb-modal .modal-dialog .close')

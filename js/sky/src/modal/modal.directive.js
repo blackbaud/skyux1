@@ -11,14 +11,14 @@
             return parseFloat(val.replace('px', ''));
         }
 
-        function getModalBodyWrapperMargin(el, fullPage) {
+        function getModalBodyWrapperMargin(el) {
             var margin = 0;
 
             while (el.not('.modal-dialog') && 
                     el.length > 0 && 
                     // Don't evaluate any body padding since the modal should cover
                     // the entire screen, including the omnibar.
-                    (!el.is(document.body) || !fullPage)
+                    (!el.is(document.body))
             ) {
                 margin += el.outerHeight() - el.height();
 
@@ -74,7 +74,9 @@
                                 'margin-top': headerHeight,
                                 'margin-bottom': footerHeight
                             });
-                            newMinHeight = windowEl.height() - headerHeight - footerHeight;
+                            reservedHeight = headerHeight + footerHeight;
+                            reservedHeight += getModalBodyWrapperMargin(el);
+                            newMinHeight = windowEl.height() - reservedHeight;
                             bodyEl.css({
                                 'min-height': newMinHeight
                             });
@@ -86,7 +88,7 @@
 
                             // Account for the border, padding, etc. of the elements 
                             // that wrap the modal body.
-                            reservedHeight += getModalBodyWrapperMargin(el, fullPage);
+                            reservedHeight += getModalBodyWrapperMargin(el);
 
                             newMaxHeight = windowEl.height() - reservedHeight;
 
