@@ -12,36 +12,10 @@
             <bb-modal-header bb-modal-help-key="'bb-security-users.html'">Modal header</bb-modal-header>
             <div bb-modal-body>
                 <form>
-                    <div style="height: 500px">
-                        top content
-                    </div>
-                    <bb-grid bb-grid-options="contentCtrl.gridOptions" bb-multiselect-actions="contentCtrl.gridActions" bb-selections-updated="contentCtrl.updateActions(selections)" bb-selected-rows="contentCtrl.selectedRows">
-                        <!--<div class="bb-filters-inline">
-                            <select ng-model="contentCtrl.gridOptions.filters.selectFilter">
-                                <option value="">All Values</option>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                            </select>
-                            <label><input type="checkbox" ng-model="contentCtrl.gridOptions.filters.checkFilter"/>Check 1 Really long Labelll</label>
-                        </div>-->
-                        <bb-grid-filters bb-options="gridCtrl.filterOptions">
-                            <bb-grid-filters-group bb-grid-filters-group-label="'Filter group'">
-                                <div>
-                                    <label><input type="checkbox" ng-model="gridCtrl.guitarFilter"/> Show guitars</label>
-                                </div>
-                                <div>
-                                    <label><input type="checkbox" ng-model="gridCtrl.drumsFilter"/> Show drums</label>
-                                </div>
-                            </bb-grid-filters-group>
-                        </bb-grid-filters>
-                    </bb-grid>
                     <div class="form-group">
                         <label class="control-label">{{::contentCtrl.textLabel}}</label>
                         <input type="text" class="form-control" autofocus />
                     </div>
-                    <div style="height: 5000px">
-                    </div>
-                    bottom content
                 </form>
             </div>
             <bb-modal-footer>

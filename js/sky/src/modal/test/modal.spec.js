@@ -203,9 +203,14 @@ describe('Modal', function () {
         it('should be displayed full-page when that option is specified', function () {
             var modalInstance;
 
-            modalInstance = bbModal.open({
-                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
-            }, true);
+            modalInstance = bbModal.open(
+                {
+                    template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+                },
+                {
+                    fullPage: true
+                }
+            );
 
             $rootScope.$digest();
 
@@ -222,9 +227,14 @@ describe('Modal', function () {
             var bodyEl = $(document.body),
                 modalInstance;
 
-            modalInstance = bbModal.open({
-                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
-            }, true);
+            modalInstance = bbModal.open(
+                {
+                    template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+                },
+                {
+                    fullPage: true
+                }
+            );
 
             $rootScope.$digest();
 
@@ -240,13 +250,22 @@ describe('Modal', function () {
                 modalInstance1,
                 modalInstance2;
 
-            modalInstance1 = bbModal.open({
-                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
-            }, true);
+            modalInstance1 = bbModal.open(
+                {
+                    template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+                },
+                {
+                    fullPage: true
+                });
 
-            modalInstance2 = bbModal.open({
-                template: '<bb-modal><div bb-modal-body></div></bb-modal>'
-            }, true);
+            modalInstance2 = bbModal.open(
+                {
+                    template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+                },
+                {
+                    fullPage: true
+                }
+            );
 
             $rootScope.$digest();
 

@@ -11,11 +11,16 @@
 
         // This controller only exists to display the full-page form, so show it
         // as soon as it's created.
-        modalInstance = bbModal.open({
-            animation: false,
-            controller: 'ModalFullContentController as contentCtrl',
-            templateUrl: 'demo/modal/modalformfull.html'
-        }, true);
+        modalInstance = bbModal.open(
+            {
+                animation: false,
+                controller: 'ModalFullContentController as contentCtrl',
+                templateUrl: 'demo/modal/modalformfull.html'
+            }, 
+            {
+                fullPage: true
+            }
+        );
 
         // Logic to save the form data and navigate would go here.
         modalInstance.result.then(

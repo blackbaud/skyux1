@@ -12,10 +12,11 @@
 
     function bbModal($uibModal, $window) {
         return {
-            open: function (opts, fullPage) {
+            open: function (uibModalOptions, additionalOptions) {
                 var animation = true,
                     backdropClass,
                     bodyEl,
+                    fullPage,
                     idCls,
                     isIOS,
                     modalInstance,
@@ -44,6 +45,10 @@
                     bodyEl = null;
                 }
 
+                if (additionalOptions) {
+                    fullPage = additionalOptions.fullPage;
+                }
+
                 modalCount++;
                 idCls = 'bb-modal-id-' + modalCount;
 
@@ -59,12 +64,12 @@
                 bodyEl = $(document.body);
 
                 // Change default values for modal options
-                opts = angular.extend({
+                uibModalOptions = angular.extend({
                     animation: animation,
                     backdrop: 'static',
                     backdropClass: backdropClass,
                     windowClass: windowClass
-                }, opts);
+                }, uibModalOptions);
 
                 // Mobile browsers exhibit weird behavior when focusing on an input element
                 // inside a position: fixed element (in this case the modal), and it also
@@ -84,7 +89,7 @@
                     openFullPageModalCount++;
                 }
 
-                modalInstance = $uibModal.open(opts);
+                modalInstance = $uibModal.open(uibModalOptions);
 
                 openModalCount++;
 

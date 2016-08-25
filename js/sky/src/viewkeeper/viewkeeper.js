@@ -497,14 +497,10 @@
                             return;
                         }
 
-                        if (marginTopOverrides.length > 0) {
-                            verticalOffset = marginTopOverrides[marginTopOverrides.length - 1].margin;
+                        if (angular.element('.bb-omnibar>.desktop').is(':visible')) {
+                            verticalOffset = angular.element('.bb-omnibar>.desktop>.bar').outerHeight();
                         } else {
-                            if (angular.element('.bb-omnibar>.desktop').is(':visible')) {
-                                verticalOffset = angular.element('.bb-omnibar>.desktop>.bar').outerHeight();
-                            } else {
-                                verticalOffset = 0;
-                            }
+                            verticalOffset = 0;
                         }
 
                         if (scope.bbScrollingViewKeeper && scope.bbScrollingViewKeeper.viewKeeperOffsetElId) {
