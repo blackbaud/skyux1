@@ -914,7 +914,7 @@ describe('Grid directive', function () {
 
             expect(rowEl.eq(0).find('td div.bb-context-menu').eq(0)).toHaveClass('dropdown');
             expect(rowEl.eq(0).find('td button.bb-context-menu-btn').length).toBe(1);
-            expect($('body ul li a')[0]).toHaveText('Option1');
+            expect($('body .bb-dropdown-menu .bb-dropdown-item a')[0]).toHaveText('Option1');
 
             expect(rowEl.eq(1).find('td').eq(0)).toHaveClass('bb-grid-dropdown-cell');
             expect(rowEl.eq(1).find('td div.bb-context-menu').length).toBe(0);
@@ -925,7 +925,7 @@ describe('Grid directive', function () {
             expect(rowEl.eq(3).find('td').eq(0)).toHaveClass('bb-grid-dropdown-cell');
             expect(rowEl.eq(3).find('td div.bb-context-menu').eq(0)).toHaveClass('dropdown');
             expect(rowEl.eq(3).find('td button.bb-context-menu-btn').length).toBe(1);
-            expect($('body ul li a')[0]).toHaveText('Option1');
+            expect($('body .bb-dropdown-menu .bb-dropdown-item a')[0]).toHaveText('Option1');
 
         });
 
@@ -940,13 +940,13 @@ describe('Grid directive', function () {
             setGridData(dataSet1);
 
             rowEl = getGridRows(el);
-            expect($('body ul').eq(0)).toHaveCss({"display": "none"});
+            expect($('body .bb-dropdown-menu').eq(0)).toHaveCss({"display": "none"});
 
             contextEl = rowEl.eq(0).find('td div button').eq(0);
             contextEl.click();
-            expect($('body ul').eq(0)).not.toHaveCss({"display": "none"});
+            expect($('body .bb-dropdown-menu').eq(0)).not.toHaveCss({"display": "none"});
 
-            optionEl = $('body ul li a').eq(0);
+            optionEl = $('body .bb-dropdown-menu .bb-dropdown-item a').eq(0);
             expect(contextMenuItemClicked).toBe(false);
             optionEl.click();
             expect(contextMenuItemClicked).toBe(true);

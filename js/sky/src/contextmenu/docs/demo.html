@@ -14,13 +14,13 @@
     </p>
     <div>
       <bb-context-menu>
-        <li role="presentation">
+        <div class="bb-dropdown-item" role="presentation">
           <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Above')">Action above</a>
-        </li>
-        <li class="divider"></li>
-        <li class="disabled" role="presentation">
+        </div>
+        <div class="bb-dropdown-item" class="divider"></div>
+        <div class="disabled bb-dropdown-item" role="presentation">
           <a aria-disabled="true" tabindex="-1" role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Below')">Action below</a>
-        </li>
+        </div>
       </bb-context-menu>
     </div>
     <p></p>
