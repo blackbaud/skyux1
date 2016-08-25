@@ -3,5 +3,5 @@
 (function () {
     'use strict';
 
-    angular.module('sky.datepicker', ['sky.datepicker.directive']);
+    angular.module('sky.datepicker', ['sky.datepicker.directive', 'sky.datepicker.hide']);
 }());

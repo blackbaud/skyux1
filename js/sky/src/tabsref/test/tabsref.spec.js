@@ -238,5 +238,129 @@ describe('Tab Sref directive', function () {
         });
     });
 
+    describe('parameter expression', function () {
+        var stateParamValue = 'stateparametervalue',
+        /*jslint white: true */
+        uibTabHtml =
+            '<uib-tabset active="locals.active">' +
+            '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+            '<uib-tab heading="2" bb-tab-sref="tabstate.b({ stateParameter: \'' + stateParamValue + '\' })" select="tabSelectB()"></uib-tab>' +
+            '</uib-tabset>';
+        /*jslint white: false */
 
+        it('should pass along state parameters', function () {
+            var el,
+                $scope = $rootScope.$new();
+
+            spyOn($state, 'go');
+
+            $state.includes = function (sref) {
+                return sref === "tabstate.a";
+            };
+
+            /*jslint white: true */
+            el = $compile(uibTabHtml)($scope);
+            /*jslint white: false */
+
+            $timeout.flush();
+
+            $scope.locals.active = 1;
+            $scope.$digest();
+
+            $timeout.flush();
+
+            expect($state.go).toHaveBeenCalledWith('tabstate.b', { stateParameter: stateParamValue });
+        });
+
+        it('should route to current state if no state name provided', function () {
+            var el,
+                $scope = $rootScope.$new(),
+                uibTabHtml =
+                    '<uib-tabset active="locals.active">' +
+                    '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+                    '<uib-tab heading="2" bb-tab-sref="{ stateParameter: \'' + stateParamValue + '\' }" select="tabSelectB()"></uib-tab>' +
+                    '</uib-tabset>';
+
+            spyOn($state, 'go');
+
+            $state.includes = function (sref) {
+                return sref === "tabstate.a";
+            };
+
+            $state.current = {
+                name: 'tabstate.b'
+            };
+
+            /*jslint white: true */
+            el = $compile(uibTabHtml)($scope);
+            /*jslint white: false */
+
+            $timeout.flush();
+
+            $scope.locals.active = 1;
+            $scope.$digest();
+
+            $timeout.flush();
+
+            expect($state.go).toHaveBeenCalledWith('tabstate.b', { stateParameter: stateParamValue });
+        });
+
+        it('should throw error on invalid state name', function () {
+            var el,
+                $scope = $rootScope.$new(),
+                uibTabHtml =
+                    '<uib-tabset active="locals.active">' +
+                    '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+                    '<uib-tab heading="2" bb-tab-sref="({{((" select="tabSelectB()"></uib-tab>' +
+                    '</uib-tabset>';
+
+            spyOn($state, 'go');
+
+            $state.includes = function (sref) {
+                return sref === "tabstate.a";
+            };
+
+            /*jslint white: true */
+            el = $compile(uibTabHtml)($scope);
+            /*jslint white: false */
+
+            expect(function () {
+                $timeout.flush();
+
+                $scope.locals.active = 1;
+                $scope.$digest();
+
+                $timeout.flush();
+            }).toThrowError();
+        });
+
+        it('should throw error on invalid parameters', function () {
+            var el,
+                $scope = $rootScope.$new(),
+                uibTabHtml =
+                    '<uib-tabset active="locals.active">' +
+                    '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+                    '<uib-tab heading="2" bb-tab-sref="tabstate.b({garbage})" select="tabSelectB()"></uib-tab>' +
+                    '</uib-tabset>';
+
+            spyOn($state, 'go');
+
+            $state.includes = function (sref) {
+                return sref === "tabstate.a";
+            };
+
+            /*jslint white: true */
+            el = $compile(uibTabHtml)($scope);
+            /*jslint white: false */
+
+            expect(function () {
+                $timeout.flush();
+
+                $scope.locals.active = 1;
+                $scope.$digest();
+
+                $timeout.flush();
+            }).toThrowError();
+        });
+    });
 });

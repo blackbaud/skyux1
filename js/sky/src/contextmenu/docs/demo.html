@@ -19,7 +19,7 @@
         </li>
         <li class="divider"></li>
         <li class="disabled" role="presentation">
-          <a role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Below')">Action below</a>
+          <a aria-disabled="true" tabindex="-1" role="menuitem" href="javascript:void(0)" ng-click="contextMenuCtrl.doAction('Action Below')">Action below</a>
         </li>
       </bb-context-menu>
     </div>
@@ -28,7 +28,7 @@
       <button type="button" class="btn btn-primary" ng-click="contextMenuCtrl.openDropdown($event)">Open third menu</button>
       <p></p>
       <div class="bb-context-menu" uib-dropdown is-open="contextMenuCtrl.isOpen">
-        <bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>
+        <bb-context-menu-button bb-context-menu-button-dropdown-toggle></bb-context-menu-button>
         <ul uib-dropdown-menu role="menu">
 
           <li role="presentation">

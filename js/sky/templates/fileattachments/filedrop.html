@@ -1,11 +1,13 @@
 <div class="row bb-file-drop-row">
     <div class="col-xs-12 bb-file-drop-col" ng-class="{'col-sm-6': bbFileDrop.allowLinks}">
-        <div
+        <button
+             ng-attr-aria-label="{{'file_upload_drag_or_click' | bbResources}}"
              class="bb-file-drop bb-file-drop-target"
              ngf-drop
              ngf-keep="false"
              ngf-drag-over-class="{accept: 'bb-file-drop-accept', reject: 'bb-file-drop-reject'}"
              ngf-change="bbFileDrop.fileChange($files, $event, $invalidFiles)"
+             ngf-validate-fn="bbFileDrop.validate($file)"
              >
             <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">
                 <div class="bb-file-drop-contents-not-over">
@@ -23,7 +25,7 @@
                 </div>
             </div>
             <div class="bb-file-drop-contents-custom" ng-transclude></div>
-        </div>
+        </button>
     </div>
     <div class="col-sm-6 col-xs-12 bb-file-drop-col" ng-if="bbFileDrop.allowLinks">
         <div class="bb-file-drop-contents">

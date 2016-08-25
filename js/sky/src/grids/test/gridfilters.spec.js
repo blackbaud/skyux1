@@ -13,6 +13,16 @@ describe('Grid filters', function () {
         filterGridHtml,
         fxOff,
         locals,
+        summaryTemplateFirst = '<div><bb-grid bb-grid-options="locals.gridOptions">',
+        summaryTemplateSecond = '<bb-grid-filters-summary bb-options="locals.filterOptions">',
+        summaryTemplateThird = '<span>Applied Filter</span>' +
+                '</bb-grid-filters-summary>' +
+                '<bb-grid-filters bb-options="locals.filterOptions">' +
+                '<bb-grid-filters-group bb-grid-filters-group-label="\'Filter group\'">' +
+                '<label>Some content</label>' +
+                '</bb-grid-filters-group>' +
+                '</bb-grid-filters>' +
+                '</bb-grid></div>',
         $scope;
 
     function setUpGrid(gridHtml, setLocals) {
@@ -111,16 +121,15 @@ describe('Grid filters', function () {
 
             filterButtonEl = getFilterButton(el);
 
-            expect(filterButtonEl.length).toBe(1);
-            expect(filterButtonEl.eq(0)).toHaveCss({"display": "none"});
+            expect(filterButtonEl.length).toBe(0);
         });
 
-        it('can have the filter button and filter icon open a filter flyout menu', function () {
+        function testBasicFilters(filterHtml) {
             var filterButtonEl,
                 filterFlyoutEl,
                 filterIconEl;
 
-            el = setUpGrid(filterGridHtml);
+            el = setUpGrid(filterHtml);
 
             //confirm that flyout icon is there
             filterIconEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-icon');
@@ -140,6 +149,22 @@ describe('Grid filters', function () {
             //confirm that flyout pane is not there
             expect(filterFlyoutEl.length).toBe(1);
             expect(filterFlyoutEl.eq(0)).toHaveCss({"display": "none"});
+        }
+
+        it('can have the filter button and filter icon open a filter flyout menu', function () {
+            testBasicFilters(filterGridHtml);
+        });
+        
+
+        it('can have the filter button and filter icon open a filter flyout menu when using a custom toolbar', function () {
+            var customHtml = '<div><bb-grid bb-grid-options="locals.gridOptions">' +
+                '<bb-grid-filters bb-options="locals.filterOptions">' +
+                '</bb-grid-filters>' +
+                '<bb-grid-toolbar>' + 
+                '<button>Great button</button>' +
+                '</bb-grid-toolbar>' +
+                '</bb-grid></div>';
+            testBasicFilters(customHtml);
         });
 
         it('can set filters open and closed using options.filtersOpen', function () {
@@ -389,16 +414,9 @@ describe('Grid filters', function () {
             var filterToolBarEl,
                 headerEl,
                 contentEl,
-                filterSummaryGridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions">' +
-                '<bb-grid-filters-summary bb-options="locals.filterOptions">' +
-                '<span>Applied Filter</span>' +
-                '</bb-grid-filters-summary>' +
-                '<bb-grid-filters bb-options="locals.filterOptions">' +
-                '<bb-grid-filters-group bb-grid-filters-group-label="\'Filter group\'">' +
-                '<label>Some content</label>' +
-                '</bb-grid-filters-group>' +
-                '</bb-grid-filters>' +
-                '</bb-grid></div>';
+                filterSummaryGridHtml = summaryTemplateFirst + 
+                    summaryTemplateSecond + 
+                    summaryTemplateThird;
 
             el = setUpGrid(filterSummaryGridHtml);
 
@@ -413,6 +431,35 @@ describe('Grid filters', function () {
 
             expect(contentEl.eq(0)).toHaveText('Applied Filter');
 
+        });
+
+        function findCloseEl(el) {
+            return el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.bb-applied-filter-bar .close');
+        }
+
+        it('can hide the close button', function () {
+            var closeEl,
+                filterSummaryGridHtml = summaryTemplateFirst +
+                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filters-summary-dismissable="false">' +
+                summaryTemplateThird;
+
+
+            el = setUpGrid(filterSummaryGridHtml);
+
+            closeEl = findCloseEl(el);
+            expect(closeEl).not.toBeVisible();
+        });
+
+        it('shows the close button by default', function () {
+            var closeEl,
+                filterSummaryGridHtml = summaryTemplateFirst +
+                '<bb-grid-filters-summary bb-options="locals.filterOptions" bb-grid-filters-summary-dismissable="true">' +
+                summaryTemplateThird;
+
+            el = setUpGrid(filterSummaryGridHtml);
+
+            closeEl = findCloseEl(el);
+            expect(closeEl).toBeVisible();
         });
 
         it('can clear the filters by clicking on the close icon', function () {

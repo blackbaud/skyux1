@@ -2,16 +2,13 @@
 
 
     <div class="bb-grid-toolbar-viewkeeper">
-        <div ng-if="!customToolbar.hasCustomToolbar">
-            <div ng-show="locals.showToolbar">
-                <bb-grid-toolbar>
-                    <ng-transclude></ng-transclude>
-                </bb-grid-toolbar>
-            </div>
-        </div>
-
-        <div ng-if="customToolbar.hasCustomToolbar">
-            <div ng-show="locals.showToolbar">
+        <div ng-show="locals.showToolbar">
+            <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">
+                <ng-transclude></ng-transclude>
+            </bb-grid-toolbar>
+            <div ng-if="customToolbar.hasCustomToolbar">
+                <ng-transclude ng-transclude-slot="bbGridToolbar">
+                </ng-transclude>
                 <ng-transclude></ng-transclude>
             </div>
         </div>
@@ -30,7 +27,7 @@
     </div>
 
     <div ng-if="paginationOptions" class="bb-grid-pagination-container">
-        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>
+        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>
         <div class="clearfix"></div>
     </div>
 

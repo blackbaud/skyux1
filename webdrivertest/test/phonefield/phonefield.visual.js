@@ -14,13 +14,10 @@ describe('Phone Field directive', function () {
     };
 
     it('should match the baseline phone field screenshot.', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest(testPath)
             .waitForVisible(selectors.localCountryTextbox)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'phonefield',
                 selector: selectors.wrapper,
                 checkAccessibility: true
@@ -29,14 +26,11 @@ describe('Phone Field directive', function () {
     });
 
     it('should match the baseline phone field screenshot when the flag selector is clicked.', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest(testPath)
             .click(selectors.flagContainer)
             .waitForVisible(selectors.countryList)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'phonefield_flag_select',
                 selector: selectors.wrapper,
                 checkAccessibility: true
@@ -45,8 +39,6 @@ describe('Phone Field directive', function () {
     });
 
     it('should match the baseline phone field screenshot when an international country is selected.', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest(testPath)
             .click(selectors.flagContainer)
@@ -54,7 +46,6 @@ describe('Phone Field directive', function () {
             .waitForVisible(selectors.intlCountryTextbox)
             .click('body')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'phonefield_intl_country',
                 selector: selectors.wrapper,
                 checkAccessibility: true

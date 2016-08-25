@@ -64,8 +64,7 @@ describe('Context menu', function () {
         $compile(el)($scope);
         $scope.$digest();
         expect(el.find('div.bb-context-menu.dropdown').length).toBe(1);
-        expect(el.find('bb-context-menu-button.dropdown-toggle button.btn.bb-btn-secondary.bb-context-menu-btn i.fa.fa-ellipsis-h').length).toBe(1);
-
+        expect(el.find('bb-context-menu-button button.btn.dropdown-toggle.bb-btn-secondary.bb-context-menu-btn i.fa.fa-ellipsis-h').length).toBe(1);
         el.find('.bb-context-menu-btn').click();
         $scope.$digest();
 
@@ -116,7 +115,7 @@ describe('Context menu', function () {
         var el = angular.element([
             '<div>',
             '<div class="bb-context-menu" uib-dropdown>',
-            '<bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>',
+            '<bb-context-menu-button bb-context-menu-button-dropdown-toggle></bb-context-menu-button>',
             '<ul class="dropdown-menu" role="menu">',
             '   <li role="presentation" ng-repeat="item in locals.items">',
             '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></li>',
@@ -272,5 +271,6 @@ describe('Context menu', function () {
 
             testSubmenu(el);
         });
+
     });
 });

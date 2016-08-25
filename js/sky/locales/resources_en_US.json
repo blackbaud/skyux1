@@ -87,6 +87,10 @@
         "_description": "The label on the context menu button used for screen readers when the consumer has not specified a label",
         "message": "Context menu"
     },
+    "definition_list_none_found": {
+        "_description": "The default text to show when a definition list item has no value",
+        "message": "None found"
+    },
     "grid_back_to_top": {
         "_description": "Text for link in grid to scroll back to the top.",
         "message": "Back to top"
@@ -154,6 +158,10 @@
     "grid_column_picker_search_no_columns": {
         "_description": "Displays when no columns are found for the specified search text.",
         "message": "No columns found"
+    },
+    "infinite_scroll_load_more": {
+        "_description": "Text for loading more in the infinite scroll button",
+        "message": "Load more"
     },
     "modal_footer_cancel_button": {
         "_description": "Default lable text for modal cancel button",
@@ -475,6 +483,10 @@
         "_description": "",
         "message": "{0} GB"
     },
+    "file_upload_drag_or_click" : {
+        "_description": "Label for file drop",
+        "message": "Drag a file here or click to browse"
+    },
     "file_upload_drag_file_here": {
         "_description": "",
         "message": "Drag a file here"
@@ -502,6 +514,22 @@
     "file_upload_paste_link_done": {
         "_description": "",
         "message": "Done"
+    },
+    "search_label": {
+        "_description": "Label for search component functionality",
+        "message": "Search items"
+    },
+    "search_open": {
+        "_description": "Label for opening search input",
+        "message": "Open search"
+    },
+    "search_dismiss": {
+        "_description": "Label for dismissing search input",
+        "message": "Dismiss search"
+    },
+    "search_placeholder": {
+        "_description": "Placeholder text for search input component",
+        "message": "Find in this list"
     },
     "searchfield_searching": {
         "_description": "text for ui-select search control while performing a remote search",
@@ -574,5 +602,25 @@
     "tab_open": {
         "_description": "Screen reader text for the open button on a tabset",
         "message": "Open"
+    },
+    "filter_modal_apply": {
+        "_description": "Text for button to apply filters",
+        "message": "Apply filters"
+    },
+    "filter_modal_clear": {
+        "_description": "Text for button to clear filters",
+        "message": "Clear all filters"
+    },
+    "filter_button_title": {
+        "_description": "Text for the filter button title",
+        "message": "Filters"
+    },
+    "filter_summary_header": {
+        "_description": "Text for the filter summary component",
+        "message": "Filter"
+    },
+    "filter_summary_close": {
+        "_description": "Text for the label for the filter summary close icon",
+        "message": "Close"
     }
 }

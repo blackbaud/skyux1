@@ -16,7 +16,7 @@ The `bb-file-item` directive displays summary information about files that users
 
 ### File drop settings ###
 - `bb-file-drop` &mdash; Provides an element for users to click to select files from local drives or to use as a drop zone to drag and drop files.
-    - `bb-file-drop-accept` &mdash; *(Optional.)* Provides a comma-delimited string literal of MIME types that users can drop or select (`bb-file-drop-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-drop-accept="'image/png'"`) or a custom validation function (`bb-file-drop-accept="fileAttachmentDemo.validate($file)"`). By default, any type of file is allowed.
+    - `bb-file-drop-accept` &mdash; *(Optional.)* Provides a comma-delimited string literal of MIME types that users can drop or select (`bb-file-drop-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-drop-accept="'image/png'"`). By default, any type of file is allowed.
     - `bb-file-drop-multiple` &mdash; *(Optional.)* Indicates whether users can drag and drop multiple files at the same time. *(Default: `true`)* 
     - `bb-file-drop-allow-dir` &mdash; *(Optional.)* Indicates whether users can select a directory when they attach files. *(Default: `true`)*
     - `bb-file-drop-min-size` &mdash; *(Optional.)* Specifies the minimum size in bytes for valid files.
@@ -27,6 +27,7 @@ The `bb-file-item` directive displays summary information about files that users
     - `bb-file-drop-link` &mdash; *(Optional.)* Indicates whether to display an option for users to provide hyperlinks to files on the web. To display this hyperlink option, you include this attribute with no value. 
     - `bb-file-drop-link-change` &mdash; *(Optional.)* Specifies a function to be called when users add hyperlinks. The function accepts a `link` parameter with a `url` property that contains the hyperlink.
     - `bb-file-drop-noclick` &mdash; *(Optional.)* Disables the option for users to click the element and select files through a file dialog. To disable the option, you include this attribute with no value.
+    - `bb-file-drop-validate-fn` &mdash; *(Optional.)* Provides a custom validation function (`bb-file-drop-accept="fileAttachmentDemo.validate($file)"`). By default, any type of file is allowed.
 
 ### File item settings ###
 - `bb-file-item` &mdash; Displays summary information about files that users attach to forms. By default, the directive displays file names, delete buttons, and fields for names and tags. For files from local drives, it also displays file sizes and thumbnails.

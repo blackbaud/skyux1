@@ -9,7 +9,62 @@
 
     RunTemplateCache.$inject = ['$templateCache'];
 
-    function GridTestController($scope, $filter) {
+    function GridFilterController($uibModalInstance, existingFilters) {
+        var self = this;
+
+        function clearAllFilters() {
+            self.filters = {
+            };
+        }
+        
+        function transformFiltersToArray(filters) {
+            var result = [];
+
+            if (filters.playsGuitar) {
+                result.push({name: 'guitar', value: true, label: 'plays guitar'});
+            }
+
+            if (filters.playsDrums) {
+                result.push({name: 'drums', value: true, label: 'plays drums'});
+            }
+
+            return result;
+        }
+
+        function transformArrayToFilters(array) {
+            var i,
+                filters = {};
+
+            for (i = 0; i < array.length; i++) {
+                if (array[i].name === 'guitar') {
+                    filters.playsGuitar = array[i].value;
+                }
+
+                if (array[i].name === 'drums') {
+                    filters.playsDrums = array[i].value;
+                }
+            }
+
+            return filters;
+        }
+
+        function applyFilters() {
+            var result = transformFiltersToArray(self.filters);
+            $uibModalInstance.close(result);
+        }
+
+
+        if (!existingFilters) {
+            clearAllFilters();
+        } else {
+            self.filters = transformArrayToFilters(existingFilters);
+        }
+
+        self.clearAllFilters = clearAllFilters;
+        self.applyFilters = applyFilters;
+    }
+
+    function GridTestController($scope, $filter, bbModal) {
         var self = this,
             action1,
             action2,
@@ -149,6 +204,10 @@
             if (showOptions.screenshot_grid_wait) {
                 self.showWait = !self.showWait;
             }
+            if (showOptions.screenshot_grid_no_flyout) {
+                self.showNoFlyout = !self.showNoFlyout;
+            }
+
             if (showOptions.screenshot_grid_loading) {
 
                 self.showLoading = !self.showLoading;
@@ -407,28 +466,59 @@
             }
         }
 
-        function filterAndSearch() {
+        function filterAndSearch(filters, searchText) {
             var filteredData = [],
                 searchedData = [];
 
-            filteredData = filter(dataSetBand, self.gridOptions.filters);
-            searchedData = search(filteredData, self.gridOptions.searchText);
+            filteredData = filter(dataSetBand, filters);
+            searchedData = search(filteredData, searchText);
             self.gridOptions.data = searchedData;
 
         }
 
+        function openFilters() {
+            bbModal
+                .open({
+                    controller: 'GridFilterController as filterCtrl',
+                    templateUrl: 'demo/grids/filters.html',
+                    resolve: {
+                        existingFilters: function () {
+                            
+                            return angular.copy(self.appliedFilters.instruments);
+                        }
+                    }
+                })
+                .result
+                .then(function (result) {
+                    self.appliedFilters.instruments = angular.copy(result);
+                    filterAndSearch(self.appliedFilters, self.searchText);
+
+                });
+        }
+
+        self.openFilters = openFilters;
+
+        function onGridSearch(searchText) {
+            self.searchText = searchText;
+            filterAndSearch(self.searchText, self.appliedFilters);
+        }
+
+        self.onGridSearch = onGridSearch;
+
         $scope.$watch(function () {
             return self.gridOptions.filters;
         }, function () {
-            filterAndSearch();
+            filterAndSearch(self.gridOptions.filters, self.searchText);
         });
 
     }
 
-    GridTestController.$inject = ['$scope', '$filter'];
+    GridTestController.$inject = ['$scope', '$filter', 'bbModal'];
+    GridFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
 
     angular.module('screenshots', ['sky'])
     .run(RunTemplateCache)
+    .controller('GridFilterController', GridFilterController)
     .controller('GridTestController', GridTestController);
 
 }());

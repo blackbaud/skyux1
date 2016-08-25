@@ -50,7 +50,9 @@
             function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
-                    transclude: true,
+                    transclude: {
+                        'bbGridToolbar': '?bbGridToolbar'    
+                    },
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -62,6 +64,19 @@
                     controller: ['$scope', function ($scope) {
                         var locals,
                             self = this;
+
+
+
+                        function searchApplied(searchText) {
+                            locals.appliedSearchText = searchText;
+                            /*istanbul ignore else */
+                            /* sanity check */
+                            if (angular.isFunction(locals.highlightSearchText)) {
+                                locals.highlightSearchText(locals.appliedSearchText);
+                            }
+                        }
+
+                        self.searchApplied = searchApplied;
 
                         self.setFilters = function (filters) {
                             /*istanbul ignore else */
@@ -133,6 +148,8 @@
                             }
                         };
 
+                        
+
                         self.scope = $scope;
 
                         $scope.resources = bbResources;
@@ -159,11 +176,11 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
-                        $scope.customToolbar.hasCustomToolbar = angular.isDefined(attr.bbGridCustomToolbar);
+                        $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
                         $scope.$watch('locals.hasCustomToolbar', function () {
                             var breakpoints = {},
@@ -377,6 +394,7 @@
                                             template_url: column.template_url,
                                             jsonmap: column.jsonmap,
                                             allow_see_more: column.allow_see_more,
+                                            title: angular.isUndefined(column.title) || column.title,
                                             width: colWidth
                                         };
 
@@ -668,11 +686,16 @@
                                 return true;
                             }
 
-                            function highlightSearchText() {
+                            function highlightSearchText(highlightText) {
                                 var options = $scope.options;
+                                
+                                if (!highlightText && options && options.searchText) {
+                                    highlightText = options.searchText;
+                                }
+
                                 bbHighlight.clear(tableEl);
-                                if (options && options.searchText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
+                                if (highlightText) {
+                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
                                 }
                             }
 
@@ -1223,7 +1246,9 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(highlightSearchText);
+                                        $timeout(function () {
+                                            highlightSearchText(locals.appliedSearchText);
+                                        });
                                         handleTableWrapperResize();
                                         /*istanbul ignore next */
                                         /* sanity check */

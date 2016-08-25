@@ -5,12 +5,9 @@ describe('Avatar', function () {
     'use strict';
 
     function takeScreenshot(type, done) {
-        var common = require('../common');
-
         browser
             .setupTest('/avatar/fixtures/test.full.html')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: ('avatar_' + type),
                 selector: ('#screenshot-avatar-' + type),
                 checkAccessibility: true

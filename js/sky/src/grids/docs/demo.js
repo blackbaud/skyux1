@@ -25,7 +25,62 @@
         };
     }
 
-    function GridTestController($scope, $filter, $timeout) {
+    function GridFilterController($uibModalInstance, existingFilters) {
+        var self = this;
+
+        function clearAllFilters() {
+            self.filters = {
+            };
+        }
+        
+        function transformFiltersToArray(filters) {
+            var result = [];
+
+            if (filters.playsGuitar) {
+                result.push({name: 'guitar', value: true, label: 'plays guitar'});
+            }
+
+            if (filters.playsDrums) {
+                result.push({name: 'drums', value: true, label: 'plays drums'});
+            }
+
+            return result;
+        }
+
+        function transformArrayToFilters(array) {
+            var i,
+                filters = {};
+
+            for (i = 0; i < array.length; i++) {
+                if (array[i].name === 'guitar') {
+                    filters.playsGuitar = array[i].value;
+                }
+
+                if (array[i].name === 'drums') {
+                    filters.playsDrums = array[i].value;
+                }
+            }
+
+            return filters;
+        }
+
+        function applyFilters() {
+            var result = transformFiltersToArray(self.filters);
+            $uibModalInstance.close(result);
+        }
+
+
+        if (!existingFilters) {
+            clearAllFilters();
+        } else {
+            self.filters = transformArrayToFilters(existingFilters);
+        }
+
+        self.clearAllFilters = clearAllFilters;
+        self.applyFilters = applyFilters;
+    }
+
+    function GridTestController($scope, $filter, $timeout, bbModal) {
 
         var newDataFlag = 0,
             action1,
@@ -78,16 +133,6 @@
             ],
             self = this;
 
-        function applyFilters() {
-            self.appliedFilters.instruments = [];
-            if (self.guitarFilter) {
-                self.appliedFilters.instruments.push({name: 'guitars'});
-            }
-            if (self.drumsFilter) {
-                self.appliedFilters.instruments.push({name: 'drums'});
-            }
-        }
-
         function updateActions(selections) {
             var i,
                 selection;
@@ -125,6 +170,88 @@
             alert(message);
         }
 
+        function search(array, text) {
+            if (angular.isDefined(text) && text !== '') {
+                return array.filter(function (element) {
+                    var check = ((element.name.indexOf(text) > -1) ||
+                            (element.instrument.indexOf(text) > -1) ||
+                            (element.bio.indexOf(text) > -1) ||
+                            (element.templated.info.indexOf(text) !== -1) ||
+                            (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
+                    return check;
+                });
+
+            } else {
+                return array;
+            }
+        }
+
+
+        function filter(array, filters) {
+            var i,
+                item,
+                newData = [];
+            if (angular.isDefined(filters) &&  filters.length > 0) {
+                for (i = 0; i < filters.length; i++) {
+                    item = filters[i];
+                    if (item.name === 'guitar') {
+                        newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
+                    }
+                    if (item.name === 'drums') {
+                        newData.push(dataSetBand[3]);
+                    }
+                }
+                return newData;
+            } else {
+                return array;
+            }
+        }
+
+        function filterAndSearch(searchText, filters) {
+            var filteredData = [],
+                searchedData = [];
+
+            filteredData = filter(dataSetBand, filters);
+            searchedData = search(filteredData, searchText);
+            self.gridOptions.data = searchedData;
+        }
+
+        function onDismissFilter(index) {
+            self.appliedFilters.splice(index, 1);
+            filterAndSearch(self.searchText, self.appliedFilters);
+        }
+
+        function openFilters() {
+            bbModal
+                .open({
+                    controller: 'GridFilterController as filterCtrl',
+                    templateUrl: 'demo/grids/filters.html',
+                    resolve: {
+                        existingFilters: function () {
+                            
+                            return angular.copy(self.appliedFilters);
+                        }
+                    }
+                })
+                .result
+                .then(function (result) {
+                    self.appliedFilters = angular.copy(result);
+                    filterAndSearch(self.searchText, self.appliedFilters);
+                });
+        }
+
+        function onGridSearch(searchText) {
+            self.searchText = searchText;
+            filterAndSearch(self.searchText, self.appliedFilters);
+        }
+
+        self.onGridSearch = onGridSearch;
+
+        self.openFilters = openFilters;
+
+        self.onDismissFilter = onDismissFilter;
+
+        self.summaryIsDismissible = true;
 
         action1 = {
             actionCallback: action1Clicked,
@@ -142,25 +269,9 @@
             title: 'Drum action'
         };
 
-        self.appliedFilters = {
-            instruments: []
-        };
 
         self.clickCustom = function () {
             alert('custom button clicked');
-        };
-
-        self.filterOptions = {
-            applyFilters: function (args) {
-                applyFilters();
-                args.filters = angular.copy(self.appliedFilters);
-            },
-            clearFilters: function (args) {
-                self.guitarFilter = false;
-                self.drumsFilter = false;
-                applyFilters();
-                args.filters = angular.copy(self.appliedFilters);
-            }
         };
 
         self.gridActions = [
@@ -240,15 +351,14 @@
                 columnPickerHelpKey: 'bb-security-users.html'
             };
 
-            self.guitarFilter = false;
-
-            self.drumsFilter = false;
 
             self.updateActions = updateActions;
 
             self.setSelections = setSelections;
 
             self.selectedRows = [dataSetBand[1]];
+
+            
 
             function setSelections() {
                 self.selectedRows = [dataSetBand[3]];
@@ -269,64 +379,6 @@
                     }
                 });
             }, true);
-
-            function search(array, text) {
-                if (angular.isDefined(text) && text !== '') {
-                    return array.filter(function (element) {
-                        var check = ((element.name.indexOf(text) > -1) ||
-                               (element.instrument.indexOf(text) > -1) ||
-                               (element.bio.indexOf(text) > -1) ||
-                               (element.templated.info.indexOf(text) !== -1) ||
-                               (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
-                        return check;
-                    });
-
-                } else {
-                    return array;
-                }
-            }
-
-            function filter(array, filters) {
-                var i,
-                    item,
-                    newData = [];
-                if (angular.isDefined(filters) && filters.instruments && filters.instruments.length > 0) {
-                    for (i = 0; i < filters.instruments.length; i++) {
-                        item = filters.instruments[i];
-                        if (item.name === 'guitars') {
-                            newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
-                        }
-                        if (item.name === 'drums') {
-                            newData.push(dataSetBand[3]);
-                        }
-                    }
-                    return newData;
-                } else {
-                    return array;
-                }
-            }
-
-            function filterAndSearch() {
-                var filteredData = [],
-                    searchedData = [];
-
-                filteredData = filter(dataSetBand, self.gridOptions.filters);
-                searchedData = search(filteredData, self.gridOptions.searchText);
-                self.gridOptions.data = searchedData;
-
-            }
-
-            $scope.$watch(function () {
-                return self.gridOptions.searchText;
-            }, function () {
-                filterAndSearch();
-            });
-
-            $scope.$watch(function () {
-                return self.gridOptions.filters;
-            }, function () {
-                filterAndSearch();
-            });
 
             self.gridOptions.hasMoreRows = true;
 
@@ -449,7 +501,8 @@
                     id: 1,
                     name: 'name',
                     width_xs: 100,
-                    width_all: 300
+                    width_all: 300,
+                    title: false
                 },
                 {
                     caption: 'Skills',
@@ -499,22 +552,19 @@
             }
         }
 
-        $scope.$watch(function () {
-            return self.gridOptions2.filters;
-        }, function (newValue) {
+        function filterItems(filters) {
+            self.gridOptions2.filtersAreActive = filters && (filters.checkFilter || filters.selectFilter);
 
-            self.gridOptions2.filtersAreActive = newValue && (newValue.checkFilter || newValue.selectFilter);
+            if (angular.isDefined(filters)) {
 
-            if (angular.isDefined(newValue)) {
-
-                if (newValue.checkFilter) {
+                if (filters.checkFilter) {
                     self.gridOptions2.data = [dataSet1[2]];
                     self.paginationOptions.recordCount = 1;
                 }
 
-                if (newValue.selectFilter) {
-                    if (newValue.selectFilter === 'option1') {
-                        if (newValue.checkFilter) {
+                if (filters.selectFilter) {
+                    if (filters.selectFilter === 'option1') {
+                        if (filters.checkFilter) {
                             self.gridOptions2.data = [dataSet1[0], dataSet1[2]];
                         } else {
                             self.gridOptions2.data = [dataSet1[0]];
@@ -522,9 +572,9 @@
 
                         self.paginationOptions.recordCount = self.gridOptions2.data.length;
                         return;
-                    } else if (newValue.selectFilter === 'option2') {
+                    } else if (filters.selectFilter === 'option2') {
 
-                        if (newValue.checkFilter) {
+                        if (filters.checkFilter) {
                             self.gridOptions2.data = [dataSet1[1], dataSet1[2]];
                         } else {
                             self.gridOptions2.data = [dataSet1[1]];
@@ -533,7 +583,7 @@
                         self.paginationOptions.recordCount = self.gridOptions2.data.length;
                         return;
                     }
-                } else if (newValue.checkFilter) {
+                } else if (filters.checkFilter) {
                     self.gridOptions2.data = [dataSet1[2]];
                     self.paginationOptions.recordCount = self.gridOptions2.data.length;
                     return;
@@ -541,8 +591,44 @@
             }
             self.gridOptions2.data = dataSet1;
             self.paginationOptions.recordCount = 30;
+        }
 
+        function search(array, text) {
+            var result;
+            if (angular.isDefined(text) && text !== '') {
+                result = array.filter(function (element) {
+                    var check = ((element.name.indexOf(text) > -1) ||
+                            (element.skills.indexOf(text) > -1) ||
+                            (element.cats && element.cats.indexOf(text) > -1));
+                    return check;
+                });
+
+                self.paginationOptions.recordCount = result.length;
+                return result;
+            } else {
+                return array;
+            }
+        }
+
+        function filterAndSearch(searchText, filters) {
+            var searchedData = [];
+
+            filterItems(filters);
+            searchedData = search(self.gridOptions2.data, searchText);
+            self.gridOptions2.data = searchedData;
+        }
+
+        $scope.$watch(function () {
+            return self.gridOptions2.filters;
+        }, function (newValue) {
+            filterAndSearch(self.searchText, self.gridOptions2.filters)
         }, true);
+
+        function onGridSearch(searchText) {
+            self.searchText = searchText;
+            filterAndSearch(self.searchText, self.gridOptions2.filters);
+        }
+        self.onGridSearch = onGridSearch;
 
         $scope.$on('loadMoreRows', function (event, data) {
             self.gridOptions2.data = getPaginationDataSet(data.top, data.skip);
@@ -555,12 +641,15 @@
 
     TemplateController.$inject = ['$scope'];
 
-    GridTestController.$inject = ['$scope', '$filter', '$timeout'];
+    GridFilterController.$inject = ['$uibModalInstance', 'existingFilters']
+
+    GridTestController.$inject = ['$scope', '$filter', '$timeout', 'bbModal'];
 
     angular.module('stache')
     .run(RunTemplateCache)
     .controller('TemplateController', TemplateController)
     .controller('GridTestController', GridTestController)
+    .controller('GridFilterController', GridFilterController)
     .controller('PaginationGridTestController', PaginationGridTestController);
 
 }());

@@ -1,0 +1,5 @@
+<div class="bb-definition-list-content-component">
+    <div ng-style="{width: $ctrl.definitionCtrl.bbDefinitionListLabelWidth}" class="bb-field-label bb-definition-list-label" ng-transclude="label"></div>
+    <div class="bb-definition-list-value" ng-transclude="value" ng-show="$ctrl.hasValue()"></div>
+    <div class="bb-definition-list-no-value bb-deemphasized" ng-show="!$ctrl.hasValue()">{{$ctrl.definitionCtrl.bbDefinitionListDefaultValue}}</div>
+</div>

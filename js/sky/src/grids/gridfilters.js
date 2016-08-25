@@ -12,7 +12,10 @@
             scope: {
                 bbOptions: "="
             },
-            controller: ['$scope', function ($scope) {
+            controller: ['$scope', '$log', function ($scope, $log) {
+
+                $log.warn('The bb-grid-filters directive is deprecated. Use a filter modal instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
+
                 $scope.applyFilters = function () {
                     var args = {},
                         options = $scope.bbOptions;
@@ -121,25 +124,37 @@
             templateUrl: 'sky/templates/grids/filtersgroup.html'
         };
     })
-    .directive('bbGridFiltersSummary', ['bbResources', function (bbResources) {
+    .directive('bbGridFiltersSummary', ['bbResources', '$log', function (bbResources, $log) {
         return {
             require: '^bbGrid',
             replace: true,
             transclude: true,
             restrict: 'E',
             scope: {
-                bbOptions: "="
             },
+            bindToController: {
+                bbOptions: '=',
+                bbGridFiltersSummaryDismissable: '=?'
+            },
+            controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
+                var ctrl = this;
+
+                $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
+
                 $scope.clearFilters = function () {
                     var args = {},
-                        options = $scope.bbOptions;
+                        options = ctrl.bbOptions;
 
                     if (options && options.clearFilters) {
                         options.clearFilters(args);
                         $scope.updateFilters(args.filters);
                     }
                 };
+
+                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                    ctrl.bbGridFiltersSummaryDismissable = true;
+                }
 
                 $scope.resources = bbResources;
 

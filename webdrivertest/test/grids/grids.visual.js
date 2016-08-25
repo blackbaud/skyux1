@@ -1,34 +1,29 @@
-/*global describe, it, browser, require, $ */
+/*global describe, it, browser */
 
 describe('bb-grid component', function () {
     'use strict';
 
     it('should match the baseline screenshot of the standard grid', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
-            .click('button.show-grid')
+            .click('button.show-grid-no-flyout')
             .moveCursorOffScreen()
-            .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
+            .waitForVisible('#screenshot-grid-no-flyout .bb-filter-btn', 20000)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_standard',
-                selector: '#screenshot-grid'
+                selector: '#screenshot-grid-no-flyout'
             })
             .call(done);
     });
 
     it('should match the baseline screenshot of the grid while wait is invoked', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-wait')
             .moveCursorOffScreen()
             .waitForVisible('#screenshot-grid-wait .bb-filter-btn', 20000)
+            .pause(1000)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_wait',
                 selector: '#screenshot-grid-wait'
             })
@@ -36,15 +31,13 @@ describe('bb-grid component', function () {
     });
 
     it('should match the baseline screenshort of a loading grid', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-loading')
             .moveCursorOffScreen()
             .waitForVisible('#screenshot-grid-loading .bb-filter-btn', 20000)
+            .pause(1000)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_loading',
                 selector: '#screenshot-grid-loading'
             })
@@ -52,15 +45,12 @@ describe('bb-grid component', function () {
     });
 
     it('should match the baseline screenshot of a grid with pagination', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-page')
             .moveCursorOffScreen()
             .waitForVisible('#screenshot-grid-pagination .bb-filter-btn', 20000)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_paged',
                 selector: '#screenshot-grid-pagination'
             })
@@ -68,8 +58,6 @@ describe('bb-grid component', function () {
     });
 
     it('match a baseline screenshot of a grid with filters', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid')
@@ -79,7 +67,6 @@ describe('bb-grid component', function () {
             .click('#screenshot-grid .bb-visual-filter')
             .click('#screenshot-grid .bb-grid-filters-footer .btn-primary')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_filters',
                 selector: '#screenshot-grid'
             })
@@ -87,8 +74,6 @@ describe('bb-grid component', function () {
     });
 
     it('match a baseline screenshot while a grid with filters open is scrolled', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid')
@@ -97,7 +82,6 @@ describe('bb-grid component', function () {
             .waitForVisible('#screenshot-grid .bb-visual-filter', 20000)
             .scroll(0, 49)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_filter_viewkeeper',
                 selector: '#screenshot-grid'
             })
@@ -105,8 +89,6 @@ describe('bb-grid component', function () {
     });
 
     it('should match a baseline screenshot with a grid that has active inline filters', function (done) {
-        var common = require('../common');
-
         browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-page')
@@ -115,7 +97,6 @@ describe('bb-grid component', function () {
             .waitForVisible('#screenshot-grid-pagination .bb-filters-inline', 20000)
             .click('#screenshot-grid-pagination .bb-filters-inline input[type="checkbox"]')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_filter_inline',
                 selector: '#screenshot-grid-pagination'
             })
@@ -123,19 +104,16 @@ describe('bb-grid component', function () {
     });
 
     function multiselectTest(screenSize, done) {
-        var common = require('../common');
-
         browser
-            .setupTest('/grids/fixtures/test.full.html')
-            .click('button.show-grid')
-            .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
-            .click('#screenshot-grid td label.bb-check-wrapper')
-            .moveToObject('#screenshot-grid tr.ui-widget-content:nth-child(2)')
+            .setupTest('/grids/fixtures/test.full.html', screenSize)
+            .click('button.show-grid-no-flyout')
+            .waitForVisible('#screenshot-grid-no-flyout .bb-filter-btn', 20000)
+            .click('#screenshot-grid-no-flyout td label.bb-check-wrapper')
+            .moveToObject('#screenshot-grid-no-flyout tr.ui-widget-content:nth-child(2)')
             .moveCursorOffScreen()
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_multiselect',
-                selector: '#screenshot-grid'
+                selector: '#screenshot-grid-no-flyout'
             })
             .call(done);
     }
@@ -149,21 +127,33 @@ describe('bb-grid component', function () {
     });
 
     it('should match a baseline screenshot of a grid with context menu open', function (done) {
-        var common = require('../common'),
-            browserResult;
 
-        /*  We add this class to the body because the resizing that webdriverCss does 
-            while taking screenshots closes the context menu dropdown.
-        */
-        browserResult = browser
+        browser
             .setupTest('/grids/fixtures/test.full.html')
-            .click('button.show-grid')
-            .waitForVisible('#screenshot-grid td .bb-context-menu-btn', 20000)
+            .click('button.show-grid-no-flyout')
+            .waitForVisible('#screenshot-grid-no-flyout td .bb-context-menu-btn', 20000)
             .click('.bb-context-menu-btn')
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'grids_contextmenu_open',
-                selector: '#screenshot-grid'
+                selector: '#screenshot-grid-no-flyout'
+            })
+            .call(done);
+    });
+
+    it('should match a baseline screenshot of a grid with filter modal', function (done) {
+        browser
+            .setupTest('/grids/fixtures/test.full.html')
+            .click('button.show-grid-no-flyout')
+            .waitForVisible('#screenshot-grid-no-flyout .bb-filter-btn .bb-btn-secondary', 20000)
+            .click('#screenshot-grid-no-flyout .bb-filter-btn .bb-btn-secondary')
+            .pause(1000)
+            .click('.bb-test-guitar')
+            .click('.bb-test-drum')
+            .click('.btn-primary')
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'grids_filter_modal',
+                selector: '#screenshot-grid-no-flyout'
             })
             .call(done);
     });

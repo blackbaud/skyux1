@@ -3,13 +3,27 @@
       <bb-tile bb-tile-header="'Grid with pagination in tile'">
           <bb-grid bb-grid-options="pagedCtrl.gridOptions2" bb-grid-pagination="pagedCtrl.paginationOptions">
               <div class="bb-filters-inline">
-                  <select ng-model="pagedCtrl.gridOptions2.filters.selectFilter">
-                      <option value="">All Values</option>
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                  </select>
-                  <label><input type="checkbox" ng-model="pagedCtrl.gridOptions2.filters.checkFilter"/>Check 1 Really long Labelll</label>
+                  <div class="form-inline">
+                      <div class="form-group">
+                          <select class="form-control" ng-model="pagedCtrl.gridOptions2.filters.selectFilter">
+                                <option value="">All Values</option>
+                                <option value="option1">Option 1</option>
+                                <option value="option2">Option 2</option>
+                            </select>
+                            <label>
+                                <input 
+                                    bb-check
+                                    type="checkbox" 
+                                    ng-model="pagedCtrl.gridOptions2.filters.checkFilter"/>
+                                    Check 1 Really long Labelll
+                            </label>
+                      </div>
+                  </div>
+                  
               </div>
+              <bb-grid-toolbar
+                bb-grid-search="pagedCtrl.onGridSearch(searchText)">
+              </bb-grid-toolbar>
           </bb-grid>
       </bb-tile>
       <div class="clearfix"></div>
@@ -20,29 +34,42 @@
     <h3>Grid with vertical loading</h3>
 
     <div ng-controller="GridTestController as gridCtrl">
-      <button class="btn btn-primary" style="margin-bottom: 10px;" ng-click="gridCtrl.setSelections()">Set drum selection</button>
+      <button type="button" class="btn btn-primary" ng-click="gridCtrl.setSelections()">Set drum selection</button>
+      <button 
+        type="button"
+        class="btn bb-btn-secondary"
+        ng-click="gridCtrl.summaryIsDismissible = !gridCtrl.summaryIsDismissible">
+        Toggle summary dismissible
+    </button>
 
       <div style="margin-top: 10px; margin-bottom: 10px;">
-          <button ng-click="gridCtrl.gridOptions.loading = true;">Begin loading</button>
-          <button ng-click="gridCtrl.gridOptions.loading = false;">End loading</button>
+          <button class="btn bb-btn-secondary" ng-click="gridCtrl.gridOptions.loading = true;">Begin loading</button>
+          <button class="btn bb-btn-secondary" ng-click="gridCtrl.gridOptions.loading = false;">End loading</button>
       </div>
 
-      <bb-grid bb-grid-options="gridCtrl.gridOptions" bb-multiselect-actions="gridCtrl.gridActions" bb-selections-updated="gridCtrl.updateActions(selections)" bb-selected-rows="gridCtrl.selectedRows" bb-grid-custom-toolbar>
-          <bb-grid-filters-summary ng-show="gridCtrl.appliedFilters.instruments.length > 0" bb-options="gridCtrl.filterOptions">
-              <span ng-repeat="item in gridCtrl.appliedFilters.instruments">{{item.name}}<span ng-if="!$last">, </span></span>
-          </bb-grid-filters-summary>
-          <bb-grid-filters bb-options="gridCtrl.filterOptions">
-              <bb-grid-filters-group bb-grid-filters-group-label="'Filter group'">
-                  <div>
-                      <label><input type="checkbox" ng-model="gridCtrl.guitarFilter"/> Show guitars</label>
-                  </div>
-                  <div>
-                      <label><input type="checkbox" ng-model="gridCtrl.drumsFilter"/> Show drums</label>
-                  </div>
-              </bb-grid-filters-group>
-          </bb-grid-filters>
-          <bb-grid-toolbar>
+      <bb-grid 
+        bb-grid-options="gridCtrl.gridOptions" 
+        bb-multiselect-actions="gridCtrl.gridActions" 
+        bb-selections-updated="gridCtrl.updateActions(selections)" 
+        bb-selected-rows="gridCtrl.selectedRows">
+          <bb-grid-toolbar
+            bb-grid-filter-click="gridCtrl.openFilters()"
+            bb-grid-search="gridCtrl.onGridSearch(searchText)">
+
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
+              <bb-grid-toolbar-filter-summary>
+                  <bb-filter-summary ng-show="gridCtrl.appliedFilters.length > 0">
+                    <bb-filter-summary-item
+                        ng-repeat="item in gridCtrl.appliedFilters"
+                        bb-filter-summary-item-on-click="gridCtrl.openFilters()"
+                        bb-filter-summary-item-on-dismiss="gridCtrl.onDismissFilter($index)"
+                        bb-filter-summary-item-is-dismissible="gridCtrl.summaryIsDismissible"
+                        >
+                        {{item.label}}
+                    </bb-filter-summary-item>
+                </bb-filter-summary>
+              </bb-grid-toolbar-filter-summary>
+              
           </bb-grid-toolbar>
       </bb-grid>
 
@@ -50,3 +77,25 @@
     </div>
 
 </div>
+
+<script type="text/ng-template" id="demo/grids/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Instrument filter</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <div>
+                      <label><input bb-check type="checkbox" ng-model="filterCtrl.filters.playsGuitar"/> Show guitar players</label>
+                    </div>
+                    <div>
+                      <label><input  bb-check type="checkbox" ng-model="filterCtrl.filters.playsDrums"/> Show drum players</label>
+                    </div>
+                </form>
+            </div>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>
