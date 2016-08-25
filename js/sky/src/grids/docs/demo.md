@@ -69,7 +69,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `loading` &mdash; *(Optional.)* When set to `true`, automatically displays a `bbWait` component over the grid's data.
         - `multiselect` &mdash; *(Optional.)* Indicates whether to add a multi-select checkbox column to the grid. To add the column, set this property to `true`.
         - `onAddClick` &mdash; *(Optional.)* Specifies a function to be called when users click the add button in the toolbar. The add button only appears if the `onAddClick` property specifies a function.
-        - `onAddClickLabel` &mdash; *(Optional.)* Specifies a label for the add button.
+        - `onAddClickLabel` &mdash; *(Optional.)* Specifies tooltip text for the add button.
         - `resources` &mdash; *(Optional.)* Specifies the resource dictionary available in the scope of each `columns` property's `template_url` and `controller` properties.
         - `searchText` &mdash; *(Deprecated.)* Use `bb-grid-toolbar` with the `bb-grid-on-search` function instead. <s>The text that users enter in the grid search box. Set by the `bb-grid` directive.</s>
         - `selectedColumnIds` &mdash; An array of unique identifiers that indicates the visible columns in their display order.
