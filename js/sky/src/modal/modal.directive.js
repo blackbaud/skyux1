@@ -37,7 +37,7 @@
                 windowEl = $(window);
 
             function setViewkeeperMarginTop(margin) {
-                
+
                 if (!marginStyleEl) {
                     marginStyleEl = $('<style></style>').appendTo(document.body);
                 }
@@ -58,6 +58,7 @@
                     margin,
                     modalDialogEl,
                     newMaxHeight,
+                    newMinHeight,
                     reservedHeight;
 
                 if (bodyEl && bodyEl.length > 0) {
@@ -72,6 +73,10 @@
                             bodyEl.css({
                                 'margin-top': headerHeight,
                                 'margin-bottom': footerHeight
+                            });
+                            newMinHeight = windowEl.height() - headerHeight - footerHeight;
+                            bodyEl.css({
+                                'min-height': newMinHeight
                             });
                         } else {
                             margin = getPixelValue(modalDialogEl.css('margin-bottom')) + 

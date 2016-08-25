@@ -145,6 +145,9 @@
         .modal {
             overflow: visible;
         }
+        > *:not(.bb-modal) {
+            display: none;
+        }
     }
 }
 

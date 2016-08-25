@@ -1,4 +1,4 @@
-<div class="bb-screenshot-noanim">
+<div style="height: 5000px" class="bb-screenshot-noanim">
   <div ng-controller="ModalTestController as modalCtrl">
     
     <button type="button" class="bb-test-dropdown btn btn-primary" ng-click="modalCtrl.showModal()">Show Context</button>
@@ -82,24 +82,11 @@
             <bb-modal-header bb-modal-help-key="'bb-security-users.html'">Modal header</bb-modal-header>
             <div bb-modal-body>
                 <form>
-                    <div style="height: 500px">
-                        top content
+                    <div class="form-group">
+                        <label class="control-label">A label
+                            <input type="text" class="form-control" autofocus />
+                        </label>
                     </div>
-                    <bb-grid bb-grid-options="contentCtrl.gridOptions" bb-multiselect-actions="contentCtrl.gridActions" bb-selections-updated="contentCtrl.updateActions(selections)" bb-selected-rows="contentCtrl.selectedRows">
-                        <bb-grid-filters bb-options="gridCtrl.filterOptions">
-                            <bb-grid-filters-group bb-grid-filters-group-label="'Filter group'">
-                                <div>
-                                    <label><input type="checkbox" ng-model="gridCtrl.guitarFilter"/> Show guitars</label>
-                                </div>
-                                <div>
-                                    <label><input type="checkbox" ng-model="gridCtrl.drumsFilter"/> Show drums</label>
-                                </div>
-                            </bb-grid-filters-group>
-                        </bb-grid-filters>
-                    </bb-grid>
-                    <div style="height: 5000px">
-                    </div>
-                    bottom content
                 </form>
             </div>
             <bb-modal-footer>
