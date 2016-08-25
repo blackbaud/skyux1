@@ -30,16 +30,15 @@ describe('modals', function () {
     });
 
     it('should match the baseline full-page modal screenshot', function (done) {
-        var common = require('../common');
 
         browser
             .setupTest('/modal/fixtures/test.full.html')
             .click('.bb-test-fullpage')
             .pause(1000)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'modal_fullpage',
-                selector: 'html'
+                selector: 'html',
+                checkAccessibility: true
             })
             .click('.bb-modal .modal-dialog .close')
             .call(done);
