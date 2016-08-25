@@ -38,6 +38,7 @@
                            placeholder="{{'file_upload_link_placeholder' | bbResources}}"
                            ng-model="bbFileDrop.url"
                            ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"
+                           ng-attr-aria-label="{{'file_upload_link_input' | bbResources}}"
                            />
                 </div>
                 <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">
