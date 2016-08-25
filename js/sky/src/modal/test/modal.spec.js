@@ -205,7 +205,7 @@ describe('Modal', function () {
 
             modalInstance = bbModal.open(
                 {
-                    template: '<bb-modal><div bb-modal-body></div></bb-modal>'
+                    template: '<bb-modal><bb-modal-header>Heyo</bb-modal-header><div bb-modal-body></div><bb-modal-footer></bb-modal-footer></bb-modal>'
                 },
                 {
                     fullPage: true
@@ -213,6 +213,12 @@ describe('Modal', function () {
             );
 
             $rootScope.$digest();
+
+            $(window).resize();
+            $timeout.flush();
+
+            expect($('.modal-content').outerHeight()).toBe($(document).height());
+            expect($('.modal-content').outerWidth()).toBe($(document).width());
 
             $(window).resize();
             $timeout.flush();

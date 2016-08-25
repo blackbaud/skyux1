@@ -18,7 +18,7 @@
                     el.length > 0 && 
                     // Don't evaluate any body padding since the modal should cover
                     // the entire screen, including the omnibar.
-                    (!fullPage || !el.is(document.body))
+                    (!el.is(document.body) || !fullPage)
             ) {
                 margin += el.outerHeight() - el.height();
 
@@ -37,6 +37,7 @@
                 windowEl = $(window);
 
             function setViewkeeperMarginTop(margin) {
+                
                 if (!marginStyleEl) {
                     marginStyleEl = $('<style></style>').appendTo(document.body);
                 }
