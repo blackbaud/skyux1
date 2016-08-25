@@ -1,4 +1,4 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('contextmenu', function () {
     'use strict';
@@ -9,7 +9,8 @@ describe('contextmenu', function () {
                 .setupTest('/contextmenu/fixtures/test.full.html')
                 .compareScreenshot({
                     screenshotName: 'contextmenu_closed',
-                    selector: '#screenshot-contextmenu'
+                    selector: '#screenshot-contextmenu',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
@@ -20,7 +21,8 @@ describe('contextmenu', function () {
                 .click('#screenshot-contextmenu button.bb-context-menu-btn')
                 .compareScreenshot({
                     screenshotName: 'contextmenu_open',
-                    selector: '#screenshot-contextmenu'
+                    selector: '#screenshot-contextmenu',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
@@ -34,7 +36,8 @@ describe('contextmenu', function () {
                 .click('#screenshot-submenu button.bb-context-menu-btn')
                 .compareScreenshot({
                     screenshotName: 'submenumenu_collapsed',
-                    selector: '#screenshot-submenu'
+                    selector: '#screenshot-submenu',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
@@ -46,7 +49,8 @@ describe('contextmenu', function () {
                 .click('#screenshot-submenu .bb-submenu .panel-title .accordion-toggle > span > div')
                 .compareScreenshot({
                     screenshotName: 'submenumenu_expanded',
-                    selector: '#screenshot-submenu'
+                    selector: '#screenshot-submenu',
+                    checkAccessibility: true
                 })
                 .call(done);
         });
