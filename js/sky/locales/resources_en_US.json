@@ -515,6 +515,14 @@
         "_description": "",
         "message": "Done"
     },
+    "file_upload_link_input": {
+        "_description": "Label for input to upload file",
+        "message": "Add a link to a file"
+    },
+    "file_item_delete": {
+        "_description": "Label for button that deletes a file",
+        "message": "Delete file"
+    },
     "search_label": {
         "_description": "Label for search component functionality",
         "message": "Search items"
