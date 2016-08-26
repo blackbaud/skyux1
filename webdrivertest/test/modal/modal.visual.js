@@ -28,4 +28,19 @@ describe('modals', function () {
             .click('.bb-modal .modal-dialog .close')
             .call(done);
     });
+
+    /*it('should match the baseline full-page modal screenshot', function (done) {
+
+        browser
+            .setupTest('/modal/fixtures/test.full.html')
+            .click('.bb-test-fullpage')
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'modal_fullpage',
+                checkAccessibility: true,
+                selector: '.bb-modal-fullpage'
+            })
+            .click('.bb-modal .modal-dialog .close')
+            .call(done);
+    });*/
 });

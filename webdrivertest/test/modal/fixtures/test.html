@@ -2,6 +2,7 @@
   <div ng-controller="ModalTestController as modalCtrl">
     
     <button type="button" class="bb-test-dropdown btn btn-primary" ng-click="modalCtrl.showModal()">Show Context</button>
+    <button type="button" class="bb-test-fullpage btn btn-primary" ng-click="modalCtrl.showModalFull()">Show Full-page</button>
     <div id="screenshot-modal">
         <div id="screenshot-modal-tiles"> 
             <bb-modal>
@@ -34,7 +35,7 @@
             </bb-modal>
         </div>
     </div>
-    
+        
   </div>
 </div>
 
@@ -71,6 +72,28 @@
             <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
             <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
         </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
+
+<script type="text/ng-template" id="demo/modal/modalformfull.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header bb-modal-help-key="'bb-security-users.html'">Modal header</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <div class="form-group">
+                        <label class="control-label">A label
+                            <input type="text" class="form-control" autofocus />
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+                <bb-modal-footer-button>Sample button</bb-modal-footer-button>
+                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
         </div>
     </bb-modal>
 </script>
