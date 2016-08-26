@@ -12509,9 +12509,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
         '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" bb-context-menu-button-dropdown-toggle></bb-context-menu-button>\n' +
-        '    <ul uib-dropdown-menu role="menu">\n' +
+        '    <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '    </ul>\n' +
+        '    </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menubutton.html',
@@ -12520,11 +12520,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</button>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menuitem.html',
-        '<li role="presentation">\n' +
+        '<div class="bb-dropdown-item" role="presentation">\n' +
         '  <a role="menuitem" href="javascript:void(0)" ng-click="bbContextMenuItem.clickItem()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '  </a>\n' +
-        '</li>\n' +
+        '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/submenu.accordiongroup.html',
         '<div class="panel" ng-class="panelClass || \'panel-default\'">\n' +
@@ -12918,9 +12918,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
         '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">\n' +
         '    </bb-context-menu-button>\n' +
-        '    <ul uib-dropdown-menu role="menu">\n' +
+        '    <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">\n' +
         '        <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>\n' +
-        '    </ul>\n' +
+        '    </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/filters.html',
