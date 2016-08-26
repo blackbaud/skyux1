@@ -3,19 +3,18 @@
 describe('modals', function () {
     'use strict';
 
-    it('match the baseline modal screenshot', function (done) {
-        browser
+    it('modal', function () {
+        return browser
             .setupTest('/modal/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'modal',
                 selector: '#screenshot-modal',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('match the baseline modal with context menu screenshot', function (done) {
-        browser
+    it('modal_dropdown', function () {
+        return browser
             .setupTest('/modal/fixtures/test.full.html')
             .click('.bb-test-dropdown')
             .pause(1000)
@@ -25,7 +24,6 @@ describe('modals', function () {
                 selector: '.modal-content',
                 checkAccessibility: true
             })
-            .click('.bb-modal .modal-dialog .close')
-            .call(done);
+            .click('.bb-modal .modal-dialog .close');
     });
 });

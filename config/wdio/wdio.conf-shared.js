@@ -6,11 +6,9 @@
  * WebDriver configuration options shared between CI and local versions.
  */
 
-
-
 module.exports = {
     specs: [
-        'webdrivertest/test/**/*.visual.js'
+        'webdrivertest/test/**/modal.visual.js'
     ],
     logLevel: 'silent',
     baseUrl: 'http://localhost:8000/webdrivertest/test',
@@ -21,6 +19,9 @@ module.exports = {
         }
     },
     waitforTimeout: 3000,
+    services: [
+        'visual-regression'
+    ],
     onPrepare: function () {
         console.log('preparing tests');
     },
@@ -45,10 +46,14 @@ module.exports = {
             return common.focusElement(this, selector);
         });
     },
+    beforeTest: function () {
+
+    },
     after: function () {
         console.log('after test run');
     },
     onComplete: function () {
         console.log('tests complete');
-    }
+    },
+    sync: false
 };

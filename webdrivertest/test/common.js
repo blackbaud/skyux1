@@ -1,20 +1,34 @@
 /*jshint jasmine: true */
-/* global module, axe, document, console */
+/* global module, axe, document, require, console */
 
 (function () {
     'use strict';
 
-    function getPrefix(browser) {
-        var browserName = browser.desiredCapabilities.browserName,
+    function getPrefix(capabilities) {
+        var browserName = capabilities.browserName,
             platform;
 
-        if (browser.desiredCapabilities.os === 'OS X') {
+        if (capabilities.os === 'OS X') {
             platform = 'MAC';
         } else {
             platform = 'WIN';
         }
 
         return platform + '_' + browserName;
+    }
+
+    function getScreenshotName(basePath) {
+        var path = require('path');
+        return function (context) {
+            var prefix = getPrefix(context.desiredCapabilities),
+                testName = context.test.title,
+                width = context.meta.width,
+                screenshotName;
+
+            screenshotName = prefix + '_' + testName + '_full' + '.' + testName + '.' + width + 'px' + '.baseline.png';
+            
+            return path.join(basePath, prefix, screenshotName);
+        };
     }
 
     function logError(message) {
@@ -61,45 +75,49 @@
         }
         return browser.url(url)
             .getViewportSize().then(function (size) {
+                console.log('in get viewport size');
                 if (size.width !== screenWidth) {
+                    console.log('before return 1');
                     return browser.setViewportSize({width: screenWidth, height: size.height});
                 } else {
+                    console.log('before return 2');
                     return;
                 }
             });
     }
 
-    module.exports = {
-        compareScreenshot: function (options) {
-            
-            return options.browserResult.getViewportSize('width').then(function (width) {
-                var pageName,
-                    prefix = getPrefix(this),
+    function getViewSizeHandler(width, browser, options) {
+        var pageName,
+                    prefix = getPrefix(browser.desiredCapabilities),
                     widthString = '.' + width + 'px';
 
-                pageName = prefix + '/' + prefix + '_' + options.screenshotName + '_full';
-                options.screenshotName = options.screenshotName + widthString;
-                
-                return this.webdrivercss(pageName, [
-                    {
-                        name: options.screenshotName,
-                        elem: options.selector
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[options.screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                })
-                .then(function () {
-                    if (options.checkAccessibility) {
-                        return checkAccessibility(this, options);
-                    } else {
-                        return;
-                    }
-                });
+        pageName = prefix + '/' + prefix + '_' + options.screenshotName + '_full';
+        options.screenshotName = options.screenshotName + widthString;
+
+        console.log('before check element');
+        return browser.checkElement(options.selector, {widths: [width]}).then(function (results) {
+            results.forEach(function (element) {
+                console.log('checking elements');
+                expect(element.isExactSameImage).toBe(true);
             });
-                
+            console.log('after check element');
+            if (options.checkAccessibility) {
+                return checkAccessibility(this, options);
+            } else {
+                return;
+            }
+        });
+    }
+
+    module.exports = {
+        compareScreenshot: function (options) { 
+            console.log('in compare screenshot');
+            return options.browserResult.getViewportSize('width').then(function (width) {
+                return getViewSizeHandler(width, this, options);
+            });  
         },
         setupTest: setupTest,
+        getScreenshotName: getScreenshotName,
         checkAccessibility: checkAccessibility,
         moveCursorOffScreen: function (browser) {
             return browser.moveToObject('body', 0, 0);
@@ -108,4 +126,4 @@
             return browser.execute('document.querySelector("' + selector + '").focus()');
         }
     };
-}());
+})();

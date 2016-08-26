@@ -71,9 +71,9 @@
       "resolved": "https://registry.npmjs.org/to/-/to-0.2.9.tgz",
       "version": "0.2.9"
     },
-    "wdio-jasmine-framework": "0.1.7",
-    "webdrivercss": "v2.0.0beta-rc1",
-    "webdriverio": "3.2.6"
+    "wdio-jasmine-framework": "0.2.5",
+    "webdriverio": "4.0.9",
+    "wdio-visual-regression-service": "0.2.0"
   },
   "dependencies": {
     "angular": "1.5.3",
@@ -94,8 +94,7 @@
     "jquery-ui-touch-punch": "0.2.3",
     "intl-tel-input": "8.5.2",
     "moment": "2.9.0",
-    "ng-file-upload": "12.0.4",
-    "webdriverio": "3.2.6"
+    "ng-file-upload": "12.0.4"
   },
   "scripts": {
     "test": "grunt test"

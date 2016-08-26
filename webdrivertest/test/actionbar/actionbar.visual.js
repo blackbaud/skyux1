@@ -12,21 +12,19 @@ describe('actionbar', function () {
         };
     }
 
-    it('should match the baseline actionbar screenshot on small screens', function (done) {
+    it('actionbar', function () {
         var options = createActionbarOptions();
 
-        browser
+        return browser
             .setupTest('/actionbar/fixtures/test.full.html')
-            .compareScreenshot(options)
-            .call(done);
+            .compareScreenshot(options);
     });
 
-    it('should match the baseline actionbar screenshot on small screens', function (done) {
+    it('actionbar', function () {
         var options = createActionbarOptions();
 
-        browser
+        return browser
             .setupTest('/actionbar/fixtures/test.full.html', 480)
-            .compareScreenshot(options)
-            .call(done);
+            .compareScreenshot(options);
     });
 });
