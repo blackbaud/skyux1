@@ -133,6 +133,27 @@
 
     angular.module('sky.keyinfo', ['sky.keyinfo.component']);
 }());
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
+        'sky.modal',
+        [
+            'sky.modal.directive',
+            'sky.modal.body.directive',
+            'sky.modal.header.directive',
+            'sky.modal.footer.directive',
+            'sky.modal.footer.button.directive',
+            'sky.modal.footer.button.primary.directive',
+            'sky.modal.footer.button.cancel.directive',
+            'sky.modal.factory'
+        ]
+    );
+}());
+
 /*global angular */
 
 (function () {
@@ -7116,216 +7137,493 @@
 }());
 
 /*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalBody() {
+        function link(scope, el, attrs, modalCtrl) {
+            el.addClass('modal-body container-fluid');
+            modalCtrl.setBodyEl(el);
+        }
+
+        return {
+            link: link,
+            require: '^bbModal',
+            restrict: 'A'
+        };
+    }
+
+    angular.module('sky.modal.body.directive', ['sky.modal', 'sky.resources', 'ui.bootstrap'])
+        .directive('bbModalBody', bbModalBody);
+}());
+
+/*jshint browser: true */
 /*global angular, jQuery */
 
 (function ($) {
     'use strict';
 
-    var openModalCount = 0;
+    function bbModal($timeout, bbViewKeeperBuilder) {
+        function getPixelValue(val) {
+            val = val || '0';
 
-    angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
-        .factory('bbModal', ['$uibModal', '$window', function ($uibModal, $window) {
-            return {
-                open: function (opts) {
-                    var bodyEl,
-                        isIOS,
-                        modalInstance,
-                        scrollTop;
+            return parseFloat(val.replace('px', ''));
+        }
 
-                    function modalClosed() {
-                        openModalCount--;
-                        if (isIOS) {
-                            bodyEl
-                                .removeClass('bb-modal-open-mobile')
-                                .scrollTop(scrollTop);
-                        }
+        function getModalBodyWrapperMargin(el) {
+            var margin = 0;
 
-                        bodyEl = null;
-                    }
+            while (el.not('.modal-dialog') && 
+                    el.length > 0 && 
+                    // Don't evaluate any body padding since the modal should cover
+                    // the entire screen, including the omnibar.
+                    (!el.is(document.body))
+            ) {
+                margin += el.outerHeight() - el.height();
 
-                    isIOS = /iPad|iPod|iPhone/i.test($window.navigator.userAgent);
-                    bodyEl = $(document.body);
-
-                    // Change default values for modal options
-                    opts = angular.extend({
-                        backdrop: 'static',
-                        windowClass: 'bb-modal'
-                    }, opts);
-
-                    // Mobile browsers exhibit weird behavior when focusing on an input element
-                    // inside a position: fixed element (in this case the modal), and it also
-                    // doesn't propery prohibit scrolling on the window.  Adding this CSS class
-                    // will change the body position to fixed and the modal position to absolute
-                    // to work around this behavior.
-                    if (isIOS) {
-                        // Setting the body position to be fixed causes it to be scrolled to the
-                        // top.  Cache the current scrollTop and set it back when the modal is
-                        // closed.
-                        scrollTop = bodyEl.scrollTop();
-                        bodyEl.addClass('bb-modal-open-mobile');
-                    }
-
-                    modalInstance = $uibModal.open(opts);
-                    openModalCount++;
-
-                    modalInstance.result.then(modalClosed, modalClosed);
-
-                    return modalInstance;
-                }
-            };
-        }])
-        .directive('bbModal', ['$timeout', function ($timeout) {
-            function getPixelValue(val) {
-                val = val || '0';
-
-                return parseFloat(val.replace('px', ''));
+                el = el.parent();
             }
 
-            function getModalBodyWrapperMargin(el) {
-                var margin = 0;
+            return margin;
+        }
+        
+        function link($scope, el) {
+            var bodyEl,
+                marginStyleEl,
+                resizeTimeout,
+                viewkeeperMarginBottomOverride,
+                viewkeeperMarginTopOverride,
+                windowEl = $(window);
 
-                while (el.not('.modal-dialog') && el.length > 0) {
-                    margin += el.outerHeight() - el.height();
+            function setViewkeeperMarginTop(margin) {
 
-                    el = el.parent();
+                if (!marginStyleEl) {
+                    marginStyleEl = $('<style></style>').appendTo(document.body);
                 }
 
-                return margin;
+                marginStyleEl.text('.bb-modal-fullpage .bb-viewkeeper-fixed {margin-top: ' + margin + 'px !important;}');
             }
 
-            return {
-                controller: ['$scope', function ($scope) {
-                    this.setBodyEl = function (bodyEl) {
-                        $scope.bodyEl = bodyEl;
-                    };
-                }],
-                replace: true,
-                transclude: true,
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modal.html',
-                link: function ($scope, el) {
-                    var bodyEl,
-                        resizeTimeout,
-                        windowEl = $(window);
+            function isFullPage() {
+                var modalDialogEl = el.parents('.modal-dialog');
+                
+                return modalDialogEl.parents('.bb-modal').is('.bb-modal-fullpage');
+            }
 
-                    function fitToWindow() {
-                        var margin,
-                            modalParentEl,
-                            newMaxHeight,
-                            reservedHeight;
+            function fitToWindow() {
+                var footerHeight,
+                    fullPage,
+                    headerHeight,
+                    margin,
+                    modalDialogEl,
+                    newMaxHeight,
+                    newMinHeight,
+                    reservedHeight;
 
-                        if (bodyEl && bodyEl.length > 0) {
-                            modalParentEl = el.parents('.modal-dialog');
+                if (bodyEl && bodyEl.length > 0) {
+                    modalDialogEl = el.parents('.modal-dialog');
 
-                            if (modalParentEl.length > 0) {
-                                margin = getPixelValue(modalParentEl.css('margin-bottom')) + getPixelValue(modalParentEl.css('margin-top'));
+                    if (modalDialogEl.length > 0) {
+                        headerHeight = el.find('.modal-header').outerHeight();
+                        footerHeight = el.find('.modal-footer').outerHeight();
+                        fullPage = isFullPage();
 
-                                reservedHeight = margin + el.find('.modal-header').outerHeight() + el.find('.modal-footer').outerHeight();
+                        if (fullPage) {
+                            bodyEl.css({
+                                'margin-top': headerHeight,
+                                'margin-bottom': footerHeight
+                            });
+                            reservedHeight = headerHeight + footerHeight;
+                            reservedHeight += getModalBodyWrapperMargin(el);
+                            newMinHeight = windowEl.height() - reservedHeight;
+                            bodyEl.css({
+                                'min-height': newMinHeight
+                            });
+                        } else {
+                            margin = getPixelValue(modalDialogEl.css('margin-bottom')) + 
+                                getPixelValue(modalDialogEl.css('margin-top'));
 
-                                // Account for the border, padding, etc. of the elements that wrap the modal body.
-                                reservedHeight += getModalBodyWrapperMargin(el);
+                            reservedHeight = margin + headerHeight + footerHeight;
 
-                                newMaxHeight = windowEl.height() - reservedHeight;
+                            // Account for the border, padding, etc. of the elements 
+                            // that wrap the modal body.
+                            reservedHeight += getModalBodyWrapperMargin(el);
 
-                                bodyEl.css('max-height', newMaxHeight);
-                            }
-                        }
-                    }
+                            newMaxHeight = windowEl.height() - reservedHeight;
 
-                    $scope.$watch('bodyEl', function (newValue) {
-                        bodyEl = newValue;
-                        fitToWindow();
-                    });
-
-                    $timeout(function () {
-                        fitToWindow();
-                    }, 0);
-
-                    windowEl.on('resize.bbModal' + $scope.$id, function () {
-                        $timeout.cancel(resizeTimeout);
-
-                        resizeTimeout = $timeout(function () {
-                            fitToWindow();
-                        }, 250);
-                    });
-
-                    el.on('$destroy', function () {
-                        windowEl.off('.bbModal' + $scope.$id);
-                    });
-                }
-            };
-        }])
-        .directive('bbModalBody', function () {
-            return {
-                link: function (scope, el, attrs, modalCtrl) {
-                    el.addClass('modal-body container-fluid');
-                    modalCtrl.setBodyEl(el);
-                },
-                require: '^bbModal',
-                restrict: 'A'
-            };
-        })
-        .directive('bbModalHeader', function () {
-            return {
-                controller: angular.noop,
-                replace: true,
-                transclude: true,
-                require: '^bbModal',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalheader.html',
-                scope: {
-                    bbModalHelpKey: '='
-                }
-            };
-        })
-        .directive('bbModalFooter', function () {
-            return {
-                controller: angular.noop,
-                replace: true,
-                transclude: true,
-                require: '^bbModal',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooter.html'
-            };
-        })
-        .directive('bbModalFooterButton', function () {
-            return {
-                replace: true,
-                transclude: true,
-                require: '^bbModalFooter',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooterbutton.html'
-            };
-        })
-        .directive('bbModalFooterButtonPrimary', ['bbResources', function (bbResources) {
-            return {
-                replace: true,
-                transclude: true,
-                require: '^bbModalFooter',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooterbuttonprimary.html',
-                link: function ($scope, el) {
-                    if (el.children().length === 0) {
-                        el.append("<span>" + bbResources.modal_footer_primary_button + "</span>");
+                            bodyEl.css('max-height', newMaxHeight);
+                        } 
                     }
                 }
-            };
-        }])
-        .directive('bbModalFooterButtonCancel', ['bbResources', function (bbResources) {
-            return {
-                replace: true,
-                transclude: true,
-                require: '^bbModalFooter',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
-                link: function ($scope, el) {
-                    if (el.children().length === 0) {
-                        el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
-                    }
+            }
+
+            $scope.$watch('bodyEl', function (newValue) {
+                bodyEl = newValue;
+                fitToWindow();
+            });
+
+            $scope.$watch(function () {
+                if ($scope.headerEl) {
+                    return $scope.headerEl.outerHeight();
                 }
+            }, function (newValue) {
+                if (isFullPage()) {
+                    if (!viewkeeperMarginTopOverride) {
+                        viewkeeperMarginTopOverride = {};
+                        
+                        bbViewKeeperBuilder.addViewportMarginTopOverride(
+                            viewkeeperMarginTopOverride
+                        );
+                    }
+                    
+                    viewkeeperMarginTopOverride.margin = newValue;
+
+                    setViewkeeperMarginTop(newValue);
+                }
+            });
+
+            $scope.$watch(function () {
+                if ($scope.footerEl) {
+                    return $scope.footerEl.outerHeight();
+                }
+            }, function (newValue) {
+                if (isFullPage()) {
+                    if (!viewkeeperMarginBottomOverride) {
+                        viewkeeperMarginBottomOverride = {};
+                        
+                        bbViewKeeperBuilder.addViewportMarginBottomOverride(
+                            viewkeeperMarginBottomOverride
+                        );
+                    }
+                    
+                    viewkeeperMarginBottomOverride.margin = newValue;
+                }
+            });
+
+            $timeout(function () {
+                fitToWindow();
+            }, 0);
+
+            windowEl.on('resize.bbModal' + $scope.$id, function () {
+                $timeout.cancel(resizeTimeout);
+
+                resizeTimeout = $timeout(function () {
+                    fitToWindow();
+                }, 250);
+            });
+
+            el.on('$destroy', function () {
+                windowEl.off('.bbModal' + $scope.$id);
+
+                if (viewkeeperMarginBottomOverride) {
+                    bbViewKeeperBuilder.removeViewportMarginBottomOverride(
+                        viewkeeperMarginBottomOverride
+                    );
+                }
+
+                if (viewkeeperMarginTopOverride) {
+                    bbViewKeeperBuilder.removeViewportMarginTopOverride(
+                        viewkeeperMarginTopOverride
+                    );
+                }
+
+                if (marginStyleEl) {
+                    marginStyleEl.remove();
+                    marginStyleEl = null;
+                }
+            });
+        }
+
+        function Controller($scope) {
+            this.setBodyEl = function (bodyEl) {
+                $scope.bodyEl = bodyEl;
             };
-        }]);
+
+            this.setHeaderEl = function (headerEl) {
+                $scope.headerEl = headerEl;
+            };
+
+            this.setFooterEl = function (footerEl) {
+                $scope.footerEl = footerEl;
+            };
+        }
+
+        Controller.$inject = ['$scope'];
+
+        return {
+            controller: Controller,
+            replace: true,
+            transclude: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modal.html',
+            link: link
+        };
+    }
+
+    bbModal.$inject = ['$timeout', 'bbViewKeeperBuilder'];
+
+    angular.module('sky.modal.directive', ['sky.viewkeeper'])
+        .directive('bbModal', bbModal);
 }(jQuery));
+
+/*jshint browser: true */
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+
+    var CLS_BODY_FULLPAGE = 'bb-modal-open-fullpage',
+        CLS_BODY_MOBILE = 'bb-modal-open-mobile',
+        modalCount = 0,
+        openFullPageModalCount = 0,
+        openModalCount = 0;
+
+    function bbModal($uibModal, $window) {
+        return {
+            open: function (uibModalOptions, additionalOptions) {
+                var animation = true,
+                    backdropClass,
+                    bodyEl,
+                    fullPage,
+                    idCls,
+                    isIOS,
+                    modalInstance,
+                    scrollTop,
+                    windowClass = 'bb-modal';
+
+                function modalClosed() {
+                    $(window).off('resize.' + idCls);
+
+                    openModalCount--;
+
+                    if (fullPage) {
+                        openFullPageModalCount--;
+
+                        if (openFullPageModalCount === 0) {
+                            bodyEl.removeClass(CLS_BODY_FULLPAGE);
+                        }
+                    }
+
+                    if (isIOS) {
+                        bodyEl
+                            .removeClass(CLS_BODY_MOBILE)
+                            .scrollTop(scrollTop);
+                    }
+
+                    bodyEl = null;
+                }
+
+                if (additionalOptions) {
+                    fullPage = additionalOptions.fullPage;
+                }
+
+                modalCount++;
+                idCls = 'bb-modal-id-' + modalCount;
+
+                windowClass += ' ' + idCls;
+
+                if (fullPage) {
+                    windowClass += ' bb-modal-fullpage';
+                    backdropClass = 'bb-modal-fullpage-backdrop';
+                    animation = false;
+                }
+
+                isIOS = /iPad|iPod|iPhone/i.test($window.navigator.userAgent);
+                bodyEl = $(document.body);
+
+                // Change default values for modal options
+                uibModalOptions = angular.extend({
+                    animation: animation,
+                    backdrop: 'static',
+                    backdropClass: backdropClass,
+                    windowClass: windowClass
+                }, uibModalOptions);
+
+                // Mobile browsers exhibit weird behavior when focusing on an input element
+                // inside a position: fixed element (in this case the modal), and it also
+                // doesn't propery prohibit scrolling on the window.  Adding this CSS class
+                // will change the body position to fixed and the modal position to absolute
+                // to work around this behavior.
+                if (isIOS) {
+                    // Setting the body position to be fixed causes it to be scrolled to the
+                    // top.  Cache the current scrollTop and set it back when the modal is
+                    // closed.
+                    scrollTop = bodyEl.scrollTop();
+                    bodyEl.addClass(CLS_BODY_MOBILE);
+                }
+
+                if (fullPage) {
+                    bodyEl.addClass(CLS_BODY_FULLPAGE);
+                    openFullPageModalCount++;
+                }
+
+                modalInstance = $uibModal.open(uibModalOptions);
+
+                openModalCount++;
+
+                modalInstance.result.then(modalClosed, modalClosed);
+
+                return modalInstance;
+            }
+        };
+    }    
+
+    bbModal.$inject = ['$uibModal', '$window'];
+
+    angular.module('sky.modal.factory', ['ui.bootstrap'])
+        .factory('bbModal', bbModal);
+}(jQuery));
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooterButtonCancel(bbResources) {
+        return {
+            replace: true,
+            transclude: true,
+            require: '^bbModalFooter',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
+            link: function ($scope, el) {
+                if (el.children().length === 0) {
+                    el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
+                }
+            }
+        };
+    }
+
+    bbModalFooterButtonCancel.$inject = ['bbResources'];
+
+    angular.module(
+        'sky.modal.footer.button.cancel.directive', 
+        [
+            'sky.modal.footer.directive', 
+            'sky.resources'
+        ]
+    )
+        .directive('bbModalFooterButtonCancel', bbModalFooterButtonCancel);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooterButton() {
+        return {
+            replace: true,
+            transclude: true,
+            require: '^bbModalFooter',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooterbutton.html'
+        };
+    }
+
+    angular.module('sky.modal.footer.button.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+        .directive('bbModalFooterButton', bbModalFooterButton);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooterButtonPrimary(bbResources) {
+        return {
+            replace: true,
+            transclude: true,
+            require: '^bbModalFooter',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooterbuttonprimary.html',
+            link: function ($scope, el) {
+                if (el.children().length === 0) {
+                    el.append("<span>" + bbResources.modal_footer_primary_button + "</span>");
+                }
+            }
+        };
+    }
+
+    bbModalFooterButtonPrimary.$inject = ['bbResources'];
+
+    angular.module(
+        'sky.modal.footer.button.primary.directive', 
+        [
+            'sky.modal.footer.directive',
+            'sky.resources'
+        ]
+    )
+        .directive('bbModalFooterButtonPrimary', bbModalFooterButtonPrimary);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooter() {
+        function link(scope, el, attrs, bbModal) {
+            bbModal.setFooterEl(el);
+        }
+
+        return {
+            controller: angular.noop,
+            link: link,
+            replace: true,
+            transclude: true,
+            require: '^bbModal',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooter.html'
+        };
+    }
+
+    angular.module('sky.modal.footer.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+        .directive('bbModalFooter', bbModalFooter);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalHeader() {
+        function link(scope, el, attrs, bbModal) {
+            bbModal.setHeaderEl(el);
+        }
+
+        return {
+            controller: angular.noop,
+            link: link,
+            replace: true,
+            transclude: true,
+            require: '^bbModal',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalheader.html',
+            scope: {
+                bbModalHelpKey: '='
+            }
+        };
+    }
+
+    angular.module(
+        'sky.modal.header.directive', 
+        [
+            'sky.helpbutton', 
+            'sky.modal', 
+            'sky.resources', 
+            'ui.bootstrap'
+        ]
+    )
+        .directive('bbModalHeader', bbModalHeader);
+}());
 
 /*global angular, define, require */
 
@@ -11165,9 +11463,11 @@ angular.module('sky.palette.config', [])
 
     var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed',
         CLS_VIEWKEEPER_NO_OMNIBAR = 'bb-viewkeeper-no-omnibar',
+        marginBottomOverrides = [],
+        marginTopOverrides = [],
         config = {
             viewportMarginTop: 0,
-            hasOmnibar: true 
+            hasOmnibar: true
         },
         ViewKeeper;
 
@@ -11195,6 +11495,46 @@ angular.module('sky.palette.config', [])
         }
     }
 
+    function fixEl(vk, boundaryInfo, fixedStyles) {
+        var elQ = angular.element(vk.el),
+            spacerHeight,
+            width;
+
+        if (boundaryInfo.spacerQ.length === 0) {
+            if (vk.setPlaceholderHeight) {
+                spacerHeight = boundaryInfo.elHeight;
+            } else {
+                spacerHeight = 0;
+            }
+            elQ.after(
+                '<div id="' + 
+                boundaryInfo.spacerId + 
+                '" style="height: ' + 
+                spacerHeight + 
+                'px;"></div>'
+            );
+        }
+
+        elQ.addClass(CLS_VIEWKEEPER_FIXED);
+
+        vk.currentElFixedTop = fixedStyles.elFixedTop;
+        vk.currentElFixedBottom = fixedStyles.elFixedBottom;
+        vk.currentElFixedLeft = fixedStyles.elFixedLeft;
+        vk.currentElFixedWidth = fixedStyles.elFixedWidth;
+
+        if (vk.setWidth) {
+            width = fixedStyles.elFixedWidth;
+        }
+
+        setElPosition(
+            elQ, 
+            fixedStyles.elFixedLeft, 
+            fixedStyles.elFixedTop, 
+            fixedStyles.elFixedBottom, 
+            width
+        );
+    }
+
     function unfixEl(vk) {
         var elQ = angular.element(vk.el),
             width;
@@ -11212,6 +11552,18 @@ angular.module('sky.palette.config', [])
             width = "auto";
         }
         setElPosition(elQ, "", "", "", width);
+    }
+
+    function getViewportMarginTop() {
+        return marginTopOverrides.length > 0 ? 
+            marginTopOverrides[marginTopOverrides.length - 1].margin : 
+            config.viewportMarginTop;
+    }
+
+    function getViewportMarginBottom() {
+        return marginBottomOverrides.length > 0 ? 
+            marginBottomOverrides[marginBottomOverrides.length - 1].margin : 
+            0;
     }
 
     function calculateVerticalOffset(vk) {
@@ -11238,6 +11590,129 @@ angular.module('sky.palette.config', [])
         return offset;
     }
 
+    function getBoundaryInfo(vk) {
+        var boundaryBottom,
+            boundaryOffset,
+            boundaryTop,
+            boundaryQ,
+            documentQ,
+            elQ,
+            scrollLeft,
+            scrollTop,
+            spacerId,
+            spacerQ,
+            elHeight;
+
+        elQ = angular.element(vk.el);
+
+        boundaryQ = angular.element(vk.boundaryEl);
+        spacerId = getSpacerId(vk);
+
+        spacerQ = angular.element("#" + spacerId);
+        documentQ = angular.element(window.document);
+
+        boundaryOffset = boundaryQ.offset();
+        boundaryTop = boundaryOffset.top;
+        boundaryBottom = boundaryTop + boundaryQ.height();
+
+        scrollLeft = documentQ.scrollLeft();
+        scrollTop = documentQ.scrollTop();
+
+        elHeight = elQ.outerHeight(true);
+
+        return {
+            boundaryBottom: boundaryBottom,
+            boundaryOffset: boundaryOffset,
+            boundaryQ: boundaryQ,
+            elHeight: elHeight,
+            scrollLeft: scrollLeft,
+            scrollTop: scrollTop,
+            spacerId: spacerId,
+            spacerQ: spacerQ
+        };
+    }
+
+    function shouldFixEl(vk, boundaryInfo, verticalOffSet) {
+        var anchorHeight,
+            anchorTop,
+            doFixEl,
+            elQ;
+
+        elQ = angular.element(vk.el);
+
+        if (boundaryInfo.spacerQ.length > 0) {
+            anchorTop = boundaryInfo.spacerQ.offset().top;
+            anchorHeight = boundaryInfo.spacerQ.outerHeight(true);
+        } else {
+            anchorTop = elQ.offset().top;
+            anchorHeight = boundaryInfo.elHeight;
+        }
+
+        if (vk.fixToBottom) {
+            //Fix el if the natural bottom of the element would not be on the screen
+            doFixEl = 
+                anchorTop + anchorHeight > 
+                boundaryInfo.scrollTop + (window.innerHeight - getViewportMarginBottom());
+        } else {
+            doFixEl = boundaryInfo.scrollTop + verticalOffSet + getViewportMarginTop() > anchorTop;
+        }
+
+        return doFixEl;
+    }
+
+    function getFixedStyles(vk, boundaryInfo, verticalOffSet) {
+        var elFixedBottom,
+            elFixedLeft,
+            elFixedTop,
+            elFixedWidth;
+
+        if (vk.fixToBottom) {
+            elFixedBottom = getViewportMarginBottom();
+        } else {
+            // If the element needs to be fixed, this will calculate its position.  The position 
+            // will be 0 (fully visible) unless the user is scrolling the boundary out of view.  
+            // In that case, the element should begin to scroll out of view with the
+            // rest of the boundary by setting its top position to a negative value.
+            elFixedTop = Math.min(
+                (boundaryInfo.boundaryBottom - boundaryInfo.elHeight) - boundaryInfo.scrollTop, 
+                verticalOffSet
+            );
+        }
+
+        elFixedWidth = boundaryInfo.boundaryQ.width();
+        elFixedLeft = boundaryInfo.boundaryOffset.left - boundaryInfo.scrollLeft;
+
+        return {
+            elFixedBottom: elFixedBottom,
+            elFixedLeft: elFixedLeft,
+            elFixedTop: elFixedTop,
+            elFixedWidth: elFixedWidth
+        };
+    }
+
+    function needsUpdating(vk, doFixEl, fixedStyles) {
+        if (
+            (
+                doFixEl && 
+                vk.currentElFixedLeft === fixedStyles.elFixedLeft && 
+                vk.currentElFixedTop === fixedStyles.elFixedTop && 
+                vk.currentElFixedBottom === fixedStyles.elFixedBottom && 
+                vk.currentElFixedWidth === fixedStyles.elFixedWidth
+            ) || 
+            (
+                !doFixEl && 
+                !(vk.currentElFixedLeft !== undefined && vk.currentElFixedLeft !== null)
+            )
+        ) {
+            // The element is either currently fixed and its position and width do not need 
+            // to change, or the element is not currently fixed and does not need to be fixed.  
+            // No changes are needed.
+            return false;
+        }
+
+        return true;
+    }
+
     ViewKeeper = function (options) {
         var id,
             vk = this;
@@ -11253,7 +11728,7 @@ angular.module('sky.palette.config', [])
         vk.setPlaceholderHeight = (options.setPlaceholderHeight !== false);
         vk.onStateChanged = options.onStateChanged;
         vk.isFixed = false;
-
+        
         if (options.verticalOffSetElId) {
             vk.verticalOffSetEl = angular.element('#' + options.verticalOffSetElId);
 
@@ -11270,34 +11745,13 @@ angular.module('sky.palette.config', [])
     ViewKeeper.prototype = {
 
         syncElPosition: function () {
-            var anchorTop,
-                anchorHeight,
+            var boundaryInfo,
+                doFixEl,
                 isCurrentlyFixed,
-                currentElFixedLeft,
-                currentElFixedTop,
-                currentElFixedBottom,
-                currentElFixedWidth,
-                documentQ,
-                fixEl,
-                boundaryBottom,
-                boundaryOffset,
-                boundaryQ,
-                boundaryTop,
-                elFixedLeft,
-                elFixedTop,
-                elFixedBottom,
-                elFixedWidth,
-                elHeight,
+                fixedStyles,
                 elQ,
-                needsUpdating,
-                scrollLeft,
-                scrollTop,
-                spacerHeight,
-                spacerId,
-                spacerQ,
                 verticalOffSet,
-                vk = this,
-                width;
+                vk = this;
 
             isCurrentlyFixed = vk.isFixed;
 
@@ -11310,86 +11764,15 @@ angular.module('sky.palette.config', [])
                 return;
             }
 
-            boundaryQ = angular.element(vk.boundaryEl);
-            spacerId = getSpacerId(vk);
+            boundaryInfo = getBoundaryInfo(vk);
+            fixedStyles = getFixedStyles(vk, boundaryInfo, verticalOffSet);
 
-            spacerQ = angular.element("#" + spacerId);
-            documentQ = angular.element(window.document);
+            doFixEl = shouldFixEl(vk, boundaryInfo, verticalOffSet);
 
-            boundaryOffset = boundaryQ.offset();
-            boundaryTop = boundaryOffset.top;
-            boundaryBottom = boundaryTop + boundaryQ.height();
-
-            scrollLeft = documentQ.scrollLeft();
-            scrollTop = documentQ.scrollTop();
-
-            elHeight = elQ.outerHeight(true);
-
-            if (vk.fixToBottom) {
-                elFixedBottom = 0;
-            } else {
-                // If the element needs to be fixed, this will calculate its position.  The position will be 0 (fully visible) unless
-                // the user is scrolling the boundary out of view.  In that case, the element should begin to scroll out of view with the
-                // rest of the boundary by setting its top position to a negative value.
-                elFixedTop = Math.min((boundaryBottom - elHeight) - scrollTop, verticalOffSet);
-            }
-
-
-            elFixedWidth = boundaryQ.width();
-            elFixedLeft = boundaryOffset.left - scrollLeft;
-
-            currentElFixedLeft = vk.currentElFixedLeft;
-            currentElFixedTop = vk.currentElFixedTop;
-            currentElFixedBottom = vk.currentElFixedBottom;
-            currentElFixedWidth = vk.currentElFixedWidth;
-
-            if (spacerQ.length > 0) {
-                anchorTop = spacerQ.offset().top;
-                anchorHeight = spacerQ.outerHeight(true);
-            } else {
-                anchorTop = elQ.offset().top;
-                anchorHeight = elHeight;
-            }
-
-            if (vk.fixToBottom) {
-                //Fix el if the natural bottom of the element would not be on the screen
-                fixEl = (anchorTop + anchorHeight > scrollTop + window.innerHeight);
-            } else {
-                fixEl = scrollTop + verticalOffSet + config.viewportMarginTop > anchorTop;
-            }
-
-            if ((fixEl && currentElFixedLeft === elFixedLeft && currentElFixedTop === elFixedTop && currentElFixedBottom === elFixedBottom && currentElFixedWidth === elFixedWidth) || (!fixEl && !(currentElFixedLeft !== undefined && currentElFixedLeft !== null))) {
-                // The element is either currently fixed and its position and width do not need to change, or the element is not
-                // currently fixed and does not need to be fixed.  No changes are needed.
-                needsUpdating = false;
-            } else {
-                needsUpdating = true;
-            }
-
-            if (needsUpdating) {
-                if (fixEl) {
+            if (needsUpdating(vk, doFixEl, fixedStyles)) {
+                if (doFixEl) {
                     vk.isFixed = true;
-                    if (spacerQ.length === 0) {
-                        if (vk.setPlaceholderHeight) {
-                            spacerHeight = elHeight;
-                        } else {
-                            spacerHeight = 0;
-                        }
-                        elQ.after('<div id="' + spacerId + '" style="height: ' + spacerHeight + 'px;"></div>');
-                    }
-
-                    elQ.addClass(CLS_VIEWKEEPER_FIXED);
-
-                    vk.currentElFixedTop = elFixedTop;
-                    vk.currentElFixedBottom = elFixedBottom;
-                    vk.currentElFixedLeft = elFixedLeft;
-                    vk.currentElFixedWidth = elFixedWidth;
-
-                    if (vk.setWidth) {
-                        width = elFixedWidth;
-                    }
-
-                    setElPosition(elQ, elFixedLeft, elFixedTop, elFixedBottom, width);
+                    fixEl(vk, boundaryInfo, fixedStyles);
                 } else {
                     vk.isFixed = false;
                     unfixEl(vk);
@@ -11425,7 +11808,7 @@ angular.module('sky.palette.config', [])
                 anchorTop = elQ.offset().top;
             }
 
-            documentQ.scrollTop(anchorTop - verticalOffset - config.viewportMarginTop);
+            documentQ.scrollTop(anchorTop - verticalOffset - getViewportMarginTop());
         },
 
         destroy: function () {
@@ -11455,6 +11838,28 @@ angular.module('sky.palette.config', [])
             return {
                 create: function (options) {
                     return new ViewKeeper(options);
+                },
+                addViewportMarginBottomOverride: function (value) {
+                    marginBottomOverrides.push(value);
+                },
+                removeViewportMarginBottomOverride: function (value) {
+                    var index = marginBottomOverrides.indexOf(value);
+
+                    /*istanbul ignore else */
+                    if (index > -1) {
+                        marginBottomOverrides.splice(index, 1);
+                    }
+                },
+                addViewportMarginTopOverride: function (value) {
+                    marginTopOverrides.push(value);
+                },
+                removeViewportMarginTopOverride: function (value) {
+                    var index = marginTopOverrides.indexOf(value);
+
+                    /*istanbul ignore else */
+                    if (index > -1) {
+                        marginTopOverrides.splice(index, 1);
+                    }
                 }
             };
         })
