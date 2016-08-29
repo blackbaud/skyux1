@@ -21,11 +21,9 @@
         var path = require('path');
         return function (context) {
             var prefix = getPrefix(context.desiredCapabilities),
-                testName = context.test.title,
-                width = context.meta.width,
-                screenshotName;
+                screenshotName = context.options.screenshotName;
 
-            screenshotName = prefix + '_' + testName + '_full' + '.' + testName + '.' + width + 'px' + '.baseline.png';
+            screenshotName = prefix + '_' + screenshotName + '.baseline.png';
             
             return path.join(basePath, prefix, screenshotName);
         };
@@ -95,22 +93,13 @@
     }
 
     function getViewSizeHandler(width, browser, options) {
-        var pageName,
-                    prefix = getPrefix(browser.desiredCapabilities),
-                    widthString = '.' + width + 'px';
+        var widthString = '.' + width + 'px';
 
-        pageName = prefix + '/' + prefix + '_' + options.screenshotName + '_full';
-        options.screenshotName = options.screenshotName + widthString;
+        options.screenshotName = options.screenshotName + '_full' + '.' + options.screenshotName + widthString;
 
-        //if (options.selector) {
-        return browser.checkElement(options.selector).then(function (results) {
+        return browser.checkElement(options.selector, {screenshotName: options.screenshotName}).then(function (results) {
             return checkVisualResult(results, options, this);
         });
-        /*} else {
-            return browser.checkDocument().then(function (results) {
-                return checkVisualResult(results, options, this);
-            });
-        }*/
         
     }
 
