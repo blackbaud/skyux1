@@ -9,15 +9,15 @@
         self.tabs = [
             {
                 title: 'Tab 1',
-                content: '1 content'
+                content: 'Placeholder content for Tab 1'
             },
             {
                 title: 'Tab 2',
-                content: '2 content'
+                content: 'Placeholder content for Tab 2'
             },
             {
                 title: 'Tab 3',
-                content: '3 content'
+                content: 'Placeholder content for Tab 3'
             }
         ];
 
@@ -28,7 +28,7 @@
 
         self.addTab = function () {
             var newTitle = 'Tab ' + tabCount.toString(),
-                newContent = tabCount.toString() + ' content';
+                newContent = 'Placeholder content for Tab ' + tabCount.toString();
             self.tabs.push({
                 title: newTitle,
                 content: newContent
@@ -55,19 +55,19 @@
 
         self.availableTabs = [
             {
-                title: 'Opened Tab 1',
-                description: 'The first tab that can be opened',
-                content: 'Opened Tab 1 Content'
+                title: 'Opened tab 1',
+                description: 'The first tab that the modal can open',
+                content: 'Placeholder content for Opened tab 1'
             },
             {
-                title: 'Opened Tab 2',
-                description: 'The second tab that can be opened',
-                content: 'Opened Tab 2 Content'
+                title: 'Opened tab 2',
+                description: 'The second tab that the modal can open',
+                content: 'Placeholder content for Opened tab 2'
             },
             {
-                title: 'Opened Tab 3',
-                description: 'The third tab that can be opened',
-                content: 'Opened Tab 3 Content'
+                title: 'Opened tab 3',
+                description: 'The third tab that the modal can open',
+                content: 'Placeholder content for Opened tab 3'
             }
         ];
 
@@ -81,6 +81,28 @@
             $scope.$close(self.selectedTabs);
         };
     }
+    
+    function TabsetPageController() {
+        var self = this;
+            self.pages = [
+                {
+                    title: "Records",
+                    count: 10,
+                    content: "Placeholder content for a tab that displays 10 records."
+                },
+                {
+                    title: "Gifts",
+                    count: 14,
+                    content: "Placeholder content for a tab that displays 14 gifts."
+                },
+                                {
+                    title: "Users",
+                    count: 144,
+                    content: "Placeholder content for a tab that displays 144 users."
+                }
+
+            ]
+    }
 
     CheckModalController.$inject = ['$scope', 'currentTabs'];
 
@@ -89,5 +111,6 @@
 
     angular.module('stache')
         .controller('CheckModalController', CheckModalController)
-        .controller('TabsetTestController', TabsetTestController);
+        .controller('TabsetTestController', TabsetTestController)
+        .controller('TabsetPageController', TabsetPageController);
 }());

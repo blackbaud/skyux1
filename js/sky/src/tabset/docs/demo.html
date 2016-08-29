@@ -1,16 +1,29 @@
 <div ng-controller="TabsetTestController as tabsetTestCtrl">
-
+  <h3>Tabs example with buttons to add and open tabs</h3>
     <uib-tabset bb-tabset-add="tabsetTestCtrl.addTab()" bb-tabset-open="tabsetTestCtrl.openTab()" bb-tabset-collapsible>
       <uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in tabsetTestCtrl.tabs" class="bb-tab-close">
-          <uib-tab-heading>
-              {{t.title}}
-              <button type="button" class="bb-tab-close-icon" ng-click="tabsetTestCtrl.closeTab($index, $event)"></button>
-          </uib-tab-heading>
-          {{t.content}}
-
+         <uib-tab-heading>
+           {{t.title}}
+            <button type="button" class="bb-tab-close-icon" ng-click="tabsetTestCtrl.closeTab($index, $event)"></button>
+         </uib-tab-heading>
+         {{t.content}}
       </uib-tab>
-  </uib-tabset>
+    </uib-tabset>
 </div>
+
+<div ng-controller="TabsetPageController as tabsetPageCtrl">
+  <h3>Tabs example with counter</h3>
+    <uib-tabset bb-tabset-collapsible>
+        <uib-tab bb-tab-collapsible-header="p.title" ng-repeat="p in tabsetPageCtrl.pages">
+            <uib-tab-heading>
+                {{p.title}}
+                <span class="bb-tab-header-count">{{p.count}}</span>
+            </uib-tab-heading>
+            {{p.content}}
+        </uib-tab>
+    </uib-tabset>
+</div>
+
 <script type="text/ng-template" id="demo/tabset/checklist.html">
     <bb-modal>
         <bb-modal-header>Select Tabs</bb-modal-header>
@@ -23,7 +36,7 @@
             </bb-checklist>
         </div>
         <bb-modal-footer>
-            <bb-modal-footer-button-primary ng-click="checkCtrl.applyChanges()">Apply Tabs</bb-modal-footer-button-primary>
+            <bb-modal-footer-button-primary ng-click="checkCtrl.applyChanges()">Apply tabs</bb-modal-footer-button-primary>
             <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
         </bb-modal-footer>
     </bb-modal>
