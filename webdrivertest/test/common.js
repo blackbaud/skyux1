@@ -75,15 +75,23 @@
         }
         return browser.url(url)
             .getViewportSize().then(function (size) {
-                console.log('in get viewport size');
                 if (size.width !== screenWidth) {
-                    console.log('before return 1');
                     return browser.setViewportSize({width: screenWidth, height: size.height});
                 } else {
-                    console.log('before return 2');
                     return;
                 }
             });
+    }
+
+    function checkVisualResult(results, options, browser) {
+        results.forEach(function (element) {
+            expect(element.isExactSameImage).toBe(true);
+        });
+        if (options.checkAccessibility) {
+            return checkAccessibility(browser, options);
+        } else {
+            return;
+        }
     }
 
     function getViewSizeHandler(width, browser, options) {
@@ -94,24 +102,20 @@
         pageName = prefix + '/' + prefix + '_' + options.screenshotName + '_full';
         options.screenshotName = options.screenshotName + widthString;
 
-        console.log('before check element');
-        return browser.checkElement(options.selector, {widths: [width]}).then(function (results) {
-            results.forEach(function (element) {
-                console.log('checking elements');
-                expect(element.isExactSameImage).toBe(true);
-            });
-            console.log('after check element');
-            if (options.checkAccessibility) {
-                return checkAccessibility(this, options);
-            } else {
-                return;
-            }
+        //if (options.selector) {
+        return browser.checkElement(options.selector).then(function (results) {
+            return checkVisualResult(results, options, this);
         });
+        /*} else {
+            return browser.checkDocument().then(function (results) {
+                return checkVisualResult(results, options, this);
+            });
+        }*/
+        
     }
 
     module.exports = {
         compareScreenshot: function (options) { 
-            console.log('in compare screenshot');
             return options.browserResult.getViewportSize('width').then(function (width) {
                 return getViewSizeHandler(width, this, options);
             });  
