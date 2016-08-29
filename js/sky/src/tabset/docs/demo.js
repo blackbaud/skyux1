@@ -84,24 +84,24 @@
     
     function TabsetPageController() {
         var self = this;
-            self.pages = [
-                {
-                    title: "Records",
-                    count: 10,
-                    content: "Placeholder content for a tab that displays 10 records."
-                },
-                {
-                    title: "Gifts",
-                    count: 14,
-                    content: "Placeholder content for a tab that displays 14 gifts."
-                },
-                                {
-                    title: "Users",
-                    count: 144,
-                    content: "Placeholder content for a tab that displays 144 users."
-                }
+        self.pages = [
+            {
+                title: "Records",
+                count: 10,
+                content: "Placeholder content for a tab that displays 10 records."
+            },
+            {
+                title: "Gifts",
+                count: 14,
+                content: "Placeholder content for a tab that displays 14 gifts."
+            },
+                            {
+                title: "Users",
+                count: 144,
+                content: "Placeholder content for a tab that displays 144 users."
+            }
 
-            ]
+        ]
     }
 
     CheckModalController.$inject = ['$scope', 'currentTabs'];
