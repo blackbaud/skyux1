@@ -101,7 +101,7 @@ describe('Viewkeeper', function () {
                 bbViewKeeperConfig,
                 initialViewportMarginTop;
             
-            function validateFixed(el, fixed, bottom) {
+            function validateFixed(el, fixed, bottom, bottomCss) {
                 var expectedCls = 'bb-viewkeeper-fixed';
                 
                 if (fixed) {
@@ -112,7 +112,7 @@ describe('Viewkeeper', function () {
                 
                 if (bottom) {
                     expect(el).toHaveCss({
-                        bottom: '0px'
+                        bottom: bottomCss || '0px'
                     });
                 }
             }
@@ -377,6 +377,86 @@ describe('Viewkeeper', function () {
                 
                 destroyAndRemove(vk);
             });
+            
+            it('should allow the top margin to be overridden', function () {
+                var marginTopOverride,
+                    styleEl,
+                    vk = createViewKeeper();
+
+                $(vk.el).before('<div style="height: 200px"></div>');
+
+                marginTopOverride = {
+                    margin: initialViewportMarginTop + 100
+                };
+
+                $('<div style="position: fixed; left: 0; right: 0; top: 0; background-color: green"></div>')
+                    .height(marginTopOverride.margin)
+                    .appendTo(document.body);
+                
+                validateFixed(vk.el, false);
+
+                styleEl = $(
+                    '<style>.bb-viewkeeper-fixed {margin-top: ' + 
+                    marginTopOverride.margin + 
+                    'px !important;}</style>'
+                )
+                    .appendTo(document.body);
+
+                bbViewKeeperBuilder.addViewportMarginTopOverride(marginTopOverride);
+                
+                // The boundary element is positioned to be the same as the initial viewport
+                // margin top, so calculate the scroll based on it and the height of the 
+                // margin top override.
+                $(document)
+                    .scrollTop(marginTopOverride.margin - (initialViewportMarginTop + 1))
+                    .scroll();
+                
+                validateFixed(vk.el, false);
+                
+                $(document)
+                    .scrollTop(marginTopOverride.margin - (initialViewportMarginTop - 1))
+                    .scroll();
+                
+                validateFixed(vk.el, true);
+
+                bbViewKeeperBuilder.removeViewportMarginTopOverride(marginTopOverride);
+ 
+                destroyAndRemove(vk);
+                styleEl.remove();
+            });
+            
+            it('should allow the bottom margin to be overridden', function () {
+                var marginBottomOverride,
+                    vk;
+
+                vk = createViewKeeper({
+                    fixToBottom: true
+                });
+                
+                $('<div>b</div>')
+                    .height($(window).height() + 300)
+                    .prependTo(vk.boundaryEl);
+
+                marginBottomOverride = {
+                    margin: 150
+                };
+                
+                validateFixed(vk.el, false);
+
+                bbViewKeeperBuilder.addViewportMarginBottomOverride(marginBottomOverride);
+                
+                vk.syncElPosition();
+                
+                validateFixed(vk.el, true, true, marginBottomOverride.margin + 'px');
+
+                bbViewKeeperBuilder.removeViewportMarginBottomOverride(marginBottomOverride);
+
+                vk.syncElPosition();
+ 
+                validateFixed(vk.el, true, true, '0px');
+
+                destroyAndRemove(vk);
+            });
         });
     });
 
@@ -386,7 +466,7 @@ describe('Viewkeeper', function () {
             bbViewKeeperBuilder;
         
         beforeEach(module(
-        'ngMock'
+            'ngMock'
         ));
 
         beforeEach(module(function ($provide) {

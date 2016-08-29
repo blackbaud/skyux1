@@ -26,6 +26,7 @@ body:not(.bb-viewkeeper-ignore-fixed) {
             }
         }
     }
+
     /*Special handling for jqGrid since it already specifies the position attribute with a more specific selector */
     .ui-jqgrid-hdiv {
         &.bb-viewkeeper-fixed,

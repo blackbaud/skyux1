@@ -25,6 +25,8 @@
   font-weight: normal;
 }
 
+
+
 .caret {
     border-top: none;
     border-right: none;
@@ -121,11 +123,11 @@
 
 .bb-context-menu .dropdown-menu, .dropdown-menu bb-context-menu-item {
   
-    li.disabled {
+    li.disabled, .bb-dropdown-item.disabled {
         pointer-events:none;  
     }
 
-    li > a {
+    li > a, .bb-dropdown-item > a {
         border-radius: 3px;
         clear: both;
         color: inherit;
@@ -138,11 +140,11 @@
         white-space: nowrap;
     }
 
-    li > a.font-bold {
+    li > a.font-bold, .bb-dropdown-item > a.font-bold {
         font-weight: 600;
     }
 
-    li > a, .bb-submenu .panel-body a {
+    li > a, .bb-submenu .panel-body a, .bb-dropdown-item > a {
         &:hover,
         &:focus {
             text-decoration: none;

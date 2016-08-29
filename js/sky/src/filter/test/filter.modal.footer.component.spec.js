@@ -20,10 +20,10 @@
 
 
         it('Creates a modal footer with apply and clear filter buttons', function () {
-            var modalHtml = '<div><bb-filter-modal-footer ' + 
+            var modalHtml = '<div><bb-modal><bb-filter-modal-footer ' + 
                 'bb-filter-modal-apply="modalCtrl.applyFilters()" ' +
                 'bb-filter-modal-clear="modalCtrl.clearAllFilters()"> ' +
-            '</bb-filter-modal-footer></div>',
+            '</bb-filter-modal-footer></bb-modal></div>',
                 footerEl,
                 filtersApplied = false,
                 filtersCleared = false,

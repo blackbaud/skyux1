@@ -31,6 +31,9 @@ describe('Avatar directive', function () {
                     return imgUrl;
                 },
                 revokeObjectURL: function () {}
+            },
+            navigator: {
+                userAgent: ''
             }
         };
 
