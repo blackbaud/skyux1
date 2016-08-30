@@ -45,7 +45,7 @@
     "grunt-karma": "0.12.2",
     "grunt-ngdocs": "0.2.9",
     "grunt-sri": "0.0.5",
-    "grunt-webdriver": "1.0.0",
+    "grunt-webdriver": "2.0.1",
     "install": "0.6.0",
     "istanbul": "0.4.2",
     "jasmine": "2.4.1",
@@ -72,7 +72,7 @@
       "version": "0.2.9"
     },
     "wdio-jasmine-framework": "0.2.5",
-    "webdriverio": "4.0.9",
+    "webdriverio": "4.2.8",
     "wdio-visual-regression-service": "0.2.0"
   },
   "dependencies": {

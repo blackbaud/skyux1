@@ -1,5 +1,5 @@
 
-/*global describe, it, browser,require */
+/*global describe, it, browser */
 
 describe('Carousel', function () {
     'use strict';

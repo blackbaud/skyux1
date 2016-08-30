@@ -3,10 +3,7 @@
 (function () {
     'use strict';
     var os,
-        config,
-        path = require('path'),
-        VisualRegressionCompare = require('wdio-visual-regression-service/compare'),
-        common = require('../../webdrivertest/test/common.js');
+        config;
 
     
     
@@ -26,15 +23,9 @@
         }
     ];
 
-    config.visualRegression = {
-        compare: new VisualRegressionCompare.LocalCompare({
-            referenceName: common.getScreenshotName(path.join(process.cwd(), 'webdriver-screenshotslocal')),
-            screenshotName: common.getScreenshotName(path.join(process.cwd(), 'webdriver-screenshotslocal-screen')),
-            diffName: common.getScreenshotName(path.join(process.cwd(), 'webdriver-screenshotslocal-diffs')),
-            misMatchTolerance: 0.01
-        }),
-        viewportChangePause: 300
-    };
+    config.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshotslocal', 
+                                                                                                'webdriver-screenshotslocal-screen', 
+                                                                                                'webdriver-screenshotslocal-diffs');
 
     exports.config = config;
 }());

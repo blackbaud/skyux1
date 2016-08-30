@@ -1,22 +1,21 @@
 
-/*global describe, it, browser,require, expect */
+/*global describe, it, browser */
 
 describe('Reorder', function () {
     'use strict';
 
-    it('should match previous reorder screenshot in the default state', function (done) {
-        browser
+    it('should match previous reorder screenshot in the default state', function () {
+        return browser
             .setupTest('/reorder/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'reorder_default',
                 selector: '#screenshot-reorder',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match previous reorder screenshot when user is sorting', function (done) {
-        browser
+    it('should match previous reorder screenshot when user is sorting', function () {
+        return browser
             .setupTest('/reorder/fixtures/test.full.html')
             .moveToObject('#screenshot-reorder .bb-reorder-list-row:first-child .bb-reorder-list-col-icon')
             .buttonDown()
@@ -26,7 +25,6 @@ describe('Reorder', function () {
                 selector: '#screenshot-reorder',
                 checkAccessibility: true
             })
-            .buttonUp()
-            .call(done);
+            .buttonUp();
     });
 });

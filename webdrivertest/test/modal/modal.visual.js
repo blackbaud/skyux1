@@ -3,7 +3,7 @@
 describe('modals', function () {
     'use strict';
 
-    it('modal', function () {
+    it('match the baseline modal screenshot', function () {
         return browser
             .setupTest('/modal/fixtures/test.full.html')
             .compareScreenshot({
@@ -13,7 +13,7 @@ describe('modals', function () {
             });
     });
 
-    it('modal_dropdown', function () {
+    it('match the baseline modal with context menu screenshot', function () {
         return browser
             .setupTest('/modal/fixtures/test.full.html')
             .click('.bb-test-dropdown')
@@ -27,7 +27,7 @@ describe('modals', function () {
             .click('.bb-modal .modal-dialog .close');
     });
 
-    it('modal_fullpage', function () {
+    /*it('should match the baseline full-page modal screenshot', function () {
 
         return browser
             .setupTest('/modal/fixtures/test.full.html')
@@ -39,5 +39,5 @@ describe('modals', function () {
                 checkAccessibility: true
             })
             .click('.bb-modal .modal-dialog .close');
-    });
+    });*/
 });

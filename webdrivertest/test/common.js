@@ -1,5 +1,5 @@
 /*jshint jasmine: true */
-/* global module, axe, document, require, console */
+/* global module, axe, document, require, console, process */
 
 (function () {
     'use strict';
@@ -19,6 +19,7 @@
 
     function getScreenshotName(basePath) {
         var path = require('path');
+            
         return function (context) {
             var prefix = getPrefix(context.desiredCapabilities),
                 screenshotName = context.options.screenshotName;
@@ -26,6 +27,20 @@
             screenshotName = prefix + '_' + screenshotName + '.baseline.png';
             
             return path.join(basePath, prefix, screenshotName);
+        };
+    }
+
+    function getVisualRegression(referenceFolder, screenshotFolder, diffsFolder) {
+        var path = require('path'),
+            VisualRegressionCompare = require('wdio-visual-regression-service/compare');
+        return {
+            compare: new VisualRegressionCompare.LocalCompare({
+                referenceName: getScreenshotName(path.join(process.cwd(), referenceFolder)),
+                screenshotName: getScreenshotName(path.join(process.cwd(), screenshotFolder)),
+                diffName: getScreenshotName(path.join(process.cwd(), diffsFolder)),
+                misMatchTolerance: 0.01
+            }),
+            viewportChangePause: 300
         };
     }
 
@@ -110,7 +125,7 @@
             });  
         },
         setupTest: setupTest,
-        getScreenshotName: getScreenshotName,
+        getVisualRegression: getVisualRegression,
         checkAccessibility: checkAccessibility,
         moveCursorOffScreen: function (browser) {
             return browser.moveToObject('body', 0, 0);

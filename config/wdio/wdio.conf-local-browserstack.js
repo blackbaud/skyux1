@@ -63,14 +63,10 @@
     ];
     shared.host = 'hub-cloud.browserstack.com';
     shared.port = 80;
-    shared.plugins = {
-        webdrivercss: {
-            screenshotRoot: 'webdriver-screenshotslocal',
-            failedComparisonsRoot: 'webdriver-screenshotslocal-diffs',
-            mismatchTolerance: 0.05
-        }
-    };
 
+    shared.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshotslocal', 
+                                                                                                'webdriver-screenshotslocal-screen', 
+                                                                                                'webdriver-screenshotslocal-diffs');
     exports.config = shared;
 
 }());

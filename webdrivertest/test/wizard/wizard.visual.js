@@ -1,11 +1,11 @@
 
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('wizard', function () {
     'use strict';
 
-    it('should match the baseline wizard screenshot', function (done) {
-        browser
+    it('should match the baseline wizard screenshot', function () {
+        return browser
             .setupTest('/wizard/fixtures/test.full.html')
             .click('#screenshots-wizard-open')
             .pause(1000)
@@ -13,7 +13,6 @@ describe('wizard', function () {
                 screenshotName: 'wizard',
                 selector: '.modal-content',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 });

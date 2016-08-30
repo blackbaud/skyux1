@@ -12,7 +12,7 @@ describe('actionbar', function () {
         };
     }
 
-    it('actionbar', function () {
+    it('should match the baseline actionbar screenshot', function () {
         var options = createActionbarOptions();
 
         return browser
@@ -20,7 +20,7 @@ describe('actionbar', function () {
             .compareScreenshot(options);
     });
 
-    it('actionbar', function () {
+    it('should match the baseline actionbar screenshot on small screens', function () {
         var options = createActionbarOptions();
 
         return browser

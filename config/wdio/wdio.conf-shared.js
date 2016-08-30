@@ -8,7 +8,7 @@
 
 module.exports = {
     specs: [
-        'webdrivertest/test/**/modal.visual.js'
+        'webdrivertest/test/**/*.visual.js'
     ],
     logLevel: 'silent',
     baseUrl: 'http://localhost:8000/webdrivertest/test',
@@ -55,5 +55,6 @@ module.exports = {
     onComplete: function () {
         console.log('tests complete');
     },
+    maxInstances: 1,
     sync: false
 };
