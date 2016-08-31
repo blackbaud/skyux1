@@ -20,7 +20,8 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
-            resolution: '1280x960'
+            resolution: '1280x960',
+            maxInstances: 3
         },
         {
             browserName: 'firefox',
@@ -33,11 +34,12 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
-            resolution: '1280x960'
+            resolution: '1280x960',
+            maxInstances: 3
         }
     ];
 
-    shared.maxInstances = 8;
+    shared.maxInstances = 6;
     shared.host = 'hub-cloud-us.browserstack.com';
     shared.port = 80;
 
