@@ -27,7 +27,6 @@ module.exports = {
     },
     before: function () {
         var common = require('../../webdrivertest/test/common.js');
-        console.log('before test run');
         
         browser.addCommand('setupTest', function async(url, screenWidth) {
             return common.setupTest(this, url, screenWidth); 
@@ -50,7 +49,7 @@ module.exports = {
 
     },
     after: function () {
-        console.log('after test run');
+        
     },
     onComplete: function () {
         console.log('tests complete');

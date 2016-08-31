@@ -36,6 +36,8 @@
             resolution: '1280x960'
         }
     ];
+
+    shared.maxInstances = 4;
     shared.host = 'hub-cloud-us.browserstack.com';
     shared.port = 80;
 
