@@ -54,6 +54,5 @@ module.exports = {
     onComplete: function () {
         console.log('tests complete');
     },
-    maxInstances: 1,
     sync: false
 };

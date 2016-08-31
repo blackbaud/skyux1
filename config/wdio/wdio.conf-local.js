@@ -23,6 +23,8 @@
         }
     ];
 
+    config.maxInstances = 1;
+
     config.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshotslocal', 
                                                                                                 'webdriver-screenshotslocal-screen', 
                                                                                                 'webdriver-screenshotslocal-diffs');

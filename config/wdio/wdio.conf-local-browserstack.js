@@ -63,6 +63,7 @@
     ];
     shared.host = 'hub-cloud.browserstack.com';
     shared.port = 80;
+    shared.maxInstances = 1;
 
     shared.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshotslocal', 
                                                                                                 'webdriver-screenshotslocal-screen', 
