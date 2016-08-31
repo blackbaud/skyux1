@@ -27,7 +27,7 @@ if [[ "$(ls -A webdriver-screenshots-diffs)" ]]; then
 
     mkdir -p created-screenshots
 
-    cp -rf ../webdriver-screenshots-screen /created-screenshots
+    cp -rf ../webdriver-screenshots-screen created-screenshots/
 
     git add -A
     if [ -z "$(git status --porcelain)" ]; then
