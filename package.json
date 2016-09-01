@@ -73,8 +73,7 @@
     },
     "wdio-jasmine-framework": "0.2.5",
     "webdriverio": "4.2.8",
-    "wdio-visual-regression-service": "0.2.0",
-    "wdio-screenshot": "0.2.1"
+    "wdio-visual-regression-service": "0.2.0"
   },
   "dependencies": {
     "angular": "1.5.3",
