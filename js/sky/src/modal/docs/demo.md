@@ -1,16 +1,16 @@
 ---
 name: Modal
 icon: list-alt
-summary: The modal component launches modals in a way that is consistent with SKY UX applications.
+summary: The modal component launches modals in a consistent way in SKY UX applications.
 ---
 
-The modal directive and service allow you to launch modals in a consistent way in SKY UX applications. Instead of the UI Bootstrap `$uibModal.open`, use `bbModal.open`. 
-This takes the following arguments: 
-  - `uibModalOptions` &mdash; Specifies an object that has the same options as [$uibModal.open](https://angular-ui.github.io/bootstrap/#modal), allowing for some custom default SKY UX behaviors.
-  - `bbModalOptions` &mdash; *(Optional.)* Specifies an object that contains SKY UX specific options for modals.
-    -  `fullPage` &mdash; *(Optional.)* Specifies whether the modal should take up the entire page. *(Default = `false`)*
+The modal directive and service allow you to launch modals in a consistent way in SKY UX applications. The `bbModal` service lauches the modals instead of [the UI Bootstrap `$uibModal.open`](https://angular-ui.github.io/bootstrap/#modal), while the `bb-modal` directive provides a common look-and-feel for modal content. Within the `bb-modal` directive, you have options to display a common modal header, specify the body content, and display a common modal footer and buttons.
 
-In addition to the `bbModal` service to lauch modals, a `bb-modal` directive can provide a common look-and-feel for modal content. Within `bb-modal`, `bb-modal-header` displays a common modal header, `bb-modal-footer` displays a common modal footer and buttons, and `bb-modal-body` wraps the modal's body content.
+### Modal service settings ###
+- `bbModal.open` &mdash; Launches modals in a consistent way in SKY UX applications. Used instead of `$uibModal.open`.
+  - `uibModalOptions` &mdash; Specifies an object with the same options as `$uibModal.open` that allows for some custom default SKY UX behavior.
+  - `bbModalOptions` &mdash; *(Optional.)* Specifies an object that contains SKY UX-specific options for modals.
+    -  `fullPage` &mdash; *(Optional.)* Indicates whether the modal takes up the entire page. *(Default: `false`)*
 
 ### Modal directive settings ###
 - `bb-modal` &mdash; Creates a modal with a common SKY UX look-and-feel.
