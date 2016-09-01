@@ -19,7 +19,7 @@ describe('Reorder', function () {
             .setupTest('/reorder/fixtures/test.full.html')
             .moveToObject('#screenshot-reorder .bb-reorder-list-row:first-child .bb-reorder-list-col-icon')
             .buttonDown()
-            .moveToObject('#screenshot-reorder .bb-reorder-list-row:nth-child(2)', 0, -35)
+            .moveToObject('#screenshot-reorder .bb-reorder-list-row:nth-child(2)', 0, 0)
             .compareScreenshot({
                 screenshotName: 'reorder_sorting',
                 selector: '#screenshot-reorder',
