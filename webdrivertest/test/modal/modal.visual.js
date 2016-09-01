@@ -27,7 +27,7 @@ describe('modals', function () {
             .click('.bb-modal .modal-dialog .close');
     });
 
-    /*it('should match the baseline full-page modal screenshot', function () {
+    it('should match the baseline full-page modal screenshot', function () {
 
         return browser
             .setupTest('/modal/fixtures/test.full.html')
@@ -39,5 +39,5 @@ describe('modals', function () {
                 checkAccessibility: true
             })
             .click('.bb-modal .modal-dialog .close');
-    });*/
+    });
 });
