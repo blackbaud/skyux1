@@ -14,6 +14,31 @@ describe('filter components', function () {
             .call(done);
     });
 
+    it('should match the baseline screenshot of the filter button when active', function (done) {
+        browser
+            .setupTest('/filter/fixtures/test.full.html')
+            .click('.bb-filter-set-active')
+            .compareScreenshot({
+                screenshotName: 'filter_button_active',
+                selector: '#screenshot-filter-button',
+                checkAccessibility: true
+            })
+            .call(done);
+    });
+
+    it('should match the baseline screenshot of the filter button when active and focused', function (done) {
+        browser
+            .setupTest('/filter/fixtures/test.full.html')
+            .click('.bb-filter-set-active')
+            .focusElement('#screenshot-filter-button .bb-btn-secondary')
+            .compareScreenshot({
+                screenshotName: 'filter_button_active_focus',
+                selector: '#screenshot-filter-button',
+                checkAccessibility: true
+            })
+            .call(done);
+    });
+
     it('should match the baseline screenshot of the filter modal footer', function (done) {
         browser
             .setupTest('/filter/fixtures/test.full.html')

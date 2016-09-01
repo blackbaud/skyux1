@@ -1,7 +1,9 @@
 <div style="height: 1000px" ng-controller="FilterTestController as filterCtrl">
+    <button type="button" style="margin-bottom: 10px" class="bb-filter-set-active btn btn-primary" ng-click="filterCtrl.isActive = !filterCtrl.isActive">Set filter button active</button>
     <div id="screenshot-filter-button" style="margin-bottom: 5px;">
         <bb-filter-button 
-            bb-filter-button-on-click="filterCtrl.filterButtonClicked()">
+            bb-filter-button-on-click="filterCtrl.filterButtonClicked()"
+            bb-filter-button-active="filterCtrl.isActive">
         </bb-filter-button>
     </div>
     <div id="screenshot-filter-summary">
