@@ -1,4 +1,5 @@
-/*global describe, it, browser,  $ */
+/*global describe, it, browser, $ */
+
 
 describe('navbar', function () {
     'use strict';
@@ -8,8 +9,10 @@ describe('navbar', function () {
             .setupTest('/navbar/fixtures/test.full.html', screenWidth)
             .compareScreenshot({
                 screenshotName: 'navbar',
-                selector: '#screenshot-navbar'
+                selector: '#screenshot-navbar',
+                checkAccessibility: true
             });
+
     }
 
     it('should match the baseline navbar screenshot', function () {
@@ -26,7 +29,9 @@ describe('navbar', function () {
             .moveToObject('.nav li.dropdown a')
             .compareScreenshot({
                 screenshotName: 'navbar_dropdown',
-                selector: '#screenshot-navbar-dropdown'
+
+                selector: '#screenshot-navbar-dropdown',
+                checkAccessibility: true
             });
     });
 
@@ -38,7 +43,8 @@ describe('navbar', function () {
             })
             .compareScreenshot({
                 screenshotName: 'navbar_dropdown_open',
-                selector: '#screenshot-navbar-dropdown'
+                selector: '#screenshot-navbar-dropdown',
+                checkAccessibility: true
             });
     });
 });

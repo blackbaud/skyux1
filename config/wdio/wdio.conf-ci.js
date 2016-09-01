@@ -24,6 +24,7 @@
         },
         {
             browserName: 'firefox',
+            browser_version: '47',
             'browserstack.local': 'true',
             'browserstack.debug': 'true',
             os: 'OS X',
