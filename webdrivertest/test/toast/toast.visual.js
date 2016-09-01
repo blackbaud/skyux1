@@ -9,6 +9,7 @@ describe('toast', function () {
             .click('#screenshot-toast-open')
             .waitForVisible('#toast-container')
             .pause(1000)
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'toast',
                 selector: '#toast-container',
@@ -22,6 +23,7 @@ describe('toast', function () {
             .click('#screenshot-toast-open-info')
             .waitForVisible('#toast-container')
             .pause(1000)
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'toast_info',
                 selector: '#toast-container',
@@ -35,6 +37,7 @@ describe('toast', function () {
             .click('#screenshot-toast-open-success')
             .waitForVisible('#toast-container')
             .pause(1000)
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'toast_success',
                 selector: '#toast-container',
@@ -48,6 +51,7 @@ describe('toast', function () {
             .click('#screenshot-toast-open-warning')
             .waitForVisible('#toast-container')
             .pause(1000)
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'toast_warning',
                 selector: '#toast-container',
@@ -61,6 +65,7 @@ describe('toast', function () {
             .click('#screenshot-toast-open-danger')
             .waitForVisible('#toast-container')
             .pause(1000)
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'toast_danger',
                 selector: '#toast-container',
