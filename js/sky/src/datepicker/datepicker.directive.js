@@ -310,8 +310,7 @@
                         momentDate = checkMomentDate(vm.pickerDate);
                         if (angular.isDate(momentDate)) {
                             vm.date = momentDate;
-                        } else 
-                        if (vm.date !== inputEl.val()) {
+                        } else if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
                             vm.date = inputEl.val();
                         }
