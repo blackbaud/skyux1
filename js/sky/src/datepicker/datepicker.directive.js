@@ -118,7 +118,6 @@
                     }
                 }
 
-
                 deferred = $q.defer();
 
                 if (skipValidation || angular.isDate(modelValue) || modelValue === '' || hasMinMaxError() || (!vm.required && modelValue === null)) {
@@ -294,8 +293,11 @@
                 function checkMomentDate(date) {
                     var result;
 
-                    result = bbDatepickerParser.parseMoment(date, vm.format);
 
+                    if (!vm.hasCustomValidation) {
+                        result = bbDatepickerParser.parseMoment(date, vm.format);
+                    }
+                    
                     return result;
                 }
 
@@ -306,10 +308,10 @@
                     /* sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
                         momentDate = checkMomentDate(vm.pickerDate);
-
                         if (angular.isDate(momentDate)) {
                             vm.date = momentDate;
-                        } else if (vm.date !== inputEl.val()) {
+                        } else 
+                        if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
                             vm.date = inputEl.val();
                         }

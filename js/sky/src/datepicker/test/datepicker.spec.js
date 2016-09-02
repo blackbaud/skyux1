@@ -34,7 +34,6 @@ describe('Datepicker directive', function () {
                     '<bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1"></bb-datepicker>' +
                 '</form>' +
             '</div>';
-
     }));
 
     afterEach(function () {
@@ -709,7 +708,7 @@ describe('Datepicker directive', function () {
 
     });
 
-    it('does not attempt to parse strings with length less than 8', function () {
+    it('Parses date strings with only two year digits', function () {
         var el,
             inputEl;
 
@@ -721,11 +720,9 @@ describe('Datepicker directive', function () {
 
         setInput(inputEl, '18.5.19');
 
-        expect(angular.isDefined($scope.testdate1)).toBe(true);
-        expect(angular.isDefined($scope.testform.$error.dateFormat)).toBe(true);
+        expect(inputEl).toHaveValue('18.05.2019');
+        expect($scope.testdate1).toEqual(new Date('05/18/2019'));
 
-        expect($scope.testform.$error.dateFormat[0].invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
-        expect($scope.testform.testDate1.invalidFormatMessage).toBe(resources.date_field_invalid_date_message);
     });
 
     it('handles ng-model changes after initialization', function () {

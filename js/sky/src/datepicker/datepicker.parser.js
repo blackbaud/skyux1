@@ -126,15 +126,20 @@
             return (separator && !separatorAtEnd && !separatorAtBeginning && hasTwoSeparators && !anyPartIsZero);
         }
 
-        function isMomentParsable(value) {
+        function hasValidMomentFormat(format) {
+            var formatIndex = getFormatIndex(format);
+            return !((formatIndex.monthBegin > formatIndex.yearBegin && formatIndex.yearBegin > formatIndex.dayBegin) ||
+                (formatIndex.monthBegin < formatIndex.yearBegin && formatIndex.yearBegin < formatIndex.dayBegin));
+        }
 
+        function isMomentParsable(value, format) {
             if (angular.isString(value) && dateHasSeparator(value)) {
 
                 if (value.length < 11 && value.length > 5) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (hasValidMomentFormat(format)) {
+                        return true;
+                    }
+                } 
             }
 
             return false;
