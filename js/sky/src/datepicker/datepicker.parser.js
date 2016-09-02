@@ -151,6 +151,8 @@
                 formatParts,
                 separator = matchSeparator(format);
 
+            /* istanbul ignore else */
+            /* sanity check */
             if (separator) {
                 dateParts = value.split(separator);
                 formatParts = format.split(separator);
@@ -159,13 +161,12 @@
                 if (formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin) {
                     return formatParts[2].length === 4 && dateParts[2].length === 2;
                 }
-
+                /* istanbul ignore else */
+                /* sanity check */
                 if (formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin) {
                     return formatParts[0].length === 4 && dateParts[0].length !== 4;
                 }
             }
-
-            return false;
 
         }
 
@@ -175,15 +176,21 @@
                 separatorChar,
                 separator = matchSeparator(format);
 
+            /* istanbul ignore else */
+            /* sanity check */
             if (separator) {
                 formatParts = format.split(separator);
                 separatorChar = separator[0];
 
+                /* istanbul ignore else */
+                /* sanity check */
                 if (separatorChar) {
                     if (formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin) {
                         return formatParts[0] + separatorChar + formatParts[1] + separatorChar + 'yy';
                     }
 
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin) {
                         return 'yy' + separatorChar + formatParts[1] + separatorChar + formatParts[2];
                     }
@@ -194,6 +201,8 @@
         function getMomentDate(value, format) {
             var momentDate = bbMoment(value, format.toUpperCase()),
                 date;
+            /* istanbul ignore else */
+            /* sanity check */
             if (momentDate.isValid()) {
                 date = momentDate.toDate();
             }

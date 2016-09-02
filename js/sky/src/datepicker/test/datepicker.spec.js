@@ -725,6 +725,23 @@ describe('Datepicker directive', function () {
 
     });
 
+    it('Parses date strings with only two year digits with the year coming first', function () {
+        var el,
+            inputEl;
+
+        dateConfig.currentCultureDateFormatString = 'yyyy/MM/dd';
+
+        el = setupDatepicker(datepickerHtml, '1992/02/02');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, '92/2/2');
+
+        expect(inputEl).toHaveValue('1992/02/02');
+        expect($scope.testdate1).toEqual(new Date('02/02/1992'));
+
+    });
+
     it('handles ng-model changes after initialization', function () {
         var el,
             inputEl;
