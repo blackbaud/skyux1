@@ -291,12 +291,25 @@
                     }
                 );
 
+                function checkMomentDate(date) {
+                    var result;
+
+                    result = bbDatepickerParser.parseMoment(date, vm.format);
+
+                    return result;
+                }
+
                 function inputChanged() {
-                    var inputNgModel = vm.getInputNgModel();
+                    var inputNgModel = vm.getInputNgModel(),
+                        momentDate;
                     /*istanbul ignore else */
                     /* sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                        if (vm.date !== inputEl.val()) {
+                        momentDate = checkMomentDate(vm.pickerDate);
+
+                        if (angular.isDate(momentDate)) {
+                            vm.date = momentDate;
+                        } else if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
                             vm.date = inputEl.val();
                         }
