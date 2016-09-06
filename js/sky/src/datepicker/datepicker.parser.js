@@ -145,6 +145,14 @@
             return false;
         }
 
+        function yearInLastPosition(formatIndex) {
+            return formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin;
+        }
+
+        function yearInFirstPosition(formatIndex) {
+            return formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin;
+        }
+
         function yearPartDoesNotMatchFormat(value, format) {
             var formatIndex = getFormatIndex(format),
                 dateParts,
@@ -158,23 +166,26 @@
                 formatParts = format.split(separator);
 
             
-                if (formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin) {
+                if (yearInLastPosition(formatIndex)) {
                     return formatParts[2].length === 4 && dateParts[2].length === 2;
                 }
                 /* istanbul ignore else */
                 /* sanity check */
-                if (formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin) {
+                if (yearInFirstPosition(formatIndex)) {
                     return formatParts[0].length === 4 && dateParts[0].length !== 4;
                 }
             }
 
         }
 
+        
+
         function getTwoDigitFormat(format) {
             var formatIndex = getFormatIndex(format),
                 formatParts,
                 separatorChar,
-                separator = matchSeparator(format);
+                separator = matchSeparator(format),
+                middleFormat;
 
             /* istanbul ignore else */
             /* sanity check */
@@ -185,14 +196,16 @@
                 /* istanbul ignore else */
                 /* sanity check */
                 if (separatorChar) {
-                    if (formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin) {
-                        return formatParts[0] + separatorChar + formatParts[1] + separatorChar + 'yy';
+
+                    middleFormat = separatorChar + formatParts[1] + separatorChar;
+                    if (yearInLastPosition(formatIndex)) {
+                        return formatParts[0] + middleFormat + 'yy';
                     }
 
                     /* istanbul ignore else */
                     /* sanity check */
-                    if (formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin) {
-                        return 'yy' + separatorChar + formatParts[1] + separatorChar + formatParts[2];
+                    if (yearInFirstPosition(formatIndex)) {
+                        return 'yy' + middleFormat + formatParts[2];
                     }
                 }
             }
