@@ -735,10 +735,10 @@ describe('Datepicker directive', function () {
 
         inputEl = el.find('input');
 
-        setInput(inputEl, '92/2/2');
+        setInput(inputEl, '92/3/3');
 
-        expect(inputEl).toHaveValue('1992/02/02');
-        expect($scope.testdate1).toEqual(new Date('02/02/1992'));
+        expect(inputEl).toHaveValue('1992/03/03');
+        expect($scope.testdate1).toEqual(new Date('03/03/1992'));
 
     });
 

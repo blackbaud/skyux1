@@ -178,8 +178,6 @@
 
         }
 
-        
-
         function getTwoDigitFormat(format) {
             var formatIndex = getFormatIndex(format),
                 formatParts,
