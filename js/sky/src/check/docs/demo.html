@@ -20,7 +20,7 @@
     <label>Radio buttons:</label>
     <div ng-repeat="radioItem in checkCtrl.radioItems">
 
-        <input bb-check type="radio" id="radio-id-{{$id}}" ng-model="checkCtrl.selectedRadioItem" ng-value="radioItem.id" ng-disabled="radioItem.disabled">
+        <input name="demo" bb-check type="radio" id="radio-id-{{$id}}" ng-model="checkCtrl.selectedRadioItem" ng-value="radioItem.id" ng-disabled="radioItem.disabled">
         <label for="radio-id-{{$id}}">
             {{radioItem.description}}
         </label>

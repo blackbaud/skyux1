@@ -19,8 +19,7 @@
                 require: '?ngModel',
                 link: function (scope, el, attr, ngModel) {
                     var labelEl = el.parent('label'),
-                        styledEl,
-                        typeClass;
+                        styledEl;
 
                     if (labelEl.length < 1) {
                         el.wrap(createEl('wrapper'));
@@ -45,15 +44,10 @@
                         }, function (newValue) {
                             scope.checkValue = newValue; 
                         });
-
-                        typeClass = 'bb-check-radio';
-                    } else {
-                        typeClass = 'bb-check-checkbox';
-                    }
+                    } 
                     
                     styledEl = createEl(('styled' + attr.type), scope);
-                    
-                    styledEl.addClass(typeClass);
+
 
                     el.after(styledEl);
                 }
