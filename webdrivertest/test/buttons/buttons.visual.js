@@ -1,17 +1,16 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('buttons', function () {
     'use strict';
 
-    it('should match the baseline buttons screenshot', function (done) {
-        browser
+    it('should match the baseline buttons screenshot', function () {
+        return browser
             .setupTest('/buttons/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'buttons',
                 selector: '#screenshot-buttons',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
     function getSelector(type, prefix) {
@@ -19,50 +18,49 @@ describe('buttons', function () {
         return selector;
     }
 
-    function clickTest(type, done, prefix) {
+    function clickTest(type, prefix) {
         var selector = getSelector(type, prefix);
 
-        browser
+        return browser
             .setupTest('/buttons/fixtures/test.full.html')
             .click(selector)
             .compareScreenshot({
                 screenshotName: ('button_' + type + '_click'),
                 selector: ('#screenshots-buttons-' + type),
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     }
 
-    it('should match the baseline screenshot while clicking a default button', function (done) {
-        clickTest('default', done);
+    it('should match the baseline screenshot while clicking a default button', function () {
+        return clickTest('default');
     });
 
-    it('should match the baseline screenshot while clicking a primary button', function (done) {
-        clickTest('primary', done);
+    it('should match the baseline screenshot while clicking a primary button', function () {
+        return clickTest('primary');
     });
 
-    it('should match the baseline screenshot while clicking a secondary button', function (done) {
-        clickTest('secondary', done, 'bb');
+    it('should match the baseline screenshot while clicking a secondary button', function () {
+        return clickTest('secondary', 'bb');
     });
 
-    it('should match the baseline screenshot while clicking a success button', function (done) {
-        clickTest('success', done);
+    it('should match the baseline screenshot while clicking a success button', function () {
+        return clickTest('success');
     });
 
-    it('should match the baseline screenshot while clicking an info button', function (done) {
-        clickTest('info', done);
+    it('should match the baseline screenshot while clicking an info button', function () {
+        return clickTest('info');
     });
 
-    it('should match the baseline screenshot while clicking a warning button', function (done) {
-        clickTest('warning', done);
+    it('should match the baseline screenshot while clicking a warning button', function () {
+        return clickTest('warning');
     });
 
-    it('should match the baseline screenshot while clicking a danger button', function (done) {
-        clickTest('danger', done);
+    it('should match the baseline screenshot while clicking a danger button', function () {
+        return clickTest('danger');
     });
 
-    it('should match the baseline screenshot while clicking a link button', function (done) {
-        clickTest('link', done);
+    it('should match the baseline screenshot while clicking a link button', function () {
+        return clickTest('link');
     });
 
 });

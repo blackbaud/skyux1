@@ -3,21 +3,20 @@
 describe('search', function () {
     'use strict';
 
-    it('should match the baseline search screenshot', function (done) {
+    it('should match the baseline search screenshot', function () {
 
-        browser
+        return browser
             .setupTest('/search/fixtures/test.full.html')
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'search',
                 selector: '#screenshot-search-full',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline search screenshot when the input is focused', function (done) {
-        browser
+    it('should match the baseline search screenshot when the input is focused', function () {
+        return browser
             .setupTest('/search/fixtures/test.full.html')
             .pause(1000)
             .focusElement('.bb-search-input')
@@ -25,26 +24,24 @@ describe('search', function () {
                 screenshotName: 'search_focus',
                 selector: '#screenshot-search-full',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline search screenshot on small screens', function (done) {
+    it('should match the baseline search screenshot on small screens', function () {
 
-        browser
+        return browser
             .setupTest('/search/fixtures/test.full.html', 480)
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'search_small',
                 selector: '#screenshot-search-full',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline search screenshot on small screens when dismissable input is shown', function (done) {
+    it('should match the baseline search screenshot on small screens when dismissable input is shown', function () {
 
-        browser
+        return browser
             .setupTest('/search/fixtures/test.full.html', 480)
             .pause(1000)
             .click('.bb-search-btn-open')
@@ -53,13 +50,12 @@ describe('search', function () {
                 screenshotName: 'search_small_dismissable',
                 selector: '#screenshot-search-full',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline search screenshot on small screens when search is applied', function (done) {
+    it('should match the baseline search screenshot on small screens when search is applied', function () {
 
-        browser
+        return browser
             .setupTest('/search/fixtures/test.full.html', 480)
             .pause(1000)
             .click('.bb-search-btn-open')
@@ -71,13 +67,12 @@ describe('search', function () {
                 screenshotName: 'search_small_dismissable_applied',
                 selector: '#screenshot-search-full',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline search screenshot on small screens when search is applied and dismissed', function (done) {
+    it('should match the baseline search screenshot on small screens when search is applied and dismissed', function () {
 
-        browser
+        return browser
             .setupTest('/search/fixtures/test.full.html', 480)
             .pause(1000)
             .click('.bb-search-btn-open')
@@ -91,8 +86,7 @@ describe('search', function () {
                 screenshotName: 'search_small_applied',
                 selector: '#screenshot-search-full',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
 });

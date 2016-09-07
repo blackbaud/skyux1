@@ -1,20 +1,19 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('textexpand', function () {
     'use strict';
 
-    it('should match the baseline screenshot when text expand is collapsed', function (done) {
-        browser
+    it('should match the baseline screenshot when text expand is collapsed', function () {
+        return browser
             .setupTest('/textexpand/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'textexpand_collapsed',
                 selector: '#screenshot-text-expand-all'
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline screenshot when text expand is expanded', function (done) {
-        browser
+    it('should match the baseline screenshot when text expand is expanded', function () {
+        return browser
             .setupTest('/textexpand/fixtures/test.full.html')
             .click('#screenshot-text-expand .bb-text-expand-see-more')
             .click('#screenshot-text-expand-line-break .bb-text-expand-see-more')
@@ -23,7 +22,6 @@ describe('textexpand', function () {
             .compareScreenshot({
                 screenshotName: 'textexpand_expanded',
                 selector: '#screenshot-text-expand-all'
-            })
-            .call(done);
+            });
     });
 });

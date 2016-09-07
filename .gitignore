@@ -211,8 +211,10 @@ webdrivertest/test/**/*.full.html
 /screenshot-local-diffs
 /screenshot-diffs
 /webdriver-screenshots-diffs
+/webdriver-screenshots-screen
 /webdriver-screenshotslocal
 /webdriver-screenshotslocal-diffs
+/webdriver-screenshotslocal-screen
 .slimerjs-cache/
 browserstack.env
 browserstack-binary/

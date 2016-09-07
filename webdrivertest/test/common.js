@@ -1,20 +1,47 @@
 /*jshint jasmine: true */
-/* global module, axe, document, console */
+/* global module, axe, document, require, console, process */
 
 (function () {
     'use strict';
 
-    function getPrefix(browser) {
-        var browserName = browser.desiredCapabilities.browserName,
+    function getPrefix(capabilities) {
+        var browserName = capabilities.browserName,
             platform;
 
-        if (browser.desiredCapabilities.os === 'OS X') {
+        if (capabilities.os === 'OS X') {
             platform = 'MAC';
         } else {
             platform = 'WIN';
         }
 
         return platform + '_' + browserName;
+    }
+
+    function getScreenshotName(basePath) {
+        var path = require('path');
+            
+        return function (context) {
+            var prefix = getPrefix(context.desiredCapabilities),
+                screenshotName = context.options.screenshotName;
+
+            screenshotName = prefix + '_' + screenshotName + '.baseline.png';
+            
+            return path.join(basePath, prefix, screenshotName);
+        };
+    }
+
+    function getVisualRegression(referenceFolder, screenshotFolder, diffsFolder) {
+        var path = require('path'),
+            VisualRegressionCompare = require('wdio-visual-regression-service/compare');
+        return {
+            compare: new VisualRegressionCompare.LocalCompare({
+                referenceName: getScreenshotName(path.join(process.cwd(), referenceFolder)),
+                screenshotName: getScreenshotName(path.join(process.cwd(), screenshotFolder)),
+                diffName: getScreenshotName(path.join(process.cwd(), diffsFolder)),
+                misMatchTolerance: 0.01
+            }),
+            viewportChangePause: 300
+        };
     }
 
     function logError(message) {
@@ -69,37 +96,36 @@
             });
     }
 
-    module.exports = {
-        compareScreenshot: function (options) {
-            
-            return options.browserResult.getViewportSize('width').then(function (width) {
-                var pageName,
-                    prefix = getPrefix(this),
-                    widthString = '.' + width + 'px';
+    function checkVisualResult(results, options, browser) {
+        results.forEach(function (element) {
+            expect(element.isExactSameImage).toBe(true);
+        });
+        if (options.checkAccessibility) {
+            return checkAccessibility(browser, options);
+        } else {
+            return;
+        }
+    }
 
-                pageName = prefix + '/' + prefix + '_' + options.screenshotName + '_full';
-                options.screenshotName = options.screenshotName + widthString;
-                
-                return this.webdrivercss(pageName, [
-                    {
-                        name: options.screenshotName,
-                        elem: options.selector
-                    }
-                ], function (err, res) {
-                    expect(err).toBe(undefined);
-                    expect(res[options.screenshotName][0].isWithinMisMatchTolerance).toBe(true);
-                })
-                .then(function () {
-                    if (options.checkAccessibility) {
-                        return checkAccessibility(this, options);
-                    } else {
-                        return;
-                    }
-                });
-            });
-                
+    function getViewSizeHandler(width, browser, options) {
+        var widthString = '.' + width + 'px';
+
+        options.screenshotName = options.screenshotName + '_full' + '.' + options.screenshotName + widthString;
+
+        return browser.checkElement(options.selector, {screenshotName: options.screenshotName}).then(function (results) {
+            return checkVisualResult(results, options, this);
+        });
+        
+    }
+
+    module.exports = {
+        compareScreenshot: function (options) { 
+            return options.browserResult.getViewportSize('width').then(function (width) {
+                return getViewSizeHandler(width, this, options);
+            });  
         },
         setupTest: setupTest,
+        getVisualRegression: getVisualRegression,
         checkAccessibility: checkAccessibility,
         moveCursorOffScreen: function (browser) {
             return browser.moveToObject('body', 0, 0);
@@ -108,4 +134,4 @@
             return browser.execute('document.querySelector("' + selector + '").focus()');
         }
     };
-}());
+})();

@@ -3,9 +3,9 @@
 describe('infinite scroll', function () {
     'use strict';
 
-    it('match the baseline infinite scroll screenshot', function (done) {
+    it('match the baseline infinite scroll screenshot', function () {
 
-        browser
+        return browser
             .setupTest('/infinitescroll/fixtures/test.full.html')
             .click('.bb-btn-secondary')
             .pause(1000)
@@ -13,7 +13,6 @@ describe('infinite scroll', function () {
                 screenshotName: 'infinitescroll',
                 selector: '#screenshot-infinitescroll',
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 });

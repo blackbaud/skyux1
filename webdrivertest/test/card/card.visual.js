@@ -1,10 +1,10 @@
 
-/*global describe, it, browser,require */
+/*global describe, it, browser */
 
 describe('Card', function () {
     'use strict';
 
-    function clickTest(screenshotName, visibleComponents, selectable, done, extraStep) {
+    function clickTest(screenshotName, visibleComponents, selectable, extraStep) {
         var result;
 
         result = browser
@@ -15,66 +15,61 @@ describe('Card', function () {
             result = extraStep(result);
         }
 
-        result.compareScreenshot({
+        return result.compareScreenshot({
             screenshotName: ('card_' + screenshotName),
             selector: '#screenshots-card',
             checkAccessibilty: true
-        })
-        .call(done);
+        });
     }
 
-    it('should match previous screenshot when all components are present', function (done) {
-        clickTest(
+    it('should match previous screenshot when all components are present', function () {
+        return clickTest(
             'all',
             [
                 'Title',
                 'Content',
                 'Actions'
             ],
-            false,
-            done
+            false
         );
     });
 
-    it('should match previous screenshot when no header is present', function (done) {
-        clickTest(
+    it('should match previous screenshot when no header is present', function () {
+        return clickTest(
             'noheader',
             [
                 'Content',
                 'Actions'
             ],
-            false,
-            done
+            false
         );
     });
 
-    it('should match previous screenshot when no actions are present', function (done) {
-        clickTest(
+    it('should match previous screenshot when no actions are present', function () {
+        return clickTest(
             'noactions',
             [
                 'Title',
                 'Content'
             ],
-            false,
-            done
+            false
         );
     });
 
-    it('should match previous screenshot when selectable', function (done) {
-        clickTest(
+    it('should match previous screenshot when selectable', function () {
+        return clickTest(
             'selectable',
             [
                 'Title',
                 'Content',
                 'Actions'
             ],
-            true,
-            done
+            true
         );
     });
 
-    it('should match previous screenshot when the card is selected', function (done) {
-        clickTest(
+    it('should match previous screenshot when the card is selected', function () {
+        return clickTest(
             'selected',
             [
                 'Title',
@@ -82,7 +77,6 @@ describe('Card', function () {
                 'Actions'
             ],
             true,
-            done,
             function (result) {
                 return result.click('.bb-card-title');
             }
