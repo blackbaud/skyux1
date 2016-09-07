@@ -4,20 +4,18 @@
     }
 
 </style>
+
 <div ng-controller="SortTestController as sortCtrl">
-    <div uib-dropdown >
-        <button type="button" class="btn bb-btn-secondary" uib-dropdown-toggle>
-            <i class="fa fa-lg fa-sort"></i>
-        </button>
-        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-            <li class="disabled">
-                <a class="bb-subsection-heading" style="color: #707374" href="javascript:void(0)" aria-disabled="true" tabindex="-1">Sort by</a>
-            </li>
-            <li class="divider" style="margin: 0;"></li>
-            <li ng-class="{'bb-sort-selected': sortCtrl.selectedItem.id === item.id }" ng-repeat="item in sortCtrl.items" role="menuitem">
-                <a ng-class="{'bb-emphasized': sortCtrl.selectedItem.id === item.id}" href="javascript:void(0)" ng-click="sortCtrl.selectItem(item)">{{item.label}}</a>
-            </li>
-        </ul>
-    </div>
+    <bb-sort>
+        <bb-sort-item 
+            ng-repeat="item in sortCtrl.items" 
+            bb-sort
+            bb-sort-item-active="sortCtrl.initialState === item.id"
+            bb-sort-item-select="sortCtrl.sortItems(item)">
+        {{item.label}}
+        </bb-sort-item>
+    </bb-sort>
+
+    <p>Selected item is: {{sortCtrl.selectedItem}}</p>
     
 </div>

@@ -630,5 +630,13 @@
     "filter_summary_close": {
         "_description": "Text for the label for the filter summary close icon",
         "message": "Close"
+    },
+    "sort_menu_heading": {
+        "_description": "Text for the heading in the sort dropdown",
+        "message": "Sort by"
+    },
+    "sort_button_label": {
+        "_description": "Text for the sort button",
+        "message": "Sort"
     }
 }

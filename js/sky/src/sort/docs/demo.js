@@ -10,7 +10,7 @@
         }
 
 
-        self.selectItem = selectItem;
+        self.sortItems = selectItem;
 
         self.items = [
             {
@@ -54,6 +54,8 @@
                 name: 'vendorNameZA'
             }
         ];
+
+        self.initialState = self.items[6].id;
     }
 
     SortTestController.$inject = ['bbModal'];

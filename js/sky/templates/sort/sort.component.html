@@ -1,0 +1,18 @@
+<div uib-dropdown >
+    <button title="{{'sort_button_label' | bbResources}}" type="button" class="btn bb-btn-secondary" uib-dropdown-toggle>
+        <i class="fa fa-lg fa-sort"></i>
+    </button>
+    <div class="bb-dropdown-menu dropdown-menu" uib-dropdown-menu role="menu">  
+        <div class="bb-dropdown-item" role="presentation">
+            <a 
+                class="bb-subsection-heading bb-sort-heading" 
+                href="javascript:void(0)" 
+                aria-disabled="true" 
+                tabindex="-1">
+            {{'sort_menu_heading' | bbResources}}
+            </a>
+        </div>
+        <div class="bb-dropdown-item bb-sort-heading-divider divider"></div>
+        <ng-transclude></ng-transclude>
+    </div>
+</div>
