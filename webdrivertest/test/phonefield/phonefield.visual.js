@@ -1,4 +1,4 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('Phone Field directive', function () {
     'use strict';
@@ -13,20 +13,19 @@ describe('Phone Field directive', function () {
         wrapper: '#screenshot-phone-field'
     };
 
-    it('should match the baseline phone field screenshot.', function (done) {
-        browser
+    it('should match the baseline phone field screenshot.', function () {
+        return browser
             .setupTest(testPath)
             .waitForVisible(selectors.localCountryTextbox)
             .compareScreenshot({
                 screenshotName: 'phonefield',
                 selector: selectors.wrapper,
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline phone field screenshot when the flag selector is clicked.', function (done) {
-        browser
+    it('should match the baseline phone field screenshot when the flag selector is clicked.', function () {
+        return browser
             .setupTest(testPath)
             .click(selectors.flagContainer)
             .waitForVisible(selectors.countryList)
@@ -34,12 +33,11 @@ describe('Phone Field directive', function () {
                 screenshotName: 'phonefield_flag_select',
                 selector: selectors.wrapper,
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline phone field screenshot when an international country is selected.', function (done) {
-        browser
+    it('should match the baseline phone field screenshot when an international country is selected.', function () {
+        return browser
             .setupTest(testPath)
             .click(selectors.flagContainer)
             .click(selectors.intlCountrySelect)
@@ -49,7 +47,6 @@ describe('Phone Field directive', function () {
                 screenshotName: 'phonefield_intl_country',
                 selector: selectors.wrapper,
                 checkAccessibility: true
-            })
-            .call(done);
+            });
     });
 });

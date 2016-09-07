@@ -6,8 +6,6 @@
  * WebDriver configuration options shared between CI and local versions.
  */
 
-
-
 module.exports = {
     specs: [
         'webdrivertest/test/**/*.visual.js'
@@ -21,12 +19,14 @@ module.exports = {
         }
     },
     waitforTimeout: 3000,
+    services: [
+        'visual-regression'
+    ],
     onPrepare: function () {
         console.log('preparing tests');
     },
     before: function () {
         var common = require('../../webdrivertest/test/common.js');
-        console.log('before test run');
         
         browser.addCommand('setupTest', function async(url, screenWidth) {
             return common.setupTest(this, url, screenWidth); 
@@ -45,10 +45,14 @@ module.exports = {
             return common.focusElement(this, selector);
         });
     },
+    beforeTest: function () {
+
+    },
     after: function () {
-        console.log('after test run');
+        
     },
     onComplete: function () {
         console.log('tests complete');
-    }
+    },
+    sync: false
 };

@@ -3,8 +3,8 @@
 describe('bb-grid component', function () {
     'use strict';
 
-    it('should match the baseline screenshot of the standard grid', function (done) {
-        browser
+    it('should match the baseline screenshot of the standard grid', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-no-flyout')
             .moveCursorOffScreen()
@@ -12,12 +12,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_standard',
                 selector: '#screenshot-grid-no-flyout'
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline screenshot of the grid while wait is invoked', function (done) {
-        browser
+    it('should match the baseline screenshot of the grid while wait is invoked', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-wait')
             .moveCursorOffScreen()
@@ -26,12 +25,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_wait',
                 selector: '#screenshot-grid-wait'
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline screenshort of a loading grid', function (done) {
-        browser
+    it('should match the baseline screenshort of a loading grid', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-loading')
             .moveCursorOffScreen()
@@ -40,12 +38,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_loading',
                 selector: '#screenshot-grid-loading'
-            })
-            .call(done);
+            });
     });
 
-    it('should match the baseline screenshot of a grid with pagination', function (done) {
-        browser
+    it('should match the baseline screenshot of a grid with pagination', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-page')
             .moveCursorOffScreen()
@@ -53,12 +50,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_paged',
                 selector: '#screenshot-grid-pagination'
-            })
-            .call(done);
+            });
     });
 
-    it('match a baseline screenshot of a grid with filters', function (done) {
-        browser
+    it('match a baseline screenshot of a grid with filters', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
@@ -69,12 +65,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_filters',
                 selector: '#screenshot-grid'
-            })
-            .call(done);
+            });
     });
 
-    it('match a baseline screenshot while a grid with filters open is scrolled', function (done) {
-        browser
+    it('match a baseline screenshot while a grid with filters open is scrolled', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid')
             .waitForVisible('#screenshot-grid .bb-filter-btn', 20000)
@@ -84,12 +79,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_filter_viewkeeper',
                 selector: '#screenshot-grid'
-            })
-            .call(done);
+            });
     });
 
-    it('should match a baseline screenshot with a grid that has active inline filters', function (done) {
-        browser
+    it('should match a baseline screenshot with a grid that has active inline filters', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-page')
             .waitForVisible('#screenshot-grid-pagination .bb-filter-btn', 20000)
@@ -99,12 +93,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_filter_inline',
                 selector: '#screenshot-grid-pagination'
-            })
-            .call(done);
+            });
     });
 
-    function multiselectTest(screenSize, done) {
-        browser
+    function multiselectTest(screenSize) {
+        return browser
             .setupTest('/grids/fixtures/test.full.html', screenSize)
             .click('button.show-grid-no-flyout')
             .waitForVisible('#screenshot-grid-no-flyout .bb-filter-btn', 20000)
@@ -114,21 +107,20 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_multiselect',
                 selector: '#screenshot-grid-no-flyout'
-            })
-            .call(done);
+            });
     }
 
-    it('should match a baseline screenshot of a grid with multiselect', function (done) {
-        multiselectTest(1280, done);
+    it('should match a baseline screenshot of a grid with multiselect', function () {
+        return multiselectTest(1280);
     });
 
-    it('should match a baseline screenshot of a grid with multiselect on a small screen', function (done) {
-        multiselectTest(480, done);
+    it('should match a baseline screenshot of a grid with multiselect on a small screen', function () {
+        return multiselectTest(480);
     });
 
-    it('should match a baseline screenshot of a grid with context menu open', function (done) {
+    it('should match a baseline screenshot of a grid with context menu open', function () {
 
-        browser
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-no-flyout')
             .waitForVisible('#screenshot-grid-no-flyout td .bb-context-menu-btn', 20000)
@@ -136,12 +128,11 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_contextmenu_open',
                 selector: '#screenshot-grid-no-flyout'
-            })
-            .call(done);
+            });
     });
 
-    it('should match a baseline screenshot of a grid with filter modal', function (done) {
-        browser
+    it('should match a baseline screenshot of a grid with filter modal', function () {
+        return browser
             .setupTest('/grids/fixtures/test.full.html')
             .click('button.show-grid-no-flyout')
             .waitForVisible('#screenshot-grid-no-flyout .bb-filter-btn .bb-btn-secondary', 20000)
@@ -154,7 +145,6 @@ describe('bb-grid component', function () {
             .compareScreenshot({
                 screenshotName: 'grids_filter_modal',
                 selector: '#screenshot-grid-no-flyout'
-            })
-            .call(done);
+            });
     });
 });

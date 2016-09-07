@@ -4,6 +4,8 @@
     'use strict';
     var os,
         config;
+
+    
     
     if (process.platform === 'win32') {
         os = 'WIN';
@@ -21,13 +23,11 @@
         }
     ];
 
-    config.plugins = {
-        webdrivercss: {
-            screenshotRoot: 'webdriver-screenshotslocal',
-            failedComparisonsRoot: 'webdriver-screenshotslocal-diffs',
-            mismatchTolerance: 0.05
-        }
-    };
+    config.maxInstances = 1;
+
+    config.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshotslocal', 
+                                                                                                'webdriver-screenshotslocal-screen', 
+                                                                                                'webdriver-screenshotslocal-diffs');
 
     exports.config = config;
 }());
