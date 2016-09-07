@@ -17,14 +17,29 @@
             return date;
         }
 
+        function getFormatIndex(format) {
+            return {
+                yearBegin: format.indexOf('y'),
+                monthBegin: format.indexOf('M'),
+                dayBegin: format.indexOf('d')
+            };
+        }
+
         function parseNoSeparatorDateString(value, format) {
             var date = null,
-                yearBegin = format.indexOf('y'),
-                monthBegin = format.indexOf('M'),
-                dayBegin = format.indexOf('d'),
+                yearBegin,
+                monthBegin,
+                dayBegin,
+                formatIndex,
                 yearIndex,
                 monthIndex,
                 dayIndex;
+
+            formatIndex = getFormatIndex(format);
+            yearBegin = formatIndex.yearBegin;
+            monthBegin = formatIndex.monthBegin;
+            dayBegin = formatIndex.dayBegin;
+
             if (angular.isString(value) && value.length === 8 && !isNaN(value)) {
                 if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
                     yearIndex = 4;
@@ -55,10 +70,15 @@
         function getAltInputFormats(format) {
             var altInputFormats = [],
                 separator = matchSeparator(format),
-                yearBegin = format.indexOf('y'),
-                monthBegin = format.indexOf('M'),
-                dayBegin = format.indexOf('d'),
+                formatIndex = getFormatIndex(format),
+                yearBegin,
+                monthBegin,
+                dayBegin,
                 separatorChar;
+            
+            yearBegin = formatIndex.yearBegin;
+            monthBegin = formatIndex.monthBegin;
+            dayBegin = formatIndex.dayBegin;
 
             /*istanbul ignore else */
             /* sanity check */
@@ -81,7 +101,6 @@
 
                 return altInputFormats;
             }
-
 
         }
 
@@ -107,57 +126,122 @@
             return (separator && !separatorAtEnd && !separatorAtBeginning && hasTwoSeparators && !anyPartIsZero);
         }
 
-        function isMomentParsable(value, format) {
-            var yearParts,
-                yearIndex,
-                monthIndex,
-                dayIndex,
-                separator;
+        function hasValidMomentFormat(format) {
+            var formatIndex = getFormatIndex(format);
+            return !((formatIndex.monthBegin > formatIndex.yearBegin && formatIndex.yearBegin > formatIndex.dayBegin) ||
+                (formatIndex.monthBegin < formatIndex.yearBegin && formatIndex.yearBegin < formatIndex.dayBegin));
+        }
 
+        function isMomentParsable(value, format) {
             if (angular.isString(value) && dateHasSeparator(value)) {
 
-                if (value.length === 10) {
-                    return true;
-                } else if (value.length === 9 || value.length === 8) {
-                    //insure that years have 4 characters
-                    separator = matchSeparator(value);
-                    yearParts = value.split(separator);
-                    yearIndex = format.indexOf('y');
-                    monthIndex = format.indexOf('M');
-                    dayIndex = format.indexOf('d');
-                    if (yearIndex > monthIndex && yearIndex > dayIndex) {
-                        return yearParts[2].length === 4;
+                if (value.length < 11 && value.length > 5) {
+                    if (hasValidMomentFormat(format)) {
+                        return true;
                     }
-
-                    if (yearIndex < monthIndex && yearIndex < dayIndex) {
-                        return yearParts[0].length === 4;
-                    }
-
-                }
-
+                } 
             }
 
             return false;
         }
 
+        function yearInLastPosition(formatIndex) {
+            return formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin;
+        }
+
+        function yearInFirstPosition(formatIndex) {
+            return formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin;
+        }
+
+        function yearPartDoesNotMatchFormat(value, format) {
+            var formatIndex = getFormatIndex(format),
+                dateParts,
+                formatParts,
+                separator = matchSeparator(format);
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (separator) {
+                dateParts = value.split(separator);
+                formatParts = format.split(separator);
+
+            
+                if (yearInLastPosition(formatIndex)) {
+                    return formatParts[2].length === 4 && dateParts[2].length === 2;
+                }
+                /* istanbul ignore else */
+                /* sanity check */
+                if (yearInFirstPosition(formatIndex)) {
+                    return formatParts[0].length === 4 && dateParts[0].length !== 4;
+                }
+            }
+
+        }
+
+        function getTwoDigitFormat(format) {
+            var formatIndex = getFormatIndex(format),
+                formatParts,
+                separatorChar,
+                separator = matchSeparator(format),
+                middleFormat;
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (separator) {
+                formatParts = format.split(separator);
+                separatorChar = separator[0];
+
+                /* istanbul ignore else */
+                /* sanity check */
+                if (separatorChar) {
+
+                    middleFormat = separatorChar + formatParts[1] + separatorChar;
+                    if (yearInLastPosition(formatIndex)) {
+                        return formatParts[0] + middleFormat + 'yy';
+                    }
+
+                    /* istanbul ignore else */
+                    /* sanity check */
+                    if (yearInFirstPosition(formatIndex)) {
+                        return 'yy' + middleFormat + formatParts[2];
+                    }
+                }
+            }
+        }
+
+        function getMomentDate(value, format) {
+            var momentDate = bbMoment(value, format.toUpperCase()),
+                date;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (momentDate.isValid()) {
+                date = momentDate.toDate();
+            }
+            return date;
+        }
+
         function parseMoment(value, format) {
-           var date = null,
-               momentDate;
+            var date = null,
+               momentFormat;
 
-           if (isMomentParsable(value, format)) {
-               momentDate = bbMoment(value, format.toUpperCase());
-               if (momentDate.isValid()) {
-                   date = momentDate.toDate();
-               }
-           }
-
-           return date;
-       }
+            if (isMomentParsable(value, format)) {
+                if (yearPartDoesNotMatchFormat(value, format)) {
+                    momentFormat = getTwoDigitFormat(format);
+                }
+                if (!momentFormat) {
+                    momentFormat = format;
+                }
+                date = getMomentDate(value, momentFormat);
+               
+            }
+            return date;
+        }
 
         return {
             parseUTCString: parseUTCString,
             parseNoSeparatorDateString: parseNoSeparatorDateString,
             getAltInputFormats: getAltInputFormats,
+            parseMoment: parseMoment,
             runModelParsers: function (value, format) {
                 var date = null;
 
