@@ -9,7 +9,6 @@
     <bb-sort>
         <bb-sort-item 
             ng-repeat="item in sortCtrl.items" 
-            bb-sort
             bb-sort-item-active="sortCtrl.initialState === item.id"
             bb-sort-item-select="sortCtrl.sortItems(item)">
         {{item.label}}
