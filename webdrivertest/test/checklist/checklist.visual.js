@@ -8,6 +8,7 @@ describe('checklist', function () {
         return browser
             .setupTest('/checklist/fixtures/test.full.html')
             .click('button.show-grid')
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'checklist_grid',
                 selector: '#screenshot-checklist-grid',
@@ -19,6 +20,7 @@ describe('checklist', function () {
         return browser
             .setupTest('/checklist/fixtures/test.full.html')
             .click('button.show-list')
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'checklist_list',
                 selector: '#screenshot-checklist-list',
@@ -30,6 +32,7 @@ describe('checklist', function () {
         return browser
             .setupTest('/checklist/fixtures/test.full.html')
             .click('button.show-single')
+            .moveCursorOffScreen()
             .compareScreenshot({
                 screenshotName: 'checklist_single',
                 selector: '#screenshot-checklist-single',
