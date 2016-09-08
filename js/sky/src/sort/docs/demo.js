@@ -105,8 +105,6 @@
         
     }
 
-    SortTestController.$inject = ['bbModal'];
-
     angular.module('stache')
         .controller('SortTestController', SortTestController);
 })();
