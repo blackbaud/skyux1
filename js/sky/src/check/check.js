@@ -16,8 +16,7 @@
             }
 
             return {
-                require: '?ngModel',
-                link: function (scope, el, attr, ngModel) {
+                link: function (scope, el, attr) {
                     var labelEl = el.parent('label'),
                         styledEl;
 
@@ -35,16 +34,6 @@
                         .wrap(createEl('labeltext'));
                     }
                     
-                    scope.checkModel = ngModel;
-                    
-                    if (attr.type === 'radio') {
-
-                        scope.$watch(function () {
-                            return scope.$eval(attr.ngValue);
-                        }, function (newValue) {
-                            scope.checkValue = newValue; 
-                        });
-                    } 
                     
                     styledEl = createEl(('styled' + attr.type), scope);
 
