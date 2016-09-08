@@ -16,11 +16,9 @@
             }
 
             return {
-                require: '?ngModel',
-                link: function (scope, el, attr, ngModel) {
+                link: function (scope, el, attr) {
                     var labelEl = el.parent('label'),
-                        styledEl,
-                        typeClass;
+                        styledEl;
 
                     if (labelEl.length < 1) {
                         el.wrap(createEl('wrapper'));
@@ -36,24 +34,9 @@
                         .wrap(createEl('labeltext'));
                     }
                     
-                    scope.checkModel = ngModel;
-                    
-                    if (attr.type === 'radio') {
-
-                        scope.$watch(function () {
-                            return scope.$eval(attr.ngValue);
-                        }, function (newValue) {
-                            scope.checkValue = newValue; 
-                        });
-
-                        typeClass = 'bb-check-radio';
-                    } else {
-                        typeClass = 'bb-check-checkbox';
-                    }
                     
                     styledEl = createEl(('styled' + attr.type), scope);
-                    
-                    styledEl.addClass(typeClass);
+
 
                     el.after(styledEl);
                 }
