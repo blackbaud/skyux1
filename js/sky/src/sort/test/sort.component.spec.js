@@ -179,6 +179,5 @@
             expect($document.find('body').children('.bb-dropdown-menu').length).toBe(1);
             sortEl.remove();
         });
-
     });
 })();

@@ -2,18 +2,6 @@
 (function () {
     'use strict';
 
-    function Controller($element) {
-        var self = this;
-
-        function onInit() {
-            if (self.bbSortAppendToBody) {
-                $element.find('.bb-sort').attr('dropdown-append-to-body', true);
-            }
-        }
-
-        self.$onInit = onInit;
-    }
-
     function templateFn($element, $attrs) {
         var templateString;
         if (angular.isDefined($attrs.bbSortAppendToBody)) {
@@ -35,13 +23,10 @@
         return templateString;
     }
 
-    Controller.$inject = ['$element'];
-
     templateFn.$inject = ['$element', '$attrs'];
 
     angular.module('sky.sort.component', ['ui.bootstrap.dropdown', 'sky.resources', 'sky.sort.menu.component'])
         .component('bbSort', {
-            controller: Controller,
             template: templateFn,
             bindings: {
                 bbSortAppendToBody: '@?'
