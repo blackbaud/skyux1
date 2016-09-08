@@ -163,5 +163,22 @@
             sortEl.remove();
         });
 
+        it('applies the dropdown-append-to-body attribute when necessary', function () {
+            var sortEl,
+                appendHtml = '<bb-sort bb-sort-append-to-body>' +
+                '<bb-sort-item ' +
+                'ng-repeat="item in sortCtrl.items" ' +
+                'bb-sort-item-active="sortCtrl.initialState === item.id" ' +
+                'bb-sort-item-select="sortCtrl.sortItems(item)">' +
+                '{{item.label}}' +
+                '</bb-sort-item>' +
+                '</bb-sort>';
+
+            sortEl = initSort(appendHtml);
+
+            expect($document.find('body').children('.bb-dropdown-menu').length).toBe(1);
+            sortEl.remove();
+        });
+
     });
 })();

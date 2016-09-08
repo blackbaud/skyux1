@@ -35,7 +35,7 @@
     angular.module('sky.sort.item.component', [])
         .component('bbSortItem', {
             require: {
-                sortCtrl: '^bbSort'
+                sortCtrl: '^bbSortMenu'
             },
             templateUrl: 'sky/templates/sort/sort.item.component.html',
             transclude: true,
