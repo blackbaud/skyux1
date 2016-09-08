@@ -24,6 +24,17 @@
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $document = _$document_;
+
+            $scope.sortCtrl = {
+                items: [{
+                    id: '1',
+                    label: 'label 1'
+                },
+                {
+                    id: '2',
+                    label: 'label 2'
+                }]
+            };
             
         }));
 
@@ -39,25 +50,25 @@
             return el.find('bb-sort-item .bb-dropdown-item a');
         }
 
+        function getDropdownItems(el) {
+            return el.find('bb-sort-item .bb-dropdown-item');
+        }
+
+        function initSort(templateHtml) {
+            var sortEl = $compile(templateHtml)($scope);
+            $document.find('body').append(sortEl);
+            $scope.$digest();
+            return sortEl;
+        }
+
         it('creates a sort button and items', function () {
 
-            var sortEl = $compile(sortHtml)($scope),
+            var sortEl,
                 sortButtonEl,
                 sortItems,
                 sortMenu;
-            $scope.sortCtrl = {
-                items: [{
-                    id: '1',
-                    label: 'label 1'
-                },
-                {
-                    id: '2',
-                    label: 'label 2'
-                }]
-            };
 
-            $document.find('body').append(sortEl);
-            $scope.$digest();
+            sortEl = initSort(sortHtml);
 
             sortButtonEl = getSortButton(sortEl);
             expect(sortButtonEl.find('i.fa-sort').length).toBe(1);
@@ -74,22 +85,82 @@
 
             expect(sortItems.eq(0)).toHaveText('label 1');
 
-            expect(sortItems.eq(0)).toHaveText('label 2');
+            expect(sortItems.eq(1)).toHaveText('label 2');
 
             sortEl.remove();
 
         });
 
-        it('calls the proper function on sort item select and applies styling', function () {
+        function verifyStyles(sortEl, index, isSelected) {
+            var dropdownItems = getDropdownItems(sortEl),
+                sortItems = getSortItems(sortEl);
+            if (isSelected) {
+                expect(sortItems.eq(index)).toHaveClass('bb-emphasized');
+                expect(dropdownItems.eq(index)).toHaveClass('bb-sort-selected');
+            } else {
+                expect(sortItems.eq(index)).not.toHaveClass('bb-emphasized');
+                expect(dropdownItems.eq(index)).not.toHaveClass('bb-sort-selected');
+            }
+        }
 
+        it('calls the proper function on sort item select and applies styling', function () {
+            var sortEl,
+                sortButtonEl,
+                selectedItem,
+                sortItems;
+            
+            $scope.sortCtrl.sortItems = function (item) {
+                selectedItem = item;
+            };
+            
+            sortEl = initSort(sortHtml);
+
+            sortButtonEl = getSortButton(sortEl);
+
+            sortButtonEl.click();
+
+            sortItems = getSortItems(sortEl);
+            sortItems.eq(0).click();
+            $scope.$digest();
+            expect(selectedItem).toEqual($scope.sortCtrl.items[0]);
+            verifyStyles(sortEl, 0, true);
+
+            sortItems.eq(1).click();
+            $scope.$digest();
+            expect(selectedItem).toEqual($scope.sortCtrl.items[1]);
+            verifyStyles(sortEl, 0, false);
+            verifyStyles(sortEl, 1, true);
+
+            sortEl.remove();
         });
 
         it('updates the applied styling on active binding change', function () {
+            var sortEl;
+            
+            sortEl = initSort(sortHtml);
 
+            $scope.sortCtrl.initialState = '1';
+            $scope.$digest();
+
+            verifyStyles(sortEl, 0, true);
+
+            $scope.sortCtrl.initialState = '2';
+            $scope.$digest();
+
+            verifyStyles(sortEl, 0, false);
+            verifyStyles(sortEl, 1, true);
+
+            sortEl.remove();
         });
 
         it('updates the applied styling on initialization', function () {
+            var sortEl;
+            $scope.sortCtrl.initialState = '1';
+            sortEl = initSort(sortHtml);
 
+            verifyStyles(sortEl, 0, true);
+
+            sortEl.remove();
         });
 
     });
