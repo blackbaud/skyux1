@@ -59,7 +59,9 @@
                         multiselectActions: '=?bbMultiselectActions',
                         updateMultiselectActions: '&bbSelectionsUpdated',
                         paginationOptions: '=?bbGridPagination',
-                        selectedRows: '=?bbSelectedRows'
+                        selectedRows: '=?bbSelectedRows',
+                        bbGridLoadMore: '&?',
+                        bbGridHasMoreRows: '<?'
                     },
                     controller: ['$scope', function ($scope) {
                         var locals,
@@ -1314,22 +1316,36 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function addMoreRowsToGrid(moreRows) {
+                                tableEl.addRowData('', moreRows);
+                                $scope.options.data = $scope.options.data.concat(moreRows);
+                                setUpFancyCheckCell();
+                                doNotResetRows = true;
+                            }
+
                             function loadMore() {
                                 var deferred = $q.defer(),
                                     loadMorePromise = deferred.promise;
 
-                                loadMorePromise.then(function (moreRows) {
-                                    tableEl.addRowData('', moreRows);
-                                    $scope.options.data = $scope.options.data.concat(moreRows);
-                                    setUpFancyCheckCell();
-                                    doNotResetRows = true;
-                                });
+                                loadMorePromise.then(addMoreRowsToGrid);
 
                                 $scope.$emit('loadMoreRows', {
                                     promise: deferred
                                 });
 
                             }
+
+                            function loadInfiniteScroll() {
+                                var loadPromise = $scope.bbGridLoadMore();
+                                if (loadPromise && angular.isFunction(loadPromise.then)) {
+                                    loadPromise.then(addMoreRowsToGrid);
+                                } else {
+                                    addMoreRowsToGrid();
+                                }
+                                return loadPromise;
+                            }
+
+                            $scope.locals.loadInfiniteScroll = loadInfiniteScroll;
 
                             $scope.locals.loadMore = loadMore;
 

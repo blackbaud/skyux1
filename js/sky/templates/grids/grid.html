@@ -21,9 +21,16 @@
         <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>
     </div>
 
-    <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">
+    <div ng-if="!paginationOptions &amp;&amp; !bbGridLoadMore" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">
         <span class="fa fa-cloud-download"></span>
         <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>
+    </div>
+
+    <div ng-if="!paginationOptions &amp;&amp; bbGridLoadMore">
+        <bb-infinite-scroll
+            bb-infinite-scroll-load="locals.loadInfiniteScroll()"
+            bb-infinite-scroll-has-more="bbGridHasMoreRows">
+        </bb-infinite-scroll>        
     </div>
 
     <div ng-if="paginationOptions" class="bb-grid-pagination-container">
