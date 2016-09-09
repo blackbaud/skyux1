@@ -23,7 +23,20 @@
         return -1;
     }
 
-    angular.module('sky.grids', ['sky.contextmenu', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window', 'sky.grids.toolbar'])
+    angular.module('sky.grids', 
+            [
+                'sky.infinitescroll',
+                'sky.contextmenu', 
+                'sky.mediabreakpoints', 
+                'sky.viewkeeper', 
+                'sky.highlight', 
+                'sky.resources', 
+                'sky.data', 
+                'sky.grids.filters', 
+                'sky.grids.actionbar', 
+                'sky.window', 
+                'sky.grids.toolbar'
+                ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
             function toggleDropdown($event) {
                 $event.preventDefault();
