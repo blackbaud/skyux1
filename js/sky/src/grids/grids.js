@@ -67,8 +67,6 @@
                         var locals,
                             self = this;
 
-
-
                         function searchApplied(searchText) {
                             locals.appliedSearchText = searchText;
                             /*istanbul ignore else */
