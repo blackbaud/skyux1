@@ -71,12 +71,12 @@
         self.sortOptions = [
             {
                 id: 1,
-                label: 'Assignee name (A - Z)',
+                label: 'Assigned to (A - Z)',
                 name: 'assigneeNameAZ'
             },
             {
                 id: 2,
-                label: 'Assignee name (Z - A)',
+                label: 'Assigned to (Z - A)',
                 name: 'assigneeNameZA'
             },
             {
