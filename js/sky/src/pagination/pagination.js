@@ -5,7 +5,7 @@
 
     var evtNsPos = 0;
 
-    angular.module('sky.pagination', ['ui.bootstrap.pagination'])
+    angular.module('sky.pagination', ['ui.bootstrap.pagination', 'sky.pagination.label'])
         .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;

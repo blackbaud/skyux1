@@ -8,7 +8,8 @@ describe('pagination', function () {
             .setupTest('/pagination/fixtures/test.full.html')
             .compareScreenshot({
                 screenshotName: 'pagination',
-                selector: '#screenshot-pagination'
+                selector: '#screenshot-pagination',
+                checkAccessibility: true
             });
 
     });
