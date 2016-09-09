@@ -12963,8 +12963,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-checklist-wrapper" bb-wait="bbChecklist.bbChecklistIsLoading" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">\n' +
         '    <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">\n' +
         '      <div ng-switch="bbChecklist.isSingleSelect()">\n' +
-        '        <div ng-switch-when="true">\n' +
-        '          <button ng-repeat="item in bbChecklist.filteredItems" type="button" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}" ng-click="bbChecklist.singleSelectRowClick(item)">\n' +
+        '        <div ng-switch-when="true" role="radiogroup">\n' +
+        '          <button\n' +
+        '            ng-repeat="item in bbChecklist.filteredItems"\n' +
+        '            role="radio" \n' +
+        '            type="button"\n' +
+        '            ng-attr-aria-checked="{{bbChecklist.itemIsSelected(item)}}"\n' +
+        '            class="bb-checklist-list-row" \n' +
+        '            ng-class="bbChecklist.getRowCls(item)" \n' +
+        '            data-bbauto-field="{{item.name}}" \n' +
+        '            ng-click="bbChecklist.singleSelectRowClick(item)">\n' +
         '            <ng-include class="bb-checklist-list-col" src="\'sky/templates/checklist/checklistlistrow.include.html\'"></ng-include>\n' +
         '          </button>\n' +
         '        </div>\n' +
