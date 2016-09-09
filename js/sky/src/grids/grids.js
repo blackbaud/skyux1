@@ -59,9 +59,7 @@
                         multiselectActions: '=?bbMultiselectActions',
                         updateMultiselectActions: '&bbSelectionsUpdated',
                         paginationOptions: '=?bbGridPagination',
-                        selectedRows: '=?bbSelectedRows',
-                        bbGridLoadMore: '&?',
-                        bbGridHasMoreRows: '<?'
+                        selectedRows: '=?bbSelectedRows'
                     },
                     controller: ['$scope', function ($scope) {
                         var locals,
@@ -1331,19 +1329,13 @@
                                     promise: deferred
                                 });
 
+                                return loadMorePromise;
+
                             }
 
-                            function loadInfiniteScroll() {
-                                var loadPromise = $scope.bbGridLoadMore();
-                                if (loadPromise && angular.isFunction(loadPromise.then)) {
-                                    loadPromise.then(addMoreRowsToGrid);
-                                } else {
-                                    addMoreRowsToGrid();
-                                }
-                                return loadPromise;
+                            if (angular.isDefined(attr.bbGridInfiniteScroll)) {
+                                $scope.locals.hasInfiniteScroll = true;
                             }
-
-                            $scope.locals.loadInfiniteScroll = loadInfiniteScroll;
 
                             $scope.locals.loadMore = loadMore;
 

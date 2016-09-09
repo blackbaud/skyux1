@@ -397,19 +397,17 @@
                 return newData;
             }
 
-            function loadMoreRows() {
-                self.gridOptions.loading = true;
-                return $timeout(function () {
-                    var newDataSet = getLoadMoreDataSet();
-                    self.gridOptions.loading = false;
-                    self.hasMoreRows = false;
-
-                    return newDataSet;
-
+            $scope.$on('loadMoreRows', function (event, data) {
+                /* If a promise exists on the event data, then we can resolve
+                       it with the next set of data that should be concatenated
+                       to the grid */
+                $timeout(function () {
+                    self.gridOptions.hasMoreRows = false;
+                    data.promise.resolve(getLoadMoreDataSet());
+                    
                 }, 2000);
-            }
-            self.loadMoreRows = loadMoreRows;
-            self.hasMoreRows = true;
+
+            });
 
             $scope.$on('includedColumnsChanged', function (event, data) {
                 // Optionally set the data's willResetData property to true if the controller will handle reloading the results
