@@ -91,6 +91,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `title` &mdash; Specifies the text to display on the button for the action.
     - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.
     - `bb-selections-updated` &mdash; *(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.
+    - `bb-grid-infinite-scroll` &mdash; *(Optional.)* When present, indicates that the grid will use infinite scroll to load instead of the load more button. When using infinite scroll, you must load data with the `loadMoreRows` event `promise` property.
 
 ### Grid events ###
     - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.

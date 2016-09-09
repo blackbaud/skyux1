@@ -15,6 +15,20 @@ describe('bb-grid component', function () {
             });
     });
 
+    it('should match the baseline screenshot of the standard grid with infinite scroll', function () {
+        return browser
+            .setupTest('/grids/fixtures/test.full.html')
+            .click('button.show-grid-no-flyout')
+            .click('button.bb-test-show-infinite')
+            .click('.bb-infinite-scroll .bb-btn-secondary')
+            .moveCursorOffScreen()
+            .waitForVisible('#screenshot-grid-no-flyout .bb-filter-btn', 20000)
+            .compareScreenshot({
+                screenshotName: 'grids_infinite',
+                selector: '#screenshot-grid-no-flyout'
+            });
+    });
+
     it('should match the baseline screenshot of the grid while wait is invoked', function () {
         return browser
             .setupTest('/grids/fixtures/test.full.html')
