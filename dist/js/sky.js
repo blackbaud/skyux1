@@ -5073,7 +5073,20 @@
         return -1;
     }
 
-    angular.module('sky.grids', ['sky.contextmenu', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window', 'sky.grids.toolbar'])
+    angular.module('sky.grids', 
+            [
+                'sky.infinitescroll',
+                'sky.contextmenu', 
+                'sky.mediabreakpoints', 
+                'sky.viewkeeper', 
+                'sky.highlight', 
+                'sky.resources', 
+                'sky.data', 
+                'sky.grids.filters', 
+                'sky.grids.actionbar', 
+                'sky.window', 
+                'sky.grids.toolbar'
+                ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
             function toggleDropdown($event) {
                 $event.preventDefault();
@@ -5114,8 +5127,6 @@
                     controller: ['$scope', function ($scope) {
                         var locals,
                             self = this;
-
-
 
                         function searchApplied(searchText) {
                             locals.appliedSearchText = searchText;
@@ -6364,21 +6375,29 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function addMoreRowsToGrid(moreRows) {
+                                tableEl.addRowData('', moreRows);
+                                $scope.options.data = $scope.options.data.concat(moreRows);
+                                setUpFancyCheckCell();
+                                doNotResetRows = true;
+                            }
+
                             function loadMore() {
                                 var deferred = $q.defer(),
                                     loadMorePromise = deferred.promise;
 
-                                loadMorePromise.then(function (moreRows) {
-                                    tableEl.addRowData('', moreRows);
-                                    $scope.options.data = $scope.options.data.concat(moreRows);
-                                    setUpFancyCheckCell();
-                                    doNotResetRows = true;
-                                });
+                                loadMorePromise.then(addMoreRowsToGrid);
 
                                 $scope.$emit('loadMoreRows', {
                                     promise: deferred
                                 });
 
+                                return loadMorePromise;
+
+                            }
+
+                            if (angular.isDefined(attr.bbGridInfiniteScroll)) {
+                                $scope.locals.hasInfiniteScroll = true;
                             }
 
                             $scope.locals.loadMore = loadMore;
@@ -13487,9 +13506,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
         '        <span class="fa fa-cloud-download"></span>\n' +
         '        <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>\n' +
+        '    </div>\n' +
+        '\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll">\n' +
+        '        <bb-infinite-scroll\n' +
+        '            bb-infinite-scroll-load="locals.loadMore()"\n' +
+        '            bb-infinite-scroll-has-more="options.hasMoreRows">\n' +
+        '        </bb-infinite-scroll>        \n' +
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
