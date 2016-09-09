@@ -45,8 +45,16 @@
   <div class="bb-checklist-wrapper" bb-wait="bbChecklist.bbChecklistIsLoading" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">
     <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">
       <div ng-switch="bbChecklist.isSingleSelect()">
-        <div ng-switch-when="true">
-          <button ng-repeat="item in bbChecklist.filteredItems" type="button" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}" ng-click="bbChecklist.singleSelectRowClick(item)">
+        <div ng-switch-when="true" role="radiogroup">
+          <button
+            ng-repeat="item in bbChecklist.filteredItems"
+            role="radio" 
+            type="button"
+            ng-attr-aria-checked="{{bbChecklist.itemIsSelected(item)}}"
+            class="bb-checklist-list-row" 
+            ng-class="bbChecklist.getRowCls(item)" 
+            data-bbauto-field="{{item.name}}" 
+            ng-click="bbChecklist.singleSelectRowClick(item)">
             <ng-include class="bb-checklist-list-col" src="'sky/templates/checklist/checklistlistrow.include.html'"></ng-include>
           </button>
         </div>
