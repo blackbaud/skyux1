@@ -47,6 +47,15 @@ describe('Select field directive', function () {
 
     describe('single-select', function () {
 
+        it('should show the search icon when specified', function () {
+            var $scope = $rootScope.$new(),
+                el;
+
+            el = $compile('<bb-select-field bb-select-field-style="single" bb-select-field-icon="search" ng-model="selectedItems"></bb-select-field>')($scope);
+            $scope.$digest();
+
+            expect(el.find('.bb-select-field-single-icon i')).toHaveClass('fa-search');
+        });
 
         it('should display the selected value in the button used to invoke the picker', function () {
             var $scope = $rootScope.$new(),

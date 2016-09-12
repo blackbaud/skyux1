@@ -32,6 +32,7 @@
                 bbSelectFieldClick: '&?',
                 bbSelectFieldSelectedItems: '=?ngModel',
                 bbSelectFieldStyle: '@?',
+                bbSelectFieldIcon: '@?',
                 bbSelectFieldText: '@?'
             },
             controller: 'BBSelectFieldController',
