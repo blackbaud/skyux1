@@ -630,5 +630,13 @@
     "filter_summary_close": {
         "_description": "Text for the label for the filter summary close icon",
         "message": "Close"
+    },
+    "pagination_previous": {
+        "_description": "Text for the label for the pagination previous link",
+        "message": "Previous"
+    },
+    "pagination_next": {
+        "_description": "Text for the label for the pagination next link",
+        "message": "Next"
     }
 }
