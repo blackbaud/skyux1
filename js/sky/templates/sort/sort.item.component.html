@@ -1,0 +1,10 @@
+<div 
+    class="bb-dropdown-item" 
+    ng-class="{'bb-sort-selected': $ctrl.isSelected }" role="menuitem">
+    <a 
+        ng-class="{'bb-emphasized': $ctrl.isSelected }" 
+        href="javascript:void(0)" 
+        ng-click="$ctrl.itemSelected()">
+        <ng-transclude></ng-transclude>
+    </a>
+</div>
