@@ -10,7 +10,8 @@ describe('Page summary', function () {
             .setValue('#screenshots-pagesummary-items', visibleComponents.join(','))
             .compareScreenshot({
                 screenshotName: ('pagesummary_' + screenshotName),
-                selector: '#screenshots-pagesummary'
+                selector: '#screenshots-pagesummary',
+                checkAccessibility: true
             });
     }
 
