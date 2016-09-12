@@ -401,10 +401,10 @@
                 /* If a promise exists on the event data, then we can resolve
                        it with the next set of data that should be concatenated
                        to the grid */
-                self.gridOptions.loading = true;
                 $timeout(function () {
+                    self.gridOptions.hasMoreRows = false;
                     data.promise.resolve(getLoadMoreDataSet());
-                    self.gridOptions.loading = false;
+                    
                 }, 2000);
 
             });

@@ -321,7 +321,88 @@ describe('Grid directive', function () {
         expect(cellEl.eq(0)).toHaveText('Ringo');
         expect(cellEl.eq(1)).toHaveText('Drums');
         expect(cellEl.eq(2)).toHaveText('');
+    });
 
+    function timeoutFlushIfAvailable() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
+        }
+
+    function setupScrollInfinite(inView, parentScrollable) {
+        var windowVal = 10,
+            offsetVal;
+        offsetVal = inView ? 0 : 30; 
+
+        spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
+        spyOn($.fn, 'height').and.returnValue(windowVal);
+        
+        if (!parentScrollable) {
+            spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+        } else {
+            spyOn($.fn, 'position').and.returnValue({ top: offsetVal });
+        }
+
+    }
+
+    it('can load more data when using infinite scroll through a promise', function () {
+
+        var rowEl,
+            cellEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            data.promise.resolve(angular.copy(dataSet1));
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+        
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+        cellEl = rowEl.eq(4).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('John');
+        expect(cellEl.eq(1)).toHaveText('Rhythm guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(5).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Paul');
+        expect(cellEl.eq(1)).toHaveText('Bass');
+        expect(cellEl.eq(2)).toHaveText('Lorem');
+
+        cellEl = rowEl.eq(6).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('George');
+        expect(cellEl.eq(1)).toHaveText('Lead guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(7).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Ringo');
+        expect(cellEl.eq(1)).toHaveText('Drums');
+        expect(cellEl.eq(2)).toHaveText('');
     });
 
     it('reinitializes the grid in response to a reInitGrid event', function () {

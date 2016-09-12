@@ -34,8 +34,8 @@
     border-radius: 50%;
 }
 
-.bb-check-checkbox:hover,
-.bb-check-radio:hover {
+.bb-check-wrapper input:hover + .bb-check-checkbox,
+.bb-check-wrapper input:hover + .bb-check-radio {
     border: 2px solid $bb-color-blue;
 }
 

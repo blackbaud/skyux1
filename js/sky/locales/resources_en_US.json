@@ -638,5 +638,13 @@
     "sort_button_label": {
         "_description": "Text for the sort button",
         "message": "Sort"
+    },
+    "pagination_previous": {
+        "_description": "Text for the label for the pagination previous link",
+        "message": "Previous"
+    },
+    "pagination_next": {
+        "_description": "Text for the label for the pagination next link",
+        "message": "Next"
     }
 }

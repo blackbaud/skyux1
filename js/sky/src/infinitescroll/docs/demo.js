@@ -29,7 +29,7 @@
 
                 addData();
 
-                if (idCount > 25) {
+                if (idCount > 9) {
                     vm.hasMore = false;
                 }
             }, 4000);

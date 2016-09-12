@@ -23,7 +23,20 @@
         return -1;
     }
 
-    angular.module('sky.grids', ['sky.contextmenu', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window', 'sky.grids.toolbar'])
+    angular.module('sky.grids', 
+            [
+                'sky.infinitescroll',
+                'sky.contextmenu', 
+                'sky.mediabreakpoints', 
+                'sky.viewkeeper', 
+                'sky.highlight', 
+                'sky.resources', 
+                'sky.data', 
+                'sky.grids.filters', 
+                'sky.grids.actionbar', 
+                'sky.window', 
+                'sky.grids.toolbar'
+                ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
             function toggleDropdown($event) {
                 $event.preventDefault();
@@ -64,8 +77,6 @@
                     controller: ['$scope', function ($scope) {
                         var locals,
                             self = this;
-
-
 
                         function searchApplied(searchText) {
                             locals.appliedSearchText = searchText;
@@ -1314,21 +1325,29 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function addMoreRowsToGrid(moreRows) {
+                                tableEl.addRowData('', moreRows);
+                                $scope.options.data = $scope.options.data.concat(moreRows);
+                                setUpFancyCheckCell();
+                                doNotResetRows = true;
+                            }
+
                             function loadMore() {
                                 var deferred = $q.defer(),
                                     loadMorePromise = deferred.promise;
 
-                                loadMorePromise.then(function (moreRows) {
-                                    tableEl.addRowData('', moreRows);
-                                    $scope.options.data = $scope.options.data.concat(moreRows);
-                                    setUpFancyCheckCell();
-                                    doNotResetRows = true;
-                                });
+                                loadMorePromise.then(addMoreRowsToGrid);
 
                                 $scope.$emit('loadMoreRows', {
                                     promise: deferred
                                 });
 
+                                return loadMorePromise;
+
+                            }
+
+                            if (angular.isDefined(attr.bbGridInfiniteScroll)) {
+                                $scope.locals.hasInfiniteScroll = true;
                             }
 
                             $scope.locals.loadMore = loadMore;
