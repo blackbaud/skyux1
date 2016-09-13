@@ -9,6 +9,7 @@ The select field directive launches a modal that displays items for users to sel
 ### Select field settings ###
   - `bb-select-field` &mdash; Creates a field that launches a modal with items for users to select.
     - `ng-model` &mdash; The array of items that users select on the modal.
+    - `bb-select-field-clear` &mdash; Adds a clear button to the select field in single-select mode. To add the clear functionality include this attribute with no value in the `bb-select-field` element.
     - `bb-select-field-text` &mdash; For multi-select mode, specifies the text to display in the link that opens the modal. For single-select mode, specifies the placeholder text to display in the field until users make selections.
     - `bb-select-field-style` &mdash; *(Optional.)* Indicates whether to display the select field in single- or multi-select mode. By default, the select field uses multi-select mode and you do not need this property. To limit users to a single selection, include this property and set it to `single`.
     - `bb-select-field-icon` &mdash; *(Optional.)* Indicates whether to use the search icon in single-select mode. By default, the single select icon is the `fa-sort` icon. To use the `fa-search` icon, include this property and set it to `search`.

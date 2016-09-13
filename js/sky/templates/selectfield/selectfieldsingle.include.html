@@ -2,7 +2,8 @@
   <div class="bb-select-field-single-inner">
     <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>
     <span 
-        role="button" 
+        role="button"
+        class="bb-select-field-clear"
         tabindex="0"
         ng-show="bbSelectField.bbSelectFieldClear &amp;&amp; bbSelectField.bbSelectFieldSelectedItems.length > 0"
         ng-click="bbSelectField.clearField($event)"

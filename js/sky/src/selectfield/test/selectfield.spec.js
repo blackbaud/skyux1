@@ -57,10 +57,62 @@ describe('Select field directive', function () {
             expect(el.find('.bb-select-field-single-icon i')).toHaveClass('fa-search');
         });
 
+        function findClearEl(el) {
+            return el.find('.bb-select-field-clear');
+        }
+
         it('should show the close icon when bbSelectFieldClear is specified and an item is selected and clear properly when used', function () {
+            var $scope = $rootScope.$new(),
+                clearEl,
+                e,
+                el;
 
+            el = $compile('<bb-select-field bb-select-field-style="single" bb-select-field-clear ng-model="selectedItems"></bb-select-field>')($scope);
+
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            clearEl = findClearEl(el);
+
+            expect(clearEl).not.toBeVisible();
+
+            $scope.selectedItems = [
+                {
+                    title: 'Selected item'
+                }
+            ];
+
+            $scope.$digest();
+            
+            expect(clearEl).toBeVisible();
+
+            clearEl.click();
+            $scope.$digest();
+
+            expect(clearEl).not.toBeVisible();
+            expect($scope.selectedItems).toEqual([]);
+
+            $scope.selectedItems = [
+                {
+                    title: 'Selected item'
+                }
+            ];
+
+            $scope.$digest();
+
+            e = $.Event('keypress');
+            e.which = 13;
+            e.keyCode = 13;
+
+            clearEl.trigger(e);
+
+            $scope.$digest();
+            expect(clearEl).not.toBeVisible();
+            expect($scope.selectedItems).toEqual([]);
+
+            el.remove();
         });
-
 
         it('should display the selected value in the button used to invoke the picker', function () {
             var $scope = $rootScope.$new(),
@@ -206,6 +258,38 @@ describe('Select field directive', function () {
 
             $scope.selectedItems = [
             ];
+            $scope.$digest();
+
+            expect($scope.myForm.$valid).toBe(false);
+            expect($scope.myForm.myField.$touched).toBe(true);
+            expect($scope.myForm.myField.$error.required).toBe(true);
+
+            el.remove();
+        });
+
+        it('should set touched on clear', function () {
+            var $scope = $rootScope.$new(),
+                clearEl,
+                el;
+
+            el = $compile('<form name="myForm"> <bb-select-field name="myField" bb-select-field-style="single" ng-model="selectedItems" bb-select-field-clear required>' +
+            '<bb-select-field-picker bb-select-field-picker-template="bbSelectField/single/test.html"></bb-select-field-picker>' +
+            '</bb-select-field>')($scope);
+
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            $scope.selectedItems = [
+                {
+                    title: 'Selected item'
+                }
+            ];
+
+            $scope.$digest();
+
+            clearEl = findClearEl(el);
+            clearEl.click();
             $scope.$digest();
 
             expect($scope.myForm.$valid).toBe(false);

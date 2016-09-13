@@ -56,7 +56,10 @@
             $event.stopPropagation();
             $event.preventDefault();
             vm.bbSelectFieldSelectedItems = [];
-            vm.setModelTouched();
+            if (angular.isFunction(vm.setModelTouched)) {
+                vm.setModelTouched();
+            }
+            
         }
 
         vm.clearField = clearField;
