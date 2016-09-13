@@ -31,7 +31,7 @@ Before you can contribute to SKY UX, you must have the following prerequisites i
 
 ### Visual regression tests
 
-We run visual regression tests through Browserstack using [webdrivercss](https://github.com/webdriverio/webdrivercss). To run these tests against a local selenium server you will need [GraphicsMagick](http://www.graphicsmagick.org/) for image processing installed on your system.
+We run visual regression tests through Browserstack using [webdriverio](http://webdriver.io/) and [wdio-visual-regression-service](https://github.com/zinserjan/wdio-visual-regression-service). To run these tests against a local selenium server you will need [GraphicsMagick](http://www.graphicsmagick.org/) for image processing installed on your system.
 
 ##### Mac OS X using [Homebrew](http://mxcl.github.io/homebrew/)
 ```sh
