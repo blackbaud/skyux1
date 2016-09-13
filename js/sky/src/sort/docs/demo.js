@@ -8,21 +8,15 @@
 
         function selectItem(item) {
             var result = repeaterItems.sort(function (a, b) {
-                switch (item.name) {
-                    case 'assigneeNameAZ': 
-                        return a.assignee > b.assignee;
-                    case 'assigneeNameZA': 
-                        return a.assignee < b.assignee;
-                    case 'dateCreatedNew':
-                        return a.date < b.date;
-                    case 'dateCreatedOld': 
-                        return a.date > b.date;
-                    case 'noteTitleAZ':
-                        return a.title > b.title;
-                    case 'notTitleZA':
-                        return a.title < b.title;   
+                var descending = item.descending ? -1 : 1,
+                    sortProperty = item.name;
+                if (a[sortProperty] > b[sortProperty]) {
+                    return (descending);
+                } else if (a[sortProperty] < b[sortProperty]) {
+                    return (-1 * descending);
+                } else {
+                    return 0;
                 }
-                return true;
             });
 
             self.sortedItems = repeaterItems;
@@ -72,32 +66,38 @@
             {
                 id: 1,
                 label: 'Assigned to (A - Z)',
-                name: 'assigneeNameAZ'
+                name: 'assignee',
+                descending: false
             },
             {
                 id: 2,
                 label: 'Assigned to (Z - A)',
-                name: 'assigneeNameZA'
+                name: 'assignee',
+                descending: true
             },
             {
                 id: 3,
                 label: 'Date created (newest first)',
-                name: 'dateCreatedNew'
+                name: 'date',
+                descending: true
             },
             {
                 id: 4,
                 label: 'Date created (oldest first)',
-                name: 'dateCreatedOld'
+                name: 'date',
+                descending: false
             },
             {
                 id: 5,
                 label: 'Note title (A - Z)',
-                name: 'noteTitleAZ'
+                name: 'title',
+                descending: false
             },
             {
                 id: 6,
                 label: 'Note title (Z - A)',
-                name: 'noteTitleZA'
+                name: 'title',
+                descending: true
             }
         ];
 
