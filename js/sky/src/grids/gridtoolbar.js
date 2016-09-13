@@ -14,7 +14,8 @@
                 bbGridSearchText: '<?bbGridSearchText'
             },
             transclude: {
-                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
+                'bbGridToolbarSort': '?bbGridToolbarSort'    
             },
             link: function ($scope, el, attr, bbGrid) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');

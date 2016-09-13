@@ -58,6 +58,15 @@
             bb-grid-search="gridCtrl.onGridSearch(searchText)">
 
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
+              <bb-grid-toolbar-sort>
+                  <bb-sort>
+                    <bb-sort-item 
+                        ng-repeat="sortItem in gridCtrl.sortOptions" 
+                        bb-sort-item-select="gridCtrl.sortItems(sortItem)">
+                    {{sortItem.label}}
+                    </bb-sort-item>
+                </bb-sort>
+              </bb-grid-toolbar-sort>
               <bb-grid-toolbar-filter-summary>
                   <bb-filter-summary ng-show="gridCtrl.appliedFilters.length > 0">
                     <bb-filter-summary-item
