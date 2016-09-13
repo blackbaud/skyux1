@@ -17,7 +17,7 @@
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
                 'bbGridToolbarSort': '?bbGridToolbarSort'    
             },
-            link: function ($scope, el, attr, bbGrid) {
+            link: function ($scope, el, attr, bbGrid, $transclude) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
                 function applySearchText() {
@@ -135,6 +135,7 @@
                         /* sanity check */
                         if (bbGrid !== null) {
                             bbGrid.applySearchText = applySearchText;
+                            bbGrid.headerSortInactive = $transclude.isSlotFilled('bbGridToolbarSort');
                         }
 
                         if (angular.isFunction($scope.options.onAddClick)) {

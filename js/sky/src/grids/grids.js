@@ -66,6 +66,7 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
+                    require: 'bbGrid',
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -187,7 +188,7 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr, ctrls, $transclude) {
+                    link: function ($scope, element, attr, bbGrid, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
@@ -1122,7 +1123,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName)) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();

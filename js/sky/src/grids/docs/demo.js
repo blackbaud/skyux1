@@ -344,9 +344,6 @@
                     }
                 },
                 multiselect: true,
-                sortOptions: {
-                    excludedColumns: ['bio']
-                },
                 selectedColumnIds: [1, 2, 3, 5],
                 columnPickerHelpKey: 'bb-security-users.html'
             };
@@ -410,6 +407,11 @@
                         return 0;
                     }
                 });
+
+                self.gridOptions.sortOptions = {
+                    column: item.name,
+                    descending: item.descending
+                }
             }
 
             self.sortItems = sortItems;

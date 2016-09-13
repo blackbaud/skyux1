@@ -59,7 +59,7 @@
 
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
               <bb-grid-toolbar-sort>
-                  <bb-sort>
+                  <bb-sort bb-sort-append-to-body>
                     <bb-sort-item 
                         ng-repeat="sortItem in gridCtrl.sortOptions" 
                         bb-sort-item-select="gridCtrl.sortItems(sortItem)">
