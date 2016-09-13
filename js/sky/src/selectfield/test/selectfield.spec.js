@@ -57,6 +57,11 @@ describe('Select field directive', function () {
             expect(el.find('.bb-select-field-single-icon i')).toHaveClass('fa-search');
         });
 
+        it('should show the close icon when bbSelectFieldClear is specified and an item is selected and clear properly when used', function () {
+
+        });
+
+
         it('should display the selected value in the button used to invoke the picker', function () {
             var $scope = $rootScope.$new(),
                 el;

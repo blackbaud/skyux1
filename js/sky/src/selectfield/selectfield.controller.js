@@ -52,6 +52,15 @@
             }
         };
 
+        function clearField($event) {
+            $event.stopPropagation();
+            $event.preventDefault();
+            vm.bbSelectFieldSelectedItems = [];
+            vm.setModelTouched();
+        }
+
+        vm.clearField = clearField;
+
         vm.removeAll = function () {
             vm.bbSelectFieldSelectedItems = [];
         };
