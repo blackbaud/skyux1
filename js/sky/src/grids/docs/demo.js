@@ -411,7 +411,7 @@
                 self.gridOptions.sortOptions = {
                     column: item.name,
                     descending: item.descending
-                }
+                };
             }
 
             self.sortItems = sortItems;
