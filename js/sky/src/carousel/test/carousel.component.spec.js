@@ -10,7 +10,7 @@ describe('Carousel component', function () {
         bbResources,
         styleEl;
 
-    function createCarouselEl($scope, itemCount, style) {
+    function createCarouselEl($scope, itemCount, style, useRepeater) {
         var html,
             i;
 
@@ -25,11 +25,24 @@ describe('Carousel component', function () {
 
         html += '>';
         
-        for (i = 0; i < itemCount; i++) {
-            html += 
-                '<bb-carousel-item>' +
-                    '<bb-card><button></button></bb-card>' +
-                '</bb-carousel-item>';
+        if (!useRepeater) {
+            for (i = 0; i < itemCount; i++) {
+                html += 
+                    '<bb-carousel-item>' +
+                        '<bb-card><button></button></bb-card>' +
+                    '</bb-carousel-item>';
+            }
+        } else {
+            html += '<bb-carousel-item ng-repeat="item in items">' +
+                        '<bb-card><button></button></bb-card>' +
+                    '</bb-carousel-item>';
+
+            $scope.items = [];
+            for (i = 0; i < itemCount; i++) {
+                $scope.items.push({
+                    id: i
+                });
+            }
         }
          
         html += '</bb-carousel>';
@@ -389,6 +402,41 @@ describe('Carousel component', function () {
         validateItemSelected(el, 1);
 
         $scope.selectedIndex = 0;
+        $scope.$digest();
+
+        validateItemSelected(el, 0);
+
+        el.remove();
+    });
+
+    it('should allow the host to set the selected index with ng-repeat', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 10, false, true);
+
+        el.appendTo(document.body);
+
+        $scope.selectedIndex = 1;
+        $scope.$digest();
+
+        validateItemSelected(el, 1);
+
+        $scope.selectedIndex = 0;
+        $scope.$digest();
+
+        validateItemSelected(el, 0);
+
+        el.remove();
+    });
+
+    it('should allow the host to have selected index 0 with ng-repeat with one item', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 1, false, true);
+
+        el.appendTo(document.body);
         $scope.$digest();
 
         validateItemSelected(el, 0);
