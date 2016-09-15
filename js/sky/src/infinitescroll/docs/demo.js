@@ -24,15 +24,14 @@
         
         vm.hasMore = true;
 
-        vm.loadFn = function (loadingComplete) {
-            $timeout(function () {
+        vm.loadFn = function () {
+            return $timeout(function () {
 
                 addData();
 
-                if (idCount > 25) {
+                if (idCount > 9) {
                     vm.hasMore = false;
                 }
-                loadingComplete();
             }, 4000);
 
         };
@@ -42,4 +41,4 @@
 
     angular.module('stache')
         .controller('InfiniteScrollDemoController', InfiniteScrollDemoController);
-}());
+})();

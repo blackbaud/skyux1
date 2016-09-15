@@ -4,6 +4,7 @@
 
 .modal-header {
     min-height: 45px;
+    background: $form-background;
 
     .bb-dialog-header {
         white-space: nowrap;
@@ -23,8 +24,11 @@
     .bb-helpbutton {
         float: right;
         margin-right: 20px;
-        margin-top: 2px !important;
         font-size: 16px;
+
+        &.close {
+            margin-top: 2px;
+        }
     }
 
     .close {
@@ -50,10 +54,10 @@
     margin: 0;
     text-align: left;
     background: $form-background;
+    
     .btn+.btn {
         margin-left: 10px;
     }
-
 }
 
 .bb-modal {
@@ -61,6 +65,89 @@
 
     .modal-body {
         overflow-y: auto;
+    }
+}
+
+.bb-modal-fullpage {
+    opacity: 0;
+    transition: opacity $bb-transition-time-short;
+
+    &.modal.in {
+        opacity: 1;
+        @include transform(none);
+
+        .modal-dialog {
+            @include transform(none);
+        }
+    }
+
+    &.modal {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .modal-dialog {
+        margin: 0;
+        width: 100%;
+    }
+
+    .modal-content {
+        border: none;
+    }
+
+    .modal-dialog,
+    .modal-content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .modal-header,
+    .modal-footer {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        z-index: 10000;
+    }
+
+    .modal-header {
+        top: 0;
+
+        .bb-dialog-header {
+            @include bb-section-heading;
+        }
+
+        .close,
+        .bb-helpbutton {
+            font-size: 20px;
+            margin-top: 6px;
+        }
+    }
+
+    .modal-footer {
+        bottom: 0;
+    }
+
+    .modal-body {
+        overflow: visible;
+        top: 0;
+        bottom: 0;
+    }
+}
+
+.bb-modal-open-fullpage {
+    &.modal-open {
+        overflow: auto;
+
+        .modal {
+            overflow: visible;
+        }
+        > *:not(.bb-modal) {
+            display: none;
+        }
     }
 }
 

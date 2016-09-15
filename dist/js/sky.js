@@ -88,9 +88,16 @@
 (function () {
     'use strict';
 
-    angular.module('sky.datepicker', ['sky.datepicker.directive']);
+    angular.module('sky.datepicker', ['sky.datepicker.directive', 'sky.datepicker.hide']);
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.definitionlist', ['sky.definitionlist.component', 'sky.definitionlistcontent.component']);
+}());
 /*global angular */
 
 (function () {
@@ -104,8 +111,49 @@
 (function () {
     'use strict';
 
+    angular.module('sky.filter', 
+        [
+            'sky.filter.modal.footer.component',
+            'sky.filter.button.component',
+            'sky.filter.summary.component',
+            'sky.filter.summary.item.component'
+        ]);
+})();
+
+/*global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.infinitescroll', ['sky.infinitescroll.component']);
+})();
+/*global angular */
+
+(function () {
+    'use strict';
+
     angular.module('sky.keyinfo', ['sky.keyinfo.component']);
 }());
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
+        'sky.modal',
+        [
+            'sky.modal.directive',
+            'sky.modal.body.directive',
+            'sky.modal.header.directive',
+            'sky.modal.footer.directive',
+            'sky.modal.footer.button.directive',
+            'sky.modal.footer.button.primary.directive',
+            'sky.modal.footer.button.cancel.directive',
+            'sky.modal.factory'
+        ]
+    );
+}());
+
 /*global angular */
 
 (function () {
@@ -148,7 +196,7 @@
             'sky.search.input.component',
             'sky.search.container.directive'
         ]);
-}());
+})();
 /*global angular */
 
 (function () {
@@ -163,8 +211,22 @@
         ]
     );
 
-}());
+})();
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module(
+        'sky.sort',
+        [
+            'sky.sort.component',
+            'sky.sort.item.component'
+        ]
+    );
+
+})();
 /*jslint browser: true */
 /*global angular */
 
@@ -247,7 +309,7 @@
                 function mediaBreakpointHandler(breakpoints) {
                     if (breakpoints.xs) {
                         if (!el.parent().is('li')) {
-                            el.wrap('<li></li>');
+                            el.wrap('<li role="menuitem"></li>');
                         }
 
                     } else {
@@ -1143,11 +1205,9 @@
             }
 
             return {
-                require: '?ngModel',
-                link: function (scope, el, attr, ngModel) {
+                link: function (scope, el, attr) {
                     var labelEl = el.parent('label'),
-                        styledEl,
-                        typeClass;
+                        styledEl;
 
                     if (labelEl.length < 1) {
                         el.wrap(createEl('wrapper'));
@@ -1163,24 +1223,9 @@
                         .wrap(createEl('labeltext'));
                     }
                     
-                    scope.checkModel = ngModel;
-                    
-                    if (attr.type === 'radio') {
-
-                        scope.$watch(function () {
-                            return scope.$eval(attr.ngValue);
-                        }, function (newValue) {
-                            scope.checkValue = newValue; 
-                        });
-
-                        typeClass = 'bb-check-radio';
-                    } else {
-                        typeClass = 'bb-check-checkbox';
-                    }
                     
                     styledEl = createEl(('styled' + attr.type), scope);
-                    
-                    styledEl.addClass(typeClass);
+
 
                     el.after(styledEl);
                 }
@@ -1774,6 +1819,18 @@
 (function () {
     'use strict';
 
+    function buttonTemplate(elem, attrs) {
+        var templateEl = angular.element('<button type="button" class="btn bb-btn-secondary bb-context-menu-btn" aria-label="{{bbContextMenuButton.getAriaLabel()}}">' +
+                                            '<i class="fa fa-ellipsis-h"></i>' +
+                                            '</button>');
+
+        if (angular.isDefined(attrs.bbContextMenuButtonDropdownToggle)) {
+            templateEl.attr('uib-dropdown-toggle', 'true');
+        }
+
+        return templateEl;
+    }
+
     function bbContextMenuButton() {
         function link(scope, el, attrs, ctrls) {
             var bbContextMenu = ctrls[1],
@@ -1792,7 +1849,7 @@
             restrict: 'E',
             require: ['bbContextMenuButton', '?^bbContextMenu'],
             scope: {},
-            templateUrl: 'sky/templates/contextmenu/menubutton.html'
+            template: buttonTemplate
         };
     }
 
@@ -1952,6 +2009,8 @@
             link: function ($scope, el, attrs, ctrls) {
                 var submenuCtrl = ctrls[1],
                     vm = ctrls[0];
+
+                vm.submenuCtrl = submenuCtrl;
 
                 vm.toggleAccordion = function ($event) {
                     submenuCtrl.toggleAccordion($event);
@@ -2605,7 +2664,6 @@
                     }
                 }
 
-
                 deferred = $q.defer();
 
                 if (skipValidation || angular.isDate(modelValue) || modelValue === '' || hasMinMaxError() || (!vm.required && modelValue === null)) {
@@ -2778,12 +2836,27 @@
                     }
                 );
 
+                function checkMomentDate(date) {
+                    var result;
+
+
+                    if (!vm.hasCustomValidation) {
+                        result = bbDatepickerParser.parseMoment(date, vm.format);
+                    }
+                    
+                    return result;
+                }
+
                 function inputChanged() {
-                    var inputNgModel = vm.getInputNgModel();
+                    var inputNgModel = vm.getInputNgModel(),
+                        momentDate;
                     /*istanbul ignore else */
                     /* sanity check */
                     if ((angular.isUndefined(vm.pickerDate) || !angular.isDate(vm.pickerDate)) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
-                        if (vm.date !== inputEl.val()) {
+                        momentDate = checkMomentDate(vm.pickerDate);
+                        if (angular.isDate(momentDate)) {
+                            vm.date = momentDate;
+                        } else if (vm.date !== inputEl.val()) {
                             dateChangeInternal = true;
                             vm.date = inputEl.val();
                         }
@@ -2934,6 +3007,38 @@
 (function () {
     'use strict';
 
+    /*  This directive addresses a positioning problem that occurs in uib-datepicker when the datepicker popup
+        attempts to position itself after a mode change while ng-if has not fully processed. This directive watches
+        the mode change, hides the element if necessary, and kicks off the event that positions the popup again */
+    function Controller($scope, $element) {
+        var ctrl = this;
+
+        function emitModeChange() {
+            $element[ctrl.bbDatepickerHideMode !== ctrl.bbDatepickerHideModeMatch ? 'addClass' : 'removeClass']('ng-hide');
+            $scope.$emit('uib:datepicker.mode');
+        }
+
+        ctrl.$onChanges = emitModeChange;
+    }
+
+    Controller.$inject = ['$scope', '$element'];
+
+    angular.module('sky.datepicker.hide', [])
+        .component('bbDatepickerHide', 
+        {
+            bindings: {
+                bbDatepickerHideMode: '<',
+                bbDatepickerHideModeMatch: '@'
+            },
+            controller: Controller,
+            transclude: true,
+            template: '<ng-transclude></ng-transclude>'
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
     function bbDatepickerMaxDate() {
         return {
             restrict: 'A',
@@ -2995,14 +3100,29 @@
             return date;
         }
 
+        function getFormatIndex(format) {
+            return {
+                yearBegin: format.indexOf('y'),
+                monthBegin: format.indexOf('M'),
+                dayBegin: format.indexOf('d')
+            };
+        }
+
         function parseNoSeparatorDateString(value, format) {
             var date = null,
-                yearBegin = format.indexOf('y'),
-                monthBegin = format.indexOf('M'),
-                dayBegin = format.indexOf('d'),
+                yearBegin,
+                monthBegin,
+                dayBegin,
+                formatIndex,
                 yearIndex,
                 monthIndex,
                 dayIndex;
+
+            formatIndex = getFormatIndex(format);
+            yearBegin = formatIndex.yearBegin;
+            monthBegin = formatIndex.monthBegin;
+            dayBegin = formatIndex.dayBegin;
+
             if (angular.isString(value) && value.length === 8 && !isNaN(value)) {
                 if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
                     yearIndex = 4;
@@ -3033,10 +3153,15 @@
         function getAltInputFormats(format) {
             var altInputFormats = [],
                 separator = matchSeparator(format),
-                yearBegin = format.indexOf('y'),
-                monthBegin = format.indexOf('M'),
-                dayBegin = format.indexOf('d'),
+                formatIndex = getFormatIndex(format),
+                yearBegin,
+                monthBegin,
+                dayBegin,
                 separatorChar;
+            
+            yearBegin = formatIndex.yearBegin;
+            monthBegin = formatIndex.monthBegin;
+            dayBegin = formatIndex.dayBegin;
 
             /*istanbul ignore else */
             /* sanity check */
@@ -3059,7 +3184,6 @@
 
                 return altInputFormats;
             }
-
 
         }
 
@@ -3085,57 +3209,122 @@
             return (separator && !separatorAtEnd && !separatorAtBeginning && hasTwoSeparators && !anyPartIsZero);
         }
 
-        function isMomentParsable(value, format) {
-            var yearParts,
-                yearIndex,
-                monthIndex,
-                dayIndex,
-                separator;
+        function hasValidMomentFormat(format) {
+            var formatIndex = getFormatIndex(format);
+            return !((formatIndex.monthBegin > formatIndex.yearBegin && formatIndex.yearBegin > formatIndex.dayBegin) ||
+                (formatIndex.monthBegin < formatIndex.yearBegin && formatIndex.yearBegin < formatIndex.dayBegin));
+        }
 
+        function isMomentParsable(value, format) {
             if (angular.isString(value) && dateHasSeparator(value)) {
 
-                if (value.length === 10) {
-                    return true;
-                } else if (value.length === 9 || value.length === 8) {
-                    //insure that years have 4 characters
-                    separator = matchSeparator(value);
-                    yearParts = value.split(separator);
-                    yearIndex = format.indexOf('y');
-                    monthIndex = format.indexOf('M');
-                    dayIndex = format.indexOf('d');
-                    if (yearIndex > monthIndex && yearIndex > dayIndex) {
-                        return yearParts[2].length === 4;
+                if (value.length < 11 && value.length > 5) {
+                    if (hasValidMomentFormat(format)) {
+                        return true;
                     }
-
-                    if (yearIndex < monthIndex && yearIndex < dayIndex) {
-                        return yearParts[0].length === 4;
-                    }
-
-                }
-
+                } 
             }
 
             return false;
         }
 
+        function yearInLastPosition(formatIndex) {
+            return formatIndex.yearBegin > formatIndex.monthBegin && formatIndex.yearBegin > formatIndex.dayBegin;
+        }
+
+        function yearInFirstPosition(formatIndex) {
+            return formatIndex.yearBegin < formatIndex.monthBegin && formatIndex.yearBegin < formatIndex.dayBegin;
+        }
+
+        function yearPartDoesNotMatchFormat(value, format) {
+            var formatIndex = getFormatIndex(format),
+                dateParts,
+                formatParts,
+                separator = matchSeparator(format);
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (separator) {
+                dateParts = value.split(separator);
+                formatParts = format.split(separator);
+
+            
+                if (yearInLastPosition(formatIndex)) {
+                    return formatParts[2].length === 4 && dateParts[2].length === 2;
+                }
+                /* istanbul ignore else */
+                /* sanity check */
+                if (yearInFirstPosition(formatIndex)) {
+                    return formatParts[0].length === 4 && dateParts[0].length !== 4;
+                }
+            }
+
+        }
+
+        function getTwoDigitFormat(format) {
+            var formatIndex = getFormatIndex(format),
+                formatParts,
+                separatorChar,
+                separator = matchSeparator(format),
+                middleFormat;
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (separator) {
+                formatParts = format.split(separator);
+                separatorChar = separator[0];
+
+                /* istanbul ignore else */
+                /* sanity check */
+                if (separatorChar) {
+
+                    middleFormat = separatorChar + formatParts[1] + separatorChar;
+                    if (yearInLastPosition(formatIndex)) {
+                        return formatParts[0] + middleFormat + 'yy';
+                    }
+
+                    /* istanbul ignore else */
+                    /* sanity check */
+                    if (yearInFirstPosition(formatIndex)) {
+                        return 'yy' + middleFormat + formatParts[2];
+                    }
+                }
+            }
+        }
+
+        function getMomentDate(value, format) {
+            var momentDate = bbMoment(value, format.toUpperCase()),
+                date;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (momentDate.isValid()) {
+                date = momentDate.toDate();
+            }
+            return date;
+        }
+
         function parseMoment(value, format) {
-           var date = null,
-               momentDate;
+            var date = null,
+               momentFormat;
 
-           if (isMomentParsable(value, format)) {
-               momentDate = bbMoment(value, format.toUpperCase());
-               if (momentDate.isValid()) {
-                   date = momentDate.toDate();
-               }
-           }
-
-           return date;
-       }
+            if (isMomentParsable(value, format)) {
+                if (yearPartDoesNotMatchFormat(value, format)) {
+                    momentFormat = getTwoDigitFormat(format);
+                }
+                if (!momentFormat) {
+                    momentFormat = format;
+                }
+                date = getMomentDate(value, momentFormat);
+               
+            }
+            return date;
+        }
 
         return {
             parseUTCString: parseUTCString,
             parseNoSeparatorDateString: parseNoSeparatorDateString,
             getAltInputFormats: getAltInputFormats,
+            parseMoment: parseMoment,
             runModelParsers: function (value, format) {
                 var date = null;
 
@@ -3576,6 +3765,73 @@
         .directive('bbDateRangePicker', bbDateRangePickerDirective);
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function Controller(bbResources) {
+        var vm = this;
+
+        function onInit() {
+            if (!vm.bbDefinitionListDefaultValue) {
+                vm.bbDefinitionListDefaultValue = bbResources.definition_list_none_found;
+            }
+        }
+
+        vm.$onInit = onInit;
+    }
+
+    Controller.$inject = ['bbResources'];
+    
+    angular.module('sky.definitionlist.component', ['sky.resources'])
+        .component('bbDefinitionList', {
+            templateUrl: 'sky/templates/definitionlist/definitionlist.component.html',
+            controller: Controller,
+            bindings: {
+                bbDefinitionListLabelWidth: '@?',
+                bbDefinitionListDefaultValue: '<?'
+            },
+            transclude: {
+                heading: '?bbDefinitionListHeading', 
+                content: 'bbDefinitionListContent'
+            }
+        });
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function Controller($element) {
+        var vm = this;
+
+        function listHasValue() {
+            var valueEl = $element.find('.bb-definition-list-value');
+            if (valueEl && valueEl.text() && valueEl.text().trim()) {
+                return true;
+            }
+            return false;
+        }
+
+        vm.hasValue = listHasValue;
+    }
+    
+    Controller.$inject = ['$element'];
+
+    angular.module('sky.definitionlistcontent.component', [])
+        .component('bbDefinitionListContent', {
+            require: {
+                definitionCtrl: '^bbDefinitionList'
+            },
+            templateUrl: 'sky/templates/definitionlist/definitionlistcontent.component.html',
+            transclude: {
+                value: '?bbDefinitionListValue',
+                label: 'bbDefinitionListLabel'
+            },
+            controller: Controller
+        });
+}());
 /* global angular */
 (function () {
     'use strict';
@@ -4244,6 +4500,87 @@
     angular.module('sky.fileattachments.filesize', ['sky.format', 'sky.resources'])
         .filter('bbFileSize', bbFileSize);
 }());
+/* global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.filter.button.component', ['sky.resources'])
+        .component('bbFilterButton', {
+            templateUrl: 'sky/templates/filter/filter.button.component.html',
+            bindings: {
+                bbFilterButtonOnClick: '&',
+                bbFilterButtonActive: '<?'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.filter.modal.footer.component', ['sky.resources', 'sky.modal'])
+        .component('bbFilterModalFooter', {
+            templateUrl: 'sky/templates/filter/filter.modal.footer.component.html',
+            bindings: {
+                bbFilterModalApply: '&',
+                bbFilterModalClear: '&'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    angular.module('sky.filter.summary.component', ['sky.resources'])
+        .component('bbFilterSummary', {
+            templateUrl: 'sky/templates/filter/filter.summary.component.html',
+            transclude: true
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller($log) {
+        var ctrl = this;
+
+        function summaryItemInit() {
+            if (angular.isDefined(ctrl.bbFilterSummaryItemIsDismissable)) {
+                $log.warn('bb-filter-summary-item-is-dismissable is deprecated, use bb-filter-summary-item-is-dismissible instead.');
+            }
+
+            if (angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissable) && angular.isUndefined(ctrl.bbFilterSummaryItemIsDismissible)) {
+                ctrl.bbFilterSummaryItemIsDismissible = true;
+            }
+        }
+
+        function clearFilter($event) {
+            $event.stopPropagation();
+            if (angular.isFunction(ctrl.bbFilterSummaryItemOnDismiss)) {
+                ctrl.bbFilterSummaryItemOnDismiss();
+            }
+            
+        }
+
+        ctrl.$onInit = summaryItemInit;
+
+        ctrl.clearFilter = clearFilter;
+    }
+
+    Controller.$inject = ['$log'];
+
+    angular.module('sky.filter.summary.item.component', [])
+        .component('bbFilterSummaryItem', {
+            templateUrl: 'sky/templates/filter/filter.summary.item.component.html',
+            controller: Controller,
+            bindings: {
+                bbFilterSummaryItemOnClick: '&?',
+                bbFilterSummaryItemOnDismiss: '&?',
+                bbFilterSummaryItemIsDismissable: '<?',
+                bbFilterSummaryItemIsDismissible: '<?'
+            },
+            transclude: true
+        });
+})();
 /*global angular */
 
 (function () {
@@ -4546,7 +4883,10 @@
             scope: {
                 bbOptions: "="
             },
-            controller: ['$scope', function ($scope) {
+            controller: ['$scope', '$log', function ($scope, $log) {
+
+                $log.warn('The bb-grid-filters directive is deprecated. Use a filter modal instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
+
                 $scope.applyFilters = function () {
                     var args = {},
                         options = $scope.bbOptions;
@@ -4655,7 +4995,7 @@
             templateUrl: 'sky/templates/grids/filtersgroup.html'
         };
     })
-    .directive('bbGridFiltersSummary', ['bbResources', function (bbResources) {
+    .directive('bbGridFiltersSummary', ['bbResources', '$log', function (bbResources, $log) {
         return {
             require: '^bbGrid',
             replace: true,
@@ -4670,6 +5010,8 @@
             controllerAs: 'gridFilterSummary',
             controller: ['$scope', function ($scope) {
                 var ctrl = this;
+
+                $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
 
                 $scope.clearFilters = function () {
                     var args = {},
@@ -4745,7 +5087,20 @@
         return -1;
     }
 
-    angular.module('sky.grids', ['sky.contextmenu', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window', 'sky.grids.toolbar'])
+    angular.module('sky.grids', 
+            [
+                'sky.infinitescroll',
+                'sky.contextmenu', 
+                'sky.mediabreakpoints', 
+                'sky.viewkeeper', 
+                'sky.highlight', 
+                'sky.resources', 
+                'sky.data', 
+                'sky.grids.filters', 
+                'sky.grids.actionbar', 
+                'sky.window', 
+                'sky.grids.toolbar'
+                ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
             function toggleDropdown($event) {
                 $event.preventDefault();
@@ -4772,7 +5127,9 @@
             function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
-                    transclude: true,
+                    transclude: {
+                        'bbGridToolbar': '?bbGridToolbar'    
+                    },
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -4784,6 +5141,17 @@
                     controller: ['$scope', function ($scope) {
                         var locals,
                             self = this;
+
+                        function searchApplied(searchText) {
+                            locals.appliedSearchText = searchText;
+                            /*istanbul ignore else */
+                            /* sanity check */
+                            if (angular.isFunction(locals.highlightSearchText)) {
+                                locals.highlightSearchText(locals.appliedSearchText);
+                            }
+                        }
+
+                        self.searchApplied = searchApplied;
 
                         self.setFilters = function (filters) {
                             /*istanbul ignore else */
@@ -4855,6 +5223,8 @@
                             }
                         };
 
+                        
+
                         self.scope = $scope;
 
                         $scope.resources = bbResources;
@@ -4881,11 +5251,11 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
-                        $scope.customToolbar.hasCustomToolbar = angular.isDefined(attr.bbGridCustomToolbar);
+                        $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
                         $scope.$watch('locals.hasCustomToolbar', function () {
                             var breakpoints = {},
@@ -5391,11 +5761,16 @@
                                 return true;
                             }
 
-                            function highlightSearchText() {
+                            function highlightSearchText(highlightText) {
                                 var options = $scope.options;
+                                
+                                if (!highlightText && options && options.searchText) {
+                                    highlightText = options.searchText;
+                                }
+
                                 bbHighlight.clear(tableEl);
-                                if (options && options.searchText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
+                                if (highlightText) {
+                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
                                 }
                             }
 
@@ -5946,7 +6321,9 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(highlightSearchText);
+                                        $timeout(function () {
+                                            highlightSearchText(locals.appliedSearchText);
+                                        });
                                         handleTableWrapperResize();
                                         /*istanbul ignore next */
                                         /* sanity check */
@@ -6012,21 +6389,29 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function addMoreRowsToGrid(moreRows) {
+                                tableEl.addRowData('', moreRows);
+                                $scope.options.data = $scope.options.data.concat(moreRows);
+                                setUpFancyCheckCell();
+                                doNotResetRows = true;
+                            }
+
                             function loadMore() {
                                 var deferred = $q.defer(),
                                     loadMorePromise = deferred.promise;
 
-                                loadMorePromise.then(function (moreRows) {
-                                    tableEl.addRowData('', moreRows);
-                                    $scope.options.data = $scope.options.data.concat(moreRows);
-                                    setUpFancyCheckCell();
-                                    doNotResetRows = true;
-                                });
+                                loadMorePromise.then(addMoreRowsToGrid);
 
                                 $scope.$emit('loadMoreRows', {
                                     promise: deferred
                                 });
 
+                                return loadMorePromise;
+
+                            }
+
+                            if (angular.isDefined(attr.bbGridInfiniteScroll)) {
+                                $scope.locals.hasInfiniteScroll = true;
                             }
 
                             $scope.locals.loadMore = loadMore;
@@ -6228,9 +6613,14 @@
         return {
             require: '?^bbGrid',
             scope: {
-                options: '=?bbToolbarOptions'
+                options: '=?bbToolbarOptions',
+                bbGridFilterClick: '&?bbGridFilterClick',
+                bbGridSearch: '&?bbGridSearch',
+                bbGridSearchText: '<?bbGridSearchText'
             },
-            transclude: true,
+            transclude: {
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
+            },
             link: function ($scope, el, attr, bbGrid) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
@@ -6240,17 +6630,28 @@
                     searchEl = el.find('.bb-search-container input');
                     /*istanbul ignore else */
                     /* sanity check */
-                    if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
+                    if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.toolbarLocals.searchText) {
                         searchEl.eq(0).select();
                     }
 
-                    $scope.options.searchText = $scope.searchText;
+                    $scope.options.searchText = $scope.toolbarLocals.searchText;
 
                     /*istanbul ignore else */
                     /* sanity check */
                     if (bbGrid !== null) {
                         bbGrid.highlightSearchText();
                     }
+                }
+
+                function toolbarSearch(searchText) {
+                    $scope.bbGridSearch({searchText: searchText});
+
+                    /*istanbul ignore else */
+                    /* sanity check */
+                    if (bbGrid !== null) {
+                        bbGrid.searchApplied(searchText);
+                    }
+                    
                 }
 
                 function openColumnPicker() {
@@ -6308,7 +6709,8 @@
                 $scope.toolbarLocals = {
                     applySearchText: applySearchText,
                     openColumnPicker: openColumnPicker,
-                    toggleFilterMenu: toggleFilterMenu
+                    toggleFilterMenu: toggleFilterMenu,
+                    toolbarSearch: toolbarSearch
                 };
 
                 $scope.resources = bbResources;
@@ -6327,7 +6729,7 @@
                 $scope.$watch('options.selectedColumnIds', function (newValue) {
                     if (angular.isDefined(newValue)) {
 
-                        $scope.searchText = $scope.options.searchText;
+                        $scope.toolbarLocals.searchText = $scope.options.searchText;
 
                         if ($scope.options.hasInlineFilters) {
                             moveInlineFilters();
@@ -6346,8 +6748,8 @@
                 }, true);
 
                 $scope.$watch('options.searchText', function (newValue) {
-                    if (newValue !== $scope.searchText) {
-                        $scope.searchText = newValue;
+                    if (newValue !== $scope.toolbarLocals.searchText) {
+                        $scope.toolbarLocals.searchText = newValue;
                     }
                 });
 
@@ -6381,7 +6783,7 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
 
@@ -6629,6 +7031,106 @@
 }());
 
 /*global angular */
+(function () {
+    'use strict';
+    var nextId = 0;
+
+    function Controller($element, $window, $timeout) {
+        var ctrl = this,
+            scrollableParentEl,
+            scrollableParentIsWindow = false,
+            componentId = 'bb-infinitescroll-' + nextId;
+
+        function infiniteScrollInView() {
+            if (scrollableParentIsWindow) {
+                return scrollableParentEl.scrollTop() + scrollableParentEl.height() > $element.offset().top;
+            } else {
+                return scrollableParentEl.scrollTop() + scrollableParentEl.height() > $element.position().top;
+            }
+        }
+
+        function loadComplete() {
+            ctrl.isLoading = false;
+        }
+
+        function callLoadCallback() {
+            var loadPromise;
+
+            loadPromise = ctrl.bbInfiniteScrollLoad();
+
+            if (loadPromise && angular.isFunction(loadPromise.then)) {
+                loadPromise.then(function () {
+                    loadComplete();
+                });
+            } else {
+                loadComplete();
+            }
+        }
+
+        function startInfiniteScrollLoad() {
+            if (ctrl.bbInfiniteScrollHasMore && !ctrl.isLoading && infiniteScrollInView()) {
+                ctrl.isLoading = true;
+                
+                callLoadCallback();
+            }
+        }
+
+        function getScrollableParentEl(el) {
+            var parentEl = angular.element(el).parent();
+
+            while (parentEl.length > 0 && !parentEl.is('body')) {
+                switch (parentEl.css('overflow-y')) {
+                    case 'auto':
+                    case 'scroll':
+                        return parentEl;
+                }
+
+                parentEl = parentEl.parent();
+            }
+            scrollableParentIsWindow = true;
+            return angular.element($window);
+        }
+
+        function onInit() {
+            
+            ctrl.isLoading = false;
+
+            scrollableParentEl = getScrollableParentEl($element);
+            
+            scrollableParentEl.on('scroll.' + componentId, function () {
+                // Put in angular digest cycle
+                $timeout(function () {
+                    startInfiniteScrollLoad();
+                });
+            });
+                
+        }
+
+        function onDestroy() {
+            scrollableParentEl.off('scroll.' + componentId);
+        }
+
+        ctrl.$onInit = onInit;
+        ctrl.$onDestroy = onDestroy;
+
+        ctrl.startInfiniteScrollLoad = startInfiniteScrollLoad;
+        nextId++;     
+    } 
+
+    Controller.$inject = ['$element', '$window', '$timeout'];
+
+    angular.module('sky.infinitescroll.component', ['sky.resources', 'sky.wait'])
+        .component('bbInfiniteScroll', {
+            templateUrl: 'sky/templates/infinitescroll/infinitescroll.component.html',
+            bindings: {
+                bbInfiniteScrollHasMore: '<',
+                bbInfiniteScrollLoad: '&'
+            },
+            controller: Controller
+        
+        });
+})();
+/*global angular */
 
 (function () {
     'use strict';
@@ -6749,216 +7251,493 @@
 }());
 
 /*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalBody() {
+        function link(scope, el, attrs, modalCtrl) {
+            el.addClass('modal-body container-fluid');
+            modalCtrl.setBodyEl(el);
+        }
+
+        return {
+            link: link,
+            require: '^bbModal',
+            restrict: 'A'
+        };
+    }
+
+    angular.module('sky.modal.body.directive', ['sky.modal', 'sky.resources', 'ui.bootstrap'])
+        .directive('bbModalBody', bbModalBody);
+}());
+
+/*jshint browser: true */
 /*global angular, jQuery */
 
 (function ($) {
     'use strict';
 
-    var openModalCount = 0;
+    function bbModal($timeout, bbViewKeeperBuilder) {
+        function getPixelValue(val) {
+            val = val || '0';
 
-    angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
-        .factory('bbModal', ['$uibModal', '$window', function ($uibModal, $window) {
-            return {
-                open: function (opts) {
-                    var bodyEl,
-                        isIOS,
-                        modalInstance,
-                        scrollTop;
+            return parseFloat(val.replace('px', ''));
+        }
 
-                    function modalClosed() {
-                        openModalCount--;
-                        if (isIOS) {
-                            bodyEl
-                                .removeClass('bb-modal-open-mobile')
-                                .scrollTop(scrollTop);
-                        }
+        function getModalBodyWrapperMargin(el) {
+            var margin = 0;
 
-                        bodyEl = null;
-                    }
+            while (el.not('.modal-dialog') && 
+                    el.length > 0 && 
+                    // Don't evaluate any body padding since the modal should cover
+                    // the entire screen, including the omnibar.
+                    (!el.is(document.body))
+            ) {
+                margin += el.outerHeight() - el.height();
 
-                    isIOS = /iPad|iPod|iPhone/i.test($window.navigator.userAgent);
-                    bodyEl = $(document.body);
-
-                    // Change default values for modal options
-                    opts = angular.extend({
-                        backdrop: 'static',
-                        windowClass: 'bb-modal'
-                    }, opts);
-
-                    // Mobile browsers exhibit weird behavior when focusing on an input element
-                    // inside a position: fixed element (in this case the modal), and it also
-                    // doesn't propery prohibit scrolling on the window.  Adding this CSS class
-                    // will change the body position to fixed and the modal position to absolute
-                    // to work around this behavior.
-                    if (isIOS) {
-                        // Setting the body position to be fixed causes it to be scrolled to the
-                        // top.  Cache the current scrollTop and set it back when the modal is
-                        // closed.
-                        scrollTop = bodyEl.scrollTop();
-                        bodyEl.addClass('bb-modal-open-mobile');
-                    }
-
-                    modalInstance = $uibModal.open(opts);
-                    openModalCount++;
-
-                    modalInstance.result.then(modalClosed, modalClosed);
-
-                    return modalInstance;
-                }
-            };
-        }])
-        .directive('bbModal', ['$timeout', function ($timeout) {
-            function getPixelValue(val) {
-                val = val || '0';
-
-                return parseFloat(val.replace('px', ''));
+                el = el.parent();
             }
 
-            function getModalBodyWrapperMargin(el) {
-                var margin = 0;
+            return margin;
+        }
+        
+        function link($scope, el) {
+            var bodyEl,
+                marginStyleEl,
+                resizeTimeout,
+                viewkeeperMarginBottomOverride,
+                viewkeeperMarginTopOverride,
+                windowEl = $(window);
 
-                while (el.not('.modal-dialog') && el.length > 0) {
-                    margin += el.outerHeight() - el.height();
+            function setViewkeeperMarginTop(margin) {
 
-                    el = el.parent();
+                if (!marginStyleEl) {
+                    marginStyleEl = $('<style></style>').appendTo(document.body);
                 }
 
-                return margin;
+                marginStyleEl.text('.bb-modal-fullpage .bb-viewkeeper-fixed {margin-top: ' + margin + 'px !important;}');
             }
 
-            return {
-                controller: ['$scope', function ($scope) {
-                    this.setBodyEl = function (bodyEl) {
-                        $scope.bodyEl = bodyEl;
-                    };
-                }],
-                replace: true,
-                transclude: true,
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modal.html',
-                link: function ($scope, el) {
-                    var bodyEl,
-                        resizeTimeout,
-                        windowEl = $(window);
+            function isFullPage() {
+                var modalDialogEl = el.parents('.modal-dialog');
+                
+                return modalDialogEl.parents('.bb-modal').is('.bb-modal-fullpage');
+            }
 
-                    function fitToWindow() {
-                        var margin,
-                            modalParentEl,
-                            newMaxHeight,
-                            reservedHeight;
+            function fitToWindow() {
+                var footerHeight,
+                    fullPage,
+                    headerHeight,
+                    margin,
+                    modalDialogEl,
+                    newMaxHeight,
+                    newMinHeight,
+                    reservedHeight;
 
-                        if (bodyEl && bodyEl.length > 0) {
-                            modalParentEl = el.parents('.modal-dialog');
+                if (bodyEl && bodyEl.length > 0) {
+                    modalDialogEl = el.parents('.modal-dialog');
 
-                            if (modalParentEl.length > 0) {
-                                margin = getPixelValue(modalParentEl.css('margin-bottom')) + getPixelValue(modalParentEl.css('margin-top'));
+                    if (modalDialogEl.length > 0) {
+                        headerHeight = el.find('.modal-header').outerHeight();
+                        footerHeight = el.find('.modal-footer').outerHeight();
+                        fullPage = isFullPage();
 
-                                reservedHeight = margin + el.find('.modal-header').outerHeight() + el.find('.modal-footer').outerHeight();
+                        if (fullPage) {
+                            bodyEl.css({
+                                'margin-top': headerHeight,
+                                'margin-bottom': footerHeight
+                            });
+                            reservedHeight = headerHeight + footerHeight;
+                            reservedHeight += getModalBodyWrapperMargin(el);
+                            newMinHeight = windowEl.height() - reservedHeight;
+                            bodyEl.css({
+                                'min-height': newMinHeight
+                            });
+                        } else {
+                            margin = getPixelValue(modalDialogEl.css('margin-bottom')) + 
+                                getPixelValue(modalDialogEl.css('margin-top'));
 
-                                // Account for the border, padding, etc. of the elements that wrap the modal body.
-                                reservedHeight += getModalBodyWrapperMargin(el);
+                            reservedHeight = margin + headerHeight + footerHeight;
 
-                                newMaxHeight = windowEl.height() - reservedHeight;
+                            // Account for the border, padding, etc. of the elements 
+                            // that wrap the modal body.
+                            reservedHeight += getModalBodyWrapperMargin(el);
 
-                                bodyEl.css('max-height', newMaxHeight);
-                            }
-                        }
-                    }
+                            newMaxHeight = windowEl.height() - reservedHeight;
 
-                    $scope.$watch('bodyEl', function (newValue) {
-                        bodyEl = newValue;
-                        fitToWindow();
-                    });
-
-                    $timeout(function () {
-                        fitToWindow();
-                    }, 0);
-
-                    windowEl.on('resize.bbModal' + $scope.$id, function () {
-                        $timeout.cancel(resizeTimeout);
-
-                        resizeTimeout = $timeout(function () {
-                            fitToWindow();
-                        }, 250);
-                    });
-
-                    el.on('$destroy', function () {
-                        windowEl.off('.bbModal' + $scope.$id);
-                    });
-                }
-            };
-        }])
-        .directive('bbModalBody', function () {
-            return {
-                link: function (scope, el, attrs, modalCtrl) {
-                    el.addClass('modal-body container-fluid');
-                    modalCtrl.setBodyEl(el);
-                },
-                require: '^bbModal',
-                restrict: 'A'
-            };
-        })
-        .directive('bbModalHeader', function () {
-            return {
-                controller: angular.noop,
-                replace: true,
-                transclude: true,
-                require: '^bbModal',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalheader.html',
-                scope: {
-                    bbModalHelpKey: '='
-                }
-            };
-        })
-        .directive('bbModalFooter', function () {
-            return {
-                controller: angular.noop,
-                replace: true,
-                transclude: true,
-                require: '^bbModal',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooter.html'
-            };
-        })
-        .directive('bbModalFooterButton', function () {
-            return {
-                replace: true,
-                transclude: true,
-                require: '^bbModalFooter',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooterbutton.html'
-            };
-        })
-        .directive('bbModalFooterButtonPrimary', ['bbResources', function (bbResources) {
-            return {
-                replace: true,
-                transclude: true,
-                require: '^bbModalFooter',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooterbuttonprimary.html',
-                link: function ($scope, el) {
-                    if (el.children().length === 0) {
-                        el.append("<span>" + bbResources.modal_footer_primary_button + "</span>");
+                            bodyEl.css('max-height', newMaxHeight);
+                        } 
                     }
                 }
-            };
-        }])
-        .directive('bbModalFooterButtonCancel', ['bbResources', function (bbResources) {
-            return {
-                replace: true,
-                transclude: true,
-                require: '^bbModalFooter',
-                restrict: 'E',
-                templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
-                link: function ($scope, el) {
-                    if (el.children().length === 0) {
-                        el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
-                    }
+            }
+
+            $scope.$watch('bodyEl', function (newValue) {
+                bodyEl = newValue;
+                fitToWindow();
+            });
+
+            $scope.$watch(function () {
+                if ($scope.headerEl) {
+                    return $scope.headerEl.outerHeight();
                 }
+            }, function (newValue) {
+                if (isFullPage()) {
+                    if (!viewkeeperMarginTopOverride) {
+                        viewkeeperMarginTopOverride = {};
+                        
+                        bbViewKeeperBuilder.addViewportMarginTopOverride(
+                            viewkeeperMarginTopOverride
+                        );
+                    }
+                    
+                    viewkeeperMarginTopOverride.margin = newValue;
+
+                    setViewkeeperMarginTop(newValue);
+                }
+            });
+
+            $scope.$watch(function () {
+                if ($scope.footerEl) {
+                    return $scope.footerEl.outerHeight();
+                }
+            }, function (newValue) {
+                if (isFullPage()) {
+                    if (!viewkeeperMarginBottomOverride) {
+                        viewkeeperMarginBottomOverride = {};
+                        
+                        bbViewKeeperBuilder.addViewportMarginBottomOverride(
+                            viewkeeperMarginBottomOverride
+                        );
+                    }
+                    
+                    viewkeeperMarginBottomOverride.margin = newValue;
+                }
+            });
+
+            $timeout(function () {
+                fitToWindow();
+            }, 0);
+
+            windowEl.on('resize.bbModal' + $scope.$id, function () {
+                $timeout.cancel(resizeTimeout);
+
+                resizeTimeout = $timeout(function () {
+                    fitToWindow();
+                }, 250);
+            });
+
+            el.on('$destroy', function () {
+                windowEl.off('.bbModal' + $scope.$id);
+
+                if (viewkeeperMarginBottomOverride) {
+                    bbViewKeeperBuilder.removeViewportMarginBottomOverride(
+                        viewkeeperMarginBottomOverride
+                    );
+                }
+
+                if (viewkeeperMarginTopOverride) {
+                    bbViewKeeperBuilder.removeViewportMarginTopOverride(
+                        viewkeeperMarginTopOverride
+                    );
+                }
+
+                if (marginStyleEl) {
+                    marginStyleEl.remove();
+                    marginStyleEl = null;
+                }
+            });
+        }
+
+        function Controller($scope) {
+            this.setBodyEl = function (bodyEl) {
+                $scope.bodyEl = bodyEl;
             };
-        }]);
+
+            this.setHeaderEl = function (headerEl) {
+                $scope.headerEl = headerEl;
+            };
+
+            this.setFooterEl = function (footerEl) {
+                $scope.footerEl = footerEl;
+            };
+        }
+
+        Controller.$inject = ['$scope'];
+
+        return {
+            controller: Controller,
+            replace: true,
+            transclude: true,
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modal.html',
+            link: link
+        };
+    }
+
+    bbModal.$inject = ['$timeout', 'bbViewKeeperBuilder'];
+
+    angular.module('sky.modal.directive', ['sky.viewkeeper'])
+        .directive('bbModal', bbModal);
 }(jQuery));
+
+/*jshint browser: true */
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+
+    var CLS_BODY_FULLPAGE = 'bb-modal-open-fullpage',
+        CLS_BODY_MOBILE = 'bb-modal-open-mobile',
+        modalCount = 0,
+        openFullPageModalCount = 0,
+        openModalCount = 0;
+
+    function bbModal($uibModal, $window) {
+        return {
+            open: function (uibModalOptions, additionalOptions) {
+                var animation = true,
+                    backdropClass,
+                    bodyEl,
+                    fullPage,
+                    idCls,
+                    isIOS,
+                    modalInstance,
+                    scrollTop,
+                    windowClass = 'bb-modal';
+
+                function modalClosed() {
+                    $(window).off('resize.' + idCls);
+
+                    openModalCount--;
+
+                    if (fullPage) {
+                        openFullPageModalCount--;
+
+                        if (openFullPageModalCount === 0) {
+                            bodyEl.removeClass(CLS_BODY_FULLPAGE);
+                        }
+                    }
+
+                    if (isIOS) {
+                        bodyEl
+                            .removeClass(CLS_BODY_MOBILE)
+                            .scrollTop(scrollTop);
+                    }
+
+                    bodyEl = null;
+                }
+
+                if (additionalOptions) {
+                    fullPage = additionalOptions.fullPage;
+                }
+
+                modalCount++;
+                idCls = 'bb-modal-id-' + modalCount;
+
+                windowClass += ' ' + idCls;
+
+                if (fullPage) {
+                    windowClass += ' bb-modal-fullpage';
+                    backdropClass = 'bb-modal-fullpage-backdrop';
+                    animation = false;
+                }
+
+                isIOS = /iPad|iPod|iPhone/i.test($window.navigator.userAgent);
+                bodyEl = $(document.body);
+
+                // Change default values for modal options
+                uibModalOptions = angular.extend({
+                    animation: animation,
+                    backdrop: 'static',
+                    backdropClass: backdropClass,
+                    windowClass: windowClass
+                }, uibModalOptions);
+
+                // Mobile browsers exhibit weird behavior when focusing on an input element
+                // inside a position: fixed element (in this case the modal), and it also
+                // doesn't propery prohibit scrolling on the window.  Adding this CSS class
+                // will change the body position to fixed and the modal position to absolute
+                // to work around this behavior.
+                if (isIOS) {
+                    // Setting the body position to be fixed causes it to be scrolled to the
+                    // top.  Cache the current scrollTop and set it back when the modal is
+                    // closed.
+                    scrollTop = bodyEl.scrollTop();
+                    bodyEl.addClass(CLS_BODY_MOBILE);
+                }
+
+                if (fullPage) {
+                    bodyEl.addClass(CLS_BODY_FULLPAGE);
+                    openFullPageModalCount++;
+                }
+
+                modalInstance = $uibModal.open(uibModalOptions);
+
+                openModalCount++;
+
+                modalInstance.result.then(modalClosed, modalClosed);
+
+                return modalInstance;
+            }
+        };
+    }    
+
+    bbModal.$inject = ['$uibModal', '$window'];
+
+    angular.module('sky.modal.factory', ['ui.bootstrap'])
+        .factory('bbModal', bbModal);
+}(jQuery));
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooterButtonCancel(bbResources) {
+        return {
+            replace: true,
+            transclude: true,
+            require: '^bbModalFooter',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
+            link: function ($scope, el) {
+                if (el.children().length === 0) {
+                    el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
+                }
+            }
+        };
+    }
+
+    bbModalFooterButtonCancel.$inject = ['bbResources'];
+
+    angular.module(
+        'sky.modal.footer.button.cancel.directive', 
+        [
+            'sky.modal.footer.directive', 
+            'sky.resources'
+        ]
+    )
+        .directive('bbModalFooterButtonCancel', bbModalFooterButtonCancel);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooterButton() {
+        return {
+            replace: true,
+            transclude: true,
+            require: '^bbModalFooter',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooterbutton.html'
+        };
+    }
+
+    angular.module('sky.modal.footer.button.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+        .directive('bbModalFooterButton', bbModalFooterButton);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooterButtonPrimary(bbResources) {
+        return {
+            replace: true,
+            transclude: true,
+            require: '^bbModalFooter',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooterbuttonprimary.html',
+            link: function ($scope, el) {
+                if (el.children().length === 0) {
+                    el.append("<span>" + bbResources.modal_footer_primary_button + "</span>");
+                }
+            }
+        };
+    }
+
+    bbModalFooterButtonPrimary.$inject = ['bbResources'];
+
+    angular.module(
+        'sky.modal.footer.button.primary.directive', 
+        [
+            'sky.modal.footer.directive',
+            'sky.resources'
+        ]
+    )
+        .directive('bbModalFooterButtonPrimary', bbModalFooterButtonPrimary);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalFooter() {
+        function link(scope, el, attrs, bbModal) {
+            bbModal.setFooterEl(el);
+        }
+
+        return {
+            controller: angular.noop,
+            link: link,
+            replace: true,
+            transclude: true,
+            require: '^bbModal',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalfooter.html'
+        };
+    }
+
+    angular.module('sky.modal.footer.directive', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
+        .directive('bbModalFooter', bbModalFooter);
+}());
+
+/*jshint browser: true */
+/*global angular */
+
+(function () {
+    'use strict';
+
+    function bbModalHeader() {
+        function link(scope, el, attrs, bbModal) {
+            bbModal.setHeaderEl(el);
+        }
+
+        return {
+            controller: angular.noop,
+            link: link,
+            replace: true,
+            transclude: true,
+            require: '^bbModal',
+            restrict: 'E',
+            templateUrl: 'sky/templates/modal/modalheader.html',
+            scope: {
+                bbModalHelpKey: '='
+            }
+        };
+    }
+
+    angular.module(
+        'sky.modal.header.directive', 
+        [
+            'sky.helpbutton', 
+            'sky.modal', 
+            'sky.resources', 
+            'ui.bootstrap'
+        ]
+    )
+        .directive('bbModalHeader', bbModalHeader);
+}());
 
 /*global angular, define, require */
 
@@ -7089,6 +7868,10 @@
                             }
 
                             scope.$emit('searchBoxKeyUp', event.keyCode);
+                        });
+
+                        searchBox.on('click', function () {
+                            scope.$emit('searchBoxClicked');
                         });
 
                         scope.$watch('searching', function (searching) {
@@ -7465,7 +8248,7 @@
 
     var evtNsPos = 0;
 
-    angular.module('sky.pagination', ['ui.bootstrap.pagination'])
+    angular.module('sky.pagination', ['ui.bootstrap.pagination', 'sky.pagination.label'])
         .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
@@ -7653,6 +8436,36 @@
         }]);
 }());
 
+/* global angular */
+(function () {
+    'use strict';
+
+    function getPaginationLabelDirective(labelText) {
+        function link($scope, el) {
+            el.find('a').attr('aria-label', labelText);
+        }
+        return {
+            restrict: 'C',
+            link: link
+        };
+    }
+
+    function paginationPrev(bbResources) {
+        return getPaginationLabelDirective(bbResources.pagination_previous);
+    }
+
+    paginationPrev.$inject = ['bbResources'];
+
+    function paginationNext(bbResources) {
+        return getPaginationLabelDirective(bbResources.pagination_next);
+    }
+
+    paginationNext.$inject = ['bbResources'];
+
+    angular.module('sky.pagination.label', ['ui.bootstrap.pagination', 'sky.resources'])
+        .directive('paginationPrev', paginationPrev)
+        .directive('paginationNext', paginationNext);
+})();
 /*jshint unused: false */
 /*global angular, bbPaletteConfig */
 
@@ -8702,7 +9515,7 @@ angular.module('sky.palette.config', [])
                 link: linkFn
             };
         });
-}());
+})();
 
 
 /* global angular */
@@ -8710,7 +9523,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
 
-    function Controller($element, $animate, bbMediaBreakpoints) {
+    function Controller($element, bbMediaBreakpoints, bbResources) {
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
@@ -8929,6 +9742,10 @@ angular.module('sky.palette.config', [])
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
+
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
+                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            }
         }
 
 
@@ -8949,7 +9766,7 @@ angular.module('sky.palette.config', [])
         ctrl.inputFocused = inputFocused;
     }
 
-    Controller.$inject = ['$element', '$animate', 'bbMediaBreakpoints'];
+    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
@@ -8958,10 +9775,10 @@ angular.module('sky.palette.config', [])
             bindings: {
                 bbOnSearch: '&?',
                 bbSearchText: '<?',
-                bbOnSearchInputToggled: '&?'
+                bbSearchPlaceholder: '<?'
             }
         });
-}());
+})();
 /*global angular */
 
 (function () {
@@ -9088,8 +9905,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
     function bbSelectFieldMultipleItemAnimation() {
-        var duration = 250,
-            slideOptions;
+        var duration = 250;
 
         function getFadeOptions(doneFn) {
             return {
@@ -9099,30 +9915,22 @@ angular.module('sky.palette.config', [])
             };
         }
 
-        slideOptions = {
-            duration: duration,
-            queue: false
-        };
-
         return {
             enter: function (el, doneFn) {
                 el
                     .css({
-                        display: 'none',
                         opacity: 0
                     })
-                    .slideDown(slideOptions)
                     .animate({
-                        opacity: 1
+                        opacity: 1,
+                        display: 'inline-flex'
                     }, getFadeOptions(doneFn));
             },
             leave: function (el, doneFn) {
                 // Take focus off the close button
                 el.find('.close').blur();
 
-                el
-                    .slideUp(slideOptions)
-                    .fadeOut(getFadeOptions(doneFn));
+                el.fadeOut(getFadeOptions(doneFn));
             }
         };
     }
@@ -9257,6 +10065,131 @@ angular.module('sky.palette.config', [])
         .directive('bbSelectFieldPicker', bbSelectFieldPicker);
 }());
 
+/* global angular */
+(function () {
+    'use strict';
+
+    function templateFn($element, $attrs) {
+        var templateString;
+        if (angular.isDefined($attrs.bbSortAppendToBody)) {
+            templateString = '<div class="bb-sort" uib-dropdown dropdown-append-to-body>';
+        } else {
+            templateString = '<div class="bb-sort" uib-dropdown>';
+        }
+
+        templateString += ['<button title="{{\'sort_button_label\' | bbResources}}" ',
+                                'type="button" class="btn bb-btn-secondary" uib-dropdown-toggle>',
+                                '<i class="fa fa-lg fa-sort"></i>',
+                            '</button>',
+                            '<div class="bb-dropdown-menu dropdown-menu" uib-dropdown-menu role="menu"> ',
+                                '<bb-sort-menu>',
+                                    '<ng-transclude></ng-transclude>',
+                                '</bb-sort-menu>',
+                            '</div>',
+                        '</div>'].join('');
+        return templateString;
+    }
+
+    templateFn.$inject = ['$element', '$attrs'];
+
+    angular.module('sky.sort.component', ['ui.bootstrap.dropdown', 'sky.resources', 'sky.sort.menu.component'])
+        .component('bbSort', {
+            template: templateFn,
+            bindings: {
+                bbSortAppendToBody: '@?'
+            },
+            transclude: true
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var self = this;
+
+        function itemSelected() {
+            self.sortCtrl.selectItem(self);
+            self.bbSortItemSelect();
+        }
+
+        function onInit() {
+            self.sortCtrl.addItem(self);
+            if (self.bbSortItemActive) {
+                self.sortCtrl.selectItem(self);
+            }
+        }
+
+        function onChanges(changesObj) {
+            if (changesObj.bbSortItemActive && 
+                changesObj.bbSortItemActive.currentValue && 
+                changesObj.bbSortItemActive.currentValue !== changesObj.bbSortItemActive.previousValue) {
+                
+                self.sortCtrl.selectItem(self);
+            }
+        }
+
+        self.$onInit = onInit;
+        self.$onChanges = onChanges;
+
+        self.itemSelected = itemSelected;
+    }
+
+    angular.module('sky.sort.item.component', [])
+        .component('bbSortItem', {
+            require: {
+                sortCtrl: '^bbSortMenu'
+            },
+            templateUrl: 'sky/templates/sort/sort.item.component.html',
+            transclude: true,
+            controller: Controller,
+            bindings: {
+                bbSortItemSelect: '&?',
+                bbSortItemActive: '<?'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var self = this;
+
+        function selectItem(sortItem) {
+            var i,
+                item;
+            for (i = 0; i < self.sortItems.length; i++) {
+                item = self.sortItems[i];
+                if (sortItem === item) {
+                    item.isSelected = true;
+                } else {
+                    item.isSelected = false;
+                }
+            }
+        }
+
+        function addItem(sortItem) {
+            self.sortItems.push(sortItem);
+        }
+
+        function initSort() {
+            self.sortItems = [];
+        }
+
+        self.$onInit = initSort;
+        self.selectItem = selectItem;
+        self.addItem = addItem;
+    }
+
+
+    angular.module('sky.sort.menu.component', ['ui.bootstrap.dropdown', 'sky.resources'])
+        .component('bbSortMenu', {
+            controller: Controller,
+            templateUrl: 'sky/templates/sort/sort.menu.component.html',
+            transclude: true
+        });
+})();
 /*jslint nomen: true, plusplus: true */
 /*global angular, jQuery */
 
@@ -9742,39 +10675,90 @@ angular.module('sky.palette.config', [])
 (function () {
     'use strict';
 
+    function evaluateAngularExpression(exp, scope) {
+        return angular.copy(scope.$eval(exp)) || null;
+    }
+
+    function checkForAndWrapRefWithStateName(ref, $state) {
+        var newRef,
+            parsedRef;
+
+        // Match against statename({ param: value }) syntax, as specified for ui-sref in angular-ui-router v0.2.15
+        // Produces the following matches, in this order, if no statename is present:
+        //   - original string, Ex: statename({ param: value })
+        //   - parameter object string, Ex: { param: value }
+        parsedRef = ref.match(/^\s*({[^}]*})\s*$/);
+
+        // Wrap the parameter string with the current statename if no statename was provided
+        if (parsedRef && $state.current) {
+            newRef = $state.current.name + '(' + parsedRef[1] + ')';
+        }
+
+        return newRef || ref;
+    }
+
+    function parseAndValidateRef(ref) {
+        // Match against statename({ param: value }) syntax, as specified for ui-sref in angular-ui-router v0.2.15
+        // Produces the following matches in this order:
+        //   - original string, Ex: statename({ param: value })
+        //   - state name, Ex: statename
+        //   - parameter object string w/ wrapping parenthesis, Ex: ({ param: value })
+        //   - parameter object string, Ex: { param: value }
+        var parsedRefSubstrings = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
+
+        if (!parsedRefSubstrings || parsedRefSubstrings.length !== 4) {
+            throw new Error("Invalid state ref '" + ref + "'");
+        }
+
+        return parsedRefSubstrings;
+    }
+
+    function parseStateRef(ref, scope, $state) {
+        var parsedRef;
+
+        ref = checkForAndWrapRefWithStateName(ref, $state);
+
+        parsedRef = parseAndValidateRef(ref);
+
+        return {
+            state: parsedRef[1],
+            params: evaluateAngularExpression(parsedRef[3], scope)
+        };
+    }
+
+    function setActiveTab(sref, el, tabsetCtrl, $state) {
+        if ($state.includes(sref.state)) {
+            tabsetCtrl.select(el.isolateScope().index);
+        }
+    }
+
     angular.module('sky.tabsref', ['sky.tabset', 'ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
                 require: '^uibTabset',
                 link: function (scope, el, attrs, tabsetCtrl) {
-                    var sref = attrs.bbTabSref,
+                    var sref = parseStateRef(attrs.bbTabSref, scope, $state),
                         stateChangeDeregistration;
-
-                    function checkCurrentState() {
-                        if ($state.includes(sref)) {
-                            tabsetCtrl.select(el.isolateScope().index);
-                        }
-                    }
 
                     /*istanbul ignore else */
                     /* sanity check */
-                    if (sref) {
-                        checkCurrentState();
+                    if (sref.state) {
+                        setActiveTab(sref, el, tabsetCtrl, $state);
 
                         stateChangeDeregistration = $rootScope.$on('$stateChangeSuccess', function () {
-                            checkCurrentState();
+                            setActiveTab(sref, el, tabsetCtrl, $state);
                         });
 
                         scope.$watch(function () {
                             return tabsetCtrl.active;
                         }, function (newValue) {
-                            if (newValue === el.isolateScope().index && !$state.includes(sref)) {
+                            if (newValue === el.isolateScope().index && !$state.includes(sref.state)) {
                                 // JPB - Delay calling state.go because the state change will fail
                                 // if it is triggered while in the middle of processing of another state change.
                                 // This can happen if you browse to the page without specifying the state of a particular tab
                                 // and then this code tries to switch you over to the state of the first tab.
                                 $timeout(function () {
-                                    $state.go(sref);
+                                    $state.go(sref.state, sref.params);
                                 });
                             }
                         });
@@ -10748,9 +11732,11 @@ angular.module('sky.palette.config', [])
 
     var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed',
         CLS_VIEWKEEPER_NO_OMNIBAR = 'bb-viewkeeper-no-omnibar',
+        marginBottomOverrides = [],
+        marginTopOverrides = [],
         config = {
             viewportMarginTop: 0,
-            hasOmnibar: true 
+            hasOmnibar: true
         },
         ViewKeeper;
 
@@ -10778,6 +11764,46 @@ angular.module('sky.palette.config', [])
         }
     }
 
+    function fixEl(vk, boundaryInfo, fixedStyles) {
+        var elQ = angular.element(vk.el),
+            spacerHeight,
+            width;
+
+        if (boundaryInfo.spacerQ.length === 0) {
+            if (vk.setPlaceholderHeight) {
+                spacerHeight = boundaryInfo.elHeight;
+            } else {
+                spacerHeight = 0;
+            }
+            elQ.after(
+                '<div id="' + 
+                boundaryInfo.spacerId + 
+                '" style="height: ' + 
+                spacerHeight + 
+                'px;"></div>'
+            );
+        }
+
+        elQ.addClass(CLS_VIEWKEEPER_FIXED);
+
+        vk.currentElFixedTop = fixedStyles.elFixedTop;
+        vk.currentElFixedBottom = fixedStyles.elFixedBottom;
+        vk.currentElFixedLeft = fixedStyles.elFixedLeft;
+        vk.currentElFixedWidth = fixedStyles.elFixedWidth;
+
+        if (vk.setWidth) {
+            width = fixedStyles.elFixedWidth;
+        }
+
+        setElPosition(
+            elQ, 
+            fixedStyles.elFixedLeft, 
+            fixedStyles.elFixedTop, 
+            fixedStyles.elFixedBottom, 
+            width
+        );
+    }
+
     function unfixEl(vk) {
         var elQ = angular.element(vk.el),
             width;
@@ -10795,6 +11821,18 @@ angular.module('sky.palette.config', [])
             width = "auto";
         }
         setElPosition(elQ, "", "", "", width);
+    }
+
+    function getViewportMarginTop() {
+        return marginTopOverrides.length > 0 ? 
+            marginTopOverrides[marginTopOverrides.length - 1].margin : 
+            config.viewportMarginTop;
+    }
+
+    function getViewportMarginBottom() {
+        return marginBottomOverrides.length > 0 ? 
+            marginBottomOverrides[marginBottomOverrides.length - 1].margin : 
+            0;
     }
 
     function calculateVerticalOffset(vk) {
@@ -10821,6 +11859,129 @@ angular.module('sky.palette.config', [])
         return offset;
     }
 
+    function getBoundaryInfo(vk) {
+        var boundaryBottom,
+            boundaryOffset,
+            boundaryTop,
+            boundaryQ,
+            documentQ,
+            elQ,
+            scrollLeft,
+            scrollTop,
+            spacerId,
+            spacerQ,
+            elHeight;
+
+        elQ = angular.element(vk.el);
+
+        boundaryQ = angular.element(vk.boundaryEl);
+        spacerId = getSpacerId(vk);
+
+        spacerQ = angular.element("#" + spacerId);
+        documentQ = angular.element(window.document);
+
+        boundaryOffset = boundaryQ.offset();
+        boundaryTop = boundaryOffset.top;
+        boundaryBottom = boundaryTop + boundaryQ.height();
+
+        scrollLeft = documentQ.scrollLeft();
+        scrollTop = documentQ.scrollTop();
+
+        elHeight = elQ.outerHeight(true);
+
+        return {
+            boundaryBottom: boundaryBottom,
+            boundaryOffset: boundaryOffset,
+            boundaryQ: boundaryQ,
+            elHeight: elHeight,
+            scrollLeft: scrollLeft,
+            scrollTop: scrollTop,
+            spacerId: spacerId,
+            spacerQ: spacerQ
+        };
+    }
+
+    function shouldFixEl(vk, boundaryInfo, verticalOffSet) {
+        var anchorHeight,
+            anchorTop,
+            doFixEl,
+            elQ;
+
+        elQ = angular.element(vk.el);
+
+        if (boundaryInfo.spacerQ.length > 0) {
+            anchorTop = boundaryInfo.spacerQ.offset().top;
+            anchorHeight = boundaryInfo.spacerQ.outerHeight(true);
+        } else {
+            anchorTop = elQ.offset().top;
+            anchorHeight = boundaryInfo.elHeight;
+        }
+
+        if (vk.fixToBottom) {
+            //Fix el if the natural bottom of the element would not be on the screen
+            doFixEl = 
+                anchorTop + anchorHeight > 
+                boundaryInfo.scrollTop + (window.innerHeight - getViewportMarginBottom());
+        } else {
+            doFixEl = boundaryInfo.scrollTop + verticalOffSet + getViewportMarginTop() > anchorTop;
+        }
+
+        return doFixEl;
+    }
+
+    function getFixedStyles(vk, boundaryInfo, verticalOffSet) {
+        var elFixedBottom,
+            elFixedLeft,
+            elFixedTop,
+            elFixedWidth;
+
+        if (vk.fixToBottom) {
+            elFixedBottom = getViewportMarginBottom();
+        } else {
+            // If the element needs to be fixed, this will calculate its position.  The position 
+            // will be 0 (fully visible) unless the user is scrolling the boundary out of view.  
+            // In that case, the element should begin to scroll out of view with the
+            // rest of the boundary by setting its top position to a negative value.
+            elFixedTop = Math.min(
+                (boundaryInfo.boundaryBottom - boundaryInfo.elHeight) - boundaryInfo.scrollTop, 
+                verticalOffSet
+            );
+        }
+
+        elFixedWidth = boundaryInfo.boundaryQ.width();
+        elFixedLeft = boundaryInfo.boundaryOffset.left - boundaryInfo.scrollLeft;
+
+        return {
+            elFixedBottom: elFixedBottom,
+            elFixedLeft: elFixedLeft,
+            elFixedTop: elFixedTop,
+            elFixedWidth: elFixedWidth
+        };
+    }
+
+    function needsUpdating(vk, doFixEl, fixedStyles) {
+        if (
+            (
+                doFixEl && 
+                vk.currentElFixedLeft === fixedStyles.elFixedLeft && 
+                vk.currentElFixedTop === fixedStyles.elFixedTop && 
+                vk.currentElFixedBottom === fixedStyles.elFixedBottom && 
+                vk.currentElFixedWidth === fixedStyles.elFixedWidth
+            ) || 
+            (
+                !doFixEl && 
+                !(vk.currentElFixedLeft !== undefined && vk.currentElFixedLeft !== null)
+            )
+        ) {
+            // The element is either currently fixed and its position and width do not need 
+            // to change, or the element is not currently fixed and does not need to be fixed.  
+            // No changes are needed.
+            return false;
+        }
+
+        return true;
+    }
+
     ViewKeeper = function (options) {
         var id,
             vk = this;
@@ -10836,7 +11997,7 @@ angular.module('sky.palette.config', [])
         vk.setPlaceholderHeight = (options.setPlaceholderHeight !== false);
         vk.onStateChanged = options.onStateChanged;
         vk.isFixed = false;
-
+        
         if (options.verticalOffSetElId) {
             vk.verticalOffSetEl = angular.element('#' + options.verticalOffSetElId);
 
@@ -10853,34 +12014,13 @@ angular.module('sky.palette.config', [])
     ViewKeeper.prototype = {
 
         syncElPosition: function () {
-            var anchorTop,
-                anchorHeight,
+            var boundaryInfo,
+                doFixEl,
                 isCurrentlyFixed,
-                currentElFixedLeft,
-                currentElFixedTop,
-                currentElFixedBottom,
-                currentElFixedWidth,
-                documentQ,
-                fixEl,
-                boundaryBottom,
-                boundaryOffset,
-                boundaryQ,
-                boundaryTop,
-                elFixedLeft,
-                elFixedTop,
-                elFixedBottom,
-                elFixedWidth,
-                elHeight,
+                fixedStyles,
                 elQ,
-                needsUpdating,
-                scrollLeft,
-                scrollTop,
-                spacerHeight,
-                spacerId,
-                spacerQ,
                 verticalOffSet,
-                vk = this,
-                width;
+                vk = this;
 
             isCurrentlyFixed = vk.isFixed;
 
@@ -10893,86 +12033,15 @@ angular.module('sky.palette.config', [])
                 return;
             }
 
-            boundaryQ = angular.element(vk.boundaryEl);
-            spacerId = getSpacerId(vk);
+            boundaryInfo = getBoundaryInfo(vk);
+            fixedStyles = getFixedStyles(vk, boundaryInfo, verticalOffSet);
 
-            spacerQ = angular.element("#" + spacerId);
-            documentQ = angular.element(window.document);
+            doFixEl = shouldFixEl(vk, boundaryInfo, verticalOffSet);
 
-            boundaryOffset = boundaryQ.offset();
-            boundaryTop = boundaryOffset.top;
-            boundaryBottom = boundaryTop + boundaryQ.height();
-
-            scrollLeft = documentQ.scrollLeft();
-            scrollTop = documentQ.scrollTop();
-
-            elHeight = elQ.outerHeight(true);
-
-            if (vk.fixToBottom) {
-                elFixedBottom = 0;
-            } else {
-                // If the element needs to be fixed, this will calculate its position.  The position will be 0 (fully visible) unless
-                // the user is scrolling the boundary out of view.  In that case, the element should begin to scroll out of view with the
-                // rest of the boundary by setting its top position to a negative value.
-                elFixedTop = Math.min((boundaryBottom - elHeight) - scrollTop, verticalOffSet);
-            }
-
-
-            elFixedWidth = boundaryQ.width();
-            elFixedLeft = boundaryOffset.left - scrollLeft;
-
-            currentElFixedLeft = vk.currentElFixedLeft;
-            currentElFixedTop = vk.currentElFixedTop;
-            currentElFixedBottom = vk.currentElFixedBottom;
-            currentElFixedWidth = vk.currentElFixedWidth;
-
-            if (spacerQ.length > 0) {
-                anchorTop = spacerQ.offset().top;
-                anchorHeight = spacerQ.outerHeight(true);
-            } else {
-                anchorTop = elQ.offset().top;
-                anchorHeight = elHeight;
-            }
-
-            if (vk.fixToBottom) {
-                //Fix el if the natural bottom of the element would not be on the screen
-                fixEl = (anchorTop + anchorHeight > scrollTop + window.innerHeight);
-            } else {
-                fixEl = scrollTop + verticalOffSet + config.viewportMarginTop > anchorTop;
-            }
-
-            if ((fixEl && currentElFixedLeft === elFixedLeft && currentElFixedTop === elFixedTop && currentElFixedBottom === elFixedBottom && currentElFixedWidth === elFixedWidth) || (!fixEl && !(currentElFixedLeft !== undefined && currentElFixedLeft !== null))) {
-                // The element is either currently fixed and its position and width do not need to change, or the element is not
-                // currently fixed and does not need to be fixed.  No changes are needed.
-                needsUpdating = false;
-            } else {
-                needsUpdating = true;
-            }
-
-            if (needsUpdating) {
-                if (fixEl) {
+            if (needsUpdating(vk, doFixEl, fixedStyles)) {
+                if (doFixEl) {
                     vk.isFixed = true;
-                    if (spacerQ.length === 0) {
-                        if (vk.setPlaceholderHeight) {
-                            spacerHeight = elHeight;
-                        } else {
-                            spacerHeight = 0;
-                        }
-                        elQ.after('<div id="' + spacerId + '" style="height: ' + spacerHeight + 'px;"></div>');
-                    }
-
-                    elQ.addClass(CLS_VIEWKEEPER_FIXED);
-
-                    vk.currentElFixedTop = elFixedTop;
-                    vk.currentElFixedBottom = elFixedBottom;
-                    vk.currentElFixedLeft = elFixedLeft;
-                    vk.currentElFixedWidth = elFixedWidth;
-
-                    if (vk.setWidth) {
-                        width = elFixedWidth;
-                    }
-
-                    setElPosition(elQ, elFixedLeft, elFixedTop, elFixedBottom, width);
+                    fixEl(vk, boundaryInfo, fixedStyles);
                 } else {
                     vk.isFixed = false;
                     unfixEl(vk);
@@ -11008,7 +12077,7 @@ angular.module('sky.palette.config', [])
                 anchorTop = elQ.offset().top;
             }
 
-            documentQ.scrollTop(anchorTop - verticalOffset - config.viewportMarginTop);
+            documentQ.scrollTop(anchorTop - verticalOffset - getViewportMarginTop());
         },
 
         destroy: function () {
@@ -11038,6 +12107,28 @@ angular.module('sky.palette.config', [])
             return {
                 create: function (options) {
                     return new ViewKeeper(options);
+                },
+                addViewportMarginBottomOverride: function (value) {
+                    marginBottomOverrides.push(value);
+                },
+                removeViewportMarginBottomOverride: function (value) {
+                    var index = marginBottomOverrides.indexOf(value);
+
+                    /*istanbul ignore else */
+                    if (index > -1) {
+                        marginBottomOverrides.splice(index, 1);
+                    }
+                },
+                addViewportMarginTopOverride: function (value) {
+                    marginTopOverrides.push(value);
+                },
+                removeViewportMarginTopOverride: function (value) {
+                    var index = marginTopOverrides.indexOf(value);
+
+                    /*istanbul ignore else */
+                    if (index > -1) {
+                        marginTopOverrides.splice(index, 1);
+                    }
                 }
             };
         })
@@ -11771,12 +12862,15 @@ angular.module('sky.palette.config', [])
         'sky.data',
         'sky.datepicker',
         'sky.daterangepicker',
+        'sky.definitionlist', 
         'sky.error',
         'sky.format',
+        'sky.filter',
         'sky.grids',
         'sky.help',
         'sky.helpbutton',
         'sky.highlight',
+        'sky.infinitescroll',
         'sky.keyinfo',
         'sky.mediabreakpoints',
         'sky.modal',
@@ -11795,6 +12889,7 @@ angular.module('sky.palette.config', [])
         'sky.scrollintoview',
         'sky.search',
         'sky.selectfield',
+        'sky.sort',
         'sky.tabscroll',
         'sky.tabset',
         'sky.tabsref',
@@ -11836,7 +12931,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","pagination_previous":"Previous","pagination_next":"Next"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -11866,7 +12961,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            {{bbActionBarItemGroup.title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '\n' +
-        '            <ul uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">\n' +
+        '            <ul role="menu" uib-dropdown-menu ng-attr-id="{{bbActionBarItemGroup.toggleId}}">\n' +
         '\n' +
         '            </ul>\n' +
         '        </div>\n' +
@@ -11983,10 +13078,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<span class="bb-check-label-text"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/styledcheckbox.html',
-        '<span role="checkbox" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue || false}}"></span>\n' +
+        '<span class="bb-check-checkbox"></span>\n' +
         '');
     $templateCache.put('sky/templates/check/styledradio.html',
-        '<span role="radio" tabindex="-1" ng-attr-aria-checked="{{checkModel.$modelValue === checkValue}}"></span>');
+        '<span class="bb-check-radio"></span>');
     $templateCache.put('sky/templates/check/wrapper.html',
         '<label class="bb-check-wrapper"></label>\n' +
         '');
@@ -12038,8 +13133,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-checklist-wrapper" bb-wait="bbChecklist.bbChecklistIsLoading" ng-switch="bbChecklist.bbChecklistMode" ng-class="bbChecklist.getChecklistCls()">\n' +
         '    <div ng-switch-when="list" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklist.filteredItems.length}}">\n' +
         '      <div ng-switch="bbChecklist.isSingleSelect()">\n' +
-        '        <div ng-switch-when="true">\n' +
-        '          <button ng-repeat="item in bbChecklist.filteredItems" type="button" class="bb-checklist-list-row" ng-class="bbChecklist.getRowCls(item)" data-bbauto-field="{{item.name}}" ng-click="bbChecklist.singleSelectRowClick(item)">\n' +
+        '        <div ng-switch-when="true" role="radiogroup">\n' +
+        '          <button\n' +
+        '            ng-repeat="item in bbChecklist.filteredItems"\n' +
+        '            role="radio" \n' +
+        '            type="button"\n' +
+        '            ng-attr-aria-checked="{{bbChecklist.itemIsSelected(item)}}"\n' +
+        '            class="bb-checklist-list-row" \n' +
+        '            ng-class="bbChecklist.getRowCls(item)" \n' +
+        '            data-bbauto-field="{{item.name}}" \n' +
+        '            ng-click="bbChecklist.singleSelectRowClick(item)">\n' +
         '            <ng-include class="bb-checklist-list-col" src="\'sky/templates/checklist/checklistlistrow.include.html\'"></ng-include>\n' +
         '          </button>\n' +
         '        </div>\n' +
@@ -12088,10 +13191,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" uib-dropdown-toggle></bb-context-menu-button>\n' +
-        '    <ul uib-dropdown-menu role="menu">\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" bb-context-menu-button-dropdown-toggle></bb-context-menu-button>\n' +
+        '    <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '    </ul>\n' +
+        '    </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menubutton.html',
@@ -12100,18 +13203,29 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</button>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/menuitem.html',
-        '<li role="presentation">\n' +
+        '<div class="bb-dropdown-item" role="presentation">\n' +
         '  <a role="menuitem" href="javascript:void(0)" ng-click="bbContextMenuItem.clickItem()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '  </a>\n' +
-        '</li>\n' +
+        '</div>\n' +
         '');
+    $templateCache.put('sky/templates/contextmenu/submenu.accordiongroup.html',
+        '<div class="panel" ng-class="panelClass || \'panel-default\'">\n' +
+        '  <div role="tab" id="{{::headingId}}" aria-selected="{{isOpen}}" class="panel-heading" tabindex="0" ng-keypress="toggleOpen()">\n' +
+        '    <h4 class="panel-title">\n' +
+        '      <div data-toggle="collapse" aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" class="accordion-toggle" uib-accordion-transclude="heading"><span uib-accordion-header ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></a>\n' +
+        '    </h4>\n' +
+        '  </div>\n' +
+        '  <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!isOpen}}" role="tabpanel" class="panel-collapse collapse" uib-collapse="!isOpen">\n' +
+        '    <div class="panel-body" ng-transclude></div>\n' +
+        '  </div>\n' +
+        '</div>');
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <uib-accordion>\n' +
-        '        <uib-accordion-group is-open="bbSubmenu.accordionOpen">\n' +
+        '        <uib-accordion-group template-url="sky/templates/contextmenu/submenu.accordiongroup.html" is-open="bbSubmenu.accordionOpen">\n' +
         '            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">\n' +
-        '                <div ng-click="bbSubmenu.toggleAccordion($event)">\n' +
+        '                <div role="button" ng-click="bbSubmenu.toggleAccordion($event)">\n' +
         '                    <span>\n' +
         '                        {{bbSubmenu.heading}}\n' +
         '                    <span>\n' +
@@ -12125,9 +13239,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenuheading.html',
         '<uib-accordion-heading>\n' +
-        '    <div ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
+        '    <div role="button" ng-click="bbSubmenuHeading.toggleAccordion($event)">\n' +
         '        <ng-transclude></ng-transclude>\n' +
-        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
+        '        <i ng-class="\'fa-chevron-\' + (bbSubmenuHeading.submenuCtrl.accordionOpen ? \'up\' : \'down\')" class="fa bb-submenu-chevron"></i>\n' +
         '    </div>\n' +
         '</uib-accordion-heading>\n' +
         '');
@@ -12161,6 +13275,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                datepicker-append-to-body="{{bbDatepicker.appendToBody}}"\n' +
         '                close-on-date-selection="{{bbDatepicker.closeOnSelection}}"\n' +
         '                alt-input-formats="bbDatepicker.altInputFormats"\n' +
+        '                datepicker-template-url="sky/templates/datepicker/uibdatepicker.html"\n' +
         '\n' +
         '                bb-datepicker-custom-validate="{{bbDatepicker.hasCustomValidation}}"\n' +
         '                bb-datepicker-min-date\n' +
@@ -12175,6 +13290,22 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/datepicker/uibdatepicker.html',
+        '<div class="uib-datepicker" role="application" ng-keydown="keydown($event)">\n' +
+        '  \n' +
+        '  <bb-datepicker-hide  bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="day">\n' +
+        '    <uib-daypicker ng-if="datepickerMode === \'day\'" tabindex="0"></uib-daypicker>\n' +
+        '  </bb-datepicker-hide>\n' +
+        '\n' +
+        '  <bb-datepicker-hide  bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="month">\n' +
+        '    <uib-monthpicker ng-if="datepickerMode === \'month\'" tabindex="0"></uib-monthpicker>\n' +
+        '  </bb-datepicker-hide>\n' +
+        '\n' +
+        '  <bb-datepicker-hide bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="year">\n' +
+        '    <uib-yearpicker ng-if="datepickerMode === \'year\'" tabindex="0"></uib-yearpicker>\n' +
+        '  </bb-datepicker-hide>\n' +
+        '  \n' +
+        '</div>');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
         '<div class="form-inline" ng-form="bbDateRangePickerCtrl.dateRangeForm">\n' +
         '    <div class="form-group bb-date-range-picker-form-group">\n' +
@@ -12208,6 +13339,18 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      <label class="bb-date-range-picker-date-format-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.dateFormat">{{::bbDateRangePickerCtrl.resources.date_field_invalid_date_message}}</label>\n' +
         '      <label class="bb-date-range-picker-date-min-error error" ng-show="bbDateRangePickerCtrl.dateRangeForm.toDate.$error.minDate">{{::bbDateRangePickerCtrl.resources.date_range_picker_min_date_error}}</label>\n' +
         '    </div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/definitionlist/definitionlist.component.html',
+        '<div class="bb-definition-list">\n' +
+        '    <div class="bb-subsection-heading bb-definition-list-heading" ng-transclude="heading"></div>\n' +
+        '    <div class="bb-definition-list-content" ng-transclude="content"></div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/definitionlist/definitionlistcontent.component.html',
+        '<div class="bb-definition-list-content-component">\n' +
+        '    <div ng-style="{width: $ctrl.definitionCtrl.bbDefinitionListLabelWidth}" class="bb-field-label bb-definition-list-label" ng-transclude="label"></div>\n' +
+        '    <div class="bb-definition-list-value" ng-transclude="value" ng-show="$ctrl.hasValue()"></div>\n' +
+        '    <div class="bb-definition-list-no-value bb-deemphasized" ng-show="!$ctrl.hasValue()">{{$ctrl.definitionCtrl.bbDefinitionListDefaultValue}}</div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/error/error.description.directive.html',
@@ -12277,7 +13420,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/fileattachments/filedrop.html',
         '<div class="row bb-file-drop-row">\n' +
         '    <div class="col-xs-12 bb-file-drop-col" ng-class="{\'col-sm-6\': bbFileDrop.allowLinks}">\n' +
-        '        <div\n' +
+        '        <button\n' +
+        '             ng-attr-aria-label="{{\'file_upload_drag_or_click\' | bbResources}}"\n' +
         '             class="bb-file-drop bb-file-drop-target"\n' +
         '             ngf-drop\n' +
         '             ngf-keep="false"\n' +
@@ -12301,7 +13445,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                </div>\n' +
         '            </div>\n' +
         '            <div class="bb-file-drop-contents-custom" ng-transclude></div>\n' +
-        '        </div>\n' +
+        '        </button>\n' +
         '    </div>\n' +
         '    <div class="col-sm-6 col-xs-12 bb-file-drop-col" ng-if="bbFileDrop.allowLinks">\n' +
         '        <div class="bb-file-drop-contents">\n' +
@@ -12314,6 +13458,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                           placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
         '                           ng-model="bbFileDrop.url"\n' +
         '                           ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"\n' +
+        '                           ng-attr-aria-label="{{\'file_upload_link_input\' | bbResources}}"\n' +
         '                           />\n' +
         '                </div>\n' +
         '                <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">\n' +
@@ -12337,7 +13482,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>\n' +
         '        <div class="col-xs-2">\n' +
         '            <div class="pull-right">\n' +
-        '                <button type="button" class="btn bb-btn-secondary bb-file-item-btn-delete" ng-click="itemDelete()">\n' +
+        '                <button type="button" class="btn bb-btn-secondary bb-file-item-btn-delete" ng-attr-aria-label="{{\'file_item_delete\' | bbResources}}" ng-click="itemDelete()">\n' +
         '                    <i class="glyphicon glyphicon-trash"></i>\n' +
         '                </button>\n' +
         '            </div>\n' +
@@ -12358,6 +13503,47 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/filter/filter.button.component.html',
+        '<button \n' +
+        '    ng-attr-title="{{\'filter_button_title\' | bbResources}}" \n' +
+        '    ng-class="{\'bb-filter-btn-active\': $ctrl.bbFilterButtonActive}" \n' +
+        '    data-bbauto-field="FilterButton" \n' +
+        '    type="button" \n' +
+        '    class="btn bb-btn-secondary" \n' +
+        '    ng-click="$ctrl.bbFilterButtonOnClick()">\n' +
+        '    <i class="fa fa-lg fa-filter"></i>\n' +
+        '</button>');
+    $templateCache.put('sky/templates/filter/filter.modal.footer.component.html',
+        '<bb-modal-footer>\n' +
+        '    <bb-modal-footer-button-primary ng-click="$ctrl.bbFilterModalApply()" >{{\'filter_modal_apply\' | bbResources}}</bb-modal-footer-button-primary>\n' +
+        '    <button type="button" class="btn btn-link" ng-click="$ctrl.bbFilterModalClear()">{{\'filter_modal_clear\' | bbResources}}</button>\n' +
+        '    <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>\n' +
+        '</bb-modal-footer>');
+    $templateCache.put('sky/templates/filter/filter.summary.component.html',
+        '<div class="bb-filter-summary">\n' +
+        '    <span class="bb-filter-summary-header">{{::\'filter_summary_header\' | bbResources}}:</span>\n' +
+        '    <div class="bb-filter-summary-items">\n' +
+        '        <ng-transclude></ng-transclude>\n' +
+        '    </div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/filter/filter.summary.item.component.html',
+        '<div \n' +
+        '    role="button" \n' +
+        '    tabindex="0" \n' +
+        '    class="bb-filter-summary-item" \n' +
+        '    ng-click="$ctrl.bbFilterSummaryItemOnClick()"\n' +
+        '    ng-keypress="$event.keyCode === 13 &amp;&amp; $ctrl.bbFilterSummaryItemOnClick()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '    <span \n' +
+        '        ng-attr-aria-label="{{\'filter_summary_close\' | bbResources}}"\n' +
+        '        ng-if="$ctrl.bbFilterSummaryItemIsDismissable || $ctrl.bbFilterSummaryItemIsDismissible" \n' +
+        '        role="button" \n' +
+        '        tabindex="0" \n' +
+        '        class="fa fa-times close" \n' +
+        '        ng-click="$ctrl.clearFilter($event)"\n' +
+        '        ng-keypress="$event.keyCode === 13 &amp;&amp; $ctrl.clearFilter($event)">\n' +
+        '    </span>\n' +
+        '</div>');
     $templateCache.put('sky/templates/grids/actionbar.html',
         '<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">\n' +
         '    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar">\n' +
@@ -12415,9 +13601,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
         '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">\n' +
         '    </bb-context-menu-button>\n' +
-        '    <ul uib-dropdown-menu role="menu">\n' +
+        '    <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">\n' +
         '        <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>\n' +
-        '    </ul>\n' +
+        '    </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/filters.html',
@@ -12479,16 +13665,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '\n' +
         '    <div class="bb-grid-toolbar-viewkeeper">\n' +
-        '        <div ng-if="!customToolbar.hasCustomToolbar">\n' +
-        '            <div ng-show="locals.showToolbar">\n' +
-        '                <bb-grid-toolbar>\n' +
-        '                    <ng-transclude></ng-transclude>\n' +
-        '                </bb-grid-toolbar>\n' +
-        '            </div>\n' +
-        '        </div>\n' +
-        '\n' +
-        '        <div ng-if="customToolbar.hasCustomToolbar">\n' +
-        '            <div ng-show="locals.showToolbar">\n' +
+        '        <div ng-show="locals.showToolbar">\n' +
+        '            <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">\n' +
+        '                <ng-transclude></ng-transclude>\n' +
+        '            </bb-grid-toolbar>\n' +
+        '            <div ng-if="customToolbar.hasCustomToolbar">\n' +
+        '                <ng-transclude ng-transclude-slot="bbGridToolbar">\n' +
+        '                </ng-transclude>\n' +
         '                <ng-transclude></ng-transclude>\n' +
         '            </div>\n' +
         '        </div>\n' +
@@ -12501,13 +13684,20 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
         '        <span class="fa fa-cloud-download"></span>\n' +
         '        <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>\n' +
         '    </div>\n' +
         '\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll">\n' +
+        '        <bb-infinite-scroll\n' +
+        '            bb-infinite-scroll-load="locals.loadMore()"\n' +
+        '            bb-infinite-scroll-has-more="options.hasMoreRows">\n' +
+        '        </bb-infinite-scroll>        \n' +
+        '    </div>\n' +
+        '\n' +
         '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
-        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages"></uib-pagination>\n' +
+        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
@@ -12530,28 +13720,74 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/grids/gridtoolbar.html',
         '<div class="bb-grid-toolbar-container">\n' +
-        '    <div class="clearfix toolbar bb-table-toolbar">\n' +
-        '        <button type="button" data-bbauto-field="AddButton" class="bb-grid-toolbar-btn btn-primary btn" ng-show="toolbarLocals.hasAdd" ng-click="options.onAddClick()">\n' +
-        '            <i class="fa fa-plus-circle"></i>\n' +
-        '            <span class="bb-toolbar-btn-label" ng-show="options.onAddClickLabel">{{options.onAddClickLabel}}</span>\n' +
+        '    <div class="clearfix toolbar bb-table-toolbar" bb-search-container>\n' +
+        '\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            ng-attr-title="{{options.onAddClickLabel}}"\n' +
+        '            data-bbauto-field="AddButton" \n' +
+        '            class="bb-grid-toolbar-btn btn-primary btn" \n' +
+        '            ng-show="toolbarLocals.hasAdd" \n' +
+        '            ng-click="options.onAddClick()">\n' +
+        '            <i class="fa fa-lg fa-plus-circle"></i>\n' +
         '        </button>\n' +
         '        <div class="bb-grid-toolbar-button-container">\n' +
         '            <ng-transclude></ng-transclude>\n' +
         '        </div>\n' +
-        '        <div class="bb-search-container search-container">\n' +
-        '            <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" data-bbauto-field="SearchBox" />\n' +
-        '            <div class="bb-search-icon fa fa-search" data-bbauto-field="SearchButton" ng-click="toolbarLocals.applySearchText()"></div>\n' +
+        '\n' +
+        '        <div ng-if="!bbGridSearch" class="bb-search-container">\n' +
+        '            <input \n' +
+        '                type="text" \n' +
+        '                placeholder="{{resources.grid_search_placeholder}}" \n' +
+        '                ng-model="toolbarLocals.searchText" \n' +
+        '                ng-keyup="$event.keyCode == 13 && toolbarLocals.applySearchText()" \n' +
+        '                data-bbauto-field="SearchBox" />\n' +
+        '            <div \n' +
+        '                class="bb-search-icon fa fa-lg fa-search" \n' +
+        '                data-bbauto-field="SearchButton" \n' +
+        '                ng-click="toolbarLocals.applySearchText()"></div>\n' +
         '        </div>\n' +
-        '        <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn" data-bbauto-field="ColumnPickerButton" ng-show="!options.hideColPicker" ng-click="toolbarLocals.openColumnPicker()">\n' +
-        '            <span class="fa fa-columns"></span>\n' +
-        '            <span class="bb-toolbar-btn-label">{{resources.grid_columns_button}}</span>\n' +
+        '\n' +
+        '        <bb-search-input \n' +
+        '            ng-if="bbGridSearch"\n' +
+        '            bb-search-text="bbGridSearchText"\n' +
+        '            bb-on-search="toolbarLocals.toolbarSearch(searchText)"\n' +
+        '            bb-search-placeholder\n' +
+        '            >\n' +
+        '        </bb-search-input>\n' +
+        '\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            class="btn bb-btn-secondary bb-grid-toolbar-btn bb-column-picker-btn"\n' +
+        '            ng-attr-title="{{::\'grid_columns_button\' | bbResources}}"       \n' +
+        '            data-bbauto-field="ColumnPickerButton" \n' +
+        '            ng-show="!options.hideColPicker" \n' +
+        '            ng-click="toolbarLocals.openColumnPicker()">\n' +
+        '            <span class="fa fa-lg fa-columns"></span>\n' +
         '        </button>\n' +
-        '        <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" ng-class="{\'bb-filters-inline-active\': options.filtersAreActive}" data-bbauto-field="FilterButton" ng-show="!options.hideFilters" ng-click="toolbarLocals.toggleFilterMenu()">\n' +
-        '            <span class="fa fa-filter"></span>\n' +
-        '            <span class="bb-toolbar-btn-label">{{resources.grid_filters_button}}</span>\n' +
+        '        <button \n' +
+        '            type="button" \n' +
+        '            class="btn bb-btn-secondary bb-grid-toolbar-btn bb-filter-btn" \n' +
+        '            ng-class="{\'bb-filters-inline-active\': options.filtersAreActive}" \n' +
+        '            data-bbauto-field="FilterButton" \n' +
+        '            ng-if="!options.hideFilters &amp;&amp; !bbGridFilterClick" \n' +
+        '            ng-click="toolbarLocals.toggleFilterMenu()">\n' +
+        '            \n' +
+        '            <span class="fa fa-lg fa-filter"></span>\n' +
+        '        \n' +
         '        </button>\n' +
+        '        \n' +
+        '        <bb-filter-button \n' +
+        '            class="bb-filter-btn"\n' +
+        '            ng-if="!options.hideFilters &amp;&amp; bbGridFilterClick"\n' +
+        '            bb-filter-button-on-click="bbGridFilterClick()"\n' +
+        '            bb-filter-button-active="options.filtersAreActive"\n' +
+        '            >\n' +
+        '        </bb-filter-button>\n' +
         '    </div>\n' +
         '    <div class="bb-grid-filter-summary-container">\n' +
+        '        <div ng-transclude="bbGridToolbarFilterSummary">\n' +
+        '        </div>\n' +
         '    </div>\n' +
         '    <div class="bb-grid-filter-inline-container" ng-hide="options.hasInlineFilters && !toolbarLocals.filtersVisible">\n' +
         '    </div>\n' +
@@ -12563,6 +13799,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/seemore.html',
         '<div bb-text-expand="data" bb-text-expand-max-length="100" style="white-space: pre-wrap"></div>\n' +
         '');
+    $templateCache.put('sky/templates/infinitescroll/infinitescroll.component.html',
+        '<div class="bb-infinite-scroll" ng-if="$ctrl.bbInfiniteScrollHasMore">\n' +
+        '  <button type="button" class="btn bb-btn-secondary" ng-if="!$ctrl.isLoading" ng-click="$ctrl.startInfiniteScrollLoad()">{{::\'infinite_scroll_load_more\' | bbResources}}</button>\n' +
+        '  <div bb-wait="$ctrl.isLoading">\n' +
+        '  </div>\n' +
+        '</div>');
     $templateCache.put('sky/templates/keyinfo/keyinfo.component.html',
         '<div ng-class="{\'bb-key-info-horizontal\': $ctrl.bbKeyInfoLayout === \'horizontal\'}" class="bb-key-info">\n' +
         '    <div class="bb-key-info-value" ng-transclude="value"></div>\n' +
@@ -12703,7 +13945,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</section>\n' +
         '');
     $templateCache.put('sky/templates/search/search.input.component.html',
-        '<div>\n' +
+        '<div class="bb-search-input-inline">\n' +
         '    <div \n' +
         '        class="bb-search-open-wrapper"\n' +
         '        ng-show="$ctrl.currentBreakpoint.xs"\n' +
@@ -12729,7 +13971,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    ng-focus="$ctrl.inputFocused(true)"\n' +
         '                    ng-blur="$ctrl.inputFocused(false)"\n' +
         '                    data-bbauto-field="SearchBox"\n' +
-        '                    aria-label="{{::\'search_label\' | bbResources}}" />    \n' +
+        '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
+        '                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"\n' +
+        '                    />    \n' +
         '\n' +
         '                <span class="input-group-btn">\n' +
         '                    \n' +
@@ -12743,7 +13987,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                        <i class="fa fa-times"></i>\n' +
         '                    </button>\n' +
         '\n' +
-        '                    <button          \n' +
+        '                    <button\n' +
+        '                        data-bbauto-field="SearchButton"          \n' +
         '                        type="button"\n' +
         '                        class="btn bb-search-btn-input-group bb-search-btn-apply"\n' +
         '                        ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"\n' +
@@ -12780,8 +14025,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <i class="fa fa-plus-circle"></i> <span class="bb-select-field-multiple-title">{{bbSelectField.bbSelectFieldText}}</span>\n' +
         '</button>\n' +
         '<div>\n' +
-        '  <ul class="list-unstyled bb-select-field-multiple-items">\n' +
-        '    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">\n' +
+        '  <div class="bb-select-field-multiple-items">\n' +
+        '    <span class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length <= 5" ng-repeat="selectedItem in bbSelectField.bbSelectFieldSelectedItems">\n' +
         '      <div class="bb-select-field-multiple-item-title">\n' +
         '        {{selectedItem.title}}\n' +
         '      </div>\n' +
@@ -12789,8 +14034,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
         '      </button>\n' +
-        '    </li>\n' +
-        '    <li class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">\n' +
+        '    </span>\n' +
+        '    <span class="bb-select-field-multiple-item" ng-if="bbSelectField.bbSelectFieldSelectedItems.length > 5">\n' +
         '      <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">\n' +
         '        {{bbSelectField.getSummaryCountText()}}\n' +
         '      </div>\n' +
@@ -12798,7 +14043,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
         '      </button>\n' +
-        '    </li>\n' +
+        '    </span>\n' +
         '  </ul>\n' +
         '</div>\n' +
         '');
@@ -12831,6 +14076,42 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</button>\n' +
         '');
+    $templateCache.put('sky/templates/sort/sort.component.html',
+        '<div class="bb-sort" uib-dropdown>\n' +
+        '    <button title="{{\'sort_button_label\' | bbResources}}" type="button" class="btn bb-btn-secondary" uib-dropdown-toggle>\n' +
+        '        <i class="fa fa-lg fa-sort"></i>\n' +
+        '    </button>\n' +
+        '    <div class="bb-dropdown-menu dropdown-menu" uib-dropdown-menu role="menu"> \n' +
+        '        <bb-sort-menu>\n' +
+        '            <ng-transclude></ng-transclude>\n' +
+        '        </bb-sort-menu>\n' +
+        '    </div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/sort/sort.item.component.html',
+        '<div \n' +
+        '    class="bb-dropdown-item" \n' +
+        '    ng-class="{\'bb-sort-selected\': $ctrl.isSelected }" role="menuitem">\n' +
+        '    <a \n' +
+        '        ng-class="{\'bb-emphasized\': $ctrl.isSelected }" \n' +
+        '        href="javascript:void(0)" \n' +
+        '        ng-click="$ctrl.itemSelected()">\n' +
+        '        <ng-transclude></ng-transclude>\n' +
+        '    </a>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/sort/sort.menu.component.html',
+        '<div> \n' +
+        '    <div class="bb-dropdown-item" role="presentation">\n' +
+        '        <a \n' +
+        '            class="bb-subsection-heading bb-sort-heading" \n' +
+        '            href="javascript:void(0)" \n' +
+        '            aria-disabled="true" \n' +
+        '            tabindex="-1">\n' +
+        '        {{\'sort_menu_heading\' | bbResources}}\n' +
+        '        </a>\n' +
+        '    </div>\n' +
+        '    <div class="bb-dropdown-item bb-sort-heading-divider divider"></div>\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
     $templateCache.put('sky/templates/tabset/addbutton.html',
         '<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add bb-btn-secondary" aria-label="{{\'tab_add\' | bbResources}}">\n' +
         '  <span class="btn bb-btn-secondary"><i class="fa fa-lg fa-plus-circle"></i></span>\n' +

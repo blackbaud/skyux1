@@ -321,7 +321,88 @@ describe('Grid directive', function () {
         expect(cellEl.eq(0)).toHaveText('Ringo');
         expect(cellEl.eq(1)).toHaveText('Drums');
         expect(cellEl.eq(2)).toHaveText('');
+    });
 
+    function timeoutFlushIfAvailable() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
+        }
+
+    function setupScrollInfinite(inView, parentScrollable) {
+        var windowVal = 10,
+            offsetVal;
+        offsetVal = inView ? 0 : 30; 
+
+        spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
+        spyOn($.fn, 'height').and.returnValue(windowVal);
+        
+        if (!parentScrollable) {
+            spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+        } else {
+            spyOn($.fn, 'position').and.returnValue({ top: offsetVal });
+        }
+
+    }
+
+    it('can load more data when using infinite scroll through a promise', function () {
+
+        var rowEl,
+            cellEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            data.promise.resolve(angular.copy(dataSet1));
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+        
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+        cellEl = rowEl.eq(4).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('John');
+        expect(cellEl.eq(1)).toHaveText('Rhythm guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(5).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Paul');
+        expect(cellEl.eq(1)).toHaveText('Bass');
+        expect(cellEl.eq(2)).toHaveText('Lorem');
+
+        cellEl = rowEl.eq(6).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('George');
+        expect(cellEl.eq(1)).toHaveText('Lead guitar');
+        expect(cellEl.eq(2)).toHaveText('');
+
+        cellEl = rowEl.eq(7).find('td');
+
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText('Ringo');
+        expect(cellEl.eq(1)).toHaveText('Drums');
+        expect(cellEl.eq(2)).toHaveText('');
     });
 
     it('reinitializes the grid in response to a reInitGrid event', function () {
@@ -464,7 +545,7 @@ describe('Grid directive', function () {
 
             paginationEl = paginationContainerEl.eq(0).find('li');
 
-            //default max of 5 pages shown with two arrow elements
+            //1 page shown with two arrow elements
             expect(paginationEl.length).toBe(3);
 
             //expect the correct numbers to be shown in pagination
@@ -480,6 +561,74 @@ describe('Grid directive', function () {
             expect(paginationEl.eq(1)).toHaveText(2);
 
             expect(paginationEl.eq(2)).toHaveClass('disabled');
+
+        });
+
+        it('loads a grid with pagination with boundary links enabled', function () {
+            var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-pagination="locals.paginationOptions"></bb-grid></div>',
+                pagedData1 = [
+                    {
+                        name: 'John',
+                        instrument: 'Rhythm guitar'
+                    },
+                    {
+                        name: 'Paul',
+                        instrument: 'Bass',
+                        bio: 'Lorem'
+                    },
+                    {
+                        name: 'George',
+                        instrument: 'Lead guitar'
+                    },
+                    {
+                        name: 'Ringo',
+                        instrument: 'Drums'
+                    }
+                ],
+                paginationContainerEl,
+                paginationEl;
+
+            el = setUpGrid(gridHtml);
+
+            $scope.$on('loadMoreRows', getTopAndSkipFromLoadMore);
+
+            $scope.locals.paginationOptions = {
+                recordCount: 60,
+                boundaryLinks: true,
+                itemsPerPage: 4
+            };
+
+            setGridData(pagedData1);
+
+            paginationContainerEl = el.find('.bb-grid-pagination-container');
+
+            expect(paginationContainerEl.length).toBe(1);
+
+            paginationEl = paginationContainerEl.eq(0).find('li');
+
+            //5 pages shown with arrow elements, ellipses, and final page
+            expect(paginationEl.length).toBe(9);
+
+            //expect the correct numbers to be shown in pagination
+            expect(paginationEl.eq(1)).toHaveText(1);
+            expect(paginationEl.eq(1)).toHaveClass('active');
+
+            //expect the ellipses to be shown properly
+            expect(paginationEl.eq(6)).toHaveText('...');
+
+            //expect movement to behave correctly
+            paginationEl.eq(5).find('a').click();
+            paginationEl = paginationContainerEl.eq(0).find('li');
+            expect(paginationEl.length).toBe(11);
+            expect(paginationEl.eq(2)).toHaveText(2);
+
+            paginationEl.eq(10).find('a').click();
+            paginationEl = paginationContainerEl.eq(0).find('li');
+            expect(paginationEl.eq(2)).toHaveText('...');
+            expect(paginationEl.eq(3)).toHaveText(4);
+
+            expect(top).toBe(4);
+            expect(skip).toBe(20);
 
         });
 
@@ -846,7 +995,7 @@ describe('Grid directive', function () {
 
             expect(rowEl.eq(0).find('td div.bb-context-menu').eq(0)).toHaveClass('dropdown');
             expect(rowEl.eq(0).find('td button.bb-context-menu-btn').length).toBe(1);
-            expect($('body ul li a')[0]).toHaveText('Option1');
+            expect($('body .bb-dropdown-menu .bb-dropdown-item a')[0]).toHaveText('Option1');
 
             expect(rowEl.eq(1).find('td').eq(0)).toHaveClass('bb-grid-dropdown-cell');
             expect(rowEl.eq(1).find('td div.bb-context-menu').length).toBe(0);
@@ -857,7 +1006,7 @@ describe('Grid directive', function () {
             expect(rowEl.eq(3).find('td').eq(0)).toHaveClass('bb-grid-dropdown-cell');
             expect(rowEl.eq(3).find('td div.bb-context-menu').eq(0)).toHaveClass('dropdown');
             expect(rowEl.eq(3).find('td button.bb-context-menu-btn').length).toBe(1);
-            expect($('body ul li a')[0]).toHaveText('Option1');
+            expect($('body .bb-dropdown-menu .bb-dropdown-item a')[0]).toHaveText('Option1');
 
         });
 
@@ -872,13 +1021,13 @@ describe('Grid directive', function () {
             setGridData(dataSet1);
 
             rowEl = getGridRows(el);
-            expect($('body ul').eq(0)).toHaveCss({"display": "none"});
+            expect($('body .bb-dropdown-menu').eq(0)).toHaveCss({"display": "none"});
 
             contextEl = rowEl.eq(0).find('td div button').eq(0);
             contextEl.click();
-            expect($('body ul').eq(0)).not.toHaveCss({"display": "none"});
+            expect($('body .bb-dropdown-menu').eq(0)).not.toHaveCss({"display": "none"});
 
-            optionEl = $('body ul li a').eq(0);
+            optionEl = $('body .bb-dropdown-menu .bb-dropdown-item a').eq(0);
             expect(contextMenuItemClicked).toBe(false);
             optionEl.click();
             expect(contextMenuItemClicked).toBe(true);

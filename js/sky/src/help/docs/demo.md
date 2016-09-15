@@ -4,6 +4,19 @@ icon: question
 summary: The help service allows Angular components to open and close the help panel programmatically.
 ---
 
+<div class="alert alert-warning">
+  <div class="media">
+    <div class="media-left">
+      <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-flag fa-stack-1x fa-inverse"></i></span>
+    </div>
+    <div class="media-body">
+      <h4 class="media-heading" id="advanced-users-only">For Blackbaud Internal Use Only</h4>
+      The help service is not currently available for third-party custom applications.
+    </div>
+  </div>
+</div>
+
+
 The help service allows Angular components to open and close the help panel programmatically. When the widget opens, it interrogates the page to identify the current help topic and display relevant help content. The `bbHelpConfig` object controls settings for this service.
 
  ### Dependencies ###

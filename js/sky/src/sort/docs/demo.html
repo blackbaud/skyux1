@@ -1,0 +1,35 @@
+<div ng-controller="SortTestController as sortCtrl">
+    <bb-sort>
+        <bb-sort-item 
+            ng-repeat="item in sortCtrl.sortOptions" 
+            bb-sort-item-active="sortCtrl.initialState === item.id"
+            bb-sort-item-select="sortCtrl.sortItems(item)">
+        {{item.label}}
+        </bb-sort-item>
+    </bb-sort>
+
+    <div>
+        <bb-repeater bb-repeater-expand-mode="none">
+            <bb-repeater-item ng-repeat="item in sortCtrl.sortedItems">
+                <bb-repeater-item-title>
+                    {{item.title}}
+                </bb-repeater-item-title>
+                <bb-repeater-item-content>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-xs-6">
+                            Assigned to {{item.assignee}}
+                        </div>
+                        <div class="col-xs-6">
+                            Created {{item.date | date }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {{item.note}}
+                        </div>
+                    </div>
+                </bb-repeater-item-content>
+            </bb-repeater-item>
+        </bb-repeater>
+    </div>
+</div>

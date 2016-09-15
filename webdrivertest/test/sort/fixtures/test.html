@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div ng-controller="SortTestController as sortCtrl">
+                <div id="screenshot-sort" style="width: 600px; height: 500px;">
+                    <bb-sort>
+                        <bb-sort-item 
+                            ng-repeat="item in sortCtrl.sortOptions" 
+                            bb-sort-item-active="sortCtrl.initialState === item.id"
+                            bb-sort-item-select="sortCtrl.sortItems(item)">
+                        {{item.label}}
+                        </bb-sort-item>
+                    </bb-sort>
+                </div>
+                <div id="screenshot-sort-append" style="width: 600px; height: 500px;">
+                    <bb-sort bb-sort-append-to-body>
+                        <bb-sort-item 
+                            ng-repeat="item in sortCtrl.sortOptions" 
+                            bb-sort-item-active="sortCtrl.initialState === item.id"
+                            bb-sort-item-select="sortCtrl.sortItems(item)">
+                        {{item.label}}
+                        </bb-sort-item>
+                    </bb-sort>
+                </div>
+            
+            </div>
+        </div>
+    </div>    
+</div>

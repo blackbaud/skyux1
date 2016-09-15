@@ -64,12 +64,11 @@ describe('Context menu', function () {
         $compile(el)($scope);
         $scope.$digest();
         expect(el.find('div.bb-context-menu.dropdown').length).toBe(1);
-        expect(el.find('bb-context-menu-button.dropdown-toggle button.btn.bb-btn-secondary.bb-context-menu-btn i.fa.fa-ellipsis-h').length).toBe(1);
-
+        expect(el.find('bb-context-menu-button button.btn.dropdown-toggle.bb-btn-secondary.bb-context-menu-btn i.fa.fa-ellipsis-h').length).toBe(1);
         el.find('.bb-context-menu-btn').click();
         $scope.$digest();
 
-        itemsEl = el.find('ul li a');
+        itemsEl = el.find('.bb-dropdown-menu .bb-dropdown-item a');
         expect(itemsEl.length).toBe(3);
 
         for (i = 0; i < $scope.locals.items.length; i++) {
@@ -103,8 +102,8 @@ describe('Context menu', function () {
         var el = angular.element([
             '<div>',
             '<bb-context-menu>',
-            '   <li role="presentation" ng-repeat="item in locals.items">',
-            '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></li>',
+            '   <div class="bb-dropdown-item" role="presentation" ng-repeat="item in locals.items">',
+            '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></div>',
             '</bb-context-menu>',
             '</div>'
         ].join(''));
@@ -116,11 +115,11 @@ describe('Context menu', function () {
         var el = angular.element([
             '<div>',
             '<div class="bb-context-menu" uib-dropdown>',
-            '<bb-context-menu-button uib-dropdown-toggle></bb-context-menu-button>',
-            '<ul class="dropdown-menu" role="menu">',
-            '   <li role="presentation" ng-repeat="item in locals.items">',
-            '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></li>',
-            '</ul>',
+            '<bb-context-menu-button bb-context-menu-button-dropdown-toggle></bb-context-menu-button>',
+            '<div class="dropdown-menu bb-dropdown-menu" role="menu">',
+            '   <div class="bb-dropdown-item" role="presentation" ng-repeat="item in locals.items">',
+            '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></div>',
+            '</div>',
             '</div>',
             '</div>'
         ].join(''));
@@ -170,7 +169,7 @@ describe('Context menu', function () {
         }
 
         function getDropdownMenu(el) {
-            return el.find('ul.dropdown-menu');
+            return el.find('.dropdown-menu');
         }
 
         function getDropdownButton(el) {
@@ -230,16 +229,16 @@ describe('Context menu', function () {
                 '<div>',
                 '<div class="bb-context-menu" dropdown>',
                 '<bb-context-menu-button dropdown-toggle></bb-context-menu-button>',
-                '<ul class="dropdown-menu" role="menu">',
-                '   <li role="presentation" ng-repeat="item in locals.items">',
-                '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></li>',
-                '   <li role="presentation">',
+                '<div class="dropdown-menu bb-dropdown-menu" role="menu">',
+                '   <div class="bb-dropdown-item" role="presentation" ng-repeat="item in locals.items">',
+                '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></div>',
+                '   <div class="bb-dropdown-item" role="presentation">',
                 '   <bb-submenu bb-submenu-heading="locals.heading">',
                 '       <a role="menuitem" href="javascript:void(0)" ng-click="locals.firstClick()">First Item</a>',
                 '       <a role="menuitem" href="javascript:void(0)" ng-click="locals.secondClick()">Second Item</a>',
                 '   </bb-submenu>',
-                '   </li>',
-                '</ul>',
+                '   </div>',
+                '</div>',
                 '</div>',
                 '</div>'
             ].join(''));
@@ -253,10 +252,10 @@ describe('Context menu', function () {
                 '<div>',
                 '<div class="bb-context-menu" dropdown>',
                 '<bb-context-menu-button dropdown-toggle></bb-context-menu-button>',
-                '<ul class="dropdown-menu" role="menu">',
-                '   <li role="presentation" ng-repeat="item in locals.items">',
-                '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></li>',
-                '   <li role="presentation">',
+                '<div class="dropdown-menu bb-dropdown-menu" role="menu">',
+                '   <div class="bb-dropdown-item" role="presentation" ng-repeat="item in locals.items">',
+                '       <a role="menuitem" href="javascript:void(0)" ng-click="item.onClick()">{{item.text}}</a></div>',
+                '   <div class="bb-dropdown-item" role="presentation">',
                 '   <bb-submenu>',
                 '       <bb-submenu-heading>',
                 '           {{locals.heading}}',
@@ -264,13 +263,14 @@ describe('Context menu', function () {
                 '       <a role="menuitem" href="javascript:void(0)" ng-click="locals.firstClick()">First Item</a>',
                 '       <a role="menuitem" href="javascript:void(0)" ng-click="locals.secondClick()">Second Item</a>',
                 '   </bb-submenu>',
-                '   </li>',
-                '</ul>',
+                '   </div>',
+                '</div>',
                 '</div>',
                 '</div>'
             ].join(''));
 
             testSubmenu(el);
         });
+
     });
 });

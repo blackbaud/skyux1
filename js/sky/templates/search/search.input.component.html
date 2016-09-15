@@ -1,4 +1,4 @@
-<div>
+<div class="bb-search-input-inline">
     <div 
         class="bb-search-open-wrapper"
         ng-show="$ctrl.currentBreakpoint.xs"
@@ -24,7 +24,9 @@
                     ng-focus="$ctrl.inputFocused(true)"
                     ng-blur="$ctrl.inputFocused(false)"
                     data-bbauto-field="SearchBox"
-                    aria-label="{{::'search_label' | bbResources}}" />    
+                    ng-attr-aria-label="{{::'search_label' | bbResources}}" 
+                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"
+                    />    
 
                 <span class="input-group-btn">
                     
@@ -38,7 +40,8 @@
                         <i class="fa fa-times"></i>
                     </button>
 
-                    <button          
+                    <button
+                        data-bbauto-field="SearchButton"          
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-apply"
                         ng-click="$ctrl.applySearchText($ctrl.bbSearchText)"

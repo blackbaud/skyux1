@@ -1,0 +1,26 @@
+@import 'mixins';
+
+.bb-definition-list {
+    margin-right: 50px;
+    margin-bottom: 20px;
+}
+
+.bb-definition-list-heading {
+    margin-bottom: $margin-half;
+}
+
+.bb-definition-list-content-component {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: $margin-half;
+}
+
+.bb-definition-list-label {
+    margin-right: $margin;
+    width: 90px;
+    word-wrap: break-word;
+}
+
+.bb-definition-list-no-value, .bb-definition-list-value {
+    flex: 1;
+} 

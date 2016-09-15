@@ -1,0 +1,44 @@
+<div style="height: 1000px" ng-controller="FilterTestController as filterCtrl">
+    <button type="button" style="margin-bottom: 10px" class="bb-filter-set-active btn btn-primary" ng-click="filterCtrl.isActive = !filterCtrl.isActive">Set filter button active</button>
+    <div id="screenshot-filter-button" style="margin-bottom: 5px;">
+        <bb-filter-button 
+            bb-filter-button-on-click="filterCtrl.filterButtonClicked()"
+            bb-filter-button-active="filterCtrl.isActive">
+        </bb-filter-button>
+    </div>
+    <div id="screenshot-filter-summary">
+        <bb-filter-summary ng-show="filterCtrl.appliedFilters && filterCtrl.appliedFilters.length > 0">
+            <bb-filter-summary-item 
+                ng-repeat="item in filterCtrl.appliedFilters" 
+                bb-filter-summary-item-on-click="filterCtrl.filterButtonClicked()"
+                bb-filter-summary-item-on-dismiss="filterCtrl.onDismiss($index)" >
+                {{item.label}}
+            </bb-filter-summary-item>
+        </bb-filter-summary>
+    </div>
+</div>
+<script type="text/ng-template" id="demo/filter/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Food preferences</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <label for="bb-select-type">Fruit type</label>
+                    <select id="bb-select-type" ng-model="modalCtrl.filters.fruitType" class="form-control">
+                        <option value="any">Any Fruit</option>
+                        <option value="citrus">Citrus</option>
+                        <option value="berry">Berry</option>
+                    </select>
+                    <label id="bb-hide-vege" style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="modalCtrl.filters.hideVege" />
+                        Hide vegetarian
+                    </label>
+                </form>
+            </div>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="modalCtrl.applyFilters()"
+                bb-filter-modal-clear="modalCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>

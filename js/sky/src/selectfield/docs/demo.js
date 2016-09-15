@@ -147,4 +147,4 @@
 
     angular.module('stache')
         .controller('SelectFieldTestController', SelectFieldTestController);
-}());
+})();

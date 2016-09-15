@@ -23,7 +23,20 @@
         return -1;
     }
 
-    angular.module('sky.grids', ['sky.contextmenu', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window', 'sky.grids.toolbar'])
+    angular.module('sky.grids', 
+            [
+                'sky.infinitescroll',
+                'sky.contextmenu', 
+                'sky.mediabreakpoints', 
+                'sky.viewkeeper', 
+                'sky.highlight', 
+                'sky.resources', 
+                'sky.data', 
+                'sky.grids.filters', 
+                'sky.grids.actionbar', 
+                'sky.window', 
+                'sky.grids.toolbar'
+                ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
             function toggleDropdown($event) {
                 $event.preventDefault();
@@ -50,7 +63,9 @@
             function ($window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow, $q) {
                 return {
                     replace: true,
-                    transclude: true,
+                    transclude: {
+                        'bbGridToolbar': '?bbGridToolbar'    
+                    },
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -62,6 +77,17 @@
                     controller: ['$scope', function ($scope) {
                         var locals,
                             self = this;
+
+                        function searchApplied(searchText) {
+                            locals.appliedSearchText = searchText;
+                            /*istanbul ignore else */
+                            /* sanity check */
+                            if (angular.isFunction(locals.highlightSearchText)) {
+                                locals.highlightSearchText(locals.appliedSearchText);
+                            }
+                        }
+
+                        self.searchApplied = searchApplied;
 
                         self.setFilters = function (filters) {
                             /*istanbul ignore else */
@@ -133,6 +159,8 @@
                             }
                         };
 
+                        
+
                         self.scope = $scope;
 
                         $scope.resources = bbResources;
@@ -159,11 +187,11 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
-                        $scope.customToolbar.hasCustomToolbar = angular.isDefined(attr.bbGridCustomToolbar);
+                        $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
                         $scope.$watch('locals.hasCustomToolbar', function () {
                             var breakpoints = {},
@@ -669,11 +697,16 @@
                                 return true;
                             }
 
-                            function highlightSearchText() {
+                            function highlightSearchText(highlightText) {
                                 var options = $scope.options;
+                                
+                                if (!highlightText && options && options.searchText) {
+                                    highlightText = options.searchText;
+                                }
+
                                 bbHighlight.clear(tableEl);
-                                if (options && options.searchText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
+                                if (highlightText) {
+                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
                                 }
                             }
 
@@ -1224,7 +1257,9 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(highlightSearchText);
+                                        $timeout(function () {
+                                            highlightSearchText(locals.appliedSearchText);
+                                        });
                                         handleTableWrapperResize();
                                         /*istanbul ignore next */
                                         /* sanity check */
@@ -1290,21 +1325,29 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function addMoreRowsToGrid(moreRows) {
+                                tableEl.addRowData('', moreRows);
+                                $scope.options.data = $scope.options.data.concat(moreRows);
+                                setUpFancyCheckCell();
+                                doNotResetRows = true;
+                            }
+
                             function loadMore() {
                                 var deferred = $q.defer(),
                                     loadMorePromise = deferred.promise;
 
-                                loadMorePromise.then(function (moreRows) {
-                                    tableEl.addRowData('', moreRows);
-                                    $scope.options.data = $scope.options.data.concat(moreRows);
-                                    setUpFancyCheckCell();
-                                    doNotResetRows = true;
-                                });
+                                loadMorePromise.then(addMoreRowsToGrid);
 
                                 $scope.$emit('loadMoreRows', {
                                     promise: deferred
                                 });
 
+                                return loadMorePromise;
+
+                            }
+
+                            if (angular.isDefined(attr.bbGridInfiniteScroll)) {
+                                $scope.locals.hasInfiniteScroll = true;
                             }
 
                             $scope.locals.loadMore = loadMore;

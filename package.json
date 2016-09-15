@@ -1,7 +1,7 @@
 {
   "name": "blackbaud-skyux",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
-  "version": "1.6.8",
+  "version": "1.7.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/blackbaud/skyux"
@@ -45,7 +45,7 @@
     "grunt-karma": "0.12.2",
     "grunt-ngdocs": "0.2.9",
     "grunt-sri": "0.0.5",
-    "grunt-webdriver": "1.0.0",
+    "grunt-webdriver": "2.0.1",
     "install": "0.6.0",
     "istanbul": "0.4.2",
     "jasmine": "2.4.1",
@@ -71,9 +71,9 @@
       "resolved": "https://registry.npmjs.org/to/-/to-0.2.9.tgz",
       "version": "0.2.9"
     },
-    "wdio-jasmine-framework": "0.1.7",
-    "webdrivercss": "v2.0.0beta-rc1",
-    "webdriverio": "3.2.6"
+    "wdio-jasmine-framework": "0.2.5",
+    "webdriverio": "4.2.8",
+    "wdio-visual-regression-service": "0.4.0"
   },
   "dependencies": {
     "angular": "1.5.3",
@@ -94,8 +94,7 @@
     "jquery-ui-touch-punch": "0.2.3",
     "intl-tel-input": "8.5.2",
     "moment": "2.9.0",
-    "ng-file-upload": "12.0.4",
-    "webdriverio": "3.2.6"
+    "ng-file-upload": "12.0.4"
   },
   "scripts": {
     "test": "grunt test"

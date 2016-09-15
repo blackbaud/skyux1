@@ -1,0 +1,10 @@
+<div class="bb-sort" uib-dropdown>
+    <button title="{{'sort_button_label' | bbResources}}" type="button" class="btn bb-btn-secondary" uib-dropdown-toggle>
+        <i class="fa fa-lg fa-sort"></i>
+    </button>
+    <div class="bb-dropdown-menu dropdown-menu" uib-dropdown-menu role="menu"> 
+        <bb-sort-menu>
+            <ng-transclude></ng-transclude>
+        </bb-sort-menu>
+    </div>
+</div>

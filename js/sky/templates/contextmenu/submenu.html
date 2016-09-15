@@ -1,8 +1,8 @@
 <div class="bb-submenu">
     <uib-accordion>
-        <uib-accordion-group is-open="bbSubmenu.accordionOpen">
+        <uib-accordion-group template-url="sky/templates/contextmenu/submenu.accordiongroup.html" is-open="bbSubmenu.accordionOpen">
             <uib-accordion-heading ng-if="bbSubmenu.staticHeader">
-                <div ng-click="bbSubmenu.toggleAccordion($event)">
+                <div role="button" ng-click="bbSubmenu.toggleAccordion($event)">
                     <span>
                         {{bbSubmenu.heading}}
                     <span>

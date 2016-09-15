@@ -24,6 +24,7 @@
         },
         {
             browserName: 'firefox',
+            browser_version: '47',
             'browserstack.local': 'true',
             'browserstack.debug': 'true',
             os: 'OS X',
@@ -36,16 +37,14 @@
             resolution: '1280x960'
         }
     ];
+
+    shared.maxInstances = 10;
     shared.host = 'hub-cloud-us.browserstack.com';
     shared.port = 80;
-    shared.plugins = {
-        webdrivercss: {
-            screenshotRoot: 'webdriver-screenshots',
-            failedComparisonsRoot: 'webdriver-screenshots-diffs',
-            mismatchTolerance: 0.05
-        }
-    };
 
+    shared.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshots', 
+                                                                                                'webdriver-screenshots-screen', 
+                                                                                                'webdriver-screenshots-diffs');
     exports.config = shared;
 
 }());

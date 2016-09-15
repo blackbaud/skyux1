@@ -4,19 +4,20 @@
     vertical-align: middle;
     margin-bottom: 0;
 }
+.bb-search-docs-toolbar {
+    padding: 5px;
+}
 </style>
 <div ng-controller="SearchTestController as searchCtrl">
     <div class="bb-search-docs-toolbar" bb-search-container>
         <div class="bb-search-docs-toolbar-item">
-            <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Custom button</button>  
+            <button type="button" ng-click="searchCtrl.applySearchText('Robert')" class="btn bb-btn-secondary">Predefined search text</button>  
         </div>
-        <div class="bb-search-docs-toolbar-item">
-            <bb-search-input
-                bb-search-text="searchCtrl.searchText"
-                bb-on-search="searchCtrl.applySearchText(searchText)"
-                bb-on-search-input-toggled="searchCtrl.searchInputToggled(isVisible)">
-            </bb-search-input>
-        </div>
+        <bb-search-input
+            bb-search-text="searchCtrl.searchText"
+            bb-on-search="searchCtrl.applySearchText(searchText)"
+            bb-search-placeholder>
+        </bb-search-input>
     </div>    
     <div>
         <bb-repeater bb-repeater-expand-mode="none">

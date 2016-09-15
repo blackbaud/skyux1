@@ -1,0 +1,12 @@
+.bb-dropdown-menu.dropdown-menu .bb-dropdown-item > .bb-subsection-heading.bb-sort-heading {
+    color: $bb-text-deemphasized-color;
+    pointer-events: none;
+}
+
+.bb-sort-selected {
+    background-color: $bb-selected-color;
+}
+
+.dropdown-menu .divider.bb-sort-heading-divider {
+    margin: 0;
+}

@@ -1,6 +1,7 @@
 <div class="row bb-file-drop-row">
     <div class="col-xs-12 bb-file-drop-col" ng-class="{'col-sm-6': bbFileDrop.allowLinks}">
-        <div
+        <button
+             ng-attr-aria-label="{{'file_upload_drag_or_click' | bbResources}}"
              class="bb-file-drop bb-file-drop-target"
              ngf-drop
              ngf-keep="false"
@@ -24,7 +25,7 @@
                 </div>
             </div>
             <div class="bb-file-drop-contents-custom" ng-transclude></div>
-        </div>
+        </button>
     </div>
     <div class="col-sm-6 col-xs-12 bb-file-drop-col" ng-if="bbFileDrop.allowLinks">
         <div class="bb-file-drop-contents">
@@ -37,6 +38,7 @@
                            placeholder="{{'file_upload_link_placeholder' | bbResources}}"
                            ng-model="bbFileDrop.url"
                            ng-keypress="$event.keyCode === 13 &amp;&amp; bbFileDrop.addLink($event)"
+                           ng-attr-aria-label="{{'file_upload_link_input' | bbResources}}"
                            />
                 </div>
                 <button type="button" class="btn btn-primary" ng-disabled="!bbFileDrop.url" ng-click="bbFileDrop.addLink($event)">

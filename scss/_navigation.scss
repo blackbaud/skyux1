@@ -44,25 +44,31 @@
             white-space: nowrap;
             margin-right: $margin-half;
 
-            .dropdown-menu li {
-                margin: 0;
-
-                a {
-                    background-color: $bb-nav-bg-color;
-                    border-bottom: none;
-                    font-size: 12px;
-                    font-weight: normal;
-                    color: $bb-nav-color;
-
-                    padding: $padding $bb-nav-item-padding *0.75;
-                    text-decoration: none;
+            .dropdown-menu {
+                li {
                     margin: 0;
-                    border-radius: 0;
 
-                    &:hover {
-                        background-color: $bb-nav-selected-bg-color;
-                        color: $bb-nav-selected-color;
+                    a {
+                        background-color: $bb-nav-bg-color;
+                        border-bottom: none;
+                        font-size: 12px;
+                        font-weight: normal;
+                        color: $bb-nav-color;
+
+                        padding: $padding $bb-nav-item-padding *0.75;
+                        text-decoration: none;
+                        margin: 0;
+                        border-radius: 0;
+
+                        &:hover {
+                            background-color: $bb-nav-selected-bg-color;
+                            color: $bb-nav-selected-color;
+                        }
                     }
+                }
+                li.bb-navbar-active a {
+                    background-color: $bb-nav-selected-bg-color;
+                    color: $bb-nav-selected-color;
                 }
             }
 

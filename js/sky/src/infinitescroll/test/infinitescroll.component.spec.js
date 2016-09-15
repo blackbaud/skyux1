@@ -11,7 +11,7 @@
             loadCalls,
             infiniteHtml = '<div><bb-infinite-scroll ' + 
                 'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
-                'bb-infinite-scroll-load="infiniteCtrl.loadFn(loadingComplete)">' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn()">' +
                 '</bb-infinite-scroll></div>';
 
         beforeEach(module(
@@ -39,22 +39,28 @@
             }
         }
 
-        function setupScrollInfinite(inView) {
+        function setupScrollInfinite(inView, parentScrollable) {
             var windowVal = 10,
                 offsetVal;
             offsetVal = inView ? 0 : 30; 
+
             spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
             spyOn($.fn, 'height').and.returnValue(windowVal);
-            spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+            
+            if (!parentScrollable) {
+                spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
+            } else {
+                spyOn($.fn, 'position').and.returnValue({ top: offsetVal });
+            }
+
         }
 
         beforeEach(function () {
             loadCalls = 0;
             $scope.infiniteCtrl = {
                 hasMore: true,
-                loadFn: function (loadingComplete) {
+                loadFn: function () {
                     loadCalls++;
-                    loadingComplete();
                 }
             };
             windowEl = angular.element($window);
@@ -117,12 +123,16 @@
             expect(loadCalls).toBe(1);
         });
 
-
         it('should not have the load more button visible if the component load more button is pressed and is already loading', function () {
-            var el;
+            var el,
+                loadCallback;
             
             $scope.infiniteCtrl.loadFn = function () {
-                loadCalls++;
+                return {
+                    then: function (callback) {
+                        loadCallback = callback;
+                    }
+                };     
             };
 
             setupScrollInfinite(true);
@@ -132,9 +142,11 @@
 
             el.find('.bb-btn-secondary').click();
             timeoutFlushIfAvailable();
-            expect(loadCalls).toBe(1);
             expect(el.find('.bb-btn-secondary').length).toBe(0);
 
+            loadCallback();
+            $scope.$digest();
+            expect(el.find('.bb-btn-secondary').length).toBe(1);
 
         });
 
@@ -152,6 +164,42 @@
             timeoutFlushIfAvailable();
             expect(loadCalls).toBe(0);
         });
+
+        it('should handle a scrollable parent properly', function () {
+            var parentHtml = '<div style="overflow-y: scroll;"><bb-infinite-scroll ' + 
+                'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn()">' +
+                '</bb-infinite-scroll></div>',
+                el;
+            
+            setupScrollInfinite(true, true);
+            
+            el = $compile(parentHtml)($scope);
+            $scope.$digest();
+
+            el.scroll();
+            timeoutFlushIfAvailable();
+            expect(loadCalls).toBe(1);
+            
+        });
+
+        it('should handle an auto parent properly', function () {
+            var parentHtml = '<div style="overflow-y: auto;"><bb-infinite-scroll ' + 
+                'bb-infinite-scroll-has-more="infiniteCtrl.hasMore" ' +
+                'bb-infinite-scroll-load="infiniteCtrl.loadFn()">' +
+                '</bb-infinite-scroll></div>',
+                el;
+            
+            setupScrollInfinite(true, true);
+            
+            el = $compile(parentHtml)($scope);
+            $scope.$digest();
+
+            el.scroll();
+            timeoutFlushIfAvailable();
+            expect(loadCalls).toBe(1);
+            
+        });
       
     });
-}());
+})();

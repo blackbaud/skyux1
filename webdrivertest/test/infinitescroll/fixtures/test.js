@@ -25,9 +25,9 @@
         vm.hasMore = true;
 
         vm.loadFn = function () {
-            $timeout(function () {
+            return $timeout(function () {
 
-            }, 4000);
+            }, 10000);
 
         };
     }
@@ -36,4 +36,4 @@
 
     angular.module('screenshots', ['sky'])
         .controller('InfiniteScrollTestController', InfiniteScrollTestController);
-}());
+})();

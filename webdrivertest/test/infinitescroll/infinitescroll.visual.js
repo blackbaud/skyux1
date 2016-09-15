@@ -1,19 +1,18 @@
-/*global describe, it, browser,require */
+/*global describe, it, browser */
 
 describe('infinite scroll', function () {
     'use strict';
 
-    it('match the baseline infinite scroll screenshot', function (done) {
-        var common = require('../common');
+    it('match the baseline infinite scroll screenshot', function () {
 
-        browser
+        return browser
             .setupTest('/infinitescroll/fixtures/test.full.html')
             .click('.bb-btn-secondary')
+            .pause(1000)
             .compareScreenshot({
-                prefix: common.getPrefix(browser),
                 screenshotName: 'infinitescroll',
-                selector: '#screenshot-infinitescroll'
-            })
-            .call(done);
+                selector: '#screenshot-infinitescroll',
+                checkAccessibility: true
+            });
     });
 });

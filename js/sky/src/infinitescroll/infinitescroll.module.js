@@ -3,4 +3,4 @@
     'use strict';
 
     angular.module('sky.infinitescroll', ['sky.infinitescroll.component']);
-}());
+})();
