@@ -15,9 +15,7 @@
         }
 
         function selectChanged(newIndex) {
-            console.log('newIndex: ', newIndex);
             vm.selectedIndex = parseInt(newIndex) - 1;
-            console.log('selectedIndex: ', vm.selectedIndex);
         }
 
         function selectedIndexChange(index) {
