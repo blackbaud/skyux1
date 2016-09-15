@@ -5130,6 +5130,7 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
+                    require: 'bbGrid',
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -5251,7 +5252,7 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr, ctrls, $transclude) {
+                    link: function ($scope, element, attr, bbGrid, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
@@ -6186,7 +6187,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName)) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
@@ -6619,9 +6620,10 @@
                 bbGridSearchText: '<?bbGridSearchText'
             },
             transclude: {
-                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
+                'bbGridToolbarSort': '?bbGridToolbarSort'    
             },
-            link: function ($scope, el, attr, bbGrid) {
+            link: function ($scope, el, attr, bbGrid, $transclude) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
                 function applySearchText() {
@@ -6739,6 +6741,7 @@
                         /* sanity check */
                         if (bbGrid !== null) {
                             bbGrid.applySearchText = applySearchText;
+                            bbGrid.headerSortInactive = $transclude.isSlotFilled('bbGridToolbarSort');
                         }
 
                         if (angular.isFunction($scope.options.onAddClick)) {
@@ -6783,7 +6786,7 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search', 'sky.sort'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
 
@@ -13818,6 +13821,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            bb-filter-button-active="options.filtersAreActive"\n' +
         '            >\n' +
         '        </bb-filter-button>\n' +
+        '        <div class="bb-grid-toolbar-sort-container">\n' +
+        '            <div ng-transclude="bbGridToolbarSort">\n' +
+        '                \n' +
+        '            </div>\n' +
+        '        </div>\n' +
         '    </div>\n' +
         '    <div class="bb-grid-filter-summary-container">\n' +
         '        <div ng-transclude="bbGridToolbarFilterSummary">\n' +
