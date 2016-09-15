@@ -347,9 +347,6 @@
                 }
             },
             multiselect: true,
-            sortOptions: {
-                excludedColumns: ['bio']
-            },
             selectedColumnIds: [1, 2, 3, 5],
             columnPickerHelpKey: 'bb-security-users.html'
         };
@@ -387,12 +384,70 @@
             onAddClickLabel: 'Add button',
             selectedColumnIds: [1, 2, 3],
             columnPickerHelpKey: 'bb-security-users.html',
-            sortOptions: {
-                descending: true
-            },
             hasInlineFilters: true,
             filters: {}
         };
+
+        self.sortOptions = [
+                {
+                    id: 1,
+                    label: 'Name (A - Z)',
+                    name: 'name',
+                    descending: false
+                },
+                {
+                    id: 2,
+                    label: 'Name (Z - A)',
+                    name: 'name',
+                    descending: true
+                },
+                {
+                    id: 3,
+                    label: 'Instrument (A - Z)',
+                    name: 'instrument',
+                    descending: false
+                },
+                {
+                    id: 4,
+                    label: 'Instrument (Z - A)',
+                    name: 'instrument',
+                    descending: true
+                },
+                {
+                    id: 5,
+                    label: 'Date (newest first)',
+                    name: 'mydate',
+                    descending: true
+
+                },
+                {
+                    id: 6,
+                    label: 'Date (oldest first)',
+                    name: 'mydate',
+                    descending: false
+                }
+            ];
+
+        function sortItems(item) {
+            self.gridOptions.data.sort(function (a, b) {
+                var descending = item.descending ? -1 : 1,
+                    sortProperty = item.name;
+                if (a[sortProperty] > b[sortProperty]) {
+                    return (descending);
+                } else if (a[sortProperty] < b[sortProperty]) {
+                    return (-1 * descending);
+                } else {
+                    return 0;
+                }
+            });
+
+            self.gridOptions.sortOptions = {
+                column: item.name,
+                descending: item.descending
+            };
+        }
+
+        self.sortItems = sortItems;
 
         self.gridOptions3 = {
             columns: self.gridOptions2.columns,

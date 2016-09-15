@@ -344,9 +344,6 @@
                     }
                 },
                 multiselect: true,
-                sortOptions: {
-                    excludedColumns: ['bio']
-                },
                 selectedColumnIds: [1, 2, 3, 5],
                 columnPickerHelpKey: 'bb-security-users.html'
             };
@@ -358,18 +355,50 @@
 
             self.selectedRows = [dataSetBand[1]];
 
-            
+            self.sortOptions = [
+                {
+                    id: 1,
+                    label: 'Name (A - Z)',
+                    name: 'name',
+                    descending: false
+                },
+                {
+                    id: 2,
+                    label: 'Name (Z - A)',
+                    name: 'name',
+                    descending: true
+                },
+                {
+                    id: 3,
+                    label: 'Instrument (A - Z)',
+                    name: 'instrument',
+                    descending: false
+                },
+                {
+                    id: 4,
+                    label: 'Instrument (Z - A)',
+                    name: 'instrument',
+                    descending: true
+                },
+                {
+                    id: 5,
+                    label: 'Date (newest first)',
+                    name: 'mydate',
+                    descending: true
 
-            function setSelections() {
-                self.selectedRows = [dataSetBand[3]];
-            }
+                },
+                {
+                    id: 6,
+                    label: 'Date (oldest first)',
+                    name: 'mydate',
+                    descending: false
+                }
+            ];
 
-            $scope.$watch(function () {
-                return self.gridOptions.sortOptions;
-            }, function () {
+            function sortItems(item) {
                 self.gridOptions.data.sort(function (a, b) {
-                    var descending = self.gridOptions.sortOptions.descending ? -1 : 1,
-                        sortProperty = self.gridOptions.sortOptions.column;
+                    var descending = item.descending ? -1 : 1,
+                        sortProperty = item.name;
                     if (a[sortProperty] > b[sortProperty]) {
                         return (descending);
                     } else if (a[sortProperty] < b[sortProperty]) {
@@ -378,7 +407,18 @@
                         return 0;
                     }
                 });
-            }, true);
+
+                self.gridOptions.sortOptions = {
+                    column: item.name,
+                    descending: item.descending
+                };
+            }
+
+            self.sortItems = sortItems;
+
+            function setSelections() {
+                self.selectedRows = [dataSetBand[3]];
+            }
 
             self.gridOptions.hasMoreRows = true;
 
@@ -391,9 +431,10 @@
                 newData = angular.copy(dataSetBand);
 
                 for (i = 0; i < dataSetBand.length; i++) {
-                    newData[i].flag = newDataFlag;
+                    newData[i].id = newDataFlag;
+                    newDataFlag++;
                 }
-                newDataFlag++;
+                
                 return newData;
             }
 
