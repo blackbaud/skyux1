@@ -25,12 +25,33 @@
             ng-model="selectFieldCtrl.selectedSingleItems"
             bb-select-field-text="Pick a value"
             bb-select-field-style="single"
+            
             required>
             <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
             </bb-select-field-picker>
           </bb-select-field>
         </div>
       </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div id="screenshot-selectfield-single-search" style="padding: 15px;">
+                 <label for="single-select-search" class="control-label">
+                    Single-select search icon
+                </label>
+                <bb-select-field
+                    id="single-select-search"
+                    ng-model="selectFieldCtrl.selectedSingleItemsClear"
+                    bb-select-field-text="Pick a value"
+                    bb-select-field-style="single"
+                    bb-select-field-icon="search"
+                    bb-select-field-clear
+                    required>
+                    <bb-select-field-picker bb-select-field-picker-template="demo/selectfield/selectfieldpickersingle.html">
+                    </bb-select-field-picker>
+                </bb-select-field>   
+            </div>    
+        </div>
     </div>
   </form>
 

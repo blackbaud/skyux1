@@ -1,6 +1,22 @@
-<button type="button" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">
+<button class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">
   <div class="bb-select-field-single-inner">
     <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>
-    <div class="bb-select-field-single-icon"><i class="fa fa-sort"></i></div>
+    <span 
+        role="button"
+        class="bb-select-field-clear"
+        tabindex="0"
+        ng-show="bbSelectField.bbSelectFieldClear &amp;&amp; bbSelectField.bbSelectFieldSelectedItems.length > 0"
+        ng-click="bbSelectField.clearField($event)"
+        ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.clearField($event)"
+        ng-attr-aria-label="{{'selectfieldpicker_clear' | bbResources}}">
+        <i class="fa fa-times"></i>
+    </span>
+    <div class="bb-select-field-single-icon">
+        <i 
+            ng-class="{'fa-sort': bbSelectField.bbSelectFieldIcon !== 'search', 
+                'fa-search': bbSelectField.bbSelectFieldIcon === 'search'}"     
+            class="fa">
+        </i>
+    </div>
   </div>
 </button>

@@ -41,6 +41,8 @@
 
 
         vm.selectedItems = vm.listItems.slice(0, 4);
+
+        vm.selectedSingleItemsClear = [vm.listItems[0]];
     }
     angular.module('screenshots', ['sky'])
         .controller('SelectFieldTestController', SelectFieldTestController);
