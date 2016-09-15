@@ -14,7 +14,7 @@
 <div ng-controller="TabsetPageController as tabsetPageCtrl">
   <h3>Tabs example with counter</h3>
     <uib-tabset bb-tabset-collapsible>
-        <uib-tab bb-tab-collapsible-header="p.title" ng-repeat="p in tabsetPageCtrl.pages">
+        <uib-tab bb-tab-collapse-header="p.title" ng-repeat="p in tabsetPageCtrl.pages">
             <uib-tab-heading>
                 {{p.title}}
                 <span class="bb-tab-header-count">{{p.count}}</span>
