@@ -14039,7 +14039,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">\n' +
         '        {{bbSelectField.getSummaryCountText()}}\n' +
         '      </div>\n' +
-        '      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.removeAll(); bbSelectField.setModelTouched()">\n' +
+        '      <button \n' +
+        '        type="button"\n' +
+        '        class="close bb-select-field-multiple-item-delete" \n' +
+        '        ng-click="bbSelectField.removeAll(); bbSelectField.setModelTouched()">\n' +
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
         '      </button>\n' +
