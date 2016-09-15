@@ -54,9 +54,25 @@
         };
     }
 
+    function findTabNumberIndex(index, tabsetCtrl) {
+        var i;
+        for (i = 0; i < tabsetCtrl.tabs.length; i++) {
+            if (tabsetCtrl.tabs[i].index === index) {
+                return i;
+            }
+        }
+    }
+
     function setActiveTab(sref, el, tabsetCtrl, $state) {
+        var index;
         if ($state.includes(sref.state)) {
-            tabsetCtrl.select(el.isolateScope().index);
+            index = el.isolateScope().index;
+            if (angular.isNumber(index)) {
+                tabsetCtrl.select(index);
+            } else {
+                tabsetCtrl.select(findTabNumberIndex(index, tabsetCtrl));
+            }
+           
         }
     }
 
