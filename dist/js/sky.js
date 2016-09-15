@@ -9833,6 +9833,18 @@ angular.module('sky.palette.config', [])
             }
         };
 
+        function clearField($event) {
+            $event.stopPropagation();
+            $event.preventDefault();
+            vm.bbSelectFieldSelectedItems = [];
+            if (angular.isFunction(vm.setModelTouched)) {
+                vm.setModelTouched();
+            }
+            
+        }
+
+        vm.clearField = clearField;
+
         vm.removeAll = function () {
             vm.bbSelectFieldSelectedItems = [];
         };
@@ -9857,23 +9869,28 @@ angular.module('sky.palette.config', [])
 
     function bbSelectField() {
         function link($scope, el, attrs, ctrls) {
-            if (ctrls[0] && ctrls[1] && attrs.required) {
+            var bbSelectField = ctrls[0];
+            if (bbSelectField && ctrls[1] && attrs.required) {
                 ctrls[1].$validators.required = function () {
-                    return angular.isDefined(ctrls[0].bbSelectFieldSelectedItems) && ctrls[0].bbSelectFieldSelectedItems.length > 0;
+                    return angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0;
                 };
 
                 $scope.$watchCollection(
                     function () {
-                        return ctrls[0].bbSelectFieldSelectedItems;
+                        return bbSelectField.bbSelectFieldSelectedItems;
                     },
                     function () {
                         ctrls[1].$validate();
                     }
                 );
 
-                ctrls[0].setModelTouched = function () {
+                bbSelectField.setModelTouched = function () {
                     ctrls[1].$setTouched();
                 };
+            }
+
+            if (angular.isDefined(attrs.bbSelectFieldClear)) {
+                bbSelectField.bbSelectFieldClear = true;
             }
         }
 
@@ -9884,6 +9901,7 @@ angular.module('sky.palette.config', [])
                 bbSelectFieldClick: '&?',
                 bbSelectFieldSelectedItems: '=?ngModel',
                 bbSelectFieldStyle: '@?',
+                bbSelectFieldIcon: '@?',
                 bbSelectFieldText: '@?'
             },
             controller: 'BBSelectFieldController',
@@ -14072,10 +14090,26 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
-        '<button type="button" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '<button class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
         '  <div class="bb-select-field-single-inner">\n' +
         '    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>\n' +
-        '    <div class="bb-select-field-single-icon"><i class="fa fa-sort"></i></div>\n' +
+        '    <span \n' +
+        '        role="button"\n' +
+        '        class="bb-select-field-clear"\n' +
+        '        tabindex="0"\n' +
+        '        ng-show="bbSelectField.bbSelectFieldClear &amp;&amp; bbSelectField.bbSelectFieldSelectedItems.length > 0"\n' +
+        '        ng-click="bbSelectField.clearField($event)"\n' +
+        '        ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.clearField($event)"\n' +
+        '        ng-attr-aria-label="{{\'selectfieldpicker_clear\' | bbResources}}">\n' +
+        '        <i class="fa fa-times"></i>\n' +
+        '    </span>\n' +
+        '    <div class="bb-select-field-single-icon">\n' +
+        '        <i \n' +
+        '            ng-class="{\'fa-sort\': bbSelectField.bbSelectFieldIcon !== \'search\', \n' +
+        '                \'fa-search\': bbSelectField.bbSelectFieldIcon === \'search\'}"     \n' +
+        '            class="fa">\n' +
+        '        </i>\n' +
+        '    </div>\n' +
         '  </div>\n' +
         '</button>\n' +
         '');
