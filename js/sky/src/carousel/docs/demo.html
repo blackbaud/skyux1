@@ -1,4 +1,13 @@
 <div ng-controller="CarouselTestController as carouselCtrl">
+    <div class="row">
+        <div class="col-xs-4">
+            <label>Choose carousel item</label>
+            <select ng-model="carouselCtrl.selectModel" class="form-control" ng-change="carouselCtrl.selectChanged(carouselCtrl.selectModel)">
+                <option ng-repeat="item in carouselCtrl.items">{{item}}</option>
+            </select>
+        </div>
+    </div>
+  
   <bb-carousel bb-carousel-style="card-large"
     bb-carousel-selected-index="carouselCtrl.selectedIndex"
     bb-carousel-selected-index-change="carouselCtrl.selectedIndexChange(index)">
@@ -9,7 +18,7 @@
           This card demonstrates the amount of space that is available for a card that uses the default large size. If the content does not require this much space, you can set the card size to small. The type of content to display in the body of a card varies based on what the card represents and whether it prompts users to action. The content can consist of some combination of a graph, trend, status, summary information, and guidance text.
         </bb-card-content>
         <bb-card-actions>
-          <button type="button" ng-mousedown="carouselCtrl.goToFirstIndex($event)" class="btn btn-default">Return to start</button>
+          <button type="button" class="btn btn-default">Click me</button>
         </bb-card-actions>
       </bb-card>
     </bb-carousel-item>

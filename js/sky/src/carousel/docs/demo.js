@@ -14,8 +14,15 @@
             vm.items.push(i + 1);
         }
 
+        function selectChanged(newIndex) {
+            console.log('newIndex: ', newIndex);
+            vm.selectedIndex = parseInt(newIndex) - 1;
+            console.log('selectedIndex: ', vm.selectedIndex);
+        }
+
         function selectedIndexChange(index) {
             vm.selectedIndex = index;
+            vm.selectModel = (index + 1).toString();
         }
 
         function goToFirstIndex($event) {
@@ -27,6 +34,8 @@
         vm.goToFirstIndex = goToFirstIndex;
 
         vm.selectedIndex = 5;
+
+        vm.selectChanged = selectChanged;
     }
 
     angular.module('stache')
