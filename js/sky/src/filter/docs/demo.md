@@ -1,7 +1,5 @@
 ---
 name: Filter
----
-name: Filter
 icon: filter
 summary: The filter module provides components that allow users to select filter criteria.
 ---

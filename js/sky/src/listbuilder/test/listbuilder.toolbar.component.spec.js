@@ -35,9 +35,8 @@
                 searchHtml,
                 localSearchText,
                 listCtrl = {
-                    onSearch: function (searchText, highlightResults) {
+                    onSearch: function (searchText) {
                         localSearchText = searchText;
-                        highlightResults();
                     }
                 };
             
@@ -47,7 +46,7 @@
                 searchHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
-                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)" ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
                     'bb-listbuilder-search-text="listCtrl.searchText">' +
                     '</bb-listbuilder-toolbar>' +
                     simpleCardContentHtml +
@@ -140,6 +139,34 @@
 
             });
 
+            it('calls the search callback, and resolves highlight promise on input enter when returning a promise', function () {
+                var el,
+                    searchButtonEl;
+
+                $scope.listCtrl = listCtrl;
+
+                $scope.listCtrl.onSearch = function (searchText) {
+
+                    return {
+                        then: function (callback) {
+                            localSearchText = searchText;
+                            callback();
+                        }
+                    };
+                };
+
+                el = initListbuilderTest();
+                changeInput(el, 'First');
+
+                searchButtonEl = findSearchButton(el);
+                searchButtonEl.click();
+                $scope.$digest();
+
+                verifySearchResults(el, 'First');
+                el.remove();
+
+            });
+
             it('selects the input, calls the search callback, and resolves highlight promise on search button click', function () {
                 var el,
                     searchButtonEl;
@@ -198,7 +225,7 @@
                     noCardHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
-                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)" ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
                     'bb-listbuilder-search-text="listCtrl.searchText">' +
                     '</bb-listbuilder-toolbar>' +
                     '</bb-listbuilder>');

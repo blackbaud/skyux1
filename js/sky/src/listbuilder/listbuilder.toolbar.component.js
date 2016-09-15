@@ -7,19 +7,18 @@
             vkToolbar;
 
         function applySearchText(searchText) {
+            var highlightPromise;
 
-            //select input
-            var deferred = $q.defer(),
-                highlightPromise;
-            highlightPromise = deferred.promise;
-            
-            // Allow user to call highlight promise after applying search callback
-            highlightPromise.then(function () {
+            highlightPromise = ctrl.bbListbuilderOnSearch({searchText: searchText});
+
+            if (highlightPromise && angular.isFunction(highlightPromise.then)) {
+                // Allow user to call highlight promise after applying search callback
+                highlightPromise.then(function () {
+                    ctrl.listbuilderCtrl.highlightSearchText(searchText);
+                });
+            } else {
                 ctrl.listbuilderCtrl.highlightSearchText(searchText);
-            });
-
-            //search callback
-            ctrl.bbListbuilderOnSearch({searchText: searchText, highlightResults: deferred.resolve});
+            }
             
         }
 
@@ -101,7 +100,7 @@
             'sky.resources', 
             'sky.viewkeeper', 
             'sky.listbuilder.add.component',       
-            'sky.listbuilder.filter.component',
+            'sky.filter',
             'sky.search'
         ])
         .component('bbListbuilderToolbar', {

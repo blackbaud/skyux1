@@ -2,7 +2,7 @@
 
     <bb-infinite-scroll
         bb-infinite-scroll-has-more="$ctrl.bbListbuilderShowLoadMore"
-        bb-infinite-scroll-load="$ctrl.loadCallback(loadingComplete)">
+        bb-infinite-scroll-load="$ctrl.loadCallback()">
     </bb-infinite-scroll>
     <div class="bb-listbuilder-actionbar" ng-show="$ctrl.listbuilderCtrl.isScrolled">
         <span class="bb-listbuilder-backtotop-left" ng-click="$ctrl.listbuilderCtrl.scrollToTop()">

@@ -37,9 +37,9 @@
             listbuilderHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
-                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"> ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)"> ' +
                     '</bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)" ' +
+                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()" ' +
                     'bb-listbuilder-show-load-more="listCtrl.showLoadMore">' +
                     '</bb-listbuilder-footer>' + 
                     '</bb-listbuilder>');
@@ -131,7 +131,7 @@
                     },
                     listbuilderNoToolbarHtml = angular.element(
                     '<bb-listbuilder>' +
-                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)" ' +
+                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()" ' +
                     'bb-listbuilder-show-load-more="true">' +
                     '</bb-listbuilder-footer>' + 
                     '</bb-listbuilder>');
@@ -182,12 +182,11 @@
                 loadCalls = 0;
                 $scope.listCtrl = {
                     showLoadMore: true,
-                    onLoadMore: function (loadingComplete) {
+                    onLoadMore: function () {
                         loadCalls++;
-                        loadingComplete();
                     },
-                    onSearch: function (searchText, highlightResults) {
-                        highlightResults();
+                    onSearch: function (searchText) {
+                        return searchText;
                     }
                 };
                 windowEl = angular.element($window);
@@ -244,7 +243,7 @@
 
             });
 
-            it('should highlight using the last search text when load more promise is resolved', function () {
+            function validateHighlight(onLoadMore) {
                 var el,
                     searchButtonEl,
                     highlightedEl;
@@ -252,7 +251,7 @@
                 listbuilderHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
-                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"> ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)"> ' +
                     '</bb-listbuilder-toolbar>' +
                     '<bb-listbuilder-content>' +
                     '<bb-listbuilder-cards>' +
@@ -266,7 +265,7 @@
                     '</bb-card>' +
                     '</bb-listbuilder-cards>' +
                     '</bb-listbuilder-content>' +
-                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)" ' +
+                    '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()" ' +
                     'bb-listbuilder-show-load-more="listCtrl.showLoadMore">' +
                     '</bb-listbuilder-footer>' + 
                     '</bb-listbuilder>');
@@ -280,10 +279,7 @@
                 
                 setupScrollInfinite(true);
 
-                $scope.listCtrl.onLoadMore = function (loadingComplete) {
-                    $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});
-                    loadingComplete();
-                };
+                $scope.listCtrl.onLoadMore = onLoadMore;
 
                 el = $compile(listbuilderHtml)($scope);
                 el.appendTo($document.find('body'));
@@ -304,6 +300,28 @@
 
 
                 el.remove();
+            }
+
+            it('should highlight using the last search text when load more does not return a promise', function () {
+                function onLoadMore() {
+                    $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});
+                }
+                validateHighlight(onLoadMore);
+
+            });
+
+            it('should highlight using the last search text when load more returns a promise', function () {
+                function onLoadMore() {
+                    $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});
+                    return {
+                        then: function (callback) {
+                            
+                            callback();
+                        }
+                        
+                    };
+                }
+                validateHighlight(onLoadMore);
 
             });
         });

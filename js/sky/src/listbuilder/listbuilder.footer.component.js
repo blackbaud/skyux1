@@ -2,21 +2,22 @@
 (function () {
     'use strict';
 
-    function Controller($element, $document, $q) {
+    function Controller($element, $document) {
         var ctrl = this,
                     actionbarEl;
 
-        function loadCallback(loadingComplete) {
-            var deferred = $q.defer(),
-                    loadingPromise;
-            loadingPromise = deferred.promise;
-             
-            loadingPromise.then(function () {
-                loadingComplete();
-                ctrl.listbuilderCtrl.highlightLastSearchText();
-            });
+        function loadCallback() {
+            var loadingPromise = ctrl.bbListbuilderOnLoadMore();
 
-            ctrl.bbListbuilderOnLoadMore({loadingComplete: deferred.resolve});
+            if (loadingPromise && angular.isFunction(loadingPromise.then)) {
+                loadingPromise.then(function () {
+                    ctrl.listbuilderCtrl.highlightLastSearchText();
+                });
+            } else {
+                ctrl.listbuilderCtrl.highlightLastSearchText();
+            }
+
+            return loadingPromise;
         }
 
         function setupActionbar() {
@@ -46,7 +47,7 @@
         ctrl.loadCallback = loadCallback;
     }
 
-    Controller.$inject = ['$element', '$document', '$q'];
+    Controller.$inject = ['$element', '$document'];
 
     angular.module('sky.listbuilder.footer.component', ['sky.resources', 'sky.infinitescroll'])
         .component('bbListbuilderFooter', {

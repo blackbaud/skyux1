@@ -13,10 +13,10 @@
       <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
         Add Stuff
       </bb-listbuilder-add>
-      <bb-listbuilder-filter 
-        bb-listbuilder-filter-modal-open="listCtrl.openObject"
-        bb-listbuilder-filter-apply="listCtrl.appliedFilterCallback(filters)"
-      >
+      <bb-listbuilder-filter> 
+        <bb-filter-button bb-filter-btn-on-click="listCtrl.onFilterClick()">
+        
+        </bb-filter-button>
       </bb-listbuilder-filter>
       <bb-listbuilder-actions>
         <bb-listbuilder-action ng-click="listCtrl.onActionClick()">
@@ -46,7 +46,7 @@
       </bb-listbuilder-cards>
     </bb-listbuilder-content>
     <bb-listbuilder-footer
-        bb-listbuilder-on-load-more="listCtrl.onLoadMore(loadingComplete)"
+        bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
         bb-listbuilder-show-load-more="true">
     </bb-listbuilder-footer>
   </bb-listbuilder>
