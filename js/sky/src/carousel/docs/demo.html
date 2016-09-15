@@ -1,5 +1,16 @@
 <div ng-controller="CarouselTestController as carouselCtrl">
-  <bb-carousel bb-carousel-style="card-large">
+    <div class="row">
+        <div class="col-xs-4">
+            <label>Choose carousel item</label>
+            <select ng-model="carouselCtrl.selectModel" class="form-control" ng-change="carouselCtrl.selectChanged(carouselCtrl.selectModel)">
+                <option ng-repeat="item in carouselCtrl.items">{{item}}</option>
+            </select>
+        </div>
+    </div>
+  
+  <bb-carousel bb-carousel-style="card-large"
+    bb-carousel-selected-index="carouselCtrl.selectedIndex"
+    bb-carousel-selected-index-change="carouselCtrl.selectedIndexChange(index)">
     <bb-carousel-item ng-repeat="item in carouselCtrl.items">
       <bb-card bb-card-size="large">
         <bb-card-title>Large card {{item}}</bb-card-title>

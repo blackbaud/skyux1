@@ -61,6 +61,11 @@
 
         vm.addItem = function (item) {
             vm.items.push(item);
+
+            if ((angular.isUndefined(vm.bbCarouselSelectedIndex) && vm.items.length === 1) || vm.bbCarouselSelectedIndex === (vm.items.length - 1)) {
+                vm.setSelectedItem(vm.bbCarouselSelectedIndex || 0, true);
+            }
+            
         };
 
         vm.setSelectedItem = function (item, skipChange) {
@@ -146,11 +151,16 @@
             vm.setSelectedItem(currentItemIndex, true);
         });
 
-        $scope.$watch(function () {
-            return vm.bbCarouselSelectedIndex;
-        }, function () {
-            vm.setSelectedItem(vm.bbCarouselSelectedIndex || 0, true);
-        });
+        function onChanges(changesObj) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbCarouselSelectedIndex && angular.isDefined(changesObj.bbCarouselSelectedIndex.currentValue)) {
+                vm.setSelectedItem(changesObj.bbCarouselSelectedIndex.currentValue || 0, true);
+            }
+        }
+
+        vm.$onChanges = onChanges;
+
     }
 
     Controller.$inject = ['$scope', '$element', 'bbFormat', 'bbResources'];
