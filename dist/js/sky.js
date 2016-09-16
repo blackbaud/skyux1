@@ -14124,7 +14124,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
-        '<button class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '<div role="button" tabindex="0" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
         '  <div class="bb-select-field-single-inner">\n' +
         '    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>\n' +
         '    <span \n' +
@@ -14145,7 +14145,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </i>\n' +
         '    </div>\n' +
         '  </div>\n' +
-        '</button>\n' +
+        '</div>\n' +
         '');
     $templateCache.put('sky/templates/sort/sort.component.html',
         '<div class="bb-sort" uib-dropdown>\n' +
