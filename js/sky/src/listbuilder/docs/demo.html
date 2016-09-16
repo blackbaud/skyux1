@@ -8,21 +8,37 @@
   </div>
   <bb-listbuilder>
     <bb-listbuilder-toolbar 
-        bb-listbuilder-on-search="listCtrl.onSearch(searchText, highlightResults)"
+        bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
         bb-listbuilder-search-text="listCtrl.searchText">
       <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
         Add Stuff
       </bb-listbuilder-add>
       <bb-listbuilder-filter> 
-        <bb-filter-button bb-filter-btn-on-click="listCtrl.onFilterClick()">
+        <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
         
         </bb-filter-button>
       </bb-listbuilder-filter>
-      <bb-listbuilder-actions>
-        <bb-listbuilder-action ng-click="listCtrl.onActionClick()">
-          My action
-        </bb-listbuilder-action>
-      </bb-listbuilder-actions>
+      <bb-listbuilder-sort>
+        <bb-sort bb-sort-append-to-body>
+            <bb-sort-item 
+                ng-repeat="item in listCtrl.sortOptions" 
+                bb-sort-item-active="listCtrl.initialState === item.id"
+                bb-sort-item-select="listCtrl.sortItems(item)">
+            {{item.label}}
+            </bb-sort-item>
+        </bb-sort>
+      </bb-listbuilder-sort>
+      <bb-listbuilder-filter-summary>
+        <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
+            <bb-filter-summary-item
+                ng-repeat="item in listCtrl.appliedFilters"
+                bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)"
+                >
+                {{item.label}}
+            </bb-filter-summary-item>
+        </bb-filter-summary>
+      </bb-listbuilder-filter-summary>
     </bb-listbuilder-toolbar>
     <bb-listbuilder-content>
       <bb-listbuilder-cards>
@@ -64,8 +80,8 @@
                         <option value="berry">Berry</option>
                     </select>
                     <label style="margin-top: 15px;">
-                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.hideVege" />
-                        Hide vegetarian
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.hideOrange" />
+                        Hide Orange
                     </label>
                 </form>
             </div>

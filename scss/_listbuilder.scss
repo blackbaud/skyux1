@@ -3,13 +3,24 @@
     min-height: 39px;
     background-color: $bb-color-white;
     padding: $padding-half $padding $padding-half $padding;
-    @include bb-border(light, top, bottom);
+    @include bb-border(dark, top, bottom);
+}
+
+.bb-listbuilder-toolbar-container {
+    .bb-filter-summary {
+        border-top: none;
+        padding-left: $padding;
+        padding-right: $padding;
+        padding-top: $padding-half;
+        padding-bottom: $padding-half;
+    }
 }
 
 .bb-listbuilder-toolbar-item {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle;
+    margin-right: $padding-half;
 }
 
 .bb-listbuilder-no-search span.highlight {

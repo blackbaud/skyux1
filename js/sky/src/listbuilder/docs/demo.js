@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function ListbuilderFilterController($uibModalInstance, filters) {
+    function ListbuilderFilterController($uibModalInstance, existingFilters) {
         var self = this;
 
         function clearAllFilters() {
@@ -10,16 +10,48 @@
                 fruitType: 'any'
             };
         }
+        
+        function transformFiltersToArray(filters) {
+            var result = [];
+
+            if (filters.fruitType && filters.fruitType !== 'any') {
+                result.push({name: 'fruitType', value: filters.fruitType, label: filters.fruitType});
+            }
+
+            if (filters.hideOrange) {
+                result.push({name: 'hideOrange', value: true, label: 'hide orange fruits'});
+            }
+
+            return result;
+        }
+
+        function transformArrayToFilters(array) {
+            var i,
+                filters = {};
+
+            for (i = 0; i < array.length; i++) {
+                if (array[i].name === 'fruitType') {
+                    filters.fruitType = array[i].value;
+                }
+
+                if (array[i].name === 'hideOrange') {
+                    filters.hideOrange = array[i].value;
+                }
+            }
+
+            return filters;
+        }
 
         function applyFilters() {
-            $uibModalInstance.close(self.filters);
+            var result = transformFiltersToArray(self.filters);
+            $uibModalInstance.close(result);
         }
 
 
-        if (!filters) {
+        if (!existingFilters) {
             clearAllFilters();
         } else {
-            self.filters = filters;
+            self.filters = transformArrayToFilters(existingFilters);
         }
 
         if (angular.isUndefined(self.filters.fruitType)) {
@@ -31,7 +63,7 @@
 
     }
 
-    ListbuilderFilterController.$inject = ['$uibModalInstance', 'filters'];
+    ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
     
     function ListbuilderTestController($timeout, bbModal) {
         var self = this,
@@ -97,7 +129,7 @@
                 controller: 'ListbuilderFilterController as filterCtrl',
                 templateUrl: 'demo/listbuilder/filters.html',
                 resolve: {
-                    filters: function () {
+                    existingFilters: function () {
                         return angular.copy(self.appliedFilters);
                     }
                 }
@@ -107,12 +139,55 @@
                 });
         }
 
+        self.onFilterClick = onFilterClick;
+
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
 
         data = createData(5);
         self.data = data;
+
+        self.sortOptions = [
+            {
+                id: 1,
+                label: 'Assigned to (A - Z)',
+                name: 'assignee',
+                descending: false
+            },
+            {
+                id: 2,
+                label: 'Assigned to (Z - A)',
+                name: 'assignee',
+                descending: true
+            },
+            {
+                id: 3,
+                label: 'Date created (newest first)',
+                name: 'date',
+                descending: true
+            },
+            {
+                id: 4,
+                label: 'Date created (oldest first)',
+                name: 'date',
+                descending: false
+            },
+            {
+                id: 5,
+                label: 'Note title (A - Z)',
+                name: 'title',
+                descending: false
+            },
+            {
+                id: 6,
+                label: 'Note title (Z - A)',
+                name: 'title',
+                descending: true
+            }
+        ];
+
+        self.initialState = self.sortOptions[4].id;
         
         
     }

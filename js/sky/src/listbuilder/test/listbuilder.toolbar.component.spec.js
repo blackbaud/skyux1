@@ -242,6 +242,22 @@
             });
         });
 
+        describe('filters', function () {
+            it('should transclude a filter button', function () {
+
+            });
+
+            it('should transclude a filter summary', function () {
+
+            });
+        });
+
+        describe('sorting', function () {
+            it('should transclude a sort button', function () {
+
+            });
+        });
+
         describe('viewkeeper', function () {
             var viewKeeperHtml,
                 bbViewKeeperBuilder;

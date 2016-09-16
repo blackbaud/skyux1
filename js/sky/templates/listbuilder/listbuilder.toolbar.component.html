@@ -1,14 +1,29 @@
-<div class="bb-listbuilder-toolbar" bb-search-container>
-    <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">
-    </div>
-    <div class="bb-listbuilder-toolbar-item">
-        <bb-search-input
-            bb-search-text="$ctrl.bbListbuilderSearchText"
-            bb-on-search="$ctrl.applySearchText(searchText)"
-            >
-        </bb-search-input>
-    </div>
-    <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderFilter">
+<div class="bb-listbuilder-toolbar-container">
+    <div class="bb-listbuilder-toolbar" bb-search-container>
+        <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">
+        </div>
+        <div class="bb-listbuilder-toolbar-item">
+            <bb-search-input
+                bb-search-text="$ctrl.bbListbuilderSearchText"
+                bb-on-search="$ctrl.applySearchText(searchText)"
+                >
+            </bb-search-input>
+        </div>
+        
+        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderFilter">
 
-    </div>    
+        </div>
+
+        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderSort">
+
+        </div>
+
+        <ng-transclude></ng-transclude>    
+    </div>
+
+    <div class="bb-listbuilder-filter-summary-container">
+        <div ng-transclude="bbListbuilderFilterSummary">
+        </div>
+    </div>
+    
 </div>

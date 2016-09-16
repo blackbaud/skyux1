@@ -8,6 +8,7 @@
             'sky.listbuilder.component', 
             'sky.listbuilder.toolbar.component', 
             'sky.listbuilder.footer.component',
-            'sky.listbuilder.card.component'
+            'sky.listbuilder.card.component',
+            'sky.listbuilder.cards.component'
         ]);
 }());

@@ -33,7 +33,7 @@
                 }
 
                 vkToolbar = new bbViewKeeperBuilder.create({
-                    el: $element.find('.bb-listbuilder-toolbar'),
+                    el: $element.find('.bb-listbuilder-toolbar-container'),
                     boundaryEl: ctrl.listbuilderCtrl.getContentContainer(),
                     setWidth: true,
                     verticalOffSetElId: ctrl.bbListbuilderVerticalOffsetElId,
@@ -113,7 +113,9 @@
             },
             transclude: {
                 bbListbuilderAdd: '?bbListbuilderAdd',
-                bbListbuilderFilter: '?bbListbuilderFilter'
+                bbListbuilderFilter: '?bbListbuilderFilter',
+                bbListbuilderSort: '?bbListbuilderSort',
+                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary'
             },
             controller: Controller,
             require: {
