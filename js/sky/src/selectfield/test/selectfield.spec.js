@@ -92,6 +92,8 @@ describe('Select field directive', function () {
 
             expect(clearEl).not.toBeVisible();
             expect($scope.selectedItems).toEqual([]);
+            $animate.flush();
+            expect('.bb-modal').not.toExist();
 
             $scope.selectedItems = [
                 {
