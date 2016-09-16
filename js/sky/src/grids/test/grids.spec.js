@@ -696,6 +696,31 @@ describe('Grid directive', function () {
 
 
     describe('sorting', function () {
+
+        it('applies appropriate classes on sortOptions change', function () {
+            var headerEl;
+
+
+            el = setUpGrid(basicGridHtml);
+
+            headerEl = getHeaders(el);
+
+            setGridData(dataSet1);
+
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+
+            locals.gridOptions.sortOptions = {
+                column: 'name',
+                descending: true
+            };
+
+            $scope.$digest();
+
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+            expect(headerEl.eq(0)).toHaveClass('sorting-desc');
+        });
+
         it('respects excludedColumn property when sorting', function () {
             var headerEl;
 

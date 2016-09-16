@@ -145,7 +145,7 @@
         .modal {
             overflow: visible;
         }
-        > *:not(.bb-modal) {
+        bb-page {
             display: none;
         }
     }

@@ -30,6 +30,11 @@
     vertical-align: middle;
 }
 
+.bb-grid-toolbar-sort-container {
+    display: inline-block;
+    margin-left: $margin-half;
+}
+
 .bb-grid-filter-summary-container {
     .bb-filter-summary {
         border-top: none;

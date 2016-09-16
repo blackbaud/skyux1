@@ -1034,6 +1034,11 @@
 
         vm.addItem = function (item) {
             vm.items.push(item);
+
+            if ((angular.isUndefined(vm.bbCarouselSelectedIndex) && vm.items.length === 1) || vm.bbCarouselSelectedIndex === (vm.items.length - 1)) {
+                vm.setSelectedItem(vm.bbCarouselSelectedIndex || 0, true);
+            }
+            
         };
 
         vm.setSelectedItem = function (item, skipChange) {
@@ -1119,11 +1124,16 @@
             vm.setSelectedItem(currentItemIndex, true);
         });
 
-        $scope.$watch(function () {
-            return vm.bbCarouselSelectedIndex;
-        }, function () {
-            vm.setSelectedItem(vm.bbCarouselSelectedIndex || 0, true);
-        });
+        function onChanges(changesObj) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbCarouselSelectedIndex && angular.isDefined(changesObj.bbCarouselSelectedIndex.currentValue)) {
+                vm.setSelectedItem(changesObj.bbCarouselSelectedIndex.currentValue || 0, true);
+            }
+        }
+
+        vm.$onChanges = onChanges;
+
     }
 
     Controller.$inject = ['$scope', '$element', 'bbFormat', 'bbResources'];
@@ -5130,6 +5140,7 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
+                    require: 'bbGrid',
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -5251,7 +5262,7 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr, ctrls, $transclude) {
+                    link: function ($scope, element, attr, bbGrid, $transclude) {
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
@@ -6186,7 +6197,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName)) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
@@ -6619,9 +6630,10 @@
                 bbGridSearchText: '<?bbGridSearchText'
             },
             transclude: {
-                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary'    
+                'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
+                'bbGridToolbarSort': '?bbGridToolbarSort'    
             },
-            link: function ($scope, el, attr, bbGrid) {
+            link: function ($scope, el, attr, bbGrid, $transclude) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
                 function applySearchText() {
@@ -6739,6 +6751,7 @@
                         /* sanity check */
                         if (bbGrid !== null) {
                             bbGrid.applySearchText = applySearchText;
+                            bbGrid.headerSortInactive = $transclude.isSlotFilled('bbGridToolbarSort');
                         }
 
                         if (angular.isFunction($scope.options.onAddClick)) {
@@ -6783,7 +6796,7 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbModal'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search'])
+    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search', 'sky.sort'])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
 
@@ -9833,6 +9846,18 @@ angular.module('sky.palette.config', [])
             }
         };
 
+        function clearField($event) {
+            $event.stopPropagation();
+            $event.preventDefault();
+            vm.bbSelectFieldSelectedItems = [];
+            if (angular.isFunction(vm.setModelTouched)) {
+                vm.setModelTouched();
+            }
+            
+        }
+
+        vm.clearField = clearField;
+
         vm.removeAll = function () {
             vm.bbSelectFieldSelectedItems = [];
         };
@@ -9857,23 +9882,28 @@ angular.module('sky.palette.config', [])
 
     function bbSelectField() {
         function link($scope, el, attrs, ctrls) {
-            if (ctrls[0] && ctrls[1] && attrs.required) {
+            var bbSelectField = ctrls[0];
+            if (bbSelectField && ctrls[1] && attrs.required) {
                 ctrls[1].$validators.required = function () {
-                    return angular.isDefined(ctrls[0].bbSelectFieldSelectedItems) && ctrls[0].bbSelectFieldSelectedItems.length > 0;
+                    return angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0;
                 };
 
                 $scope.$watchCollection(
                     function () {
-                        return ctrls[0].bbSelectFieldSelectedItems;
+                        return bbSelectField.bbSelectFieldSelectedItems;
                     },
                     function () {
                         ctrls[1].$validate();
                     }
                 );
 
-                ctrls[0].setModelTouched = function () {
+                bbSelectField.setModelTouched = function () {
                     ctrls[1].$setTouched();
                 };
+            }
+
+            if (angular.isDefined(attrs.bbSelectFieldClear)) {
+                bbSelectField.bbSelectFieldClear = true;
             }
         }
 
@@ -9884,6 +9914,7 @@ angular.module('sky.palette.config', [])
                 bbSelectFieldClick: '&?',
                 bbSelectFieldSelectedItems: '=?ngModel',
                 bbSelectFieldStyle: '@?',
+                bbSelectFieldIcon: '@?',
                 bbSelectFieldText: '@?'
             },
             controller: 'BBSelectFieldController',
@@ -10726,9 +10757,25 @@ angular.module('sky.palette.config', [])
         };
     }
 
+    function findTabNumberIndex(index, tabsetCtrl) {
+        var i;
+        for (i = 0; i < tabsetCtrl.tabs.length; i++) {
+            if (tabsetCtrl.tabs[i].index === index) {
+                return i;
+            }
+        }
+    }
+
     function setActiveTab(sref, el, tabsetCtrl, $state) {
+        var index;
         if ($state.includes(sref.state)) {
-            tabsetCtrl.select(el.isolateScope().index);
+            index = el.isolateScope().index;
+            if (angular.isNumber(index)) {
+                tabsetCtrl.select(index);
+            } else {
+                tabsetCtrl.select(findTabNumberIndex(index, tabsetCtrl));
+            }
+           
         }
     }
 
@@ -13784,6 +13831,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            bb-filter-button-active="options.filtersAreActive"\n' +
         '            >\n' +
         '        </bb-filter-button>\n' +
+        '        <div class="bb-grid-toolbar-sort-container">\n' +
+        '            <div ng-transclude="bbGridToolbarSort">\n' +
+        '                \n' +
+        '            </div>\n' +
+        '        </div>\n' +
         '    </div>\n' +
         '    <div class="bb-grid-filter-summary-container">\n' +
         '        <div ng-transclude="bbGridToolbarFilterSummary">\n' +
@@ -14039,7 +14091,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      <div class="bb-select-field-multiple-item-title bb-select-field-multiple-summary">\n' +
         '        {{bbSelectField.getSummaryCountText()}}\n' +
         '      </div>\n' +
-        '      <button class="close bb-select-field-multiple-item-delete" ng-click="bbSelectField.removeAll(); bbSelectField.setModelTouched()">\n' +
+        '      <button \n' +
+        '        type="button"\n' +
+        '        class="close bb-select-field-multiple-item-delete" \n' +
+        '        ng-click="bbSelectField.removeAll(); bbSelectField.setModelTouched()">\n' +
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'selectfield_remove\' | bbResources}}</span>\n' +
         '      </button>\n' +
@@ -14069,12 +14124,28 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
-        '<button type="button" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '<div role="button" tabindex="0" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
         '  <div class="bb-select-field-single-inner">\n' +
         '    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>\n' +
-        '    <div class="bb-select-field-single-icon"><i class="fa fa-sort"></i></div>\n' +
+        '    <span \n' +
+        '        role="button"\n' +
+        '        class="bb-select-field-clear"\n' +
+        '        tabindex="0"\n' +
+        '        ng-show="bbSelectField.bbSelectFieldClear &amp;&amp; bbSelectField.bbSelectFieldSelectedItems.length > 0"\n' +
+        '        ng-click="bbSelectField.clearField($event)"\n' +
+        '        ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.clearField($event)"\n' +
+        '        ng-attr-aria-label="{{\'selectfieldpicker_clear\' | bbResources}}">\n' +
+        '        <i class="fa fa-times"></i>\n' +
+        '    </span>\n' +
+        '    <div class="bb-select-field-single-icon">\n' +
+        '        <i \n' +
+        '            ng-class="{\'fa-sort\': bbSelectField.bbSelectFieldIcon !== \'search\', \n' +
+        '                \'fa-search\': bbSelectField.bbSelectFieldIcon === \'search\'}"     \n' +
+        '            class="fa">\n' +
+        '        </i>\n' +
+        '    </div>\n' +
         '  </div>\n' +
-        '</button>\n' +
+        '</div>\n' +
         '');
     $templateCache.put('sky/templates/sort/sort.component.html',
         '<div class="bb-sort" uib-dropdown>\n' +

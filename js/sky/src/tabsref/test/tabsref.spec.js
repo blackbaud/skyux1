@@ -5,6 +5,7 @@ describe('Tab Sref directive', function () {
     'use strict';
 
     var uibTabHtml,
+        uibTabHtmlIndex,
         $compile,
         $provide,
         $rootScope,
@@ -46,10 +47,22 @@ describe('Tab Sref directive', function () {
                     '<uib-tab heading="2" bb-tab-sref="tabstate.b" select="tabSelectB()"></uib-tab>' +
                 '</uib-tabset>';
             /*jslint white: false */
+            uibTabHtmlIndex =
+                '<uib-tabset active="locals.active">' +
+                    '<uib-tab index="\'tab 1\'" heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+                    '<uib-tab index="\'tab 2\'" heading="2" bb-tab-sref="tabstate.b" select="tabSelectB()"></uib-tab>' +
+                '</uib-tabset>';
         });
 
+        function timeoutIfNecessary() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
+        }
 
-        it('should select the corresponding tab on state change', function () {
+        function stateChange(templateHtml) {
             var el,
                 tabSelectCalled,
                 $scope = $rootScope.$new();
@@ -63,10 +76,10 @@ describe('Tab Sref directive', function () {
             };
 
             /*jslint white: true */
-            el = $compile(uibTabHtml)($scope);
+            el = $compile(templateHtml)($scope);
             /*jslint white: false */
             $scope.$digest();
-            $timeout.flush();
+            timeoutIfNecessary();
 
             $rootScope.$broadcast('$stateChangeSuccess');
 
@@ -74,9 +87,17 @@ describe('Tab Sref directive', function () {
 
 
             expect(tabSelectCalled).toBe(true);
+        }
+
+        it('should select the corresponding tab on state change with no index', function () {
+            stateChange(uibTabHtml);
         });
 
-        it('should change state when a tab is selected', function () {
+        it('should select the corresponding tab on state change with index', function () {
+            stateChange(uibTabHtmlIndex);
+        });
+
+        function tabSelected(templateHtml, index) {
             var el,
                 stateGoCalled,
                 $scope = $rootScope.$new();
@@ -91,17 +112,26 @@ describe('Tab Sref directive', function () {
             };
 
             /*jslint white: true */
-            el = $compile(uibTabHtml)($scope);
+            el = $compile(templateHtml)($scope);
             /*jslint white: false */
 
             $timeout.flush();
 
-            $scope.locals.active = 1;
+            $scope.locals.active = index;
             $scope.$digest();
 
-            $timeout.flush();
+            timeoutIfNecessary();
 
             expect(stateGoCalled).toBe(true);
+        }
+
+        it('should change state when a tab is selected', function () {
+            tabSelected(uibTabHtml, 1);
+        });
+
+        it('should change state when a tab is selected with index', function () {
+            tabSelected(uibTabHtmlIndex, 'tab 2');
+
         });
 
         it('should remove state change handler on destroy', function () {

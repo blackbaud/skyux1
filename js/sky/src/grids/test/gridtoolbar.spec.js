@@ -51,6 +51,10 @@ describe('Grid toolbars', function () {
         return el.find('.ui-jqgrid-bdiv tr.ui-row-ltr');
     }
 
+    function getHeaders(el) {
+        return el.find('.bb-grid-container .table-responsive .ui-jqgrid-hbox > table > thead > tr > th');
+    }
+
     beforeEach(module('ngMock'));
     beforeEach(module(
         'sky.grids',
@@ -531,6 +535,60 @@ describe('Grid toolbars', function () {
                 $scope.$digest();
 
                 expect(searchEl).toHaveValue('John');
+            });
+        });
+
+        describe('sorting', function () {
+            var sortGridHtml;
+            
+            
+            beforeEach(function () {
+                sortGridHtml = '<div>' +
+                        '<bb-grid bb-grid-options="locals.gridOptions">' +
+                        '<bb-grid-toolbar bb-grid-search-text="locals.searchText" ' +
+                            'bb-grid-search="locals.onSearch(searchText)" ' +
+                            '>' +
+                            '<bb-grid-toolbar-sort>' +
+                                '<bb-sort bb-sort-append-to-body>' +
+                                    '<bb-sort-item ' +
+                                        'bb-sort-item-select="locals.sortItems()"> ' +
+                                        'My Sort option' +
+                                    '</bb-sort-item>' +
+                                '</bb-sort>' +
+                            '</bb-grid-toolbar-sort>' +
+                        '</bb-grid-toolbar>' +
+                        '</bb-grid>' +
+                        '</div>';
+            });
+
+            it('allows users to transclude sort content', function () {
+                var sortContainerEl;
+                el = setUpGrid(sortGridHtml, locals);
+                setOptions(options);
+
+                sortContainerEl = el.find('.bb-grid-toolbar-sort-container');
+                expect(sortContainerEl.find('.btn i')).toHaveClass('fa-sort');
+            });
+
+            it('prevents sort action on header click when sort content is specified', function () {
+                var headerEl;
+                
+                el = setUpGrid(sortGridHtml, locals);
+                setOptions(options);
+
+                headerEl = getHeaders(el);
+
+                setGridData(dataSet1);
+
+                expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+                expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+
+                headerEl.eq(0).click();
+
+                expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+                expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+
+                
             });
         });     
     });

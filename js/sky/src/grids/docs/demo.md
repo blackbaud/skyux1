@@ -19,6 +19,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
       - `bb-grid-search` &mdash; *(Optional.)* Specifies a function to be called when search text is applied.
       - `bb-grid-search-text` &mdash; *(Optional.)* Specifies search text that users can supply to the grid search box.
       - `bb-grid-toolbar-filter-summary` &mdash; *(Optional.)* Contains content that will be placed in the filter summary section of the grid toolbar. See the [filter](../filter) module for the `bb-filter-summary` component which can be placed inside of here.
+      - `bb-grid-toolbar-sort` &mdash; *(Optional.)* Contains content that will be placed in the sort section of the grid toolbar. See the [sort](../sort) module for the `bb-sort` component which can be placed inside of here.
     - `bb-grid-filters` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>*(Optional.)* Creates a flyout filter menu within the `bb-grid` directive.</s>
         - `bb-options` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Specifies an object with the following properties for the `bb-grid-filters` directive.</s>
             - `applyFilters` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Specifies a function to be called when users click the button to apply filters. You can set `args.filters` to pass updated filters to `bb-grid`.</s>
@@ -73,10 +74,10 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `resources` &mdash; *(Optional.)* Specifies the resource dictionary available in the scope of each `columns` property's `template_url` and `controller` properties.
         - `searchText` &mdash; *(Deprecated.)* Use `bb-grid-toolbar` with the `bb-grid-on-search` function instead. <s>The text that users enter in the grid search box. Set by the `bb-grid` directive.</s>
         - `selectedColumnIds` &mdash; An array of unique identifiers that indicates the visible columns in their display order.
-        - `sortOptions` &mdash; Specifies options for column sorting.
-            - `excludedColumns` &mdash; *(Optional.)* Specifies an array of the names of columns that users cannot use to sort the grid.
-            - `column` &mdash; Specifies the name of the column to sort data by. Set by the `bb-grid` directive.
-            - `descending` &mdash; Indicates whether to sort in descending order. Set to `true` by the `bb-grid` directive to sort in descending order.
+        - `sortOptions` &mdash; *(Optional.)* Specifies options for displaying sort indication in column headers.
+            - `excludedColumns` &mdash; *(Optional.)* Specifies an array of the names of columns that users cannot use to sort the grid. Prevents the grid headers from showing sort indication on click when not using `bb-grid-toolbar-sort`. 
+            - `column` &mdash; Specifies the name of the column that has been sorted.
+            - `descending` &mdash; Indicates whether the sort is in descending order. When set to `true` the arrow icon in the specified column header will point downwards, otherwise the arrow icon will point upwards.
     - `bb-grid-pagination` &mdash; *(Optional.)* Specifies an object with the following properties to indicate that the grid uses pagination instead of infinite scrolling.
         - `currentPage` &mdash; *(Optional.)* Specifies the current page starting at 1. *(Default = 1)*
         - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default = 5)*

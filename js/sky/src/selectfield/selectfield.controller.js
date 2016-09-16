@@ -52,6 +52,18 @@
             }
         };
 
+        function clearField($event) {
+            $event.stopPropagation();
+            $event.preventDefault();
+            vm.bbSelectFieldSelectedItems = [];
+            if (angular.isFunction(vm.setModelTouched)) {
+                vm.setModelTouched();
+            }
+            
+        }
+
+        vm.clearField = clearField;
+
         vm.removeAll = function () {
             vm.bbSelectFieldSelectedItems = [];
         };

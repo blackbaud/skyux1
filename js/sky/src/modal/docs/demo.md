@@ -10,7 +10,7 @@ The modal directive and service allow you to launch modals in a consistent way i
 - `bbModal.open` &mdash; Launches modals in a consistent way in SKY UX applications. Used instead of `$uibModal.open`.
   - `uibModalOptions` &mdash; Specifies an object with the same options as `$uibModal.open` that allows for some custom default SKY UX behavior.
   - `bbModalOptions` &mdash; *(Optional.)* Specifies an object that contains SKY UX-specific options for modals.
-    -  `fullPage` &mdash; *(Optional.)* Indicates whether the modal takes up the entire page. *(Default: `false`)*
+    -  `fullPage` &mdash; *(Optional.)* Indicates whether the modal takes up the entire page. When using a full page modal that has content behind it, you must wrap that content in a [bb-page](../page) to prevent unneeded scrollbars in the modal. *(Default: `false`)*
 
 ### Modal directive settings ###
 - `bb-modal` &mdash; Creates a modal with a common SKY UX look-and-feel.

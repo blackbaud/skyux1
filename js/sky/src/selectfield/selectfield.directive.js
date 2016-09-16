@@ -5,23 +5,28 @@
 
     function bbSelectField() {
         function link($scope, el, attrs, ctrls) {
-            if (ctrls[0] && ctrls[1] && attrs.required) {
+            var bbSelectField = ctrls[0];
+            if (bbSelectField && ctrls[1] && attrs.required) {
                 ctrls[1].$validators.required = function () {
-                    return angular.isDefined(ctrls[0].bbSelectFieldSelectedItems) && ctrls[0].bbSelectFieldSelectedItems.length > 0;
+                    return angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0;
                 };
 
                 $scope.$watchCollection(
                     function () {
-                        return ctrls[0].bbSelectFieldSelectedItems;
+                        return bbSelectField.bbSelectFieldSelectedItems;
                     },
                     function () {
                         ctrls[1].$validate();
                     }
                 );
 
-                ctrls[0].setModelTouched = function () {
+                bbSelectField.setModelTouched = function () {
                     ctrls[1].$setTouched();
                 };
+            }
+
+            if (angular.isDefined(attrs.bbSelectFieldClear)) {
+                bbSelectField.bbSelectFieldClear = true;
             }
         }
 
@@ -32,6 +37,7 @@
                 bbSelectFieldClick: '&?',
                 bbSelectFieldSelectedItems: '=?ngModel',
                 bbSelectFieldStyle: '@?',
+                bbSelectFieldIcon: '@?',
                 bbSelectFieldText: '@?'
             },
             controller: 'BBSelectFieldController',
