@@ -38,23 +38,32 @@
       <bb-listbuilder-cards>
         <bb-listbuilder-card ng-repeat="item in listCtrl.data">
             <bb-card>
-            <bb-card-title>
-            {{item.name}}
-            </bb-card-title>
-            <bb-card-content>
-            Occupation: {{item.occupation}}
-            Joined on: {{item.joinDate | date}}
-            Paid dues: {{item.duesPaid}}
-            </bb-card-content>
-            <bb-card-actions>
-                <bb-context-menu>
-                    <bb-context-menu-item>Action 1</bb-context-menu-item>
-                    <bb-context-menu-item>Action 2</bb-context-menu-item>
-                </bb-context-menu>
-            </bb-card-actions>
-        </bb-card>
+                <bb-card-title>
+                {{item.name}}
+                </bb-card-title>
+                <bb-card-content>
+                    <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-success">Membership dues paid</span>
+                    </div>
+                    <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-danger">Membership dues not paid</span>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        Occupation: {{item.occupation}}
+                    </div>
+                    <div>
+                        Joined on: {{item.joinDate | date}}
+                    </div>
+                    
+                </bb-card-content>
+                <bb-card-actions>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </bb-card-actions>
+            </bb-card>
         </bb-listbuilder-card>
-       
       </bb-listbuilder-cards>
     </bb-listbuilder-content>
     <bb-listbuilder-footer
