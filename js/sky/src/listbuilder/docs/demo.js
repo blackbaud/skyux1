@@ -60,7 +60,9 @@
         var self = this,
             sortProperty,
             sortDescending,
-            maxRecordsShown,
+            maxRecordsShown = 0,
+            nextSkip = 0,
+            nextTop = 6,
             dataSet = [
                 {
                     name: 'Tim Duggy',
@@ -140,9 +142,10 @@
             var i,
                 newData = [];
             
-            for (i = 0; i < top && dataSet.length - 1 > skip + i; i++) {
+            for (i = 0; i < top && dataSet.length > skip + i; i++) {
                 newData.push(dataSet[skip + i]);
             }
+
             return newData;
         }
 
@@ -166,17 +169,6 @@
             
         }
 
-        function onSearch(searchText) {
-            return $timeout(function () {
-                var searchedData
-                self.searchText = searchText;
-                searchedData = searchArray(searchText, dataSet);
-                
-                self.data = searchedData.slice(0, maxRecordsShown);
-                
-            }, 1000);
-        }
-
         function filter(array, filters) {
             var i,
                 item,
@@ -186,8 +178,6 @@
                     item = filters[i];
                     if (item.name === 'tenYears') {
                         newData = newData.filter(function (filterObj) {
-                            console.log('now year: ', new Date().getFullYear());
-                            console.log('filtered year: ', filterObj.joinDate.getFullYear());
                             return new Date().getFullYear() - filterObj.joinDate.getFullYear() >= 10;
                         });
                     }
@@ -204,42 +194,50 @@
         }
 
         function sortArray(sortProperty, sortDescending, array) {
-            return array.sort(function (a, b) {
-                var descending = sortDescending ? -1 : 1;
+            if (sortProperty) {
+                return array.sort(function (a, b) {
+                    var descending = sortDescending ? -1 : 1;
 
-                if (a[sortProperty] > b[sortProperty]) {
-                    return (descending);
-                } else if (a[sortProperty] < b[sortProperty]) {
-                    return (-1 * descending);
-                } else {
-                    return 0;
-                }
-            });
+                    if (a[sortProperty] > b[sortProperty]) {
+                        return (descending);
+                    } else if (a[sortProperty] < b[sortProperty]) {
+                        return (-1 * descending);
+                    } else {
+                        return 0;
+                    }
+                });
+            } else {
+                return array;
+            }
+            
+        }
 
+        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData) {
+            var filteredData;
+            filteredData = searchArray(searchText, dataSet);
+            filteredData = filter(filteredData, filters);
+            filteredData = sortArray(sortProperty, sortDescending, filteredData);
+
+            self.data = filteredData.slice(0, maxData);
+            console.log('filtered data length: ', filteredData.length);
+            console.log('data length: ', self.data.length);
+            self.hasMoreData = filteredData.length > self.data.length;
+            nextSkip = self.data.length;
+        }
+
+        function onSearch(searchText) {
+            return $timeout(function () {
+                var searchedData
+                self.searchText = searchText;
+                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+                
+            }, 1000);
         }
 
         function sortItems(item) {
             sortProperty = item.name;
             sortDescending = item.descending;
-            self.data = sortArray(item.name, item.descending, self.data);
-        }
-
-        self.sortItems = sortItems;
-
-        function onLoadMore() {
-            return $timeout(function () {
-                var newData = getData(6, 6);
-                
-                maxRecordsShown = 12;
-                self.data = self.data.concat(newData);
-                onSearch(self.searchText);
-                self.hasMoreData = false;
-            }, 4000);
-            
-        }
-
-        function onAddClick() {
-            alert('Add button clicked');
+            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
         }
 
         function onFilterClick() {
@@ -254,8 +252,30 @@
             }).result
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
-                    self.data = filter(dataSet, self.appliedFilters);
+                    applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
                 });
+        }
+
+        function loadData() {
+            var newData = getData(nextTop, nextSkip);
+                
+            
+            self.data = self.data.concat(newData);
+            if (maxRecordsShown < self.data.length) {
+                maxRecordsShown = self.data.length;
+            }
+            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+        }
+
+        function onLoadMore() {
+            return $timeout(function () {
+                loadData();
+            }, 4000);
+            
+        }
+
+        function onAddClick() {
+            alert('Add button clicked');
         }
 
         self.onFilterClick = onFilterClick;
@@ -263,11 +283,10 @@
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
+        self.sortItems = sortItems;
         self.hasMoreData = true;
-
-        self.data = getData(6, 0);
-
-        maxRecordsShown = self.data.length
+        self.data = [];
+        loadData();
 
         self.sortOptions = [
             {
