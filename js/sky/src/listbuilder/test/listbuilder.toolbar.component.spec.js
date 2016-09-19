@@ -289,7 +289,7 @@
                 $scope.$digest();
 
                 spyArgs = bbViewKeeperBuilder.create.calls.mostRecent().args[0];
-                expect(spyArgs.el).toEqual(el.find('.bb-listbuilder-toolbar'));
+                expect(spyArgs.el).toEqual(el.find('.bb-listbuilder-toolbar-container'));
                 expect(spyArgs.boundaryEl).toEqual(el.find('.bb-listbuilder-content'));
                 expect(spyArgs.setWidth).toBe(true);
                 expect(spyArgs.verticalOffSetElId).toBe('myoffsetid');
