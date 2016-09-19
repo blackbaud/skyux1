@@ -6,7 +6,7 @@
     @include bb-border(dark, top, bottom);
 }
 
-.bb-listbuilder-toolbar-container {
+.bb-listbuilder-filter-summary-container {
     .bb-filter-summary {
         border-top: none;
         padding-left: $padding;
@@ -74,8 +74,3 @@
         display: inline-block;
     }
 }
-
-
-
-
-
