@@ -1,11 +1,6 @@
 <div ng-controller="ListbuilderTestController as listCtrl">
   
-  <div>
-    <label>Fruit preference: {{listCtrl.appliedFilters.fruitType}}</label>
-  </div>
-  <div>
-    <label>Hide Vegetarian: {{listCtrl.appliedFilters.hideVege}}</label>    
-  </div>
+
   <bb-listbuilder>
     <bb-listbuilder-toolbar 
         bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
@@ -14,8 +9,7 @@
         Add Stuff
       </bb-listbuilder-add>
       <bb-listbuilder-filter> 
-        <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
-        
+        <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">  
         </bb-filter-button>
       </bb-listbuilder-filter>
       <bb-listbuilder-sort>
@@ -48,7 +42,9 @@
             {{item.name}}
             </bb-card-title>
             <bb-card-content>
-            {{item.content}}
+            Occupation: {{item.occupation}}
+            Joined on: {{item.joinDate | date}}
+            Paid dues: {{item.duesPaid}}
             </bb-card-content>
             <bb-card-actions>
                 <bb-context-menu>
@@ -63,7 +59,7 @@
     </bb-listbuilder-content>
     <bb-listbuilder-footer
         bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
-        bb-listbuilder-show-load-more="true">
+        bb-listbuilder-show-load-more="listCtrl.hasMoreData">
     </bb-listbuilder-footer>
   </bb-listbuilder>
 </div>
@@ -73,15 +69,13 @@
             <bb-modal-header>Food preferences</bb-modal-header>
             <div bb-modal-body>
                 <form>
-                    <label>Fruit type</label>
-                    <select ng-model="filterCtrl.filters.fruitType" class="form-control">
-                        <option value="any">Any Fruit</option>
-                        <option value="citrus">Citrus</option>
-                        <option value="berry">Berry</option>
-                    </select>
                     <label style="margin-top: 15px;">
-                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.hideOrange" />
-                        Hide Orange
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.tenYears" />
+                        Show only members with 10 years experience
+                    </label>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.onlyUnpaid" />
+                        Show only members with unpaid dues
                     </label>
                 </form>
             </div>

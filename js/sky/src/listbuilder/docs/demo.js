@@ -7,19 +7,20 @@
 
         function clearAllFilters() {
             self.filters = {
-                fruitType: 'any'
+                tenYears: false,
+                onlyUnpaid: false
             };
         }
         
         function transformFiltersToArray(filters) {
             var result = [];
 
-            if (filters.fruitType && filters.fruitType !== 'any') {
-                result.push({name: 'fruitType', value: filters.fruitType, label: filters.fruitType});
+            if (filters.tenYears) {
+                result.push({name: 'tenYears', value: true, label: 'members with ten years'});
             }
 
-            if (filters.hideOrange) {
-                result.push({name: 'hideOrange', value: true, label: 'hide orange fruits'});
+            if (filters.onlyUnpaid) {
+                result.push({name: 'onlyUnpaid', value: true, label: 'unpaid members'});
             }
 
             return result;
@@ -30,13 +31,7 @@
                 filters = {};
 
             for (i = 0; i < array.length; i++) {
-                if (array[i].name === 'fruitType') {
-                    filters.fruitType = array[i].value;
-                }
-
-                if (array[i].name === 'hideOrange') {
-                    filters.hideOrange = array[i].value;
-                }
+                filters[array[i].name] = array[i].value;
             }
 
             return filters;
@@ -54,10 +49,6 @@
             self.filters = transformArrayToFilters(existingFilters);
         }
 
-        if (angular.isUndefined(self.filters.fruitType)) {
-            self.filters.fruitType = 'any';
-        }
-
         self.clearAllFilters = clearAllFilters;
         self.applyFilters = applyFilters;
 
@@ -67,55 +58,182 @@
     
     function ListbuilderTestController($timeout, bbModal) {
         var self = this,
-            contentCount = 1,
-            data;
+            sortProperty,
+            sortDescending,
+            maxRecordsShown,
+            dataSet = [
+                {
+                    name: 'Tim Duggy',
+                    occupation: 'Software Engineer',
+                    joinDate: new Date('1/1/2016'),
+                    duesPaid: false
+                },
+                {
+                    name: 'Janet Smith',
+                    occupation: 'Accountant',
+                    joinDate: new Date('2/23/2006'),
+                    duesPaid: true
+                },
+                {
+                    name: 'James Wheeler',
+                    occupation: 'Marketing Director',
+                    joinDate: new Date('4/12/2013'),
+                    duesPaid: true
+                },
+                {
+                    name: 'Jarod Douglas',
+                    occupation: 'Real Estate Agent',
+                    joinDate: new Date('12/12/2012'),
+                    duesPaid: false
+                },
+                {
+                    name: 'Sarah Silver',
+                    occupation: 'Software Engineer',
+                    joinDate: new Date('11/7/1999'),
+                    duesPaid: true
+                },
+                {
+                    name: 'Tina Maller',
+                    occupation: 'Sales',
+                    joinDate: new Date('3/5/2016'),
+                    duesPaid: true
+                },
+                {
+                    name: 'Megan Johnson',
+                    occupation: 'Manager',
+                    joinDate: new Date('1/1/2013'),
+                    duesPaid: true
+                },
+                {
+                    name: 'Reed Sawyer',
+                    occupation: 'Accountant',
+                    joinDate: new Date('3/9/2006'),
+                    duesPaid: true
+                },
+                {
+                    name: 'James Dunn',
+                    occupation: 'Auto Technician',
+                    joinDate: new Date('6/12/2015'),
+                    duesPaid: false
+                },
+                {
+                    name: 'Douglas Herman',
+                    occupation: 'Lawyer',
+                    joinDate: new Date('3/1/2012'),
+                    duesPaid: true
+                },
+                {
+                    name: 'Helen Walker',
+                    occupation: 'Software Consultant',
+                    joinDate: new Date('4/7/2007'),
+                    duesPaid: true
+                },
+                {
+                    name: 'Christopher Lewen',
+                    occupation: 'Sales',
+                    joinDate: new Date('5/26/2016'),
+                    duesPaid: true
+                }
+            ];
 
-        function createData(amount) {
+        function getData(top, skip) {
             var i,
                 newData = [];
-
-            for (i = 0; i < amount; i++) {
-                newData.push(
-                    {
-                        name: (contentCount + ' Title'),
-                        content: (contentCount + ' Content')
-                    }
-                );
-                contentCount++;
+            
+            for (i = 0; i < top && dataSet.length - 1 > skip + i; i++) {
+                newData.push(dataSet[skip + i]);
             }
             return newData;
         }
 
-        function onSearch(searchText) {
-            return $timeout(function () {
-                var filteredData = data;
-                self.searchText = searchText;
-                if (searchText) {
-                    filteredData = data.filter(function (item) {
-                        var property;
-                        for (property in item) {
-                            if (item.hasOwnProperty(property) && (property === 'name' || property === 'content')) {
-                                if (item[property].indexOf(searchText) > -1) {
-                                    return true;
-                                }
+        function searchArray(searchText, array) {
+            var filteredData;
+            if (searchText) {
+                filteredData = array.filter(function (item) {
+                    var property;
+                    for (property in item) {
+                        if (item.hasOwnProperty(property) && (property === 'name' || property === 'occupation')) {
+                            if (item[property].indexOf(searchText) > -1) {
+                                return true;
                             }
                         }
-                        return false;
-                    });
-                
+                    }
+                    return false;
+                });
+                return filteredData;
+            }
+            return array;
+            
+        }
 
-                }
-                self.data = filteredData;
+        function onSearch(searchText) {
+            return $timeout(function () {
+                var searchedData
+                self.searchText = searchText;
+                searchedData = searchArray(searchText, dataSet);
+                
+                self.data = searchedData.slice(0, maxRecordsShown);
+                
             }, 1000);
         }
 
+        function filter(array, filters) {
+            var i,
+                item,
+                newData = angular.copy(array);
+            if (angular.isDefined(filters) &&  filters.length > 0) {
+                for (i = 0; i < filters.length; i++) {
+                    item = filters[i];
+                    if (item.name === 'tenYears') {
+                        newData = newData.filter(function (filterObj) {
+                            console.log('now year: ', new Date().getFullYear());
+                            console.log('filtered year: ', filterObj.joinDate.getFullYear());
+                            return new Date().getFullYear() - filterObj.joinDate.getFullYear() >= 10;
+                        });
+                    }
+                    if (item.name === 'onlyUnpaid') {
+                        newData = newData.filter(function (filterObj) {
+                            return filterObj.duesPaid === false;
+                        });
+                    }
+                }
+                return newData;
+            } else {
+                return array;
+            }
+        }
+
+        function sortArray(sortProperty, sortDescending, array) {
+            return array.sort(function (a, b) {
+                var descending = sortDescending ? -1 : 1;
+
+                if (a[sortProperty] > b[sortProperty]) {
+                    return (descending);
+                } else if (a[sortProperty] < b[sortProperty]) {
+                    return (-1 * descending);
+                } else {
+                    return 0;
+                }
+            });
+
+        }
+
+        function sortItems(item) {
+            sortProperty = item.name;
+            sortDescending = item.descending;
+            self.data = sortArray(item.name, item.descending, self.data);
+        }
+
+        self.sortItems = sortItems;
+
         function onLoadMore() {
             return $timeout(function () {
-                var newData = createData(5);
-
-                data = data.concat(newData);
-                self.data = data;
+                var newData = getData(6, 6);
+                
+                maxRecordsShown = 12;
+                self.data = self.data.concat(newData);
                 onSearch(self.searchText);
+                self.hasMoreData = false;
             }, 4000);
             
         }
@@ -136,6 +254,7 @@
             }).result
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
+                    self.data = filter(dataSet, self.appliedFilters);
                 });
         }
 
@@ -144,51 +263,52 @@
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
+        self.hasMoreData = true;
 
-        data = createData(5);
-        self.data = data;
+        self.data = getData(6, 0);
+
+        maxRecordsShown = self.data.length
 
         self.sortOptions = [
             {
                 id: 1,
-                label: 'Assigned to (A - Z)',
-                name: 'assignee',
+                label: 'Name (A - Z)',
+                name: 'name',
                 descending: false
             },
             {
                 id: 2,
-                label: 'Assigned to (Z - A)',
-                name: 'assignee',
+                label: 'Name (Z - A)',
+                name: 'name',
                 descending: true
             },
             {
                 id: 3,
-                label: 'Date created (newest first)',
-                name: 'date',
+                label: 'Date joined (newest first)',
+                name: 'joinDate',
                 descending: true
             },
             {
                 id: 4,
-                label: 'Date created (oldest first)',
-                name: 'date',
+                label: 'Date joined (oldest first)',
+                name: 'joinDate',
                 descending: false
             },
             {
                 id: 5,
-                label: 'Note title (A - Z)',
-                name: 'title',
+                label: 'Occupation (A - Z)',
+                name: 'occupation',
                 descending: false
             },
             {
                 id: 6,
-                label: 'Note title (Z - A)',
-                name: 'title',
+                label: 'Occupation (Z - A)',
+                name: 'occupation',
                 descending: true
             }
         ];
 
         self.initialState = self.sortOptions[4].id;
-        
         
     }
 
