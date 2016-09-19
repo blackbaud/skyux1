@@ -234,6 +234,11 @@
             }, 1000);
         }
 
+        function onDismissFilter(index) {
+            self.appliedFilters.splice(index, 1);
+            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+        }
+
         function sortItems(item) {
             sortProperty = item.name;
             sortDescending = item.descending;
@@ -285,6 +290,7 @@
         self.onAddClick = onAddClick;
         self.sortItems = sortItems;
         self.hasMoreData = true;
+        self.onDismissFilter = onDismissFilter;
         self.data = [];
         loadData();
 
