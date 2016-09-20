@@ -1,6 +1,12 @@
-<div ng-controller="ListbuilderTestController as listCtrl">
+<div ng-controller="ModalController as modalCtrl">
+    <button type="button" class="btn btn-primary" ng-click="modalCtrl.open()">Open</button>
+</div>
   
-
+<script type="text/ng-template" id="demo/listbuilder/modal.html">
+<bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Listbuilder</bb-modal-header>
+            <div bb-modal-body>
   <bb-listbuilder>
     <bb-listbuilder-toolbar 
         bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
@@ -72,6 +78,10 @@
     </bb-listbuilder-footer>
   </bb-listbuilder>
 </div>
+            <bb-modal-footer><button type="button" class="btn btn-primary">Click me</button></bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
 <script type="text/ng-template" id="demo/listbuilder/filters.html">
     <bb-modal>
         <div class="modal-form">

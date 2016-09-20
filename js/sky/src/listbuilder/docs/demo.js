@@ -338,9 +338,27 @@
     }
 
     ListbuilderTestController.$inject = ['$timeout', 'bbModal'];
+
+    function ModalController(bbModal) {
+        var self = this;
+        self.open = function () {
+            bbModal.open(
+                {
+                    controller: 'ListbuilderTestController as listCtrl',
+                    templateUrl: 'demo/listbuilder/modal.html'
+                }, 
+                {
+                    fullPage: true
+                }
+            )
+        }
+    }
+
+    ModalController.$inject = ['bbModal'];
     
     angular
         .module('stache')
+        .controller('ModalController', ModalController)
         .controller('ListbuilderTestController', ListbuilderTestController)
         .controller('ListbuilderFilterController', ListbuilderFilterController);
 }());

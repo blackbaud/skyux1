@@ -26,12 +26,9 @@
         }
 
         function removeActionbar() {
-            /* istanbul ignore else */
-            /* sanity check */
             if (actionbarEl) {
                 actionbarEl.remove();
             }
-            
         }
 
         function initFooter() {
