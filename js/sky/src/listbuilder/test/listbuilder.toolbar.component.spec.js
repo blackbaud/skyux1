@@ -203,7 +203,6 @@
                 verifyCardTitleHighlight(el, false);
 
                 el.remove();
-
             });
 
             it('applies search text binding to input and highlights on initialization', function () {

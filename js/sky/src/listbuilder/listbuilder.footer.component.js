@@ -2,9 +2,8 @@
 (function () {
     'use strict';
 
-    function Controller($element, $document) {
-        var ctrl = this,
-                    actionbarEl;
+    function Controller() {
+        var ctrl = this;
 
         function loadCallback() {
             var loadingPromise = ctrl.bbListbuilderOnLoadMore();
@@ -20,31 +19,8 @@
             return loadingPromise;
         }
 
-        function setupActionbar() {
-            actionbarEl = $element.find('.bb-listbuilder-actionbar');
-            $document.find('body').append(actionbarEl);
-        }
-
-        function removeActionbar() {
-            if (actionbarEl) {
-                actionbarEl.remove();
-            }
-        }
-
-        function initFooter() {
-            setupActionbar();
-        }
-
-        function destroyFooter() {
-            removeActionbar();
-        }
-
-        ctrl.$postLink = initFooter;
-        ctrl.$onDestroy = destroyFooter;
         ctrl.loadCallback = loadCallback;
     }
-
-    Controller.$inject = ['$element', '$document'];
 
     angular.module('sky.listbuilder.footer.component', ['sky.resources', 'sky.infinitescroll'])
         .component('bbListbuilderFooter', {
@@ -54,6 +30,7 @@
                 bbListbuilderShowLoadMore: '<?'
             },
             controller: Controller,
+            transclude: true,
             require: {
                 listbuilderCtrl: '^bbListbuilder'
             }

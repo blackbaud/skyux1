@@ -36,18 +36,9 @@
                     el: $element.find('.bb-listbuilder-toolbar-summary-container'),
                     boundaryEl: ctrl.listbuilderCtrl.getContentContainer(),
                     setWidth: true,
-                    verticalOffSetElId: ctrl.bbListbuilderVerticalOffsetElId,
-                    onStateChanged: function () {
-                        $timeout(function () {
-                            ctrl.listbuilderCtrl.isScrolledChanged(vkToolbar.isFixed);
-                        });
-                    }
+                    verticalOffSetElId: ctrl.bbListbuilderVerticalOffsetElId
                 });
             }
-        }
-
-        function toolbarScrollToTop() {
-            vkToolbar.scrollToTop();
         }
 
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
@@ -69,12 +60,6 @@
             }
             
             setupViewKeeper();
-
-            /*
-                Allow other listbuilder components to scroll to original
-                toolbar location.
-            */
-            ctrl.listbuilderCtrl.toolbarScrollToTop = toolbarScrollToTop;
 
         }
 

@@ -28,24 +28,9 @@
             return $element.find('.bb-listbuilder-content');
         }
 
-        function scrollToTop() {
-            /*
-                ctrl.toolbarScrollToTop() set in listbuilder.toolbar.component
-            */
-            if (angular.isFunction(ctrl.toolbarScrollToTop)) {
-                ctrl.toolbarScrollToTop();
-            }
-        }
-
-        function isScrolledChanged(isScrolled) {
-            ctrl.isScrolled = isScrolled;
-        }
-
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.getContentContainer = getContentContainer;
-        ctrl.scrollToTop = scrollToTop;
-        ctrl.isScrolledChanged = isScrolledChanged;
 
     }
 
