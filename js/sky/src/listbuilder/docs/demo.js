@@ -219,8 +219,6 @@
             filteredData = sortArray(sortProperty, sortDescending, filteredData);
 
             self.data = filteredData.slice(0, maxData);
-            console.log('filtered data length: ', filteredData.length);
-            console.log('data length: ', self.data.length);
             self.hasMoreData = filteredData.length > self.data.length;
             nextSkip = self.data.length;
         }
