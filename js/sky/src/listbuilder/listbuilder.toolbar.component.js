@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, $q, $timeout, bbViewKeeperBuilder) {
+    function Controller($element, bbViewKeeperBuilder) {
         var ctrl = this,
             vkToolbar;
 
@@ -78,7 +78,7 @@
 
     }
 
-    Controller.$inject = ['$element', '$q', '$timeout', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [

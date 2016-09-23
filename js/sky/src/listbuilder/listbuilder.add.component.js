@@ -3,15 +3,15 @@
     'use strict';
 
     function Controller(bbResources) {
-        var self = this;
+        var ctrl = this;
 
         function onInit() {
-            if (angular.isUndefined(self.bbListbuilderAddLabel)) {
-                self.bbListbuilderAddLabel = bbResources.listbuilder_add_title;
+            if (angular.isUndefined(ctrl.bbListbuilderAddLabel)) {
+                ctrl.bbListbuilderAddLabel = bbResources.listbuilder_add_title;
             }
         }
 
-        self.$onInit = onInit;
+        ctrl.$onInit = onInit;
     }
 
     Controller.$inject = ['bbResources'];

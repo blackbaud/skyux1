@@ -2,22 +2,17 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbHighlight, $timeout) {
+    function Controller($element) {
         var ctrl = this,
             lastSearchText;
 
         function highlightSearchText(searchText) {
             lastSearchText = searchText;
-            $timeout(function () {
-                var cardEl = $element.find('.bb-card');
-                if (cardEl.length > 0) {
-                    bbHighlight.clear(cardEl);
-                    if (searchText) {
-                        bbHighlight(cardEl.not('.bb-listbuilder-no-search'), searchText, 'highlight');
-                    }
-                }
-                
-            });
+            /*  This is set by bbListbuilderCards. When we have multiple listbuilder views,
+                the highlight function will be chosen dynamically
+            */
+            ctrl.highlightCards(searchText);
+            
         }
 
         function highlightLastSearchText() {
@@ -34,9 +29,9 @@
 
     }
 
-    Controller.$inject = ['$element', 'bbHighlight', '$timeout'];
+    Controller.$inject = ['$element'];
 
-    angular.module('sky.listbuilder.component', ['sky.card', 'sky.highlight'])
+    angular.module('sky.listbuilder.component', [])
         .component('bbListbuilder', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.component.html',
             transclude: {
