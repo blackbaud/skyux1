@@ -5,11 +5,11 @@
     function Controller() {
         var ctrl = this;
 
-        function onInit() {
+        function postLink() {
             ctrl.cardsCtrl.addCard();
         }
 
-        ctrl.$onInit = onInit;
+        ctrl.$postLink = postLink;
     }
 
     angular.module('sky.listbuilder.card.component', [])

@@ -11,7 +11,9 @@
             /*  This is set by bbListbuilderCards. When we have multiple listbuilder views,
                 the highlight function will be chosen dynamically
             */
-            ctrl.highlightCards(searchText);
+            if (angular.isFunction(ctrl.highlightCards)) {
+                ctrl.highlightCards(searchText);
+            }
             
         }
 
@@ -26,7 +28,6 @@
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.getContentContainer = getContentContainer;
-
     }
 
     Controller.$inject = ['$element'];

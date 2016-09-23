@@ -70,7 +70,7 @@
         }
 
         // Lifecycle hooks
-        ctrl.$onInit = initToolbar;
+        ctrl.$postLink = initToolbar;
         ctrl.$onChanges = bindingChanges;
         ctrl.$onDestroy = destroyToolbar;
 

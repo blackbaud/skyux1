@@ -2,11 +2,13 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbHighlight) {
+    function Controller($element, bbHighlight, $timeout) {
         var ctrl = this;
 
         function highlightCards(searchText) {
             var cardEl = $element.find('.bb-card');
+            /*istanbul ignore else */
+            /* sanity check */
             if (cardEl.length > 0) {
                 bbHighlight.clear(cardEl);
                 if (searchText) {
@@ -16,18 +18,20 @@
         }
 
         function addCard() {
-            ctrl.listbuilderCtrl.highlightLastSearchText();
+            $timeout(function () {
+                ctrl.listbuilderCtrl.highlightLastSearchText();
+            });
         }
 
         function initCards() {
             ctrl.listbuilderCtrl.highlightCards = highlightCards;
         }
 
-        ctrl.$onInit = initCards;
+        ctrl.$postLink = initCards;
         ctrl.addCard = addCard;
     }
 
-    Controller.$inject = ['$element', 'bbHighlight'];
+    Controller.$inject = ['$element', 'bbHighlight', '$timeout'];
 
     angular.module('sky.listbuilder.cards.component', ['sky.highlight', 'sky.card'])
         .component('bbListbuilderCards', {

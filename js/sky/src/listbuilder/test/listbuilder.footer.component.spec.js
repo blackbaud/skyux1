@@ -154,7 +154,8 @@
                     '</bb-listbuilder-toolbar>' +
                     '<bb-listbuilder-content>' +
                     '<bb-listbuilder-cards>' +
-                    '<bb-card ng-repeat="card in listCtrl.cards">' +
+                    '<bb-listbuilder-card ng-repeat="card in listCtrl.cards">' +
+                    '<bb-card>' +
                     '<bb-card-title>' +
                     '{{card.title}}' +
                     '</bb-card-title>' +
@@ -162,6 +163,7 @@
                     '{{card.content}}' +
                     '</bb-card-content>' +
                     '</bb-card>' +
+                    '</bb-listbuilder-card>' +
                     '</bb-listbuilder-cards>' +
                     '</bb-listbuilder-content>' +
                     '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()" ' +

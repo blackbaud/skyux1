@@ -332,7 +332,7 @@
         ];
 
         self.initialState = self.sortOptions[4].id;
-        
+
     }
 
     ListbuilderTestController.$inject = ['$timeout', 'bbModal'];

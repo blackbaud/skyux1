@@ -7,6 +7,7 @@
             $scope,
             simpleCardContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-cards>' +
+                    '<bb-listbuilder-card>' +
                     '<bb-card>' +
                     '<bb-card-title>' +
                     'First' +
@@ -15,6 +16,7 @@
                     'First Content' +
                     '</bb-card-content>' +
                     '</bb-card>' +
+                    '</bb-listbuilder-card>' +
                     '</bb-listbuilder-cards>' +
                     '</bb-listbuilder-content>';
 
@@ -192,13 +194,11 @@
                 el = initListbuilderTest();
                 $scope.listCtrl.searchText = 'First';
                 $scope.$digest();
-                $timeout.flush();
                 verifyInputBinding(el, 'First');
                 verifyCardTitleHighlight(el, true);
 
                 $scope.listCtrl.searchText = '';
                 $scope.$digest();
-                $timeout.flush();
                 verifyInputBinding(el, '');
                 verifyCardTitleHighlight(el, false);
 
@@ -323,7 +323,7 @@
             it('creates an add button when bb-listbuilder-add is specified', function () {
                 var addButtonHtml = '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-add bb-listbuilder-add-action="listCtrl.addAction()">My Add</bb-listbuilder-add>' +
+                    '<bb-listbuilder-add bb-listbuilder-add-action="listCtrl.addAction()"></bb-listbuilder-add>' +
                     '</bb-listbuilder-toolbar>' +
                     '</bb-listbuilder>',
                     el,
@@ -345,6 +345,36 @@
                 expect(addButtonEl.length).toBe(1);
                 addButtonEl.click();
                 expect(addCalled).toBe(true);
+                expect(addButtonEl).toHaveAttr('title', 'Add');
+            });
+
+            it('creates an add button with a label ', function () {
+                var addButtonHtml = '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-add bb-listbuilder-add-action="listCtrl.addAction()" bb-listbuilder-add-label="listCtrl.addLabel"></bb-listbuilder-add>' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>',
+                    el,
+                    addCalled = false,
+                    addButtonEl;
+
+                $scope.listCtrl = {
+                    addAction: function () {
+                        addCalled = true;
+                    },
+                    addLabel: 'Add thing'
+                };
+
+                el = $compile(addButtonHtml)($scope);
+
+                $scope.$digest();
+
+                addButtonEl = getAddButton(el);
+
+                expect(addButtonEl.length).toBe(1);
+                addButtonEl.click();
+                expect(addCalled).toBe(true);
+                expect(addButtonEl).toHaveAttr('title', $scope.listCtrl.addLabel);
             });
         });
     });
