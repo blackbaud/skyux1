@@ -1,4 +1,4 @@
-/*global describe, it, browser, require */
+/*global describe, it, browser */
 
 describe('listbuilder', function () {
     'use strict';
@@ -16,10 +16,10 @@ describe('listbuilder', function () {
     }
 
     it('match the baseline listbuilder screenshot', function () {
-        listbuilderTest(1280);
+        return listbuilderTest(1280);
     });
 
     it('match the baseline listbuilder screenshot on small screens', function () {
-        listbuilderTest(480);
+        return listbuilderTest(480);
     });
 });
