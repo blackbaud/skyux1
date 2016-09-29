@@ -68,6 +68,27 @@
             
         };
 
+        vm.removeItem = function (item) {
+            var i,
+                items = vm.items,
+                index,
+                n;
+
+            for (i = 0, n = items.length; i < n; i++) {
+                if (items[i] === item) {
+                    index = i;
+                    break;
+                }
+            }
+
+            /*istanbul ignore else */
+            if (index >= (n - 1)) {
+                vm.setSelectedItem(n - 2, true);    
+            }
+            
+            items.splice(index, 1);
+        };
+
         vm.setSelectedItem = function (item, skipChange) {
             var i,
                 itemEl,
