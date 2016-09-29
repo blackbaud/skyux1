@@ -489,7 +489,7 @@ describe('Carousel component', function () {
         expect(getDotBtns(el).length).toBe(3);
         validateDotSelected(el, 2);
 
-        $scope.items.splice($scope.items.length -1, 1);
+        $scope.items.splice($scope.items.length - 1, 1);
         $scope.$digest();
 
         validateItemSelected(el, 1);
