@@ -18,6 +18,11 @@
             vm.carouselCtrl.addItem(vm);
         };
 
+        vm.$onDestroy = function () {
+            $element.find('.bb-carousel-item').removeClass('bb-carousel-item');
+            vm.carouselCtrl.removeItem(vm);
+        };
+
         // There's no "ng-focusin" equivalent so we have to attach the handler
         // here instead.
         $element.on('focusin', function () {

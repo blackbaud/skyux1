@@ -473,4 +473,29 @@ describe('Carousel component', function () {
 
         el.remove();
     });
+
+    it('should allow cards to be removed', function () {
+        var $scope = $rootScope.$new(),
+            el;
+
+        el = createCarouselEl($scope, 3, false, true);
+
+        el.appendTo(document.body);
+
+        $scope.selectedIndex = 2;
+        $scope.$digest();
+
+        validateItemSelected(el, 2);
+        expect(getDotBtns(el).length).toBe(3);
+        validateDotSelected(el, 2);
+
+        $scope.items.splice($scope.items.length -1, 1);
+        $scope.$digest();
+
+        validateItemSelected(el, 1);
+        expect(getDotBtns(el).length).toBe(2);
+        validateDotSelected(el, 1);
+
+        el.remove();
+    });
 });
