@@ -229,7 +229,7 @@
                 self.searchText = searchText;
                 applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
                 
-            }, 1000);
+            });
         }
 
         function onDismissFilter(index) {
