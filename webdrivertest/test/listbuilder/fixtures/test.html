@@ -1,0 +1,79 @@
+<div class="container">
+    <div style="height: 100px; width: 100px;">
+    </div>
+    <div id="screenshot-listbuilder">
+        <div ng-controller="ListbuilderTestController as listCtrl">
+            <bb-listbuilder>
+                <bb-listbuilder-toolbar 
+                    bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
+                    bb-listbuilder-search-text="listCtrl.searchText">
+                <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
+                    Add Stuff
+                </bb-listbuilder-add>
+                <bb-listbuilder-filter> 
+                    <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">  
+                    </bb-filter-button>
+                </bb-listbuilder-filter>
+                <bb-listbuilder-sort>
+                    <bb-sort bb-sort-append-to-body>
+                        <bb-sort-item 
+                            ng-repeat="item in listCtrl.sortOptions" 
+                            bb-sort-item-active="listCtrl.initialState === item.id"
+                            bb-sort-item-select="listCtrl.sortItems(item)">
+                        {{item.label}}
+                        </bb-sort-item>
+                    </bb-sort>
+                </bb-listbuilder-sort>
+                <bb-listbuilder-filter-summary>
+                    <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
+                        <bb-filter-summary-item
+                            ng-repeat="item in listCtrl.appliedFilters"
+                            bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                            bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)"
+                            >
+                            {{item.label}}
+                        </bb-filter-summary-item>
+                    </bb-filter-summary>
+                </bb-listbuilder-filter-summary>
+                </bb-listbuilder-toolbar>
+                <bb-listbuilder-content>
+                <bb-listbuilder-cards>
+                    <bb-listbuilder-card ng-repeat="item in listCtrl.data">
+                        <bb-card>
+                            <bb-card-title>
+                            {{item.name}}
+                            </bb-card-title>
+                            <bb-card-content>
+                                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <span class="label label-success">Membership dues paid</span>
+                                </div>
+                                <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <span class="label label-danger">Membership dues not paid</span>
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    Occupation: {{item.occupation}}
+                                </div>
+                                <div>
+                                    Joined on: {{item.joinDate | date}}
+                                </div>
+                                
+                            </bb-card-content>
+                            <bb-card-actions>
+                                <bb-context-menu>
+                                    <bb-context-menu-item>Action 1</bb-context-menu-item>
+                                    <bb-context-menu-item>Action 2</bb-context-menu-item>
+                                </bb-context-menu>
+                            </bb-card-actions>
+                        </bb-card>
+                    </bb-listbuilder-card>
+                </bb-listbuilder-cards>
+                </bb-listbuilder-content>
+                <bb-listbuilder-footer
+                    bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
+                    bb-listbuilder-show-load-more="listCtrl.hasMoreData">
+                </bb-listbuilder-footer>
+            </bb-listbuilder>
+        </div>   
+    </div>
+    
+</div>

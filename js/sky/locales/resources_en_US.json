@@ -523,6 +523,14 @@
         "_description": "Label for button that deletes a file",
         "message": "Delete file"
     },
+    "listbuilder_footer_back_to_top": {
+        "_description": "Text for scrolling back to the top of the listbuilder",
+        "message": "Back to top"
+    },
+    "listbuilder_add_title": {
+        "_description": "Text for the add button title",
+        "message": "Add"
+    },
     "search_label": {
         "_description": "Label for search component functionality",
         "message": "Search items"
@@ -647,4 +655,5 @@
         "_description": "Text for the label for the pagination next link",
         "message": "Next"
     }
+
 }

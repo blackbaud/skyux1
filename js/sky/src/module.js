@@ -28,6 +28,7 @@
         'sky.highlight',
         'sky.infinitescroll',
         'sky.keyinfo',
+        'sky.listbuilder',
         'sky.mediabreakpoints',
         'sky.modal',
         'sky.moment',
