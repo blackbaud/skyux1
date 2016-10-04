@@ -980,6 +980,7 @@
 
     function Controller($scope, $element, bbFormat, bbResources) {
         var currentItemIndex,
+            currentItem,
             vm = this;
 
         function getItemEls() {
@@ -1028,6 +1029,24 @@
             }
         }
 
+        function getElItem(index) {
+            var el,
+                i,
+                items = vm.items,
+                itemEls = getItemEls(),
+                n;
+
+            if (index < itemEls.length) {
+                el = itemEls[index];
+
+                for (i = 0, n = items.length; i < n; i++) {
+                    if (items[i].elIsItem(el)) {
+                        return items[i];
+                    }
+                }
+            }
+        }
+
         currentItemIndex = 0;
 
         vm.items = [];
@@ -1039,6 +1058,37 @@
                 vm.setSelectedItem(vm.bbCarouselSelectedIndex || 0, true);
             }
             
+        };
+
+        vm.removeItem = function (item) {
+            var elIndex,
+                i,
+                items = vm.items,
+                index,
+                n;
+
+            //Remove the item from the item array;
+            for (i = 0, n = items.length; i < n; i++) {
+                if (items[i] === item) {
+                    index = i;
+                    break;
+                }
+            }       
+
+            items.splice(index, 1);
+
+            //Update selected element index.
+            if (currentItemIndex >= (items.length)) {
+                //If the selected index is out of bounds after removal, select the last element
+                vm.setSelectedItem(items.length - 1, true);
+            } else {
+                //If the current selected item is still in the array but at a different index, update the current selected index.  This would happen
+                //if an item before the current selected item is removed.  In that case, the indexes would have shifted.
+                elIndex = getElIndex(currentItem);
+                if (elIndex >= 0 && elIndex !== currentItemIndex) {
+                    vm.setSelectedItem(elIndex, true);
+                }
+            }
         };
 
         vm.setSelectedItem = function (item, skipChange) {
@@ -1072,6 +1122,7 @@
             }
 
             currentItemIndex = item;
+            currentItem = getElItem(item);
 
             vm.allowPrevious = currentItemIndex > 0;
             vm.allowNext = currentItemIndex < itemEls.length - 1;
@@ -1169,6 +1220,11 @@
 
         vm.$onInit = function () {
             vm.carouselCtrl.addItem(vm);
+        };
+
+        vm.$onDestroy = function () {
+            $element.find('.bb-carousel-item').removeClass('bb-carousel-item');
+            vm.carouselCtrl.removeItem(vm);
         };
 
         // There's no "ng-focusin" equivalent so we have to attach the handler
