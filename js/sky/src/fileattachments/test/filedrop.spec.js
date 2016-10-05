@@ -213,6 +213,29 @@ describe('File drop directive', function () {
         expect(fileDroppedSpy).toHaveBeenCalledWith(files, rejectedFiles);
     });
 
+    it('should not call the specified callback when a file both files and rejected files are empty', function () {
+        var $scope = $rootScope.$new(),
+            el,
+            fileDroppedSpy,
+            files,
+            rejectedFiles;
+
+        files = [
+        ];
+
+        rejectedFiles = [
+        ];
+
+        $scope.fileDropped = angular.noop;
+
+        fileDroppedSpy = spyOn($scope, 'fileDropped');
+
+        el = getDropEl($scope);
+        el.isolateScope().bbFileDrop.fileChange(files, {}, rejectedFiles);
+
+        expect(fileDroppedSpy).not.toHaveBeenCalled();
+    });
+
     it('should call the specified callback when a file is validated', function () {
         var $scope = $rootScope.$new(),
             el,

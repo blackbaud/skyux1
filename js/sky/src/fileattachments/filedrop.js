@@ -30,10 +30,12 @@
                         scope.bbFileDrop.url = null;
                     },
                     fileChange: function ($files, $event, $invalidFiles) {
-                        scope.bbFileDropChange({
-                            files: $files,
-                            rejectedFiles: $invalidFiles
-                        });
+                        if ($files.length > 0 || $invalidFiles.length > 0) {
+                            scope.bbFileDropChange({
+                                files: $files,
+                                rejectedFiles: $invalidFiles
+                            });
+                        } 
                     },
                     validate: function ($file) {
                         return scope.bbFileDropValidateFn({
