@@ -8,7 +8,7 @@ The context menu directives allow you to create SKY UX-themed [UI Bootstrap drop
 
 ### Context menu settings
     - `bb-context-menu` &mdash; Creates a dropdown menu with the context menu button.
-        - `bb-context-menu-label` &mdash; Assigns a label to the context menu button for screen readers.
+        - `bb-context-menu-label` &mdash; *(Optional.)* Assigns a label to the context menu button for screen readers. By defualt, this will be set to "Context menu".
         - `bb-context-menu-item` &mdash; Creates an entry within a dropdown menu.
             - `bb-context-menu-action` &mdash; Specifies a function to be called when users click the menu item.
     - `bb-context-menu-button` &mdash; Creates a button with the SKY UX context menu styles.
