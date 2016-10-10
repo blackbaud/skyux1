@@ -4352,10 +4352,12 @@
                         scope.bbFileDrop.url = null;
                     },
                     fileChange: function ($files, $event, $invalidFiles) {
-                        scope.bbFileDropChange({
-                            files: $files,
-                            rejectedFiles: $invalidFiles
-                        });
+                        if ($files.length > 0 || $invalidFiles.length > 0) {
+                            scope.bbFileDropChange({
+                                files: $files,
+                                rejectedFiles: $invalidFiles
+                            });
+                        } 
                     },
                     validate: function ($file) {
                         return scope.bbFileDropValidateFn({
@@ -13835,6 +13837,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="row bb-file-drop-row">\n' +
         '    <div class="col-xs-12 bb-file-drop-col" ng-class="{\'col-sm-6\': bbFileDrop.allowLinks}">\n' +
         '        <button\n' +
+        '             type="button"\n' +
         '             ng-attr-aria-label="{{\'file_upload_drag_or_click\' | bbResources}}"\n' +
         '             class="bb-file-drop bb-file-drop-target"\n' +
         '             ngf-drop\n' +
