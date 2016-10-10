@@ -28,7 +28,11 @@
 
                  />
         <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{'bb-datefield-open': bbDatepicker.pickerOpened}">
-            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="bbDatepicker.open($event)">
+            <button 
+                type="button" 
+                class="btn btn-default bb-date-field-calendar-button" 
+                ng-click="bbDatepicker.open($event)" 
+                ng-attr-aria-label="{{'datepicker_open' | bbResources}}">
                 <i class="fa fa-calendar"></i>
             </button>
         </span>
