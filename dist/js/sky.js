@@ -13621,9 +13621,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/contextmenu/submenu.accordiongroup.html',
         '<div class="panel" ng-class="panelClass || \'panel-default\'">\n' +
-        '  <div role="tab" id="{{::headingId}}" aria-selected="{{isOpen}}" class="panel-heading" tabindex="0" ng-keypress="toggleOpen()">\n' +
+        '  <div role="tab" aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" id="{{::headingId}}" aria-selected="{{isOpen}}" class="panel-heading" tabindex="0" ng-keypress="toggleOpen()">\n' +
         '    <h4 class="panel-title">\n' +
-        '      <div data-toggle="collapse" aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" class="accordion-toggle" uib-accordion-transclude="heading"><span uib-accordion-header ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></a>\n' +
+        '      <div data-toggle="collapse" class="accordion-toggle" uib-accordion-transclude="heading"><span uib-accordion-header ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></div>\n' +
         '    </h4>\n' +
         '  </div>\n' +
         '  <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!isOpen}}" role="tabpanel" class="panel-collapse collapse" uib-collapse="!isOpen">\n' +
