@@ -17,12 +17,12 @@
             </bb-alert>
             <div ng-repeat="item in fileAttachmentDemo.allItems" bb-file-item="item" bb-file-item-delete="fileAttachmentDemo.deleteAttachment(item)" style="margin-bottom: 10px">
                 <div class="form-group">
-                    <label>Name for this attachment</label>
-                    <input type="text" class="form-control" />
+                    <label for="filename-{{$index}}" >Name for this attachment</label>
+                    <input id="filename-{{$index}}" type="text" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label>Tags for this attachment</label>
-                    <input type="text" class="form-control" />
+                    <label for="filetag-{{$index}}">Tags for this attachment</label>
+                    <input id="filetag-{{$index}}" type="text" class="form-control" />
                 </div>
             </div>
         </div>
