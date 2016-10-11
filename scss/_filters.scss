@@ -3,6 +3,11 @@
 .bb-filters-inline {
     background-color: $bb-inline-filter-color;
     padding: $padding;
+
+    /* TODO: Should the padding-right just be removed for all date range pickers? */
+    .form-group.bb-date-range-picker-form-group {
+        padding-right: 0;
+    }
 }
 
 .toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active, .bb-filter-btn-active, .bb-filter-btn-active:hover, .bb-filter-btn-active:focus {
