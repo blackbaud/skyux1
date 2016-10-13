@@ -13,11 +13,16 @@
 
         function initCards() {
             ctrl.viewName = 'card';
-            ctrl.listbuilderContentCtrl.addListbuilderView({ viewName: ctrl.viewName, viewSwitcherClass: 'fa-th', highlightClass: 'bb-card'});
+            ctrl.listbuilderContentCtrl.addListbuilderView({ viewName: ctrl.viewName, viewSwitcherClass: 'fa-th-large', highlightClass: 'bb-card'});
+        }
+
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
         }
 
         ctrl.$postLink = initCards;
         ctrl.addCard = addCard;
+        ctrl.viewIsActive = viewIsActive;
     }
 
     Controller.$inject = ['$timeout'];

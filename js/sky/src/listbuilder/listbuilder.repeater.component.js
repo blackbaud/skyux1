@@ -8,10 +8,15 @@
 
         function initRepeater() {
             ctrl.viewName = 'repeater';
-            ctrl.listbuilderContentCtrl.addListbuilderView({ viewName: ctrl.viewName, viewSwitcherClass: 'fa-th', highlightClass: 'bb-repeater-item'});
+            ctrl.listbuilderContentCtrl.addListbuilderView({ viewName: ctrl.viewName, viewSwitcherClass: 'fa-list', highlightClass: 'bb-repeater-item'});
+        }
+
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
         }
 
         ctrl.$postLink = initRepeater;
+        ctrl.viewIsActive = viewIsActive;
 
     }
 

@@ -36,8 +36,14 @@
             return ctrl.listbuilderCtrl.currentView;
         }
 
-        ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
-        ctrl.highlightLastSearchText = highlightLastSearchText;
+        function onInit() {
+            ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
+            ctrl.listbuilderCtrl.highlightLastSearchText = highlightLastSearchText;
+            ctrl.highlightLastSearchText = highlightLastSearchText;
+        }
+
+        ctrl.$onInit = onInit;
+        
         ctrl.addListbuilderView = addListbuilderView;
         ctrl.getCurrentView = getCurrentView;
 

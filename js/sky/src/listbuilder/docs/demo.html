@@ -83,7 +83,13 @@
                 Joined on: {{item.joinDate | date}}
               </div>
             </bb-repeater-item-content>
-          </bb-repeater-item>
+            <bb-repeater-item-context-menu>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </bb-card-actions>
+          </bb-repeater-item-context-menu>
         </bb-repeater>
       </bb-listbuilder-repeater>
     </bb-listbuilder-content>
