@@ -3,30 +3,22 @@
     'use strict';
 
     function Controller($element) {
-        var ctrl = this,
-            lastSearchText;
+        var ctrl = this;
 
         function highlightSearchText(searchText) {
-            lastSearchText = searchText;
-            /*  This is set by bbListbuilderCards. When we have multiple listbuilder views,
-                the highlight function will be chosen dynamically
-            */
-            if (angular.isFunction(ctrl.highlightCards)) {
-                ctrl.highlightCards(searchText);
-            }
-            
-        }
-
-        function highlightLastSearchText() {
-            highlightSearchText(lastSearchText);
+            ctrl.highlightSearchContent(searchText);
         }
 
         function getContentContainer() {
             return $element.find('.bb-listbuilder-content');
         }
 
+        function onInit() {
+            ctrl.contentViews = [];
+        }
+
+        ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
-        ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.getContentContainer = getContentContainer;
     }
 

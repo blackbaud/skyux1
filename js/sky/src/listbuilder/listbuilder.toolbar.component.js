@@ -41,6 +41,10 @@
             }
         }
 
+        function viewChanged(newView) {
+            ctrl.listbuilderCtrl.currentView = newView;
+        }
+
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
         function bindingChanges(changesObj) {
             var searchText;
@@ -75,6 +79,8 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
+
+        ctrl.viewChanged = viewChanged;
 
     }
 

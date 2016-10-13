@@ -1,0 +1,12 @@
+<div class="bb-listbuilder-switcher" uib-dropdown ng-if="$ctrl.bbListbuilderSwitcherViews.length > 1">
+    <button type="button" uib-dropdown-toggle>
+        <i class="fa fa-lg" ng-class="$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherClass"></i>
+    </button>
+    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+        <li role="menu-item" ng-repeat="view in $ctrl.bbListbuilderSwitcherViews" ng-if="view.name !=== $ctrl.bbListbuilderSwitcherCurrentView.viewName">
+            <a href="javascript:void(0)" ng-click="$ctrl.switchView(view)">
+                <i class="fa fa-lg" ng-class="view.viewSwitcherClass"></i>
+            </a>
+        </li>
+    </ul>
+</div>

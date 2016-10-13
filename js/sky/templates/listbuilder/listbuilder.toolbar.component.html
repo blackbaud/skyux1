@@ -18,7 +18,14 @@
 
         </div>
 
-        <ng-transclude></ng-transclude>    
+        <ng-transclude></ng-transclude>
+
+        <bb-listbuilder-switcher 
+            bb-listbuilder-switcher-views="$ctrl.listbuilderCtrl.contentViews" 
+            bb-listbuilder-switcher-current-view="$ctrl.listbuilderCtrl.currentView"
+            bb-listbuilder-switcher-view-change="$ctrl.viewChanged(newView)"
+            >
+        </bb-listbuilder-switcher>    
     </div>
 
     <div class="bb-listbuilder-filter-summary-container">
