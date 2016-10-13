@@ -42,4 +42,4 @@
             },
             controller: Controller
         });
-}());
+})();
