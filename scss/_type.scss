@@ -49,3 +49,16 @@ Semantic font class styles are based on existing styling of analogous components
 .bb-field-label {
     @include bb-field-label();
 }
+
+/* Accessibly hide content - invisible to the screen, visible to screenreaders and other assistive tech. */
+.bb-invisible {
+    border: 0; 
+    clip: rect(0 0 0 0); 
+    height: 1px; 
+    margin: -1px; 
+    overflow: hidden; 
+    padding: 0; 
+    position: absolute; 
+    width: 1px;
+    pointer-events: none;
+}

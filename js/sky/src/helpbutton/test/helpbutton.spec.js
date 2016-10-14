@@ -43,7 +43,7 @@ describe('Helpbutton directive', function () {
     }));
 
     it('adds the correct classes', function () {
-        var el = angular.element('<div bb-help-button bb-help-key="bb-security-users.html"></div>');
+        var el = angular.element('<button type="button" bb-help-button bb-help-key="bb-security-users.html">Help</button>');
 
         $compile(el)($scope);
 
@@ -54,7 +54,7 @@ describe('Helpbutton directive', function () {
     });
 
     it('handles true override keys', function () {
-        var el = angular.element('<div bb-help-button bb-help-key="bb-security-users.html" bb-set-help-key-override="true"></div>'),
+        var el = angular.element('<button type="button" bb-help-button bb-help-key="bb-security-users.html" bb-set-help-key-override="true">Help</button>'),
             removeEvent;
 
         $compile(el)($scope);
@@ -71,7 +71,7 @@ describe('Helpbutton directive', function () {
     });
 
     it('opens the help widget on click', function () {
-        var el = angular.element('<div bb-help-button bb-help-key="bb-security-users.html"></div>');
+        var el = angular.element('<button type="button" bb-help-button bb-help-key="bb-security-users.html">Help</button>');
 
         $compile(el)($scope);
 

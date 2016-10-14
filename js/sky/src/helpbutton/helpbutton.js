@@ -18,6 +18,7 @@
                 var oldHelpKeyOverride;
 
                 el.addClass('bb-helpbutton fa fa-question-circle close');
+                el.contents().wrap('<span class="bb-invisible"></span>');
 
                 if (attrs.bbSetHelpKeyOverride && attrs.bbSetHelpKeyOverride.toLowerCase() === 'true') {
                     oldHelpKeyOverride = $state.current.helpKeyOverride;
