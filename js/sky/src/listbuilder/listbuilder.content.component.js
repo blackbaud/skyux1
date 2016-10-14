@@ -40,7 +40,7 @@
         function setCurrentView(newView) {
             ctrl.listbuilderCtrl.currentView = newView;
             if (angular.isFunction(ctrl.bbListbuilderContentViewChanged)) {
-                ctrl.bbListbuilderContentViewChanged({ newView: newView });
+                ctrl.bbListbuilderContentViewChanged({ newView: newView.viewName });
             }
         } 
 
@@ -54,6 +54,20 @@
             for (i = 0; i < ctrl.listbuilderCtrl.contentViews.length; i++) {
                 if (ctrl.listbuilderCtrl.contentViews[i].viewName === viewName) {
                     ctrl.listbuilderCtrl.currentView = ctrl.listbuilderCtrl.contentViews[i];
+                    return;
+                }
+            }
+        }
+
+        function updateListbuilderView(viewName, newView) {
+            var i;
+
+            for (i = 0; i < ctrl.listbuilderCtrl.contentViews.length; i++) {
+                if (ctrl.listbuilderCtrl.contentViews[i].viewName === viewName) {
+                    ctrl.listbuilderCtrl.contentViews[i] = newView;
+                    if (ctrl.listbuilderCtrl.currentView.viewName === viewName) {
+                        setCurrentView(newView);
+                    }
                     return;
                 }
             }
@@ -85,6 +99,7 @@
         ctrl.$onChanges = onChanges;
         
         ctrl.addListbuilderView = addListbuilderView;
+        ctrl.updateListbuilderView = updateListbuilderView;
         ctrl.getCurrentView = getCurrentView;
 
     }
