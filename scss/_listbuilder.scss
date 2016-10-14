@@ -76,14 +76,13 @@
 
 .bb-listbuilder-switcher {
     float: right;
-    
-    .dropdown-menu {
-        min-width: 0px;
-        left: 1px;
-         > li > a {
-             padding: 6px 12px;
-             margin: 0;
-         } 
-    }
+}
 
+.dropdown-menu.bb-listbuilder-switcher-menu {
+    min-width: 0px;
+    left: 1px;
+        > li > a {
+            padding: 6px 12px;
+            margin: 0;
+        } 
 }

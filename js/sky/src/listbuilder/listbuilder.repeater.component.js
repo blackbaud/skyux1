@@ -2,13 +2,18 @@
 (function () {
     'use strict';
 
-    function Controller() {
+    function Controller(bbResources) {
         var ctrl = this;
 
 
         function initRepeater() {
             ctrl.viewName = 'repeater';
-            ctrl.listbuilderContentCtrl.addListbuilderView({ viewName: ctrl.viewName, viewSwitcherClass: 'fa-list', highlightClass: 'bb-repeater-item'});
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-list',
+                highlightClass: 'bb-repeater-item',
+                viewSwitcherLabel: bbResources.listbuilder_repeater_switcher
+            });
         }
 
         function viewIsActive() {
@@ -20,7 +25,9 @@
 
     }
 
-    angular.module('sky.listbuilder.repeater.component', ['sky.repeater'])
+    Controller.$inject = ['bbResources'];
+
+    angular.module('sky.listbuilder.repeater.component', ['sky.repeater', 'sky.resources'])
         .component('bbListbuilderRepeater', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.repeater.component.html',
             transclude: true,

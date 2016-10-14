@@ -1,11 +1,28 @@
-<div class="bb-listbuilder-switcher" uib-dropdown ng-if="$ctrl.bbListbuilderSwitcherViews.length > 1">
-    <button class="btn bb-btn-secondary" type="button" uib-dropdown-toggle>
-        <i class="fa fa-lg" ng-class="$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherClass"></i>
+<div 
+    class="bb-listbuilder-switcher" 
+    uib-dropdown 
+    dropdown-append-to-body 
+    ng-if="$ctrl.bbListbuilderSwitcherViews.length > 1">
+    <button 
+        class="btn bb-btn-secondary" 
+        type="button" 
+        uib-dropdown-toggle
+        ng-attr-aria-label="{{$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherLabel}}">
+        <i 
+          class="fa fa-lg" 
+          ng-class="$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherClass"
+          ></i>
     </button>
-    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+    <ul class="dropdown-menu bb-listbuilder-switcher-menu" uib-dropdown-menu role="menu">
         <li role="menu-item" ng-repeat="view in $ctrl.bbListbuilderSwitcherViews" ng-if="view.viewName !== $ctrl.bbListbuilderSwitcherCurrentView.viewName">
-            <a href="javascript:void(0)" ng-click="$ctrl.switchView(view)">
-                <i class="fa fa-lg" ng-class="view.viewSwitcherClass"></i>
+            <a 
+                href="javascript:void(0)" 
+                ng-click="$ctrl.switchView(view)"
+                ng-attr-aria-label="{{view.viewSwitcherLabel}}">
+                <i 
+                    class="fa fa-lg" 
+                    ng-class="view.viewSwitcherClass"
+                    ></i>
             </a>
         </li>
     </ul>

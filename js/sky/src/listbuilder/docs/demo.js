@@ -281,12 +281,17 @@
             alert('Add button clicked');
         }
 
+        function viewChanged(newView) {
+            self.activeView = newView;
+        }
+
         self.onFilterClick = onFilterClick;
 
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
         self.sortItems = sortItems;
+        self.viewChanged = viewChanged;
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
         self.data = [];

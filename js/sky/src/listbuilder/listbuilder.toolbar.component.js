@@ -42,7 +42,9 @@
         }
 
         function viewChanged(newView) {
-            ctrl.listbuilderCtrl.currentView = newView;
+            if (angular.isFunction(ctrl.listbuilderCtrl.setCurrentView)) {
+                ctrl.listbuilderCtrl.setCurrentView(newView);
+            }
         }
 
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.

@@ -1,4 +1,8 @@
 <div ng-controller="ListbuilderTestController as listCtrl">
+    <button type="button" class="btn btn-primary" style="margin-bottom: 10px"
+        ng-click="listCtrl.activeView = 'repeater'">
+        Change to repeater view
+    </button>
   <bb-listbuilder>
     <bb-listbuilder-toolbar 
         bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
@@ -32,7 +36,10 @@
         </bb-filter-summary>
       </bb-listbuilder-filter-summary>
     </bb-listbuilder-toolbar>
-    <bb-listbuilder-content>
+    <bb-listbuilder-content 
+        bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
+        bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
+        >
       <bb-listbuilder-cards>
         <bb-listbuilder-card ng-repeat="item in listCtrl.data">
             <bb-card>
