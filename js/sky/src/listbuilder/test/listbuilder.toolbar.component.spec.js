@@ -205,7 +205,7 @@
                 el.remove();
             });
 
-            it('applies search text binding to input and highlights on initialization', function () {
+            it('applies search text binding to input and highlights card on initialization', function () {
                 var el;
                 
                 $scope.listCtrl = listCtrl;
@@ -218,6 +218,7 @@
 
                 el.remove();
             });
+
 
             it('does not apply highlight when card does not exist', function () {
                 var el,

@@ -23,6 +23,7 @@
                 highlightClass: 'bb-card',
                 viewSwitcherLabel: bbResources.listbuilder_card_switcher
             });
+
         }
 
         function onDestroy() {

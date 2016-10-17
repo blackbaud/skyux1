@@ -2,11 +2,17 @@
 (function () {
     'use strict';
 
-    function Controller(bbResources) {
+    function Controller(bbResources, $timeout) {
         var ctrl = this;
 
         function viewIsActive() {
             return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
+        function addRepeaterItem() {
+            $timeout(function () {
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
+            });
         }
 
         function initRepeater() {
@@ -17,6 +23,9 @@
                 highlightClass: 'bb-repeater-item',
                 viewSwitcherLabel: bbResources.listbuilder_repeater_switcher
             });
+            $timeout(function () {
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
+            });
         }
 
         function onDestroy() {
@@ -26,10 +35,11 @@
         ctrl.$postLink = initRepeater;
         ctrl.$onDestroy = onDestroy;
         ctrl.viewIsActive = viewIsActive;
+        ctrl.addRepeaterItem = addRepeaterItem;
 
     }
 
-    Controller.$inject = ['bbResources'];
+    Controller.$inject = ['bbResources', '$timeout'];
 
     angular.module('sky.listbuilder.repeater.component', ['sky.repeater', 'sky.resources'])
         .component('bbListbuilderRepeater', {

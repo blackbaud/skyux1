@@ -39,6 +39,20 @@
                     '<bb-listbuilder-toolbar ' +
                     'bb-listbuilder-on-search="listCtrl.onSearch(searchText)"> ' +
                     '</bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-content>' +
+                    '<bb-listbuilder-cards>' +
+                    '<bb-listbuilder-card>' +
+                    '<bb-card>' +
+                    '<bb-card-title>' +
+                    'First' +
+                    '</bb-card-title>' +
+                    '<bb-card-content>' +
+                    'First Content' +
+                    '</bb-card-content>' +
+                    '</bb-card>' +
+                    '</bb-listbuilder-card>' +
+                    '</bb-listbuilder-cards>' +
+                    '</bb-listbuilder-content>' +
                     '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()" ' +
                     'bb-listbuilder-show-load-more="listCtrl.showLoadMore">' +
                     '</bb-listbuilder-footer>' + 
@@ -142,19 +156,30 @@
 
             });
 
-            function validateHighlight(onLoadMore) {
+            function validateHighlight(onLoadMore, type) {
                 var el,
                     searchButtonEl,
-                    highlightedEl;
+                    highlightedEl,
+                    contentHtml;
+                if (type === 'repeater') {
+                    contentHtml = '<bb-listbuilder-repeater>' +
+                        '<bb-repeater>' +
+                        '<bb-listbuilder-repeater-item ng-repeat="item in listCtrl.items">' +
+                        '<bb-repeater-item>' +
+                        '<bb-repeater-item-title>' +
+                        '{{item.title}}' +
+                        '</bb-repeater-item-title>' +
+                        '<bb-repeater-item-content>' +
+                        '{{item.content}}' +
+                        '</bb-repeater-item-content>' +
+                        '</bb-repeater-item>' +
+                        '</bb-listbuilder-repeater-item>' +
+                        '</bb-repeater>' +
+                        '</bb-listbuilder-repeater>';
 
-                listbuilderHtml = angular.element(
-                    '<bb-listbuilder>' +
-                    '<bb-listbuilder-toolbar ' +
-                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)"> ' +
-                    '</bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-content>' +
-                    '<bb-listbuilder-cards>' +
-                    '<bb-listbuilder-card ng-repeat="card in listCtrl.cards">' +
+                } else {
+                    contentHtml = '<bb-listbuilder-cards>' +
+                    '<bb-listbuilder-card ng-repeat="card in listCtrl.items">' +
                     '<bb-card>' +
                     '<bb-card-title>' +
                     '{{card.title}}' +
@@ -164,14 +189,23 @@
                     '</bb-card-content>' +
                     '</bb-card>' +
                     '</bb-listbuilder-card>' +
-                    '</bb-listbuilder-cards>' +
+                    '</bb-listbuilder-cards>';
+                }
+
+                listbuilderHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)"> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-content>' +
+                    contentHtml +
                     '</bb-listbuilder-content>' +
                     '<bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()" ' +
                     'bb-listbuilder-show-load-more="listCtrl.showLoadMore">' +
                     '</bb-listbuilder-footer>' + 
                     '</bb-listbuilder>');
 
-                $scope.listCtrl.cards = [
+                $scope.listCtrl.items = [
                     {
                         title: 'First',
                         content: 'Content'
@@ -199,13 +233,12 @@
                 highlightedEl = el.find('span.highlight');
                 expect(highlightedEl.length).toBe(2);
 
-
                 el.remove();
             }
 
             it('should highlight using the last search text when load more does not return a promise', function () {
                 function onLoadMore() {
-                    $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});
+                    $scope.listCtrl.items.push({ title: 'Second', content: 'Content'});
                 }
                 validateHighlight(onLoadMore);
 
@@ -213,7 +246,7 @@
 
             it('should highlight using the last search text when load more returns a promise', function () {
                 function onLoadMore() {
-                    $scope.listCtrl.cards.push({ title: 'Second', content: 'Content'});
+                    $scope.listCtrl.items.push({ title: 'Second', content: 'Content'});
                     return {
                         then: function (callback) {
                             
@@ -223,6 +256,29 @@
                     };
                 }
                 validateHighlight(onLoadMore);
+
+            });
+
+            it('should highlight repeater using the last search text when load more does not return a promise', function () {
+                function onLoadMore() {
+                    $scope.listCtrl.items.push({ title: 'Second', content: 'Content'});
+                }
+                validateHighlight(onLoadMore, 'repeater');
+
+            });
+
+            it('should highlight repeater using the last search text when load more returns a promise', function () {
+                function onLoadMore() {
+                    $scope.listCtrl.items.push({ title: 'Second', content: 'Content'});
+                    return {
+                        then: function (callback) {
+                            
+                            callback();
+                        }
+                        
+                    };
+                }
+                validateHighlight(onLoadMore, 'repeater');
 
             });
         });

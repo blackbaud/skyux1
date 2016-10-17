@@ -48,9 +48,7 @@
             }
         }
 
-        function highlightLastSearchText() {
-            highlightSearchContent(lastSearchText);
-        }
+        
 
         function getCurrentView() {
             return ctrl.listbuilderCtrl.currentView;
@@ -94,9 +92,8 @@
 
         function onInit() {
             ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
-            ctrl.listbuilderCtrl.highlightLastSearchText = highlightLastSearchText;
             ctrl.listbuilderCtrl.setCurrentView = setCurrentView;
-            ctrl.highlightLastSearchText = highlightLastSearchText;
+            ctrl.highlightLastSearchText = ctrl.listbuilderCtrl.highlightLastSearchText;
             if (ctrl.bbListbuilderContentActiveView) {
                 setActiveView(ctrl.bbListbuilderContentActiveView);
             }

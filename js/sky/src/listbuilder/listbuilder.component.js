@@ -3,10 +3,20 @@
     'use strict';
 
     function Controller($element) {
-        var ctrl = this;
+        var ctrl = this,
+            lastSearchText;
+
+        function highlightLastSearchText() {
+            if (angular.isFunction(ctrl.highlightSearchContent)) {
+                ctrl.highlightSearchContent(lastSearchText);
+            }
+        }
 
         function highlightSearchText(searchText) {
-            ctrl.highlightSearchContent(searchText);
+            lastSearchText = searchText;
+            if (angular.isFunction(ctrl.highlightSearchContent)) {
+                ctrl.highlightSearchContent(searchText);
+            }
         }
 
         function getContentContainer() {
@@ -20,6 +30,7 @@
         ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.getContentContainer = getContentContainer;
+        ctrl.highlightLastSearchText = highlightLastSearchText;
     }
 
     Controller.$inject = ['$element'];
