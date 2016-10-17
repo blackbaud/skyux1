@@ -1,12 +1,8 @@
-
-
 .form-inline {
-  .form-group.bb-date-range-picker-form-group {
-    padding-right: $padding;
-    vertical-align: top;
-    margin-bottom: $margin-half;
-    label {
-      display: block;
+    .form-group.bb-date-range-picker-form-group {
+        vertical-align: top;
+        label {
+            display: block;
+        }
     }
-  }
 }
