@@ -44,8 +44,13 @@
             }
         }
 
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.bbListbuilderContentCustomViewName);
+        }
+
         ctrl.$postLink = initContent;
         ctrl.$onChanges = onChanges;
+        ctrl.$onDestroy = onDestroy;
         ctrl.viewIsActive = viewIsActive;
     }
 

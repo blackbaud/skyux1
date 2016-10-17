@@ -5,6 +5,9 @@
     function Controller(bbResources) {
         var ctrl = this;
 
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
 
         function initRepeater() {
             ctrl.viewName = 'repeater';
@@ -16,11 +19,12 @@
             });
         }
 
-        function viewIsActive() {
-            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
         }
 
         ctrl.$postLink = initRepeater;
+        ctrl.$onDestroy = onDestroy;
         ctrl.viewIsActive = viewIsActive;
 
     }

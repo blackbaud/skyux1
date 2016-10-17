@@ -7,7 +7,7 @@
         class="btn bb-btn-secondary" 
         type="button" 
         uib-dropdown-toggle
-        ng-attr-aria-label="{{$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherLabel}}">
+        ng-attr-title="{{$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherLabel}}">
         <i 
           class="fa fa-lg" 
           ng-class="$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherClass"
@@ -18,7 +18,7 @@
             <a 
                 href="javascript:void(0)" 
                 ng-click="$ctrl.switchView(view)"
-                ng-attr-aria-label="{{view.viewSwitcherLabel}}">
+                ng-attr-title="{{view.viewSwitcherLabel}}">
                 <i 
                     class="fa fa-lg" 
                     ng-class="view.viewSwitcherClass"

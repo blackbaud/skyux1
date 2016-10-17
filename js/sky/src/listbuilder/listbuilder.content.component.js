@@ -16,6 +16,25 @@
             } 
         }
 
+        function removeListbuilderView(viewName) {
+            var i;
+
+            for (i = 0; i < ctrl.listbuilderCtrl.contentViews.length; i++) {
+                if (ctrl.listbuilderCtrl.contentViews[i].viewName === viewName) {
+                    ctrl.listbuilderCtrl.contentViews.splice(i, 1);
+                    if (ctrl.listbuilderCtrl.currentView.viewName === viewName) {
+                        if (ctrl.listbuilderCtrl.contentViews.length > 0) {
+                            ctrl.listbuilderCtrl.currentView = ctrl.listbuilderCtrl.contentViews[0];
+                        } else {
+                            ctrl.listbuilderCtrl.currentView = null;
+                        }   
+                        
+                    }
+                    return;
+                }
+            }
+        }
+
         function highlightSearchContent(searchText) {
             var contentEl = $element.find('.' + ctrl.listbuilderCtrl.currentView.highlightClass);
             lastSearchText = searchText;
@@ -99,6 +118,7 @@
         ctrl.$onChanges = onChanges;
         
         ctrl.addListbuilderView = addListbuilderView;
+        ctrl.removeListbuilderView = removeListbuilderView;
         ctrl.updateListbuilderView = updateListbuilderView;
         ctrl.getCurrentView = getCurrentView;
 

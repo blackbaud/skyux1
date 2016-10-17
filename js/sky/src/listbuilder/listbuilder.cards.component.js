@@ -11,6 +11,10 @@
             });
         }
 
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
         function initCards() {
             ctrl.viewName = 'card';
             ctrl.listbuilderContentCtrl.addListbuilderView({ 
@@ -21,11 +25,12 @@
             });
         }
 
-        function viewIsActive() {
-            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
         }
 
         ctrl.$postLink = initCards;
+        ctrl.$onDestroy = onDestroy;
         ctrl.addCard = addCard;
         ctrl.viewIsActive = viewIsActive;
     }
