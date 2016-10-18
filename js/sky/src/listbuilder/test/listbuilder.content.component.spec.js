@@ -533,6 +533,8 @@
                 switcherEl = getSwitcher(el);
                 expect(switcherEl.length).toBe(1);
 
+                el.remove();
+
             });
         });
     });
