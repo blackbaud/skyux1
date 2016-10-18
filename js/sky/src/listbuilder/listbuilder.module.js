@@ -10,6 +10,7 @@
             'sky.listbuilder.footer.component',
             'sky.listbuilder.content.component',
             'sky.listbuilder.content.custom.component',
+            'sky.listbuilder.content.custom.item.component',
             'sky.listbuilder.card.component',
             'sky.listbuilder.cards.component',
             'sky.listbuilder.switcher.component',

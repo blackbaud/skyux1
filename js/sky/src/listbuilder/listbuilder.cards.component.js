@@ -12,7 +12,7 @@
         }
 
         function viewIsActive() {
-            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
         }
 
         function initCards() {

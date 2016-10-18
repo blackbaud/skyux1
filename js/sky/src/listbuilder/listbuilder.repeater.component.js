@@ -6,7 +6,7 @@
         var ctrl = this;
 
         function viewIsActive() {
-            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
         }
 
         function addRepeaterItem() {
@@ -22,9 +22,6 @@
                 viewSwitcherClass: 'fa-list',
                 highlightClass: 'bb-repeater-item',
                 viewSwitcherLabel: bbResources.listbuilder_repeater_switcher
-            });
-            $timeout(function () {
-                ctrl.listbuilderContentCtrl.highlightLastSearchText();
             });
         }
 

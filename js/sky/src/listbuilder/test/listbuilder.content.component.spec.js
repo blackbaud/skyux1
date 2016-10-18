@@ -9,7 +9,7 @@
         $compile,
         $document,
         simpleCardContentHtml = 
-                    '<bb-listbuilder-cards>' +
+                    '<bb-listbuilder-cards ng-if="!listCtrl.cardIsDestroyed">' +
                     '<bb-listbuilder-card>' +
                     '<bb-card>' +
                     '<bb-card-title>' +
@@ -21,7 +21,7 @@
                     '</bb-card>' +
                     '</bb-listbuilder-card>' +
                     '</bb-listbuilder-cards>',
-        simpleRepeaterContentHtml = '<bb-listbuilder-repeater>' +
+        simpleRepeaterContentHtml = '<bb-listbuilder-repeater ng-if="!listCtrl.repeaterIsDestroyed">' +
                     '<bb-repeater>' +
                     '<bb-listbuilder-repeater-item>' +
                     '<bb-repeater-item>' +
@@ -33,15 +33,22 @@
                     '</bb-repeater-item-content>' +
                     '</bb-repeater-item>' +
                     '</bb-listbuilder-repeater-item>' +
-                    '</bb-repeater>',
-        simpleCustomContentHtml = '<bb-listbuilder-content-custom>' + 
+                    '</bb-repeater>' +
+                    '</bb-listbuilder-repeater>',
+        simpleCustomContentHtml = '<bb-listbuilder-content-custom ng-if="!listCtrl.customIsDestroyed" ' +  
+                    'bb-listbuilder-content-custom-view-name="custom-1" ' +
+                    'bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper" ' +
+                    'bb-listbuilder-content-custom-highlight-class="bb-test-custom" ' +
+                    'bb-listbuilder-content-custom-view-switcher-label="Switch to custom"> ' + 
                     '<div class="bb-test-custom">' +
+                    '<bb-listbuilder-content-custom-item>' +
                     '<div class="bb-test-custom-title">' + 
                     'First' +
                     '</div>' +
                     '<div class="bb-test-custom-content">' +
                     'First Content' +
                     '</div>' +
+                    '</bb-listbuilder-content-custom-item>' +
                     '</div>' +
                     '</bb-listbuilder-content-custom>',
         listbuilderToolBarHtml =  
@@ -75,6 +82,7 @@
             el = $compile(listbuilderHtml)($scope);
             $document.find('body').append(el);
             $scope.$digest();
+            $timeout.flush();
             return el;
         }
 
@@ -98,6 +106,10 @@
             return el.find('.bb-repeater-item');
         }
 
+        function getCustomItems(el) {
+            return el.find('.bb-listbuilder-content-custom-item');
+        }
+
         it('does not show the view switcher if only one view exists', function () {
             var cardListEl,
                 switcherEl,
@@ -115,12 +127,63 @@
 
         });
 
-        function verifyRepeaterActive(el) {
+        function verifySwitcherButton(el, type) {
+            var switcherButtonEl = getSwitcherButton(el),
+                className,
+                title;
+            switch (type) {
+                case 'card':
+                    className = 'fa-th-large';
+                    title = 'Switch to card view';
+                    break;
+                case 'repeater':
+                    className = 'fa-list';
+                    title = 'Switch to repeater view';
+                    break;
+                case 'custom':
+                    className = 'fa-pied-piper';
+                    title = 'Switch to custom';
+                    break;
+            }
+            expect(switcherButtonEl.find('i')).toHaveClass(className);
+            expect(switcherButtonEl).toHaveAttr('title', title);
+        }
+
+        function verifySwitcherItems(el, types) {
+            var switcherMenuItemsEl = getSwitcherItems(el),
+                className,
+                title,
+                i;
+
+            expect(switcherMenuItemsEl.length).toBe(types.length);
+            
+            for (i = 0; i < types.length; i++) {
+                switch (types[i]) {
+                    case 'card':
+                        className = 'fa-th-large';
+                        title = 'Switch to card view';
+                        break;
+                    case 'repeater':
+                        className = 'fa-list';
+                        title = 'Switch to repeater view';
+                        break;
+                    case 'custom':
+                        className = 'fa-pied-piper';
+                        title = 'Switch to custom';
+                        break;
+                }
+                expect(switcherMenuItemsEl.find('a').eq(i)).toHaveAttr('title', title);
+                expect(switcherMenuItemsEl.find('i').eq(i)).toHaveClass(className);
+            }
+
+        }
+
+        function verifyRepeaterActive(el, hasCustomEntry) {
             var cardEl,
-            switcherEl,
-            switcherButtonEl,
-            switcherMenuItemsEl,
-            repeaterItemEl;
+                switcherEl,
+                customEl,
+                types,
+                repeaterItemEl;
 
             cardEl = getCards(el);
             expect(cardEl.length).toBe(0);
@@ -128,43 +191,68 @@
             switcherEl = getSwitcher(el);
             expect(switcherEl.length).toBe(1);
 
-            switcherButtonEl = getSwitcherButton(el);
-            expect(switcherButtonEl.find('i')).toHaveClass('fa-list');
-            expect(switcherButtonEl).toHaveAttr('title', 'Switch to repeater view');
-
-            switcherMenuItemsEl = getSwitcherItems();
-            expect(switcherMenuItemsEl.length).toBe(1);
-            expect(switcherMenuItemsEl.find('a')).toHaveAttr('title', 'Switch to card view');
-            expect(switcherMenuItemsEl.find('i')).toHaveClass('fa-th-large');
+            verifySwitcherButton(el, 'repeater');
+            if (hasCustomEntry) {
+                types = ['card', 'custom'];
+            } else {
+                types = ['card'];
+            }
+            verifySwitcherItems(el, types);
 
             repeaterItemEl = getRepeaterItems(el);
             expect(repeaterItemEl.length).toBe(1);
+
+            if (hasCustomEntry) {
+                customEl = getCustomItems(el);
+                expect(customEl.length).toBe(0);
+            }
         }
 
-        function verifyCardActive(el) {
+        function verifyCardActive(el, hasCustomEntry) {
             var cardEl,
-            switcherEl,
-            switcherButtonEl,
-            switcherMenuItemsEl,
-            repeaterItemEl;
+                switcherEl,
+                types,
+                customEl,
+                repeaterItemEl;
+
             cardEl = getCards(el);
             expect(cardEl.length).toBe(1);
 
             switcherEl = getSwitcher(el);
             expect(switcherEl.length).toBe(1);
 
-            switcherButtonEl = getSwitcherButton(el);
-            expect(switcherButtonEl.find('i')).toHaveClass('fa-th-large');
-            expect(switcherButtonEl).toHaveAttr('title', 'Switch to card view');
-
-            switcherMenuItemsEl = getSwitcherItems();
-            expect(switcherMenuItemsEl.length).toBe(1);
-
-            expect(switcherMenuItemsEl.find('a')).toHaveAttr('title', 'Switch to repeater view');
-            expect(switcherMenuItemsEl.find('i')).toHaveClass('fa-list');
+            verifySwitcherButton(el, 'card');
+            if (hasCustomEntry) {
+                types = ['repeater', 'custom'];
+            } else {
+                types = ['repeater'];
+            }
+            verifySwitcherItems(el, types);
 
             repeaterItemEl = getRepeaterItems(el);
             expect(repeaterItemEl.length).toBe(0);
+
+            if (hasCustomEntry) {
+                customEl = getCustomItems(el);
+                expect(customEl.length).toBe(0);
+            }
+        }
+
+        function verifyCustomActive(el) {
+            var cardEl,
+                customEl,
+                repeaterItemEl;
+            cardEl = getCards(el);
+            expect(cardEl.length).toBe(0);
+            repeaterItemEl = getRepeaterItems(el);
+            expect(repeaterItemEl.length).toBe(0);
+            customEl = getCustomItems(el);
+            expect(customEl.length).toBe(1);
+
+            verifySwitcherButton(el, 'custom');
+
+            verifySwitcherItems(el, ['card', 'repeater']);
+
         }
 
         function clickSwitcherItem(index) {
@@ -236,9 +324,9 @@
             return el.find('.bb-search-btn-apply');
         }
 
-        function verifyRepeaterTitleHighlight(el, hasHighlight) {
+        function verifyRepeaterTitleHighlight(el, className, hasHighlight) {
 
-            var repeaterTitleSpan = el.find('bb-repeater-item-title span');
+            var repeaterTitleSpan = el.find('.' + className + ' span');
 
             if (hasHighlight) {
                 expect(repeaterTitleSpan).toHaveClass('highlight');
@@ -248,11 +336,20 @@
             
         }
 
-        function verifySearchResults(el) {
-
-            $timeout.flush();
-            verifyRepeaterTitleHighlight(el, true);
+        function timeoutFlushIfAvailable() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
         }
+
+        function verifySearchResults(el, className) {
+
+            timeoutFlushIfAvailable();
+            verifyRepeaterTitleHighlight(el, className, true);
+        }
+        
 
         it('highlights search text properly in repeater view', function () {
             var el,
@@ -264,11 +361,11 @@
             searchButtonEl = findSearchButton(el);
             searchButtonEl.click();
             $scope.$digest();
-            verifySearchResults(el);
+            verifySearchResults(el, 'bb-repeater-item');
             el.remove();
         });
 
-        it('highlights search text properly on initializationin repeater view', function () {
+        it('highlights search text properly on initialization in repeater view', function () {
             var el;
 
             $scope.listCtrl = {
@@ -276,32 +373,165 @@
             };
 
             el = initListbuilder(simpleRepeaterContentHtml);
-            verifySearchResults(el);
+            verifySearchResults(el, 'bb-repeater-item');
             el.remove();
         });
 
         it('removes entries from the view switcher on destroy', function () {
+            var el,
+                cardEl,
+                switcherEl,
+                repeaterEl;
+
+            el = initListbuilder(simpleCardContentHtml + simpleRepeaterContentHtml);
+            $scope.listCtrl = {
+                cardIsDestroyed: true
+            };
+            $scope.$digest();
+
+            repeaterEl = getRepeaterItems(el);
+            expect(repeaterEl.length).toBe(1);
+
+            switcherEl = getSwitcher(el);
+            expect(switcherEl.length).toBe(0);
+
+            $scope.listCtrl = {
+                cardIsDestroyed: false
+            };
+            $scope.$digest();
+
+            verifyRepeaterActive(el);
+
+            $scope.listCtrl = {
+                repeaterIsDestroyed: true
+            };
+            $scope.$digest();
+
+            cardEl = getCards(el);
+            expect(cardEl.length).toBe(1);
+            switcherEl = getSwitcher(el);
+            expect(switcherEl.length).toBe(0);
+
+            el.remove();
 
         });
 
         describe('custom views', function () {
             it('creates a custom item in the view switcher', function () {
-
+                var el;
+                $scope.listCtrl = {
+                    activeView: 'card'
+                };
+                el = initListbuilder(simpleCardContentHtml + simpleRepeaterContentHtml + simpleCustomContentHtml);
+                verifyCardActive(el, true);
+                el.remove();
             });
 
             it('shows the custom view when selected', function () {
+                var el;
+                $scope.listCtrl = {
+                    activeView: 'card'
+                };
 
+                el = initListbuilder(simpleCardContentHtml + simpleRepeaterContentHtml + simpleCustomContentHtml);
+
+                verifyCardActive(el, true);
+
+                clickSwitcherItem(1);
+
+                verifyCustomActive(el);
+                el.remove();
             });
 
             it('can update the view information', function () {
+                var el,
+                    advancedCustomContentHtml,
+                    switcherItemsEl,
+                    switcherButtonEl;
+                
+                $scope.listCtrl = {
+                    activeView: 'custom-1',
+                    className: 'fa-wut'
+                };
+                
+                advancedCustomContentHtml = '<bb-listbuilder-content-custom ' +  
+                    'bb-listbuilder-content-custom-view-name="{{listCtrl.viewName}}" ' +
+                    'bb-listbuilder-content-custom-view-switcher-class="{{listCtrl.className}}" ' +
+                    'bb-listbuilder-content-custom-highlight-class="bb-test-custom" ' +
+                    'bb-listbuilder-content-custom-view-switcher-label="Switch to custom"> ' + 
+                    '<div class="bb-test-custom">' +
+                    '<bb-listbuilder-content-custom-item>' +
+                    '<div class="bb-test-custom-title">' + 
+                    'First' +
+                    '</div>' +
+                    '<div class="bb-test-custom-content">' +
+                    'First Content' +
+                    '</div>' +
+                    '</bb-listbuilder-content-custom-item>' +
+                    '</div>' +
+                    '</bb-listbuilder-content-custom>';
 
+                el = initListbuilder(simpleCardContentHtml + simpleRepeaterContentHtml + advancedCustomContentHtml);
+                
+                $scope.listCtrl.viewName = 'custom-1';
+                $scope.$digest();
+
+                switcherButtonEl = getSwitcherButton(el);
+                expect(switcherButtonEl.find('i')).toHaveClass('fa-wut');
+
+                $scope.listCtrl.className = 'fa-yuy';
+                $scope.$digest();
+
+                switcherButtonEl = getSwitcherButton(el);
+                expect(switcherButtonEl.find('i')).toHaveClass('fa-yuy');
+
+                $scope.listCtrl.viewName = 'custom-2';
+                $scope.listCtrl.className = 'fa-change';
+                $scope.$digest();
+                switcherButtonEl = getSwitcherButton(el);
+                expect(switcherButtonEl.find('i')).toHaveClass('fa-change');
+
+                clickSwitcherItem(0);
+
+                $scope.listCtrl.className = 'fa-huh';
+                $scope.$digest();
+                switcherItemsEl = getSwitcherItems();
+                expect(switcherItemsEl.find('i').eq(1)).toHaveClass('fa-huh');
+
+                el.remove();
             });
 
             it('highlights custom view information properly', function () {
+                var el,
+                    searchButtonEl;
 
+                el = initListbuilder(simpleCustomContentHtml);
+
+                changeInput(el, 'First');
+
+                searchButtonEl = findSearchButton(el);
+                searchButtonEl.click();
+                $scope.$digest();
+                verifySearchResults(el, 'bb-test-custom-title');
+
+                el.remove();
             });
 
             it('removes entries from the view switcher on destroy', function () {
+                var el,
+                    cardEl,
+                    switcherEl;
+                el = initListbuilder(simpleCardContentHtml + simpleRepeaterContentHtml + simpleCustomContentHtml);
+                $scope.listCtrl = {
+                    customIsDestroyed: true
+                };
+                $scope.$digest();
+
+                cardEl = getCards(el);
+                expect(cardEl.length).toBe(1);
+
+                switcherEl = getSwitcher(el);
+                expect(switcherEl.length).toBe(1);
 
             });
         });

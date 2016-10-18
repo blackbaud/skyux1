@@ -2,8 +2,14 @@
 (function () {
     'use strict';
 
-    function Controller() {
+    function Controller($timeout) {
         var ctrl = this;
+
+        function addItem() {
+            $timeout(function () {
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
+            });
+        }
 
         function getViewObject() {
             return { 
@@ -23,10 +29,12 @@
         }
 
         function viewIsActive() {
-            return ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.bbListbuilderContentCustomViewName;
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.bbListbuilderContentCustomViewName;
         }
 
         function onChanges(changesObj) {
+            /* istanbul ignore else */
+            /* sanity check */
             if (ctrl.bbListbuilderContentCustomViewName) {
                 if (changesObj.bbListbuilderContentCustomViewName) {
                     if (!changesObj.bbListbuilderContentCustomViewName.previousValue) {
@@ -52,7 +60,10 @@
         ctrl.$onChanges = onChanges;
         ctrl.$onDestroy = onDestroy;
         ctrl.viewIsActive = viewIsActive;
+        ctrl.addItem = addItem;
     }
+
+    Controller.$inject = ['$timeout'];
 
     angular.module('sky.listbuilder.content.custom.component', [])
         .component('bbListbuilderContentCustom', {

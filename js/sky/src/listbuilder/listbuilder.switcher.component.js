@@ -7,6 +7,8 @@
 
          function switchView(newView) {
              ctrl.bbListbuilderSwitcherCurrentView = newView;
+             /* istanbul ignore else */
+             /* sanity check */
              if (angular.isFunction(ctrl.bbListbuilderSwitcherViewChange)) {
                  ctrl.bbListbuilderSwitcherViewChange({newView: newView});
              }

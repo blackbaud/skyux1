@@ -42,6 +42,8 @@
         }
 
         function viewChanged(newView) {
+            /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(ctrl.listbuilderCtrl.setCurrentView)) {
                 ctrl.listbuilderCtrl.setCurrentView(newView);
             }

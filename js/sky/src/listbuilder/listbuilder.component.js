@@ -7,6 +7,8 @@
             lastSearchText;
 
         function highlightLastSearchText() {
+            /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(ctrl.highlightSearchContent)) {
                 ctrl.highlightSearchContent(lastSearchText);
             }

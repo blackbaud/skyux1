@@ -56,6 +56,8 @@
 
         function setCurrentView(newView) {
             ctrl.listbuilderCtrl.currentView = newView;
+            /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(ctrl.bbListbuilderContentViewChanged)) {
                 ctrl.bbListbuilderContentViewChanged({ newView: newView.viewName });
             }
@@ -101,6 +103,8 @@
 
         function onChanges(changesObj) {
             var activeView;
+            /* istanbul ignore else */
+            /* sanity check */
             if (changesObj.bbListbuilderContentActiveView) {
                 activeView = changesObj.bbListbuilderContentActiveView;
                 /* istanbul ignore else */
