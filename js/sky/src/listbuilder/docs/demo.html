@@ -1,6 +1,6 @@
 
 <style>
-    .bb-custom-content {
+    .bb-custom-content-item {
         border-bottom: 1px solid green;
         padding: 20px;
     }
@@ -111,32 +111,37 @@
       <bb-listbuilder-content-custom 
         bb-listbuilder-content-custom-view-name="custom-1" 
         bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
-        bb-listbuilder-content-custom-highlight-class="bb-custom-content"
+        bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
         bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
+
         <div class="bb-custom-content" ng-repeat="item in listCtrl.data">
-            <div>
-              {{item.name}}
-            </div>
-            <div>
-              <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                <span class="label label-success">Membership dues paid</span>
-              </div>
-              <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                <span class="label label-danger">Membership dues not paid</span>
-              </div>
-              <div style="margin-bottom: 10px">
-                Occupation: {{item.occupation}}
-              </div>
-              <div>
-                Joined on: {{item.joinDate | date}}
-              </div>
-            </div>
-            <div>
-                <bb-context-menu>
-                    <bb-context-menu-item>Action 1</bb-context-menu-item>
-                    <bb-context-menu-item>Action 2</bb-context-menu-item>
-                </bb-context-menu>
-          </div>
+            <bb-listbuilder-content-custom-item>
+                <div class="bb-custom-content-item">
+                    <div>
+                    {{item.name}}
+                    </div>
+                    <div>
+                    <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-success">Membership dues paid</span>
+                    </div>
+                    <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-danger">Membership dues not paid</span>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        Occupation: {{item.occupation}}
+                    </div>
+                    <div>
+                        Joined on: {{item.joinDate | date}}
+                    </div>
+                    </div>
+                    <div>
+                        <bb-context-menu>
+                            <bb-context-menu-item>Action 1</bb-context-menu-item>
+                            <bb-context-menu-item>Action 2</bb-context-menu-item>
+                        </bb-context-menu>
+                    </div>
+                </div>
+            </bb-listbuilder-content-custom-item>
         </div> 
       </bb-listbuilder-content-custom>
     </bb-listbuilder-content>
