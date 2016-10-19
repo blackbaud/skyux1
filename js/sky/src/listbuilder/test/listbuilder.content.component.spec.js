@@ -23,8 +23,7 @@
                     '</bb-listbuilder-cards>',
         simpleRepeaterContentHtml = '<bb-listbuilder-repeater ng-if="!listCtrl.repeaterIsDestroyed">' +
                     '<bb-repeater>' +
-                    '<bb-listbuilder-repeater-item>' +
-                    '<bb-repeater-item>' +
+                    '<bb-repeater-item bb-listbuilder-repeater-item>' +
                     '<bb-repeater-item-title>' +
                     'First' +
                     '</bb-repeater-item-title>' +
@@ -32,7 +31,6 @@
                     'First Content' +
                     '</bb-repeater-item-content>' +
                     '</bb-repeater-item>' +
-                    '</bb-listbuilder-repeater-item>' +
                     '</bb-repeater>' +
                     '</bb-listbuilder-repeater>',
         simpleCustomContentHtml = '<bb-listbuilder-content-custom ng-if="!listCtrl.customIsDestroyed" ' +  
@@ -40,15 +38,13 @@
                     'bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper" ' +
                     'bb-listbuilder-content-custom-highlight-class="bb-test-custom" ' +
                     'bb-listbuilder-content-custom-view-switcher-label="Switch to custom"> ' + 
-                    '<div class="bb-test-custom">' +
-                    '<bb-listbuilder-content-custom-item>' +
+                    '<div class="bb-test-custom" bb-listbuilder-content-custom-item>' +
                     '<div class="bb-test-custom-title">' + 
                     'First' +
                     '</div>' +
                     '<div class="bb-test-custom-content">' +
                     'First Content' +
                     '</div>' +
-                    '</bb-listbuilder-content-custom-item>' +
                     '</div>' +
                     '</bb-listbuilder-content-custom>',
         listbuilderToolBarHtml =  
@@ -56,7 +52,6 @@
                     'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
                     'bb-listbuilder-search-text="listCtrl.searchText">' +
                     '</bb-listbuilder-toolbar>';
-
         beforeEach(module(
             'sky.listbuilder',
             'sky.templates'
@@ -107,7 +102,7 @@
         }
 
         function getCustomItems(el) {
-            return el.find('.bb-listbuilder-content-custom-item');
+            return el.find('.bb-test-custom');
         }
 
         it('does not show the view switcher if only one view exists', function () {

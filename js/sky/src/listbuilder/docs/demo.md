@@ -28,13 +28,13 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-cards` &mdash; Component that contains a card view for the listbuilder.
     - `bb-listbuilder-card` &mdash; Component that contains an individual card in the listbuilder.
   - `bb-listbuilder-repeater` &mdash; Component that contains a repeater view for the listbuilder.
-    - `bb-listbuilder-repeater-item` &mdash; Component that contains an individual repeater item in the listbuilder.
+    - `bb-listbuilder-repeater-item` &mdash; Attribute that can be placed on an individual repeater item in the listbuilder to highlight last search text on load.
   - `bb-listbuilder-content-custom` &mdash; Component that contains a custom view in the listbuilder.
     - `bb-listbuilder-content-custom-view-name` &mdash; Specifies a unique name for the custom view.
     - `bb-listbuilder-content-custom-view-switcher-class` &mdash; Specifies a css class for the icon for this custom view to be used in the view switcher.
     - `bb-listbuilder-content-custom-view-switcher-label` &mdash; Specifies text for the title attribute for this custom view to be used in the view switcher.
     - `bb-listbuilder-content-custom-highlight-class` &mdash; Specifies a css class where search text will be highlighted in the custom view.
-    - `bb-listbuilder-content-custom-item` &mdash; Component that contains an individual custom item in the listbuilder.
+    - `bb-listbuilder-content-custom-item` &mdash; Attribute that can be placed on an individual custom item in the listbuilder to highlight last search text on load.
 
 `bb-listbuilder-footer` &mdash; Component for the listbuilder footer, which contains the ability to load data using infinite scroll.
     - `bb-listbuilder-show-load-more` &mdash; When true, indicates that there is more data ready to be loaded by the listbuilder.

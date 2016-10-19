@@ -164,8 +164,7 @@
                 if (type === 'repeater') {
                     contentHtml = '<bb-listbuilder-repeater>' +
                         '<bb-repeater>' +
-                        '<bb-listbuilder-repeater-item ng-repeat="item in listCtrl.items">' +
-                        '<bb-repeater-item>' +
+                        '<bb-repeater-item bb-listbuilder-repeater-item ng-repeat="item in listCtrl.items">' +
                         '<bb-repeater-item-title>' +
                         '{{item.title}}' +
                         '</bb-repeater-item-title>' +
@@ -173,7 +172,6 @@
                         '{{item.content}}' +
                         '</bb-repeater-item-content>' +
                         '</bb-repeater-item>' +
-                        '</bb-listbuilder-repeater-item>' +
                         '</bb-repeater>' +
                         '</bb-listbuilder-repeater>';
 

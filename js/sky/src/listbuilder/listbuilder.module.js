@@ -10,12 +10,12 @@
             'sky.listbuilder.footer.component',
             'sky.listbuilder.content.component',
             'sky.listbuilder.content.custom.component',
-            'sky.listbuilder.content.custom.item.component',
+            'sky.listbuilder.content.custom.item.directive',
             'sky.listbuilder.card.component',
             'sky.listbuilder.cards.component',
             'sky.listbuilder.switcher.component',
             'sky.listbuilder.repeater.component',
-            'sky.listbuilder.repeater.item.component'
+            'sky.listbuilder.repeater.item.directive'
             
         ]);
 }());
