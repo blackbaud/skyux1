@@ -80,7 +80,7 @@
             $timeout.flush();
             return el;
         }
-
+        
         function getCards(el) {
             return el.find('.bb-card');
         }

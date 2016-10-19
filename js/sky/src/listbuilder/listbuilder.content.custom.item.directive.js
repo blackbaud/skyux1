@@ -10,7 +10,7 @@
         .directive('bbListbuilderContentCustomItem', function () {
             return {
                 restrict: 'A',
-                linkFn: linkFn,
+                link: linkFn,
                 require: '^^bbListbuilderContentCustom'
             };
         });
