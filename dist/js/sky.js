@@ -143,8 +143,15 @@
             'sky.listbuilder.component', 
             'sky.listbuilder.toolbar.component', 
             'sky.listbuilder.footer.component',
+            'sky.listbuilder.content.component',
+            'sky.listbuilder.content.custom.component',
+            'sky.listbuilder.content.custom.item.directive',
             'sky.listbuilder.card.component',
-            'sky.listbuilder.cards.component'
+            'sky.listbuilder.cards.component',
+            'sky.listbuilder.switcher.component',
+            'sky.listbuilder.repeater.component',
+            'sky.listbuilder.repeater.item.directive'
+            
         ]);
 }());
 /*jshint browser: true */
@@ -7284,49 +7291,54 @@
             }
 
         });
-}());
+})();
 /* global angular */
 (function () {
     'use strict';
 
-    function Controller($element, bbHighlight, $timeout) {
+    function Controller($timeout, bbResources) {
         var ctrl = this;
-
-        function highlightCards(searchText) {
-            var cardEl = $element.find('.bb-card');
-            /*istanbul ignore else */
-            /* sanity check */
-            if (cardEl.length > 0) {
-                bbHighlight.clear(cardEl);
-                if (searchText) {
-                    bbHighlight(cardEl.not('.bb-listbuilder-no-search'), searchText, 'highlight');
-                }
-            }
-        }
 
         function addCard() {
             $timeout(function () {
-                ctrl.listbuilderCtrl.highlightLastSearchText();
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
             });
         }
 
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
         function initCards() {
-            ctrl.listbuilderCtrl.highlightCards = highlightCards;
+            ctrl.viewName = 'card';
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-th-large', 
+                highlightClass: 'bb-card',
+                viewSwitcherLabel: bbResources.listbuilder_card_switcher
+            });
+
+        }
+
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
         }
 
         ctrl.$postLink = initCards;
+        ctrl.$onDestroy = onDestroy;
         ctrl.addCard = addCard;
+        ctrl.viewIsActive = viewIsActive;
     }
 
-    Controller.$inject = ['$element', 'bbHighlight', '$timeout'];
+    Controller.$inject = ['$timeout', 'bbResources'];
 
-    angular.module('sky.listbuilder.cards.component', ['sky.highlight', 'sky.card'])
+    angular.module('sky.listbuilder.cards.component', ['sky.card', 'sky.resources'])
         .component('bbListbuilderCards', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.cards.component.html',
             transclude: true,
             controller: Controller,
             require: {
-                listbuilderCtrl: '^bbListbuilder'
+                listbuilderContentCtrl: '^bbListbuilderContent'
             }
 
         });
@@ -7339,28 +7351,33 @@
         var ctrl = this,
             lastSearchText;
 
-        function highlightSearchText(searchText) {
-            lastSearchText = searchText;
-            /*  This is set by bbListbuilderCards. When we have multiple listbuilder views,
-                the highlight function will be chosen dynamically
-            */
-            if (angular.isFunction(ctrl.highlightCards)) {
-                ctrl.highlightCards(searchText);
+        function highlightLastSearchText() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.highlightSearchContent)) {
+                ctrl.highlightSearchContent(lastSearchText);
             }
-            
         }
 
-        function highlightLastSearchText() {
-            highlightSearchText(lastSearchText);
+        function highlightSearchText(searchText) {
+            lastSearchText = searchText;
+            if (angular.isFunction(ctrl.highlightSearchContent)) {
+                ctrl.highlightSearchContent(searchText);
+            }
         }
 
         function getContentContainer() {
             return $element.find('.bb-listbuilder-content');
         }
 
+        function onInit() {
+            ctrl.contentViews = [];
+        }
+
+        ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
-        ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.getContentContainer = getContentContainer;
+        ctrl.highlightLastSearchText = highlightLastSearchText;
     }
 
     Controller.$inject = ['$element'];
@@ -7375,7 +7392,252 @@
             },
             controller: Controller
         });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller($element, bbHighlight) {
+
+        var ctrl = this,
+            lastSearchText;
+
+        function addListbuilderView(newView) {
+            ctrl.listbuilderCtrl.contentViews.push(newView);
+
+            if ((ctrl.bbListbuilderContentActiveView && newView.viewName === ctrl.bbListbuilderContentActiveView) || 
+                !ctrl.listbuilderCtrl.currentView) {
+                ctrl.listbuilderCtrl.currentView = newView;
+            } 
+        }
+
+        function removeListbuilderView(viewName) {
+            var i;
+
+            for (i = 0; i < ctrl.listbuilderCtrl.contentViews.length; i++) {
+                if (ctrl.listbuilderCtrl.contentViews[i].viewName === viewName) {
+                    ctrl.listbuilderCtrl.contentViews.splice(i, 1);
+                    if (ctrl.listbuilderCtrl.currentView.viewName === viewName) {
+                        if (ctrl.listbuilderCtrl.contentViews.length > 0) {
+                            ctrl.listbuilderCtrl.currentView = ctrl.listbuilderCtrl.contentViews[0];
+                        } else {
+                            ctrl.listbuilderCtrl.currentView = null;
+                        }   
+                        
+                    }
+                    return;
+                }
+            }
+        }
+
+        function highlightSearchContent(searchText) {
+            var contentEl = $element.find('.' + ctrl.listbuilderCtrl.currentView.highlightClass);
+            lastSearchText = searchText;
+            /*istanbul ignore else */
+            /* sanity check */
+            if (contentEl.length > 0) {
+                bbHighlight.clear(contentEl);
+                if (searchText) {
+                    bbHighlight(contentEl.not('.bb-listbuilder-no-search'), searchText, 'highlight');
+                }
+            }
+        }
+
+        
+
+        function getCurrentView() {
+            return ctrl.listbuilderCtrl.currentView;
+        }
+
+        function setCurrentView(newView) {
+            ctrl.listbuilderCtrl.currentView = newView;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.bbListbuilderContentViewChanged)) {
+                ctrl.bbListbuilderContentViewChanged({ newView: newView.viewName });
+            }
+        } 
+
+        function setActiveView(viewName) {
+            var i;
+
+            if (ctrl.listbuilderCtrl.currentView && ctrl.listbuilderCtrl.currentView.viewName === viewName) {
+                return;
+            }
+
+            for (i = 0; i < ctrl.listbuilderCtrl.contentViews.length; i++) {
+                if (ctrl.listbuilderCtrl.contentViews[i].viewName === viewName) {
+                    ctrl.listbuilderCtrl.currentView = ctrl.listbuilderCtrl.contentViews[i];
+                    return;
+                }
+            }
+        }
+
+        function updateListbuilderView(viewName, newView) {
+            var i;
+
+            for (i = 0; i < ctrl.listbuilderCtrl.contentViews.length; i++) {
+                if (ctrl.listbuilderCtrl.contentViews[i].viewName === viewName) {
+                    ctrl.listbuilderCtrl.contentViews[i] = newView;
+                    if (ctrl.listbuilderCtrl.currentView.viewName === viewName) {
+                        setCurrentView(newView);
+                    }
+                    return;
+                }
+            }
+        }
+
+        function onInit() {
+            ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
+            ctrl.listbuilderCtrl.setCurrentView = setCurrentView;
+            ctrl.highlightLastSearchText = ctrl.listbuilderCtrl.highlightLastSearchText;
+            if (ctrl.bbListbuilderContentActiveView) {
+                setActiveView(ctrl.bbListbuilderContentActiveView);
+            }
+        }
+
+        function onChanges(changesObj) {
+            var activeView;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbListbuilderContentActiveView) {
+                activeView = changesObj.bbListbuilderContentActiveView;
+                /* istanbul ignore else */
+                /* sanity check */
+                if (activeView.currentValue !== activeView.previousValue) {
+                    setActiveView(activeView.currentValue);
+                }
+            }
+        }
+
+        ctrl.$onInit = onInit;
+        ctrl.$onChanges = onChanges;
+        
+        ctrl.addListbuilderView = addListbuilderView;
+        ctrl.removeListbuilderView = removeListbuilderView;
+        ctrl.updateListbuilderView = updateListbuilderView;
+        ctrl.getCurrentView = getCurrentView;
+
+    }
+
+    Controller.$inject = ['$element', 'bbHighlight'];
+
+    angular.module('sky.listbuilder.content.component', ['sky.highlight'])
+        .component('bbListbuilderContent', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.content.component.html',
+            transclude: true,
+            controller: Controller,
+            require: {
+                listbuilderCtrl: '^bbListbuilder'
+            },
+            bindings: {
+                bbListbuilderContentActiveView: '@?',
+                bbListbuilderContentViewChanged: '&?'
+            }
+        });
+
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller($timeout) {
+        var ctrl = this;
+
+        function addItem() {
+            $timeout(function () {
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
+            });
+        }
+
+        function getViewObject() {
+            return { 
+                    viewName: ctrl.bbListbuilderContentCustomViewName, 
+                    viewSwitcherClass: ctrl.bbListbuilderContentCustomViewSwitcherClass, 
+                    highlightClass: ctrl.bbListbuilderContentCustomHighlightClass,
+                    viewSwitcherLabel: ctrl.bbListbuilderContentCustomViewSwitcherLabel
+                };
+        }
+
+        function initContent() {
+            ctrl.viewName = 'card';
+            if (ctrl.bbListbuilderContentCustomViewName) {
+                ctrl.listbuilderContentCtrl.addListbuilderView(getViewObject());
+            }
+            
+        }
+
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.bbListbuilderContentCustomViewName;
+        }
+
+        function onChanges(changesObj) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (ctrl.bbListbuilderContentCustomViewName) {
+                if (changesObj.bbListbuilderContentCustomViewName) {
+                    if (!changesObj.bbListbuilderContentCustomViewName.previousValue) {
+                        ctrl.listbuilderContentCtrl.addListbuilderView(getViewObject());
+                    } else {
+                        ctrl.listbuilderContentCtrl.updateListbuilderView(
+                            changesObj.bbListbuilderContentCustomViewName.previousValue,
+                            getViewObject());
+                    }
+                }
+                ctrl.listbuilderContentCtrl.updateListbuilderView(
+                            ctrl.bbListbuilderContentCustomViewName,
+                            getViewObject());
+                
+            }
+        }
+
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.bbListbuilderContentCustomViewName);
+        }
+
+        ctrl.$postLink = initContent;
+        ctrl.$onChanges = onChanges;
+        ctrl.$onDestroy = onDestroy;
+        ctrl.viewIsActive = viewIsActive;
+        ctrl.addItem = addItem;
+    }
+
+    Controller.$inject = ['$timeout'];
+
+    angular.module('sky.listbuilder.content.custom.component', [])
+        .component('bbListbuilderContentCustom', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.content.custom.component.html',
+            transclude: true,
+            controller: Controller,
+            require: {
+                listbuilderContentCtrl: '^bbListbuilderContent'
+            },
+            bindings: {
+                bbListbuilderContentCustomViewName: '@?',
+                bbListbuilderContentCustomViewSwitcherClass: '@?',
+                bbListbuilderContentCustomHighlightClass: '@?',
+                bbListbuilderContentCustomViewSwitcherLabel: '@?'
+            }
+
+        });
 }());
+/* global angular */
+(function () {
+    'use strict';
+
+    function linkFn(scope, el, attr, customCtrl) {
+        customCtrl.addItem();
+    }
+
+    angular.module('sky.listbuilder.content.custom.item.directive', [])
+        .directive('bbListbuilderContentCustomItem', function () {
+            return {
+                restrict: 'A',
+                link: linkFn,
+                require: '^^bbListbuilderContentCustom'
+            };
+        });
+})();
 /* global angular */
 (function () {
     'use strict';
@@ -7414,6 +7676,113 @@
             }
         });
 }());
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller(bbResources, $timeout) {
+        var ctrl = this;
+
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
+        function addRepeaterItem() {
+            $timeout(function () {
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
+            });
+        }
+
+        function initRepeater() {
+            ctrl.viewName = 'repeater';
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-list',
+                highlightClass: 'bb-repeater-item',
+                viewSwitcherLabel: bbResources.listbuilder_repeater_switcher
+            });
+        }
+
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
+        }
+
+        ctrl.$postLink = initRepeater;
+        ctrl.$onDestroy = onDestroy;
+        ctrl.viewIsActive = viewIsActive;
+        ctrl.addRepeaterItem = addRepeaterItem;
+
+    }
+
+    Controller.$inject = ['bbResources', '$timeout'];
+
+    angular.module('sky.listbuilder.repeater.component', ['sky.repeater', 'sky.resources'])
+        .component('bbListbuilderRepeater', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.repeater.component.html',
+            transclude: true,
+            controller: Controller,
+            require: {
+                listbuilderContentCtrl: '^bbListbuilderContent'
+            }
+
+        });
+}());
+/* global angular */
+(function () {
+    'use strict';
+
+    function linkFn(scope, el, attr, repeaterCtrl) {
+        repeaterCtrl.addRepeaterItem();
+    }
+
+    angular.module('sky.listbuilder.repeater.item.directive', [])
+        .directive('bbListbuilderRepeaterItem', function () {
+            return {
+                restrict: 'A',
+                link: linkFn,
+                require: '^^bbListbuilderRepeater'
+            }; 
+        });
+}());
+ /* global angular */
+ (function () {
+     'use strict';
+
+     function Controller($scope) {
+         var ctrl = this;
+
+         function switchView(newView) {
+             ctrl.bbListbuilderSwitcherCurrentView = newView;
+             /* istanbul ignore else */
+             /* sanity check */
+             if (angular.isFunction(ctrl.bbListbuilderSwitcherViewChange)) {
+                 ctrl.bbListbuilderSwitcherViewChange({newView: newView});
+             }
+         }
+
+         function onInit() {
+             ctrl.switcherId = 'listbuilder-switcher-' + $scope.$id;
+         }
+         ctrl.switchView = switchView;
+         ctrl.$onInit = onInit;
+     }
+
+     Controller.$inject = ['$scope']; 
+
+     angular.module('sky.listbuilder.switcher.component', [])
+        .component('bbListbuilderSwitcher', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.switcher.component.html',
+            transclude: true,
+            controller: Controller,
+            bindings: {
+                bbListbuilderSwitcherViews: '<?',
+                bbListbuilderSwitcherCurrentView: '<?',
+                bbListbuilderSwitcherViewChange: '&?'
+            }
+        });
+ })();
+ 
+ 
 /* global angular */
 (function () {
     'use strict';
@@ -7457,6 +7826,14 @@
             }
         }
 
+        function viewChanged(newView) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.listbuilderCtrl.setCurrentView)) {
+                ctrl.listbuilderCtrl.setCurrentView(newView);
+            }
+        }
+
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
         function bindingChanges(changesObj) {
             var searchText;
@@ -7491,6 +7868,8 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
+
+        ctrl.viewChanged = viewChanged;
 
     }
 
@@ -13343,7 +13722,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","listbuilder_footer_back_to_top":"Back to top","listbuilder_add_title":"Add","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","datepicker_open":"Open datepicker","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","pagination_previous":"Previous","pagination_next":"Next"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","listbuilder_footer_back_to_top":"Back to top","listbuilder_add_title":"Add","listbuilder_card_switcher":"Switch to card view","listbuilder_repeater_switcher":"Switch to repeater view","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","datepicker_open":"Open datepicker","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","pagination_previous":"Previous","pagination_next":"Next"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -14242,7 +14621,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.cards.component.html',
-        '<div class="row">\n' +
+        '<div class="row" ng-if="$ctrl.viewIsActive()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.component.html',
@@ -14256,18 +14635,66 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-listbuilder-footer-container" ng-transclude="bbListbuilderFooter">\n' +
         '    </div>\n' +
         '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.content.component.html',
+        '<div>\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.content.custom.component.html',
+        '<div class="bb-listbuilder-content-custom" ng-if="$ctrl.viewIsActive()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.footer.component.html',
         '<div class="bb-listbuilder-footer">\n' +
         '\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '\n' +
         '    <bb-infinite-scroll\n' +
-        '        bb-infinite-scroll-has-more="$ctrl.bbListbuilderShowLoadMore"\n' +
+        '        bb-infinite-scroll-has-more="$ctrl.bbListbuilderShowLoadMore && $ctrl.listbuilderCtrl.currentView.viewName"\n' +
         '        bb-infinite-scroll-load="$ctrl.loadCallback()">\n' +
         '    </bb-infinite-scroll>\n' +
         '\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.repeater.component.html',
+        '<div ng-if="$ctrl.viewIsActive()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.switcher.component.html',
+        '<div \n' +
+        '    class="bb-listbuilder-switcher" \n' +
+        '    uib-dropdown \n' +
+        '    dropdown-append-to-body \n' +
+        '    ng-if="$ctrl.bbListbuilderSwitcherViews.length > 1">\n' +
+        '    <button \n' +
+        '        class="btn bb-btn-secondary" \n' +
+        '        type="button"\n' +
+        '        ng-attr-aria-controls="{{$ctrl.switcherId}}" \n' +
+        '        uib-dropdown-toggle\n' +
+        '        ng-attr-title="{{$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherLabel}}">\n' +
+        '        <i \n' +
+        '          class="fa fa-lg" \n' +
+        '          ng-class="$ctrl.bbListbuilderSwitcherCurrentView.viewSwitcherClass"\n' +
+        '          ></i>\n' +
+        '    </button>\n' +
+        '    <ul \n' +
+        '        ng-attr-id="{{$ctrl.switcherId}}"\n' +
+        '        class="dropdown-menu bb-listbuilder-switcher-menu" \n' +
+        '        uib-dropdown-menu \n' +
+        '        role="menu">\n' +
+        '        <li role="presentation" ng-repeat="view in $ctrl.bbListbuilderSwitcherViews" ng-if="view.viewName !== $ctrl.bbListbuilderSwitcherCurrentView.viewName">\n' +
+        '            <a \n' +
+        '                role="menuitem"\n' +
+        '                href="javascript:void(0)" \n' +
+        '                ng-click="$ctrl.switchView(view)"\n' +
+        '                ng-attr-title="{{view.viewSwitcherLabel}}">\n' +
+        '                <i \n' +
+        '                    class="fa fa-lg" \n' +
+        '                    ng-class="view.viewSwitcherClass"\n' +
+        '                    ></i>\n' +
+        '            </a>\n' +
+        '        </li>\n' +
+        '    </ul>\n' +
+        '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.toolbar.component.html',
         '<div class="bb-listbuilder-toolbar-summary-container">\n' +
         '    <div class="bb-listbuilder-toolbar" bb-search-container>\n' +
@@ -14289,7 +14716,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '        </div>\n' +
         '\n' +
-        '        <ng-transclude></ng-transclude>    \n' +
+        '        <ng-transclude></ng-transclude>\n' +
+        '        \n' +
+        '        <div class="bb-listbuilder-toolbar-switcher-container">\n' +
+        '            <bb-listbuilder-switcher \n' +
+        '                bb-listbuilder-switcher-views="$ctrl.listbuilderCtrl.contentViews" \n' +
+        '                bb-listbuilder-switcher-current-view="$ctrl.listbuilderCtrl.currentView"\n' +
+        '                bb-listbuilder-switcher-view-change="$ctrl.viewChanged(newView)"\n' +
+        '                >\n' +
+        '            </bb-listbuilder-switcher>\n' +
+        '        </div>    \n' +
         '    </div>\n' +
         '\n' +
         '    <div class="bb-listbuilder-filter-summary-container">\n' +
