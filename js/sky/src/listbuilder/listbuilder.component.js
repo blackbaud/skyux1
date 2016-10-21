@@ -6,28 +6,33 @@
         var ctrl = this,
             lastSearchText;
 
-        function highlightSearchText(searchText) {
-            lastSearchText = searchText;
-            /*  This is set by bbListbuilderCards. When we have multiple listbuilder views,
-                the highlight function will be chosen dynamically
-            */
-            if (angular.isFunction(ctrl.highlightCards)) {
-                ctrl.highlightCards(searchText);
+        function highlightLastSearchText() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.highlightSearchContent)) {
+                ctrl.highlightSearchContent(lastSearchText);
             }
-            
         }
 
-        function highlightLastSearchText() {
-            highlightSearchText(lastSearchText);
+        function highlightSearchText(searchText) {
+            lastSearchText = searchText;
+            if (angular.isFunction(ctrl.highlightSearchContent)) {
+                ctrl.highlightSearchContent(searchText);
+            }
         }
 
         function getContentContainer() {
             return $element.find('.bb-listbuilder-content');
         }
 
+        function onInit() {
+            ctrl.contentViews = [];
+        }
+
+        ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
-        ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.getContentContainer = getContentContainer;
+        ctrl.highlightLastSearchText = highlightLastSearchText;
     }
 
     Controller.$inject = ['$element'];
@@ -42,4 +47,4 @@
             },
             controller: Controller
         });
-}());
+})();

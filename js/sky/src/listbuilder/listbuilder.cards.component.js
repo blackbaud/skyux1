@@ -2,44 +2,49 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbHighlight, $timeout) {
+    function Controller($timeout, bbResources) {
         var ctrl = this;
-
-        function highlightCards(searchText) {
-            var cardEl = $element.find('.bb-card');
-            /*istanbul ignore else */
-            /* sanity check */
-            if (cardEl.length > 0) {
-                bbHighlight.clear(cardEl);
-                if (searchText) {
-                    bbHighlight(cardEl.not('.bb-listbuilder-no-search'), searchText, 'highlight');
-                }
-            }
-        }
 
         function addCard() {
             $timeout(function () {
-                ctrl.listbuilderCtrl.highlightLastSearchText();
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
             });
         }
 
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
         function initCards() {
-            ctrl.listbuilderCtrl.highlightCards = highlightCards;
+            ctrl.viewName = 'card';
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-th-large', 
+                highlightClass: 'bb-card',
+                viewSwitcherLabel: bbResources.listbuilder_card_switcher
+            });
+
+        }
+
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
         }
 
         ctrl.$postLink = initCards;
+        ctrl.$onDestroy = onDestroy;
         ctrl.addCard = addCard;
+        ctrl.viewIsActive = viewIsActive;
     }
 
-    Controller.$inject = ['$element', 'bbHighlight', '$timeout'];
+    Controller.$inject = ['$timeout', 'bbResources'];
 
-    angular.module('sky.listbuilder.cards.component', ['sky.highlight', 'sky.card'])
+    angular.module('sky.listbuilder.cards.component', ['sky.card', 'sky.resources'])
         .component('bbListbuilderCards', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.cards.component.html',
             transclude: true,
             controller: Controller,
             require: {
-                listbuilderCtrl: '^bbListbuilder'
+                listbuilderContentCtrl: '^bbListbuilderContent'
             }
 
         });

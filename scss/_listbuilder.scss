@@ -4,6 +4,8 @@
     background-color: $bb-color-white;
     padding: $padding-half $padding $padding-half $padding;
     @include bb-border(dark, top, bottom);
+    display: flex;
+    align-items: center;
 }
 
 .bb-listbuilder-filter-summary-container {
@@ -17,9 +19,6 @@
 }
 
 .bb-listbuilder-toolbar-item {
-    display: inline-block;
-    margin-bottom: 0;
-    vertical-align: middle;
     margin-right: $padding-half;
 }
 
@@ -72,4 +71,18 @@
     .bb-listbuilder-add-label {
         display: inline-block;
     }
+}
+
+.bb-listbuilder-toolbar-switcher-container {
+    margin-left: auto;
+}
+
+.dropdown-menu.bb-listbuilder-switcher-menu {
+    min-width: 0px;
+    left: 1px;
+        > li > a {
+            padding: 6px 12px;
+            margin: 0;
+            text-align: center;
+        } 
 }

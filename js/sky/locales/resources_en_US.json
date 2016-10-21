@@ -531,6 +531,14 @@
         "_description": "Text for the add button title",
         "message": "Add"
     },
+    "listbuilder_card_switcher": {
+        "_description": "Text for the card view switcher",
+        "message": "Switch to card view"
+    },
+    "listbuilder_repeater_switcher": {
+        "_description": "Text for repeater view switcher",
+        "message": "Switch to repeater view"
+    },
     "search_label": {
         "_description": "Label for search component functionality",
         "message": "Search items"

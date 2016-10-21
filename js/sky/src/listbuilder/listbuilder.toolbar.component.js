@@ -41,6 +41,14 @@
             }
         }
 
+        function viewChanged(newView) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.listbuilderCtrl.setCurrentView)) {
+                ctrl.listbuilderCtrl.setCurrentView(newView);
+            }
+        }
+
         // Trigger highlight if bbListbuilderSearchText binding changes from parent.
         function bindingChanges(changesObj) {
             var searchText;
@@ -75,6 +83,8 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
+
+        ctrl.viewChanged = viewChanged;
 
     }
 
