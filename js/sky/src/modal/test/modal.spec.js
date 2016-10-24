@@ -412,6 +412,38 @@ describe('Modal', function () {
             el.remove();
         });
 
+        it('should dismiss with close when enter is pressed on x on modal header', function () {
+            var dismissArgs,
+                $scope = $rootScope.$new(),
+                e,
+                el;
+
+            /*jslint white: true */
+            el = $compile(
+                '<bb-modal>' +
+                    '<bb-modal-header bb-modal-help-key="helpKey"></bb-modal-header>' +
+                '</bb-modal>'
+            )($scope);
+
+            $scope.$digest();
+
+            $scope.$dismiss = function (args) {
+                dismissArgs = args;
+            };
+
+            e = $.Event('keyup');
+            e.which = 13;
+            e.keyCode = 13;
+
+            el.find('.fa.fa-times.close').trigger(e);
+
+            $scope.$digest();
+
+            expect(dismissArgs).toBe('close');
+
+            el.remove();
+        });
+
     });
 
     describe('footer', function () {
