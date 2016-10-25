@@ -5,6 +5,8 @@
 .modal-header {
     min-height: 45px;
     background: $form-background;
+    display: flex;
+    align-items: center;
 
     .bb-dialog-header {
         white-space: nowrap;
@@ -22,18 +24,11 @@
     }
 
     .bb-helpbutton {
-        float: right;
-        margin-right: 20px;
         font-size: 16px;
-
-        &.close {
-            margin-top: 2px;
-        }
+        margin-right: 20px;
+        margin-left: auto;
     }
 
-    .close {
-        margin-top: 3px;
-    }
 }
 
 .modal-body {

@@ -523,6 +523,10 @@
         "_description": "Label for button that deletes a file",
         "message": "Delete file"
     },
+    "help_button_label": {
+        "description": "Label for the help button",
+        "message": "Open help"
+    },
     "listbuilder_footer_back_to_top": {
         "_description": "Text for scrolling back to the top of the listbuilder",
         "message": "Back to top"
@@ -538,6 +542,10 @@
     "listbuilder_repeater_switcher": {
         "_description": "Text for repeater view switcher",
         "message": "Switch to repeater view"
+    },
+    "modal_close": {
+        "_description": "Text for modal close button",
+        "message": "Close modal"
     },
     "search_label": {
         "_description": "Label for search component functionality",
