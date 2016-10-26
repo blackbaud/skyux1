@@ -1,14 +1,14 @@
 <div class="bb-summary-actionbar">
   <div class="bb-summary-actionbar-actions" ng-transclude="bbSummaryActionbarActions">
   </div>
-  <div class="bb-summary-actionbar-summary" ng-hide="($ctrl.hideSummary &amp;&amp; $ctrl.isXsScreen) || !$ctrl.summaryContentExists">
+  <div class="bb-summary-actionbar-summary" ng-hide="!$ctrl.summaryContentExists">
     <div class="bb-summary-actionbar-summary-items" ng-transclude="bbSummaryActionbarSummary">
     </div>
     <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.isXsScreen &amp;&amp; $ctrl.summaryContentExists">
-      <button class="btn bb-btn-secondary" ng-click="$ctrl.toggleDetails()"><i class="fa fa-chevron-down"></i></button>
+      <button class="btn bb-btn-secondary" ng-click="$ctrl.hideSummarySection()"><i class="fa fa-chevron-down"></i></button>
     </div>
   </div>
-  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.hideSummary &amp;&amp; $ctrl.isXsScreen &amp;&amp; $ctrl.summaryContentExists">
-    <button class="btn bb-btn-secondary" ng-click="$ctrl.toggleDetails()"><i class="fa fa-chevron-up"></i></button>
+  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.isXsScreen &amp;&amp; $ctrl.summaryContentExists">
+    <button class="btn bb-btn-secondary" ng-click="$ctrl.showSummarySection()"><i class="fa fa-chevron-up"></i></button>
   </div>
 </div>

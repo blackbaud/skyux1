@@ -5,15 +5,62 @@
     function Controller($document, $element, $transclude, $scope, $timeout, $window, bbMediaBreakpoints) {
         var ctrl = this,
             marginTimeout,
+            summaryEl,
             actionbarEl;
 
-        function toggleDetails() {
-            ctrl.hideSummary = !ctrl.hideSummary;
-            addActionbarMargin();
+        function hideSummarySection() {
+
+            var summaryHeight = summaryEl.outerHeight();
+            ctrl.showExpand = true;
+            console.log(summaryHeight);
+            
+            summaryEl.css({
+                overflow: 'hidden',
+                height: summaryHeight
+            })
+            .animate({
+                height: 0
+            }, 150, function () {
+                summaryEl.css({
+                    display: 'none',
+                    height: '',
+                    overflow: ''
+                });
+                
+                addActionbarMargin();
+            });
+        }
+
+        function showSummarySection() {
+            var summaryHeight = summaryEl.css({
+                display: 'flex'
+            }).outerHeight();
+
+            ctrl.showExpand = false;
+
+            summaryEl.css({
+                overflow: 'hidden',
+                height: 0
+            })
+            .animate({
+                height: summaryHeight
+            }, 150, function () {
+                summaryEl.css({
+                    display: '',
+                    overflow: '',
+                    height: ''
+                });
+                addActionbarMargin();
+
+            });
         }
 
         function breakpointChanged(breakpoint) {
             ctrl.isXsScreen = breakpoint && breakpoint.xs;
+            if (!ctrl.isXsScreen) {
+                summaryEl.css('display', '');
+                ctrl.showExpand = false;
+            }
         }
 
         function addActionbarMargin() {
@@ -22,6 +69,10 @@
                 var actionbarHeight = actionbarEl.outerHeight();
                 $document.find('body').css('margin-bottom', actionbarHeight);
             }, 250);
+        }
+
+        function getSummaryEl() {
+            return $element.find('.bb-summary-actionbar-summary');
         }
 
         function getActionbar() {
@@ -46,6 +97,7 @@
 
         function onInit() {
             actionbarEl = getActionbar();
+            summaryEl = getSummaryEl();
             bbMediaBreakpoints.register(breakpointChanged);
             ctrl.summaryContentExists = $transclude.isSlotFilled('bbSummaryActionbarSummary');
             watchActionBarHeight();
@@ -62,7 +114,8 @@
         ctrl.$postLink = onInit;
         ctrl.$onDestroy = onDestroy;
 
-        ctrl.toggleDetails = toggleDetails;
+        ctrl.hideSummarySection = hideSummarySection;
+        ctrl.showSummarySection = showSummarySection;
     }
 
     Controller.$inject = ['$document', '$element', '$transclude', '$scope', '$timeout', '$window', 'bbMediaBreakpoints'];
