@@ -12,7 +12,6 @@
 
             var summaryHeight = summaryEl.outerHeight();
             ctrl.showExpand = true;
-            console.log(summaryHeight);
             
             summaryEl.css({
                 overflow: 'hidden',
