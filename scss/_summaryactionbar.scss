@@ -5,21 +5,24 @@
     margin-top: $margin-double;
     position: fixed;
     bottom: 0;
+    left: 0;
+    z-index: $zindex-modal-background - 1;
     background-color: $bb-color-white;
-    @include bb-border(dark, top);
+    box-shadow: 0 -3px 3px 0 $gray-lighter;
 }
 
 .bb-summary-actionbar-actions {
     margin: $margin 0;
     padding-left: $padding;
     padding-right: $padding-triple;
-    @include bb-border(light, right);
+    flex-shrink: 0;
 }
 
 .bb-summary-actionbar-summary {
     margin: $margin 0;
     padding-left: $padding-triple;
     display: flex;
+    @include bb-border(light, left);
 }
 
 .bb-summary-actionbar-summary-items {
@@ -51,7 +54,7 @@
         padding: $padding;
     }
 
-    .bb-summary-actionbar-actions {
-        border-right: none;
+    .bb-summary-actionbar-summary {
+        border-left: none;
     }
 }
