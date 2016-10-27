@@ -127,7 +127,7 @@
         pointer-events:none;  
     }
 
-    li > a, .bb-dropdown-item > a {
+    li > a, .bb-dropdown-item > a, .bb-dropdown-item > .bb-btn-secondary {
         border-radius: 3px;
         clear: both;
         color: inherit;
@@ -140,11 +140,29 @@
         white-space: nowrap;
     }
 
+    .bb-dropdown-item > .bb-btn-secondary {
+        background-color: transparent;
+        display: block;
+        box-sizing: border-box;
+        padding: 3px 20px;
+        clear: both;
+        white-space: nowrap;
+        font-weight: normal;
+        font-size: 12px;
+        text-align: left;
+        margin: 4px;
+        line-height: 25px;
+        color: inherit;
+        border: none;
+        border-radius: 3px;
+        width: 95%;
+    }
+
     li > a.font-bold, .bb-dropdown-item > a.font-bold {
         font-weight: 600;
     }
 
-    li > a, .bb-submenu .panel-body a, .bb-dropdown-item > a {
+    li > a, .bb-submenu .panel-body a, .bb-dropdown-item > a, .bb-dropdown-item > .bb-btn-secondary {
         &:hover,
         &:focus {
             text-decoration: none;

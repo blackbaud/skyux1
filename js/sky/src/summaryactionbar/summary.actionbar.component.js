@@ -4,9 +4,22 @@
 
     function Controller($document, $element, $transclude, $scope, $timeout, $window, bbMediaBreakpoints) {
         var ctrl = this,
+            animationSpeed = 150,
             marginTimeout,
             summaryEl,
             actionbarEl;
+
+        function summaryAnimationEnd(closed) {
+            var displayType = closed ? 'none' : '';
+            
+            summaryEl.css({
+                display: displayType,
+                height: '',
+                overflow: ''
+            });
+                
+            addActionbarMargin();
+        }
 
         function hideSummarySection() {
 
@@ -19,14 +32,8 @@
             })
             .animate({
                 height: 0
-            }, 150, function () {
-                summaryEl.css({
-                    display: 'none',
-                    height: '',
-                    overflow: ''
-                });
-                
-                addActionbarMargin();
+            }, animationSpeed, function () {
+                summaryAnimationEnd(true);
             });
         }
 
@@ -43,14 +50,8 @@
             })
             .animate({
                 height: summaryHeight
-            }, 150, function () {
-                summaryEl.css({
-                    display: '',
-                    overflow: '',
-                    height: ''
-                });
-                addActionbarMargin();
-
+            }, animationSpeed, function () {
+                summaryAnimationEnd(false);
             });
         }
 

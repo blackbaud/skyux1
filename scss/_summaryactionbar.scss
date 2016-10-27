@@ -16,6 +16,13 @@
     padding-left: $padding;
     padding-right: $padding-triple;
     flex-shrink: 0;
+    .btn {
+        margin-right: $margin;
+    }
+}
+
+.bb-summary-actionbar-secondary-actions {
+    display: inline-block;
 }
 
 .bb-summary-actionbar-summary {

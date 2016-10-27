@@ -1,9 +1,13 @@
 <div ng-controller="SummaryActionbarTestController as summaryCtrl">
   <bb-summary-actionbar>
       <bb-summary-actionbar-actions>
-          <button class="btn btn-primary" type="button">Primary action</button>
-          <button class="btn bb-btn-secondary" type="button">Secondary action</button>
-          <button class="btn btn-link">Cancel</button>
+          <bb-summary-actionbar-primary>Primary action</bb-summary-actionbar-primary>
+          <bb-summary-actionbar-secondary-actions>
+              <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action</bb-summary-actionbar-secondary>
+              <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action 2</bb-summary-actionbar-secondary>
+              <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action 3</bb-summary-actionbar-secondary>
+          </bb-summary-actionbar-secondary-actions>
+          <bb-summary-actionbar-cancel>Cancel</bb-summary-actionbar-cancel>
       </bb-summary-actionbar-actions>
       <bb-summary-actionbar-summary>
           <div>
