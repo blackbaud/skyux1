@@ -28,23 +28,27 @@
             
         }
 
-        function hideSummarySection() {
+        function isInFullPageModal() {
+            return $element.parents('.bb-modal.bb-modal-fullpage').length > 0;
+        }
 
-            var summaryHeight = summaryEl.outerHeight(),
-                bodyHeight,
+        function isInModalFooter() {
+            return $element.parents('.modal-footer').length > 0;
+        }
+
+        function handleModalAnimationHide(summaryHeight) {
+            var bodyHeight,
                 newBodyMax,
                 modalBodyEl;
-            
-            ctrl.showExpand = true;
+
+            modalBodyEl = getModalBody();
 
             if (isInFullPageModal()) {
-                modalBodyEl = getModalBody();
                 bodyHeight = parseInt(modalBodyEl.css('min-height'), 10);
                 modalBodyEl.css({
                     minHeight: bodyHeight + summaryHeight
                 });
-            } else if (isInModalFooter()) {
-                modalBodyEl = getModalBody();
+            } else {
                 bodyHeight = parseInt(modalBodyEl.css('max-height'), 10);
                 newBodyMax = bodyHeight + summaryHeight;
                 modalBodyEl.animate(
@@ -57,6 +61,38 @@
                     }
                 );
             }
+        }
+
+        function handleModalAnimationShow(summaryHeight) {
+            var modalBodyEl = getModalBody(),
+                bodyHeight,
+                newBodyMax;
+
+            if (!isInFullPageModal()) {
+                bodyHeight = parseInt(modalBodyEl.css('max-height'), 10);
+                newBodyMax = bodyHeight - summaryHeight;
+                modalBodyEl.animate(
+                    {
+                        maxHeight: newBodyMax
+                    },
+                    {
+                        duration: animationSpeed,
+                        queue: false
+                    }
+                );
+            }
+        }
+
+
+        function hideSummarySection() {
+
+            var summaryHeight = summaryEl.outerHeight();
+                 
+            ctrl.showExpand = true;
+
+            if (isInModalFooter()) {
+                handleModalAnimationHide(summaryHeight);
+            } 
             
             summaryEl.css({
                 overflow: 'hidden',
@@ -78,27 +114,13 @@
         function showSummarySection() {
             var summaryHeight = summaryEl.css({
                 display: 'flex'
-            }).outerHeight(),
-            modalBodyEl,
-            newBodyMax,
-            bodyHeight;
-
-            if (isInModalFooter() && !isInFullPageModal()) {
-                modalBodyEl = getModalBody();
-                bodyHeight = parseInt(modalBodyEl.css('max-height'), 10);
-                newBodyMax = bodyHeight - summaryHeight;
-                modalBodyEl.animate(
-                    {
-                        maxHeight: newBodyMax
-                    },
-                    {
-                        duration: animationSpeed,
-                        queue: false
-                    }
-                );
-            }
+            }).outerHeight();
 
             ctrl.showExpand = false;
+
+            if (isInModalFooter()) {
+                handleModalAnimationShow(summaryHeight);
+            } 
 
             summaryEl.css({
                 overflow: 'hidden',
@@ -162,18 +184,27 @@
             });
         }
 
-        function isInFullPageModal() {
-            return $element.parents('.bb-modal.bb-modal-fullpage').length > 0;
+        function setModalFooterStyles(shouldAddClass) {
+            var footerEl = $element.parents('.modal-footer'),
+                method = shouldAddClass ? 'addClass' : 'removeClass' ;
+
+            footerEl[method]('bb-modal-footer-summary-actionbar-container');
         }
 
-        function isInModalFooter() {
-            return $element.parents('.modal-footer').length > 0;
+        function initializeModalSummary() {
+            setModalFooterStyles(true);
+            addActionbarMargin();
+            if (!isInFullPageModal()) {
+                ctrl.summaryCollapseMode = true;
+            } else {
+                bbMediaBreakpoints.register(breakpointChanged);
+            }
         }
 
-        function setModalFooterStyles() {
-            var footerEl = $element.parents('.modal-footer');
-
-            footerEl.addClass('bb-modal-footer-summary-actionbar-container');
+        function initializeDocumentSummary() {
+            bbMediaBreakpoints.register(breakpointChanged);
+            watchActionBarHeight();
+            windowResize();
         }
 
         function onInit() {
@@ -182,15 +213,9 @@
             ctrl.summaryContentExists = $transclude.isSlotFilled('bbSummaryActionbarSummary');
             
             if (!isInModalFooter()) {
-                bbMediaBreakpoints.register(breakpointChanged);
-                watchActionBarHeight();
-                windowResize();
+                initializeDocumentSummary();
             } else {
-                setModalFooterStyles();
-                addActionbarMargin();
-                if (!isInFullPageModal()) {
-                    ctrl.summaryCollapseMode = true;
-                }
+                initializeModalSummary();
             }
             
         }
@@ -198,7 +223,12 @@
         function onDestroy() {
             bbMediaBreakpoints.unregister(breakpointChanged);
             $timeout.cancel(marginTimeout);
-            $document.find('body').css('margin-bottom', '');
+            if (!isInModalFooter()) {
+                $document.find('body').css('margin-bottom', '');
+            } else {
+                setModalFooterStyles(false);
+            }
+            
             angular.element($window).off('resize.bbSummaryActionbar' + $scope.$id);
         }
 
