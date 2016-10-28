@@ -98,6 +98,8 @@
                 }
             }
 
+            $scope.fitToWindow = fitToWindow;
+
             $scope.$watch('bodyEl', function (newValue) {
                 bodyEl = newValue;
                 fitToWindow();
@@ -186,6 +188,10 @@
 
             this.setFooterEl = function (footerEl) {
                 $scope.footerEl = footerEl;
+            };
+
+            this.fitToWindow = function () {
+                $scope.fitToWindow();
             };
         }
 

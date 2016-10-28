@@ -21,26 +21,82 @@
             addActionbarMargin();
         }
 
+        function getModalBody() {
+            var modalDialogEl = $element.parents('.modal-dialog');
+
+            return modalDialogEl.find('.modal-body');
+            
+        }
+
         function hideSummarySection() {
 
-            var summaryHeight = summaryEl.outerHeight();
+            var summaryHeight = summaryEl.outerHeight(),
+                bodyHeight,
+                newBodyMax,
+                modalBodyEl;
+            
             ctrl.showExpand = true;
+
+            if (isInFullPageModal()) {
+                modalBodyEl = getModalBody();
+                bodyHeight = parseInt(modalBodyEl.css('min-height'), 10);
+                modalBodyEl.css({
+                    minHeight: bodyHeight + summaryHeight
+                });
+            } else if (isInModalFooter()) {
+                modalBodyEl = getModalBody();
+                bodyHeight = parseInt(modalBodyEl.css('max-height'), 10);
+                newBodyMax = bodyHeight + summaryHeight;
+                modalBodyEl.animate(
+                    {
+                        maxHeight: newBodyMax
+                    },
+                    {
+                        duration: animationSpeed,
+                        queue: false
+                    }
+                );
+            }
             
             summaryEl.css({
                 overflow: 'hidden',
                 height: summaryHeight
             })
-            .animate({
-                height: 0
-            }, animationSpeed, function () {
-                summaryAnimationEnd(true);
-            });
+            .animate(
+                {
+                    height: 0
+                }, 
+                {
+                    duration: animationSpeed,
+                    queue: false,
+                    complete: function () {
+                        summaryAnimationEnd(true);
+                    }
+                });
         }
 
         function showSummarySection() {
             var summaryHeight = summaryEl.css({
                 display: 'flex'
-            }).outerHeight();
+            }).outerHeight(),
+            modalBodyEl,
+            newBodyMax,
+            bodyHeight;
+
+            if (isInModalFooter() && !isInFullPageModal()) {
+                modalBodyEl = getModalBody();
+                bodyHeight = parseInt(modalBodyEl.css('max-height'), 10);
+                newBodyMax = bodyHeight - summaryHeight;
+                modalBodyEl.animate(
+                    {
+                        maxHeight: newBodyMax
+                    },
+                    {
+                        duration: animationSpeed,
+                        queue: false
+                    }
+                );
+            }
 
             ctrl.showExpand = false;
 
@@ -48,11 +104,17 @@
                 overflow: 'hidden',
                 height: 0
             })
-            .animate({
-                height: summaryHeight
-            }, animationSpeed, function () {
-                summaryAnimationEnd(false);
-            });
+            .animate(
+                {
+                    height: summaryHeight
+                }, 
+                {
+                    duration: animationSpeed,
+                    queue: false,
+                    complete: function () {
+                        summaryAnimationEnd(false);
+                    }
+                });
         }
 
         function breakpointChanged(breakpoint) {
@@ -64,11 +126,17 @@
         }
 
         function addActionbarMargin() {
+            var actionbarHeight;
             $timeout.cancel(marginTimeout);
             marginTimeout = $timeout(function () {
-                var actionbarHeight = actionbarEl.outerHeight();
-                $document.find('body').css('margin-bottom', actionbarHeight);
+                if (!isInModalFooter()) {
+                    actionbarHeight = actionbarEl.outerHeight();
+                    $document.find('body').css('margin-bottom', actionbarHeight);
+                } else {
+                    ctrl.bbModal.fitToWindow();
+                }
             }, 250);
+            
         }
 
         function getSummaryEl() {
@@ -95,13 +163,34 @@
             });
         }
 
+        function isInFullPageModal() {
+            return $element.parents('.bb-modal.bb-modal-fullpage').length > 0;
+        }
+
+        function isInModalFooter() {
+            return $element.parents('.modal-footer').length > 0;
+        }
+
+        function setModalFooterStyles() {
+            var footerEl = $element.parents('.modal-footer');
+
+            footerEl.addClass('bb-modal-footer-summary-actionbar-container');
+        }
+
         function onInit() {
             actionbarEl = getActionbar();
             summaryEl = getSummaryEl();
             bbMediaBreakpoints.register(breakpointChanged);
             ctrl.summaryContentExists = $transclude.isSlotFilled('bbSummaryActionbarSummary');
-            watchActionBarHeight();
-            windowResize();
+            
+            if (!isInModalFooter()) {
+                watchActionBarHeight();
+                windowResize();
+            } else {
+                setModalFooterStyles();
+                addActionbarMargin();
+            }
+            
         }
 
         function onDestroy() {
@@ -124,6 +213,9 @@
         .component('bbSummaryActionbar', {
             templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.component.html',
             controller: Controller,
+            require: {
+                'bbModal': '?^^bbModal'
+            },
             transclude: {
                 bbSummaryActionbarActions: '?bbSummaryActionbarActions',
                 bbSummaryActionbarSummary: '?bbSummaryActionbarSummary'
