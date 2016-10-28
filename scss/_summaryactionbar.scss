@@ -53,14 +53,12 @@
     margin-right: $margin;
 }
 
-@media (min-width: $screen-sm-min) {
-    .bb-summary-actionbar-details-expand, .bb-summary-actionbar-details-collapse {
-        display: none;
-    }
+.bb-summary-actionbar-details-expand, .bb-summary-actionbar-details-collapse {
+    display: none;
 }
 
-@media(max-width: $screen-xs-max) {
-    .bb-summary-actionbar {
+.bb-summary-actionbar-summary-collapsed {
+    &.bb-summary-actionbar {
         flex-wrap: wrap;
     }
 
@@ -74,5 +72,9 @@
 
     .bb-summary-actionbar-summary {
         border-left: none;
+    }
+    
+    .bb-summary-actionbar-details-expand, .bb-summary-actionbar-details-collapse {
+        display: block;
     }
 }

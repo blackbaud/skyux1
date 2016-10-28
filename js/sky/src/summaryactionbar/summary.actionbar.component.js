@@ -118,8 +118,8 @@
         }
 
         function breakpointChanged(breakpoint) {
-            ctrl.isXsScreen = breakpoint && breakpoint.xs;
-            if (!ctrl.isXsScreen) {
+            ctrl.summaryCollapseMode = breakpoint && breakpoint.xs;
+            if (!ctrl.summaryCollapseMode) {
                 summaryEl.css('display', '');
                 ctrl.showExpand = false;
             }
@@ -136,7 +136,6 @@
                     ctrl.bbModal.fitToWindow();
                 }
             }, 250);
-            
         }
 
         function getSummaryEl() {
@@ -180,15 +179,18 @@
         function onInit() {
             actionbarEl = getActionbar();
             summaryEl = getSummaryEl();
-            bbMediaBreakpoints.register(breakpointChanged);
             ctrl.summaryContentExists = $transclude.isSlotFilled('bbSummaryActionbarSummary');
             
             if (!isInModalFooter()) {
+                bbMediaBreakpoints.register(breakpointChanged);
                 watchActionBarHeight();
                 windowResize();
             } else {
                 setModalFooterStyles();
                 addActionbarMargin();
+                if (!isInFullPageModal()) {
+                    ctrl.summaryCollapseMode = true;
+                }
             }
             
         }
