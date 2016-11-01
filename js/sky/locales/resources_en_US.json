@@ -671,6 +671,14 @@
         "_description": "Label for the button that shows a secondary menu in the summary actionbar",
         "message": "Show secondary actions"
     },
+    "summary_actionbar_show_summary": {
+        "_description": "Label for the button that shows the actionbar summary",
+        "message": "Show summary"
+    },
+    "summary_actionbar_hide_summary": {
+        "_description": "Label for the button that hides the actionbar summary",
+        "message": "Hide summary"
+    },
     "pagination_previous": {
         "_description": "Text for the label for the pagination previous link",
         "message": "Previous"

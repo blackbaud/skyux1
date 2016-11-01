@@ -1,5 +1,5 @@
 /* jshint jasmine: true */
-/* global module, inject, $ */
+/* global module, inject, angular, $ */
 (function () {
     'use strict';
     
@@ -7,7 +7,9 @@
     describe('Summary actionbar component', function () {
         var $compile,
             $scope,
+            $timeout,
             $document,
+            $window,
             bbMediaBreakpoints,
             fxOff,
             cancelClicked = false,
@@ -52,10 +54,12 @@
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbMediaBreakpoints_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _$window_,_bbMediaBreakpoints_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
+            $timeout = _$timeout_;
             $document = _$document_;
+            $window = _$window_;
             bbMediaBreakpoints = _bbMediaBreakpoints_;
             fxOff = $.fx.off;
             $.fx.off = true;
@@ -113,6 +117,14 @@
             return el.find('.bb-summary-actionbar .bb-summary-actionbar-actions .bb-summary-actionbar-secondary-actions .bb-dropdown-menu .bb-dropdown-item .btn.bb-btn-secondary');
         }
 
+        function getHideToggle(el) {
+            return el.find('.bb-summary-actionbar-summary .bb-summary-actionbar-details-collapse .btn.bb-btn-secondary');
+        }
+
+        function getShowToggle(el) {
+            return el.find('.bb-summary-actionbar .bb-summary-actionbar-details-expand .btn.bb-btn-secondary');
+        }
+
         function initActionbar(template) {
             var el = $compile(template)($scope);
             $document.find('body').append(el);
@@ -161,6 +173,7 @@
 
             summaryEl = getSummary(actionbarEl);
             expect(summaryEl.find('.bb-test-summary')).toHaveText('My Content');
+            expect(summaryEl.find('.bb-test-summary')).toBeVisible();
 
             actionbarEl.remove();
 
@@ -198,9 +211,16 @@
             actionbarEl.remove();
         });
 
+        function changeBreakpoint(isSmall, breakpointCallbacks) {
+            var i;
+            for (i = 0; i < breakpointCallbacks.length; i++) {
+                breakpointCallbacks[i]({xs: isSmall});
+            }
+            $scope.$digest();
+        }
+
         it('should have actions collapse into a dropdown when on a small screen', function () {
             var actionbarEl,
-                i,
                 breakpointCallbacks = [];
 
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
@@ -209,33 +229,156 @@
 
             actionbarEl = initActionbar(actionbar2SecondaryHtml);
 
-            for (i = 0; i < breakpointCallbacks.length; i++) {
-                breakpointCallbacks[i]({xs: true});
-            }
-            $scope.$digest();
+            changeBreakpoint(true, breakpointCallbacks);
 
             verifySecondaryActions(actionbarEl, true, 2);
 
-            for (i = 0; i < breakpointCallbacks.length; i++) {
-                breakpointCallbacks[i]({xs: false});
-            }
-            $scope.$digest();
+            changeBreakpoint(false, breakpointCallbacks);
 
             verifySecondaryActions(actionbarEl, false, 2);
 
             actionbarEl.remove();
         });
 
-        it('should show the expanded summary when on a small screen and allow toggle of hide and show', function () {
+        function verifyMarginBodyHeight(el) {
+            var summaryHeight = el.find('.bb-summary-actionbar').outerHeight(),
+                bodyEl = $('body');
 
+            summaryHeight = summaryHeight.toString() + 'px';
+            expect(bodyEl).toHaveCss({'margin-bottom': summaryHeight});
+        }
+
+        function verifySummaryState(isHidden, el) {
+            var hideEl = getHideToggle(el),
+                showEl = getShowToggle(el),
+                summaryEl = getSummary(el);
+
+            if (isHidden) {
+                expect(hideEl).not.toBeVisible();
+                expect(summaryEl).not.toBeVisible();
+                expect(showEl).toBeVisible();
+            } else {
+                expect(hideEl).toBeVisible();
+                expect(summaryEl).toBeVisible();
+                expect(showEl).not.toBeVisible();
+            }
+            
+            verifyMarginBodyHeight(el);
+        }
+
+        function toggleSummaryHide(show, el) {
+            var hideEl = getHideToggle(el),
+                showEl = getShowToggle(el);
+
+            if (show) {
+                showEl.click();
+            } else {
+                hideEl.click();
+            }
+
+            $scope.$digest();
+            $timeout.flush();
+        }
+
+        it('should show the expanded summary when on a small screen and allow toggle of hide and show', function () {
+            var actionbarEl,
+                breakpointCallbacks = [],
+                summaryEl,
+                hideEl,
+                showEl;
+
+            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
+                breakpointCallbacks.push(callback);
+            });
+
+            actionbarEl = initActionbar(actionbar2SecondaryHtml);
+
+            //expect no toggle buttons to exist
+            hideEl = getHideToggle(actionbarEl);
+            
+            showEl = getShowToggle(actionbarEl);
+            expect(showEl).not.toBeVisible();
+            expect(hideEl).not.toBeVisible();
+
+            //change to xs mode
+            changeBreakpoint(true, breakpointCallbacks);
+
+            //expect collapse toggle to exist and summary to be visible
+            expect(actionbarEl.find('.bb-summary-actionbar')).toHaveClass('bb-summary-actionbar-summary-collapsed');
+            expect(hideEl).toBeVisible();
+            summaryEl = getSummary(actionbarEl);
+            expect(summaryEl).toBeVisible();
+            expect(showEl).not.toBeVisible();
+
+            toggleSummaryHide(false, actionbarEl);
+
+            verifySummaryState(true, actionbarEl);
+
+            
+            toggleSummaryHide(true, actionbarEl);
+
+            verifySummaryState(false, actionbarEl);
+
+            changeBreakpoint(false, breakpointCallbacks);
+
+            expect(showEl).not.toBeVisible();
+            expect(hideEl).not.toBeVisible();
+            expect(summaryEl).toBeVisible();
+            expect(actionbarEl.find('.bb-summary-actionbar')).not.toHaveClass('bb-summary-actionbar-summary-collapsed');
+
+            actionbarEl.remove();
         });
 
-        it('should adjust the margin on the document when window resizes', function () {
+        function timeoutFlushIfAvailable() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
+        }
 
+        it('should adjust the margin on the document when window resizes', function () {
+            var actionbarEl,
+                windowEl; 
+            
+            timeoutFlushIfAvailable(); 
+
+            actionbarEl = initActionbar(actionbar2SecondaryHtml);
+            windowEl = angular.element($window);
+            
+            $timeout.flush();
+
+            verifyMarginBodyHeight(actionbarEl);
+
+            actionbarEl.find('.bb-summary-actionbar').outerHeight(600);
+
+            windowEl.resize();
+            $scope.$digest();
+            $timeout.flush();
+
+            verifyMarginBodyHeight(actionbarEl);
+
+            actionbarEl.remove();
         });
 
         it('should adjust the margin on the document as the summary height changes', function () {
+            var actionbarEl; 
+            
+            timeoutFlushIfAvailable(); 
 
+            actionbarEl = initActionbar(actionbar2SecondaryHtml);
+            
+            $timeout.flush();
+
+            verifyMarginBodyHeight(actionbarEl);
+
+            actionbarEl.find('.bb-summary-actionbar').outerHeight(600);
+            $scope.$digest();
+            $timeout.flush();
+
+            verifyMarginBodyHeight(actionbarEl);
+
+            actionbarEl.remove();
         });
 
         describe('modal', function () {

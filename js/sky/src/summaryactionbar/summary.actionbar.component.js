@@ -151,7 +151,7 @@
             var actionbarHeight;
             $timeout.cancel(marginTimeout);
             marginTimeout = $timeout(function () {
-                if (!isInModalFooter()) {
+                if (!isInModalFooter()) { 
                     actionbarHeight = actionbarEl.outerHeight();
                     $document.find('body').css('margin-bottom', actionbarHeight);
                 } else {
@@ -172,6 +172,7 @@
             $scope.$watch(function () {
                 return actionbarEl.outerHeight();
             }, function (newValue, oldValue) {
+                
                 if (oldValue !== newValue) {
                     addActionbarMargin();
                 }
@@ -203,6 +204,7 @@
 
         function initializeDocumentSummary() {
             bbMediaBreakpoints.register(breakpointChanged);
+            addActionbarMargin();
             watchActionBarHeight();
             windowResize();
         }
