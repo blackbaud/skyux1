@@ -9,6 +9,8 @@
             $scope,
             $timeout,
             $document,
+            $animate,
+            bbModal,
             $window,
             bbMediaBreakpoints,
             fxOff,
@@ -50,16 +52,21 @@
                 '</bb-summary-actionbar>';
 
         beforeEach(module(
+            'ngMock',
+            'ngAnimateMock',
             'sky.summary.actionbar',
+            'sky.modal',
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _$window_,_bbMediaBreakpoints_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _$window_, _$animate_, _bbMediaBreakpoints_, _bbModal_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $timeout = _$timeout_;
             $document = _$document_;
+            $animate = _$animate_;
             $window = _$window_;
+            bbModal = _bbModal_;
             bbMediaBreakpoints = _bbMediaBreakpoints_;
             fxOff = $.fx.off;
             $.fx.off = true;
@@ -248,7 +255,7 @@
             expect(bodyEl).toHaveCss({'margin-bottom': summaryHeight});
         }
 
-        function verifySummaryState(isHidden, el) {
+        function verifySummaryStateHidden(isHidden, el, isModal) {
             var hideEl = getHideToggle(el),
                 showEl = getShowToggle(el),
                 summaryEl = getSummary(el);
@@ -263,7 +270,10 @@
                 expect(showEl).not.toBeVisible();
             }
             
-            verifyMarginBodyHeight(el);
+            if (!isModal) {
+                verifyMarginBodyHeight(el);
+            }
+            
         }
 
         function toggleSummaryHide(show, el) {
@@ -312,12 +322,12 @@
 
             toggleSummaryHide(false, actionbarEl);
 
-            verifySummaryState(true, actionbarEl);
+            verifySummaryStateHidden(true, actionbarEl);
 
             
             toggleSummaryHide(true, actionbarEl);
 
-            verifySummaryState(false, actionbarEl);
+            verifySummaryStateHidden(false, actionbarEl);
 
             changeBreakpoint(false, breakpointCallbacks);
 
@@ -382,28 +392,138 @@
         });
 
         describe('modal', function () {
-            it('should set modal styles and call fit to window when in a modal', function () {
 
+            
+            var modalSummaryActionbarHtml = '<bb-modal><bb-modal-header>Heyo</bb-modal-header><div bb-modal-body></div><bb-modal-footer>' + actionbar2SecondaryHtml + '</bb-modal-footer></bb-modal>';
+            
+            function closeModalInstance(modalInstance) {
+                modalInstance.close();
+                $scope.$digest();
+                $animate.flush();
+                $scope.$digest();
+                $animate.flush();
+                $scope.$digest();
+            }
+            
+            it('should set modal styles and call fit to window when in a modal', function () {
+                var modalInstance = bbModal.open(
+                {
+                    template: modalSummaryActionbarHtml
+                });
+
+                $timeout.flush();
+
+                //modal footer has class
+                expect($('.modal-footer')).toHaveClass('bb-modal-footer-summary-actionbar-container');
+
+                closeModalInstance(modalInstance);
             });
+
+            function getModalBodyMaxHeight() {
+                return parseInt($('.modal-body').css('max-height'), 10);
+            }
+
+            function getModalBodyMinHeight() {
+                return parseInt($('.modal-body').css('min-height'), 10);
+            }
 
             describe('no full page', function () {
                 it('should animate the modal body and fit to window when expanding and collapsing the summary', function () {
+                    var actionbarEl,
+                        bodyMaxHeight,
+                        summaryHeight,
+                        modalInstance = bbModal.open(
+                        {
+                            template: modalSummaryActionbarHtml
+                        });
 
+                    $timeout.flush();
+                    actionbarEl = $('bb-summary-actionbar');
+
+                    expect(actionbarEl.find('.bb-summary-actionbar')).toHaveClass('bb-summary-actionbar-summary-collapsed');
+
+                    verifySummaryStateHidden(false, actionbarEl, true);
+
+                    bodyMaxHeight = getModalBodyMaxHeight();
+                    summaryHeight = actionbarEl.find('.bb-summary-actionbar-summary').outerHeight();
+
+                    //hide actionbar
+                    toggleSummaryHide(false, actionbarEl);
+                    verifySummaryStateHidden(true, actionbarEl, true);
+                    expect(getModalBodyMaxHeight()).toBe(bodyMaxHeight + summaryHeight);
+
+                    bodyMaxHeight = getModalBodyMaxHeight();
+                    //show actionbar
+                    toggleSummaryHide(true, actionbarEl);
+                    verifySummaryStateHidden(false, actionbarEl, true);
+                    expect(getModalBodyMaxHeight()).toBe(bodyMaxHeight - summaryHeight);
+                    
+
+                    closeModalInstance(modalInstance);
                 }); 
-
-                it('should be always in collapse mode when in a modal', function () {
-
-                });
             });
 
             describe('full page', function () {
-                it('should set modal body styles on hiding modal', function () {
+                it('should set modal body styles on hiding summary', function () {
+                    var actionbarEl,
+                        bodyMinHeight,
+                        summaryHeight,
+                        showEl,
+                        hideEl,
+                        summaryEl,
+                        modalInstance,
+                        breakpointCallbacks = [];
+                        
+                    spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
+                        breakpointCallbacks.push(callback);
+                    });    
+                    modalInstance = bbModal.open(
+                        {
+                            template: modalSummaryActionbarHtml
+                        },
+                        {
+                            fullPage: true
+                        });
 
+                    $timeout.flush();
+                    actionbarEl = $('bb-summary-actionbar');
+
+                    //expect large screen mode
+
+                    showEl = getShowToggle(actionbarEl);
+                    hideEl = getHideToggle(actionbarEl);
+                    summaryEl = getSummary(actionbarEl);
+
+                    expect(showEl).not.toBeVisible();
+                    expect(hideEl).not.toBeVisible();
+                    expect(summaryEl).toBeVisible();
+                    expect(actionbarEl.find('.bb-summary-actionbar')).not.toHaveClass('bb-summary-actionbar-summary-collapsed');
+
+                    //small breakpoint trigger
+                    changeBreakpoint(true, breakpointCallbacks);
+                    $timeout.flush();
+
+                    verifySummaryStateHidden(false, actionbarEl, true);
+                    summaryHeight = actionbarEl.find('.bb-summary-actionbar-summary').outerHeight();
+                    
+                    //hide
+                    toggleSummaryHide(false, actionbarEl);
+                    verifySummaryStateHidden(true, actionbarEl, true);
+                    bodyMinHeight = getModalBodyMinHeight();
+
+                    //show 
+                    toggleSummaryHide(true, actionbarEl);
+                    verifySummaryStateHidden(false, actionbarEl, true);
+                    expect(getModalBodyMinHeight()).toBe(bodyMinHeight - summaryHeight);
+
+                    bodyMinHeight = getModalBodyMinHeight();
+                    toggleSummaryHide(false, actionbarEl);
+                    verifySummaryStateHidden(true, actionbarEl, true);
+                    expect(getModalBodyMinHeight()).toBe(bodyMinHeight + summaryHeight);
+
+                    closeModalInstance(modalInstance);
                 });
 
-                it('should show the expanded summary when on a small screen and side by side on a large screen', function () {
-
-                });
             });
 
             

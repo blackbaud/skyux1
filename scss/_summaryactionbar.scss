@@ -34,7 +34,12 @@
 
 .bb-summary-actionbar-secondary-actions {
     display: inline-block;
+    .bb-summary-actionbar-secondary-buttons .bb-dropdown-item {
+        display: inline-block;
+    }
 }
+
+
 
 .bb-summary-actionbar-summary {
     margin: $margin 0;

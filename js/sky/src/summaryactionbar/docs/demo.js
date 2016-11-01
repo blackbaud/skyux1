@@ -16,14 +16,14 @@
     function SummaryModalButtonController(bbModal) {
         var ctrl = this;
         
-        ctrl.open = function () {
+        ctrl.open = function (fullPage) {
             bbModal.open(
                 {
                     controller: 'SummaryActionbarTestController as summaryCtrl',
                     templateUrl: 'demo/summaryactionbar/modalform.html'
                 },
                 {
-                    fullPage: false
+                    fullPage: fullPage
                 }
             );
         };
