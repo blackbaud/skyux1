@@ -37,7 +37,7 @@
 
     Controller.$inject = ['bbMediaBreakpoints', '$scope'];
 
-    angular.module('sky.summary.actionbar.secondary.actions.component', ['ui.bootstrap.dropdown', 'sky.mediabreakpoints'])
+    angular.module('sky.summary.actionbar.secondary.actions.component', ['ui.bootstrap.dropdown', 'sky.mediabreakpoints', 'sky.resources'])
         .component('bbSummaryActionbarSecondaryActions', {
             transclude: true,
             controller: Controller,

@@ -241,7 +241,7 @@
 
     Controller.$inject = ['$document', '$element', '$transclude', '$scope', '$timeout', '$window', 'bbMediaBreakpoints'];
 
-    angular.module('sky.summary.actionbar.component', [])
+    angular.module('sky.summary.actionbar.component', ['sky.mediabreakpoints', 'sky.resources'])
         .component('bbSummaryActionbar', {
             templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.component.html',
             controller: Controller,

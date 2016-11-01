@@ -667,6 +667,10 @@
         "_description": "Text for the sort button",
         "message": "Sort"
     },
+    "summary_actionbar_open_secondary": {
+        "_description": "Label for the button that shows a secondary menu in the summary actionbar",
+        "message": "Show secondary actions"
+    },
     "pagination_previous": {
         "_description": "Text for the label for the pagination previous link",
         "message": "Previous"
