@@ -1,13 +1,12 @@
 {
-
-"_LRM_PKTAG258":"skyux-l10n_7_4 - FULL-FILE",
+"_LRM_PKTAG544":"skyux-l10n_7_15 - FULL-FILE",
     "action_bar_actions": {
         "_description": "The label for the actions dropdown on the action button bar",
-        "message": "Actions"
+        "message": "Azioni"
     },
     "alert_close": {
         "_description": "Screen reader text for the close button on alerts",
-        "message": "Close"
+        "message": "Chiudi"
     },
     "autonumeric_abbr_billions": {
         "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
@@ -23,155 +22,155 @@
     },
     "avatar_error_not_image_description": {
         "_description": "Message description displayed when the user attempts to upload an avatar file that is not a valid image",
-        "message": "Please choose a file that is a valid image."
+        "message": "Scegliere un file immagine valido."
     },
     "avatar_error_not_image_title": {
         "_description": "Message title displayed when the user attempts to upload an avatar file that is not a valid image",
-        "message": "File is not an image."
+        "message": "Il file non è un’immagine."
     },
     "avatar_error_too_large_description": {
         "_description": "Message description displayed when the user attempts to upload an avatar image with a file size that is too large",
-        "message": "Please choose an image that is less than {0}."
+        "message": "Scegliere un’immagine inferiore a {0}."
     },
     "avatar_error_too_large_title": {
         "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
-        "message": "File is too large."
+        "message": "Il file è troppo grande."
     },
     "carousel_button_label_next": {
         "_description": "The accessibility label for the carousel next button",
-        "message": "Go to next item"
+        "message": "Vai all’elemento successivo"
     },
     "carousel_button_label_previous": {
         "_description": "The accessibility label for the carousel previous button",
-        "message": "Go to previous item"
+        "message": "Vai all’elemento precedente"
     },
     "carousel_dot_label": {
         "_description": "The label for the carousel navigation dots",
-        "message": "Go to item {0}"
+        "message": "Vai all’elemento {0}"
     },
     "checklist_select_all": {
         "_description": "Text for the link in a checklist to select all items.",
-        "message": "Select all"
+        "message": "Seleziona tutto"
     },
     "checklist_clear_all": {
         "_description": "Text for the link in a checklist to clear selections.",
-        "message": "Clear all"
+        "message": "Annulla tutto"
     },
     "checklist_only_selected_items": {
         "_description": "Text for the checkbox in a checklist that toggles only showing selected items.",
-        "message": "Only show selected items"
+        "message": "Mostra solo gli elementi selezionati"
     },
     "checklist_no_items": {
         "_description": "Text in a checklist when no items are shown based on the current filter.",
-        "message": "No items found"
+        "message": "Nessun elemento trovato"
     },
     "checklist_check_title": {
         "_description": "Title for the empty header in the checkbox column for the checklist",
-        "message": "Select item"
+        "message": "Seleziona elemento"
     },
     "checklist_search_label": {
         "_description": "Label for the checklist search box",
-        "message": "Search"
+        "message": "Ricerca"
     },
     "checklist_categories_label": {
         "_description": "Label for the checklist categories dropdown",
-        "message": "Categories"
+        "message": "Categorie"
     },
     "chevron_collapse": {
         "_description": "Screen reader text for when clicking the chevron would collapse the corresponding section",
-        "message": "Collapse"
+        "message": "Comprimi"
     },
     "chevron_expand": {
         "_description": "Screen reader text for when clicking the chevron would expand the corresponding section",
-        "message": "Expand"
+        "message": "Espandi"
     },
     "context_menu_default_label": {
         "_description": "The label on the context menu button used for screen readers when the consumer has not specified a label",
-        "message": "Context menu"
+        "message": "Menu di scelta rapida"
     },
     "definition_list_none_found": {
         "_description": "The default text to show when a definition list item has no value",
-        "message": "None found"
+        "message": "Nessuna rispondenza trovata"
     },
     "grid_back_to_top": {
         "_description": "Text for link in grid to scroll back to the top.",
-        "message": "Back to top"
+        "message": "Torna su"
     },
     "grid_column_picker_all_categories": {
         "_description": "Text for category filters used to indicate that all columns should be shown in the column picker",
-        "message": "All categories"
+        "message": "Tutte le categorie"
     },
     "grid_column_picker_description_header": {
         "_description": "In the column picker, the header for the column showing the description of the columns to include in the grid.",
-        "message": "Description"
+        "message": "Descrizione"
     },
     "grid_column_picker_header": {
         "_description": "Header text for the grid column picker screen",
-        "message": "Choose columns to show in the list"
+        "message": "Scegliere le colonne da mostrare nell’elenco"
     },
     "grid_column_picker_name_header": {
         "_description": "In the column picker, the header for the column showing the names of the columns to include in the grid.",
-        "message": "Column"
+        "message": "Colonna"
     },
     "grid_column_picker_search_placeholder": {
         "_description": "Search text placeholder for the search box on the grid column picker",
-        "message": "Search by name"
+        "message": "Ricerca per nome"
     },
     "grid_column_picker_submit": {
         "_description": "Button text for applying changes made in the grid column picker",
-        "message": "Apply changes"
+        "message": "Applica modifiche"
     },
     "grid_columns_button": {
         "_description": "Label for button to select columns to display in a grid.",
-        "message": " Choose columns"
+        "message": " Scegli colonne"
     },
     "grid_filters_apply": {
         "_description": "Text for button on filters flyout to apply the selected filters to the grid",
-        "message": "Apply filters"
+        "message": "Applica filtri"
     },
     "grid_filters_button": {
         "_description": "Label for button to select filters to be applied to a grid.",
-        "message": "Filters"
+        "message": "Filtri"
     },
     "grid_filters_clear": {
         "_description": "Text for button on filters flyout to clear the selected filters for the grid",
-        "message": "Clear"
+        "message": "Cancella"
     },
     "grid_filters_header": {
         "_description": "Header text for grid filters flyout",
-        "message": "Filter"
+        "message": "Filtro"
     },
     "grid_filters_hide": {
         "_description": "Hide link text for grid filters flyout",
-        "message": "Hide"
+        "message": "Nascondi"
     },
     "grid_filters_summary_header": {
         "_description": "Header text for filter summary on top of grid",
-        "message": "Filter:"
+        "message": "Filtro:"
     },
     "grid_load_more": {
         "_description": "The text for the button to load additional rows into the grid if more rows are available.",
-        "message": "Load more"
+        "message": "Carica altro"
     },
     "grid_search_placeholder": {
         "_description": "Placeholder text in grid search box",
-        "message": "Find in this list"
+        "message": "Trova in questo elenco"
     },
     "grid_column_picker_search_no_columns": {
         "_description": "Displays when no columns are found for the specified search text.",
-        "message": "No columns found"
+        "message": "Nessuna colonna trovata"
     },
     "infinite_scroll_load_more": {
         "_description": "Text for loading more in the infinite scroll button",
-        "message": "Load more"
+        "message": "Carica altro"
     },
     "modal_footer_cancel_button": {
         "_description": "Default lable text for modal cancel button",
-        "message": "Cancel"
+        "message": "Annulla"
     },
     "modal_footer_primary_button": {
         "_description": "Default lable text for modal primary button",
-        "message": "Save"
+        "message": "Salva"
     },
     "month_short_april": {
         "_description": "",
@@ -179,11 +178,11 @@
     },
     "month_short_august": {
         "_description": "",
-        "message": "Aug"
+        "message": "Ago"
     },
     "month_short_december": {
         "_description": "",
-        "message": "Dec"
+        "message": "Dic"
     },
     "month_short_february": {
         "_description": "",
@@ -191,15 +190,15 @@
     },
     "month_short_january": {
         "_description": "",
-        "message": "Jan"
+        "message": "Gen"
     },
     "month_short_july": {
         "_description": "",
-        "message": "Jul"
+        "message": "Lug"
     },
     "month_short_june": {
         "_description": "",
-        "message": "Jun"
+        "message": "Giu"
     },
     "month_short_march": {
         "_description": "",
@@ -207,7 +206,7 @@
     },
     "month_short_may": {
         "_description": "",
-        "message": "May"
+        "message": "Mag"
     },
     "month_short_november": {
         "_description": "",
@@ -215,231 +214,231 @@
     },
     "month_short_october": {
         "_description": "",
-        "message": "Oct"
+        "message": "Ott"
     },
     "month_short_september": {
         "_description": "",
-        "message": "Sep"
+        "message": "Set"
     },
     "page_noaccess_button": {
         "_description": "",
-        "message": "Return to a non-classified page"
+        "message": "Torna a una pagina non classificata"
     },
     "page_noaccess_description": {
         "_description": "",
-        "message": "Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator."
+        "message": "Spiacenti, non si possiedono i diritti per questa pagina.\nSe si pensa di possedere i diritti, contattare l’amministratore del sistema."
     },
     "page_noaccess_header": {
         "_description": "",
-        "message": "Move along, there's nothing to see here"
+        "message": "Procedere, qui non c’è nulla da vedere"
     },
     "text_expand_see_less": {
         "_description": "Display less text content",
-        "message": "See less"
+        "message": "Mostra meno elementi"
     },
     "text_expand_see_more": {
         "_description": "",
-        "message": "See more"
+        "message": "Mostra più elementi"
     },
     "text_expand_modal_title": {
         "_description": "",
-        "message": "Expanded view"
+        "message": "Visualizzazione espansa"
     },
     "text_expand_close_text": {
         "_description": "Text for the close button on the text expand modal",
-        "message": "Close"
+        "message": "Chiudi"
     },
     "grid_action_bar_clear_selection": {
         "_description": "Clear the selections in the grid.",
-        "message": "Clear selection"
+        "message": "Cancella selezione"
     },
     "grid_action_bar_cancel_mobile_actions": {
         "_description": "Close the menu where you choose an action in mobile multiselect.",
-        "message": "Cancel"
+        "message": "Annulla"
     },
     "grid_action_bar_choose_action": {
         "_description": "Open a menu to choose an action in mobile  multiselect.",
-        "message": "Choose an action"
+        "message": "Scegliere un’azione"
     },
     "date_field_invalid_date_message": {
         "_description": "error message shown when an invalid date is entered.",
-        "message": "Please enter a valid date"
+        "message": "Inserire una data valida"
     },
     "date_range_picker_this_week": {
         "_description": "text for date range picker",
-        "message": "This week"
+        "message": "Questa settimana"
     },
     "date_range_picker_last_week": {
         "_description": "text for date range picker",
-        "message": "Last week"
+        "message": "Settimana scorsa"
     },
     "date_range_picker_next_week": {
         "_description": "text for date range picker",
-        "message": "Next week"
+        "message": "Prossima settimana"
     },
     "date_range_picker_this_month": {
         "_description": "text for date range picker",
-        "message": "This month"
+        "message": "Questo mese"
     },
     "date_range_picker_last_month": {
         "_description": "text for date range picker",
-        "message": "Last month"
+        "message": "Scorso mese"
     },
     "date_range_picker_next_month": {
         "_description": "text for date range picker",
-        "message": "Next month"
+        "message": "Prossimo mese"
     },
     "date_range_picker_this_calendar_year": {
         "_description": "text for date range picker",
-        "message": "This calendar year"
+        "message": "Questo anno calendario"
     },
     "date_range_picker_last_calendar_year": {
         "_description": "text for date range picker",
-        "message": "Last calendar year"
+        "message": "Scorso anno calendario"
     },
     "date_range_picker_next_calendar_year": {
         "_description": "text for date range picker",
-        "message": "Next calendar year"
+        "message": "Prossimo anno calendario"
     },
     "date_range_picker_this_fiscal_year": {
         "_description": "text for date range picker",
-        "message": "This fiscal year"
+        "message": "Questo anno fiscale"
     },
     "date_range_picker_last_fiscal_year": {
         "_description": "text for date range picker",
-        "message": "Last fiscal year"
+        "message": "Scorso anno fiscale"
     },
     "date_range_picker_next_fiscal_year": {
         "_description": "text for date range picker",
-        "message": "Next fiscal year"
+        "message": "Prossimo anno fiscale"
     },
     "date_range_picker_this_quarter": {
         "_description": "text for date range picker",
-        "message": "This quarter"
+        "message": "Questo trimestre"
     },
     "date_range_picker_last_quarter": {
         "_description": "text for date range picker",
-        "message": "Last quarter"
+        "message": "Scorso trimestre"
     },
     "date_range_picker_next_quarter": {
         "_description": "text for date range picker",
-        "message": "Next quarter"
+        "message": "Prossimo trimestre"
     },
     "date_range_picker_at_any_time": {
         "_description": "text for date range picker",
-        "message": "At any time"
+        "message": "In qualunque momento"
     },
     "date_range_picker_today": {
         "_description": "text for date range picker",
-        "message": "Today"
+        "message": "Oggi"
     },
     "date_range_picker_tomorrow": {
         "_description": "text for date range picker",
-        "message": "Tomorrow"
+        "message": "Domani"
     },
     "date_range_picker_yesterday": {
         "_description": "text for date range picker",
-        "message": "Yesterday"
+        "message": "Ieri"
     },
     "date_range_picker_specific_range": {
         "_description": "text for date range picker",
-        "message": "Specific range"
+        "message": "Specifica intervallo"
     },
     "date_range_picker_filter_description_this_week": {
         "_description": "text for date range picker",
-        "message": "{0} for this week"
+        "message": "{0} per questa settimana"
     },
     "date_range_picker_filter_description_last_week": {
         "_description": "text for date range picker",
-        "message": "{0} from last week"
+        "message": "{0} dalla scorsa settimana"
     },
     "date_range_picker_filter_description_next_week": {
         "_description": "text for date range picker",
-        "message": "{0} for next week"
+        "message": "{0} per la prossima settimana"
     },
     "date_range_picker_filter_description_this_month": {
         "_description": "text for date range picker",
-        "message": "{0} for this month"
+        "message": "{0} per questo mese"
     },
     "date_range_picker_filter_description_last_month": {
         "_description": "text for date range picker",
-        "message": "{0} from last month"
+        "message": "{0} dallo scorso mese"
     },
     "date_range_picker_filter_description_next_month": {
         "_description": "text for date range picker",
-        "message": "{0} for next month"
+        "message": "{0} per il prossimo mese"
     },
     "date_range_picker_filter_description_this_calendar_year": {
         "_description": "text for date range picker",
-        "message": "{0} for this calendar year"
+        "message": "{0} per questo anno calendario"
     },
     "date_range_picker_filter_description_last_calendar_year": {
         "_description": "text for date range picker",
-        "message": "{0} from last calendar year"
+        "message": "{0} dallo scorso anno calendario"
     },
     "date_range_picker_filter_description_next_calendar_year": {
         "_description": "text for date range picker",
-        "message": "{0} for next calendar year"
+        "message": "{0} per il prossimo anno calendario"
     },
     "date_range_picker_filter_description_this_fiscal_year": {
         "_description": "text for date range picker",
-        "message": "{0} for this fiscal year"
+        "message": "{0} per questo anno fiscale"
     },
     "date_range_picker_filter_description_last_fiscal_year": {
         "_description": "text for date range picker",
-        "message": "{0} from last fiscal year"
+        "message": "{0} dallo scorso anno fiscale"
     },
     "date_range_picker_filter_description_next_fiscal_year": {
         "_description": "text for date range picker",
-        "message": "{0} for next fiscal year"
+        "message": "{0} per il prossimo anno fiscale"
     },
     "date_range_picker_filter_description_this_quarter": {
         "_description": "text for date range picker",
-        "message": "{0} for this quarter"
+        "message": "{0} per questo trimestre"
     },
     "date_range_picker_filter_description_last_quarter": {
         "_description": "text for date range picker",
-        "message": "{0} from last quarter"
+        "message": "{0} dall’ultimo trimestre"
     },
     "date_range_picker_filter_description_next_quarter": {
         "_description": "text for date range picker",
-        "message": "{0} for next quarter"
+        "message": "{0} per il prossimo trimestre"
     },
     "date_range_picker_filter_description_at_any_time": {
         "_description": "text for date range picker",
-        "message": "{0} at any time"
+        "message": "{0} in qualunque momento"
     },
     "date_range_picker_filter_description_today": {
         "_description": "text for date range picker",
-        "message": "{0} for today"
+        "message": "{0} per oggi"
     },
     "date_range_picker_filter_description_yesterday": {
         "_description": "text for date range picker",
-        "message": "{0} from yesterday"
+        "message": "{0} da ieri"
     },
     "date_range_picker_filter_description_tomorrow": {
         "_description": "text for date range picker",
-        "message": "{0} for tomorrow"
+        "message": "{0} per domani"
     },
     "date_range_picker_filter_description_specific_range": {
         "_description": "text for date range picker",
-        "message": "{0} from {1} to {2}"
+        "message": "{0} da {1} a {2}"
     },
     "date_range_picker_from_date": {
         "_description": "label for date range picker",
-        "message": "From date"
+        "message": "Dalla data"
     },
     "date_range_picker_to_date": {
         "_description": "label for date range picker",
-        "message": "To date"
+        "message": "Alla data"
     },
     "date_range_picker_min_date_error": {
         "_description": "error message for date range picker",
-        "message": "End date must be after start date"
+        "message": "La data finale deve essere posteriore alla data iniziale"
     },
     "date_range_picker_max_date_error": {
         "_description": "error message for date range picker",
-        "message": "Start date must be before end date"
+        "message": "La data iniziale deve essere anteriore alla data finale"
     },
     "errormodal_ok": {
         "_description": "Text used on the primary button to dismiss the error modal.",
@@ -447,27 +446,27 @@
     },
     "error_description_broken": {
         "_description": "Text used for the error description to when page is broken.",
-        "message": "Try to refresh this page or come back later."
+        "message": "Provare ad aggiornare la pagina o riprovare più tardi."
     },
     "error_description_construction": {
         "_description": "Text used for the error description when page is under construction.",
-        "message": "Thanks for your patience while improvements are made!\nPlease check back in a little while."
+        "message": "Stiamo apportando dei miglioramenti!\nRitornare fra un po’ di tempo."
     },
     "error_title_broken": {
         "_description": "Text used for the error title when something is broken",
-        "message": "Sorry, something went wrong."
+        "message": "Si è verificato un errore."
     },
     "error_title_construction": {
         "_description": "Text used for the error title when page is under construction.",
-        "message": "This page will return soon."
+        "message": "Questa pagina tornerà presto disponibile."
     },
     "error_title_notfound": {
         "_description": "Text used for the error title when page is not found.",
-        "message": "Sorry, we can't reach that page."
+        "message": "Impossibile raggiungere quella pagina."
     },
     "file_size_b_plural": {
         "_description": "",
-        "message": "{0} bytes"
+        "message": "{0} byte"
     },
     "file_size_b_singular": {
         "_description": "",
@@ -487,19 +486,19 @@
     },
     "file_upload_drag_or_click" : {
         "_description": "Label for file drop",
-        "message": "Drag a file here or click to browse"
+        "message": "Trascina qui il file o fai clic per sfogliare"
     },
     "file_upload_drag_file_here": {
         "_description": "",
-        "message": "Drag a file here"
+        "message": "Trascina qui il file"
     },
     "file_upload_drop_files_here": {
         "_description": "",
-        "message": "Drop files here"
+        "message": "Rilascia i file qui"
     },
     "file_upload_invalid_file": {
         "_description": "",
-        "message": "This file type is invalid"
+        "message": "Questo tipo di file non è valido"
     },
     "file_upload_link_placeholder": {
         "_description": "",
@@ -507,167 +506,166 @@
     },
     "file_upload_or_click_to_browse": {
         "_description": "",
-        "message": "or click to browse"
+        "message": "o fai clic per sfogliare"
     },
     "file_upload_paste_link": {
         "_description": "",
-        "message": "Paste a link to a file"
+        "message": "Incolla un link in un file"
     },
     "file_upload_paste_link_done": {
         "_description": "",
-        "message": "Done"
+        "message": "Fine"
     },
     "file_upload_link_input": {
         "_description": "Label for input to upload file",
-        "message": "Add a link to a file"
+        "message": "Aggiungi un link a un file"
     },
     "file_item_delete": {
         "_description": "Label for button that deletes a file",
-        "message": "Delete file"
+        "message": "Elimina file"
     },
     "listbuilder_footer_back_to_top": {
         "_description": "Text for scrolling back to the top of the listbuilder",
-        "message": "Back to top"
+        "message": "Torna su"
     },
     "listbuilder_add_title": {
         "_description": "Text for the add button title",
-        "message": "Add"
+        "message": "Aggiungi"
     },
     "listbuilder_card_switcher": {
         "_description": "Text for the card view switcher",
-        "message": "Switch to card view"
+        "message": "Passa alla vista scheda"
     },
     "listbuilder_repeater_switcher": {
         "_description": "Text for repeater view switcher",
-        "message": "Switch to repeater view"
+        "message": "Passa alla vista ripetitore"
     },
     "search_label": {
         "_description": "Label for search component functionality",
-        "message": "Search items"
+        "message": "Ricerca elementi"
     },
     "search_open": {
         "_description": "Label for opening search input",
-        "message": "Open search"
+        "message": "Apri ricerca"
     },
     "search_dismiss": {
         "_description": "Label for dismissing search input",
-        "message": "Dismiss search"
+        "message": "Ignora ricerca"
     },
     "search_placeholder": {
         "_description": "Placeholder text for search input component",
-        "message": "Find in this list"
+        "message": "Trova in questo elenco"
     },
     "searchfield_searching": {
         "_description": "text for ui-select search control while performing a remote search",
-        "message": "Searching..."
+        "message": "Ricerca in corso..."
     },
     "searchfield_no_records": {
         "_description": "text for ui-select search control when no records are found.",
-        "message": "Sorry, no matching records found"
+        "message": "Non è stato trovato nessun record corrispondente"
     },
     "selectfield_summary_text": {
         "_description": "Text displayed when the user has more than 5 items selected",
-        "message": "{0} items selected"
+        "message": "{0} elementi selezionati"
     },
     "selectfield_remove": {
         "_description": "Text for screen readers to convey the meaning of the remove icon button on select field values",
-        "message": "Remove"
+        "message": "Rimuovi"
     },
     "selectfieldpicker_select": {
         "_description": "Text displayed on the primary dialog button to confirm selection of multiple items",
-        "message": "Select"
+        "message": "Seleziona"
     },
     "selectfieldpicker_select_value": {
         "_description": "The default header text for the select field picker directive when the user is allowed to select one value (singular)",
-        "message": "Select value"
+        "message": "Seleziona valore"
     },
     "selectfieldpicker_select_values": {
         "_description": "The default header text for the select field picker directive when the user is allowed to select more than one value (plural)",
-        "message": "Select values"
+        "message": "Seleziona valori"
     },
     "selectfieldpicker_clear": {
       "_description": "Text displayed on the button in single select mode to clear selection and close form",
-      "message": "Clear selection"
+      "message": "Cancella selezione"
     },
     "tile_chevron_label": {
         "_description": "Label for the expand and collapse chevron in tiles",
-        "message": "Expand or collapse"
+        "message": "Espandi o riduci"
     },
     "wizard_navigator_finish": {
         "_description": "Text displayed on the next button when a wizard is ready for completion.",
-        "message": "Finish"
+        "message": "Fine"
     },
     "wizard_navigator_next": {
         "_description": "Text displayed on a wizard's next button.",
-        "message": "Next"
+        "message": "Avanti"
     },
     "wizard_navigator_previous": {
         "_description": "Text displayed on a wizard's previous button.",
-        "message": "Previous"
+        "message": "Precedente"
     },
     "datepicker_today": {
         "_description": "Text displayed in the Today button of the datepicker",
-        "message": "Today"
+        "message": "Oggi"
     },
     "datepicker_clear": {
         "_description": "Text displayed in the Clear button of the datepicker",
-        "message": "Clear"
+        "message": "Cancella"
     },
     "datepicker_close": {
         "_description": "Text displayed in the Close button of the datepicker",
-        "message": "Done"
+        "message": "Fine"
     },
     "datepicker_open": {
         "_description": "Text for the datepicker open button",
-        "message": "Open datepicker"
+        "message": "Apri Selezione data"
     },
     "reorder_top": {
       "_description": "Text displayed to indicate that a row can be pushed to the top of the list",
-      "message": "Top"
+      "message": "In alto"
     },
     "tab_add": {
       "_description": "Screen reader text for the add button on a tabset",
-      "message": "Add tab"
+      "message": "Aggiungi scheda"
     },
     "tab_open": {
         "_description": "Screen reader text for the open button on a tabset",
-        "message": "Open"
+        "message": "Apri"
     },
     "filter_modal_apply": {
         "_description": "Text for button to apply filters",
-        "message": "Apply filters"
+        "message": "Applica filtri"
     },
     "filter_modal_clear": {
         "_description": "Text for button to clear filters",
-        "message": "Clear all filters"
+        "message": "Cancella tutti i filtri"
     },
     "filter_button_title": {
         "_description": "Text for the filter button title",
-        "message": "Filters"
+        "message": "Filtri"
     },
     "filter_summary_header": {
         "_description": "Text for the filter summary component",
-        "message": "Filter"
+        "message": "Filtro"
     },
     "filter_summary_close": {
         "_description": "Text for the label for the filter summary close icon",
-        "message": "Close"
+        "message": "Chiudi"
     },
     "sort_menu_heading": {
         "_description": "Text for the heading in the sort dropdown",
-        "message": "Sort by"
+        "message": "Elenca per"
     },
     "sort_button_label": {
         "_description": "Text for the sort button",
-        "message": "Sort"
+        "message": "Elenca"
     },
     "pagination_previous": {
         "_description": "Text for the label for the pagination previous link",
-        "message": "Previous"
+        "message": "Precedente"
     },
     "pagination_next": {
         "_description": "Text for the label for the pagination next link",
-        "message": "Next"
+        "message": "Avanti"
     }
-
 }
