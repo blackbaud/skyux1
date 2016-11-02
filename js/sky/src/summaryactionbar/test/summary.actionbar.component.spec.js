@@ -29,7 +29,7 @@
                 '<bb-summary-actionbar-cancel ng-click="summaryCtrl.cancel()">Cancel</bb-summary-actionbar-cancel>' +
                 '</bb-summary-actionbar-actions>' +
                 '<bb-summary-actionbar-summary>' +
-                '<div class="bb-test-summary">' +
+                '<div class="bb-test-summary" style="width: 100px; height: 100px;">' +
                 'My Content' +
                 '</div>' +
                 '</bb-summary-actionbar-summary>' +
