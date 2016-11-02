@@ -72,8 +72,8 @@
       "resolved": "https://registry.npmjs.org/to/-/to-0.2.9.tgz",
       "version": "0.2.9"
     },
-    "wdio-jasmine-framework": "0.2.5",
-    "webdriverio": "4.2.8",
+    "wdio-jasmine-framework": "0.2.8",
+    "webdriverio": "4.2.16",
     "wdio-visual-regression-service": "0.4.0"
   },
   "dependencies": {
