@@ -41,7 +41,7 @@ describe('summary actionbar', function () {
 
     it('should match the baseline screenshot of the summary actionbar on small screens when expanded', function () {
         return browser
-            .setupTest('summaryactionbar/fixtures/test.full.html', 480)
+            .setupTest('/summaryactionbar/fixtures/test.full.html', 480)
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_small_expanded',
