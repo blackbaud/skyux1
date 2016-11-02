@@ -5,7 +5,7 @@ module.exports = function (grunt, env, utils) {
     grunt.config.merge({
         skyux: {
             paths: {
-                dist: (env.isCurrent(env.SUPPORTED.LOCAL) ? 'bin/' : 'dist/'),
+                dist: (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'bin/' : 'dist/'),
                 src: 'js/sky/src/',
                 paletteCss: '.tmp/palette/palette.css',
                 paletteTemplate: 'js/sky/palette/',

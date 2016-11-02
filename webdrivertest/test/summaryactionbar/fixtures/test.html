@@ -1,9 +1,20 @@
+<style>
+    .bb-test-sactionbar .bb-summary-actionbar {
+        bottom: 500px !important;
+    }
+
+    .bb-modal-fullpage .modal-footer {
+        bottom: 300px !important;
+    }
+    
+</style>
 <div ng-controller="SummaryModalButtonController as summaryModalBtnCtrl">
   <button type="button" class="btn btn-primary bb-test-open-modal" ng-click="summaryModalBtnCtrl.open()">Open standard modal</button>
   <button type="button" class="btn btn-primary bb-test-open-modal-fullpage" ng-click="summaryModalBtnCtrl.open(true)">Open full page modal</button>
   <button type="button" class="btn btn-primary bb-test-show-third" ng-click="summaryCtrl.thirdButton = true">Third button</button>
-  <div style="width: 100px height: 1000px"></div>
-  <bb-summary-actionbar>
+  <div style="width: 100px; height: 1000px"></div>
+  <div class="bb-test-sactionbar">
+      <bb-summary-actionbar>
     <bb-summary-actionbar-actions>
         <bb-summary-actionbar-primary>Primary action</bb-summary-actionbar-primary>
         <bb-summary-actionbar-secondary-actions>
@@ -54,6 +65,8 @@
     </div>
     </bb-summary-actionbar-summary>
     </bb-summary-actionbar>
+  </div>
+  
       
 </div>
 
