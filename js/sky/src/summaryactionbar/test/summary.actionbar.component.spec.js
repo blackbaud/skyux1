@@ -441,6 +441,8 @@
                             template: modalSummaryActionbarHtml
                         });
 
+                    $scope.$digest();
+
                     $timeout.flush();
                     actionbarEl = $('bb-summary-actionbar');
 
@@ -453,6 +455,7 @@
 
                     //hide actionbar
                     toggleSummaryHide(false, actionbarEl);
+    
                     verifySummaryStateHidden(true, actionbarEl, true);
                     expect(getModalBodyMaxHeight()).toBe(bodyMaxHeight + summaryHeight);
 
@@ -490,6 +493,8 @@
                         {
                             fullPage: true
                         });
+
+                    $scope.$digest();
 
                     $timeout.flush();
                     actionbarEl = $('bb-summary-actionbar');

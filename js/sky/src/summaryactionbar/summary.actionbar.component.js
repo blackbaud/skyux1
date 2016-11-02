@@ -49,6 +49,7 @@
                     minHeight: bodyHeight + summaryHeight
                 });
             } else {
+                
                 bodyHeight = parseInt(modalBodyEl.css('max-height'), 10);
                 newBodyMax = bodyHeight + summaryHeight;
                 modalBodyEl.animate(
