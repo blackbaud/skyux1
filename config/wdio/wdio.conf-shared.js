@@ -8,7 +8,7 @@
 
 module.exports = {
     specs: [
-        'webdrivertest/test/**/*.visual.js'
+        'webdrivertest/test/**/summaryactionbar.visual.js'
     ],
     logLevel: 'silent',
     baseUrl: 'http://localhost:8000/webdrivertest/test',

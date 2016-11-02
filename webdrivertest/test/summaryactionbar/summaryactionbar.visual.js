@@ -9,7 +9,7 @@ describe('summary actionbar', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar',
-                selector: '.bb-summary-actionbar',
+                selector: 'body',
                 checkAccessibility: true
             });
     });
@@ -21,7 +21,7 @@ describe('summary actionbar', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_threebutton',
-                selector: '.bb-summary-actionbar',
+                selector: 'body',
                 checkAccessibility: true
             });
     });
@@ -34,7 +34,7 @@ describe('summary actionbar', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_threebutton_expanded',
-                selector: '.bb-summary-actionbar',
+                selector: 'body',
                 checkAccessibility: true
             });
     });
@@ -45,7 +45,7 @@ describe('summary actionbar', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_small_expanded',
-                selector: '.bb-summary-actionbar',
+                selector: 'body',
                 checkAccessibility: true
             });
     });
@@ -57,7 +57,7 @@ describe('summary actionbar', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_small_collapsed',
-                selector: '.bb-summary-actionbar',
+                selector: 'body',
                 checkAccessibility: true
             });
     });

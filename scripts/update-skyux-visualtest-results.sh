@@ -3,38 +3,40 @@
 
 if [[ "$(ls -A webdriver-screenshots-diffs)" ]]; then
 
-    echo -e "Starting to update webdriver test results.\n"
+    
+fi
 
-    git config --global user.email "sky-build-user@blackbaud.com"
-    git config --global user.name "Blackbaud Sky Build User"
-    git clone --quiet https://${GH_TOKEN}@github.com/blackbaud/skyux-visualtest-results.git skyux-visualtest-results-webdriver > /dev/null
+echo -e "Starting to update webdriver test results.\n"
 
-    cd skyux-visualtest-results-webdriver
+git config --global user.email "sky-build-user@blackbaud.com"
+git config --global user.name "Blackbaud Sky Build User"
+git clone --quiet https://${GH_TOKEN}@github.com/blackbaud/skyux-visualtest-results.git skyux-visualtest-results-webdriver > /dev/null
 
-    branch="$TRAVIS_BUILD_NUMBER-webdriver"
-    if [[ $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]; then
-      branch="$branch-savage"
-    fi
-    git checkout -b $branch
+cd skyux-visualtest-results-webdriver
 
-    mkdir -p failures
+branch="$TRAVIS_BUILD_NUMBER-webdriver"
+if [[ $TRAVIS_BRANCH =~ $SAVAGE_BRANCH ]]; then
+    branch="$branch-savage"
+fi
+git checkout -b $branch
 
-    cp -rf ../webdriver-screenshots-diffs/ failures/
+mkdir -p failures
 
-    mkdir -p reference
+cp -rf ../webdriver-screenshots-diffs/ failures/
 
-    cp -rf ../webdriver-screenshots/ reference/
+mkdir -p reference
 
-    mkdir -p created-screenshots
+cp -rf ../webdriver-screenshots/ reference/
 
-    cp -rf ../webdriver-screenshots-screen created-screenshots/
+mkdir -p created-screenshots
 
-    git add -A
-    if [ -z "$(git status --porcelain)" ]; then
-        echo -e "No changes to commit to skyux visual test webdriver results."
-    else
-        git commit -m "Travis build $TRAVIS_BUILD_NUMBER webdriver screenshot results pushed to skyux-visualtest-results"
-        git push -fq origin $branch > /dev/null
-        echo -e "skyux-visualtest-results webdriver successfully updated.\nTest results may be viewed at https://github.com/blackbaud/skyux-visualtest-results/tree/$branch"
-    fi
+cp -rf ../webdriver-screenshots-screen created-screenshots/
+
+git add -A
+if [ -z "$(git status --porcelain)" ]; then
+    echo -e "No changes to commit to skyux visual test webdriver results."
+else
+    git commit -m "Travis build $TRAVIS_BUILD_NUMBER webdriver screenshot results pushed to skyux-visualtest-results"
+    git push -fq origin $branch > /dev/null
+    echo -e "skyux-visualtest-results webdriver successfully updated.\nTest results may be viewed at https://github.com/blackbaud/skyux-visualtest-results/tree/$branch"
 fi
