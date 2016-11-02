@@ -187,6 +187,34 @@ describe('Datepicker directive', function () {
         expect($scope.testdate1).toEqual(new Date('06/15/2009'));
     });
 
+    it('renders SQL UTC dates properly with non zero time', function () {
+        var el,
+            inputEl;
+
+        el = setupDatepicker(datepickerHtml, '2015-05-28T00:00:01');
+
+        inputEl = el.find('input');
+
+        expect(inputEl).toHaveValue('05/28/2015');
+
+        expect(inputEl.attr('placeholder')).toBe('mm/dd/yyyy');
+    });
+
+    it('handles input changing to SQL UTC dates with non zero time', function () {
+        var el,
+            inputEl;
+
+        el = setupDatepicker(datepickerHtml, '5/17/1999');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, '2009-06-15T00:00:01');
+
+        expect(inputEl).toHaveValue('06/15/2009');
+
+        expect($scope.testdate1).toEqual(new Date('06/15/2009'));
+    });
+
     it('renders Javascript dates properly', function () {
         var el,
            inputEl;

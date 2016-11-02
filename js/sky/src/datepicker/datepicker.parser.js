@@ -5,15 +5,26 @@
     function bbDatepickerParser(bbMoment) {
         function parseUTCString(value) {
             var date = null,
-                dateArray,
-                datePart;
+                timeOffsetPart,
+                momentDate;
 
-            if (angular.isString(value) && value.indexOf('T00:00:00') !== -1) {
-                datePart = value.split('T')[0];
+            if (value.indexOf('T') !== -1) {
 
-                dateArray = datePart.split('-');
-                date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+                timeOffsetPart = value.split('T')[1];
+
+                if (timeOffsetPart.indexOf('Z') === -1 && timeOffsetPart.indexOf('+') === -1 && timeOffsetPart.indexOf('-') === -1) {
+                    momentDate = bbMoment(value, 'YYYY-MM-DDTHH:mm:ss');
+                } else {
+                    momentDate = bbMoment(value, 'YYYY-MM-DDTHH:mm:ss.sssZ');
+                }
+            
+                /* istanbul ignore else */
+                /* sanity check */
+                if (momentDate.isValid()) {
+                    date = momentDate.toDate();
+                }
             }
+            
             return date;
         }
 
@@ -210,8 +221,11 @@
         }
 
         function getMomentDate(value, format) {
-            var momentDate = bbMoment(value, format.toUpperCase()),
+            var momentDate,
                 date;
+            
+            momentDate = bbMoment(value, format.toUpperCase());
+            
             /* istanbul ignore else */
             /* sanity check */
             if (momentDate.isValid()) {
