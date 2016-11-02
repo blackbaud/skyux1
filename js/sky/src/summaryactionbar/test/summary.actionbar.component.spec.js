@@ -443,7 +443,7 @@
 
                     $scope.$digest();
 
-                    $timeout.flush();
+                    timeoutFlushIfAvailable();
                     actionbarEl = $('bb-summary-actionbar');
 
                     expect(actionbarEl.find('.bb-summary-actionbar')).toHaveClass('bb-summary-actionbar-summary-collapsed');
@@ -496,7 +496,7 @@
 
                     $scope.$digest();
 
-                    $timeout.flush();
+                    timeoutFlushIfAvailable();
                     actionbarEl = $('bb-summary-actionbar');
 
                     //expect large screen mode
@@ -512,7 +512,7 @@
 
                     //small breakpoint trigger
                     changeBreakpoint(true, breakpointCallbacks);
-                    $timeout.flush();
+                    timeoutFlushIfAvailable();
 
                     verifySummaryStateHidden(false, actionbarEl, true);
                     summaryHeight = actionbarEl.find('.bb-summary-actionbar-summary').outerHeight();
