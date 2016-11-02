@@ -432,7 +432,11 @@
                     var actionbarEl,
                         bodyMaxHeight,
                         summaryHeight,
-                        modalInstance = bbModal.open(
+                        modalInstance;
+                        
+                    timeoutFlushIfAvailable(); 
+                        
+                    modalInstance = bbModal.open(
                         {
                             template: modalSummaryActionbarHtml
                         });
@@ -473,6 +477,8 @@
                         summaryEl,
                         modalInstance,
                         breakpointCallbacks = [];
+
+                    timeoutFlushIfAvailable();
                         
                     spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
                         breakpointCallbacks.push(callback);
