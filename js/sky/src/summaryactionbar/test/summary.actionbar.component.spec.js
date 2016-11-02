@@ -60,7 +60,7 @@
         ));
 
         beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _$window_, _$animate_, _bbMediaBreakpoints_, _bbModal_) {
-            $scope = _$rootScope_.$new();
+            $scope = _$rootScope_;
             $compile = _$compile_;
             $timeout = _$timeout_;
             $document = _$document_;
@@ -410,6 +410,8 @@
                 {
                     template: modalSummaryActionbarHtml
                 });
+                $scope.$digest();
+                $animate.flush();
 
                 $timeout.flush();
 
@@ -442,6 +444,7 @@
                         });
 
                     $scope.$digest();
+                    $animate.flush();
 
                     timeoutFlushIfAvailable();
                     actionbarEl = $('bb-summary-actionbar');
@@ -495,8 +498,11 @@
                         });
 
                     $scope.$digest();
+                    $animate.flush();
 
                     timeoutFlushIfAvailable();
+
+                    $scope.$digest();
                     actionbarEl = $('bb-summary-actionbar');
 
                     //expect large screen mode
@@ -512,8 +518,10 @@
 
                     //small breakpoint trigger
                     changeBreakpoint(true, breakpointCallbacks);
+                    $scope.$digest();
                     timeoutFlushIfAvailable();
 
+                    expect(actionbarEl.find('.bb-summary-actionbar')).toHaveClass('bb-summary-actionbar-summary-collapsed');
                     verifySummaryStateHidden(false, actionbarEl, true);
                     summaryHeight = actionbarEl.find('.bb-summary-actionbar-summary').outerHeight();
                     
