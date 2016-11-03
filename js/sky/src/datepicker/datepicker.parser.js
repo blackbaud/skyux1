@@ -15,7 +15,7 @@
                 if (timeOffsetPart.indexOf('Z') === -1 && timeOffsetPart.indexOf('+') === -1 && timeOffsetPart.indexOf('-') === -1) {
                     momentDate = bbMoment(value, 'YYYY-MM-DDTHH:mm:ss');
                 } else {
-                    momentDate = bbMoment(value, 'YYYY-MM-DDTHH:mm:ss.sssZ');
+                    momentDate = bbMoment(value, 'YYYY-MM-DDThh:mm:ss.sssZ');
                 }
             
                 /* istanbul ignore else */

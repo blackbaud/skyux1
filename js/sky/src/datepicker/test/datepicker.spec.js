@@ -6,6 +6,7 @@ describe('Datepicker directive', function () {
 
     var $compile,
         datepickerHtml,
+        bbMoment,
         $scope,
         $q,
         $timeout,
@@ -18,13 +19,14 @@ describe('Datepicker directive', function () {
     beforeEach(module('sky.templates'));
     beforeEach(module('sky.datepicker'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$q_, _$timeout_, bbResources, bbDatepickerConfig) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$q_, _$timeout_, bbResources, bbDatepickerConfig, _bbMoment_) {
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
         $q = _$q_;
         dateConfig = bbDatepickerConfig;
         resources = bbResources;
         $timeout = _$timeout_;
+        bbMoment = _bbMoment_;
 
         dateConfig.currentCultureDateFormatString = 'MM/dd/yyyy';
 
@@ -212,7 +214,37 @@ describe('Datepicker directive', function () {
 
         expect(inputEl).toHaveValue('06/15/2009');
 
-        expect($scope.testdate1).toEqual(new Date('06/15/2009'));
+        expect($scope.testdate1).toEqual(bbMoment('2009-06-15T00:00:01', 'YYYY-MM-DDTHH:mm:ss').toDate());
+    });
+
+    it('renders SQL UTC dates properly with offset', function () {
+        var el,
+            inputEl;
+
+        el = setupDatepicker(datepickerHtml, '1994-11-05T08:15:30-05:00');
+
+        inputEl = el.find('input');
+
+        expect(inputEl).toHaveValue('11/05/1994');
+
+        expect(inputEl.attr('placeholder')).toBe('mm/dd/yyyy');
+
+        expect($scope.testdate1).toEqual(bbMoment('1994-11-05T08:15:30-05:00', 'YYYY-MM-DDThh:mm:ss.sssZ').toDate());
+    });
+
+    it('handles input changing to SQL UTC dates with offset', function () {
+        var el,
+            inputEl;
+
+        el = setupDatepicker(datepickerHtml, '5/17/1999');
+
+        inputEl = el.find('input');
+
+        setInput(inputEl, '1994-11-05T13:15:30Z');
+
+        expect(inputEl).toHaveValue('11/05/1994');
+
+        expect($scope.testdate1).toEqual(bbMoment('1994-11-05T13:15:30Z', 'YYYY-MM-DDThh:mm:ss.sssZ').toDate());
     });
 
     it('renders Javascript dates properly', function () {
