@@ -1,0 +1,85 @@
+.bb-summary-actionbar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: $margin-double;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: $zindex-modal-background - 1;
+    background-color: $bb-color-white;
+    box-shadow: 0 -3px 3px 0 $gray-lighter;
+}
+
+.modal-footer {
+    .bb-summary-actionbar {
+        position: static;
+        margin-top: 0;
+    }
+}
+
+.bb-modal-footer-summary-actionbar-container.modal-footer {
+    padding: 0;
+}
+
+.bb-summary-actionbar-actions {
+    margin: $margin 0;
+    padding-left: $padding;
+    padding-right: $padding-triple;
+    flex-shrink: 0;
+    .btn {
+        margin-right: $margin;
+    }
+}
+
+.bb-summary-actionbar-secondary-actions {
+    display: inline-block;
+    .bb-summary-actionbar-secondary-buttons .bb-dropdown-item {
+        display: inline-block;
+    }
+}
+
+
+
+.bb-summary-actionbar-summary {
+    margin: $margin 0;
+    padding-left: $padding-triple;
+    display: flex;
+    @include bb-border(light, left);
+}
+
+.bb-summary-actionbar-summary-items {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bb-summary-actionbar-details-expand {
+    margin-left: auto;
+    margin-right: $margin;
+}
+
+.bb-summary-actionbar-details-expand, .bb-summary-actionbar-details-collapse {
+    display: none;
+}
+
+.bb-summary-actionbar-summary-collapsed {
+    &.bb-summary-actionbar {
+        flex-wrap: wrap;
+    }
+
+    .bb-summary-actionbar-summary {
+        order: -1;
+        width: 100%;
+        @include bb-border(light, bottom);
+        margin: 0;
+        padding: $padding;
+    }
+
+    .bb-summary-actionbar-summary {
+        border-left: none;
+    }
+    
+    .bb-summary-actionbar-details-expand, .bb-summary-actionbar-details-collapse {
+        display: block;
+    }
+}

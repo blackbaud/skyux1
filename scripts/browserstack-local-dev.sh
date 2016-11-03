@@ -18,5 +18,5 @@ if [[ ! -e $binaryFile ]]; then
   unzip $binaryZip
 fi
 
-$binaryFile -v -onlyAutomate -forcelocal $BROWSER_STACK_ACCESS_KEY &
+$binaryFile -v -onlyAutomate -forcelocal -force $BROWSER_STACK_ACCESS_KEY &
 sleep 3
