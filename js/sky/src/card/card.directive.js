@@ -86,6 +86,18 @@
             return vm.bbCardSelectable === 'true';
         }
 
+        function cardSelectionToggled(isSelected) {
+
+            if (angular.isFunction(vm.bbCardSelectionToggled)) {
+                vm.bbCardSelectionToggled({isSelected: isSelected});
+            }
+            if (vm.listbuilderCardCtrl !== null && angular.isFunction(vm.listbuilderCardCtrl.listbuilderCardToggled)) {
+                vm.listbuilderCardCtrl.listbuilderCardToggled(isSelected);
+            }
+        }
+
+        vm.cardSelectionToggled = cardSelectionToggled;
+
         vm.cardIsSelectable = cardIsSelectable;
 
         components.forEach(addComponentSetter);
@@ -115,7 +127,10 @@
     }
 
     function bbCard() {
-        function link(scope, el, attrs, vm) {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0];
+
+            vm.listbuilderCardCtrl = ctrls[1];
             function watchForComponent(component) {
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
@@ -135,8 +150,10 @@
             bindToController: {
                 bbCardSelectable: '@?',
                 bbCardSelected: '=?',
+                bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
+            require: ['bbCard', '^^bbListbuilderCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,

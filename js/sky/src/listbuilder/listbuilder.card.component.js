@@ -7,6 +7,14 @@
 
         function postLink() {
             ctrl.cardsCtrl.addCard();
+
+            if (ctrl.bbListbuilderCardItem) {
+                ctrl.listbuilderCardToggled = listbuilderCardToggled;
+            }
+        }
+
+        function listbuilderCardToggled(isSelected) {
+            ctrl.contentCtrl.itemToggled(isSelected, ctrl.bbListbuilderCardItem);
         }
 
         ctrl.$postLink = postLink;
@@ -18,7 +26,11 @@
             transclude: true,
             controller: Controller,
             require: {
-                cardsCtrl: '^bbListbuilderCards'
+                cardsCtrl: '^bbListbuilderCards',
+                contentCtrl: '^^bbListbuilderContent'
+            },
+            bindings: {
+                bbListbuilderCardItem: '<?'
             }
 
         });

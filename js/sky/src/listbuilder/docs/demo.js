@@ -65,72 +65,84 @@
             nextTop = 6,
             dataSet = [
                 {
+                    id: 0,
                     name: 'Tim Duggy',
                     occupation: 'Software Engineer',
                     joinDate: new Date('1/1/2016'),
                     duesPaid: false
                 },
                 {
+                    id: 1,
                     name: 'Janet Smith',
                     occupation: 'Accountant',
                     joinDate: new Date('2/23/2006'),
                     duesPaid: true
                 },
                 {
+                    id: 2,
                     name: 'James Wheeler',
                     occupation: 'Marketing Director',
                     joinDate: new Date('4/12/2013'),
                     duesPaid: true
                 },
                 {
+                    id: 3,
                     name: 'Jarod Douglas',
                     occupation: 'Real Estate Agent',
                     joinDate: new Date('12/12/2012'),
                     duesPaid: false
                 },
                 {
+                    id: 4,
                     name: 'Sarah Silver',
                     occupation: 'Software Engineer',
                     joinDate: new Date('11/7/1999'),
                     duesPaid: true
                 },
                 {
+                    id: 5,
                     name: 'Tina Maller',
                     occupation: 'Sales',
                     joinDate: new Date('3/5/2016'),
                     duesPaid: true
                 },
                 {
+                    id: 6,
                     name: 'Megan Johnson',
                     occupation: 'Manager',
                     joinDate: new Date('1/1/2013'),
                     duesPaid: true
                 },
                 {
+                    id: 7,
                     name: 'Reed Sawyer',
                     occupation: 'Accountant',
                     joinDate: new Date('3/9/2006'),
                     duesPaid: true
                 },
                 {
+                    id: 8, 
                     name: 'James Dunn',
                     occupation: 'Auto Technician',
                     joinDate: new Date('6/12/2015'),
                     duesPaid: false
                 },
                 {
+                    id: 9,
                     name: 'Douglas Herman',
                     occupation: 'Lawyer',
                     joinDate: new Date('3/1/2012'),
                     duesPaid: true
                 },
                 {
+                    id: 10,
                     name: 'Helen Walker',
                     occupation: 'Software Consultant',
                     joinDate: new Date('4/7/2007'),
                     duesPaid: true
                 },
                 {
+                    id: 11,
                     name: 'Christopher Lewen',
                     occupation: 'Sales',
                     joinDate: new Date('5/26/2016'),
@@ -285,6 +297,51 @@
             self.activeView = newView;
         }
 
+        function getItemById(id) {
+            var i;
+
+            for (i = 0; i < dataSet.length; i++) {
+                if (dataSet[i].id === id) {
+                    return dataSet[i];
+                }
+            }
+        }
+
+        function itemsChanged(selectedItems) {
+            var i,
+                item; 
+
+            self.payMembershipSelections = [];
+            self.secondarySelections = [];
+            for (i = 0; i < selectedItems.length; i++) {
+                item = getItemById(selectedItems[i]);
+                if (!item.duesPaid) {
+                    self.payMembershipSelections.push(selectedItems[i]);
+                }
+                self.secondarySelections.push(selectedItems[i]);
+            }
+        }
+
+        function payMembership(selections) {
+            var i,
+                item;
+            for (i = 0; i < selections.length; i++) {
+                item = getItemById(selections[i]); 
+                item.duesPaid = true;
+            }
+            self.payMembershipSelections = [];
+        }
+
+        function secondaryAction(selections) {
+            console.log('secondary action taken with ', selections);
+        }
+
+        self.secondarySelections = [];
+        self.payMembershipSelections = [];
+
+        self.payMembership = payMembership;
+        self.secondaryAction = secondaryAction;
+        self.itemsChanged = itemsChanged;
         self.onFilterClick = onFilterClick;
 
         self.onSearch = onSearch;

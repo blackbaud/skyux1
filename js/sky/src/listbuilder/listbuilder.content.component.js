@@ -5,6 +5,7 @@
     function Controller($element, bbHighlight) {
 
         var ctrl = this,
+            selectedIds,
             lastSearchText;
 
         function addListbuilderView(newView) {
@@ -48,8 +49,6 @@
             }
         }
 
-        
-
         function getCurrentView() {
             return ctrl.listbuilderCtrl.currentView;
         }
@@ -92,10 +91,33 @@
             }
         }
 
+        function addSelectedItem(item) {
+            if (selectedIds.indexOf(item.id) === -1) {
+                selectedIds.push(item.id);
+            }
+        }
+
+        function removeSelectedItem(item) {
+            var itemIndex = selectedIds.indexOf(item.id);
+            if (itemIndex !== -1) {
+                selectedIds.splice(itemIndex, 1);
+            }
+        }
+
+        function itemToggled(isSelected, item) {
+            if (isSelected) {
+                addSelectedItem(item);
+            } else {
+                removeSelectedItem(item);
+            }
+            ctrl.bbListbuilderContentMultiselectItemsChanged({selectedItems: selectedIds});
+        }
+
         function onInit() {
             ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
             ctrl.listbuilderCtrl.setCurrentView = setCurrentView;
             ctrl.highlightLastSearchText = ctrl.listbuilderCtrl.highlightLastSearchText;
+            selectedIds = [];
             if (ctrl.bbListbuilderContentActiveView) {
                 setActiveView(ctrl.bbListbuilderContentActiveView);
             }
@@ -122,6 +144,7 @@
         ctrl.removeListbuilderView = removeListbuilderView;
         ctrl.updateListbuilderView = updateListbuilderView;
         ctrl.getCurrentView = getCurrentView;
+        ctrl.itemToggled = itemToggled;
 
     }
 
@@ -137,7 +160,8 @@
             },
             bindings: {
                 bbListbuilderContentActiveView: '@?',
-                bbListbuilderContentViewChanged: '&?'
+                bbListbuilderContentViewChanged: '&?',
+                bbListbuilderContentMultiselectItemsChanged: '&?'
             }
         });
 

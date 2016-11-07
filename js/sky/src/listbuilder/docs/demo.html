@@ -46,10 +46,13 @@
     <bb-listbuilder-content 
         bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
         bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
+        bb-listbuilder-content-multiselect-data="listCtrl.data"
+        bb-listbuilder-content-multiselect-selected-items="listCtrl.selectedIds"
+        bb-listbuilder-content-multiselect-items-changed="listCtrl.itemsChanged(selectedItems)"
         >
       <bb-listbuilder-cards>
-        <bb-listbuilder-card ng-repeat="item in listCtrl.data">
-            <bb-card>
+        <bb-listbuilder-card bb-listbuilder-card-item="item" ng-repeat="item in listCtrl.data">
+            <bb-card bb-card-selectable="true" bb-card-selected="item.selected">
                 <bb-card-title>
                 {{item.name}}
                 </bb-card-title>
@@ -145,6 +148,23 @@
         bb-listbuilder-show-load-more="listCtrl.hasMoreData">
     </bb-listbuilder-footer>
   </bb-listbuilder>
+  <bb-summary-actionbar 
+    ng-show="listCtrl.payMembershipSelections.length > 0 || listCtrl.secondarySelections.length > 0">
+      <bb-summary-actionbar-actions>
+          <bb-summary-actionbar-primary
+            ng-disabled="listCtrl.payMembershipSelections < 1" 
+            ng-click="listCtrl.payMembership(listCtrl.payMembershipSelections)">
+              Pay membership dues ({{listCtrl.payMembershipSelections.length}})
+          </bb-summary-actionbar-primary>
+          <bb-summary-actionbar-secondary-actions>
+              <bb-summary-actionbar-secondary
+                ng-disabled="listCtrl.secondarySelections < 1" 
+                ng-click="listCtrl.secondaryAction(listCtrl.secondarySelections)">
+                  Secondary action ({{listCtrl.secondarySelections.length}})
+              </bb-summary-actionbar-secondary>
+          </bb-summary-actionbar-secondary-actions>
+      </bb-summary-actionbar-actions>
+  </bb-summary-actionbar>
 </div>
 
 </script>
