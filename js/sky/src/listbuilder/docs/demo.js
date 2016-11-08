@@ -224,35 +224,77 @@
             
         }
 
-        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData) {
+        function getItemById(id, array) {
+            var i,
+                length = array.length;
+
+            for (i = 0; i < length; i++) {
+                if (array[i].id === id) {
+                    return array[i];
+                }
+            }
+        }
+
+        function applyMultiselectOptions(array, onlyShowSelected, selectedIds) {
+            var length = selectedIds.length,
+                item,
+                newData = [],
+                i;
+
+            for (i = 0; i < length; i++) {
+                item = getItemById(selectedIds[i], array);
+                if (item) {
+                    item.selected = true;
+                    if (onlyShowSelected) {
+                        newData.push(item);
+                    }
+                }
+                
+            }
+
+            if (onlyShowSelected) {
+                return newData;
+            } else {
+                return array;
+            }
+        }
+
+        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected) {
             var filteredData;
             filteredData = searchArray(searchText, dataSet);
             filteredData = filter(filteredData, filters);
+            filteredData = applyMultiselectOptions(filteredData, showOnlySelected, self.selectedIds);
             filteredData = sortArray(sortProperty, sortDescending, filteredData);
 
             self.data = filteredData.slice(0, maxData);
             self.hasMoreData = filteredData.length > self.data.length;
             nextSkip = self.data.length;
+
+        }
+
+        function applyAllAndUpdateSelectOptions(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected) {
+            applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected);
+            itemsChanged(self.selectedIds, false);
         }
 
         function onSearch(searchText) {
             return $timeout(function () {
                 var searchedData
                 self.searchText = searchText;
-                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+                applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
                 
             });
         }
 
         function onDismissFilter(index) {
             self.appliedFilters.splice(index, 1);
-            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
         }
 
         function sortItems(item) {
             sortProperty = item.name;
             sortDescending = item.descending;
-            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
         }
 
         function onFilterClick() {
@@ -267,7 +309,7 @@
             }).result
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
-                    applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+                    applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
                 });
         }
 
@@ -279,7 +321,7 @@
             if (maxRecordsShown < self.data.length) {
                 maxRecordsShown = self.data.length;
             }
-            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
         }
 
         function onLoadMore() {
@@ -297,28 +339,27 @@
             self.activeView = newView;
         }
 
-        function getItemById(id) {
-            var i;
-
-            for (i = 0; i < dataSet.length; i++) {
-                if (dataSet[i].id === id) {
-                    return dataSet[i];
-                }
-            }
-        }
-
-        function itemsChanged(selectedItems) {
+        function itemsChanged(selectedItems, shouldApplyFilters) {
             var i,
                 item; 
+
+            self.selectedIds = selectedItems;
+
+            if (self.showOnlySelected && shouldApplyFilters) {
+                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+            }
 
             self.payMembershipSelections = [];
             self.secondarySelections = [];
             for (i = 0; i < selectedItems.length; i++) {
-                item = getItemById(selectedItems[i]);
-                if (!item.duesPaid) {
-                    self.payMembershipSelections.push(selectedItems[i]);
+                item = getItemById(selectedItems[i], self.data);
+                if (item) {
+                    if (!item.duesPaid) {
+                        self.payMembershipSelections.push(selectedItems[i]);
+                    }
+                    self.secondarySelections.push(selectedItems[i]);
                 }
-                self.secondarySelections.push(selectedItems[i]);
+                
             }
         }
 
@@ -326,7 +367,7 @@
             var i,
                 item;
             for (i = 0; i < selections.length; i++) {
-                item = getItemById(selections[i]); 
+                item = getItemById(selections[i], self.data); 
                 item.duesPaid = true;
             }
             self.payMembershipSelections = [];
@@ -336,8 +377,62 @@
             console.log('secondary action taken with ', selections);
         }
 
+        function addSelectedItem(id, array) {
+            if (array.indexOf(id) === -1) {
+                array.push(id);
+            }
+        }
+
+        function removeSelectedItem(id, array) {
+            var itemIndex = array.indexOf(id);
+            if (itemIndex !== -1) {
+                array.splice(itemIndex, 1);
+            }
+        }
+
+        function selectAll() {
+            var length = self.data.length,
+                i;
+
+            for (i = 0; i < length; i++) {
+                self.data[i].selected = true;
+                addSelectedItem(self.data[i].id, self.selectedIds);
+            }
+
+            itemsChanged(self.selectedIds);
+
+        }
+
+        function clearAll() {
+            var length = self.data.length,
+                i;
+
+            for (i = 0; i < length; i++) {
+                self.data[i].selected = false;
+                removeSelectedItem(self.data[i].id, self.selectedIds);
+            }
+
+            itemsChanged(self.selectedIds);
+            
+        }
+
+        function toggleOnlySelected(showOnlySelected) {
+            self.showOnlySelected = showOnlySelected;
+            // when true do not need to reapply all data, when false need to reapply.
+
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, showOnlySelected);
+            
+        }
+
+        self.toggleOnlySelected = toggleOnlySelected;
+
+        self.selectAll = selectAll;
+        self.clearAll = clearAll;
+
         self.secondarySelections = [];
         self.payMembershipSelections = [];
+
+        self.selectedIds = [];
 
         self.payMembership = payMembership;
         self.secondaryAction = secondaryAction;

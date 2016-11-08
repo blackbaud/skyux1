@@ -110,7 +110,8 @@
                 bbListbuilderAdd: '?bbListbuilderAdd',
                 bbListbuilderFilter: '?bbListbuilderFilter',
                 bbListbuilderSort: '?bbListbuilderSort',
-                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary'
+                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary',
+                bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect'
             },
             controller: Controller,
             require: {

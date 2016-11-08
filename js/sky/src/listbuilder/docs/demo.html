@@ -4,6 +4,23 @@
         border-bottom: 1px solid green;
         padding: 20px;
     }
+
+    .bb-listbuilder-toolbar-multiselect {
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .bb-listbuilder-toolbar-multiselect .bb-listbuilder-show-selected {
+        margin-bottom: 0;
+        margin-left: auto;
+    }
+
+    .bb-listbuilder-select-all+.bb-listbuilder-clear-all {
+        margin-left: 10px;
+    }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
     <button type="button" class="btn btn-primary" style="margin-bottom: 10px"
@@ -42,16 +59,34 @@
             </bb-filter-summary-item>
         </bb-filter-summary>
       </bb-listbuilder-filter-summary>
+      <bb-listbuilder-toolbar-multiselect>
+          <div class="bb-listbuilder-toolbar-multiselect">
+            <button class="btn btn-link bb-listbuilder-select-all" ng-click="listCtrl.selectAll()">
+                Select all ({{listCtrl.data.length}})
+            </button>
+            <button class="btn btn-link bb-listbuilder-clear-all" ng-click="listCtrl.clearAll()">
+                Clear all
+            </button>
+            <label class="control-label bb-listbuilder-show-selected">
+                <input 
+                    type="checkbox" 
+                    bb-check 
+                    ng-model="listCtrl.showOnlySelected" 
+                    ng-change="listCtrl.toggleOnlySelected(listCtrl.showOnlySelected)">
+                Show only selected
+            </label>
+          </div>
+
+      </bb-listbuilder-toolbar-multiselect>
     </bb-listbuilder-toolbar>
     <bb-listbuilder-content 
         bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
         bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
-        bb-listbuilder-content-multiselect-data="listCtrl.data"
-        bb-listbuilder-content-multiselect-selected-items="listCtrl.selectedIds"
         bb-listbuilder-content-multiselect-items-changed="listCtrl.itemsChanged(selectedItems)"
+        bb-listbuilder-content-multiselect-selected-items="listCtrl.selectedIds"
         >
       <bb-listbuilder-cards>
-        <bb-listbuilder-card bb-listbuilder-card-item="item" ng-repeat="item in listCtrl.data">
+        <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.data">
             <bb-card bb-card-selectable="true" bb-card-selected="item.selected">
                 <bb-card-title>
                 {{item.name}}
@@ -82,7 +117,13 @@
       </bb-listbuilder-cards>
       <bb-listbuilder-repeater>
         <bb-repeater>
-            <bb-repeater-item bb-listbuilder-repeater-item ng-repeat="item in listCtrl.data">
+            <bb-repeater-item 
+                bb-listbuilder-repeater-item 
+                bb-listbuilder-repeater-item-id="item.id" 
+                ng-repeat="item in listCtrl.data"
+                bb-repeater-item-selectable="true"
+                bb-repeater-item-selected="item.selected"
+                >
                 <bb-repeater-item-title>
                 {{item.name}}
                 </bb-repeater-item-title>

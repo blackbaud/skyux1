@@ -13,6 +13,7 @@
 
             function selectItem() {
                 vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
+                vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
             vm.getCls = function () {
@@ -53,6 +54,8 @@
             var animateEnabled,
                 bbRepeater = ctrls[1],
                 vm = ctrls[0];
+
+            vm.listbuilderRepeaterItemCtrl = ctrls[2];
 
 
             function titleElExists() {
@@ -160,6 +163,20 @@
 
             vm.itemIsSelectable = itemIsSelectable;
 
+            function repeaterItemSelectionToggled(isSelected) {
+                $timeout(function () {
+                    if (angular.isFunction(vm.bbRepeaterItemSelectionToggled)) {
+                        vm.bbRepeaterItemSelectionToggled({isSelected: isSelected});
+                    }
+                    if (vm.listbuilderRepeaterItemCtrl !== null && angular.isFunction(vm.listbuilderRepeaterItemCtrl.listbuilderRepeaterItemToggled)) {
+                        vm.listbuilderRepeaterItemCtrl.listbuilderRepeaterItemToggled(isSelected);
+                    }
+                });
+                
+            }
+
+            vm.repeaterItemSelectionToggled = repeaterItemSelectionToggled;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
@@ -172,12 +189,13 @@
                 bbRepeaterItemExpanded: '=?',
                 bbRepeaterItemSelectable: '@?',
                 bbRepeaterItemSelected: '=?',
+                bbRepeaterItemSelectionToggled: '&?',
                 bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
             link: link,
-            require: ['bbRepeaterItem', '^bbRepeater'],
+            require: ['bbRepeaterItem', '^bbRepeater', 'bbListbuilderRepeaterItem'],
             scope: {},
             templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
             transclude: {

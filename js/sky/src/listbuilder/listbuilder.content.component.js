@@ -5,7 +5,6 @@
     function Controller($element, bbHighlight) {
 
         var ctrl = this,
-            selectedIds,
             lastSearchText;
 
         function addListbuilderView(newView) {
@@ -91,33 +90,37 @@
             }
         }
 
-        function addSelectedItem(item) {
-            if (selectedIds.indexOf(item.id) === -1) {
-                selectedIds.push(item.id);
+        function addSelectedItem(id) {
+            if (ctrl.bbListbuilderContentSelectedItems.indexOf(id) === -1) {
+                ctrl.bbListbuilderContentSelectedItems.push(id);
             }
         }
 
-        function removeSelectedItem(item) {
-            var itemIndex = selectedIds.indexOf(item.id);
+        function removeSelectedItem(id) {
+            var itemIndex = ctrl.bbListbuilderContentSelectedItems.indexOf(id);
             if (itemIndex !== -1) {
-                selectedIds.splice(itemIndex, 1);
+                ctrl.bbListbuilderContentSelectedItems.splice(itemIndex, 1);
             }
         }
 
-        function itemToggled(isSelected, item) {
+        function itemToggled(isSelected, id) {
             if (isSelected) {
-                addSelectedItem(item);
+                addSelectedItem(id);
             } else {
-                removeSelectedItem(item);
+                removeSelectedItem(id);
             }
-            ctrl.bbListbuilderContentMultiselectItemsChanged({selectedItems: selectedIds});
+            ctrl.bbListbuilderContentMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderContentSelectedItems});
         }
 
         function onInit() {
             ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
             ctrl.listbuilderCtrl.setCurrentView = setCurrentView;
             ctrl.highlightLastSearchText = ctrl.listbuilderCtrl.highlightLastSearchText;
-            selectedIds = [];
+            
+            if (angular.isUndefined(ctrl.bbListbuilderContentSelectedItems)) {
+                ctrl.bbListbuilderContentSelectedItems = [];
+            }
+            
             if (ctrl.bbListbuilderContentActiveView) {
                 setActiveView(ctrl.bbListbuilderContentActiveView);
             }
@@ -161,7 +164,8 @@
             bindings: {
                 bbListbuilderContentActiveView: '@?',
                 bbListbuilderContentViewChanged: '&?',
-                bbListbuilderContentMultiselectItemsChanged: '&?'
+                bbListbuilderContentMultiselectItemsChanged: '&?',
+                bbListbuilderContentSelectedItems: '<?'
             }
         });
 

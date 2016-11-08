@@ -8,13 +8,13 @@
         function postLink() {
             ctrl.cardsCtrl.addCard();
 
-            if (ctrl.bbListbuilderCardItem) {
+            if (angular.isDefined(ctrl.bbListbuilderCardId)) {
                 ctrl.listbuilderCardToggled = listbuilderCardToggled;
             }
         }
 
         function listbuilderCardToggled(isSelected) {
-            ctrl.contentCtrl.itemToggled(isSelected, ctrl.bbListbuilderCardItem);
+            ctrl.contentCtrl.itemToggled(isSelected, ctrl.bbListbuilderCardId);
         }
 
         ctrl.$postLink = postLink;
@@ -30,7 +30,7 @@
                 contentCtrl: '^^bbListbuilderContent'
             },
             bindings: {
-                bbListbuilderCardItem: '<?'
+                bbListbuilderCardId: '<?'
             }
 
         });
