@@ -21,6 +21,12 @@
             }
         }
 
+        function itemToggled(isSelected, itemId) {
+            if (angular.isFunction(ctrl.multiselectItemToggled)) {
+                ctrl.multiselectItemToggled(isSelected, itemId);
+            }
+        }
+
         function getContentContainer() {
             return $element.find('.bb-listbuilder-content');
         }
@@ -33,6 +39,7 @@
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
+        ctrl.itemToggled = itemToggled;
     }
 
     Controller.$inject = ['$element'];

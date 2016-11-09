@@ -5,12 +5,12 @@
     function linkFn($scope, el, attr, ctrls) {
         var vm = ctrls[0],
             repeaterCtrl = ctrls[1],
-            contentCtrl = ctrls[2];
+            listbuilderCtrl = ctrls[2];
         
         repeaterCtrl.addRepeaterItem();
 
         function listbuilderRepeaterItemToggled(isSelected) {
-            contentCtrl.itemToggled(isSelected, $scope.$eval(attr.bbListbuilderRepeaterItemId));
+            listbuilderCtrl.itemToggled(isSelected, $scope.$eval(attr.bbListbuilderRepeaterItemId));
         }
         
         if (angular.isDefined(attr.bbListbuilderRepeaterItemId)) {
@@ -24,7 +24,7 @@
                 restrict: 'A',
                 link: linkFn,
                 controller: angular.noop,
-                require: ['bbListbuilderRepeaterItem', '^^bbListbuilderRepeater', '^^bbListbuilderContent']
+                require: ['bbListbuilderRepeaterItem', '^^bbListbuilderRepeater', '^^bbListbuilder']
             }; 
         });
 }());

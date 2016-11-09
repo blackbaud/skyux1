@@ -96,7 +96,8 @@
             'sky.viewkeeper', 
             'sky.listbuilder.add.component',       
             'sky.filter',
-            'sky.search'
+            'sky.search',
+            'sky.listbuilder.multiselect.component'
         ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',

@@ -543,6 +543,18 @@
         "_description": "Text for repeater view switcher",
         "message": "Switch to repeater view"
     },
+    "listbuilder_show_only_selected": {
+        "_description": "Text for the checkbox in listbuilder that filters by selected items",
+        "message": "Show only selected"
+    },
+    "listbuilder_multiselect_select_all": {
+        "_description": "Text for the button that selects all items in the listbuilder",
+        "message": "Select all"
+    },
+    "listbuilder_multiselect_clear_all": {
+        "_description": "Text for the button that clears all items in the listbuilder",
+        "message": "Clear all"
+    },
     "modal_close": {
         "_description": "Text for modal close button",
         "message": "Close modal"

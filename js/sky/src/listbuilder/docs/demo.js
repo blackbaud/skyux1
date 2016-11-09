@@ -259,11 +259,12 @@
             }
         }
 
-        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected) {
-            var filteredData;
-            filteredData = searchArray(searchText, dataSet);
+        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
+            var filteredData,
+                baseData = angular.copy(dataSet);
+            filteredData = searchArray(searchText, baseData);
             filteredData = filter(filteredData, filters);
-            filteredData = applyMultiselectOptions(filteredData, showOnlySelected, self.selectedIds);
+            filteredData = applyMultiselectOptions(filteredData, showOnlySelected, selectedIds);
             filteredData = sortArray(sortProperty, sortDescending, filteredData);
 
             self.data = filteredData.slice(0, maxData);
@@ -272,29 +273,29 @@
 
         }
 
-        function applyAllAndUpdateSelectOptions(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected) {
-            applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected);
-            itemsChanged(self.selectedIds, false);
+        function applyAllAndUpdateSelectOptions(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
+            applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds);
+            itemsChanged(selectedIds, true);
         }
 
         function onSearch(searchText) {
             return $timeout(function () {
                 var searchedData
                 self.searchText = searchText;
-                applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+                applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
                 
             });
         }
 
         function onDismissFilter(index) {
             self.appliedFilters.splice(index, 1);
-            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
         }
 
         function sortItems(item) {
             sortProperty = item.name;
             sortDescending = item.descending;
-            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
         }
 
         function onFilterClick() {
@@ -309,7 +310,7 @@
             }).result
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
-                    applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+                    applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
                 });
         }
 
@@ -321,7 +322,7 @@
             if (maxRecordsShown < self.data.length) {
                 maxRecordsShown = self.data.length;
             }
-            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
         }
 
         function onLoadMore() {
@@ -339,14 +340,14 @@
             self.activeView = newView;
         }
 
-        function itemsChanged(selectedItems, shouldApplyFilters) {
+        function itemsChanged(selectedItems, shouldNotApplyFilters) {
             var i,
                 item; 
 
             self.selectedIds = selectedItems;
 
-            if (self.showOnlySelected && shouldApplyFilters) {
-                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected);
+            if (self.showOnlySelected && !shouldNotApplyFilters) {
+                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, selectedItems);
             }
 
             self.payMembershipSelections = [];
@@ -377,50 +378,43 @@
             console.log('secondary action taken with ', selections);
         }
 
-        function addSelectedItem(id, array) {
-            if (array.indexOf(id) === -1) {
-                array.push(id);
-            }
-        }
-
-        function removeSelectedItem(id, array) {
-            var itemIndex = array.indexOf(id);
-            if (itemIndex !== -1) {
-                array.splice(itemIndex, 1);
-            }
-        }
-
         function selectAll() {
             var length = self.data.length,
-                i;
+                i,
+                newSelectedIds = [];
 
             for (i = 0; i < length; i++) {
-                self.data[i].selected = true;
-                addSelectedItem(self.data[i].id, self.selectedIds);
+                if (!self.data[i].selected) {
+                    self.data[i].selected = true;
+                    newSelectedIds.push(self.data[i].id);
+                }
             }
 
-            itemsChanged(self.selectedIds);
-
+            return newSelectedIds;
         }
 
         function clearAll() {
             var length = self.data.length,
+                removedIds = [],
                 i;
 
             for (i = 0; i < length; i++) {
-                self.data[i].selected = false;
-                removeSelectedItem(self.data[i].id, self.selectedIds);
+                if (self.data[i].selected) {
+                    self.data[i].selected = false;
+                    removedIds.push(self.data[i].id);
+                }
+                
             }
 
-            itemsChanged(self.selectedIds);
+            return removedIds;
             
         }
 
         function toggleOnlySelected(showOnlySelected) {
             self.showOnlySelected = showOnlySelected;
-            // when true do not need to reapply all data, when false need to reapply.
+            // reload data with filter options (including only show selected)
 
-            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, showOnlySelected);
+            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, showOnlySelected, self.selectedIds);
             
         }
 
@@ -447,6 +441,7 @@
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
         self.data = [];
+        self.activeView = 'card';
         loadData();
 
         self.sortOptions = [
