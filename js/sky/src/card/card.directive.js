@@ -157,7 +157,7 @@
                 bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
-            require: ['bbCard', '^^bbListbuilderCard'],
+            require: ['bbCard', '?^^bbListbuilderCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,

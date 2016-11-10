@@ -181,7 +181,6 @@
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
-
         }
 
         return {
@@ -195,7 +194,7 @@
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
             link: link,
-            require: ['bbRepeaterItem', '^bbRepeater', 'bbListbuilderRepeaterItem'],
+            require: ['bbRepeaterItem', '^bbRepeater', '?bbListbuilderRepeaterItem'],
             scope: {},
             templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
             transclude: {
