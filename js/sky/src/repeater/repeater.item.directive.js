@@ -168,9 +168,6 @@
                     if (angular.isFunction(vm.bbRepeaterItemSelectionToggled)) {
                         vm.bbRepeaterItemSelectionToggled({isSelected: isSelected});
                     }
-                    if (vm.listbuilderRepeaterItemCtrl !== null && angular.isFunction(vm.listbuilderRepeaterItemCtrl.listbuilderRepeaterItemToggled)) {
-                        vm.listbuilderRepeaterItemCtrl.listbuilderRepeaterItemToggled(isSelected);
-                    }
                 });
                 
             }
@@ -180,6 +177,10 @@
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
+            });
+
+            scope.$emit('bbRepeaterItemInitialized', {
+                repeaterItemCtrl: vm
             });
         }
 
@@ -194,7 +195,7 @@
             controller: BBRepeaterItemController,
             controllerAs: 'bbRepeaterItem',
             link: link,
-            require: ['bbRepeaterItem', '^bbRepeater', '?bbListbuilderRepeaterItem'],
+            require: ['bbRepeaterItem', '^bbRepeater'],
             scope: {},
             templateUrl: 'sky/templates/repeater/repeater.item.directive.html',
             transclude: {

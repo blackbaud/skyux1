@@ -2,20 +2,33 @@
 (function () {
     'use strict';
 
+    function Controller($scope) {
+        var ctrl = this;
+        
+        function listbuilderRepeaterItemToggled(selectedArgs) {
+            ctrl.listbuilderCtrl.itemToggled(selectedArgs.isSelected, ctrl.getRepeaterItemId());
+        }
+
+        $scope.$on('bbRepeaterItemInitialized', function (event, data) {
+            data.repeaterItemCtrl.bbRepeaterItemSelectionToggled = listbuilderRepeaterItemToggled;
+            event.stopPropagation();
+            event.preventDefault(); 
+        });
+    }
+
     function linkFn($scope, el, attr, ctrls) {
-        var vm = ctrls[0],
-            repeaterCtrl = ctrls[1],
-            listbuilderCtrl = ctrls[2];
+        var ctrl = ctrls[0],
+            repeaterCtrl = ctrls[1];
+
+        ctrl.listbuilderCtrl = ctrls[2];
+
+        function getRepeaterItemId() {
+            return $scope.$eval(attr.bbListbuilderRepeaterItemId);
+        }
+
+        ctrl.getRepeaterItemId = getRepeaterItemId;
         
         repeaterCtrl.addRepeaterItem();
-
-        function listbuilderRepeaterItemToggled(isSelected) {
-            listbuilderCtrl.itemToggled(isSelected, $scope.$eval(attr.bbListbuilderRepeaterItemId));
-        }
-        
-        if (angular.isDefined(attr.bbListbuilderRepeaterItemId)) {
-            vm.listbuilderRepeaterItemToggled = listbuilderRepeaterItemToggled;
-        }
     }
 
     angular.module('sky.listbuilder.repeater.item.directive', [])
@@ -23,7 +36,7 @@
             return {
                 restrict: 'A',
                 link: linkFn,
-                controller: angular.noop,
+                controller: Controller,
                 require: ['bbListbuilderRepeaterItem', '^^bbListbuilderRepeater', '^^bbListbuilder']
             }; 
         });

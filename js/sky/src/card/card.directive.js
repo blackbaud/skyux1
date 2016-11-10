@@ -65,7 +65,7 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBCardController($timeout) {
+    function BBCardController($timeout, $scope) {
         var vm = this;
 
         function addComponentSetter(component) {
@@ -90,9 +90,6 @@
             $timeout(function () {
                 if (angular.isFunction(vm.bbCardSelectionToggled)) {
                     vm.bbCardSelectionToggled({isSelected: isSelected});
-                }
-                if (vm.listbuilderCardCtrl !== null && angular.isFunction(vm.listbuilderCardCtrl.listbuilderCardToggled)) {
-                    vm.listbuilderCardCtrl.listbuilderCardToggled(isSelected);
                 }
             });
             
@@ -126,15 +123,17 @@
 
         nextId++;
         vm.cardCheckId = 'bb-card-check-' + nextId;
+
+        $scope.$emit('bbCardInitialized', {
+            cardCtrl: vm
+        });
     }
 
-    BBCardController.$inject = ['$timeout'];
+    BBCardController.$inject = ['$timeout', '$scope'];
 
     function bbCard() {
         function link(scope, el, attrs, ctrls) {
             var vm = ctrls[0];
-
-            vm.listbuilderCardCtrl = ctrls[1];
             function watchForComponent(component) {
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
@@ -157,7 +156,7 @@
                 bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
-            require: ['bbCard', '?^^bbListbuilderCard'],
+            require: ['bbCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,

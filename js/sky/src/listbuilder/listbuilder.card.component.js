@@ -2,23 +2,32 @@
 (function () {
     'use strict';
 
-    function Controller() {
+    function Controller($scope) {
         var ctrl = this;
 
-        function postLink() {
-            ctrl.cardsCtrl.addCard();
+        function listbuilderCardToggled(selectedArgs) {
+            ctrl.listbuilderCtrl.itemToggled(selectedArgs.isSelected, ctrl.bbListbuilderCardId);
+        }
 
+        function onInit() {
             if (angular.isDefined(ctrl.bbListbuilderCardId)) {
-                ctrl.listbuilderCardToggled = listbuilderCardToggled;
+                $scope.$on('bbCardInitialized', function (event, data) {
+                    data.cardCtrl.bbCardSelectionToggled = listbuilderCardToggled;
+                    event.stopPropagation();
+                    event.preventDefault(); 
+                });
             }
         }
 
-        function listbuilderCardToggled(isSelected) {
-            ctrl.listbuilderCtrl.itemToggled(isSelected, ctrl.bbListbuilderCardId);
+        function postLink() {
+            ctrl.cardsCtrl.addCard();
         }
 
         ctrl.$postLink = postLink;
+        ctrl.$onInit = onInit;
     }
+
+    Controller.$inject = ['$scope'];
 
     angular.module('sky.listbuilder.card.component', [])
         .component('bbListbuilderCard', {
