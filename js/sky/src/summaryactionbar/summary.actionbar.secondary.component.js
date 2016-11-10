@@ -24,6 +24,9 @@
             require: {
                 bbSummaryActionbarSecondaryActions: '^bbSummaryActionbarSecondaryActions'
             },
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?'
+            }
         });
 })();
