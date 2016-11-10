@@ -243,12 +243,35 @@
         });
 
         describe('filters', function () {
-            it('should transclude a filter button', function () {
+            it('should transclude a filter button and filter summary', function () {
+                var el,
+                    filterHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-filter> ' +
+                    '<bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()"> ' +
+                    '</bb-filter-button> ' +
+                    '</bb-listbuilder-filter> ' +
+                    '<bb-listbuilder-filter-summary> ' +
+                    '<bb-filter-summary> ' +
+                    '<bb-filter-summary-item ' +
+                    'bb-filter-summary-item-on-click="listCtrl.openFilters()" ' +
+                    'bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter()" ' +
+                    '> ' +
+                    'Filter item' +
+                    '</bb-filter-summary-item> ' +
+                    '</bb-filter-summary> ' +
+                    '</bb-listbuilder-filter-summary> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
-            });
 
-            it('should transclude a filter summary', function () {
+                el = $compile(filterHtml)($scope);
 
+                $scope.$digest();
+
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-filter').length).toBe(1);
+                expect(el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-filter-summary-container .bb-filter-summary').length).toBe(1);
             });
         });
 
@@ -256,6 +279,70 @@
             it('should transclude a sort button', function () {
 
             });
+        });
+
+        describe('multiselect', function () {
+            it('should transclude multiselect options', function () {
+
+            });
+
+            describe('card', function () {
+                it('should call function when card is selected', function () {
+
+                });
+
+                it('should call function when card is unselected', function () {
+
+                });
+
+            });
+
+            describe('repeater item', function () {
+                it('should call function when repeater item is selected', function () {
+
+                });
+
+                it('should call function when repeater item is unselected', function () {
+
+                });
+            });
+
+            describe('select all', function () {
+                it('should call function and update when select all is clicked', function () {
+
+                });
+
+                it('should call function and update when select all is clicked and returns a promise', function () {
+
+                });
+
+                it('should set select all count when available',  function () {
+
+                });
+
+                it('should not show the select all count when not defined',  function () {
+
+                });
+            });
+
+            describe('clear all', function () {
+                it('should call function and update when clear all is clicked', function () {
+
+                });
+
+                it('should call function and update when clear all is clicked and returns a promise', function () {
+
+                });
+            });
+
+            it('should allow users to set selectedIds and then select a card', function () {
+
+            });
+
+            it('should allow users to set selectedIds and then unselect a card', function () {
+
+            });
+            
         });
 
         describe('viewkeeper', function () {
