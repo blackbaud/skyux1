@@ -16,6 +16,8 @@
         });
     }
 
+    Controller.$inject = ['$scope'];
+
     function linkFn($scope, el, attr, ctrls) {
         var ctrl = ctrls[0],
             repeaterCtrl = ctrls[1];
