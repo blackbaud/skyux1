@@ -46,7 +46,7 @@
       </bb-listbuilder-filter-summary>
       <bb-listbuilder-toolbar-multiselect>
           <bb-listbuilder-multiselect
-            ng-show="listCtrl.activeView === 'repeater' || listCtrl.activeView === 'card'"
+            ng-show="listCtrl.multiselectAvailable()"
             bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)"
             bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems)"
             bb-listbuilder-multiselect-selected-items="listCtrl.selectedIds">
@@ -170,7 +170,7 @@
     </bb-listbuilder-footer>
   </bb-listbuilder>
   <bb-summary-actionbar 
-    ng-show="(listCtrl.payMembershipSelections.length > 0 || listCtrl.secondarySelections.length > 0) && (listCtrl.activeView === 'repeater' || listCtrl.activeView === 'card')">
+    ng-show="listCtrl.actionsShown()">
       <bb-summary-actionbar-actions>
           <bb-summary-actionbar-primary
             ng-disabled="listCtrl.payMembershipSelections < 1" 

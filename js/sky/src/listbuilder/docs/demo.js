@@ -418,6 +418,18 @@
             
         }
 
+        function multiselectAvailable() {
+            return self.activeView === 'repeater' || self.activeView === 'card';
+        }
+
+        function actionsShown() {
+            return (self.payMembershipSelections.length > 0 || self.secondarySelections.length > 0) && multiselectAvailable();
+        }
+
+        self.multiselectAvailable = multiselectAvailable;
+
+        self.actionsShown = actionsShown;
+
         self.toggleOnlySelected = toggleOnlySelected;
 
         self.selectAll = selectAll;
