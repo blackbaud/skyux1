@@ -29,7 +29,7 @@
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
                         // Any country with a dial code that starts with 1
                         // is so small that its dial code matches its area code.
-                        // So, its dial code should just be 1 (check Google) because the area code includes the dial code.
+                        // So, its dial code should just be 1 because the area code includes the dial code.
                         // Example countries: Bahamas, Cayman Islands, Barbados.
                         if (selectedCountryData.dialCode.toString()[0] === '1') {
                             selectedCountryData.dialCode = 1;

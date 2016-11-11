@@ -401,7 +401,7 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
-    it('should not add the full dial code, just "+1", to a phone number for a country whose area code is its dial code (such as Cayman Islands and Bahamas).', function () {
+    it('should format the phone number of a country that uses its area code as its dial code with a +1 dial code (such as Cayman Islands and Bahamas).', function () {
         // ** arrange **
         var el,
             $scope = $rootScope.$new();
