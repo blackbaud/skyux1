@@ -29,6 +29,14 @@
         margin-left: auto;
     }
 
+    .close {
+        margin-left: auto;
+    }
+
+    .bb-helpbutton+.close {
+        margin-left: 0;
+    }
+
 }
 
 .modal-body {
