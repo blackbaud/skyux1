@@ -236,27 +236,40 @@
         }
 
         function applyMultiselectOptions(array, onlyShowSelected, selectedIds) {
-            var length = selectedIds.length,
+            var selectedLength = selectedIds.length,
+                arrayLength = array.length,
                 item,
                 newData = [],
                 i;
 
-            for (i = 0; i < length; i++) {
-                item = getItemById(selectedIds[i], array);
-                if (item) {
-                    item.selected = true;
-                    if (onlyShowSelected) {
-                        newData.push(item);
+            /* 
+                if selectAll is active, set each data item as selected and add new items to selected items
+            */
+            if (self.selectAllActive) {
+                for (i = 0; i < arrayLength; i++) {
+                    array[i].selected = true;
+                    if (selectedIds.indexOf(array[i].id) === -1) {
+                        selectedIds.push(array[i].id);
                     }
                 }
-                
+            } else {
+                for (i = 0; i < selectedLength; i++) {
+                    item = getItemById(selectedIds[i], array);
+                    if (item) {
+                        item.selected = true;
+                        if (onlyShowSelected) {
+                            newData.push(item);
+                        }
+                    }
+                    
+                }
+
+                if (onlyShowSelected) {
+                    return newData;
+                }
             }
 
-            if (onlyShowSelected) {
-                return newData;
-            } else {
-                return array;
-            }
+            return array;
         }
 
         function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
@@ -275,7 +288,7 @@
 
         function applyAllAndUpdateSelectOptions(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
             applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds);
-            itemsChanged(selectedIds, true);
+            itemsChanged(selectedIds, self.selectAllActive, true);
         }
 
         function onSearch(searchText) {
@@ -340,11 +353,12 @@
             self.activeView = newView;
         }
 
-        function itemsChanged(selectedItems, shouldNotApplyFilters) {
+        function itemsChanged(selectedItems, allSelected, shouldNotApplyFilters) {
             var i,
                 item; 
 
             self.selectedIds = selectedItems;
+            self.selectAllActive = allSelected;
 
             if (self.showOnlySelected && !shouldNotApplyFilters) {
                 applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, selectedItems);

@@ -48,11 +48,10 @@
           <bb-listbuilder-multiselect
             ng-show="listCtrl.multiselectAvailable()"
             bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)"
-            bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems)"
+            bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems, allSelected)"
             bb-listbuilder-multiselect-selected-items="listCtrl.selectedIds">
             <bb-listbuilder-multiselect-select-all
-              bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()"
-              bb-listbuilder-multiselect-select-all-count="listCtrl.data.length">
+              bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()">
             </bb-listbuilder-multiselect-select-all>
             <bb-listbuilder-multiselect-clear-all
               bb-listbuilder-multiselect-on-clear-all="listCtrl.clearAll()">

@@ -28,7 +28,7 @@
             } else {
                 removeSelectedItem(id, ctrl.bbListbuilderMultiselectSelectedItems);
             }
-            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderMultiselectSelectedItems});
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderMultiselectSelectedItems, allSelected: false});
         }
 
         function multiselectItemsToggled(isSelected, selectedItems) {
@@ -42,7 +42,7 @@
                     removeSelectedItem(selectedItems[i], ctrl.bbListbuilderMultiselectSelectedItems);
                 }
             }
-            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderMultiselectSelectedItems});
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderMultiselectSelectedItems, allSelected: isSelected});
         }
 
         function onInit() {

@@ -25,8 +25,7 @@
         .component('bbListbuilderMultiselectSelectAll', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.multiselect.selectall.component.html',
             bindings: {
-                bbListbuilderMultiselectOnSelectAll: '&?',
-                bbListbuilderMultiselectSelectAllCount: '<?'
+                bbListbuilderMultiselectOnSelectAll: '&?'
             },
             require: {
                 bbListbuilderMultiselect: '^^bbListbuilderMultiselect'
