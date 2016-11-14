@@ -20,7 +20,9 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-chrome-webdriver-local',
-            resolution: '1280x960'
+            resolution: '1280x960',
+            'browserstack.localIdentifier': 'SKYUXBROWSERSTACKLOCAL',
+            name: 'SKYUXBROWSERSTACKLOCAL'
         }/*,
         {
             browserName: 'firefox',
@@ -61,7 +63,7 @@
             build: 'win8-ie10-webdriver-local'
         }*/
     ];
-    shared.host = 'hub-cloud.browserstack.com';
+    shared.host = 'hub.browserstack.com';
     shared.port = 80;
     shared.maxInstances = 1;
 
