@@ -302,7 +302,30 @@
 
         describe('multiselect', function () {
             it('should transclude multiselect options', function () {
+                var el,
+                    multiselectHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-toolbar-multiselect> ' +
+                    '<bb-listbuilder-multiselect ' +
+                    'bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)" ' +
+                    'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems, allSelected)" ' +
+                    'bb-listbuilder-multiselect-selected-items="listCtrl.selectedIds"> ' +
+                    '<bb-listbuilder-multiselect-select-all ' +
+                        'bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()"> ' +
+                    '</bb-listbuilder-multiselect-select-all>' +
+                    '<bb-listbuilder-multiselect-clear-all ' +
+                        'bb-listbuilder-multiselect-on-clear-all="listCtrl.clearAll()"> ' +
+                    '</bb-listbuilder-multiselect-clear-all>' +
+                    '</bb-listbuilder-multiselect>' +
+                    '</bb-listbuilder-toolbar-multiselect>' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
+                el = $compile(multiselectHtml)($scope);
+
+                $scope.$digest();
+                expect(el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-toolbar-multiselect-container .bb-listbuilder-multiselect').length).toBe(1);
             });
 
             describe('card', function () {
