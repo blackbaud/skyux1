@@ -277,7 +277,26 @@
 
         describe('sorting', function () {
             it('should transclude a sort button', function () {
+                var el,
+                    sortHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-sort> ' +
+                    '<bb-sort> ' +
+                    '<bb-sort-item ' +
+                    'bb-sort-item-select="listCtrl.sortItems(item)"> ' +
+                    'Sort item' +
+                    '</bb-sort-item> ' +
+                    '</bb-sort>' +
+                    '</bb-listbuilder-sort> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
+
+                el = $compile(sortHtml)($scope);
+
+                $scope.$digest();
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-sort').length).toBe(1);
             });
         });
 
@@ -313,14 +332,6 @@
                 });
 
                 it('should call function and update when select all is clicked and returns a promise', function () {
-
-                });
-
-                it('should set select all count when available',  function () {
-
-                });
-
-                it('should not show the select all count when not defined',  function () {
 
                 });
             });

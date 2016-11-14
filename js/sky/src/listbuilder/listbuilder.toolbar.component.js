@@ -83,7 +83,6 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
-
         ctrl.viewChanged = viewChanged;
 
     }
@@ -97,6 +96,7 @@
             'sky.listbuilder.add.component',       
             'sky.filter',
             'sky.search',
+            'sky.sort',
             'sky.listbuilder.multiselect.component'
         ])
         .component('bbListbuilderToolbar', {
