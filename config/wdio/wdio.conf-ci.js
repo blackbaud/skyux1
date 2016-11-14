@@ -21,7 +21,8 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
-            resolution: '1280x960'
+            resolution: '1280x960',
+            name: 'SKYUXBROWSERSTACKCI'
         },
         {
             browserName: 'firefox',
@@ -35,7 +36,8 @@
             browserNoActivityTimeout: 3e5,
             captureTimeout: 3e5,
             build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
-            resolution: '1280x960'
+            resolution: '1280x960',
+            name: 'SKYUXBROWSERSTACKCI'
         }
     ];
 
