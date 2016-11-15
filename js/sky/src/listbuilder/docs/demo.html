@@ -173,13 +173,13 @@
       <bb-summary-actionbar-actions>
           <bb-summary-actionbar-primary
             bb-summary-action-disabled="listCtrl.payMembershipSelections.length < 1" 
-            ng-click="listCtrl.payMembership(listCtrl.payMembershipSelections)">
+            bb-summary-action-click="listCtrl.payMembership(listCtrl.payMembershipSelections)">
               Pay membership dues ({{listCtrl.payMembershipSelections.length}})
           </bb-summary-actionbar-primary>
           <bb-summary-actionbar-secondary-actions>
               <bb-summary-actionbar-secondary
                 bb-summary-action-disabled="listCtrl.secondarySelections.length < 1" 
-                ng-click="listCtrl.secondaryAction(listCtrl.secondarySelections)">
+                bb-summary-action-click="listCtrl.secondaryAction(listCtrl.secondarySelections)">
                   Secondary action ({{listCtrl.secondarySelections.length}})
               </bb-summary-actionbar-secondary>
           </bb-summary-actionbar-secondary-actions>

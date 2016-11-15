@@ -26,7 +26,8 @@
             },
             templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html',
             bindings: {
-                bbSummaryActionDisabled: '<?'
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
             }
         });
 })();

@@ -7,7 +7,8 @@
             transclude: true,
             templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.primary.component.html',
             bindings: {
-                bbSummaryActionDisabled: '<?'
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
             }
         });
 })();
