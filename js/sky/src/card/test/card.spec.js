@@ -5,6 +5,7 @@ describe('Card directive', function () {
     'use strict';
 
     var $compile,
+        $timeout,
         $rootScope,
         cardAllChildrenHtml;
 
@@ -20,9 +21,10 @@ describe('Card directive', function () {
         'sky.templates'
     ));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
+        $timeout = _$timeout_;
     }));
 
     it('should place the individual components in their respective placeholders', function () {
@@ -97,11 +99,13 @@ describe('Card directive', function () {
         checkEl = el.find('.bb-check-wrapper input');
 
         checkEl.click();
+        $timeout.flush();
 
         expect(el.find('.bb-card')).toHaveClass('bb-card-selected');
         expect($scope.cardSelected).toBe(true);
 
         checkEl.click();
+        $timeout.flush();
 
         expect(el.find('.bb-card')).not.toHaveClass('bb-card-selected');
         expect($scope.cardSelected).toBe(false);
@@ -124,6 +128,44 @@ describe('Card directive', function () {
         checkId = el.find('.bb-card-header .bb-check-wrapper input').attr('id');
 
         expect(el.find('.bb-card-content')).toHaveAttr('for', checkId);
+    });
+
+    it('should call the function on selection change when provided', function () {
+        var $scope = $rootScope.$new(),
+            actualIsSelected,
+            checkEl,
+            el;
+
+        $scope.onSelected = function onSelected(isSelected) {
+            actualIsSelected = isSelected;
+        };
+
+        el = $compile(
+            '<bb-card bb-card-selectable="true" bb-card-selected="cardSelected" bb-card-selection-toggled="onSelected(isSelected)">' +
+            '</bb-card>'
+        )($scope);
+
+        // The element has to be in the DOM to trigger its click event in Firefox.
+        el.appendTo(document.body);
+
+        $scope.$digest();
+
+        checkEl = el.find('.bb-check-wrapper input');
+
+        checkEl.click();
+        $timeout.flush();
+
+        expect(el.find('.bb-card')).toHaveClass('bb-card-selected');
+        expect($scope.cardSelected).toBe(true);
+        expect(actualIsSelected).toBe(true);
+
+        checkEl.click();
+        $timeout.flush();
+
+        expect(el.find('.bb-card')).not.toHaveClass('bb-card-selected');
+        expect($scope.cardSelected).toBe(false);
+        expect(actualIsSelected).toBe(false);
+        el.remove();
     });
 
     it('should dereference child controllers when destroyed', function () {
