@@ -24,7 +24,7 @@
         ctrl.listbuilderCtrl = ctrls[2];
 
         function getCustomItemId() {
-            return scope.$eval(attr.bbListbuilderCustomItemId);
+            return scope.$eval(attr.bbListbuilderContentCustomItemId);
         }
 
         ctrl.geCustomItemId = getCustomItemId;

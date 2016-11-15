@@ -6,8 +6,11 @@
 
     describe('multiselect', function () {
         var cardMultiselectHtml,
+            repeaterMultiselectHtml,
+            customMultiselectHtml,
             $scope,
             $document,
+            $rootScope,
             $timeout,
             $compile,
             actualSelectedItems,
@@ -43,6 +46,42 @@
                 '</bb-listbuilder-card>' +
                 '</bb-listbuilder-cards>' +
                 '</bb-listbuilder-content>' +
+                '</bb-listbuilder>',
+            repeaterContentHtml = '<bb-listbuilder-content ' +
+                '>' +
+                '<bb-listbuilder-repeater> ' +
+                '<bb-repeater>' +
+                '<bb-repeater-item bb-listbuilder-repeater-item bb-listbuilder-repeater-item-id="item.id" ng-repeat="item in listCtrl.data" ' +
+                'bb-repeater-item-selectable="true" bb-repeater-item-selected="item.selected">' +
+                '<bb-repeater-item-title>' +
+                '{{item.title}}' +
+                '</bb-repeater-item-title>' +
+                '<bb-repeater-item-content>' +
+                '{{item.content}}' +
+                '</bb-repeater-item-content>' +
+                '</bb-repeater-item>' +
+                '</bb-repeater>' +
+                '</bb-listbuilder-repeater>' +
+                '</bb-listbuilder-content>' +
+                '</bb-listbuilder>',   
+            customContentHtml = '<bb-listbuilder-content>' +
+                '<bb-listbuilder-content-custom ' +
+                'bb-listbuilder-content-custom-view-name="custom-1" ' +
+                'bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper" ' +
+                'bb-listbuilder-content-custom-highlight-class="bb-custom-content-item" ' +
+                'bb-listbuilder-content-custom-view-switcher-label="Switch to custom"> ' +
+                '<div class="bb-custom-content"> ' +
+                '<div class="bb-custom-content-item" ' +
+                'bb-listbuilder-content-custom-item ng-repeat="item in listCtrl.data" ' +
+                'bb-listbuilder-content-custom-item-id="item.id"> ' +
+                '<div>' +
+                '{{item.title}}' +
+                '</div>' +
+                '<button type="button" ng-click="listCtrl.customToggled($index)" class="bb-custom-toggle">Hey</button> ' +
+                '</div>' +
+                '</div>' + 
+                '</bb-listbuilder-content-custom>' +
+                '</bb-listbuilder-content>' +
                 '</bb-listbuilder>'; 
 
         beforeEach(module(
@@ -51,6 +90,7 @@
         ));
 
         beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_) {
+            $rootScope = _$rootScope_;
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $timeout = _$timeout_;
@@ -62,6 +102,18 @@
             
             $scope.$digest();
             $timeout.flush();
+        }
+
+        function clickRepeaterCheckBox(el, index) {
+            el.find('.bb-listbuilder-content .bb-repeater-item .bb-check-wrapper input').eq(index).click();
+            
+            $scope.$digest();
+            $timeout.flush();
+        }
+
+        function clickCustomCheckbox(el, index) {
+            el.find('.bb-listbuilder-content .bb-custom-content-item .bb-custom-toggle').eq(index).click();
+            $scope.$digest();
         }
 
         function clickSelectAll(el) {
@@ -91,6 +143,17 @@
                 startMultiselectHtml +
                 endMultiselectHtml +
                 cardContentHtml);
+
+            repeaterMultiselectHtml = angular.element(
+                startMultiselectHtml +
+                endMultiselectHtml +
+                repeaterContentHtml);
+
+            customMultiselectHtml = angular.element(
+                startMultiselectHtml +
+                endMultiselectHtml +
+                customContentHtml
+            );
 
             actualSelectedItems = [];
             actualAllSelected = false;
@@ -171,22 +234,72 @@
 
         describe('repeater item', function () {
             it('should call function when repeater item is selected', function () {
+                var el;
 
+                el = initMultiselect(repeaterMultiselectHtml);
+
+                clickRepeaterCheckBox(el, 1);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickRepeaterCheckBox(el, 0);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1, 0]);
+
+                el.remove();
             });
 
             it('should call function when repeater item is unselected', function () {
+                var el;
 
+                el = initMultiselect(repeaterMultiselectHtml);
+
+                clickRepeaterCheckBox(el, 1);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickRepeaterCheckBox(el, 1);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([]);
+
+                el.remove();
             });
         });
 
         describe('custom actions', function () {
             it('should call function when custom item is selected', function () {
-                
-                
-            });
+                var el,
+                    childScope;
 
-            it('should call function when custom item is unselected', function () {
+                $scope.customItemCtrl = {};
 
+                $scope.listCtrl.customToggled = function (index) {
+                    $scope.listCtrl.data[index].selected = !$scope.listCtrl.data[index].selected;
+                    $scope.customItemCtrl.bbCustomItemSelectionToggled({isSelected: $scope.listCtrl.data[index].selected});
+                };
+
+                el = initMultiselect(customMultiselectHtml);
+                childScope = el.find('.bb-listbuilder-content .bb-custom-content .bb-custom-content-item').eq(0).scope().$new();
+                childScope.$emit('bbListbuilderCustomItemInitialized', {
+                    customItemCtrl: $scope.customItemCtrl
+                });
+                $scope.$digest();
+
+                clickCustomCheckbox(el, 0);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([0]);
+
+                clickCustomCheckbox(el, 0);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([]);
+
+                el.remove();
             });
         });
 
