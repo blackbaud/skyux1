@@ -22,6 +22,8 @@
         }
 
         function itemToggled(isSelected, itemId) {
+            /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(ctrl.multiselectItemToggled)) {
                 ctrl.multiselectItemToggled(isSelected, itemId);
             }

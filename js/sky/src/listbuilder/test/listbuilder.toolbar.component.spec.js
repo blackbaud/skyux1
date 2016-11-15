@@ -5,6 +5,8 @@
     describe('Listbuilder toolbar', function () {
         var $compile,
             $scope,
+            $timeout,
+            $document,
             simpleCardContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-cards>' +
                     '<bb-listbuilder-card>' +
@@ -25,16 +27,16 @@
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
+            $timeout = _$timeout_;
+            $document = _$document_;
         }));
         
         
         describe('search', function () {
-            var $document,
-                $timeout,
-                searchHtml,
+            var searchHtml,
                 localSearchText,
                 listCtrl = {
                     onSearch: function (searchText) {
@@ -42,9 +44,8 @@
                     }
                 };
             
-            beforeEach(inject(function (_$document_, _$timeout_) {
-                $document = _$document_;
-                $timeout = _$timeout_;
+            beforeEach(function () {
+
                 searchHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
@@ -54,7 +55,7 @@
                     simpleCardContentHtml +
                     '</bb-listbuilder>');
                 
-            }));
+            });
 
             function findSearchInput(el) {
                 return el.find('.bb-search-input');
@@ -298,85 +299,6 @@
                 $scope.$digest();
                 expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-sort').length).toBe(1);
             });
-        });
-
-        describe('multiselect', function () {
-            it('should transclude multiselect options', function () {
-                var el,
-                    multiselectHtml = angular.element(
-                    '<bb-listbuilder>' +
-                    '<bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-toolbar-multiselect> ' +
-                    '<bb-listbuilder-multiselect ' +
-                    'bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)" ' +
-                    'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems, allSelected)" ' +
-                    'bb-listbuilder-multiselect-selected-items="listCtrl.selectedIds"> ' +
-                    '<bb-listbuilder-multiselect-select-all ' +
-                        'bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()"> ' +
-                    '</bb-listbuilder-multiselect-select-all>' +
-                    '<bb-listbuilder-multiselect-clear-all ' +
-                        'bb-listbuilder-multiselect-on-clear-all="listCtrl.clearAll()"> ' +
-                    '</bb-listbuilder-multiselect-clear-all>' +
-                    '</bb-listbuilder-multiselect>' +
-                    '</bb-listbuilder-toolbar-multiselect>' +
-                    '</bb-listbuilder-toolbar>' +
-                    '</bb-listbuilder>');
-
-                el = $compile(multiselectHtml)($scope);
-
-                $scope.$digest();
-                expect(el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-toolbar-multiselect-container .bb-listbuilder-multiselect').length).toBe(1);
-            });
-
-            describe('card', function () {
-                it('should call function when card is selected', function () {
-
-                });
-
-                it('should call function when card is unselected', function () {
-
-                });
-
-            });
-
-            describe('repeater item', function () {
-                it('should call function when repeater item is selected', function () {
-
-                });
-
-                it('should call function when repeater item is unselected', function () {
-
-                });
-            });
-
-            describe('select all', function () {
-                it('should call function and update when select all is clicked', function () {
-
-                });
-
-                it('should call function and update when select all is clicked and returns a promise', function () {
-
-                });
-            });
-
-            describe('clear all', function () {
-                it('should call function and update when clear all is clicked', function () {
-
-                });
-
-                it('should call function and update when clear all is clicked and returns a promise', function () {
-
-                });
-            });
-
-            it('should allow users to set selectedIds and then select a card', function () {
-
-            });
-
-            it('should allow users to set selectedIds and then unselect a card', function () {
-
-            });
-            
         });
 
         describe('viewkeeper', function () {

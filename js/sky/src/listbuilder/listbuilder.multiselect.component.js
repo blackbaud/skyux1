@@ -3,7 +3,8 @@
     'use strict';
 
     function Controller() {
-        var ctrl = this;
+        var ctrl = this,
+            listbuilderSelectedItems;
 
         function toggleOnlySelected(isSelected) {
             ctrl.bbListbuilderOnShowOnlySelected({showOnlySelected: isSelected});
@@ -24,11 +25,11 @@
 
         function multiselectItemToggled(isSelected, id) {
             if (isSelected) {
-                addSelectedItem(id, ctrl.bbListbuilderMultiselectSelectedItems);
+                addSelectedItem(id, listbuilderSelectedItems);
             } else {
-                removeSelectedItem(id, ctrl.bbListbuilderMultiselectSelectedItems);
+                removeSelectedItem(id, listbuilderSelectedItems);
             }
-            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderMultiselectSelectedItems, allSelected: false});
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: listbuilderSelectedItems, allSelected: false});
         }
 
         function multiselectItemsToggled(isSelected, selectedItems) {
@@ -37,12 +38,20 @@
 
             for (i = 0; i < length; i++) {
                 if (isSelected) {
-                    addSelectedItem(selectedItems[i], ctrl.bbListbuilderMultiselectSelectedItems);
+                    addSelectedItem(selectedItems[i], listbuilderSelectedItems);
                 } else {
-                    removeSelectedItem(selectedItems[i], ctrl.bbListbuilderMultiselectSelectedItems);
+                    removeSelectedItem(selectedItems[i], listbuilderSelectedItems);
                 }
             }
-            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: ctrl.bbListbuilderMultiselectSelectedItems, allSelected: isSelected});
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: listbuilderSelectedItems, allSelected: isSelected});
+        }
+
+        function setListbuilderSelectedItems() {
+            if (angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedItems)) {
+                listbuilderSelectedItems = [];
+            } else {
+                listbuilderSelectedItems = ctrl.bbListbuilderMultiselectSelectedItems;
+            }
         }
 
         function onInit() {
@@ -50,11 +59,17 @@
                 ctrl.hasOnlySelected = true;
             }
 
-            if (angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedItems)) {
-                ctrl.bbListbuilderMultiselectSelectedItems = [];
-            }
+            setListbuilderSelectedItems();
 
             ctrl.listbuilderCtrl.multiselectItemToggled = multiselectItemToggled;
+        }
+
+        function bindingChanges(changesObj) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbListbuilderMultiselectSelectedItems) {
+                setListbuilderSelectedItems();
+            }
         }
 
         ctrl.toggleOnlySelected = toggleOnlySelected;
@@ -62,6 +77,7 @@
         ctrl.multiselectItemsToggled = multiselectItemsToggled;
 
         ctrl.$onInit = onInit;
+        ctrl.$onChanges = bindingChanges;
     }
 
     angular.module('sky.listbuilder.multiselect.component', 

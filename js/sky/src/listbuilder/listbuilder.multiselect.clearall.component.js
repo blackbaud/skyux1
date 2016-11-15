@@ -5,16 +5,22 @@
     function Controller() {
         var ctrl = this;
 
+        function listbuilderMultiselectToggled(result) {
+            if (angular.isArray(result)) {
+                ctrl.bbListbuilderMultiselect.multiselectItemsToggled(false, result);
+            }
+        }
+
         function clearAllItems() {
             var clearAllResult = ctrl.bbListbuilderMultiselectOnClearAll();
 
 
             if (clearAllResult && angular.isFunction(clearAllResult.then)) {
                 clearAllResult.then(function (result) {
-                    ctrl.bbListbuilderMultiselect.multiselectItemsToggled(false, result);
+                    listbuilderMultiselectToggled(result);
                 });
-            } else if (clearAllResult) {
-                ctrl.bbListbuilderMultiselect.multiselectItemsToggled(false, clearAllResult);
+            } else {
+                listbuilderMultiselectToggled(clearAllResult);
             }
         }
 
