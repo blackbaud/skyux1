@@ -20,21 +20,36 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-filter` &mdash; *(Optional.)* Container for the filter button in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
   - `bb-listbuilder-sort` &mdash; *(Optional.)* Container for the sort button in the listbuilder toolbar. See the [sort](../sort) module for content that can be placed here.
   - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be place here.
-
+  - `bb-listbuilder-toolbar-multiselect` &mdash; *(Optional.)* Container for the multiselect area in the listbuilder toolbar.
+    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder.
+      - `bb-listbuilder-multiselect-items-changed` &mdash; Callback that will be executed when users select or deselect items in the listbuilder. It has the following arguments: 
+        - `selectedItems` &mdash; The array of unique identifiers that have been selected.
+        - `allSelected` &mdash; Set to true if the multiselect items were changed by selecting all items, set to false otherwise.
+      - `bb-listbuilder-multiselect-selected-items` &mdash; *(Optional.)* Specifies the array of selected unique identifiers. 
+      - `bb-listbuilder-on-show-only-selected` &mdash; Callback that will be executed when users select or deselect the 'Show only selected' checkbox in the multiselect area. It has the following arguments: 
+        - `showOnlySelected` &mdash; Set to true if the list should contain only selected items, set to false otherwise.
+      - `bb-listbuilder-multiselect-select-all` &mdash; Component that creates a 'Select all' button.
+        - `bb-listbuilder-multiselect-on-select-all` &mdash; Callback that will be executed when the 'Select all' button is clicked. The function should return an array of unique identifiers to be selected.
+      - `bb-listbuilder-multiselect-clear-all` &mdash; Component that creates a 'Clear all' button.
+        - `bb-listbuilder-multiselect-on-clear-all` &mdash; Callback that will be executed when the 'Clear all' button is clicked. The function should return an array of unique identifiers to be deselected.
+      
 `bb-listbuilder-content` &mdash; Component for the listbuilder content.
   - `bb-listbuilder-content-active-view` &mdash; *(Optional.)* Specifies the name of the active view to display as the listbuilder content. Values can be `card`, `repeater`, or the name of a custom view.
   - `bb-listbuilder-content-view-changed` &mdash; *(Optional.)* Specifies a function that will be called when the listbuilder view is changed. It has the following arguments:
     - `newView` &mdash; The name of the new active view.
   - `bb-listbuilder-cards` &mdash; Component that contains a card view for the listbuilder.
     - `bb-listbuilder-card` &mdash; Component that contains an individual card in the listbuilder.
+        - `bb-listbuilder-card-id` &mdash; *(Optional.)* Specifies a unique identifier for the card. Required when using multiselect with cards.
   - `bb-listbuilder-repeater` &mdash; Component that contains a repeater view for the listbuilder.
     - `bb-listbuilder-repeater-item` &mdash; Attribute that can be placed on an individual repeater item in the listbuilder to highlight last search text on load.
+    - `bb-listbuilder-repeater-item-id` &mdash; *(Optional.)* Specifies a unique identifier for the repeater item. Required when using multiselect with repeater itemss.
   - `bb-listbuilder-content-custom` &mdash; Component that contains a custom view in the listbuilder.
     - `bb-listbuilder-content-custom-view-name` &mdash; Specifies a unique name for the custom view.
     - `bb-listbuilder-content-custom-view-switcher-class` &mdash; Specifies a css class for the icon for this custom view to be used in the view switcher.
     - `bb-listbuilder-content-custom-view-switcher-label` &mdash; Specifies text for the title attribute for this custom view to be used in the view switcher.
     - `bb-listbuilder-content-custom-highlight-class` &mdash; Specifies a css class where search text will be highlighted in the custom view.
     - `bb-listbuilder-content-custom-item` &mdash; Attribute that can be placed on an individual custom item in the listbuilder to highlight last search text on load.
+    - `bb-listbuilder-content-custom-item-id` &mdash; *(Optional.)* Specifies a unique identifier for the custom item. Required when using multiselect with custom items.
 
 `bb-listbuilder-footer` &mdash; Component for the listbuilder footer, which contains the ability to load data using infinite scroll.
     - `bb-listbuilder-show-load-more` &mdash; When true, indicates that there is more data ready to be loaded by the listbuilder.
