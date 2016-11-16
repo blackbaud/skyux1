@@ -56,7 +56,8 @@ describe('listbuilder', function () {
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'listbuilder_multiselect',
-                selector: '#screenshot-listbuilder'
+                selector: '#screenshot-listbuilder',
+                checkAccessibility: true
             });
     });
 });
