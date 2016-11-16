@@ -4,53 +4,53 @@
 
     function Controller() {
         var ctrl = this,
-            listbuilderSelectedItems;
+            listbuilderSelectedIds;
 
         function toggleOnlySelected(isSelected) {
             ctrl.bbListbuilderOnShowOnlySelected({showOnlySelected: isSelected});
         }
 
-        function addSelectedItem(id, selectedItems) {
-            if (selectedItems.indexOf(id) === -1) {
-                selectedItems.push(id);
+        function addSelectedItem(id, selectedIds) {
+            if (selectedIds.indexOf(id) === -1) {
+                selectedIds.push(id);
             }
         }
 
-        function removeSelectedItem(id, selectedItems) {
-            var itemIndex = selectedItems.indexOf(id);
+        function removeSelectedItem(id, selectedIds) {
+            var itemIndex = selectedIds.indexOf(id);
             if (itemIndex !== -1) {
-                selectedItems.splice(itemIndex, 1);
+                selectedIds.splice(itemIndex, 1);
             }
         }
 
         function multiselectItemToggled(isSelected, id) {
             if (isSelected) {
-                addSelectedItem(id, listbuilderSelectedItems);
+                addSelectedItem(id, listbuilderSelectedIds);
             } else {
-                removeSelectedItem(id, listbuilderSelectedItems);
+                removeSelectedItem(id, listbuilderSelectedIds);
             }
-            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: listbuilderSelectedItems, allSelected: false});
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: false});
         }
 
-        function multiselectItemsToggled(isSelected, selectedItems) {
-            var length = selectedItems.length,
+        function multiselectItemsToggled(isSelected, selectedIds) {
+            var length = selectedIds.length,
                 i;
 
             for (i = 0; i < length; i++) {
                 if (isSelected) {
-                    addSelectedItem(selectedItems[i], listbuilderSelectedItems);
+                    addSelectedItem(selectedIds[i], listbuilderSelectedIds);
                 } else {
-                    removeSelectedItem(selectedItems[i], listbuilderSelectedItems);
+                    removeSelectedItem(selectedIds[i], listbuilderSelectedIds);
                 }
             }
-            ctrl.bbListbuilderMultiselectItemsChanged({selectedItems: listbuilderSelectedItems, allSelected: isSelected});
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: isSelected});
         }
 
         function setListbuilderSelectedItems() {
-            if (angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedItems)) {
-                listbuilderSelectedItems = [];
+            if (angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedIds)) {
+                listbuilderSelectedIds = [];
             } else {
-                listbuilderSelectedItems = ctrl.bbListbuilderMultiselectSelectedItems;
+                listbuilderSelectedIds = ctrl.bbListbuilderMultiselectSelectedIds;
             }
         }
 
@@ -67,7 +67,7 @@
         function bindingChanges(changesObj) {
             /* istanbul ignore else */
             /* sanity check */
-            if (changesObj.bbListbuilderMultiselectSelectedItems) {
+            if (changesObj.bbListbuilderMultiselectSelectedIds) {
                 setListbuilderSelectedItems();
             }
         }
@@ -91,7 +91,7 @@
             bindings: {
                 bbListbuilderOnShowOnlySelected: '&?',
                 bbListbuilderShowOnlySelected: '<?',
-                bbListbuilderMultiselectSelectedItems: '<?',
+                bbListbuilderMultiselectSelectedIds: '<?',
                 bbListbuilderMultiselectItemsChanged: '&?'
             },
             require: {

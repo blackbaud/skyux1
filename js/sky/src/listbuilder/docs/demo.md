@@ -23,9 +23,9 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-toolbar-multiselect` &mdash; *(Optional.)* Container for the multiselect area in the listbuilder toolbar.
     - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder.
       - `bb-listbuilder-multiselect-items-changed` &mdash; Callback that will be executed when users select or deselect items in the listbuilder. It has the following arguments: 
-        - `selectedItems` &mdash; The array of unique identifiers that have been selected.
+        - `selectedIds` &mdash; The array of unique identifiers that have been selected.
         - `allSelected` &mdash; Set to true if the multiselect items were changed by selecting all items, set to false otherwise.
-      - `bb-listbuilder-multiselect-selected-items` &mdash; *(Optional.)* Specifies the array of selected unique identifiers. 
+      - `bb-listbuilder-multiselect-selected-ids` &mdash; *(Optional.)* Specifies the array of selected unique identifiers. 
       - `bb-listbuilder-on-show-only-selected` &mdash; Callback that will be executed when users select or deselect the 'Show only selected' checkbox in the multiselect area. It has the following arguments: 
         - `showOnlySelected` &mdash; Set to true if the list should contain only selected items, set to false otherwise.
       - `bb-listbuilder-multiselect-select-all` &mdash; Component that creates a 'Select all' button.

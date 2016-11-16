@@ -20,8 +20,8 @@
                 '<bb-listbuilder-toolbar>' +
                 '<bb-listbuilder-toolbar-multiselect> ' +
                 '<bb-listbuilder-multiselect ',
-            endMultiselectHtml = 'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems, allSelected)" ' +
-                'bb-listbuilder-multiselect-selected-items="listCtrl.selectedIds"> ' +
+            endMultiselectHtml = 'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)" ' +
+                'bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"> ' +
                 '<bb-listbuilder-multiselect-select-all ' +
                     'bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()"> ' +
                 '</bb-listbuilder-multiselect-select-all>' +
@@ -176,8 +176,8 @@
                         content: 'Content 3'
                     }
                 ],
-                itemsChanged: function (selectedItems, allSelected) {
-                    actualSelectedItems = selectedItems;
+                itemsChanged: function (selectedIds, allSelected) {
+                    actualSelectedItems = selectedIds;
                     actualAllSelected = allSelected;
                 }
             };

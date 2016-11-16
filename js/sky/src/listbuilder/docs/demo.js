@@ -353,26 +353,26 @@
             self.activeView = newView;
         }
 
-        function itemsChanged(selectedItems, allSelected, shouldNotApplyFilters) {
+        function itemsChanged(selectedIds, allSelected, shouldNotApplyFilters) {
             var i,
                 item; 
 
-            self.selectedIds = selectedItems;
+            self.selectedIds = selectedIds;
             self.selectAllActive = allSelected;
 
             if (self.showOnlySelected && !shouldNotApplyFilters) {
-                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, selectedItems);
+                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, selectedIds);
             }
 
             self.payMembershipSelections = [];
             self.secondarySelections = [];
-            for (i = 0; i < selectedItems.length; i++) {
-                item = getItemById(selectedItems[i], self.data);
+            for (i = 0; i < selectedIds.length; i++) {
+                item = getItemById(selectedIds[i], self.data);
                 if (item) {
                     if (!item.duesPaid) {
-                        self.payMembershipSelections.push(selectedItems[i]);
+                        self.payMembershipSelections.push(selectedIds[i]);
                     }
-                    self.secondarySelections.push(selectedItems[i]);
+                    self.secondarySelections.push(selectedIds[i]);
                 }
                 
             }
