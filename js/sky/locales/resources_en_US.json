@@ -35,6 +35,10 @@
         "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
         "message": "File is too large."
     },
+    "card_select": {
+        "_description": "Label for the input in a card that selects the card",
+        "message": "Select card"
+    },
     "carousel_button_label_next": {
         "_description": "The accessibility label for the carousel next button",
         "message": "Go to next item"
