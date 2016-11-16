@@ -1,16 +1,16 @@
 <style>
 .bb-test-listbuilder .bb-summary-actionbar {
-    bottom: 500px !important;
+    bottom: 200px !important;
 }
 </style>
 
-<div class="container bb-test-listbuilder">
+<div class="container bb-test-listbuilder" ng-controller="ListbuilderTestController as listCtrl">
+    <button class="btn btn-primary bb-list-multiselect-button" type="button" ng-click="listCtrl.showMultiselect = true">Activate multiselect</button>
     <div style="height: 100px; width: 100px;">
     </div>
     <div id="screenshot-listbuilder">
         
-        <div ng-controller="ListbuilderTestController as listCtrl">
-            <button class="btn btn-primary bb-list-multiselect-button" type="button" ng-click="listCtrl.showMultiselect = true">Activate multiselect</button>
+        <div>     
             <bb-listbuilder>
                 <bb-listbuilder-toolbar 
                     bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
