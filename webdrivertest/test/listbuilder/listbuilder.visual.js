@@ -47,4 +47,17 @@ describe('listbuilder', function () {
                 checkAccessibility: true
             });
     });
+
+    it('match the listbuilder screenshot when using multiselect', function () {
+        return browser
+            .setupTest('/listbuilder/fixtures/test.full.html')
+            .click('.bb-list-multiselect-button')
+            .click('.bb-card input')
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'listbuilder_multiselect',
+                selector: '#screenshot-listbuilder',
+                checkAccessibility: true
+            });
+    });
 });
