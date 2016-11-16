@@ -13,7 +13,7 @@
             name: 'Actions',
             cls: 'actions'
         }],
-        cardModule = angular.module('sky.card.directive', ['sky.check']),
+        cardModule = angular.module('sky.card.directive', ['sky.check', 'sky.resources']),
         nextId = 0;
 
     function makeCardComponent(component) {
