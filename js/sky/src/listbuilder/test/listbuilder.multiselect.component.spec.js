@@ -663,6 +663,18 @@
             el.remove();
         });
 
+        it('should allow users to set selectedIds with available items', function () {
+
+        });
+
+        it('should update available items selected property when selectedIds are changed', function () {
+
+        });
+
+        it('should update available items selected property when available items are changed', function () {
+
+        });
+
         it('should allow users to set selectedIds and then unselect a card', function () {
             var el;
 
@@ -708,6 +720,10 @@
             expect(actualShowOnlySelected).toBe(false);
 
             el.remove();
+        });
+
+        it('should allow users to set onlySelected state', function () {
+
         });
         
     });
