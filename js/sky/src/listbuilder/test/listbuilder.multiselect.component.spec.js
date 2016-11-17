@@ -8,6 +8,9 @@
         var cardMultiselectHtml,
             repeaterMultiselectHtml,
             customMultiselectHtml,
+            availableItemsMultiselectHtml, 
+            availableItemsNoSelectAllClearAllMultiselectHtml, 
+            noSelectAllClearAllHtml,
             $scope,
             $document,
             $rootScope,
@@ -27,6 +30,37 @@
                 '</bb-listbuilder-multiselect-select-all>' +
                 '<bb-listbuilder-multiselect-clear-all ' +
                     'bb-listbuilder-multiselect-on-clear-all="listCtrl.clearAll()"> ' +
+                '</bb-listbuilder-multiselect-clear-all>' +
+                '</bb-listbuilder-multiselect>' +
+                '</bb-listbuilder-toolbar-multiselect>' +
+                '</bb-listbuilder-toolbar>',
+            endMultiselectAvailableItemsHtml = 'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)" ' +
+                'bb-listbuilder-multiselect-available-items="listCtrl.data" ' +
+                'bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"> ' +
+                '<bb-listbuilder-multiselect-select-all ' +
+                'bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()"> ' +
+                '</bb-listbuilder-multiselect-select-all>' +
+                '<bb-listbuilder-multiselect-clear-all ' +
+                'bb-listbuilder-multiselect-on-clear-all="listCtrl.clearAll()"> ' +
+                '</bb-listbuilder-multiselect-clear-all>' +
+                '</bb-listbuilder-multiselect>' +
+                '</bb-listbuilder-toolbar-multiselect>' +
+                '</bb-listbuilder-toolbar>',
+            endMultiselectAvailableItemsNoSelectAllClearAllHtml = 'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)" ' +
+                'bb-listbuilder-multiselect-available-items="listCtrl.data" ' +
+                'bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"> ' +
+                '<bb-listbuilder-multiselect-select-all> ' +
+                '</bb-listbuilder-multiselect-select-all>' +
+                '<bb-listbuilder-multiselect-clear-all> ' +
+                '</bb-listbuilder-multiselect-clear-all>' +
+                '</bb-listbuilder-multiselect>' +
+                '</bb-listbuilder-toolbar-multiselect>' +
+                '</bb-listbuilder-toolbar>',
+            endMultiselectNoSelectAllClearAllHtml = 'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)" ' +
+                'bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"> ' +
+                '<bb-listbuilder-multiselect-select-all> ' +
+                '</bb-listbuilder-multiselect-select-all>' +
+                '<bb-listbuilder-multiselect-clear-all> ' +
                 '</bb-listbuilder-multiselect-clear-all>' +
                 '</bb-listbuilder-multiselect>' +
                 '</bb-listbuilder-toolbar-multiselect>' +
@@ -153,6 +187,23 @@
                 startMultiselectHtml +
                 endMultiselectHtml +
                 customContentHtml
+            );
+            availableItemsMultiselectHtml = angular.element(
+                startMultiselectHtml +
+                endMultiselectAvailableItemsHtml + 
+                cardContentHtml
+            );
+
+            noSelectAllClearAllHtml = angular.element(
+                startMultiselectHtml +
+                endMultiselectNoSelectAllClearAllHtml + 
+                cardContentHtml
+            );
+
+            availableItemsNoSelectAllClearAllMultiselectHtml = angular.element(
+                startMultiselectHtml +
+                endMultiselectAvailableItemsNoSelectAllClearAllHtml + 
+                cardContentHtml
             );
 
             actualSelectedItems = [];
@@ -382,6 +433,67 @@
 
                 el.remove();
             });
+
+            it('should select all available items when available items are present and a select all function is invoked', function () {
+                var el;
+
+                $scope.listCtrl.selectAll = function () {
+                    return [0, 1, 2];
+                };
+
+                el = initMultiselect(availableItemsMultiselectHtml);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickSelectAll(el);
+
+                expect(actualAllSelected).toBe(true);
+                expect(actualSelectedItems).toEqual([1, 0, 2]);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([0, 2]);
+
+                el.remove();
+            });
+
+            it('should select all available items when no select all function is provided and available items are provided', function () {
+                var el;
+
+                el = initMultiselect(availableItemsNoSelectAllClearAllMultiselectHtml);
+
+                clickSelectAll(el);
+
+                expect(actualAllSelected).toBe(true);
+                expect(actualSelectedItems).toEqual([0, 1, 2]);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([0, 2]);
+
+                el.remove();
+            });
+
+            it('should do nothing when no select all function is provided and no available items are provided', function () {
+                 
+                var el;
+
+                el = initMultiselect(noSelectAllClearAllHtml);
+
+                clickSelectAll(el);
+
+                expect(actualAllSelected).toBe(true);
+                expect(actualSelectedItems).toEqual([]);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                el.remove();
+                
+            });
         });
 
         describe('clear all', function () {
@@ -456,6 +568,75 @@
                 expect(actualSelectedItems).toEqual([1]);
 
                 el.remove();
+            });
+
+            it('should clear all available items when available items are present and a clear all function is invoked', function () {
+                var el;
+
+                $scope.listCtrl.clearAll = function () {
+                    return [0, 1, 2];
+                };
+
+                el = initMultiselect(availableItemsMultiselectHtml);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickClearAll(el);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([]);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                el.remove();
+            });
+
+            it('should select all available items when no select all function is provided and available items are provided', function () {
+                var el;
+
+                el = initMultiselect(availableItemsNoSelectAllClearAllMultiselectHtml);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickClearAll(el);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([]);
+
+                clickCardCheckBox(el, 0);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([0]);
+
+                el.remove();
+            });
+
+            it('should do nothing when no select all function is provided and no available items are provided', function () {
+                 
+                var el;
+
+                el = initMultiselect(noSelectAllClearAllHtml);
+
+                clickCardCheckBox(el, 1);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickClearAll(el);
+
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1]);
+
+                clickCardCheckBox(el, 0);
+                expect(actualAllSelected).toBe(false);
+                expect(actualSelectedItems).toEqual([1, 0]);
+
+                el.remove();
+                
             });
         });
 
