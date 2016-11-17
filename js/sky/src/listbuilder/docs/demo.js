@@ -247,26 +247,18 @@
             */
             if (self.selectAllActive) {
                 for (i = 0; i < arrayLength; i++) {
-                    array[i].selected = true;
                     if (selectedIds.indexOf(array[i].id) === -1) {
                         selectedIds.push(array[i].id);
                     }
                 }
-            } else {
+            } else if (onlyShowSelected) { /* Filter if showOnly selected is set */
                 for (i = 0; i < selectedLength; i++) {
                     item = getItemById(selectedIds[i], array);
                     if (item) {
-                        item.selected = true;
-                        if (onlyShowSelected) {
-                            newData.push(item);
-                        }
-                    }
-                    
+                        newData.push(item);
+                    } 
                 }
-
-                if (onlyShowSelected) {
-                    return newData;
-                }
+                return newData;
             }
 
             return array;
@@ -382,7 +374,12 @@
             var i,
                 item;
             for (i = 0; i < selections.length; i++) {
+                //simulate client side duesPaid changing
                 item = getItemById(selections[i], self.data); 
+                item.duesPaid = true;
+
+                //simulate server side duesPaid changing
+                item = getItemById(selections[i], dataSet);
                 item.duesPaid = true;
             }
             self.payMembershipSelections = [];
@@ -390,38 +387,6 @@
 
         function secondaryAction(selections) {
             console.log('secondary action taken with ', selections);
-        }
-
-        function selectAll() {
-            var length = self.data.length,
-                i,
-                newSelectedIds = [];
-
-            for (i = 0; i < length; i++) {
-                if (!self.data[i].selected) {
-                    self.data[i].selected = true;
-                    newSelectedIds.push(self.data[i].id);
-                }
-            }
-
-            return newSelectedIds;
-        }
-
-        function clearAll() {
-            var length = self.data.length,
-                removedIds = [],
-                i;
-
-            for (i = 0; i < length; i++) {
-                if (self.data[i].selected) {
-                    self.data[i].selected = false;
-                    removedIds.push(self.data[i].id);
-                }
-                
-            }
-
-            return removedIds;
-            
         }
 
         function toggleOnlySelected(showOnlySelected) {
@@ -445,9 +410,6 @@
         self.actionsShown = actionsShown;
 
         self.toggleOnlySelected = toggleOnlySelected;
-
-        self.selectAll = selectAll;
-        self.clearAll = clearAll;
 
         self.secondarySelections = [];
         self.payMembershipSelections = [];

@@ -12,16 +12,20 @@
         }
 
         function selectAllItems() {
-            var selectAllResult = ctrl.bbListbuilderMultiselectOnSelectAll();
+            var selectAllResult;
+            if (angular.isFunction(ctrl.bbListbuilderMultiselectOnSelectAll)) {
+                selectAllResult = ctrl.bbListbuilderMultiselectOnSelectAll();
 
-
-            if (selectAllResult && angular.isFunction(selectAllResult.then)) {
-                selectAllResult.then(function (result) {
-                    listbuilderMultiselectToggled(result);
-                });
+                if (selectAllResult && angular.isFunction(selectAllResult.then)) {
+                    selectAllResult.then(function (result) {
+                        listbuilderMultiselectToggled(result);
+                    });
+                } else {
+                    listbuilderMultiselectToggled(selectAllResult);
+                }
             } else {
-                listbuilderMultiselectToggled(selectAllResult);
-            }
+                ctrl.bbListbuilderMultiselect.toggleAllAvailableItems(true);
+            }  
         }
 
         ctrl.selectAllItems = selectAllItems;

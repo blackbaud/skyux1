@@ -12,16 +12,22 @@
         }
 
         function clearAllItems() {
-            var clearAllResult = ctrl.bbListbuilderMultiselectOnClearAll();
+            var clearAllResult;
+            if (angular.isFunction(ctrl.bbListbuilderMultiselectOnClearAll)) {
+                clearAllResult = ctrl.bbListbuilderMultiselectOnClearAll();
 
 
-            if (clearAllResult && angular.isFunction(clearAllResult.then)) {
-                clearAllResult.then(function (result) {
-                    listbuilderMultiselectToggled(result);
-                });
+                if (clearAllResult && angular.isFunction(clearAllResult.then)) {
+                    clearAllResult.then(function (result) {
+                        listbuilderMultiselectToggled(result);
+                    });
+                } else {
+                    listbuilderMultiselectToggled(clearAllResult);
+                }
             } else {
-                listbuilderMultiselectToggled(clearAllResult);
-            }
+                ctrl.bbListbuilderMultiselect.toggleAllAvailableItems(false);
+            }  
+            
         }
 
         ctrl.clearAllItems = clearAllItems;
