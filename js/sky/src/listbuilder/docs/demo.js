@@ -65,10 +65,11 @@
             nextTop = 6,
             dataSet = [
                 {
-                    name: 'Tim Duggy',
-                    occupation: 'Software Engineer',
-                    joinDate: new Date('1/1/2016'),
-                    duesPaid: false
+                    name: '$25.00',
+                    occupation: 'Amazon market palce amz.com',
+                    joinDate: new Date('09/14/2016'),
+                    newField: 'Nicole Guersey (Visa1234)',
+                    duesPaid: true
                 },
                 {
                     name: 'Janet Smith',
@@ -285,13 +286,23 @@
             self.activeView = newView;
         }
 
+        //this is used to get panel data on selection of item
+        function getPaneldata(item)
+        {
+            //get data from database for particualar item
+            //not confirm it should be in panel directive or listBuilder-content
+            console.log('getPaneldata');
+        }
+
         self.onFilterClick = onFilterClick;
 
+        self.name = "rahul";
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
         self.sortItems = sortItems;
         self.viewChanged = viewChanged;
+        self.getPaneldata = getPaneldata;
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
         self.data = [];
