@@ -18,7 +18,8 @@
             $compile,
             actualSelectedItems,
             actualAllSelected,
-            onlySelectedHtml = 'bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)" ',
+            onlySelectedHtml = 'bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)" ' +
+                'bb-listbuilder-show-only-selected="listCtrl.showOnlySelected" ',
             startMultiselectHtml = '<bb-listbuilder>' +
                 '<bb-listbuilder-toolbar>' +
                 '<bb-listbuilder-toolbar-multiselect> ' +
@@ -664,15 +665,65 @@
         });
 
         it('should allow users to set selectedIds with available items', function () {
+            var el;
+            $scope.listCtrl.selectedIds = [0, 2];
+            el = initMultiselect(availableItemsNoSelectAllClearAllMultiselectHtml);
 
+            expect($scope.listCtrl.data[0].selected).toBe(true);
+            expect($scope.listCtrl.data[1].selected).toBe(false);
+            expect($scope.listCtrl.data[2].selected).toBe(true);
+
+            clickCardCheckBox(el, 1);
+            expect($scope.listCtrl.data[1].selected).toBe(true);
+            expect(actualAllSelected).toBe(false);
+            expect(actualSelectedItems).toEqual([0, 2, 1]);
+
+            el.remove();
         });
 
         it('should update available items selected property when selectedIds are changed', function () {
+            var el;
+            
+            el = initMultiselect(availableItemsNoSelectAllClearAllMultiselectHtml);
 
+            clickCardCheckBox(el, 1);
+            expect($scope.listCtrl.data[1].selected).toBe(true);
+            expect(actualAllSelected).toBe(false);
+            expect(actualSelectedItems).toEqual([1]);
+
+            $scope.listCtrl.selectedIds = [0, 2];
+            $scope.$digest();
+
+            expect($scope.listCtrl.data[0].selected).toBe(true);
+            expect($scope.listCtrl.data[1].selected).toBe(false);
+            expect($scope.listCtrl.data[2].selected).toBe(true);
+
+            el.remove();
         });
 
         it('should update available items selected property when available items are changed', function () {
+            var el;
 
+            $scope.listCtrl.selectedIds = [0, 1, 2, 3];
+            
+            el = initMultiselect(availableItemsNoSelectAllClearAllMultiselectHtml);
+
+            $scope.listCtrl.data = $scope.listCtrl.data.concat([{id: 3, title: 'Title 3', content: 'Content 3'}]);
+            
+            $scope.$digest();
+
+            expect($scope.listCtrl.data[0].selected).toBe(true);
+            expect($scope.listCtrl.data[1].selected).toBe(true);
+            expect($scope.listCtrl.data[2].selected).toBe(true);
+            expect($scope.listCtrl.data[3].selected).toBe(true);
+
+            $scope.listCtrl.selectedIds = undefined;
+
+            expect($scope.listCtrl.data[0].selected).toBe(true);
+            expect($scope.listCtrl.data[1].selected).toBe(true);
+            expect($scope.listCtrl.data[2].selected).toBe(true);
+            expect($scope.listCtrl.data[3].selected).toBe(true);
+            el.remove();
         });
 
         it('should allow users to set selectedIds and then unselect a card', function () {
@@ -723,7 +774,29 @@
         });
 
         it('should allow users to set onlySelected state', function () {
+            var el,
+                actualShowOnlySelected;
 
+            $scope.listCtrl.toggleOnlySelected = function (showOnlySelected) {
+                actualShowOnlySelected = showOnlySelected;
+            };
+
+            $scope.listCtrl.showOnlySelected = true;
+
+            el = initMultiselect(cardMultiselectHtml = angular.element(
+                startMultiselectHtml +
+                onlySelectedHtml +
+                endMultiselectHtml +
+                cardContentHtml));
+
+            clickOnlySelected(el);
+
+            expect(actualShowOnlySelected).toBe(false);
+
+            clickOnlySelected(el);
+            expect(actualShowOnlySelected).toBe(true);
+
+            el.remove();
         });
         
     });

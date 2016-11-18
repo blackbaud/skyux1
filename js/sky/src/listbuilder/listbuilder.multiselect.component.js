@@ -97,10 +97,10 @@
             ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: isSelected});
         }
 
-        function setListbuilderSelectedItems(isInit) {
+        function setListbuilderSelectedItems() {
             if (!angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedIds)) {
                 listbuilderSelectedIds = ctrl.bbListbuilderMultiselectSelectedIds;
-            } else if (isInit) {
+            } else {
                 listbuilderSelectedIds = [];
             }
 
@@ -112,7 +112,7 @@
                 ctrl.hasOnlySelected = true;
             }
 
-            setListbuilderSelectedItems(true);
+            setListbuilderSelectedItems();
             ctrl.listbuilderCtrl.multiselectItemToggled = multiselectItemToggled;
         }
 
