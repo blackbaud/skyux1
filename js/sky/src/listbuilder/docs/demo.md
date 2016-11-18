@@ -19,9 +19,9 @@ The listbuilder component contains functionality for displaying and executing di
     - `bb-listbuilder-add-label` &mdash; *(Optional.)* Specifies text for the add button title.
   - `bb-listbuilder-filter` &mdash; *(Optional.)* Container for the filter button in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
   - `bb-listbuilder-sort` &mdash; *(Optional.)* Container for the sort button in the listbuilder toolbar. See the [sort](../sort) module for content that can be placed here.
-  - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be place here.
+  - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
   - `bb-listbuilder-toolbar-multiselect` &mdash; *(Optional.)* Container for the multiselect area in the listbuilder toolbar.
-    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder. When using multiselect with cards, `bb-listbuilder-card-id`, `bb-card-selectable`, and `bb-card-selected` should all be set. When using multiselect with repeater items, `bb-listbuilder-repeater-item-id`, `bb-repeater-item-selectable`, and `bb-repeater-item-selected` should all be set. 
+    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder. When using multiselect with cards, `bb-listbuilder-card-id`, `bb-card-selectable`, and `bb-card-selected` should all be set. When using multiselect with repeater items, `bb-listbuilder-repeater-item-id`, `bb-repeater-item-selectable`, and `bb-repeater-item-selected` should all be set. Display actions for selected items using the [summary action bar](../summaryactionbar) module. 
       - `bb-listbuilder-multiselect-items-changed` &mdash; Callback that will be executed when users select or deselect items in the listbuilder. It has the following arguments: 
         - `selectedIds` &mdash; The array of unique identifiers that have been selected.
         - `allSelected` &mdash; Set to true if the multiselect items were changed by selecting all items, set to false otherwise.
