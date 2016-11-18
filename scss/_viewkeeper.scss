@@ -7,7 +7,7 @@ $viewkeeper-margin-top-small: $omnibar-height-small !default;
 body:not(.bb-viewkeeper-ignore-fixed) {
     .bb-viewkeeper-fixed {
         position: fixed;
-        z-index: 100;
+        z-index: $bb-zindex-viewkeeper;
         opacity: 0.95;
         filter: alpha(opacity=95);
         overflow: hidden;

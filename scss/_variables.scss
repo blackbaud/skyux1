@@ -240,6 +240,9 @@ $zindex-modal-background: 1040;
 $help-widget-zindex: $zindex-modal-background + 1000 !default;
 $omnibar-zindex: $zindex-modal-background - 1 !default;
 $bb-zindex-dropdown-append-to-body: 1051;
+
+$bb-zindex-viewkeeper: 100 !default;
+$bb-zindex-popover-list: $bb-zindex-viewkeeper - 1 !default;
 //end omnibar/help widget
 
 //begin tile
