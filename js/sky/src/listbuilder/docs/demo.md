@@ -21,17 +21,21 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-sort` &mdash; *(Optional.)* Container for the sort button in the listbuilder toolbar. See the [sort](../sort) module for content that can be placed here.
   - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be place here.
   - `bb-listbuilder-toolbar-multiselect` &mdash; *(Optional.)* Container for the multiselect area in the listbuilder toolbar.
-    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder.
+    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder. When using multiselect with cards, `bb-listbuilder-card-id`, `bb-card-selectable`, and `bb-card-selected` should all be set. When using multiselect with repeater items, `bb-listbuilder-repeater-item-id`, `bb-repeater-item-selectable`, and `bb-repeater-item-selected` should all be set. 
       - `bb-listbuilder-multiselect-items-changed` &mdash; Callback that will be executed when users select or deselect items in the listbuilder. It has the following arguments: 
         - `selectedIds` &mdash; The array of unique identifiers that have been selected.
         - `allSelected` &mdash; Set to true if the multiselect items were changed by selecting all items, set to false otherwise.
       - `bb-listbuilder-multiselect-selected-ids` &mdash; *(Optional.)* Specifies the array of selected unique identifiers. 
+      - `bb-listbuilder-multiselect-available-items` &mdash *(Optional.)* Specifies the array of items in the listbuilder. When specified, the selected property of the item will be updated when `bb-listbuilder-multiselect-selected-ids` are changed, when the select all button is clicked, and when the clear all button is clicked.
+      - `bb-listbuilder-multiselect-item-selected-property` &mdash *(Optional.)* Specifies the name for the selected property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `selected`)*
+      - `bb-listbuilder-multiselect-item-selected-property` &mdash *(Optional.)* Specifies the name for the id property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `id`)*
       - `bb-listbuilder-on-show-only-selected` &mdash; Callback that will be executed when users select or deselect the 'Show only selected' checkbox in the multiselect area. It has the following arguments: 
         - `showOnlySelected` &mdash; Set to true if the list should contain only selected items, set to false otherwise.
+      - `bb-listbuilder-show-only-selected` &mdash; *(Optional.)* Specifies the value of the 'Show only selected' checkbox. *(Default = `false`)*
       - `bb-listbuilder-multiselect-select-all` &mdash; Component that creates a 'Select all' button.
-        - `bb-listbuilder-multiselect-on-select-all` &mdash; Callback that will be executed when the 'Select all' button is clicked. The function should return an array of unique identifiers to be selected.
+        - `bb-listbuilder-multiselect-on-select-all` &mdash; *(Optional.)* Callback that will be executed when the 'Select all' button is clicked. The function should return an array of unique identifiers to be selected. When not specified, and when the `bb-listbuilder-multiselect-available-items` array is specified, all items in the array will be selected.
       - `bb-listbuilder-multiselect-clear-all` &mdash; Component that creates a 'Clear all' button.
-        - `bb-listbuilder-multiselect-on-clear-all` &mdash; Callback that will be executed when the 'Clear all' button is clicked. The function should return an array of unique identifiers to be deselected.
+        - `bb-listbuilder-multiselect-on-clear-all` &mdash; *(Optional.)* Callback that will be executed when the 'Clear all' button is clicked. The function should return an array of unique identifiers to be deselected. When not specified, and when the `bb-listbuilder-multiselect-available-items` array is specified, all items in the array will be deselected.
       
 `bb-listbuilder-content` &mdash; Component for the listbuilder content.
   - `bb-listbuilder-content-active-view` &mdash; *(Optional.)* Specifies the name of the active view to display as the listbuilder content. Values can be `card`, `repeater`, or the name of a custom view.
