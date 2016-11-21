@@ -13,6 +13,7 @@
 
             function selectItem() {
                 vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
+                vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
             vm.getCls = function () {
@@ -53,6 +54,8 @@
             var animateEnabled,
                 bbRepeater = ctrls[1],
                 vm = ctrls[0];
+
+            vm.listbuilderRepeaterItemCtrl = ctrls[2];
 
 
             function titleElExists() {
@@ -160,11 +163,25 @@
 
             vm.itemIsSelectable = itemIsSelectable;
 
+            function repeaterItemSelectionToggled(isSelected) {
+                $timeout(function () {
+                    if (angular.isFunction(vm.bbRepeaterItemSelectionToggled)) {
+                        vm.bbRepeaterItemSelectionToggled({isSelected: isSelected});
+                    }
+                });
+                
+            }
+
+            vm.repeaterItemSelectionToggled = repeaterItemSelectionToggled;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
 
+            scope.$emit('bbRepeaterItemInitialized', {
+                repeaterItemCtrl: vm
+            });
         }
 
         return {
@@ -172,6 +189,7 @@
                 bbRepeaterItemExpanded: '=?',
                 bbRepeaterItemSelectable: '@?',
                 bbRepeaterItemSelected: '=?',
+                bbRepeaterItemSelectionToggled: '&?',
                 bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
