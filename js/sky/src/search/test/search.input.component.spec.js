@@ -352,6 +352,14 @@
             expect(searchButtonEl).toBeVisible();
             expect(inputEl).toBeFocused();
 
+            $scope.searchCtrl.searchText = '';
+            $scope.$digest();
+            
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
+            expect(clearButtonEl).not.toBeVisible();
+            expect(searchButtonEl).toBeVisible();
+            expect(inputEl).toBeFocused();
+
             searchCallback({xs: false});
             $scope.$digest();
             $scope.searchCtrl.searchText = 'aText';
@@ -440,6 +448,35 @@
                 inputEl = findSearchInput(searchEl);
 
                 expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                searchEl.remove();
+            });
+
+            it('has predefined placeholder text when bbSearchPlaceholder is present', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-placeholder="searchCtrl.placeholder" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                $scope.searchCtrl = {
+
+                };
+                
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                $scope.searchCtrl.placeholder = undefined;
+                $scope.$digest();
+                expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                $scope.searchCtrl.placeholder = 'New text';
+                $scope.$digest();
+                expect(inputEl).toHaveAttr('placeholder', 'New text');
 
                 searchEl.remove();
             });

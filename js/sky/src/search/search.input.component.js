@@ -195,8 +195,7 @@
         }
 
         function searchTextBindingChanged() {
-            ctrl.showClear = true;
-            
+            ctrl.showClear = angular.isDefined(ctrl.bbSearchText) && ctrl.bbSearchText !== '';
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
                 openSearchInput(true);
             }
@@ -217,6 +216,8 @@
             }
 
             if (changesObj.bbSearchPlaceholder) {
+                /* istanbul ignore else */
+                /* sanity check */
                 if (angular.isDefined(changesObj.bbSearchPlaceholder.currentValue)) {
                     ctrl.placeholderText = changesObj.bbSearchPlaceholder.currentValue;
                 }
