@@ -168,6 +168,44 @@ describe('Card directive', function () {
         el.remove();
     });
 
+    it('should emit an event to allow users to initialize card controller options', function () {
+        var $scope = $rootScope.$new(),
+            actualIsSelected,
+            checkEl,
+            el;
+
+        function onSelected(selectedArgs) {
+            actualIsSelected = selectedArgs.isSelected;
+        }
+
+        $scope.$on('bbCardInitialized', function (event, data) {
+            data.cardCtrl.bbCardSelectionToggled = onSelected;
+            event.stopPropagation();
+            event.preventDefault();
+        });
+
+        el = $compile(
+            '<bb-card bb-card-selectable="true" bb-card-selected="cardSelected" bb-card-selection-toggled="onSelected(isSelected)">' +
+            '</bb-card>'
+        )($scope);
+
+        // The element has to be in the DOM to trigger its click event in Firefox.
+        el.appendTo(document.body);
+
+        $scope.$digest();
+
+        checkEl = el.find('.bb-check-wrapper input');
+
+        checkEl.click();
+        $timeout.flush();
+
+        expect(el.find('.bb-card')).toHaveClass('bb-card-selected');
+        expect($scope.cardSelected).toBe(true);
+        expect(actualIsSelected).toBe(true);
+
+        el.remove();
+    });
+
     it('should dereference child controllers when destroyed', function () {
         var $scope = $rootScope.$new(),
             cardScope,
