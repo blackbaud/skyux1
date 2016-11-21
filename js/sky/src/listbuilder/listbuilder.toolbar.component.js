@@ -22,6 +22,12 @@
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbListbuilderOnSearchTextChanged)) {
+                ctrl.bbListbuilderOnSearchTextChanged({searchText: searchText});
+            }  
+        }
+
         // Floating headers
         function setupViewKeeper() {
             if (ctrl.bbListbuilderToolbarFixed !== 'true') {
@@ -83,7 +89,7 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
-
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.viewChanged = viewChanged;
 
     }
@@ -102,6 +108,7 @@
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
             bindings: {
                 bbListbuilderOnSearch: '&?',
+                bbListbuilderOnSearchTextChanged: '&?',
                 bbListbuilderSearchText: '<?',
                 bbListbuilderSearchPlaceholder: '<?',
                 bbListbuilderVerticalOffsetElId: '<?',

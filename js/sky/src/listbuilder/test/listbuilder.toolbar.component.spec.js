@@ -166,6 +166,37 @@
                 el.remove();
             });
 
+            it('will call a function on search text changed if specified', function () {
+                var el,
+                    newText,
+                    searchChangeHtml;
+
+                $scope.listCtrl = listCtrl;
+                $scope.listCtrl.searchTextChanged = function (searchText) {
+                    newText = searchText;
+                };
+
+                searchChangeHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-on-search-text-changed="listCtrl.searchTextChanged(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText" ' +
+                    'bb-listbuilder-search-placeholder="listCtrl.placeholder" ' +
+                    '>' +
+                    '</bb-listbuilder-toolbar>' +
+                    simpleCardContentHtml +
+                    '</bb-listbuilder>');
+
+                el = initListbuilderTest(searchChangeHtml);
+
+                changeInput(el, 'First');
+
+                expect(newText).toBe('First');
+
+                el.remove();
+            });
+
             it('calls the search callback, and resolves highlight promise on input enter when returning a promise', function () {
                 var el,
                     searchButtonEl;
