@@ -215,6 +215,12 @@
                     searchTextBindingChanged();
                 }
             }
+
+            if (changesObj.bbSearchPlaceholder) {
+                if (angular.isDefined(changesObj.bbSearchPlaceholder.currentValue)) {
+                    ctrl.placeholderText = changesObj.bbSearchPlaceholder.currentValue;
+                }
+            }
         }
 
         function initSearch() {
@@ -223,8 +229,10 @@
                 searchTextBindingChanged();
             }
 
-            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
-                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && angular.isDefined($element.attr('bb-search-placeholder'))) {
+                ctrl.placeholderText = bbResources.search_placeholder;
+            } else {
+                ctrl.placeholderText = ctrl.bbSearchPlaceholder;
             }
         }
 

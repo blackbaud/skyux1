@@ -11,7 +11,8 @@
                 options: '=?bbToolbarOptions',
                 bbGridFilterClick: '&?bbGridFilterClick',
                 bbGridSearch: '&?bbGridSearch',
-                bbGridSearchText: '<?bbGridSearchText'
+                bbGridSearchText: '<?bbGridSearchText',
+                bbGridSearchPlaceholder: '<?bbGridSearchPlaceholder'
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
