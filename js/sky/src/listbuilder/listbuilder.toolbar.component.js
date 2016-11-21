@@ -103,6 +103,7 @@
             bindings: {
                 bbListbuilderOnSearch: '&?',
                 bbListbuilderSearchText: '<?',
+                bbListbuilderSearchPlaceholder: '<?',
                 bbListbuilderVerticalOffsetElId: '<?',
                 bbListbuilderToolbarFixed: '@?'
             },

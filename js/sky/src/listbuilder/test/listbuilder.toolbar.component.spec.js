@@ -141,6 +141,31 @@
 
             });
 
+            it('can set placeholder text if specified', function () {
+                var el,
+                    placeholderHtml;
+
+                $scope.listCtrl = listCtrl;
+                $scope.listCtrl.placeholder = 'New text';
+
+                placeholderHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText" ' +
+                    'bb-listbuilder-search-placeholder="listCtrl.placeholder" ' +
+                    '>' +
+                    '</bb-listbuilder-toolbar>' +
+                    simpleCardContentHtml +
+                    '</bb-listbuilder>');
+
+                el = initListbuilderTest(placeholderHtml);
+
+                expect(el.find('.bb-search-input-container input')).toHaveAttr('placeholder', $scope.listCtrl.placeholder);
+
+                el.remove();
+            });
+
             it('calls the search callback, and resolves highlight promise on input enter when returning a promise', function () {
                 var el,
                     searchButtonEl;
