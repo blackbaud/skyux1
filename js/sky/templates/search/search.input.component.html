@@ -20,6 +20,7 @@
                     type="text" 
                     class="form-control bb-search-input"
                     ng-model="$ctrl.bbSearchText"
+                    ng-change="$ctrl.searchTextChanged($ctrl.bbSearchText)"
                     ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
                     ng-focus="$ctrl.inputFocused(true)"
                     ng-blur="$ctrl.inputFocused(false)"

@@ -25,6 +25,12 @@
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbOnSearchTextChanged)) {
+                ctrl.bbOnSearchTextChanged({searchText: searchText});
+            }
+        }
+
         function setInputFocus() {
             $element.find('input').focus();
         }
@@ -249,6 +255,7 @@
         ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.clearSearchText = clearSearchText;
         ctrl.openSearchInput = openSearchInput;
         ctrl.dismissSearchInput = dismissSearchInput;
@@ -263,6 +270,7 @@
             controller: Controller,
             bindings: {
                 bbOnSearch: '&?',
+                bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?'
             }
