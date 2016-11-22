@@ -5,6 +5,8 @@
         <div class="bb-listbuilder-toolbar-item">
             <bb-search-input
                 bb-search-text="$ctrl.bbListbuilderSearchText"
+                bb-on-search-text-changed="$ctrl.searchTextChanged(searchText)"
+                bb-search-placeholder="$ctrl.bbListbuilderSearchPlaceholder"
                 bb-on-search="$ctrl.applySearchText(searchText)"
                 >
             </bb-search-input>

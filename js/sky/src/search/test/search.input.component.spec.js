@@ -174,6 +174,32 @@
             searchEl.remove();
         });
 
+        it('can call a change function when the user types in the input', function () {
+            var newText,
+                searchEl;
+            
+            $scope.searchCtrl = {
+                searchChanged: function (searchText) {
+                    newText = searchText;
+                }
+            };
+
+            searchEl = initSearch('<div><div bb-search-container>' +
+                '<div class="bb-test-other-item">Another Item</div>' +
+                '<bb-search-input ' +
+                'bb-search-text="searchCtrl.searchText" ' +
+                'bb-on-search="searchCtrl.applySearchText(searchText)" ' +
+                'bb-on-search-text-changed="searchCtrl.searchChanged(searchText)"> ' +
+            '</bb-search-input>' +
+            '</bb-search-input>' +
+            '</div></div>');
+
+            changeInput(searchEl, 'new value');
+            expect(newText).toBe('new value');
+            searchEl.remove();
+        });
+
+
         it('will create a dismissable search input on mobile breakpoints that will toggle input shown', function () {
             var searchCallback,
                 searchEl,
@@ -352,6 +378,14 @@
             expect(searchButtonEl).toBeVisible();
             expect(inputEl).toBeFocused();
 
+            $scope.searchCtrl.searchText = '';
+            $scope.$digest();
+            
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
+            expect(clearButtonEl).not.toBeVisible();
+            expect(searchButtonEl).toBeVisible();
+            expect(inputEl).toBeFocused();
+
             searchCallback({xs: false});
             $scope.$digest();
             $scope.searchCtrl.searchText = 'aText';
@@ -423,6 +457,52 @@
                 inputEl = findSearchInput(searchEl);
 
                 expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                searchEl.remove();
+            });
+
+            it('has predefined placeholder text when bbSearchPlaceholder is present but undefined', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-placeholder="searchCtrl.placeholder" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+                
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                searchEl.remove();
+            });
+
+            it('changes placeholder text when binding changes', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-placeholder="searchCtrl.placeholder" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                $scope.searchCtrl = {
+
+                };
+                
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                $scope.searchCtrl.placeholder = undefined;
+                $scope.$digest();
+                expect(inputEl).toHaveAttr('placeholder', 'Find in this list');
+
+                $scope.searchCtrl.placeholder = 'New text';
+                $scope.$digest();
+                expect(inputEl).toHaveAttr('placeholder', 'New text');
 
                 searchEl.remove();
             });
