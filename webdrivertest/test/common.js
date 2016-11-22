@@ -38,7 +38,7 @@
                 referenceName: getScreenshotName(path.join(process.cwd(), referenceFolder)),
                 screenshotName: getScreenshotName(path.join(process.cwd(), screenshotFolder)),
                 diffName: getScreenshotName(path.join(process.cwd(), diffsFolder)),
-                misMatchTolerance: 0.01
+                misMatchTolerance: 0.05
             }),
             viewportChangePause: 300
         };
