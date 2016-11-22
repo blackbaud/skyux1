@@ -12,7 +12,7 @@
         $templateCache.put('bbGrid/samples/mycolumn.html',
             '<div>' +
                 '<div><span class="bb-grid-no-search"> Title: </span>{{data.title}}</div>' +
-                '<a href="" tooltip-trigger="focus" tooltip-placement="bottom" bb-tooltip="bbGrid/samples/gridtooltip.html"> <span class="bb-grid-no-search"> Info:</span> {{data.info}}</a>' +
+                '<a href="" tooltip-trigger="focus" tooltip-placement="bottom" uib-tooltip-template="\'bbGrid/samples/gridtooltip.html\'"> <span class="bb-grid-no-search"> Info:</span> {{data.info}}</a>' +
                 '<button class="btn btn-success" ng-click="templateCtrl.clickIt()">My Button</button>' +
             '</div>');
     }
