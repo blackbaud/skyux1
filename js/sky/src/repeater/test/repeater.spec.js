@@ -305,6 +305,80 @@ describe('Repeater directive', function () {
             el.remove();
         });
 
+        it('should allow the user to listen for an event to initialize repeater item options', function () {
+            var $scope = $rootScope.$new(),
+                actualIsSelected,
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false
+            };
+
+            function onToggle(selectedArgs) {
+                    actualIsSelected = selectedArgs.isSelected;
+                }
+
+            $scope.$on('bbRepeaterItemInitialized', function (event, data) {
+                data.repeaterItemCtrl.bbRepeaterItemSelectionToggled = onToggle;
+            });
+
+
+            el = $compile(repeaterMultiselectCallbackHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-repeater-item-right').click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+            expect(actualIsSelected).toBe(true);
+            
+            el.remove();
+        });
+
+        it('should allow the user to click the header or content to select the item when there is no collapse with callback', function () {
+            var $scope = $rootScope.$new(),
+                actualIsSelected,
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false,
+                onToggle: function (isSelected) {
+                    actualIsSelected = isSelected;
+                }
+            };
+
+
+            el = $compile(repeaterMultiselectCallbackHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-repeater-item-right').click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+            expect(actualIsSelected).toBe(true);
+
+            el.find('.bb-repeater-item-header').click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).not.toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(false);
+            expect(actualIsSelected).toBe(false);
+            
+            el.remove();
+        });
+
         it('should allow the user to click the header or content to select the item when there is no collapse', function () {
             var $scope = $rootScope.$new(),
                 el;

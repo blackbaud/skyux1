@@ -12,6 +12,7 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-on-search` &mdash; Callback that will be executed when the toolbar's search is invoked. It has the following arguments:
     - `searchText` &mdash; Text in the toolbar's search input.
   - `bb-listbuilder-search-text` &mdash; *(Optional.)* Text that the user can provide to set the text in the toolbar's search input.
+  - `bb-listbuilder-search-placeholder` &mdash; *(Optional.)* Specifies the placeholder text for the search input.
   - `bb-listbuilder-vertical-offset-id` &mdash; *(Optional.)* Id of the element that should float above the listbuilder toolbar when the window is scrolled.
   - `bb-listbuilder-toolbar-fixed` &mdash; *(Optional.)* Set to true if the toolbar should not float when the window is scrolled. *(Default = `false`)*
   - `bb-listbuilder-add-button` &mdash; *(Optional.)* A component for the add button in a listbuilder toolbar

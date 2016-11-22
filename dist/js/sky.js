@@ -917,7 +917,7 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBCardController() {
+    function BBCardController($timeout, $scope) {
         var vm = this;
 
         function addComponentSetter(component) {
@@ -937,6 +937,17 @@
         function cardIsSelectable() {
             return vm.bbCardSelectable === 'true';
         }
+
+        function cardSelectionToggled(isSelected) {
+            $timeout(function () {
+                if (angular.isFunction(vm.bbCardSelectionToggled)) {
+                    vm.bbCardSelectionToggled({isSelected: isSelected});
+                }
+            });
+            
+        }
+
+        vm.cardSelectionToggled = cardSelectionToggled;
 
         vm.cardIsSelectable = cardIsSelectable;
 
@@ -964,10 +975,17 @@
 
         nextId++;
         vm.cardCheckId = 'bb-card-check-' + nextId;
+
+        $scope.$emit('bbCardInitialized', {
+            cardCtrl: vm
+        });
     }
 
+    BBCardController.$inject = ['$timeout', '$scope'];
+
     function bbCard() {
-        function link(scope, el, attrs, vm) {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0];
             function watchForComponent(component) {
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
@@ -987,8 +1005,10 @@
             bindToController: {
                 bbCardSelectable: '@?',
                 bbCardSelected: '=?',
+                bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
+            require: ['bbCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,
@@ -6734,7 +6754,9 @@
                 options: '=?bbToolbarOptions',
                 bbGridFilterClick: '&?bbGridFilterClick',
                 bbGridSearch: '&?bbGridSearch',
-                bbGridSearchText: '<?bbGridSearchText'
+                bbGridSearchText: '<?bbGridSearchText',
+                bbGridSearchTextChanged: '&?',
+                bbGridSearchPlaceholder: '<?bbGridSearchPlaceholder'
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
@@ -6771,6 +6793,12 @@
                         bbGrid.searchApplied(searchText);
                     }
                     
+                }
+
+                function searchTextChanged(searchText) {
+                    if (angular.isFunction($scope.bbGridSearchTextChanged)) {
+                        $scope.bbGridSearchTextChanged({searchText: searchText});
+                    }
                 }
 
                 function openColumnPicker() {
@@ -6827,6 +6855,7 @@
 
                 $scope.toolbarLocals = {
                     applySearchText: applySearchText,
+                    searchTextChanged: searchTextChanged,
                     openColumnPicker: openColumnPicker,
                     toggleFilterMenu: toggleFilterMenu,
                     toolbarSearch: toolbarSearch
@@ -7850,6 +7879,12 @@
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbListbuilderOnSearchTextChanged)) {
+                ctrl.bbListbuilderOnSearchTextChanged({searchText: searchText});
+            }  
+        }
+
         // Floating headers
         function setupViewKeeper() {
             if (ctrl.bbListbuilderToolbarFixed !== 'true') {
@@ -7911,7 +7946,7 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
-
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.viewChanged = viewChanged;
 
     }
@@ -7930,7 +7965,9 @@
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
             bindings: {
                 bbListbuilderOnSearch: '&?',
+                bbListbuilderOnSearchTextChanged: '&?',
                 bbListbuilderSearchText: '<?',
+                bbListbuilderSearchPlaceholder: '<?',
                 bbListbuilderVerticalOffsetElId: '<?',
                 bbListbuilderToolbarFixed: '@?'
             },
@@ -9893,6 +9930,7 @@ angular.module('sky.palette.config', [])
 
             function selectItem() {
                 vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
+                vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
             vm.getCls = function () {
@@ -9933,6 +9971,8 @@ angular.module('sky.palette.config', [])
             var animateEnabled,
                 bbRepeater = ctrls[1],
                 vm = ctrls[0];
+
+            vm.listbuilderRepeaterItemCtrl = ctrls[2];
 
 
             function titleElExists() {
@@ -10040,11 +10080,25 @@ angular.module('sky.palette.config', [])
 
             vm.itemIsSelectable = itemIsSelectable;
 
+            function repeaterItemSelectionToggled(isSelected) {
+                $timeout(function () {
+                    if (angular.isFunction(vm.bbRepeaterItemSelectionToggled)) {
+                        vm.bbRepeaterItemSelectionToggled({isSelected: isSelected});
+                    }
+                });
+                
+            }
+
+            vm.repeaterItemSelectionToggled = repeaterItemSelectionToggled;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
 
+            scope.$emit('bbRepeaterItemInitialized', {
+                repeaterItemCtrl: vm
+            });
         }
 
         return {
@@ -10052,6 +10106,7 @@ angular.module('sky.palette.config', [])
                 bbRepeaterItemExpanded: '=?',
                 bbRepeaterItemSelectable: '@?',
                 bbRepeaterItemSelected: '=?',
+                bbRepeaterItemSelectionToggled: '&?',
                 bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
@@ -10358,6 +10413,12 @@ angular.module('sky.palette.config', [])
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbOnSearchTextChanged)) {
+                ctrl.bbOnSearchTextChanged({searchText: searchText});
+            }
+        }
+
         function setInputFocus() {
             $element.find('input').focus();
         }
@@ -10528,8 +10589,7 @@ angular.module('sky.palette.config', [])
         }
 
         function searchTextBindingChanged() {
-            ctrl.showClear = true;
-            
+            ctrl.showClear = angular.isDefined(ctrl.bbSearchText) && ctrl.bbSearchText !== '';
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
                 openSearchInput(true);
             }
@@ -10548,6 +10608,14 @@ angular.module('sky.palette.config', [])
                     searchTextBindingChanged();
                 }
             }
+
+            if (changesObj.bbSearchPlaceholder) {
+                /* istanbul ignore else */
+                /* sanity check */
+                if (angular.isDefined(changesObj.bbSearchPlaceholder.currentValue)) {
+                    ctrl.placeholderText = changesObj.bbSearchPlaceholder.currentValue;
+                }
+            }
         }
 
         function initSearch() {
@@ -10556,8 +10624,10 @@ angular.module('sky.palette.config', [])
                 searchTextBindingChanged();
             }
 
-            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
-                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && angular.isDefined($element.attr('bb-search-placeholder'))) {
+                ctrl.placeholderText = bbResources.search_placeholder;
+            } else {
+                ctrl.placeholderText = ctrl.bbSearchPlaceholder;
             }
         }
 
@@ -10573,6 +10643,7 @@ angular.module('sky.palette.config', [])
         ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.clearSearchText = clearSearchText;
         ctrl.openSearchInput = openSearchInput;
         ctrl.dismissSearchInput = dismissSearchInput;
@@ -10587,6 +10658,7 @@ angular.module('sky.palette.config', [])
             controller: Controller,
             bindings: {
                 bbOnSearch: '&?',
+                bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?'
             }
@@ -11028,7 +11100,11 @@ angular.module('sky.palette.config', [])
     angular.module('sky.summary.actionbar.cancel.component', [])
         .component('bbSummaryActionbarCancel', {
             transclude: true,
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.cancel.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.cancel.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
+            }
         });
 })();
 /* global angular */
@@ -11299,7 +11375,11 @@ angular.module('sky.palette.config', [])
     angular.module('sky.summary.actionbar.primary.component', [])
         .component('bbSummaryActionbarPrimary', {
             transclude: true,
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.primary.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.primary.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
+            }
         });
 })();
 /* global angular */
@@ -11374,7 +11454,11 @@ angular.module('sky.palette.config', [])
             require: {
                 bbSummaryActionbarSecondaryActions: '^bbSummaryActionbarSecondaryActions'
             },
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
+            }
         });
 })();
 /*jslint nomen: true, plusplus: true */
@@ -14215,7 +14299,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      </div>\n' +
         '      <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.cardIsSelectable()"></div>\n' +
         '      <div class="bb-card-check" ng-if="bbCard.cardIsSelectable()">\n' +
-        '        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />\n' +
+        '        <input \n' +
+        '            type="checkbox" \n' +
+        '            ng-attr-id="{{bbCard.cardCheckId}}"\n' +
+        '            bb-check \n' +
+        '            ng-model="bbCard.bbCardSelected" \n' +
+        '            ng-change="bbCard.cardSelectionToggled(bbCard.bbCardSelected)"/>\n' +
         '      </div>\n' +
         '    </label>\n' +
         '  </header>\n' +
@@ -14962,7 +15051,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            ng-if="bbGridSearch"\n' +
         '            bb-search-text="bbGridSearchText"\n' +
         '            bb-on-search="toolbarLocals.toolbarSearch(searchText)"\n' +
-        '            bb-search-placeholder\n' +
+        '            bb-on-search-text-changed="toolbarLocals.searchTextChanged(searchText)"\n' +
+        '            bb-search-placeholder="bbGridSearchPlaceholder"\n' +
         '            >\n' +
         '        </bb-search-input>\n' +
         '\n' +
@@ -15117,6 +15207,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="bb-listbuilder-toolbar-item">\n' +
         '            <bb-search-input\n' +
         '                bb-search-text="$ctrl.bbListbuilderSearchText"\n' +
+        '                bb-on-search-text-changed="$ctrl.searchTextChanged(searchText)"\n' +
+        '                bb-search-placeholder="$ctrl.bbListbuilderSearchPlaceholder"\n' +
         '                bb-on-search="$ctrl.applySearchText(searchText)"\n' +
         '                >\n' +
         '            </bb-search-input>\n' +
@@ -15274,7 +15366,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">\n' +
         '  <div class="bb-repeater-item-left">\n' +
         '    <div class="bb-repeater-item-multiselect" ng-show="bbRepeaterItem.itemIsSelectable()">\n' +
-        '      <input ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" type="checkbox" bb-check ng-model="bbRepeaterItem.bbRepeaterItemSelected" />\n' +
+        '      <input \n' +
+        '        ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" \n' +
+        '        type="checkbox" \n' +
+        '        bb-check \n' +
+        '        ng-model="bbRepeaterItem.bbRepeaterItemSelected"\n' +
+        '        ng-change="bbRepeaterItem.repeaterItemSelectionToggled(bbRepeaterItem.bbRepeaterItemSelected)" />\n' +
         '    </div>\n' +
         '    <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">\n' +
         '    </div>\n' +
@@ -15312,12 +15409,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    type="text" \n' +
         '                    class="form-control bb-search-input"\n' +
         '                    ng-model="$ctrl.bbSearchText"\n' +
+        '                    ng-change="$ctrl.searchTextChanged($ctrl.bbSearchText)"\n' +
         '                    ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" \n' +
         '                    ng-focus="$ctrl.inputFocused(true)"\n' +
         '                    ng-blur="$ctrl.inputFocused(false)"\n' +
         '                    data-bbauto-field="SearchBox"\n' +
         '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
-        '                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"\n' +
+        '                    ng-attr-placeholder="{{$ctrl.placeholderText}}"\n' +
         '                    />    \n' +
         '\n' +
         '                <span class="input-group-btn">\n' +
@@ -15477,7 +15575,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.cancel.component.html',
-        '<button class="btn btn-link" type="button">\n' +
+        '<button class="btn btn-link" type="button" ng-disabled="$ctrl.bbSummaryActionDisabled" ng-click="$ctrl.bbSummaryActionClick()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.component.html',
@@ -15506,7 +15604,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.primary.component.html',
-        '<button type="button" class="btn btn-primary">\n' +
+        '<button type="button" class="btn btn-primary" ng-disabled="$ctrl.bbSummaryActionDisabled" ng-click="$ctrl.bbSummaryActionClick()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.secondary.actions.component.html',
@@ -15532,7 +15630,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.secondary.component.html',
         '<div class="bb-dropdown-item" role="presentation"> \n' +
-        '    <button type="button" class="btn bb-btn-secondary" role="menuitem">\n' +
+        '    <button type="button" class="btn bb-btn-secondary" role="menuitem" ng-disabled="$ctrl.bbSummaryActionDisabled" ng-click="$ctrl.bbSummaryActionClick()">\n' +
         '        <ng-transclude></ng-transclude>\n' +
         '    </button>\n' +
         '</div>');

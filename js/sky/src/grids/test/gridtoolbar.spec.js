@@ -462,14 +462,34 @@ describe('Grid toolbars', function () {
 
         describe('searching', function () {
 
-            var searchGridHtml;
+            var searchGridHtml,
+                searchPlaceholderHtml,
+                searchExtraCallbackHtml;
             
             
             beforeEach(function () {
+                searchExtraCallbackHtml = '<div>' +
+                        '<bb-grid bb-grid-options="locals.gridOptions">' +
+                        '<bb-grid-toolbar bb-grid-search-text="locals.searchText" ' +
+                            'bb-grid-search="locals.onSearch(searchText)" ' +
+                            'bb-grid-search-text-changed="locals.searchTextChanged(searchText)" ' +
+                            '>' +
+                        '</bb-grid-toolbar>' +
+                        '</bb-grid>' +
+                        '</div>';
                 searchGridHtml = '<div>' +
                         '<bb-grid bb-grid-options="locals.gridOptions">' +
                         '<bb-grid-toolbar bb-grid-search-text="locals.searchText" ' +
                             'bb-grid-search="locals.onSearch(searchText)" ' +
+                            '>' +
+                        '</bb-grid-toolbar>' +
+                        '</bb-grid>' +
+                        '</div>';
+                searchPlaceholderHtml = '<div>' +
+                        '<bb-grid bb-grid-options="locals.gridOptions">' +
+                        '<bb-grid-toolbar bb-grid-search-text="locals.searchText" ' +
+                            'bb-grid-search="locals.onSearch(searchText)" ' +
+                            'bb-grid-search-placeholder="locals.placeholder" ' +
                             '>' +
                         '</bb-grid-toolbar>' +
                         '</bb-grid>' +
@@ -535,6 +555,39 @@ describe('Grid toolbars', function () {
                 $scope.$digest();
 
                 expect(searchEl).toHaveValue('John');
+            });
+
+            it('sets placeholder when present', function () {
+                locals.placeholder = 'New text';
+
+                el = setUpGrid(searchPlaceholderHtml, locals);
+
+                expect(el.find('.bb-search-input-container input')).toHaveAttr('placeholder', locals.placeholder);
+            });
+
+            it('has default placeholder when not present', function () {
+
+                el = setUpGrid(searchGridHtml, locals);
+
+                expect(el.find('.bb-search-input-container input')).toHaveAttr('placeholder', 'Find in this list');
+            });
+
+            it('calls search text changed when function is specified', function () {
+                var newText,
+                    searchEl;
+                
+                locals.searchTextChanged = function (searchText) {
+                    newText = searchText;
+                };
+
+                el = setUpGrid(searchExtraCallbackHtml, locals);
+
+                searchEl = el.find('.bb-search-input');
+
+                searchEl.eq(0).val('John').trigger('change');
+                $scope.$digest();
+
+                expect(newText).toBe('John');
             });
         });
 

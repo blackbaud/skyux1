@@ -25,6 +25,12 @@
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbOnSearchTextChanged)) {
+                ctrl.bbOnSearchTextChanged({searchText: searchText});
+            }
+        }
+
         function setInputFocus() {
             $element.find('input').focus();
         }
@@ -195,8 +201,7 @@
         }
 
         function searchTextBindingChanged() {
-            ctrl.showClear = true;
-            
+            ctrl.showClear = angular.isDefined(ctrl.bbSearchText) && ctrl.bbSearchText !== '';
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
                 openSearchInput(true);
             }
@@ -215,6 +220,14 @@
                     searchTextBindingChanged();
                 }
             }
+
+            if (changesObj.bbSearchPlaceholder) {
+                /* istanbul ignore else */
+                /* sanity check */
+                if (angular.isDefined(changesObj.bbSearchPlaceholder.currentValue)) {
+                    ctrl.placeholderText = changesObj.bbSearchPlaceholder.currentValue;
+                }
+            }
         }
 
         function initSearch() {
@@ -223,8 +236,10 @@
                 searchTextBindingChanged();
             }
 
-            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
-                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && angular.isDefined($element.attr('bb-search-placeholder'))) {
+                ctrl.placeholderText = bbResources.search_placeholder;
+            } else {
+                ctrl.placeholderText = ctrl.bbSearchPlaceholder;
             }
         }
 
@@ -240,6 +255,7 @@
         ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.clearSearchText = clearSearchText;
         ctrl.openSearchInput = openSearchInput;
         ctrl.dismissSearchInput = dismissSearchInput;
@@ -254,6 +270,7 @@
             controller: Controller,
             bindings: {
                 bbOnSearch: '&?',
+                bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?'
             }

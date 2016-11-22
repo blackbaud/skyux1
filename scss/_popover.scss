@@ -3,3 +3,7 @@
 [bb-uib-popover-template-popup].popover {
   display: block !important;
 }
+
+.bb-popover-list {
+    z-index: $bb-zindex-popover-list;
+}

@@ -20,12 +20,13 @@
                     type="text" 
                     class="form-control bb-search-input"
                     ng-model="$ctrl.bbSearchText"
+                    ng-change="$ctrl.searchTextChanged($ctrl.bbSearchText)"
                     ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" 
                     ng-focus="$ctrl.inputFocused(true)"
                     ng-blur="$ctrl.inputFocused(false)"
                     data-bbauto-field="SearchBox"
                     ng-attr-aria-label="{{::'search_label' | bbResources}}" 
-                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"
+                    ng-attr-placeholder="{{$ctrl.placeholderText}}"
                     />    
 
                 <span class="input-group-btn">
