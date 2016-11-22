@@ -917,7 +917,7 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBCardController() {
+    function BBCardController($timeout, $scope) {
         var vm = this;
 
         function addComponentSetter(component) {
@@ -937,6 +937,17 @@
         function cardIsSelectable() {
             return vm.bbCardSelectable === 'true';
         }
+
+        function cardSelectionToggled(isSelected) {
+            $timeout(function () {
+                if (angular.isFunction(vm.bbCardSelectionToggled)) {
+                    vm.bbCardSelectionToggled({isSelected: isSelected});
+                }
+            });
+            
+        }
+
+        vm.cardSelectionToggled = cardSelectionToggled;
 
         vm.cardIsSelectable = cardIsSelectable;
 
@@ -964,10 +975,17 @@
 
         nextId++;
         vm.cardCheckId = 'bb-card-check-' + nextId;
+
+        $scope.$emit('bbCardInitialized', {
+            cardCtrl: vm
+        });
     }
 
+    BBCardController.$inject = ['$timeout', '$scope'];
+
     function bbCard() {
-        function link(scope, el, attrs, vm) {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0];
             function watchForComponent(component) {
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
@@ -987,8 +1005,10 @@
             bindToController: {
                 bbCardSelectable: '@?',
                 bbCardSelected: '=?',
+                bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
+            require: ['bbCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,
@@ -9910,6 +9930,7 @@ angular.module('sky.palette.config', [])
 
             function selectItem() {
                 vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
+                vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
             vm.getCls = function () {
@@ -9950,6 +9971,8 @@ angular.module('sky.palette.config', [])
             var animateEnabled,
                 bbRepeater = ctrls[1],
                 vm = ctrls[0];
+
+            vm.listbuilderRepeaterItemCtrl = ctrls[2];
 
 
             function titleElExists() {
@@ -10057,11 +10080,25 @@ angular.module('sky.palette.config', [])
 
             vm.itemIsSelectable = itemIsSelectable;
 
+            function repeaterItemSelectionToggled(isSelected) {
+                $timeout(function () {
+                    if (angular.isFunction(vm.bbRepeaterItemSelectionToggled)) {
+                        vm.bbRepeaterItemSelectionToggled({isSelected: isSelected});
+                    }
+                });
+                
+            }
+
+            vm.repeaterItemSelectionToggled = repeaterItemSelectionToggled;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
 
+            scope.$emit('bbRepeaterItemInitialized', {
+                repeaterItemCtrl: vm
+            });
         }
 
         return {
@@ -10069,6 +10106,7 @@ angular.module('sky.palette.config', [])
                 bbRepeaterItemExpanded: '=?',
                 bbRepeaterItemSelectable: '@?',
                 bbRepeaterItemSelected: '=?',
+                bbRepeaterItemSelectionToggled: '&?',
                 bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
@@ -14261,7 +14299,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      </div>\n' +
         '      <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.cardIsSelectable()"></div>\n' +
         '      <div class="bb-card-check" ng-if="bbCard.cardIsSelectable()">\n' +
-        '        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />\n' +
+        '        <input \n' +
+        '            type="checkbox" \n' +
+        '            ng-attr-id="{{bbCard.cardCheckId}}"\n' +
+        '            bb-check \n' +
+        '            ng-model="bbCard.bbCardSelected" \n' +
+        '            ng-change="bbCard.cardSelectionToggled(bbCard.bbCardSelected)"/>\n' +
         '      </div>\n' +
         '    </label>\n' +
         '  </header>\n' +
@@ -15323,7 +15366,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">\n' +
         '  <div class="bb-repeater-item-left">\n' +
         '    <div class="bb-repeater-item-multiselect" ng-show="bbRepeaterItem.itemIsSelectable()">\n' +
-        '      <input ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" type="checkbox" bb-check ng-model="bbRepeaterItem.bbRepeaterItemSelected" />\n' +
+        '      <input \n' +
+        '        ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" \n' +
+        '        type="checkbox" \n' +
+        '        bb-check \n' +
+        '        ng-model="bbRepeaterItem.bbRepeaterItemSelected"\n' +
+        '        ng-change="bbRepeaterItem.repeaterItemSelectionToggled(bbRepeaterItem.bbRepeaterItemSelected)" />\n' +
         '    </div>\n' +
         '    <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">\n' +
         '    </div>\n' +
