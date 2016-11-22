@@ -106,7 +106,8 @@ describe('Repeater directive', function () {
 
     describe('repeater item multiselect', function () {
 
-        var repeaterMultiselectHtml; 
+        var repeaterMultiselectHtml,
+            repeaterMultiselectCallbackHtml; 
 
         function getItemCheck(el) {
             return el.find('.bb-repeater-item.bb-repeater-item-selectable .bb-repeater-item-left .bb-repeater-item-multiselect .bb-check-wrapper');
@@ -115,6 +116,13 @@ describe('Repeater directive', function () {
         beforeEach(function () {
             repeaterMultiselectHtml = '<bb-repeater>' +
                 '<bb-repeater-item bb-repeater-item-selectable="{{locals.selectable}}" bb-repeater-item-input-label="locals.inputLabel" bb-repeater-item-selected="locals.selected">' +
+                '<bb-repeater-item-title>My Title</bb-repeater-item-title>' +
+                '<bb-repeater-item-content>My Content</bb-repeater-item-content>' +
+                '</bb-repeater-item>' +
+                '</bb-repeater>';
+
+            repeaterMultiselectCallbackHtml = '<bb-repeater>' +
+                '<bb-repeater-item bb-repeater-item-selection-toggled="locals.onToggle(isSelected)" bb-repeater-item-selectable="{{locals.selectable}}" bb-repeater-item-input-label="locals.inputLabel" bb-repeater-item-selected="locals.selected">' +
                 '<bb-repeater-item-title>My Title</bb-repeater-item-title>' +
                 '<bb-repeater-item-content>My Content</bb-repeater-item-content>' +
                 '</bb-repeater-item>' +
@@ -136,7 +144,7 @@ describe('Repeater directive', function () {
             expect(getItemCheck(el).length).toBe(1);
         });
 
-        it('should display a checkbox when the selectable attribute is set to false', function () {
+        it('should not display a checkbox when the selectable attribute is set to false', function () {
             var $scope = $rootScope.$new(),
                 el;
 
@@ -185,6 +193,46 @@ describe('Repeater directive', function () {
         });
 
 
+        it('should call a function when specified when the user clicks the checkbox', function () {
+            var $scope = $rootScope.$new(),
+                actualIsSelected,
+                checkEl,
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false,
+                onToggle: function (isSelected) {
+                    actualIsSelected = isSelected;
+                }
+            };
+
+            el = $compile(repeaterMultiselectCallbackHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            checkEl = el.find('.bb-check-wrapper input');
+
+            checkEl.click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+            expect(actualIsSelected).toBe(true);
+
+            checkEl.click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).not.toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(false);
+            expect(actualIsSelected).toBe(false);
+
+            el.remove();
+        });
+
         it('should update the bound values the user clicks the checkbox', function () {
             var $scope = $rootScope.$new(),
                 checkEl,
@@ -205,15 +253,91 @@ describe('Repeater directive', function () {
             checkEl = el.find('.bb-check-wrapper input');
 
             checkEl.click();
+            $timeout.flush();
 
             expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
             expect($scope.locals.selected).toBe(true);
 
             checkEl.click();
+            $timeout.flush();
 
             expect(el.find('.bb-repeater-item')).not.toHaveClass('bb-repeater-item-selected');
             expect($scope.locals.selected).toBe(false);
 
+            el.remove();
+        });
+
+        it('should allow the user to click the header or content to select the item when there is no collapse with callback', function () {
+            var $scope = $rootScope.$new(),
+                actualIsSelected,
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false,
+                onToggle: function (isSelected) {
+                    actualIsSelected = isSelected;
+                }
+            };
+
+
+            el = $compile(repeaterMultiselectCallbackHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-repeater-item-right').click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+            expect(actualIsSelected).toBe(true);
+
+            el.find('.bb-repeater-item-header').click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).not.toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(false);
+            expect(actualIsSelected).toBe(false);
+            
+            el.remove();
+        });
+
+        it('should allow the user to listen for an event to initialize repeater item options', function () {
+            var $scope = $rootScope.$new(),
+                actualIsSelected,
+                el;
+
+            $scope.locals = {
+                selectable: true,
+                selected: false
+            };
+
+            function onToggle(selectedArgs) {
+                    actualIsSelected = selectedArgs.isSelected;
+                }
+
+            $scope.$on('bbRepeaterItemInitialized', function (event, data) {
+                data.repeaterItemCtrl.bbRepeaterItemSelectionToggled = onToggle;
+            });
+
+
+            el = $compile(repeaterMultiselectCallbackHtml)($scope);
+
+            // The element has to be in the DOM to trigger its click event in Firefox.
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            el.find('.bb-repeater-item-right').click();
+            $timeout.flush();
+
+            expect(el.find('.bb-repeater-item')).toHaveClass('bb-repeater-item-selected');
+            expect($scope.locals.selected).toBe(true);
+            expect(actualIsSelected).toBe(true);
+            
             el.remove();
         });
 
