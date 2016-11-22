@@ -223,15 +223,3 @@ config/wdio/tmpconfig.js
 
 #IntelliJ Directories
 .idea/
-
-webdriver-screenshots/MAC_chrome/MAC_chrome_listbuilder_full.listbuilder.1280px.baseline.png
-
-webdriver-screenshots/MAC_chrome/MAC_chrome_listbuilder_repeater_full.listbuilder_repeater.1280px.baseline.png
-
-webdriver-screenshots/MAC_chrome/MAC_chrome_listbuilder_switcher_full.listbuilder_switcher.1280px.baseline.png
-
-webdriver-screenshots/MAC_firefox/MAC_firefox_listbuilder_full.listbuilder.1280px.baseline.png
-
-webdriver-screenshots/MAC_firefox/MAC_firefox_listbuilder_repeater_full.listbuilder_repeater.1280px.baseline.png
-
-webdriver-screenshots/MAC_firefox/MAC_firefox_listbuilder_switcher_full.listbuilder_switcher.1280px.baseline.png
