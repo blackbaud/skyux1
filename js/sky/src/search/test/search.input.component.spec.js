@@ -461,7 +461,7 @@
                 searchEl.remove();
             });
 
-            it('has predefined placeholder text when bbSearchPlaceholder is present', function () {
+            it('has predefined placeholder text when bbSearchPlaceholder is present but undefined', function () {
                 var searchEl,
                     inputEl,
                     placeholderHtml = '<bb-search-input ' +
@@ -478,7 +478,7 @@
                 searchEl.remove();
             });
 
-            it('has predefined placeholder text when bbSearchPlaceholder is present', function () {
+            it('changes placeholder text when binding changes', function () {
                 var searchEl,
                     inputEl,
                     placeholderHtml = '<bb-search-input ' +
