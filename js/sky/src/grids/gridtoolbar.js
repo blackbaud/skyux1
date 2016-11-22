@@ -11,7 +11,9 @@
                 options: '=?bbToolbarOptions',
                 bbGridFilterClick: '&?bbGridFilterClick',
                 bbGridSearch: '&?bbGridSearch',
-                bbGridSearchText: '<?bbGridSearchText'
+                bbGridSearchText: '<?bbGridSearchText',
+                bbGridSearchTextChanged: '&?',
+                bbGridSearchPlaceholder: '<?bbGridSearchPlaceholder'
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
@@ -48,6 +50,12 @@
                         bbGrid.searchApplied(searchText);
                     }
                     
+                }
+
+                function searchTextChanged(searchText) {
+                    if (angular.isFunction($scope.bbGridSearchTextChanged)) {
+                        $scope.bbGridSearchTextChanged({searchText: searchText});
+                    }
                 }
 
                 function openColumnPicker() {
@@ -104,6 +112,7 @@
 
                 $scope.toolbarLocals = {
                     applySearchText: applySearchText,
+                    searchTextChanged: searchTextChanged,
                     openColumnPicker: openColumnPicker,
                     toggleFilterMenu: toggleFilterMenu,
                     toolbarSearch: toolbarSearch

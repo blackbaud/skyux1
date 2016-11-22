@@ -23,7 +23,7 @@ describe('Carousel', function () {
 
         return result
             .moveCursorOffScreen()
-            .pause(1000)
+            .pause(2000)
             .compareScreenshot({
                 screenshotName: screenshotName,
                 selector: selector,
