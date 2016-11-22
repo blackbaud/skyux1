@@ -66,7 +66,7 @@ describe('summary actionbar', function () {
         return browser
             .setupTest('/summaryactionbar/fixtures/test.full.html')
             .click('.bb-test-open-modal')
-            .pause(1000)
+            .pause(2000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_modal',
                 selector: '.modal-content',
@@ -79,7 +79,7 @@ describe('summary actionbar', function () {
         return browser
             .setupTest('/summaryactionbar/fixtures/test.full.html')
             .click('.bb-test-open-modal-fullpage')
-            .pause(2000)
+            .pause(1000)
             .compareScreenshot({
                 screenshotName: 'summaryactionbar_modal_fullpage',
                 selector: 'body',
