@@ -33,6 +33,14 @@
             </bb-sort-item>
         </bb-sort>
       </bb-listbuilder-sort>
+      <bb-listbuilder-toolbar-secondary-actions>
+          <bb-listbuilder-secondary-actions>
+              <bb-listbuilder-secondary-action 
+                bb-listbuilder-secondary-action-click="listCtrl.saveAction()">
+                  Save list
+              </bb-listbuilder-secondary-action>
+          </bb-listbuilder-secondary-actions>
+      </bb-listbuilder-toolbar-secondary-actions>
       <bb-listbuilder-filter-summary>
         <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
             <bb-filter-summary-item

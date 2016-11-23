@@ -1,0 +1,17 @@
+<div class="bb-listbuilder-secondary-actions" uib-dropdown>
+    <button 
+        type="button" 
+        class="btn btn-secondary" 
+        uib-dropdown-toggle
+        ng-attr-aria-controls="{{$ctrl.secondaryMenuId}}"
+        ng-attr-title="{{'listbuilder_show_secondary_actions' | bbResources}}">
+        <i class="fa fa-ellipsis-h"></i>
+    </button>
+    <div 
+        uib-dropdown-menu 
+        ng-attr-id="{{$ctrl.secondaryMenuId}}" 
+        role="menu"
+        class="bb-dropdown-menu">
+        <ng-transclude></ng-transclude>
+    </div>
+</div>
