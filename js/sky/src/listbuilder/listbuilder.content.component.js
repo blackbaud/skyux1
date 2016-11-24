@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbHighlight) {
+    function Controller($rootScope, $element, bbHighlight) {
 
         var ctrl = this,
             lastSearchText;
@@ -10,10 +10,10 @@
         function addListbuilderView(newView) {
             ctrl.listbuilderCtrl.contentViews.push(newView);
 
-            if ((ctrl.bbListbuilderContentActiveView && newView.viewName === ctrl.bbListbuilderContentActiveView) || 
+            if ((ctrl.bbListbuilderContentActiveView && newView.viewName === ctrl.bbListbuilderContentActiveView) ||
                 !ctrl.listbuilderCtrl.currentView) {
                 ctrl.listbuilderCtrl.currentView = newView;
-            } 
+            }
         }
 
         function removeListbuilderView(viewName) {
@@ -27,8 +27,8 @@
                             ctrl.listbuilderCtrl.currentView = ctrl.listbuilderCtrl.contentViews[0];
                         } else {
                             ctrl.listbuilderCtrl.currentView = null;
-                        }   
-                        
+                        }
+
                     }
                     return;
                 }
@@ -48,10 +48,6 @@
             }
         }
 
-        function OnSelectedItem() {
-            console.log("OnSelectedItem");
-        }
-
         function getCurrentView() {
             return ctrl.listbuilderCtrl.currentView;
         }
@@ -63,7 +59,7 @@
             if (angular.isFunction(ctrl.bbListbuilderContentViewChanged)) {
                 ctrl.bbListbuilderContentViewChanged({ newView: newView.viewName });
             }
-        } 
+        }
 
         function setActiveView(viewName) {
             var i;
@@ -101,6 +97,8 @@
             if (ctrl.bbListbuilderContentActiveView) {
                 setActiveView(ctrl.bbListbuilderContentActiveView);
             }
+
+            ctrl.bbListbuilderContentGetPanelData();
         }
 
         function onChanges(changesObj) {
@@ -117,21 +115,29 @@
             }
         }
 
-        function getPanelContent(selectedItem) {
-            //we'll create new property in listBuilder controller for persist selectedItem's value
-            //ctrl.listbuilderCtrl.bbListbuilderContentSelectedItem = selectedItem;
-
-            /* istanbul ignore else */
-            /* sanity check */
-            if (angular.isFunction(ctrl.bbListbuilderContentGetPanelData)) {
-                ctrl.bbListbuilderContentGetPanelData({ bbListbuilderContentSelectedItem: selectedItem });
-            }
+        function OnSelectedItem(item) {
+            console.log("OnSelectedItem");
+            ctrl.bbListbuilderContentItem = item.item;
+            ctrl.bbListbuilderContentItem.$index = item.$index;
+            ctrl.bbListbuilderContentGetPanelData();
         }
+
+
+        //function getPanelContent(selectedItem) {
+        //    if (angular.isFunction(ctrl.bbListbuilderContentGetPanelData)) {
+        //        ctrl.bbListbuilderContentGetPanelData({ bbListbuilderContentSelectedItem: selectedItem });
+        //    }
+        //}
+
+        //$rootScope.$on('handleBroadcast', function (event, args) {
+        //    ctrl.bbListbuilderContentGetPanelData();
+        //    ctrl.bbListbuilderContentItem = args.item;
+        //});
 
 
         ctrl.$onInit = onInit;
         ctrl.$onChanges = onChanges;
-        
+
         ctrl.addListbuilderView = addListbuilderView;
         ctrl.removeListbuilderView = removeListbuilderView;
         ctrl.updateListbuilderView = updateListbuilderView;
@@ -140,7 +146,7 @@
 
     }
 
-    Controller.$inject = ['$element', 'bbHighlight'];
+    Controller.$inject = ['$rootScope', '$element', 'bbHighlight'];
 
     angular.module('sky.listbuilder.content.component', ['sky.highlight'])
         .component('bbListbuilderContent', {
@@ -153,6 +159,7 @@
             bindings: {
                 bbListbuilderContentActiveView: '@?',
                 bbListbuilderContentSelectedItem: '@?',
+                bbListbuilderContentItem: '=?',
                 bbListbuilderContentViewChanged: '&?',
                 bbListbuilderContentGetPanelData: '&?'
             }

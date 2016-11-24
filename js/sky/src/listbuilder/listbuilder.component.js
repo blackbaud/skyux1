@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element) {
+    function Controller($scope, $element) {
         var ctrl = this,
             lastSearchText;
 
@@ -35,7 +35,7 @@
         ctrl.highlightLastSearchText = highlightLastSearchText;
     }
 
-    Controller.$inject = ['$element'];
+    Controller.$inject = ['$scope','$element'];
 
     angular.module('sky.listbuilder.component', [])
         .component('bbListbuilder', {
