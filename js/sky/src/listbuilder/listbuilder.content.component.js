@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($rootScope, $element, bbHighlight) {
+    function Controller($element, bbHighlight) {
 
         var ctrl = this,
             lastSearchText;
@@ -116,24 +116,9 @@
         }
 
         function OnSelectedItem(item) {
-            console.log("OnSelectedItem");
-            ctrl.bbListbuilderContentItem = item.item;
-            ctrl.bbListbuilderContentItem.$index = item.$index;
+            ctrl.bbListbuilderContentItem = item;
             ctrl.bbListbuilderContentGetPanelData();
         }
-
-
-        //function getPanelContent(selectedItem) {
-        //    if (angular.isFunction(ctrl.bbListbuilderContentGetPanelData)) {
-        //        ctrl.bbListbuilderContentGetPanelData({ bbListbuilderContentSelectedItem: selectedItem });
-        //    }
-        //}
-
-        //$rootScope.$on('handleBroadcast', function (event, args) {
-        //    ctrl.bbListbuilderContentGetPanelData();
-        //    ctrl.bbListbuilderContentItem = args.item;
-        //});
-
 
         ctrl.$onInit = onInit;
         ctrl.$onChanges = onChanges;
@@ -146,7 +131,7 @@
 
     }
 
-    Controller.$inject = ['$rootScope', '$element', 'bbHighlight'];
+    Controller.$inject = ['$element', 'bbHighlight'];
 
     angular.module('sky.listbuilder.content.component', ['sky.highlight'])
         .component('bbListbuilderContent', {

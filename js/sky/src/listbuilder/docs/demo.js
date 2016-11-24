@@ -56,13 +56,13 @@
 
     ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
 
-    function ListbuilderTestController($scope, $timeout, bbModal) {
+    function ListbuilderTestController($timeout, bbModal) {
         var self = this,
             sortProperty,
             sortDescending,
             maxRecordsShown = 0,
             nextSkip = 0,
-            nextTop = 6,
+            nextTop = 12,
             dataSet = [
                 {
                     name: '$25.00',
@@ -361,7 +361,7 @@
 
     }
 
-    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal'];
+    ListbuilderTestController.$inject = ['$timeout', 'bbModal'];
 
 
     angular

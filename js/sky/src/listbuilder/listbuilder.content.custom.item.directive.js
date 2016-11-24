@@ -7,7 +7,7 @@
     }
 
     angular.module('sky.listbuilder.content.custom.item.directive', [])
-        .directive('bbListbuilderContentCustomItem', function ($rootScope) {
+        .directive('bbListbuilderContentCustomItem', function () {
             return {
                 templateUrl: 'sky/templates/listbuilder/listbuilder.repeater.component.html',
                 transclude: true,
@@ -16,10 +16,9 @@
                 require: '^^bbListbuilderContentCustom',
                 controller: function ($scope) {
                     var ctrl = this;
-                    $scope.selectItem = function (item) {
-                        console.log("selectItem");
-                        //$rootScope.$emit('handleBroadcast', item);
-                        this.$parent.$parent.$parent.$ctrl.listbuilderContentCtrl.OnSelectedItem(item);
+                    $scope.selectItem = function (currentScope) {
+                        currentScope.item.$index = currentScope.$index;
+                        this.$parent.$parent.$parent.$ctrl.listbuilderContentCtrl.OnSelectedItem(currentScope.item);
                     }
                 }
             };
