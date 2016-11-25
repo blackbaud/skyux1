@@ -15,7 +15,8 @@
             'sky.splitpanel.cards.component',
             'sky.splitpanel.switcher.component',
             'sky.splitpanel.repeater.component',
-            'sky.splitpanel.repeater.item.directive'
+            'sky.splitpanel.repeater.item.directive',
+            'sky.splitpanel.workspace.component'
             
         ]);
 }());

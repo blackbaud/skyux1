@@ -9,7 +9,7 @@
     angular.module('sky.splitpanel.content.custom.item.directive', [])
         .directive('bbSplitpanelContentCustomItem', function () {
             return {
-                templateUrl: 'sky/templates/splitpanel/splitpanel.repeater.component.html',
+                templateUrl: 'sky/templates/splitpanel/splitpanel.content.item.component.html',
                 transclude: true,
                 restrict: 'A',
                 link: linkFn,
