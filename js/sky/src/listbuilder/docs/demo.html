@@ -8,13 +8,12 @@
     .new-builder .bb-custom-content {
         float: left;
         width: 30%;
-        height: 90vh;
+        height: 300px;
         overflow-y: auto;
     }
 
     .newClass {
         cursor: pointer;
-        padding-left: 19px;
     }
 
     .split-panel {
@@ -22,12 +21,8 @@
         width: 70%;
         border-left: grey 5px solid;
         padding-left: 10px;
-        height: 90vh;
+        height: 300px;
         overflow-y: auto;
-    }
-
-    .selectedItem {
-        border-left: #7272e8 2px solid;
     }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
@@ -62,16 +57,14 @@
         </bb-listbuilder-toolbar>
         <bb-listbuilder-content bb-listbuilder-content-active-view="custom-1"
                                 bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)" bb-listbuilder-content-selected-item="custom-1"
-                                bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata1(newView)" bb-listbuilder-content-item="listCtrl.selectedItem">
+                                bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(newView)">
             <bb-listbuilder-content-custom id="parent" bb-listbuilder-content-custom-view-name="custom-1"
                                            bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
                                            bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
                                            bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
 
                 <div class="bb-custom-content">
-                    <b>{{listCtrl.data.length}}</b> Transactions
-
-                    <div class="bb-custom-content-item" bb-listbuilder-content-custom-item bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(item)" ng-repeat="item in listCtrl.data" ng-class="{'selectedItem': item.name === listCtrl.selectedItem.name}">
+                    <div class="bb-custom-content-item" bb-listbuilder-content-custom-item bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(item)" ng-repeat="item in listCtrl.data">
                         <div style="margin-bottom: 10px">
                             {{item.name}}
                         </div>
@@ -88,51 +81,53 @@
                 </div>
 
                 <bb-listbuilder-cards class="split-panel">
-                    this is main page
-                    {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
-                    <bb-card bb-card-size="large" bb-card-selectable="{{listCtrl.showCheckbox}}" bb-card-selected="listCtrl.cardSelected">
-                        <bb-card-title ng-if="listCtrl.showTitle">Large card</bb-card-title>
-                        <bb-card-content ng-if="listCtrl.showContent">
-                            <div style="margin-bottom: 10px">
-                                {{listCtrl.selectedItem.name}}
-                            </div>
-                            <div style="margin-bottom: 10px">
-                                {{listCtrl.selectedItem.joinDate | date}}
-                            </div>
-                            <div style="margin-bottom: 10px">
-                                {{listCtrl.selectedItem.occupation}}
-                            </div>
-                        </bb-card-content>
-                        <bb-card-actions ng-if="listCtrl.showActions">
-                            <button type="button" class="btn btn-default">Click me</button>
-                        </bb-card-actions>
-                    </bb-card>
-
-                    <div>
-                        <ul class="list-unstyled">
-                            <li>
-                                <label>
-                                    <input type="checkbox" bb-check ng-model="listCtrl.showTitle" /> Show title
-                                </label>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox" bb-check ng-model="listCtrl.showContent" /> Show content
-                                </label>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox" bb-check ng-model="listCtrl.showActions" /> Show action
-                                </label>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox" bb-check ng-model="listCtrl.showCheckbox" /> Show checkbox
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
-
+                    {{listCtrl.name}}
+                    this is content of panel
+                    this is content of panel this is content of panel this is
+                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                    this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                    this is content of panel this is content of panel this is content of panel this is content of panel
+                    this is content of panel this is content of panel this is content of panel this is content of panel this is conten
+                    t of panel this is content of panel this is content of panel this is content of panel this is content of panel this
+                    is content of panel this is content of panel this is content of panel this is content of panel this is content of
+                    panel this is content of panel this is content of panel this is content of panel this is content of panel this is
+                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                    this is content of panel this is content of panel this is content of panel this is content of panel this is content
+                    of panel this is content of panel this is content of panel this is content of panel this is content of panel this is
+                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                    this is content of panel this is content of panel this is content of panel this is content of panel this is content
+                    of panel this is content of panel this is content of panel this is content of panel this is content of panel this is
+                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel 
+                    this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
+                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
+                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
+                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
+                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
+                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of 
+                    panel this is content of panel this is content of panel this is content of panel this is content of panel this is content 
+                    of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
+                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
+                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
+                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
+                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
                 </bb-listbuilder-cards>
 
             </bb-listbuilder-content-custom>
@@ -166,80 +161,3 @@
         </div>
     </bb-modal>
 </script>
-
-
-<!--<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />
-this is content of panel
-<br />-->

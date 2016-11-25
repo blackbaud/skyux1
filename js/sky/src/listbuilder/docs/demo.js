@@ -11,16 +11,16 @@
                 onlyUnpaid: false
             };
         }
-
+        
         function transformFiltersToArray(filters) {
             var result = [];
 
             if (filters.tenYears) {
-                result.push({ name: 'tenYears', value: true, label: 'members with ten years' });
+                result.push({name: 'tenYears', value: true, label: 'members with ten years'});
             }
 
             if (filters.onlyUnpaid) {
-                result.push({ name: 'onlyUnpaid', value: true, label: 'unpaid members' });
+                result.push({name: 'onlyUnpaid', value: true, label: 'unpaid members'});
             }
 
             return result;
@@ -55,8 +55,8 @@
     }
 
     ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
-
-    function ListbuilderTestController($scope, $timeout, bbModal) {
+    
+    function ListbuilderTestController($timeout, bbModal) {
         var self = this,
             sortProperty,
             sortDescending,
@@ -142,7 +142,7 @@
         function getData(top, skip) {
             var i,
                 newData = [];
-
+            
             for (i = 0; i < top && dataSet.length > skip + i; i++) {
                 newData.push(dataSet[skip + i]);
             }
@@ -167,14 +167,14 @@
                 return filteredData;
             }
             return array;
-
+            
         }
 
         function filter(array, filters) {
             var i,
                 item,
                 newData = angular.copy(array);
-            if (angular.isDefined(filters) && filters.length > 0) {
+            if (angular.isDefined(filters) &&  filters.length > 0) {
                 for (i = 0; i < filters.length; i++) {
                     item = filters[i];
                     if (item.name === 'tenYears') {
@@ -210,7 +210,7 @@
             } else {
                 return array;
             }
-
+            
         }
 
         function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData) {
@@ -229,7 +229,7 @@
                 var searchedData
                 self.searchText = searchText;
                 applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
+                
             });
         }
 
@@ -262,26 +262,20 @@
 
         function loadData() {
             var newData = getData(nextTop, nextSkip);
-
-
+                
+            
             self.data = self.data.concat(newData);
             if (maxRecordsShown < self.data.length) {
                 maxRecordsShown = self.data.length;
             }
             applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
-
-            //displaying panel data for first item
-            if (self.data && self.data[0] && self.data[0] !== null) {
-                self.selectedItem = self.data[0];
-            }
         }
 
         function onLoadMore() {
             return $timeout(function () {
                 loadData();
             }, 4000);
-
+            
         }
 
         function onAddClick() {
@@ -293,14 +287,16 @@
         }
 
         //this is used to get panel data on selection of item
-        function getPaneldata() {
+        function getPaneldata(item)
+        {
             //get data from database for particualar item
             //not confirm it should be in panel directive or listBuilder-content
-
-
+            console.log('getPaneldata');
         }
 
         self.onFilterClick = onFilterClick;
+
+        self.name = "rahul";
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
         self.onAddClick = onAddClick;
@@ -353,17 +349,11 @@
 
         self.initialState = self.sortOptions[4].id;
 
-
-        self.showTitle = true;
-        self.showContent = true;
-        self.showActions = true;
-        self.showCheckbox = true;
-
     }
 
-    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal'];
+    ListbuilderTestController.$inject = ['$timeout', 'bbModal'];
 
-
+    
     angular
         .module('stache')
         .controller('ListbuilderTestController', ListbuilderTestController)
