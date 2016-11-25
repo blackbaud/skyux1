@@ -48,9 +48,7 @@
             }
         }
 
-        function OnSelectedItem() {
-            console.log("OnSelectedItem");
-        }
+        
 
         function getCurrentView() {
             return ctrl.listbuilderCtrl.currentView;
@@ -117,18 +115,6 @@
             }
         }
 
-        function getPanelContent(selectedItem) {
-            //we'll create new property in listBuilder controller for persist selectedItem's value
-            //ctrl.listbuilderCtrl.bbListbuilderContentSelectedItem = selectedItem;
-
-            /* istanbul ignore else */
-            /* sanity check */
-            if (angular.isFunction(ctrl.bbListbuilderContentGetPanelData)) {
-                ctrl.bbListbuilderContentGetPanelData({ bbListbuilderContentSelectedItem: selectedItem });
-            }
-        }
-
-
         ctrl.$onInit = onInit;
         ctrl.$onChanges = onChanges;
         
@@ -136,7 +122,6 @@
         ctrl.removeListbuilderView = removeListbuilderView;
         ctrl.updateListbuilderView = updateListbuilderView;
         ctrl.getCurrentView = getCurrentView;
-        ctrl.OnSelectedItem = OnSelectedItem;
 
     }
 
@@ -152,9 +137,7 @@
             },
             bindings: {
                 bbListbuilderContentActiveView: '@?',
-                bbListbuilderContentSelectedItem: '@?',
-                bbListbuilderContentViewChanged: '&?',
-                bbListbuilderContentGetPanelData: '&?'
+                bbListbuilderContentViewChanged: '&?'
             }
         });
 

@@ -4,141 +4,150 @@
         border-bottom: 1px solid green;
         padding: 20px;
     }
-
-    .new-builder .bb-custom-content {
-        float: left;
-        width: 30%;
-        height: 300px;
-        overflow-y: auto;
-    }
-
-    .newClass {
-        cursor: pointer;
-    }
-
-    .split-panel {
-        float: right;
-        width: 70%;
-        border-left: grey 5px solid;
-        padding-left: 10px;
-        height: 300px;
-        overflow-y: auto;
-    }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
-    <bb-listbuilder class="new-builder">
-        <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
-                                bb-listbuilder-search-text="listCtrl.searchText">
-            <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
-                Add Stuff
-            </bb-listbuilder-add>
-            <bb-listbuilder-filter>
-                <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
-                </bb-filter-button>
-            </bb-listbuilder-filter>
-            <bb-listbuilder-sort>
-                <bb-sort bb-sort-append-to-body>
-                    <bb-sort-item ng-repeat="item in listCtrl.sortOptions"
-                                  bb-sort-item-active="listCtrl.initialState === item.id"
-                                  bb-sort-item-select="listCtrl.sortItems(item)">
-                        {{item.label}}
-                    </bb-sort-item>
-                </bb-sort>
-            </bb-listbuilder-sort>
-            <bb-listbuilder-filter-summary>
-                <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
-                    <bb-filter-summary-item ng-repeat="item in listCtrl.appliedFilters"
-                                            bb-filter-summary-item-on-click="listCtrl.openFilters()"
-                                            bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)">
-                        {{item.label}}
-                    </bb-filter-summary-item>
-                </bb-filter-summary>
-            </bb-listbuilder-filter-summary>
-        </bb-listbuilder-toolbar>
-        <bb-listbuilder-content bb-listbuilder-content-active-view="custom-1"
-                                bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)" bb-listbuilder-content-selected-item="custom-1"
-                                bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(newView)">
-            <bb-listbuilder-content-custom id="parent" bb-listbuilder-content-custom-view-name="custom-1"
-                                           bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
-                                           bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
-                                           bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
-
-                <div class="bb-custom-content">
-                    <div class="bb-custom-content-item" bb-listbuilder-content-custom-item bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(item)" ng-repeat="item in listCtrl.data">
-                        <div style="margin-bottom: 10px">
-                            {{item.name}}
-                        </div>
-                        <div style="margin-bottom: 10px">
-                            {{item.joinDate | date}}
-                        </div>
-                        <div style="margin-bottom: 10px">
-                            {{item.occupation}}
-                        </div>
-                        <div style="margin-bottom: 10px">
-                            {{item.newField}}
-                        </div>
+    <button type="button" class="btn btn-primary" style="margin-bottom: 10px"
+        ng-click="listCtrl.activeView = 'repeater'">
+        Change to repeater view
+    </button>
+  <bb-listbuilder>
+    <bb-listbuilder-toolbar 
+        bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
+        bb-listbuilder-search-text="listCtrl.searchText">
+      <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
+        Add Stuff
+      </bb-listbuilder-add>
+      <bb-listbuilder-filter> 
+        <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">  
+        </bb-filter-button>
+      </bb-listbuilder-filter>
+      <bb-listbuilder-sort>
+        <bb-sort bb-sort-append-to-body>
+            <bb-sort-item 
+                ng-repeat="item in listCtrl.sortOptions" 
+                bb-sort-item-active="listCtrl.initialState === item.id"
+                bb-sort-item-select="listCtrl.sortItems(item)">
+            {{item.label}}
+            </bb-sort-item>
+        </bb-sort>
+      </bb-listbuilder-sort>
+      <bb-listbuilder-filter-summary>
+        <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
+            <bb-filter-summary-item
+                ng-repeat="item in listCtrl.appliedFilters"
+                bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)"
+                >
+                {{item.label}}
+            </bb-filter-summary-item>
+        </bb-filter-summary>
+      </bb-listbuilder-filter-summary>
+    </bb-listbuilder-toolbar>
+    <bb-listbuilder-content 
+        bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
+        bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
+        >
+      <bb-listbuilder-cards>
+        <bb-listbuilder-card ng-repeat="item in listCtrl.data">
+            <bb-card>
+                <bb-card-title>
+                {{item.name}}
+                </bb-card-title>
+                <bb-card-content>
+                    <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-success">Membership dues paid</span>
                     </div>
+                    <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-danger">Membership dues not paid</span>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        Occupation: {{item.occupation}}
+                    </div>
+                    <div>
+                        Joined on: {{item.joinDate | date}}
+                    </div>
+                    
+                </bb-card-content>
+                <bb-card-actions>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </bb-card-actions>
+            </bb-card>
+        </bb-listbuilder-card>
+      </bb-listbuilder-cards>
+      <bb-listbuilder-repeater>
+        <bb-repeater>
+            <bb-repeater-item bb-listbuilder-repeater-item ng-repeat="item in listCtrl.data">
+                <bb-repeater-item-title>
+                {{item.name}}
+                </bb-repeater-item-title>
+                <bb-repeater-item-content>
+                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-success">Membership dues paid</span>
                 </div>
+                <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-danger">Membership dues not paid</span>
+                </div>
+                <div style="margin-bottom: 10px">
+                    Occupation: {{item.occupation}}
+                </div>
+                <div>
+                    Joined on: {{item.joinDate | date}}
+                </div>
+                </bb-repeater-item-content>
+                <bb-repeater-item-context-menu>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </bb-repeater-item-context-menu>
+            </bb-repeater-item>
+        </bb-repeater>
+      </bb-listbuilder-repeater>
+      <bb-listbuilder-content-custom 
+        bb-listbuilder-content-custom-view-name="custom-1" 
+        bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
+        bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
+        bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
 
-                <bb-listbuilder-cards class="split-panel">
-                    {{listCtrl.name}}
-                    this is content of panel
-                    this is content of panel this is content of panel this is
-                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                    this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                    this is content of panel this is content of panel this is content of panel this is content of panel
-                    this is content of panel this is content of panel this is content of panel this is content of panel this is conten
-                    t of panel this is content of panel this is content of panel this is content of panel this is content of panel this
-                    is content of panel this is content of panel this is content of panel this is content of panel this is content of
-                    panel this is content of panel this is content of panel this is content of panel this is content of panel this is
-                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                    this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                    of panel this is content of panel this is content of panel this is content of panel this is content of panel this is
-                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                    this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                    of panel this is content of panel this is content of panel this is content of panel this is content of panel this is
-                    content of panel this is content of panel this is content of panel this is content of panel this is content of panel 
-                    this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of panel
-                     this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
-                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
-                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
-                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of pane
-                    l this is content of panel this is content of panel this is content of panel this is content of panel this is content of 
-                    panel this is content of panel this is content of panel this is content of panel this is content of panel this is content 
-                    of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                     of panel this is content of panel this is content of panel this is content of panel this is content of panel this is content
-                </bb-listbuilder-cards>
-
-            </bb-listbuilder-content-custom>
-        </bb-listbuilder-content>
-
-        <bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
-                               bb-listbuilder-show-load-more="listCtrl.hasMoreData">
-        </bb-listbuilder-footer>
-    </bb-listbuilder>
+        <div class="bb-custom-content">
+            <div class="bb-custom-content-item" bb-listbuilder-content-custom-item ng-repeat="item in listCtrl.data">
+                <div>
+                {{item.name}}
+                </div>
+                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-success">Membership dues paid</span>
+                </div>
+                <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-danger">Membership dues not paid</span>
+                </div>
+                <div style="margin-bottom: 10px">
+                    Occupation: {{item.occupation}}
+                </div>
+                <div>
+                    Joined on: {{item.joinDate | date}}
+                </div>
+                
+                <div>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </div>
+            </div>
+        </div> 
+      </bb-listbuilder-content-custom>
+    </bb-listbuilder-content>
+    <bb-listbuilder-footer
+        bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
+        bb-listbuilder-show-load-more="listCtrl.hasMoreData">
+    </bb-listbuilder-footer>
+  </bb-listbuilder>
 </div>
 
+</script>
 <script type="text/ng-template" id="demo/listbuilder/filters.html">
     <bb-modal>
         <div class="modal-form">
@@ -155,8 +164,9 @@
                     </label>
                 </form>
             </div>
-            <bb-filter-modal-footer bb-filter-modal-apply="filterCtrl.applyFilters()"
-                                    bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
             </bb-filter-modal-footer>
         </div>
     </bb-modal>

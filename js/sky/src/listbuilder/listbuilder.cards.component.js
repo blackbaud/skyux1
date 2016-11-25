@@ -3,37 +3,37 @@
     'use strict';
 
     function Controller($timeout, bbResources) {
-        //var ctrl = this;
-        this.name = "paul"
-        //function addCard() {
-        //    $timeout(function () {
-        //        ctrl.listbuilderContentCtrl.highlightLastSearchText();
-        //    });
-        //}
+        var ctrl = this;
 
-        //function viewIsActive() {
-        //    return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
-        //}
+        function addCard() {
+            $timeout(function () {
+                ctrl.listbuilderContentCtrl.highlightLastSearchText();
+            });
+        }
 
-        //function initCards() {
-        //    ctrl.viewName = 'card';
-        //    ctrl.listbuilderContentCtrl.addListbuilderView({ 
-        //        viewName: ctrl.viewName, 
-        //        viewSwitcherClass: 'fa-th-large', 
-        //        highlightClass: 'bb-card',
-        //        viewSwitcherLabel: bbResources.listbuilder_card_switcher
-        //    });
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
 
-        //}
+        function initCards() {
+            ctrl.viewName = 'card';
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-th-large', 
+                highlightClass: 'bb-card',
+                viewSwitcherLabel: bbResources.listbuilder_card_switcher
+            });
 
-        //function onDestroy() {
-        //    ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
-        //}
+        }
 
-        //ctrl.$postLink = initCards;
-        //ctrl.$onDestroy = onDestroy;
-        //ctrl.addCard = addCard;
-        //ctrl.viewIsActive = viewIsActive;
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
+        }
+
+        ctrl.$postLink = initCards;
+        ctrl.$onDestroy = onDestroy;
+        ctrl.addCard = addCard;
+        ctrl.viewIsActive = viewIsActive;
     }
 
     Controller.$inject = ['$timeout', 'bbResources'];
