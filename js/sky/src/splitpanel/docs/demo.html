@@ -1,0 +1,178 @@
+
+<style>
+    .bb-custom-content-item {
+        border-bottom: 1px solid green;
+        padding: 20px;
+    }
+
+    .bb-split-panel .bb-custom-content {
+        float: left;
+        width: 30%;
+        height: 90vh;
+        overflow-y: auto;
+    }
+
+    .bb-custom-content-selectable-item {
+        cursor: pointer;
+    }
+
+    .split-panel {
+        float: right;
+        width: 70%;
+        border-left: grey 5px solid;
+        padding-left: 10px;
+        height: 90vh;
+        overflow-y: auto;
+    }
+
+    .selectedItem {
+        border-left: #1c84c6 3px solid;
+        padding-left: 17px;
+    }
+</style>
+<div ng-controller="ListbuilderTestController as listCtrl">
+    <bb-splitpanel class="bb-split-panel">
+        <bb-splitpanel-toolbar bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
+                                bb-listbuilder-search-text="listCtrl.searchText">
+            <bb-listbuilder-filter>
+                <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
+                </bb-filter-button>
+            </bb-listbuilder-filter>
+            <bb-listbuilder-sort>
+                <bb-sort bb-sort-append-to-body>
+                    <bb-sort-item ng-repeat="item in listCtrl.sortOptions"
+                                  bb-sort-item-active="listCtrl.initialState === item.id"
+                                  bb-sort-item-select="listCtrl.sortItems(item)">
+                        {{item.label}}
+                    </bb-sort-item>
+                </bb-sort>
+            </bb-listbuilder-sort>
+            <bb-listbuilder-filter-summary>
+                <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
+                    <bb-filter-summary-item ng-repeat="item in listCtrl.appliedFilters"
+                                            bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                                            bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)">
+                        {{item.label}}
+                    </bb-filter-summary-item>
+                </bb-filter-summary>
+            </bb-listbuilder-filter-summary>
+        </bb-splitpanel-toolbar>
+        <bb-splitpanel-content bb-listbuilder-content-active-view="custom-1"
+                                bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)" bb-listbuilder-content-selected-item="custom-1"
+                                bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata1(newView)" bb-listbuilder-content-item="listCtrl.selectedItem">
+            <bb-splitpanel-content-custom id="parent" bb-listbuilder-content-custom-view-name="custom-1"
+                                           bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
+                                           bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
+                                           bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
+
+                <div class="bb-custom-content">
+
+                    <div class="bb-custom-content-item" bb-splitpanel-content-custom-item bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(item)" ng-repeat="item in listCtrl.data" ng-class="{'selectedItem': item.name === listCtrl.selectedItem.name}">
+                        <div style="margin-bottom: 10px">
+                            {{item.name}}
+                        </div>
+                        <div style="margin-bottom: 10px">
+                            {{item.joinDate | date}}
+                        </div>
+                        <div style="margin-bottom: 10px">
+                            {{item.occupation}}
+                        </div>
+                        <div style="margin-bottom: 10px">
+                            {{item.newField}}
+                        </div>
+                    </div>
+                </div>
+
+                <bb-splitpanel-cards class="split-panel">
+                    Transaction
+                    {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <bb-card bb-card-size="large" bb-card-selectable="{{listCtrl.showCheckbox}}" bb-card-selected="listCtrl.cardSelected">
+                        <bb-card-title ng-if="listCtrl.showTitle">Large card</bb-card-title>
+                        <bb-card-content ng-if="listCtrl.showContent">
+                            <div style="margin-bottom: 10px">
+                                {{listCtrl.selectedItem.name}}
+                            </div>
+                            <div style="margin-bottom: 10px">
+                                {{listCtrl.selectedItem.joinDate | date}}
+                            </div>
+                            <div style="margin-bottom: 10px">
+                                {{listCtrl.selectedItem.occupation}}
+                            </div>
+                        </bb-card-content>
+                        <bb-card-actions ng-if="listCtrl.showActions">
+                            <button type="button" class="btn btn-default">Click me</button>
+                        </bb-card-actions>
+                    </bb-card>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <div>
+                        <ul class="list-unstyled">
+                            <li>
+                                <label>
+                                    <input type="checkbox" bb-check ng-model="listCtrl.showTitle" /> Show title
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="checkbox" bb-check ng-model="listCtrl.showContent" /> Show content
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="checkbox" bb-check ng-model="listCtrl.showActions" /> Show action
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="checkbox" bb-check ng-model="listCtrl.showCheckbox" /> Show checkbox
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                </bb-splitpanel-cards>
+
+            </bb-splitpanel-content-custom>
+        </bb-splitpanel-content>
+
+    </bb-splitpanel>
+</div>
+
+<script type="text/ng-template" id="demo/listbuilder/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Food preferences</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.tenYears" />
+                        Show only members with 10 years experience
+                    </label>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.onlyUnpaid" />
+                        Show only members with unpaid dues
+                    </label>
+                </form>
+            </div>
+            <bb-filter-modal-footer bb-filter-modal-apply="filterCtrl.applyFilters()"
+                                    bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>
+
+

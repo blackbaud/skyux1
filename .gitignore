@@ -223,3 +223,4 @@ config/wdio/tmpconfig.js
 
 #IntelliJ Directories
 .idea/
+*.sln
