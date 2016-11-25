@@ -56,11 +56,17 @@
             ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.bbListbuilderContentCustomViewName);
         }
 
+        //function onSelectItem(item)
+        //{
+        //    console.log(item);
+        //}
+
         ctrl.$postLink = initContent;
         ctrl.$onChanges = onChanges;
         ctrl.$onDestroy = onDestroy;
         ctrl.viewIsActive = viewIsActive;
         ctrl.addItem = addItem;
+        //ctrl.onSelectItem = onSelectItem;
     }
 
     Controller.$inject = ['$timeout'];

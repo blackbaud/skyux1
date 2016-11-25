@@ -5,15 +5,16 @@
         padding: 20px;
     }
 
-    .bb-split-panel .bb-custom-content {
+    .new-builder .bb-custom-content {
         float: left;
         width: 30%;
         height: 90vh;
         overflow-y: auto;
     }
 
-    .bb-custom-content-selectable-item {
+    .newClass {
         cursor: pointer;
+        padding-left: 19px;
     }
 
     .split-panel {
@@ -26,14 +27,16 @@
     }
 
     .selectedItem {
-        border-left: #1c84c6 3px solid;
-        padding-left: 17px;
+        border-left: #7272e8 2px solid;
     }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
-    <bb-listbuilder class="bb-split-panel">
+    <bb-listbuilder class="new-builder">
         <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
                                 bb-listbuilder-search-text="listCtrl.searchText">
+            <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
+                Add Stuff
+            </bb-listbuilder-add>
             <bb-listbuilder-filter>
                 <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
                 </bb-filter-button>
@@ -87,10 +90,6 @@
                 <bb-listbuilder-cards class="split-panel">
                     this is main page
                     {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
-                    <br />
-                    <br />
-                    <br />
-                    <br />
                     <bb-card bb-card-size="large" bb-card-selectable="{{listCtrl.showCheckbox}}" bb-card-selected="listCtrl.cardSelected">
                         <bb-card-title ng-if="listCtrl.showTitle">Large card</bb-card-title>
                         <bb-card-content ng-if="listCtrl.showContent">
@@ -108,18 +107,7 @@
                             <button type="button" class="btn btn-default">Click me</button>
                         </bb-card-actions>
                     </bb-card>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+
                     <div>
                         <ul class="list-unstyled">
                             <li>
@@ -150,6 +138,9 @@
             </bb-listbuilder-content-custom>
         </bb-listbuilder-content>
 
+        <bb-listbuilder-footer bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
+                               bb-listbuilder-show-load-more="listCtrl.hasMoreData">
+        </bb-listbuilder-footer>
     </bb-listbuilder>
 </div>
 
@@ -177,3 +168,78 @@
 </script>
 
 
+<!--<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />
+this is content of panel
+<br />-->
