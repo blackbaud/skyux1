@@ -1,5 +1,5 @@
 {
-  "_LRM_PKTAG79": "skyux-l10n_8_5 - CHANGES-ONLY",
+  "_LRM_PKTAG4": "skyux-l10n_10_5 - CHANGES-ONLY",
   "action_bar_actions": {
     "message": "Actions"
   },
@@ -26,6 +26,9 @@
   },
   "avatar_error_too_large_title": {
     "message": "File is too large."
+  },
+  "card_select": {
+    "message": "Select card"
   },
   "carousel_button_label_next": {
     "message": "Go to next item"
@@ -370,8 +373,17 @@
   "listbuilder_footer_back_to_top": {
     "message": "Back to top"
   },
+  "listbuilder_multiselect_clear_all": {
+    "message": "Clear all"
+  },
+  "listbuilder_multiselect_select_all": {
+    "message": "Select all"
+  },
   "listbuilder_repeater_switcher": {
     "message": "Switch to repeater view"
+  },
+  "listbuilder_show_only_selected": {
+    "message": "Show only selected"
   },
   "modal_close": {
     "message": "Close modal"
