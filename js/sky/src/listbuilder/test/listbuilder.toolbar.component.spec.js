@@ -477,5 +477,68 @@
                 expect(addButtonEl).toHaveAttr('title', $scope.listCtrl.addLabel);
             });
         });
+
+        describe('secondary actions', function () {
+            it('creates a secondary action dropdown with items that can be clicked and disabled', function () {
+                var el,
+                    action1Clicked,
+                    action2Clicked,
+                    actionEl,
+                    secondaryHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-toolbar-secondary-actions> ' +
+                    '<bb-listbuilder-secondary-actions bb-listbuilder-secondary-actions-append-to-body="listCtrl.appendToBody"> ' +
+                    '<bb-listbuilder-secondary-action ' +
+                    'bb-listbuilder-secondary-action-click="listCtrl.action1()" ' +
+                    'bb-listbuilder-secondary-action-disabled="true"> ' +
+                    'Action 1' +
+                    '</bb-listbuilder-secondary-action>' +
+                    '<bb-listbuilder-secondary-action ' +
+                    'bb-listbuilder-secondary-action-click="listCtrl.action2()" ' +
+                    'Action 2' +
+                    '</bb-listbuilder-secondary-action>' +
+                    '</bb-listbuilder-secondary-actions>' +
+                    '</bb-listbuilder-toolbar-secondary-actions>' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
+
+                $scope.listCtrl = {
+                    action1: function () {
+                        action1Clicked = true;
+                    }, 
+                    action2: function () {
+                        action2Clicked = true;
+                    }
+                };
+
+
+                el = $compile(secondaryHtml)($scope);
+                el.appendTo($document.find('body'));
+
+                $scope.$digest();
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-ellipsis-h').length).toBe(1);
+
+                actionEl = el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-dropdown-menu .bb-dropdown-item .btn');
+                
+                expect(actionEl.eq(0)).toBeDisabled();
+                actionEl.eq(0).click();
+                $scope.$digest();
+                expect(action1Clicked).toBe(true);
+
+                expect(actionEl.eq(1)).not.toBeDisabled();
+                actionEl.eq(1).click();
+                $scope.$digest();
+                expect(action2Clicked).toBe(true);
+
+                el.remove();
+            });
+
+            it('can append the secondary action dropdown to the body', function () {
+
+            });
+
+
+        });
     });
 }());

@@ -24,6 +24,9 @@
         .component('bbListbuilderSecondaryActions', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.component.html',
             controller: Controller,
-            transclude: true
+            transclude: true,
+            bindings: {
+                bbListbuilderSecondaryActionsAppendToBody: '<?'
+            }
         });
 })();
