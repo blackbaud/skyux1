@@ -21,6 +21,12 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-filter` &mdash; *(Optional.)* Container for the filter button in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
   - `bb-listbuilder-sort` &mdash; *(Optional.)* Container for the sort button in the listbuilder toolbar. See the [sort](../sort) module for content that can be placed here.
   - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
+  - `bb-listbuilder-toolbar-secondary-actions` &mdash; *(Optional.)* Container for the secondary actions dropdown in the listbuilder toolbar.
+    - `bb-listbuilder-secondary-actions` &mdash; Component for the secondary actions dropdown.
+      - `bb-listbuilder-secondary-actions-append-to-body` &mdash; *(Optional.)* Specifies whether the dropdown should be appended to the document body. *(Default = `false`)*
+      - `bb-listbuilder-secondary-action` &mdash; Component for an individual action in the secondary actions dropdown.
+        - `bb-listbuilder-secondary-action-click` &mdash; Specifies a function that will be called when a user clicks the action.
+        - `bb-listbuilder-secondary-action-disabled` &mdash; *(Optional.)* Specifies whether the action is disabled. *(Default = `false`)*
   - `bb-listbuilder-toolbar-multiselect` &mdash; *(Optional.)* Container for the multiselect area in the listbuilder toolbar.
     - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder. When using multiselect with cards, `bb-listbuilder-card-id`, `bb-card-selectable`, and `bb-card-selected` should all be set. When using multiselect with repeater items, `bb-listbuilder-repeater-item-id`, `bb-repeater-item-selectable`, and `bb-repeater-item-selected` should all be set. Display actions for selected items using the [summary action bar](../summaryactionbar) module. 
       - `bb-listbuilder-multiselect-items-changed` &mdash; Callback that will be executed when users select or deselect items in the listbuilder. It has the following arguments: 

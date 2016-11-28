@@ -479,12 +479,11 @@
         });
 
         describe('secondary actions', function () {
-            it('creates a secondary action dropdown with items that can be clicked and disabled', function () {
-                var el,
-                    action1Clicked,
-                    action2Clicked,
-                    actionEl,
-                    secondaryHtml = angular.element(
+
+            var secondaryHtml;
+
+            beforeEach(function () {
+                secondaryHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar>' +
                     '<bb-listbuilder-toolbar-secondary-actions> ' +
@@ -495,13 +494,28 @@
                     'Action 1' +
                     '</bb-listbuilder-secondary-action>' +
                     '<bb-listbuilder-secondary-action ' +
-                    'bb-listbuilder-secondary-action-click="listCtrl.action2()" ' +
+                    'bb-listbuilder-secondary-action-click="listCtrl.action2()"> ' +
                     'Action 2' +
                     '</bb-listbuilder-secondary-action>' +
                     '</bb-listbuilder-secondary-actions>' +
                     '</bb-listbuilder-toolbar-secondary-actions>' +
                     '</bb-listbuilder-toolbar>' +
                     '</bb-listbuilder>');
+            });
+
+            function getSecondaryActions(el, appendToBody) {
+                if (appendToBody) {
+                    return $('body .bb-dropdown-menu bb-listbuilder-secondary-action .bb-dropdown-item .btn');
+                } else {
+                    return el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-dropdown-menu .bb-dropdown-item .btn');
+                }
+            }
+
+            it('creates a secondary action dropdown with items that can be clicked and disabled', function () {
+                var el,
+                    action1Clicked,
+                    action2Clicked,
+                    actionEl;
 
                 $scope.listCtrl = {
                     action1: function () {
@@ -512,15 +526,15 @@
                     }
                 };
 
-
                 el = $compile(secondaryHtml)($scope);
                 el.appendTo($document.find('body'));
 
                 $scope.$digest();
+
                 expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-ellipsis-h').length).toBe(1);
 
-                actionEl = el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-dropdown-menu .bb-dropdown-item .btn');
-                
+                actionEl = getSecondaryActions(el); 
+
                 expect(actionEl.eq(0)).toBeDisabled();
                 actionEl.eq(0).click();
                 $scope.$digest();
@@ -535,7 +549,23 @@
             });
 
             it('can append the secondary action dropdown to the body', function () {
+                var el,
+                    actionEl;
+                
+                $scope.listCtrl = {
+                    appendToBody: true
+                };
 
+                el = $compile(secondaryHtml)($scope);
+                el.appendTo($document.find('body'));
+
+                $scope.$digest();
+
+                actionEl = getSecondaryActions(el, true); 
+
+                expect(actionEl.length).toBe(2);
+
+                el.remove();
             });
 
 

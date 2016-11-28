@@ -405,6 +405,12 @@
             return (self.payMembershipSelections.length > 0 || self.secondarySelections.length > 0) && multiselectAvailable();
         }
 
+        function saveAction() {
+            alert('List has been saved!');
+        }
+
+        self.saveAction = saveAction;
+
         self.multiselectAvailable = multiselectAvailable;
 
         self.actionsShown = actionsShown;

@@ -124,7 +124,7 @@
                 bbListbuilderSort: '?bbListbuilderSort',
                 bbListbuilderFilterSummary: '?bbListbuilderFilterSummary',
                 bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect',
-                bbListbuilderToolbarSecondaryActions: '?bbListbuilderSecondaryActions'
+                bbListbuilderToolbarSecondaryActions: '?bbListbuilderToolbarSecondaryActions'
             },
             controller: Controller,
             require: {
