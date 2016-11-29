@@ -31,7 +31,7 @@
     "dotenv": "2.0.0",
     "grunt": "0.4.5",
     "grunt-bump": "0.7.0",
-    "grunt-concat-sourcemap": "0.4.3",
+    "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-connect": "1.0.0",
     "grunt-contrib-copy": "1.0.0",
     "grunt-contrib-cssmin": "1.0.1",
@@ -54,10 +54,10 @@
     "karma": "0.13.22",
     "karma-browserstack-launcher": "0.1.10",
     "karma-chrome-launcher": "0.2.2",
-    "karma-safari-launcher": "1.0.0",
     "karma-coverage": "0.5.5",
     "karma-firefox-launcher": "0.1.7",
     "karma-jasmine": "0.3.8",
+    "karma-safari-launcher": "1.0.0",
     "mkdirp": "0.5.1",
     "path": "0.12.7",
     "to": {
@@ -73,8 +73,8 @@
       "version": "0.2.9"
     },
     "wdio-jasmine-framework": "0.2.5",
-    "webdriverio": "4.2.8",
-    "wdio-visual-regression-service": "0.4.0"
+    "wdio-visual-regression-service": "0.4.0",
+    "webdriverio": "4.2.8"
   },
   "dependencies": {
     "angular": "1.5.3",
