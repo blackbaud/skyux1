@@ -58,7 +58,7 @@
             bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)"
             bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)"
             bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"
-            bb-listbuilder-multiselect-available-items="listCtrl.data">
+            bb-listbuilder-multiselect-available-items="listCtrl.gridOptions.data">
             <bb-listbuilder-multiselect-select-all>
             </bb-listbuilder-multiselect-select-all>
             <bb-listbuilder-multiselect-clear-all>
@@ -72,7 +72,7 @@
         bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
         >
       <bb-listbuilder-cards>
-        <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.data">
+        <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.gridOptions.data">
             <bb-card bb-card-selectable="true" bb-card-selected="item.selected">
                 <bb-card-title>
                 {{item.name}}
@@ -106,7 +106,7 @@
             <bb-repeater-item 
                 bb-listbuilder-repeater-item 
                 bb-listbuilder-repeater-item-id="item.id" 
-                ng-repeat="item in listCtrl.data"
+                ng-repeat="item in listCtrl.gridOptions.data"
                 bb-repeater-item-selectable="true"
                 bb-repeater-item-selected="item.selected"
                 >
@@ -143,7 +143,7 @@
         bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
 
         <div class="bb-custom-content">
-            <div class="bb-custom-content-item" bb-listbuilder-content-custom-item ng-repeat="item in listCtrl.data">
+            <div class="bb-custom-content-item" bb-listbuilder-content-custom-item ng-repeat="item in listCtrl.gridOptions.data">
                 <div>
                 {{item.name}}
                 </div>
@@ -168,6 +168,15 @@
                 </div>
             </div>
         </div> 
+      </bb-listbuilder-content-custom>
+      <bb-listbuilder-content-custom 
+        bb-listbuilder-content-custom-view-name="table" 
+        bb-listbuilder-content-custom-view-switcher-class="fa-table"
+        bb-listbuilder-content-custom-view-switcher-label="Switch to table">
+
+        <bb-grid
+            bb-grid-options="listCtrl.gridOptions">
+        </bb-grid>
       </bb-listbuilder-content-custom>
     </bb-listbuilder-content>
     <bb-listbuilder-footer

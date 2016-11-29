@@ -66,7 +66,7 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
-                    require: 'bbGrid',
+                    require: ['bbGrid', '?^^bbListbuilder'],
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -188,7 +188,11 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr, bbGrid, $transclude) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
+                        var bbGrid = ctrls[0];
+                            
+                        $scope.hasListbuilder = ctrls[1] !== null;
+
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
