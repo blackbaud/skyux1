@@ -14,6 +14,7 @@
             for (i = 0; i < amount; i++) {
                 newData.push(
                     {
+                        id: i,
                         name: (contentCount + ' Title'),
                         content: (contentCount + ' Content')
                     }
@@ -59,6 +60,9 @@
             }, 4000);
             
         }
+
+        self.payMembershipSelections = [];
+        self.secondarySelections = [0];
 
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
