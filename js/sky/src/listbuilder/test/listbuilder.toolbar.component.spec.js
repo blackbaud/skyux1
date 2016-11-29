@@ -5,6 +5,8 @@
     describe('Listbuilder toolbar', function () {
         var $compile,
             $scope,
+            $timeout,
+            $document,
             simpleCardContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-cards>' +
                     '<bb-listbuilder-card>' +
@@ -25,16 +27,16 @@
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
+            $timeout = _$timeout_;
+            $document = _$document_;
         }));
         
         
         describe('search', function () {
-            var $document,
-                $timeout,
-                searchHtml,
+            var searchHtml,
                 localSearchText,
                 listCtrl = {
                     onSearch: function (searchText) {
@@ -42,9 +44,8 @@
                     }
                 };
             
-            beforeEach(inject(function (_$document_, _$timeout_) {
-                $document = _$document_;
-                $timeout = _$timeout_;
+            beforeEach(function () {
+
                 searchHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
@@ -54,7 +55,7 @@
                     simpleCardContentHtml +
                     '</bb-listbuilder>');
                 
-            }));
+            });
 
             function findSearchInput(el) {
                 return el.find('.bb-search-input');
@@ -299,18 +300,60 @@
         });
 
         describe('filters', function () {
-            it('should transclude a filter button', function () {
+            it('should transclude a filter button and filter summary', function () {
+                var el,
+                    filterHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-filter> ' +
+                    '<bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()"> ' +
+                    '</bb-filter-button> ' +
+                    '</bb-listbuilder-filter> ' +
+                    '<bb-listbuilder-filter-summary> ' +
+                    '<bb-filter-summary> ' +
+                    '<bb-filter-summary-item ' +
+                    'bb-filter-summary-item-on-click="listCtrl.openFilters()" ' +
+                    'bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter()" ' +
+                    '> ' +
+                    'Filter item' +
+                    '</bb-filter-summary-item> ' +
+                    '</bb-filter-summary> ' +
+                    '</bb-listbuilder-filter-summary> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
-            });
 
-            it('should transclude a filter summary', function () {
+                el = $compile(filterHtml)($scope);
 
+                $scope.$digest();
+
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-filter').length).toBe(1);
+                expect(el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-filter-summary-container .bb-filter-summary').length).toBe(1);
             });
         });
 
         describe('sorting', function () {
             it('should transclude a sort button', function () {
+                var el,
+                    sortHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-sort> ' +
+                    '<bb-sort> ' +
+                    '<bb-sort-item ' +
+                    'bb-sort-item-select="listCtrl.sortItems(item)"> ' +
+                    'Sort item' +
+                    '</bb-sort-item> ' +
+                    '</bb-sort>' +
+                    '</bb-listbuilder-sort> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
+
+                el = $compile(sortHtml)($scope);
+
+                $scope.$digest();
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-sort').length).toBe(1);
             });
         });
 

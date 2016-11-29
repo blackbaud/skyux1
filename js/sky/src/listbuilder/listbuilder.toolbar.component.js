@@ -89,6 +89,7 @@
         ctrl.$onDestroy = destroyToolbar;
 
         ctrl.applySearchText = applySearchText;
+
         ctrl.searchTextChanged = searchTextChanged;
         ctrl.viewChanged = viewChanged;
 
@@ -102,7 +103,9 @@
             'sky.viewkeeper', 
             'sky.listbuilder.add.component',       
             'sky.filter',
-            'sky.search'
+            'sky.search',
+            'sky.sort',
+            'sky.listbuilder.multiselect.component'
         ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
@@ -118,7 +121,8 @@
                 bbListbuilderAdd: '?bbListbuilderAdd',
                 bbListbuilderFilter: '?bbListbuilderFilter',
                 bbListbuilderSort: '?bbListbuilderSort',
-                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary'
+                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary',
+                bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect'
             },
             controller: Controller,
             require: {
