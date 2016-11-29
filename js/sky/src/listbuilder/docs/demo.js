@@ -227,18 +227,16 @@
                     }
                 ],
                 getContextMenuItems: function (rowid, rowObject) {
-                    if (rowid === 'blaarrrh' || rowObject.name === 'Ringo') {
-                        return [
-                            {
-                                id: 'menu',
-                                title: 'Option1',
-                                cmd: function () {
-                                    alert('Context menu option chosen!');
-                                    return false;
-                                }
+                    return [
+                        {
+                            id: 'menu',
+                            title: 'Option1',
+                            cmd: function () {
+                                alert('Context menu option chosen!');
+                                return false;
                             }
-                        ];
-                    }
+                        }
+                    ];
                 },
                 multiselect: true,
                 selectedColumnIds: [1, 2, 3, 4],
