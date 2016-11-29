@@ -559,6 +559,10 @@
         "_description": "Text for the button that clears all items in the listbuilder",
         "message": "Clear all"
     },
+    "listbuilder_show_secondary_actions": {
+        "_description": "Label for the button that opens the secondary actions menu in the listbuilder",
+        "message": "Show secondary actions"
+    },
     "modal_close": {
         "_description": "Text for modal close button",
         "message": "Close modal"

@@ -105,7 +105,8 @@
             'sky.filter',
             'sky.search',
             'sky.sort',
-            'sky.listbuilder.multiselect.component'
+            'sky.listbuilder.multiselect.component',
+            'sky.listbuilder.secondary.actions.component'
         ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
@@ -122,7 +123,8 @@
                 bbListbuilderFilter: '?bbListbuilderFilter',
                 bbListbuilderSort: '?bbListbuilderSort',
                 bbListbuilderFilterSummary: '?bbListbuilderFilterSummary',
-                bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect'
+                bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect',
+                bbListbuilderToolbarSecondaryActions: '?bbListbuilderToolbarSecondaryActions'
             },
             controller: Controller,
             require: {
