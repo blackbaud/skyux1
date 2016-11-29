@@ -48,8 +48,6 @@
             }
         }
 
-        
-
         function getCurrentView() {
             return ctrl.listbuilderCtrl.currentView;
         }
@@ -96,6 +94,7 @@
             ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
             ctrl.listbuilderCtrl.setCurrentView = setCurrentView;
             ctrl.highlightLastSearchText = ctrl.listbuilderCtrl.highlightLastSearchText;
+            
             if (ctrl.bbListbuilderContentActiveView) {
                 setActiveView(ctrl.bbListbuilderContentActiveView);
             }

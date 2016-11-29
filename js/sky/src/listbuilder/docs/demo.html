@@ -4,6 +4,8 @@
         border-bottom: 1px solid green;
         padding: 20px;
     }
+
+    
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
     <button type="button" class="btn btn-primary" style="margin-bottom: 10px"
@@ -42,14 +44,28 @@
             </bb-filter-summary-item>
         </bb-filter-summary>
       </bb-listbuilder-filter-summary>
+      <bb-listbuilder-toolbar-multiselect>
+          <bb-listbuilder-multiselect
+            ng-show="listCtrl.multiselectAvailable()"
+            bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)"
+            bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)"
+            bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"
+            bb-listbuilder-multiselect-available-items="listCtrl.data">
+            <bb-listbuilder-multiselect-select-all>
+            </bb-listbuilder-multiselect-select-all>
+            <bb-listbuilder-multiselect-clear-all>
+            </bb-listbuilder-multiselect-clear-all>
+          </bb-listbuilder-multiselect>
+
+      </bb-listbuilder-toolbar-multiselect>
     </bb-listbuilder-toolbar>
     <bb-listbuilder-content 
         bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
         bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
         >
       <bb-listbuilder-cards>
-        <bb-listbuilder-card ng-repeat="item in listCtrl.data">
-            <bb-card>
+        <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.data">
+            <bb-card bb-card-selectable="true" bb-card-selected="item.selected">
                 <bb-card-title>
                 {{item.name}}
                 </bb-card-title>
@@ -79,7 +95,13 @@
       </bb-listbuilder-cards>
       <bb-listbuilder-repeater>
         <bb-repeater>
-            <bb-repeater-item bb-listbuilder-repeater-item ng-repeat="item in listCtrl.data">
+            <bb-repeater-item 
+                bb-listbuilder-repeater-item 
+                bb-listbuilder-repeater-item-id="item.id" 
+                ng-repeat="item in listCtrl.data"
+                bb-repeater-item-selectable="true"
+                bb-repeater-item-selected="item.selected"
+                >
                 <bb-repeater-item-title>
                 {{item.name}}
                 </bb-repeater-item-title>
@@ -145,6 +167,23 @@
         bb-listbuilder-show-load-more="listCtrl.hasMoreData">
     </bb-listbuilder-footer>
   </bb-listbuilder>
+  <bb-summary-actionbar 
+    ng-show="listCtrl.actionsShown()">
+      <bb-summary-actionbar-actions>
+          <bb-summary-actionbar-primary
+            bb-summary-action-disabled="listCtrl.payMembershipSelections.length < 1" 
+            bb-summary-action-click="listCtrl.payMembership(listCtrl.payMembershipSelections)">
+              Pay membership dues ({{listCtrl.payMembershipSelections.length}})
+          </bb-summary-actionbar-primary>
+          <bb-summary-actionbar-secondary-actions>
+              <bb-summary-actionbar-secondary
+                bb-summary-action-disabled="listCtrl.secondarySelections.length < 1" 
+                bb-summary-action-click="listCtrl.secondaryAction(listCtrl.secondarySelections)">
+                  Secondary action ({{listCtrl.secondarySelections.length}})
+              </bb-summary-actionbar-secondary>
+          </bb-summary-actionbar-secondary-actions>
+      </bb-summary-actionbar-actions>
+  </bb-summary-actionbar>
 </div>
 
 </script>

@@ -1,5 +1,5 @@
 {
-  "_LRM_PKTAG169": "skyux-l10n_8_16 - CHANGES-ONLY",
+  "_LRM_PKTAG439": "skyux-l10n_10_16 - CHANGES-ONLY",
   "action_bar_actions": {
     "message": "Acties"
   },
@@ -26,6 +26,9 @@
   },
   "avatar_error_too_large_title": {
     "message": "Bestand is te groot."
+  },
+  "card_select": {
+    "message": "Kaart selecteren"
   },
   "carousel_button_label_next": {
     "message": "Naar volgend item"
@@ -370,8 +373,17 @@
   "listbuilder_footer_back_to_top": {
     "message": "Terug naar boven"
   },
+  "listbuilder_multiselect_clear_all": {
+    "message": "Alles wissen"
+  },
+  "listbuilder_multiselect_select_all": {
+    "message": "Alles selecteren"
+  },
   "listbuilder_repeater_switcher": {
     "message": "Overschakelen op herhalerweergave"
+  },
+  "listbuilder_show_only_selected": {
+    "message": "Alleen selectie tonen"
   },
   "modal_close": {
     "message": "Methode sluiten"
