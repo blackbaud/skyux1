@@ -1,4 +1,9 @@
-<div role="button" tabindex="0" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">
+<div 
+    role="button" 
+    tabindex="0" 
+    class="btn btn-default bb-select-field-single" 
+    ng-click="bbSelectField.selectFieldClick()"
+    ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.selectFieldClick()">
   <div class="bb-select-field-single-inner">
     <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>
     <span 
