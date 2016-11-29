@@ -1,5 +1,5 @@
 {
-  "_LRM_PKTAG976": "skyux-l10n_8_2 - CHANGES-ONLY",
+  "_LRM_PKTAG192": "skyux-l10n_10_2 - CHANGES-ONLY",
   "action_bar_actions": {
     "message": "Actions"
   },
@@ -26,6 +26,9 @@
   },
   "avatar_error_too_large_title": {
     "message": "Le fichier est trop gros."
+  },
+  "card_select": {
+    "message": "Sélectionner la carte"
   },
   "carousel_button_label_next": {
     "message": "Aller à l'article suivant"
@@ -370,8 +373,17 @@
   "listbuilder_footer_back_to_top": {
     "message": "Retour en haut"
   },
+  "listbuilder_multiselect_clear_all": {
+    "message": "Effacer tout"
+  },
+  "listbuilder_multiselect_select_all": {
+    "message": "Sélectionner tout"
+  },
   "listbuilder_repeater_switcher": {
     "message": "Passez à la visualisation de répéteur"
+  },
+  "listbuilder_show_only_selected": {
+    "message": "Montrer seulement ce qui est sélectionné"
   },
   "modal_close": {
     "message": "Fermer le modal"
