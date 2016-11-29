@@ -15960,7 +15960,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
-        '<div role="button" tabindex="0" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '<div \n' +
+        '    role="button" \n' +
+        '    tabindex="0" \n' +
+        '    class="btn btn-default bb-select-field-single" \n' +
+        '    ng-click="bbSelectField.selectFieldClick()"\n' +
+        '    ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.selectFieldClick()">\n' +
         '  <div class="bb-select-field-single-inner">\n' +
         '    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>\n' +
         '    <span \n' +
