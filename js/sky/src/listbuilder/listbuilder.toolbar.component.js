@@ -47,6 +47,12 @@
             }
         }
 
+        function destroyViewKeeper() {
+            if (vkToolbar) {
+                vkToolbar.destroy();
+            }
+        }
+
         function viewChanged(newView) {
             /* istanbul ignore else */
             /* sanity check */
@@ -76,6 +82,26 @@
             return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
         }
 
+        function setupTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.on('scroll', function () {
+                    if (angular.isFunction(ctrl.listbuilderCtrl.topScrollbarScrollAction)) {
+                        ctrl.listbuilderCtrl.topScrollbarScrollAction();
+                    }
+                });
+            }
+        }
+
+        function destroyTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.off('scroll');
+            }
+        }
+
         function initToolbar() {
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
@@ -87,14 +113,16 @@
 
             ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
             
+            setupTopScrollbar();
+            
             setupViewKeeper();
 
         }
 
         function destroyToolbar() {
-            if (vkToolbar) {
-                vkToolbar.destroy();
-            }
+            destroyViewKeeper();
+            destroyTopScrollbar();
+
         }
 
         // Lifecycle hooks
