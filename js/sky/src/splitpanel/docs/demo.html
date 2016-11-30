@@ -29,11 +29,19 @@
         border-left: #1c84c6 3px solid;
         padding-left: 17px;
     }
+
+    .split-panel .work-space-footer {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        z-index: 10000;
+        bottom: 0;
+    }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
     <bb-splitpanel class="bb-split-panel">
         <bb-splitpanel-toolbar bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
-                                bb-listbuilder-search-text="listCtrl.searchText">
+                               bb-listbuilder-search-text="listCtrl.searchText">
             <bb-listbuilder-filter>
                 <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
                 </bb-filter-button>
@@ -58,16 +66,15 @@
             </bb-listbuilder-filter-summary>
         </bb-splitpanel-toolbar>
         <bb-splitpanel-content bb-listbuilder-content-active-view="custom-1"
-                                bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)" bb-listbuilder-content-selected-item="custom-1"
-                                bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata1(newView)" bb-listbuilder-content-item="listCtrl.selectedItem">
+                               bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)" bb-listbuilder-content-selected-item="custom-1"
+                               bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata()" bb-listbuilder-content-item="listCtrl.selectedItem">
             <bb-splitpanel-content-custom id="parent" bb-listbuilder-content-custom-view-name="custom-1"
-                                           bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
-                                           bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
-                                           bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
+                                          bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
+                                          bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
+                                          bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
 
                 <div class="bb-custom-content">
-
-                    <div class="bb-custom-content-item" bb-splitpanel-content-custom-item bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(item)" ng-repeat="item in listCtrl.data" ng-class="{'selectedItem': item.name === listCtrl.selectedItem.name}">
+                    <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data">
                         <div style="margin-bottom: 10px">
                             {{item.name}}
                         </div>
@@ -84,6 +91,7 @@
                 </div>
 
                 <bb-splitpanel-workspace class="split-panel">
+                    <!--<form>-->
                     Transaction
                     {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
                     <br />
@@ -143,7 +151,12 @@
                             </li>
                         </ul>
                     </div>
+                    <!--<div class="work-space-footer">
+                            <input type="button" name="name" value="Record transaction" />
+                            <input type="button" name="name" value="Submit" />
 
+                        </div>
+                    </form>-->
                 </bb-splitpanel-workspace>
 
             </bb-splitpanel-content-custom>
