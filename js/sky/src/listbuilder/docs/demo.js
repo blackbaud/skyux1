@@ -483,6 +483,9 @@
                 item.duesPaid = true;
             }
             self.payMembershipSelections = [];
+
+            //Refresh data for bbGrid
+            self.gridOptions.data = angular.copy(self.gridOptions.data);
         }
 
         function secondaryAction(selections) {
@@ -498,7 +501,7 @@
         }
 
         function multiselectAvailable() {
-            return self.activeView === 'repeater' || self.activeView === 'card';
+            return self.activeView === 'repeater' || self.activeView === 'card' || self.activeView === 'grid';
         }
 
         function actionsShown() {

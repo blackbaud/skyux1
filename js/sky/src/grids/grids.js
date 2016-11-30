@@ -735,6 +735,22 @@
                                 });
                             }
 
+                            function setRowMultiselect(rowid) {
+                                var row,
+                                    rowIndex = tableEl.getInd(rowid);
+
+                                row = $scope.options.data[(rowIndex - 1)];
+                                if (!$scope.hasListbuilder && $scope.selectedRows && $scope.selectedRows.length > 0) { 
+                                    if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
+                                        tableEl.setSelection(rowid, false);
+                                    }
+                                } else if ($scope.hasListbuilder) {
+                                    if (row && row[listbuilderCtrl.getListbuilderMultiselectSelectedProperty()]) {
+                                        tableEl.setSelection(rowid, false);
+                                    }
+                                }
+                            }
+
                             function afterInsertRow(rowid, rowdata, rowelem) {
                                 /*jshint validthis: true */
                                 var cell,
@@ -742,8 +758,7 @@
                                     columnData,
                                     i,
                                     itemScope,
-                                    row,
-                                    rowIndex;
+                                    row;
 
                                 if (hasTemplatedColumns) {
 
@@ -793,16 +808,8 @@
                                     }
                                 }
 
-                                rowIndex = tableEl.getInd(rowid);
-
-                                //check if row should be multiselected
-                                if ($scope.selectedRows && $scope.selectedRows.length > 0) {
-
-                                    row = $scope.options.data[(rowIndex - 1)];
-                                    if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
-                                        tableEl.setSelection(rowid, false);
-                                    }
-                                }
+                                setRowMultiselect(rowid);
+                                
                             }
 
                             function setColumnHeaderAlignment() {
@@ -877,17 +884,15 @@
                                 return sortable;
                             }
 
+                            //Might need to do something here for listbuilder multiselect
                             function clearSelectedRowsObject() {
                                 $scope.selectedRows = [];
                             }
-
 
                             function resetMultiselect() {
                                 clearSelectedRowsObject();
                                 tableEl.resetSelection();
                             }
-
-
 
                             function onSelectAll(rowIds, status) {
                                 /*jslint unparam: true */
@@ -928,15 +933,22 @@
                                         row;
                                     row = $scope.options.data[(rowIndex - 1)];
 
-                                    localRowSelect = true;
+                                    if (!$scope.hasListbuilder) {
+                                        localRowSelect = true;
 
-                                    index = arrayObjectIndexOf($scope.selectedRows, row);
+                                        index = arrayObjectIndexOf($scope.selectedRows, row);
 
-                                    if (status === true && index === -1 && row) {
-                                        $scope.selectedRows.push(row);
-                                    } else if (status === false && index > -1) {
-                                        $scope.selectedRows.splice(index, 1);
+                                        if (status === true && index === -1 && row) {
+                                            $scope.selectedRows.push(row);
+                                        } else if (status === false && index > -1) {
+                                            $scope.selectedRows.splice(index, 1);
+                                        }
+                                    } else {
+                                        listbuilderCtrl.itemToggled(status, row[listbuilderCtrl.getListbuilderMultiselectIdProperty()]);
+                                        row[listbuilderCtrl.getListbuilderMultiselectSelectedProperty()] = status;
                                     }
+
+                                    
                                 });
                             }
 

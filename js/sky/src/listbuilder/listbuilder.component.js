@@ -30,6 +30,22 @@
             }   
         }
 
+        function getListbuilderMultiselectIdProperty() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getMultiselectIdProperty)) {
+                return ctrl.getMultiselectIdProperty();
+            }
+        }
+
+        function getListbuilderMultiselectSelectedProperty() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getMultiselectSelectedProperty)) {
+                return ctrl.getMultiselectSelectedProperty();
+            }
+        }
+
         function highlightSearchText(searchText) {
             lastSearchText = searchText;
             if (angular.isFunction(ctrl.highlightSearchContent)) {
@@ -57,6 +73,8 @@
         ctrl.highlightSearchText = highlightSearchText;
         ctrl.getListbuilderToolbarId = getListbuilderToolbarId;
         ctrl.getListbuilderToolbarTopScrollbarEl = getListbuilderToolbarTopScrollbarEl;
+        ctrl.getListbuilderMultiselectIdProperty = getListbuilderMultiselectIdProperty;
+        ctrl.getListbuilderMultiselectSelectedProperty = getListbuilderMultiselectSelectedProperty;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.itemToggled = itemToggled;

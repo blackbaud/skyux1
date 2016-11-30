@@ -114,6 +114,8 @@
 
             setListbuilderSelectedItems();
             ctrl.listbuilderCtrl.multiselectItemToggled = multiselectItemToggled;
+            ctrl.listbuilderCtrl.getMultiselectIdProperty = getIdProperty;
+            ctrl.listbuilderCtrl.getMultiselectSelectedProperty = getSelectedProperty;
         }
 
         function bindingChanges(changesObj) {
