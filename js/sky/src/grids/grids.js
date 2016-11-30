@@ -1141,7 +1141,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive && !$scope.hasListbuilder) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
