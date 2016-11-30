@@ -83,3 +83,14 @@
     overflow-y: hidden;
     overflow-x: auto;
 }
+
+.bb-listbuilder {
+    .ui-jqgrid-hbox {
+        .ui-jqgrid-htable th {
+            cursor: default;
+        }
+        .bb-check-wrapper {
+            display: none;
+        }
+    }
+}
