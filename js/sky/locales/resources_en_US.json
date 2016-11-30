@@ -543,6 +543,10 @@
         "_description": "Text for the card view switcher",
         "message": "Switch to card view"
     },
+    "listbuilder_grid_switcher": {
+        "_description": "Text for the grid view switcher",
+        "message": "Switch to grid view"
+    },
     "listbuilder_repeater_switcher": {
         "_description": "Text for repeater view switcher",
         "message": "Switch to repeater view"

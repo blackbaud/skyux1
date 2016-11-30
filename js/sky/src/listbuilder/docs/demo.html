@@ -136,6 +136,11 @@
             </bb-repeater-item>
         </bb-repeater>
       </bb-listbuilder-repeater>
+      <bb-listbuilder-grid>
+        <bb-grid
+            bb-grid-options="listCtrl.gridOptions">
+        </bb-grid>
+      </bb-listbuilder-grid>
       <bb-listbuilder-content-custom 
         bb-listbuilder-content-custom-view-name="custom-1" 
         bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
@@ -169,15 +174,7 @@
             </div>
         </div> 
       </bb-listbuilder-content-custom>
-      <bb-listbuilder-content-custom 
-        bb-listbuilder-content-custom-view-name="table" 
-        bb-listbuilder-content-custom-view-switcher-class="fa-table"
-        bb-listbuilder-content-custom-view-switcher-label="Switch to table">
-
-        <bb-grid
-            bb-grid-options="listCtrl.gridOptions">
-        </bb-grid>
-      </bb-listbuilder-content-custom>
+      
     </bb-listbuilder-content>
     <bb-listbuilder-footer
         bb-listbuilder-on-load-more="listCtrl.onLoadMore()"

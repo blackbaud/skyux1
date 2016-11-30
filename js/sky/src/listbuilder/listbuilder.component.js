@@ -46,7 +46,7 @@
         }
 
         function getContentContainer() {
-            return $element.find('.bb-listbuilder-content');
+            return $element.find('.bb-listbuilder-content-container');
         }
 
         function onInit() {

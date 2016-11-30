@@ -714,14 +714,18 @@
 
                             function highlightSearchText(highlightText) {
                                 var options = $scope.options;
-                                
-                                if (!highlightText && options && options.searchText) {
-                                    highlightText = options.searchText;
-                                }
 
-                                bbHighlight.clear(tableEl);
-                                if (highlightText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                if (!$scope.hasListbuilder) {
+                                    if (!highlightText && options && options.searchText) {
+                                        highlightText = options.searchText;
+                                    }
+
+                                    bbHighlight.clear(tableEl);
+                                    if (highlightText) {
+                                        bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                    }
+                                } else {
+                                    listbuilderCtrl.highlightLastSearchText();
                                 }
                             }
 

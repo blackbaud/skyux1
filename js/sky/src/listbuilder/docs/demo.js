@@ -299,6 +299,12 @@
         }
 
         function sortArray(sortProperty, sortDescending, array) {
+
+            self.gridOptions.sortOptions = {
+                column: sortProperty,
+                descending: sortDescending
+            };
+            
             if (sortProperty) {
                 return array.sort(function (a, b) {
                     var descending = sortDescending ? -1 : 1;
