@@ -74,3 +74,9 @@
 .bb-listbuilder-clear-all {
     margin-left: $padding;
 }
+
+.bb-listbuilder-toolbar-top-scrollbar {
+    background-color: $bb-color-white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}

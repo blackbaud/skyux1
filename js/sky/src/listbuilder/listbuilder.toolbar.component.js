@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbViewKeeperBuilder) {
+    function Controller($element, bbViewKeeperBuilder, $scope) {
         var ctrl = this,
             vkToolbar;
 
@@ -68,10 +68,24 @@
             }
         }
 
+        function getToolbarId() {
+            return ctrl.listbuilderToolbarId;
+        }
+
+        function getTopScrollbar() {
+            return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
+        }
+
         function initToolbar() {
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
             }
+
+            ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
+
+            ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
+
+            ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
             
             setupViewKeeper();
 
@@ -95,7 +109,7 @@
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [

@@ -14,6 +14,22 @@
             }
         }
 
+        function getListbuilderToolbarId() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getToolbarId)) {
+                return ctrl.getToolbarId();
+            }
+        }
+
+        function getListbuilderToolbarTopScrollbarEl() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getTopScrollbar)) {
+                return ctrl.getTopScrollbar();
+            }   
+        }
+
         function highlightSearchText(searchText) {
             lastSearchText = searchText;
             if (angular.isFunction(ctrl.highlightSearchContent)) {
@@ -39,6 +55,8 @@
 
         ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
+        ctrl.getListbuilderToolbarId = getListbuilderToolbarId;
+        ctrl.getListbuilderToolbarTopScrollbarEl = getListbuilderToolbarTopScrollbarEl;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.itemToggled = itemToggled;
