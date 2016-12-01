@@ -928,10 +928,14 @@
                                 updateSelectedIds($scope.bbGridMultiselectSelectedIds);
                             }
 
+                            function hasSelectedIdsMultiselect() {
+                                return $scope.options && $scope.options.data && $scope.options.data.length > 0 && angular.isDefined(getMultiselectId($scope.options.data[0]));
+                            }
+
                             function clearSelectedRowsObject() {
                                 var i,
                                     multiselectId;
-                                if ($scope.options && $scope.options.data && $scope.options.data.length > 0 && angular.isDefined(getMultiselectId($scope.options.data[0]))) {
+                                if (hasSelectedIdsMultiselect()) {
                                     for (i = 0; i < $scope.options.data.length; i++) {
                                         multiselectId = getMultiselectId($scope.options.data[i]);
                                         removeSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
@@ -946,19 +950,35 @@
                                 tableEl.resetSelection();
                             }
 
+                            
+
+                            function selectAllItems() {
+                                var allRowData,
+                                    multiselectId,
+                                    i;
+                                if (hasSelectedIdsMultiselect()) {
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        multiselectId = getMultiselectId($scope.options.data[i]);
+                                        addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                    }
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
+                                } else {
+                                    allRowData = $scope.options.data;
+                                    if (allRowData && allRowData.length > 0) {
+                                        $scope.selectedRows = allRowData.slice();
+                                    }
+                                }
+                            }
+
                             function onSelectAll(rowIds, status) {
                                 /*jslint unparam: true */
-                                var allRowData;
 
                                 localRowSelect = true;
 
                                 clearSelectedRowsObject();
 
                                 if (status === true) {
-                                    allRowData = $scope.options.data;
-                                    if (allRowData && allRowData.length > 0) {
-                                        $scope.selectedRows = allRowData.slice();
-                                    }
+                                    selectAllItems();
                                 }
                                 $scope.$apply();
                             }
