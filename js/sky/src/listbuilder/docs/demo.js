@@ -512,6 +512,10 @@
             alert('List has been saved!');
         }
 
+        function selectedColumnIdsChanged(selectedColumnIds) {
+            self.gridOptions.selectedColumnIds = selectedColumnIds;
+        }
+
         self.saveAction = saveAction;
 
         self.multiselectAvailable = multiselectAvailable;
@@ -537,6 +541,7 @@
         self.viewChanged = viewChanged;
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
+        self.selectedColumnIdsChanged = selectedColumnIdsChanged;
         self.gridOptions = gridOptions;
         self.gridOptions.data = [];
         self.activeView = 'grid';

@@ -19,7 +19,8 @@
         [
             'ui.bootstrap.dropdown', 
             'sky.resources', 
-            'sky.listbuilder.secondary.action.component'
+            'sky.listbuilder.secondary.action.component',
+            'sky.listbuilder.column.picker.component'
         ])
         .component('bbListbuilderSecondaryActions', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.component.html',
