@@ -1141,6 +1141,10 @@
                                 return 'bb-grid-row-' + $scope.$id + '-';
                             }
 
+                            function listbuilderSortComponentPresent() {
+                                return listbuilderCtrl !== null && listbuilderCtrl.sortComponentPresent();
+                            }
+
                             function initGrid() {
                                 var columns,
                                     jqGridOptions,
@@ -1237,7 +1241,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive && !$scope.hasListbuilder) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive && !listbuilderSortComponentPresent()) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
@@ -1548,7 +1552,6 @@
                             if (!$scope.hasListbuilder) {
                                 $scope.$watchCollection('selectedRows', function (newSelections) {
                                     
-
                                     if (localRowSelect) {
                                         localRowSelect = false;
                                         return;
@@ -1560,7 +1563,6 @@
 
                                     setGridMultiselectRows(newSelections, indexCallback);
                                     
-
                                 });
                             }
 

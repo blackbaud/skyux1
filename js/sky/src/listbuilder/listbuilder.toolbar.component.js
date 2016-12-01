@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbViewKeeperBuilder, $scope) {
+    function Controller($element, bbViewKeeperBuilder, $scope, $transclude) {
         var ctrl = this,
             vkToolbar;
 
@@ -82,6 +82,10 @@
             return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
         }
 
+        function sortComponentPresent() {
+            return $transclude.isSlotFilled('bbListbuilderSort');
+        }
+
         function setupTopScrollbar() {
             var topScrollbarEl = getTopScrollbar();
 
@@ -108,8 +112,8 @@
             }
 
             ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
-
             ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
+            ctrl.listbuilderCtrl.sortComponentPresent = sortComponentPresent;
 
             ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
             
@@ -137,7 +141,7 @@
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope', '$transclude'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [
