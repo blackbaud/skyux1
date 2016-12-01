@@ -539,7 +539,7 @@
         self.onDismissFilter = onDismissFilter;
         self.gridOptions = gridOptions;
         self.gridOptions.data = [];
-        self.activeView = 'card';
+        self.activeView = 'grid';
         loadData();
 
         self.sortOptions = sortOptions;

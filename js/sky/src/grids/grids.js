@@ -988,8 +988,10 @@
                                     row = $scope.options.data[(rowIndex - 1)];
                                     
                                     multiselectId = getMultiselectId(row);
+
+                                    localRowSelect = true;
+
                                     if (angular.isUndefined(multiselectId)) {
-                                        localRowSelect = true;
 
                                         index = arrayObjectIndexOf($scope.selectedRows, row);
 
@@ -1500,41 +1502,69 @@
                                 }
                             }, true);
 
+                            function setGridMultiselectRows(selections, indexCallback) {
+                                var i,
+                                    index,
+                                    rowIds;
+
+                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
+                                    //blow away existing selections
+                                    tableEl.resetSelection();
+
+                                    rowIds = tableEl.getDataIDs();
+
+                                    for (i = 0; i < selections.length; i++) {
+
+                                        index = indexCallback(selections[i]);
+
+                                        if (index > -1) {
+                                            tableEl.setSelection(rowIds[index], false);
+                                        }
+
+                                    }
+                                }
+                            }
+
                             if (!$scope.hasListbuilder) {
                                 $scope.$watchCollection('selectedRows', function (newSelections) {
-                                    var i,
-                                        index,
-                                        rowIds;
+                                    
 
                                     if (localRowSelect) {
                                         localRowSelect = false;
                                         return;
                                     }
 
-                                    if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
-                                        //blow away existing selections
-                                        tableEl.resetSelection();
-
-                                        rowIds = tableEl.getDataIDs();
-
-                                        for (i = 0; i < newSelections.length; i++) {
-
-                                            index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
-
-                                            if (index > -1) {
-                                                tableEl.setSelection(rowIds[index], false);
-                                            }
-
-                                        }
+                                    function indexCallback(selectedItem) {
+                                        return arrayObjectIndexOf($scope.options.data, selectedItem);
                                     }
+
+                                    setGridMultiselectRows(newSelections, indexCallback);
+                                    
 
                                 });
                             }
 
                             $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
+                                if (localRowSelect) {
+                                    localRowSelect = false;
+                                    return;
+                                }
+                                
                                 if (angular.isUndefined(newSelections)) {
                                     $scope.bbGridMultiselectSelectedIds = [];
                                 }
+
+                                function indexCallback(selectedItem) {
+                                    var i;
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        if (getMultiselectId($scope.options.data[i]) === selectedItem) {
+                                            return i;
+                                        }
+                                    }
+                                    return -1;
+                                }
+
+                                setGridMultiselectRows(newSelections, indexCallback);
                             }); 
 
                             $scope.$watch('paginationOptions', initializePagination, true);
