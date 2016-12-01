@@ -910,7 +910,7 @@
                             }
 
                             function getMultiselectId(row) {
-                                var multiselectId = $scope.bbGridMultiselectIdProperty || listbuilderCtrl.getListbuilderMultiselectIdProperty();
+                                var multiselectId = $scope.bbGridMultiselectIdProperty || listbuilderCtrl !== null ? listbuilderCtrl.getListbuilderMultiselectIdProperty() : null;
                                 return row[multiselectId];
                             }
 
