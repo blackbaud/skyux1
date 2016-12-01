@@ -1527,7 +1527,7 @@
                                     index,
                                     rowIds;
 
-                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
+                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0 && selections) {
                                     //blow away existing selections
                                     tableEl.resetSelection();
 
