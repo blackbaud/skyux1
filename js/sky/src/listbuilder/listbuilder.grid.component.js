@@ -2,11 +2,20 @@
 (function () {
     'use strict';
 
-    function Controller(bbResources) {
+    function Controller(bbResources, $scope) {
         var ctrl = this;
 
         function viewIsActive() {
             return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
+        function setUpGridMultiselectEvent() {
+            $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, data) {
+                ctrl.listbuilderCtrl.updateSelectedIds(data);
+                
+                event.stopPropagation();
+                event.preventDefault(); 
+            });
         }
 
         function initGrid() {
@@ -19,6 +28,8 @@
                 viewContentClass: 'bb-listbuilder-content-grid-view'
             });
 
+            setUpGridMultiselectEvent();
+
         }
 
         function onDestroy() {
@@ -30,13 +41,16 @@
         ctrl.viewIsActive = viewIsActive;
     }
 
+    Controller.$inject = ['bbResources', '$scope'];
+
     angular.module('sky.listbuilder.grid.component', ['sky.resources'])
         .component('bbListbuilderGrid', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.grid.component.html',
             transclude: true,
             controller: Controller,
             require: {
-                listbuilderContentCtrl: '^bbListbuilderContent'
+                listbuilderContentCtrl: '^bbListbuilderContent',
+                listbuilderCtrl: '^^bbListbuilder'
             }
         });
 })();

@@ -73,7 +73,9 @@
                         multiselectActions: '=?bbMultiselectActions',
                         updateMultiselectActions: '&bbSelectionsUpdated',
                         paginationOptions: '=?bbGridPagination',
-                        selectedRows: '=?bbSelectedRows'
+                        selectedRows: '=?bbSelectedRows',
+                        bbGridMultiselectSelectedIdProperty: '<?',
+                        bbGridMultiselectSelectedIds: '<?'
                     },
                     controller: ['$scope', function ($scope) {
                         var locals,
@@ -737,18 +739,26 @@
 
                             function setRowMultiselect(rowid) {
                                 var row,
-                                    rowIndex = tableEl.getInd(rowid);
+                                    rowIndex = tableEl.getInd(rowid),
+                                    multiselectId;
+
 
                                 row = $scope.options.data[(rowIndex - 1)];
-                                if (!$scope.hasListbuilder && $scope.selectedRows && $scope.selectedRows.length > 0) { 
-                                    if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
-                                        tableEl.setSelection(rowid, false);
-                                    }
-                                } else if ($scope.hasListbuilder) {
-                                    if (row && row[listbuilderCtrl.getListbuilderMultiselectSelectedProperty()]) {
-                                        tableEl.setSelection(rowid, false);
+
+                                if (row) {
+                                    multiselectId = getMultiselectId(row);
+                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) { 
+                                        if (arrayObjectIndexOf($scope.selectedRows, row) > -1) {
+                                            tableEl.setSelection(rowid, false);
+                                        }
+                                    } else if (angular.isDefined(multiselectId)) {
+                                        if ($scope.bbGridMultiselectSelectedIds.indexOf(multiselectId) > -1) {
+                                            tableEl.setSelection(rowid, false);
+                                        }
                                     }
                                 }
+
+                                
                             }
 
                             function afterInsertRow(rowid, rowdata, rowelem) {
@@ -885,8 +895,50 @@
                             }
 
                             //Might need to do something here for listbuilder multiselect
+
+                            function addSelectedItem(id, selectedIds) {
+                                if (selectedIds.indexOf(id) === -1) {
+                                    selectedIds.push(id);
+                                }
+                            }
+
+                            function removeSelectedItem(id, selectedIds) {
+                                var itemIndex = selectedIds.indexOf(id);
+                                if (itemIndex !== -1) {
+                                    selectedIds.splice(itemIndex, 1);
+                                }
+                            }
+
+                            function getMultiselectId(row) {
+                                var multiselectId = $scope.bbGridMultiselectIdProperty || listbuilderCtrl.getListbuilderMultiselectIdProperty();
+                                return row[multiselectId];
+                            }
+
+                            function updateSelectedIds(selectedIds) {
+                                $scope.$emit('bbGridMultiselectSelectedIdsChanged', selectedIds);
+                            }
+
+                            function toggleSelectedId(isSelected, id) {
+                                if (isSelected) {
+                                    addSelectedItem(id, $scope.bbGridMultiselectSelectedIds);
+                                } else {
+                                    removeSelectedItem(id, $scope.bbGridMultiselectSelectedIds);
+                                }
+
+                                updateSelectedIds($scope.bbGridMultiselectSelectedIds);
+                            }
+
                             function clearSelectedRowsObject() {
-                                $scope.selectedRows = [];
+                                var i,
+                                    multiselectId;
+                                if ($scope.options && $scope.options.data && $scope.options.data.length > 0 && angular.isDefined(getMultiselectId($scope.options.data[0]))) {
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        multiselectId = getMultiselectId($scope.options.data[i]);
+                                        removeSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                    }
+                                } else {
+                                    $scope.selectedRows = [];
+                                }   
                             }
 
                             function resetMultiselect() {
@@ -930,10 +982,13 @@
                                 $timeout(function () {
                                     var index,
                                         rowIndex = tableEl.getInd(rowId),
+                                        multiselectId,
                                         row;
-                                    row = $scope.options.data[(rowIndex - 1)];
 
-                                    if (!$scope.hasListbuilder) {
+                                    row = $scope.options.data[(rowIndex - 1)];
+                                    
+                                    multiselectId = getMultiselectId(row);
+                                    if (angular.isUndefined(multiselectId)) {
                                         localRowSelect = true;
 
                                         index = arrayObjectIndexOf($scope.selectedRows, row);
@@ -944,20 +999,24 @@
                                             $scope.selectedRows.splice(index, 1);
                                         }
                                     } else {
-                                        listbuilderCtrl.itemToggled(status, row[listbuilderCtrl.getListbuilderMultiselectIdProperty()]);
-                                        row[listbuilderCtrl.getListbuilderMultiselectSelectedProperty()] = status;
+                                        toggleSelectedId(status, multiselectId);
                                     }
-
-                                    
                                 });
                             }
 
                             function setMultiselectRow(rowId, rowIndex) {
-                                var row;
+                                var row,
+                                    multiselectId;
 
                                 tableEl.setSelection(rowId, false);
                                 row  = $scope.options.data[(rowIndex - 1)];
-                                $scope.selectedRows.push(row);
+                                multiselectId = getMultiselectId(row);
+                                if (angular.isUndefined(multiselectId)) {
+                                    $scope.selectedRows.push(row);
+                                } else {
+                                    addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                }
+                                
                             }
 
                             function beforeSelectRow(rowId, e) {
@@ -995,6 +1054,9 @@
                                         $scope.$apply();
                                         return true;
                                     }
+
+                                    //UpdateSelectedRowsHere
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
 
                                     $scope.$apply();
                                     return false;
@@ -1438,34 +1500,42 @@
                                 }
                             }, true);
 
-                            $scope.$watchCollection('selectedRows', function (newSelections) {
-                                var i,
-                                    index,
-                                    rowIds;
+                            if (!$scope.hasListbuilder) {
+                                $scope.$watchCollection('selectedRows', function (newSelections) {
+                                    var i,
+                                        index,
+                                        rowIds;
 
-                                if (localRowSelect) {
-                                    localRowSelect = false;
-                                    return;
-                                }
-
-                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
-                                    //blow away existing selections
-                                    tableEl.resetSelection();
-
-                                    rowIds = tableEl.getDataIDs();
-
-                                    for (i = 0; i < newSelections.length; i++) {
-
-                                        index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
-
-                                        if (index > -1) {
-                                            tableEl.setSelection(rowIds[index], false);
-                                        }
-
+                                    if (localRowSelect) {
+                                        localRowSelect = false;
+                                        return;
                                     }
-                                }
 
-                            });
+                                    if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
+                                        //blow away existing selections
+                                        tableEl.resetSelection();
+
+                                        rowIds = tableEl.getDataIDs();
+
+                                        for (i = 0; i < newSelections.length; i++) {
+
+                                            index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
+
+                                            if (index > -1) {
+                                                tableEl.setSelection(rowIds[index], false);
+                                            }
+
+                                        }
+                                    }
+
+                                });
+                            }
+
+                            $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
+                                if (angular.isUndefined(newSelections)) {
+                                    $scope.bbGridMultiselectSelectedIds = [];
+                                }
+                            }); 
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 

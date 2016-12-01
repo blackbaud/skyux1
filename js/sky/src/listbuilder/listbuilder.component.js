@@ -46,6 +46,14 @@
             }
         }
 
+        function updateSelectedIds(selectedIds) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.updateMultiselectSelectedIds)) {
+                return ctrl.updateMultiselectSelectedIds(selectedIds);
+            }
+        }
+
         function highlightSearchText(searchText) {
             lastSearchText = searchText;
             if (angular.isFunction(ctrl.highlightSearchContent)) {
@@ -75,6 +83,7 @@
         ctrl.getListbuilderToolbarTopScrollbarEl = getListbuilderToolbarTopScrollbarEl;
         ctrl.getListbuilderMultiselectIdProperty = getListbuilderMultiselectIdProperty;
         ctrl.getListbuilderMultiselectSelectedProperty = getListbuilderMultiselectSelectedProperty;
+        ctrl.updateSelectedIds = updateSelectedIds;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.itemToggled = itemToggled;
