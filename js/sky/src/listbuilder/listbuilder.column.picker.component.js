@@ -6,6 +6,11 @@
 
         var ctrl = this;
 
+        function isInGridView() {
+            var currentView = ctrl.listbuilderContentCtrl.getCurrentView();
+            return currentView && currentView === 'grid';
+        }
+
         function openColumnPicker() {
             bbModal.open({
                 templateUrl: 'sky/templates/grids/columnpicker.html',
@@ -39,6 +44,7 @@
         }
 
         ctrl.openColumnPicker = openColumnPicker;
+        ctrl.isInGridView = isInGridView;
         
     }
 
