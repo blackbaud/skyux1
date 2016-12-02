@@ -1,4 +1,5 @@
 <div 
+    ng-show="$ctrl.totalSecondaryActions > 0"
     class="bb-listbuilder-secondary-actions"
     uib-dropdown 
     ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">
@@ -11,11 +12,14 @@
         <i class="fa fa-lg fa-ellipsis-h"></i>
     </button>
     <div
-        ng-class="{'bb-listbuilder-secondary-actions-grid-view': $ctrl.isInGridView()}"
         uib-dropdown-menu 
         ng-attr-id="{{$ctrl.secondaryMenuId}}" 
         role="menu"
         class="bb-dropdown-menu">
-        <ng-transclude></ng-transclude>
+        <bb-listbuilder-secondary-actions-dropdown
+             bb-listbuilder-secondary-actions-item-changed="$ctrl.itemChanged(itemAdded)"
+             bb-listbuilder-secondary-actions-current-view="$ctrl.listbuilderCtrl.currentView">
+            <ng-transclude></ng-transclude>
+        </bb-listbuilder-secondary-actions-dropdown>
     </div>
 </div>

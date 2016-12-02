@@ -5,12 +5,12 @@
     function Controller($scope) {
         var ctrl = this;
 
-        function isInGridView() {
-            return ctrl.listbuilderCtrl.currentView && ctrl.listbuilderCtrl.currentView.viewName === 'grid';
-        }
-
-        function addSecondaryAction() {
-            ctrl.totalSecondaryActions++;
+        function itemChanged(itemAdded) {
+            if (itemAdded) {
+                ctrl.totalSecondaryActions++;
+            } else {
+                ctrl.totalSecondaryActions--;
+            }
         }
 
         function onInit() {
@@ -18,8 +18,7 @@
             ctrl.totalSecondaryActions = 0;
         }
 
-        ctrl.addSecondaryAction = addSecondaryAction;
-        ctrl.isInGridView = isInGridView;
+        ctrl.itemChanged = itemChanged;
 
         ctrl.$onInit = onInit;
 
@@ -31,8 +30,7 @@
         [
             'ui.bootstrap.dropdown', 
             'sky.resources', 
-            'sky.listbuilder.secondary.action.component',
-            'sky.listbuilder.column.picker.component'
+            'sky.listbuilder.secondary.actions.dropdown.component'
         ])
         .component('bbListbuilderSecondaryActions', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.component.html',

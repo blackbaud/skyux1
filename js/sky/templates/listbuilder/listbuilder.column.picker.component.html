@@ -1,4 +1,4 @@
-<div class="bb-listbuilder-column-picker">
+<div class="bb-listbuilder-column-picker" ng-if="$ctrl.dropdownCtrl.bbListbuilderSecondaryActionsCurrentView &amp;&amp; $ctrl.dropdownCtrl.bbListbuilderSecondaryActionsCurrentView.viewName === 'grid'">
     <bb-listbuilder-secondary-action
         bb-listbuilder-secondary-action-click="$ctrl.openColumnPicker()">
         {{'listbuilder_pick_columns' | bbResources}}

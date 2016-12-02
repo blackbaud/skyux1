@@ -30,6 +30,9 @@
     angular.module('sky.listbuilder.column.picker.component', ['sky.grids.columnpicker.factory', 'sky.resources'])
         .component('bbListbuilderColumnPicker', {
             controller: Controller,
+            require: {
+                dropdownCtrl: '^^bbListbuilderSecondaryActionsDropdown'
+            },
             bindings: {
                 bbListbuilderColumnPickerSelectedColumnIds: '<',
                 bbListbuilderColumnPickerColumns: '<',
