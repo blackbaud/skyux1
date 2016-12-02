@@ -2,55 +2,32 @@
 (function () {
     'use strict';
 
-    function Controller(bbModal) {
+    function Controller(bbColumnPicker) {
 
         var ctrl = this;
 
-        function isInGridView() {
-            var currentView = ctrl.listbuilderContentCtrl.getCurrentView();
-            return currentView && currentView === 'grid';
-        }
-
         function openColumnPicker() {
-            bbModal.open({
-                templateUrl: 'sky/templates/grids/columnpicker.html',
-                controller: 'BBGridColumnPickerController',
-                resolve: {
-                    columns: function () {
-                        return ctrl.bbListbuilderColumnPickerColumns;
-                    },
-                    selectedColumnIds: function () {
-                        return ctrl.bbListbuilderColumnPickerSelectedColumnIds;
-                    },
-                    columnPickerHelpKey: function () {
-                        return ctrl.bbListbuilderColumnPickerHelpKey;
-                    },
-                    subsetLabel: function () {
-                        return ctrl.bbListbuilderColumnPickerSubsetLabel;
-                    },
-                    subsetProperty: function () {
-                        return ctrl.bbListbuilderColumnPickerSubsetProperty;
-                    },
-                    subsetExclude: function () {
-                        return ctrl.bbListbuilderColumnPickerSubsetExclude;
-                    },
-                    onlySelected: function () {
-                        return ctrl.bbListbuilderColumnPickerOnlySelected;
-                    }
-                }
-            }).result.then(function (selectedColumnIds) {
-                ctrl.bbListbuilderColumnPickerSelectedColumnIdsChanged({selectedColumnIds: selectedColumnIds});
-            });
+            bbColumnPicker.openColumnPicker({
+                        columns: ctrl.bbListbuilderColumnPickerColumns,
+                        selectedColumnIds: ctrl.bbListbuilderColumnPickerSelectedColumnIds,
+                        helpKey: ctrl.bbListbuilderColumnPickerHelpKey,
+                        subsetLabel: ctrl.bbListbuilderColumnPickerSubsetLabel,
+                        subsetProperty: ctrl.bbListbuilderColumnPickerSubsetProperty,
+                        subsetExclude: ctrl.bbListbuilderColumnPickerSubsetExclude,
+                        onlySelected: ctrl.bbListbuilderColumnPickerOnlySelected,
+                        selectedColumnIdsChangedCallback: function (selectedColumnIds) {
+                            ctrl.bbListbuilderColumnPickerSelectedColumnIdsChanged({selectedColumnIds: selectedColumnIds});
+                        }
+                    });
         }
 
         ctrl.openColumnPicker = openColumnPicker;
-        ctrl.isInGridView = isInGridView;
         
     }
 
-    Controller.$inject = ['bbModal'];
+    Controller.$inject = ['bbColumnPicker'];
 
-    angular.module('sky.listbuilder.column.picker.component', ['sky.modal', 'sky.grids.columnpicker', 'sky.resources'])
+    angular.module('sky.listbuilder.column.picker.component', ['sky.grids.columnpicker.factory', 'sky.resources'])
         .component('bbListbuilderColumnPicker', {
             controller: Controller,
             bindings: {

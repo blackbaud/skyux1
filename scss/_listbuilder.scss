@@ -94,3 +94,13 @@
         }
     }
 }
+
+.bb-listbuilder-column-picker {
+    display: none;
+}
+
+.bb-listbuilder-secondary-actions-grid-view {
+    .bb-listbuilder-column-picker {
+        display: block;
+    }   
+}

@@ -6,7 +6,7 @@
         var ctrl = this;
 
         function onInit() {
-            ctrl.secondaryActionsCtrl.addSecondaryAction();
+            //ctrl.secondaryActionsCtrl.addSecondaryAction();
         }
 
         ctrl.$onInit = onInit;
@@ -17,9 +17,9 @@
             templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.action.component.html',
             transclude: true,
             controller: Controller,
-            require: {
-                secondaryActionsCtrl: '^bbListbuilderSecondaryActions'
-            },
+            /*require: {
+                secondaryActionsCtrl: '^^bbListbuilderSecondaryActions'
+            },*/
             bindings: {
                 bbListbuilderSecondaryActionDisabled: '<?',
                 bbListbuilderSecondaryActionClick: '&?'

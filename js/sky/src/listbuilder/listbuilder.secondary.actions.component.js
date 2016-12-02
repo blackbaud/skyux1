@@ -5,6 +5,10 @@
     function Controller($scope) {
         var ctrl = this;
 
+        function isInGridView() {
+            return ctrl.listbuilderCtrl.currentView && ctrl.listbuilderCtrl.currentView.viewName === 'grid';
+        }
+
         function addSecondaryAction() {
             ctrl.totalSecondaryActions++;
         }
@@ -15,6 +19,7 @@
         }
 
         ctrl.addSecondaryAction = addSecondaryAction;
+        ctrl.isInGridView = isInGridView;
 
         ctrl.$onInit = onInit;
 
@@ -35,6 +40,9 @@
             transclude: true,
             bindings: {
                 bbListbuilderSecondaryActionsAppendToBody: '<?'
+            },
+            require: {
+                listbuilderCtrl: '^^bbListbuilder'
             }
         });
 })();

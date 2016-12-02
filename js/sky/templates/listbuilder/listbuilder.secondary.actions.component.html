@@ -1,6 +1,5 @@
 <div 
     class="bb-listbuilder-secondary-actions"
-    ng-show="$ctrl.totalSecondaryActions > 0" 
     uib-dropdown 
     ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">
     <button 
@@ -11,7 +10,8 @@
         ng-attr-title="{{'listbuilder_show_secondary_actions' | bbResources}}">
         <i class="fa fa-lg fa-ellipsis-h"></i>
     </button>
-    <div 
+    <div
+        ng-class="{'bb-listbuilder-secondary-actions-grid-view': $ctrl.isInGridView()}"
         uib-dropdown-menu 
         ng-attr-id="{{$ctrl.secondaryMenuId}}" 
         role="menu"
