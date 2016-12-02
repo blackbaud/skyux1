@@ -5,9 +5,16 @@
     function Controller($scope) {
         var ctrl = this;
 
+        function addSecondaryAction() {
+            ctrl.totalSecondaryActions++;
+        }
+
         function onInit() {
             ctrl.secondaryMenuId = 'bb-listbuilder-secondary-actions-' + $scope.$id;
+            ctrl.totalSecondaryActions = 0;
         }
+
+        ctrl.addSecondaryAction = addSecondaryAction;
 
         ctrl.$onInit = onInit;
 

@@ -1,4 +1,8 @@
-<div class="bb-listbuilder-secondary-actions" uib-dropdown ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">
+<div 
+    class="bb-listbuilder-secondary-actions"
+    ng-show="$ctrl.totalSecondaryActions > 0" 
+    uib-dropdown 
+    ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">
     <button 
         type="button" 
         class="btn bb-btn-secondary" 
