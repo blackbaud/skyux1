@@ -96,9 +96,14 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `title` &mdash; Specifies the text to display on the button for the action.
     - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.
     - `bb-selections-updated` &mdash; *(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.
+
+    - `bb-grid-multiselect-id-property` &mdash; *(Optional.)* Specifies the property on a row in the grid data that will be used as a unique identifier for multiselect.
+    - `bb-grid-multiselect-selected-ids` &mdash; *(Optional.)* Specifies an array of unique identifiers for rows in the grid data that are selected.
     - `bb-grid-infinite-scroll` &mdash; *(Optional.)* When present, indicates that the grid will use infinite scroll to load instead of the load more button. When using infinite scroll, you must load data with the `loadMoreRows` event `promise` property.
 
 ### Grid events ###
+    - `bbGridMultiselectSelectedIdsChanged` &mdash; Fires when selected rows in the grid are changed. The event contains the following data: 
+        - `selectedIds` &mdash; An array of unique identifiers for rows that have been selected. 
     - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.
         - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires.
     - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides the `promise` property to add new data to the grid.

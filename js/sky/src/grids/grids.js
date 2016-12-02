@@ -74,7 +74,7 @@
                         updateMultiselectActions: '&bbSelectionsUpdated',
                         paginationOptions: '=?bbGridPagination',
                         selectedRows: '=?bbSelectedRows',
-                        bbGridMultiselectSelectedIdProperty: '<?',
+                        bbGridMultiselectIdProperty: '@?',
                         bbGridMultiselectSelectedIds: '<?'
                     },
                     controller: ['$scope', function ($scope) {
@@ -910,7 +910,14 @@
                             }
 
                             function getMultiselectId(row) {
-                                var multiselectId = $scope.bbGridMultiselectIdProperty || listbuilderCtrl !== null ? listbuilderCtrl.getListbuilderMultiselectIdProperty() : null;
+                                var multiselectId;
+
+                                if ($scope.bbGridMultiselectIdProperty) {
+                                    multiselectId = $scope.bbGridMultiselectIdProperty;
+                                } else if (listbuilderCtrl !== null) {
+                                    multiselectId = listbuilderCtrl.getListbuilderMultiselectIdProperty();
+                                }
+                                
                                 return row[multiselectId];
                             }
 
@@ -949,8 +956,6 @@
                                 clearSelectedRowsObject();
                                 tableEl.resetSelection();
                             }
-
-                            
 
                             function selectAllItems() {
                                 var allRowData,
