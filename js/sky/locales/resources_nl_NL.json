@@ -1,5 +1,5 @@
 {
-  "_LRM_PKTAG439": "skyux-l10n_10_16 - CHANGES-ONLY",
+  "_LRM_PKTAG144": "skyux-l10n_11_16 - CHANGES-ONLY",
   "action_bar_actions": {
     "message": "Acties"
   },
@@ -384,6 +384,9 @@
   },
   "listbuilder_show_only_selected": {
     "message": "Alleen selectie tonen"
+  },
+  "listbuilder_show_secondary_actions": {
+    "message": "Secundaire acties weergeven"
   },
   "modal_close": {
     "message": "Methode sluiten"

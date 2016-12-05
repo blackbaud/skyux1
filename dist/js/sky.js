@@ -8155,10 +8155,29 @@
 (function () {
     'use strict';
 
+    function Controller() {
+        var ctrl = this;
+
+        function onInit() {
+            ctrl.dropdownCtrl.dropdownItemChanged(true);
+        }
+
+        function onDestroy() {
+            ctrl.dropdownCtrl.dropdownItemChanged(false);
+        }
+
+        ctrl.$onInit = onInit;
+        ctrl.$onDestroy = onDestroy;
+    }
+
     angular.module('sky.listbuilder.secondary.action.component', [])
         .component('bbListbuilderSecondaryAction', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.action.component.html',
             transclude: true,
+            controller: Controller,
+            require: {
+                dropdownCtrl: '^^bbListbuilderSecondaryActionsDropdown'
+            },
             bindings: {
                 bbListbuilderSecondaryActionDisabled: '<?',
                 bbListbuilderSecondaryActionClick: '&?'
@@ -8172,9 +8191,20 @@
     function Controller($scope) {
         var ctrl = this;
 
+        function itemChanged(itemAdded) {
+            if (itemAdded) {
+                ctrl.totalSecondaryActions++;
+            } else {
+                ctrl.totalSecondaryActions--;
+            }
+        }
+
         function onInit() {
             ctrl.secondaryMenuId = 'bb-listbuilder-secondary-actions-' + $scope.$id;
+            ctrl.totalSecondaryActions = 0;
         }
+
+        ctrl.itemChanged = itemChanged;
 
         ctrl.$onInit = onInit;
 
@@ -8186,7 +8216,8 @@
         [
             'ui.bootstrap.dropdown', 
             'sky.resources', 
-            'sky.listbuilder.secondary.action.component'
+            'sky.listbuilder.secondary.action.component',
+            'sky.listbuilder.secondary.actions.dropdown.component'
         ])
         .component('bbListbuilderSecondaryActions', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.component.html',
@@ -8194,7 +8225,35 @@
             transclude: true,
             bindings: {
                 bbListbuilderSecondaryActionsAppendToBody: '<?'
+            },
+            require: {
+                listbuilderCtrl: '^^bbListbuilder'
             }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this;
+
+        function dropdownItemChanged(itemAdded) {
+            ctrl.bbListbuilderSecondaryActionsItemChanged({itemAdded: itemAdded});
+        }
+
+        ctrl.dropdownItemChanged = dropdownItemChanged;
+    }
+
+    angular.module('sky.listbuilder.secondary.actions.dropdown.component', [])
+        .component('bbListbuilderSecondaryActionsDropdown', {
+            controller: Controller,
+            transclude: true,
+            bindings: {
+                bbListbuilderSecondaryActionsItemChanged: '&',
+                bbListbuilderSecondaryActionsCurrentView: '<'
+            },
+            templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.dropdown.component.html'
         });
 })();
  /* global angular */
@@ -15582,7 +15641,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </button>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.secondary.actions.component.html',
-        '<div class="bb-listbuilder-secondary-actions" uib-dropdown ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">\n' +
+        '<div \n' +
+        '    ng-show="$ctrl.totalSecondaryActions > 0"\n' +
+        '    class="bb-listbuilder-secondary-actions"\n' +
+        '    uib-dropdown \n' +
+        '    ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">\n' +
         '    <button \n' +
         '        type="button" \n' +
         '        class="btn bb-btn-secondary" \n' +
@@ -15591,13 +15654,21 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        ng-attr-title="{{\'listbuilder_show_secondary_actions\' | bbResources}}">\n' +
         '        <i class="fa fa-lg fa-ellipsis-h"></i>\n' +
         '    </button>\n' +
-        '    <div \n' +
+        '    <div\n' +
         '        uib-dropdown-menu \n' +
         '        ng-attr-id="{{$ctrl.secondaryMenuId}}" \n' +
         '        role="menu"\n' +
         '        class="bb-dropdown-menu">\n' +
-        '        <ng-transclude></ng-transclude>\n' +
+        '        <bb-listbuilder-secondary-actions-dropdown\n' +
+        '             bb-listbuilder-secondary-actions-item-changed="$ctrl.itemChanged(itemAdded)"\n' +
+        '             bb-listbuilder-secondary-actions-current-view="$ctrl.listbuilderCtrl.currentView">\n' +
+        '            <ng-transclude></ng-transclude>\n' +
+        '        </bb-listbuilder-secondary-actions-dropdown>\n' +
         '    </div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.secondary.actions.dropdown.component.html',
+        '<div>\n' +
+        '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.switcher.component.html',
         '<div \n' +

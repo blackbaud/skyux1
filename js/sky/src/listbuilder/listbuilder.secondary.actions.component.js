@@ -30,6 +30,8 @@
         [
             'ui.bootstrap.dropdown', 
             'sky.resources', 
+            'sky.listbuilder.secondary.action.component',
+            'sky.listbuilder.column.picker.component',
             'sky.listbuilder.secondary.actions.dropdown.component'
         ])
         .component('bbListbuilderSecondaryActions', {
