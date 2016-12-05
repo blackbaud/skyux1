@@ -12,11 +12,7 @@
         ctrl.dropdownItemChanged = dropdownItemChanged;
     }
 
-    angular.module('sky.listbuilder.secondary.actions.dropdown.component', 
-    [
-        'sky.listbuilder.secondary.action.component',
-        'sky.listbuilder.column.picker.component'
-    ])
+    angular.module('sky.listbuilder.secondary.actions.dropdown.component', [])
         .component('bbListbuilderSecondaryActionsDropdown', {
             controller: Controller,
             transclude: true,
