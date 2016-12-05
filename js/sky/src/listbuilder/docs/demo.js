@@ -364,13 +364,19 @@
             return array;
         }
 
-        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
+        function getAllFilteredData(searchText, filters, sortProperty, sortDescending, showOnlySelected, selectedIds) {
             var filteredData,
                 baseData = angular.copy(dataSet);
             filteredData = searchArray(searchText, baseData);
             filteredData = filter(filteredData, filters);
             filteredData = applyMultiselectOptions(filteredData, showOnlySelected, selectedIds);
             filteredData = sortArray(sortProperty, sortDescending, filteredData);
+
+            return filteredData;
+        }
+
+        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
+            var filteredData = getAllFilteredData(searchText, filters, sortProperty, sortDescending, showOnlySelected, selectedIds);
 
             self.gridOptions.data = filteredData.slice(0, maxData);
             self.hasMoreData = filteredData.length > self.gridOptions.data.length;
@@ -419,18 +425,35 @@
                 });
         }
 
-        function loadData() {
-            var newData = getData(nextTop, nextSkip);
-                
-            
-            self.gridOptions.data = self.gridOptions.data.concat(newData);
-            if (maxRecordsShown < self.gridOptions.data.length) {
-                maxRecordsShown = self.gridOptions.data.length;
-            }
-            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
+        function getNextData(top, skip, searchText, appliedFilters, sortProperty, sortDescending, maxRecordsShown, showOnlySelected, selectedIds) {
+            var allFilteredData = getAllFilteredData(searchText, filters, sortProperty, sortDescending, showOnlySelected, selectedIds),
+                newDataLength,
+                nextFilteredData;
+
+            nextFilteredData = filteredData.slice(skip, top);
+            newDataLength = self.gridOptions.data.length + nextFilteredData.length
+            self.hasMoreData = filteredData.length > newDataLength;
+            nextSkip = newDataLength;
+            return nextFilteredData;
         }
 
-        function onLoadMore() {
+        function loadData() {
+            var newData = getNextData(
+                                nextTop, 
+                                nextSkip, 
+                                self.searchText, 
+                                self.appliedFilters, 
+                                sortProperty, 
+                                sortDescending, 
+                                maxRecordsShown, 
+                                self.showOnlySelected, 
+                                self.selectedIds);
+
+            self.gridOptions.data = self.gridOptions.data.concat(newData);
+
+        }
+
+        function onLoadMore(onComplete) {
             return $timeout(function () {
                 loadData();
             }, 4000);

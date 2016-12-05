@@ -1380,10 +1380,37 @@
                                 }
                             }
 
-                            function setRows(rows) {
-                                /*istanbul ignore else */
+                            function newRowsAreConcatenated(newRows, oldRows) {
+                                var i;
+                                if (newRows && oldRows && newRows.length > oldRows.length && oldRows.length > 0) {
+                                    for (i = 0; i < oldRows.length; i++) {
+                                        if (oldRows[i] !== newRows[i]) {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
+
+                            function gridRowsUpdated(newRows) {
+                                $timeout(function () {
+                                    highlightSearchText(locals.appliedSearchText);
+                                });
+                                handleTableWrapperResize();
+                                /*istanbul ignore next */
                                 /* sanity check */
-                                if (tableDomEl.addJSONData) {
+                                updateGridLoadedTimestampAndRowCount(newRows ? newRows.length : 0);
+
+                                setUpFancyCheckCell();
+                            }
+
+                            function setRows(rows, oldRows) {
+
+                                if (newRowsAreConcatenated(rows, oldRows)) {
+                                    tableEl.addRowData('', rows.slice(oldRows.length, rows.length));
+                                    gridRowsUpdated(rows);
+                                } else if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
 
                                         if (locals.multiselect) {
@@ -1396,15 +1423,7 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(function () {
-                                            highlightSearchText(locals.appliedSearchText);
-                                        });
-                                        handleTableWrapperResize();
-                                        /*istanbul ignore next */
-                                        /* sanity check */
-                                        updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
-
-                                        setUpFancyCheckCell();
+                                        gridRowsUpdated(rows);
 
                                     });
                                 }
@@ -1596,11 +1615,11 @@
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', function (newValue) {
+                            $scope.$watchCollection('options.data', function (newValue, oldValue) {
                                 if (doNotResetRows) {
                                     doNotResetRows = false;
                                 } else {
-                                    setRows(newValue);
+                                    setRows(newValue, oldValue);
                                 }
                             });
 
