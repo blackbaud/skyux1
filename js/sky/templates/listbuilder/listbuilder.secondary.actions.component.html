@@ -1,4 +1,8 @@
-<div class="bb-listbuilder-secondary-actions" uib-dropdown ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">
+<div 
+    ng-show="$ctrl.totalSecondaryActions > 0"
+    class="bb-listbuilder-secondary-actions"
+    uib-dropdown 
+    ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">
     <button 
         type="button" 
         class="btn bb-btn-secondary" 
@@ -7,11 +11,15 @@
         ng-attr-title="{{'listbuilder_show_secondary_actions' | bbResources}}">
         <i class="fa fa-lg fa-ellipsis-h"></i>
     </button>
-    <div 
+    <div
         uib-dropdown-menu 
         ng-attr-id="{{$ctrl.secondaryMenuId}}" 
         role="menu"
         class="bb-dropdown-menu">
-        <ng-transclude></ng-transclude>
+        <bb-listbuilder-secondary-actions-dropdown
+             bb-listbuilder-secondary-actions-item-changed="$ctrl.itemChanged(itemAdded)"
+             bb-listbuilder-secondary-actions-current-view="$ctrl.listbuilderCtrl.currentView">
+            <ng-transclude></ng-transclude>
+        </bb-listbuilder-secondary-actions-dropdown>
     </div>
 </div>
