@@ -490,10 +490,12 @@
                     '<bb-listbuilder-secondary-actions bb-listbuilder-secondary-actions-append-to-body="listCtrl.appendToBody"> ' +
                     '<bb-listbuilder-secondary-action ' +
                     'bb-listbuilder-secondary-action-click="listCtrl.action1()" ' +
+                    'ng-if="!listCtrl.hideActions" ' +
                     'bb-listbuilder-secondary-action-disabled="true"> ' +
                     'Action 1' +
                     '</bb-listbuilder-secondary-action>' +
                     '<bb-listbuilder-secondary-action ' +
+                    'ng-if="!listCtrl.hideActions" ' +
                     'bb-listbuilder-secondary-action-click="listCtrl.action2()"> ' +
                     'Action 2' +
                     '</bb-listbuilder-secondary-action>' +
@@ -511,10 +513,15 @@
                 }
             }
 
+            function getSecondaryDropdownButton(el) {
+                return el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-ellipsis-h');
+            }
+
             it('creates a secondary action dropdown with items that can be clicked and disabled', function () {
                 var el,
                     action1Clicked,
                     action2Clicked,
+                    dropdownEl,
                     actionEl;
 
                 $scope.listCtrl = {
@@ -531,7 +538,10 @@
 
                 $scope.$digest();
 
-                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-ellipsis-h').length).toBe(1);
+                dropdownEl = getSecondaryDropdownButton(el);
+
+                expect(dropdownEl.length).toBe(1);
+                expect(dropdownEl).toBeVisible();
 
                 actionEl = getSecondaryActions(el); 
 
@@ -564,6 +574,35 @@
                 actionEl = getSecondaryActions(el, true); 
 
                 expect(actionEl.length).toBe(2);
+
+                el.remove();
+            });
+
+            it('does not show the secondary actions dropdown button if none exist', function () {
+                var el,
+                    actionEl;
+                
+                $scope.listCtrl = {
+                    appendToBody: true
+                };
+
+                el = $compile(secondaryHtml)($scope);
+                el.appendTo($document.find('body'));
+
+                $scope.$digest();
+
+                actionEl = getSecondaryActions(el, true); 
+
+                expect(actionEl.length).toBe(2);
+
+                $scope.listCtrl.hideActions = true;
+
+                $scope.$digest();
+
+                actionEl = getSecondaryActions(el, true); 
+                expect(actionEl.length).toBe(0);
+                
+                expect(getSecondaryDropdownButton(el)).not.toBeVisible();
 
                 el.remove();
             });
