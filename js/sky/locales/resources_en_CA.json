@@ -1,5 +1,5 @@
 {
-  "_LRM_PKTAG464": "skyux-l10n_10_4 - CHANGES-ONLY",
+  "_LRM_PKTAG776": "skyux-l10n_11_4 - CHANGES-ONLY",
   "action_bar_actions": {
     "message": "Actions"
   },
@@ -384,6 +384,9 @@
   },
   "listbuilder_show_only_selected": {
     "message": "Show only selected"
+  },
+  "listbuilder_show_secondary_actions": {
+    "message": "Show secondary actions"
   },
   "modal_close": {
     "message": "Close modal"
