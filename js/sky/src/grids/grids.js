@@ -894,9 +894,11 @@
                                 return sortable;
                             }
 
-                            //Might need to do something here for listbuilder multiselect
+
 
                             function addSelectedItem(id, selectedIds) {
+                                /* istanbul ignore else */
+                                /* sanity check */
                                 if (selectedIds.indexOf(id) === -1) {
                                     selectedIds.push(id);
                                 }
@@ -1082,7 +1084,6 @@
                                         return true;
                                     }
 
-                                    //UpdateSelectedRowsHere
                                     updateSelectedIds($scope.bbGridMultiselectSelectedIds);
 
                                     $scope.$apply();
@@ -1589,6 +1590,32 @@
                                     
                                 });
                             }
+
+                            $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
+
+                                if (localRowSelect) {
+                                    localRowSelect = false;
+                                    return;
+                                }
+                                
+                                if (angular.isUndefined(newSelections)) {
+                                    $scope.bbGridMultiselectSelectedIds = [];
+                                    localRowSelect = true;
+                                    return;
+                                }
+
+                                function indexCallback(selectedItem) {
+                                    var i;
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        if (getMultiselectId($scope.options.data[i]) === selectedItem) {
+                                            return i;
+                                        }
+                                    }
+                                    return -1;
+                                }
+
+                                setGridMultiselectRows(newSelections, indexCallback);
+                            }); 
 
                             $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
                                 if (localRowSelect) {

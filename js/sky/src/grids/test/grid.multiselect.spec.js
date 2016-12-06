@@ -358,6 +358,46 @@ describe('Grid multiselect', function () {
         expect(findCheckBox(rowEl.eq(4))).not.toBeChecked();
     });
 
+    it('sets selected state on load data when using a new data object', function () {
+        var headerEl,
+            copiedData,
+            rowEl;
+
+        el = setUpGrid(basicGridHtml, locals);
+
+        headerEl = getHeaders(el);
+
+        setGridData(dataSet1);
+
+        clickSelectAll(headerEl);
+        expect($scope.locals.selectedIds).toEqual([dataSet1[0].id, dataSet1[1].id, dataSet1[2].id, dataSet1[3].id]);
+
+        copiedData = angular.copy($scope.locals.gridOptions.data);
+        copiedData.push({
+            id: 4,
+            name: 'Jimmy',
+            instrument: 'Rhythm tamborine'
+        });
+
+        $scope.locals.gridOptions.data = copiedData;
+
+        $scope.$digest();
+
+        rowEl = getGridRows(el);
+
+        expect($scope.locals.selectedIds).toEqual([dataSet1[0].id, dataSet1[1].id, dataSet1[2].id, dataSet1[3].id]);
+        expect(rowEl.eq(0)).toHaveClass('ui-state-highlight');
+        expect(rowEl.eq(1)).toHaveClass('ui-state-highlight');
+        expect(rowEl.eq(2)).toHaveClass('ui-state-highlight');
+        expect(rowEl.eq(3)).toHaveClass('ui-state-highlight');
+        expect(rowEl.eq(4)).not.toHaveClass('ui-state-highlight');
+        expect(findCheckBox(rowEl.eq(0))).toBeChecked();
+        expect(findCheckBox(rowEl.eq(1))).toBeChecked();
+        expect(findCheckBox(rowEl.eq(2))).toBeChecked();
+        expect(findCheckBox(rowEl.eq(3))).toBeChecked();
+        expect(findCheckBox(rowEl.eq(4))).not.toBeChecked();
+    });
+
     it('updates selected items when selectedIds are changed', function () {
         var rowEl;
 
@@ -375,7 +415,8 @@ describe('Grid multiselect', function () {
         expect(rowEl.eq(0)).toHaveClass('ui-state-highlight');
         expect(findCheckBox(rowEl.eq(0))).toBeChecked();
 
-        $scope.locals.selectedIds = [1, 2];
+
+        $scope.locals.selectedIds = [1, 2, 43];
 
         $scope.$digest();
         expect(rowEl.eq(0)).not.toHaveClass('ui-state-highlight');
