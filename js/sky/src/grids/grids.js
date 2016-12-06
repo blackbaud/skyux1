@@ -880,6 +880,8 @@
 
 
                             function addSelectedItem(id, selectedIds) {
+                                /* istanbul ignore else */
+                                /* sanity check */
                                 if (selectedIds.indexOf(id) === -1) {
                                     selectedIds.push(id);
                                 }
