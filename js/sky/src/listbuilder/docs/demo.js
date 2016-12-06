@@ -214,8 +214,7 @@
                         id: 3,
                         name: 'duesPaid',
                         width_all: 300,
-                        template_url: 'bbGrid/samples/mycolumn.html',
-                        controller: 'TemplateController as templateCtrl'
+                        template_url: 'bbGrid/samples/mycolumn.html'
                     },
                     {
                         caption: 'Date',
@@ -453,7 +452,7 @@
 
         }
 
-        function onLoadMore(onComplete) {
+        function onLoadMore() {
             return $timeout(function () {
                 loadData();
             }, 4000);
@@ -593,21 +592,9 @@
     }
     RunTemplateCache.$inject = ['$templateCache'];
 
-    function TemplateController($scope) {
-        var self = this;
-
-        self.clickIt = function () {
-            alert('Column button clicked, id: ' + $scope.rowData.id);
-        };
-    }
-
-    TemplateController.$inject = ['$scope'];
-
-    
     angular
         .module('stache')
         .controller('ListbuilderTestController', ListbuilderTestController)
         .controller('ListbuilderFilterController', ListbuilderFilterController)
-        .controller('TemplateController', TemplateController)
         .run(RunTemplateCache);
-}());
+})();

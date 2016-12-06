@@ -1617,28 +1617,6 @@
                                 setGridMultiselectRows(newSelections, indexCallback);
                             }); 
 
-                            $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
-                                if (localRowSelect) {
-                                    localRowSelect = false;
-                                    return;
-                                }
-                                
-                                if (angular.isUndefined(newSelections)) {
-                                    $scope.bbGridMultiselectSelectedIds = [];
-                                }
-
-                                function indexCallback(selectedItem) {
-                                    var i;
-                                    for (i = 0; i < $scope.options.data.length; i++) {
-                                        if (getMultiselectId($scope.options.data[i]) === selectedItem) {
-                                            return i;
-                                        }
-                                    }
-                                    return -1;
-                                }
-
-                                setGridMultiselectRows(newSelections, indexCallback);
-                            }); 
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 

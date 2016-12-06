@@ -32,7 +32,7 @@ describe('Grid multiselect', function () {
     }
 
     function setGridData(data) {
-        $scope.locals.gridOptions.data = data;
+        $scope.locals.gridOptions.data = angular.copy(data);
         $scope.$digest();
     }
 
@@ -54,6 +54,7 @@ describe('Grid multiselect', function () {
 
     function clickSelectAll(headerEl) {
         headerEl.eq(0).find('.bb-check-wrapper input').click();
+        $scope.$digest();
     }
 
     function shiftClickRowMultiselect(rowEl, index) {
