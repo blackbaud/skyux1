@@ -4,7 +4,7 @@
     'use strict';
 
 
-    function BBGridToolbar(bbResources, bbModal) {
+    function BBGridToolbar(bbResources, bbColumnPicker) {
         return {
             require: '?^bbGrid',
             scope: {
@@ -59,34 +59,17 @@
                 }
 
                 function openColumnPicker() {
-                    bbModal.open({
-                        templateUrl: 'sky/templates/grids/columnpicker.html',
-                        controller: 'BBGridColumnPickerController',
-                        resolve: {
-                            columns: function () {
-                                return $scope.options.columns;
-                            },
-                            selectedColumnIds: function () {
-                                return $scope.options.selectedColumnIds;
-                            },
-                            columnPickerHelpKey: function () {
-                                return $scope.options.columnPickerHelpKey;
-                            },
-                            subsetLabel: function () {
-                                return $scope.options.columnPickerSubsetLabel;
-                            },
-                            subsetProperty: function () {
-                                return $scope.options.columnPickerSubsetProperty;
-                            },
-                            subsetExclude: function () {
-                                return $scope.options.columnPickerSubsetExclude;
-                            },
-                            onlySelected: function () {
-                                return $scope.options.columnPickerOnlySelected;
-                            }
+                    bbColumnPicker.openColumnPicker({
+                        columns: $scope.options.columns,
+                        selectedColumnIds: $scope.options.selectedColumnIds,
+                        helpKey: $scope.options.columnPickerHelpKey,
+                        subsetLabel: $scope.options.columnPickerSubsetLabel,
+                        subsetProperty: $scope.options.columnPickerSubsetProperty,
+                        subsetExclude: $scope.options.columnPickerSubsetExclude,
+                        onlySelected: $scope.options.columnPickerOnlySelected,
+                        selectedColumnIdsChangedCallback: function (selectedColumnIds) {
+                            $scope.options.selectedColumnIds = selectedColumnIds;
                         }
-                    }).result.then(function (selectedColumnIds) {
-                        $scope.options.selectedColumnIds = selectedColumnIds;
                     });
                 }
 
@@ -187,8 +170,15 @@
         };
     }
 
-    BBGridToolbar.$inject = ['bbResources', 'bbModal'];
+    BBGridToolbar.$inject = ['bbResources', 'bbColumnPicker'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search', 'sky.sort'])
+    angular.module('sky.grids.toolbar', 
+        [
+            'sky.resources', 
+            'sky.grids.columnpicker.factory', 
+            'sky.filter', 
+            'sky.search', 
+            'sky.sort'
+        ])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
