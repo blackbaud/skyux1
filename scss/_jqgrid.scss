@@ -36,6 +36,7 @@
     .ui-th-column, .ui-jqgrid-htable th.ui-th-column {
         white-space: nowrap;
         text-align: left;
+        @include bb-field-label();
     }
 
     tr.jqgrow:nth-child(even) {
@@ -151,7 +152,6 @@
     .ui-jqgrid-htable th.ui-th-column {
         overflow: visible;
         position: relative;
-        font-weight: 600;
     }
 
     .ui-jqgrid-htable th {
