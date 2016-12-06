@@ -88,15 +88,14 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar. *(Default = 5)*
         - `boundaryLinks` &mdash; *(Optional.)* Specifies whether or not to show the first and last page numbers with ellipses in the pagination bar. *(Default = `false`)*
         - `recordCount` &mdash; Specifies the total number of records available through pagination.
-    - `bb-multiselect-actions` &mdash; *(Optional.)* Specifies an array of actions with the following properties to display in the multi-select action bar.
-        - `actionCallback` &mdash; Specifies a function to be called when users click the action.
-        - `automationId` &mdash; *(Optional.)* Specifies a unique identifier to place in the `data-bbauto` attribute for automation purposes.
-        - `isPrimary` &mdash; *(Optional.)* Indicates whether to use the primary button color for the action. To use the primary button color, set this property to `true`.
-        - `selections` &mdash; Specifies the row objects from the grid to associate with the action. You can update this through the `bb-selections-updated` function.
-        - `title` &mdash; Specifies the text to display on the button for the action.
-    - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.
-    - `bb-selections-updated` &mdash; *(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.
-
+    - `bb-multiselect-actions` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>*(Optional.)* Specifies an array of actions with the following properties to display in the multi-select action bar.</s>
+        - `actionCallback` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>Specifies a function to be called when users click the action.</s>
+        - `automationId` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>*(Optional.)* Specifies a unique identifier to place in the `data-bbauto` attribute for automation purposes.</s>
+        - `isPrimary` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>*(Optional.)* Indicates whether to use the primary button color for the action. To use the primary button color, set this property to `true`.</s>
+        - `selections` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>Specifies the row objects from the grid to associate with the action. You can update this through the `bb-selections-updated` function.</s>
+        - `title` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s> Specifies the text to display on the button for the action. </s>
+    - `bb-selected-rows` &mdash; *(Deprecated.)* Use `bb-grid-multiselect-id-propery` and `bb-grid-multiselect-selected-ids` instead. <s>*(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.</s>
+    - `bb-selections-updated` &mdash; *(Deprecated.)* Listen for the `bbGridMultisselectSelectedIdsChanged` event instead. <s>*(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.</s>
     - `bb-grid-multiselect-id-property` &mdash; *(Optional.)* Specifies the property on a row in the grid data that will be used as a unique identifier for multiselect.
     - `bb-grid-multiselect-selected-ids` &mdash; *(Optional.)* Specifies an array of unique identifiers for rows in the grid data that are selected.
     - `bb-grid-infinite-scroll` &mdash; *(Optional.)* When present, indicates that the grid will use infinite scroll to load instead of the load more button. When using infinite scroll, you must load data with the `loadMoreRows` event `promise` property.
@@ -106,10 +105,10 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `selectedIds` &mdash; An array of unique identifiers for rows that have been selected. 
     - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.
         - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires.
-    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides the `promise` property to add new data to the grid.
+    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows.
         - `top` &mdash; Indicates how many records to retrieve and display in the grid. The value is the same as the `itemsPerPage` property in the `bb-grid-pagination` directive.
         - `skip` &mdash; Indicates how many records to skip before the first record displayed in the grid. The value equals the number of pages skipped multiplied by the number of items per page.
-        - `promise` &mdash; Provides a promise that the consumer of the event can resolve with new data that the grid appends to the existing data.
+        - `promise` &mdash; *(Deprecated.)* When new grid data is concatenated, `bb-grid` automatically only loads new rows instead of reloading the entire grid. <s>Provides a promise that the consumer of the event can resolve with new data that the grid appends to the existing data.</s>
     - `columnsResized` &mdash; Fires after users resize the columns in the grid. You can use this event to listen for column size changes and save them for subsequent visits to the grid. The event contains an object with the following properties:
         - `index` &mdash; Specifies the index of the resized column.
         - `newWidth` &mdash; Specifies the width of the resized column.

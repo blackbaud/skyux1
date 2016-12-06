@@ -449,6 +449,8 @@
             });
 
             $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, selectedIds) {
+                event.preventDefault();
+                event.stopPropagation();
                 updateActions(selectedIds);
             });
 
