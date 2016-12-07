@@ -179,6 +179,14 @@
             return el.find('.table-responsive');
         }
 
+        function timeoutFlushIfAvailable() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
+        }
+
         it('uses the listbuilder toolbar as the verticaloffsetElId element for the grid header view keepers', function () {
             var viewKeeperCalls,
                 tableWrapper,
@@ -366,7 +374,15 @@
         });
 
         it('highlights search text properly on data load', function () {
+            el = initializeListbuilder(basicListbuilderGridHtml);
 
+            $scope.listCtrl.searchText = 'John';
+            $scope.$digest();
+
+            setGridData(dataSet1);
+            timeoutFlushIfAvailable();
+
+            expect(el.find('td[data-grid-field="name"]').eq(0).find('span')).toHaveClass('highlight');        
         });
 
         it('creates the proper view switcher when multiple views are present', function () {

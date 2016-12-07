@@ -449,6 +449,9 @@
                                 self.selectedIds);
 
             self.gridOptions.data = self.gridOptions.data.concat(newData);
+            if (maxRecordsShown < self.gridOptions.data.length) {
+                maxRecordsShown = self.gridOptions.data.length;
+            }
 
         }
 
