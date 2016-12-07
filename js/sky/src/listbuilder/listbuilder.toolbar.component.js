@@ -89,8 +89,12 @@
         function setupTopScrollbar() {
             var topScrollbarEl = getTopScrollbar();
 
+            /* istanbul ignore else */
+            /* sanity check */
             if (topScrollbarEl.length > 0) {
                 topScrollbarEl.on('scroll', function () {
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (angular.isFunction(ctrl.listbuilderCtrl.topScrollbarScrollAction)) {
                         ctrl.listbuilderCtrl.topScrollbarScrollAction();
                     }
@@ -101,6 +105,8 @@
         function destroyTopScrollbar() {
             var topScrollbarEl = getTopScrollbar();
 
+            /* istanbul ignore else */
+            /* sanity check */
             if (topScrollbarEl.length > 0) {
                 topScrollbarEl.off('scroll');
             }
@@ -113,7 +119,7 @@
 
             ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
             ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
-            ctrl.listbuilderCtrl.sortComponentPresent = sortComponentPresent;
+            ctrl.listbuilderCtrl.toolbarSortComponentPresent = sortComponentPresent;
 
             ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
             

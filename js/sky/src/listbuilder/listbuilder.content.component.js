@@ -38,7 +38,8 @@
         function highlightSearchContent(searchText) {
             var contentEl,
                 highlightSelector;
-            
+            /* istanbul ignore else */
+            /* sanity check */
             if (ctrl.listbuilderCtrl.currentView.highlightClass) {
                 highlightSelector = '.' + ctrl.listbuilderCtrl.currentView.highlightClass;
             } else if (ctrl.listbuilderCtrl.currentView.highlightSelector) {

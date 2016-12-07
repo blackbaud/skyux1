@@ -11,12 +11,15 @@
             basicListbuilderGridHtml,
             searchToolbarHtml,
             sortToolbarHtml,
+            multiselectToolbarHtml,
             gridContentHtml,
+            multiselectGridContentHtml,
             gridScrollbarContentHtml,
             multipleContentHtml,
             viewSwitcherListbuilderHtml,
             scrollbarListbuilderHtml,
             sortListbuilderGridHtml,
+            multiselectListbuilderHtml,
             dataSet1,
             bbWindow,
             $document,
@@ -63,6 +66,10 @@
                     ],
                     data: [],
                     selectedColumnIds: [1, 2, 3]
+                },
+                itemsChanged: function (selectedIds, allSelected) {
+                    $scope.listCtrl.selectedIds = selectedIds;
+                    $scope.listCtrl.allSelected = allSelected;
                 }
             };
             
@@ -108,9 +115,32 @@
                     '</bb-listbuilder-sort>' +
                     '</bb-listbuilder-toolbar>';
 
+            multiselectToolbarHtml = '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText">' +
+                    '<bb-listbuilder-toolbar-multiselect> ' +
+                    '<bb-listbuilder-multiselect ' +
+                    'bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)" ' +
+                    'bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds" ' +
+                    'bb-listbuilder-multiselect-available-items="listCtrl.gridOptions.data"> ' +
+                    '<bb-listbuilder-multiselect-select-all>' +
+                    '</bb-listbuilder-multiselect-select-all>' +
+                    '<bb-listbuilder-multiselect-clear-all>' +
+                    '</bb-listbuilder-multiselect-clear-all>' +
+                    '</bb-listbuilder-multiselect>' +
+                    '</bb-listbuilder-toolbar-multiselect>' +
+                    '</bb-listbuilder-toolbar>';
+
             gridContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-grid>' +
                     '<bb-grid bb-grid-options="listCtrl.gridOptions">' +
+                    '</bb-grid>' +
+                    '</bb-listbuilder-grid>' +
+                    '</bb-listbuilder-content>';
+
+            multiselectGridContentHtml = '<bb-listbuilder-content>' +
+                    '<bb-listbuilder-grid>' +
+                    '<bb-grid bb-grid-options="listCtrl.gridOptions" bb-grid-multiselect-selected-ids="listCtrl.selectedIds">' +
                     '</bb-grid>' +
                     '</bb-listbuilder-grid>' +
                     '</bb-listbuilder-content>';
@@ -158,6 +188,11 @@
             viewSwitcherListbuilderHtml = '<bb-listbuilder>' +
                 searchToolbarHtml +
                 multipleContentHtml +
+                '</bb-listbuilder>';
+
+            multiselectListbuilderHtml = '<bb-listbuilder>' +
+                multiselectToolbarHtml +
+                multiselectGridContentHtml +
                 '</bb-listbuilder>';
 
             el = {};
@@ -225,6 +260,12 @@
             $scope.$digest();
         }
 
+        function clickRowMultiselect(el, index) {
+            var rowEl = getGridRows(el);
+            rowEl.eq(index).find('td input.cbox').click();
+            $timeout.flush();
+        }
+
         function verifySwitcherButton(el, type) {
             var switcherButtonEl = getSwitcherButton(el),
                 className,
@@ -290,6 +331,20 @@
 
         function getGridRows(el) {
             return el.find('.ui-jqgrid-bdiv tr.ui-row-ltr');
+        }
+
+        function findCheckBox(rowEl) {
+            return rowEl.find('td .bb-check-wrapper input').eq(0);
+        }
+
+        function clickSelectAll(el) {
+            el.find('.bb-listbuilder-toolbar-multiselect-container .bb-listbuilder-select-all').click();
+            $scope.$digest();
+        }
+
+        function clickClearAll(el) {
+            el.find('.bb-listbuilder-toolbar-multiselect-container .bb-listbuilder-clear-all').click();
+            $scope.$digest();
         }
 
         it('uses the listbuilder toolbar as the verticaloffsetElId element for the grid header view keepers', function () {
@@ -364,7 +419,6 @@
             expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
             expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
             expect($scope.listCtrl.gridOptions.sortOptions).toEqual({});
-
         });
 
         it('has a top scrollbar when columns are larger than available area', function () {
@@ -517,16 +571,69 @@
 
         });
 
-        it('listens for selecting and unselecting items in grid', function () {
+        function verifyRowsSelected(el, rowIndicies) {
+            var rowEl = getGridRows(el),
+                i;
 
+            for (i = 0; i < rowEl.length; i++) {
+                if (rowIndicies.indexOf(i) > -1) {
+                    expect(rowEl.eq(i)).toHaveClass('ui-state-highlight');
+                    expect(findCheckBox(rowEl.eq(i))).toBeChecked();
+                } else {
+                    expect(rowEl.eq(i)).not.toHaveClass('ui-state-highlight');
+                    expect(findCheckBox(rowEl.eq(i))).not.toBeChecked();
+                }
+                
+            }
+
+        }
+
+        it('listens for selecting and unselecting items in grid', function () {
+            $scope.listCtrl.gridOptions.multiselect = true;
+
+            el = initializeListbuilder(multiselectListbuilderHtml);
+            setGridData(dataSet1);
+
+            clickRowMultiselect(el, 1);
+
+            expect($scope.listCtrl.selectedIds).toEqual([1]);
+            verifyRowsSelected(el, [1]);
+
+            $scope.listCtrl.selectedIds = [0, 2];
+            $scope.$digest();
+            verifyRowsSelected(el, [0, 2]);
+
+            clickRowMultiselect(el, 0);
+
+            expect($scope.listCtrl.selectedIds).toEqual([2]);
+            verifyRowsSelected(el, [2]);
         });
 
         it('applies select all and clear all properly when selectedids are hooked up', function () {
+            $scope.listCtrl.gridOptions.multiselect = true;
 
+            el = initializeListbuilder(multiselectListbuilderHtml);
+            setGridData(dataSet1);
+
+            clickSelectAll(el);
+
+            expect($scope.listCtrl.selectedIds).toEqual([0, 1, 2, 3]);
+            expect($scope.listCtrl.allSelected).toBe(true);
+
+            clickClearAll(el);
+            expect($scope.listCtrl.selectedIds).toEqual([]);
+            expect($scope.listCtrl.allSelected).toBe(false);
         });
 
         it('hides the select all and clear all checkbox in the grid headers', function () {
+            var headerEl;
 
+            $scope.listCtrl.gridOptions.multiselect = true;
+
+            el = initializeListbuilder(multiselectListbuilderHtml);
+            setGridData(dataSet1);
+            headerEl = getHeaders(el);
+            expect(headerEl.eq(0).find('.bb-check-wrapper input')).not.toBeVisible();
         });
 
         it('allows use of the column picker component', function () {
