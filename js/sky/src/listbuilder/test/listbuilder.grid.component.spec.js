@@ -12,8 +12,11 @@
             searchToolbarHtml,
             sortToolbarHtml,
             gridContentHtml,
+            gridScrollbarContentHtml,
+            scrollbarListbuilderHtml,
             sortListbuilderGridHtml,
             dataSet1,
+            bbWindow,
             $document,
             el,
             fxOff;
@@ -25,12 +28,13 @@
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_, _bbViewKeeperBuilder_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_, _bbViewKeeperBuilder_, _bbWindow_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $timeout = _$timeout_;
             $document = _$document_;
             bbViewKeeperBuilder = _bbViewKeeperBuilder_;
+            bbWindow = _bbWindow_;
 
             $scope.listCtrl = {
                 gridOptions: {
@@ -109,6 +113,15 @@
                     '</bb-listbuilder-grid>' +
                     '</bb-listbuilder-content>';
 
+            gridScrollbarContentHtml = '<bb-listbuilder-content>' +
+                    '<bb-listbuilder-grid>' +
+                    '<div style="width: 300px"> ' +
+                    '<bb-grid bb-grid-options="listCtrl.gridOptions">' +
+                    '</bb-grid>' +
+                    '</div>' +
+                    '</bb-listbuilder-grid>' +
+                    '</bb-listbuilder-content>';
+
             basicListbuilderGridHtml = '<bb-listbuilder>' +
                     searchToolbarHtml +
                     gridContentHtml +
@@ -117,6 +130,11 @@
             sortListbuilderGridHtml = '<bb-listbuilder>' +
                     sortToolbarHtml +
                     gridContentHtml +
+                    '</bb-listbuilder>';
+
+            scrollbarListbuilderHtml = '<bb-listbuilder>' +
+                    searchToolbarHtml +
+                    gridScrollbarContentHtml +
                     '</bb-listbuilder>';
 
             el = {};
@@ -151,6 +169,14 @@
         function setGridData(data) {
             $scope.listCtrl.gridOptions.data = data;
             $scope.$digest();
+        }
+
+        function getTopScrollbarEl(el) {
+            return el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-toolbar-top-scrollbar');
+        }
+        
+        function getTableWrapperEl(el) {
+            return el.find('.table-responsive');
         }
 
         it('uses the listbuilder toolbar as the verticaloffsetElId element for the grid header view keepers', function () {
@@ -225,14 +251,117 @@
             expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
             expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
             expect($scope.listCtrl.gridOptions.sortOptions).toEqual({});
-            
-        });
-
-        it('scrolls the listbuilder top scrollbar element when grid table wrapper is scrolled', function () {
 
         });
 
-        it('scrolls the grid table wrapper element when top scrollbar is scrolled', function () {
+        it('has a top scrollbar when columns are larger than available area', function () {
+            var headerEl,
+                expectedScrollbarWidth,
+                topScrollbarEl;
+
+            $scope.listCtrl.gridOptions.columns[0].width_all = 300;
+            $scope.listCtrl.gridOptions.columns[1].width_all = 300;
+            $scope.listCtrl.gridOptions.columns[2].width_all = 300;
+
+            el = initializeListbuilder(scrollbarListbuilderHtml);
+
+            setGridData(dataSet1);
+
+            headerEl = getHeaders(el);
+
+            expect(headerEl[0].style.width).toBe('300px');
+
+            //expect top scrollbar to have height
+            topScrollbarEl = el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-toolbar-top-scrollbar');
+
+            expectedScrollbarWidth = bbWindow.getScrollbarWidth();
+
+            expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+        });
+
+        it('syncs scrolling', function () {
+            var tableWrapperEl,
+                headerViewKeeperEl,
+                topScrollbarEl;
+
+            $scope.listCtrl.gridOptions.columns[0].width_all = 300;
+            $scope.listCtrl.gridOptions.columns[1].width_all = 300;
+            $scope.listCtrl.gridOptions.columns[2].width_all = 300;
+
+            spyOn(bbViewKeeperBuilder, 'create').and.returnValue(
+                {
+                    destroy: function () {
+
+                    },
+                    scrollToTop: function () {
+
+                    },
+                    syncElPosition: function () {
+
+                    },
+                    isFixed: false
+                }
+            );
+
+            el = initializeListbuilder(scrollbarListbuilderHtml);
+
+            setGridData(dataSet1);
+
+            topScrollbarEl = getTopScrollbarEl(el);
+
+            tableWrapperEl = getTableWrapperEl(el);
+
+            topScrollbarEl.scrollLeft(20);
+
+            topScrollbarEl.scroll();
+
+            if (topScrollbarEl.height() > 0) {
+                expect(tableWrapperEl.scrollLeft()).toBe(20);
+            } else {
+                expect(tableWrapperEl.scrollLeft()).toBe(0);
+            }
+
+            tableWrapperEl.scrollLeft(10);
+
+            tableWrapperEl.scroll();
+
+            if (topScrollbarEl.height() > 0) {
+                expect(topScrollbarEl.scrollLeft()).toBe(10);
+            } else {
+                expect(topScrollbarEl.scrollLeft()).toBe(0);
+            }
+
+            topScrollbarEl.scroll();
+
+            headerViewKeeperEl = el.find('.table-responsive .ui-jqgrid-hdiv');
+            headerViewKeeperEl.addClass('bb-viewkeeper-fixed');
+            topScrollbarEl.scrollLeft(5);
+
+            topScrollbarEl.scroll();
+
+            if (topScrollbarEl.height() > 0) {
+                expect(headerViewKeeperEl.scrollLeft()).toBe(5);
+            } else {
+                expect(headerViewKeeperEl.scrollLeft()).toBe(0);
+            }
+
+            tableWrapperEl.scrollLeft(3);
+            tableWrapperEl.scroll();
+
+
+            expect(headerViewKeeperEl.scrollLeft()).toBe(3);
+
+            topScrollbarEl.scrollLeft(0);
+            topScrollbarEl.scroll();
+
+            expect(headerViewKeeperEl.scrollLeft()).toBe(0);
+
+            headerViewKeeperEl.removeClass('bb-viewkeeper-fixed');
+
+            tableWrapperEl.scrollLeft(5);
+            tableWrapperEl.scroll();
+
+            expect(headerViewKeeperEl.scrollLeft()).toBe(0);
 
         });
 
