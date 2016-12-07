@@ -12,6 +12,7 @@
             searchToolbarHtml,
             sortToolbarHtml,
             multiselectToolbarHtml,
+            columnpickerToolbarHtml,
             gridContentHtml,
             multiselectGridContentHtml,
             gridScrollbarContentHtml,
@@ -20,8 +21,10 @@
             scrollbarListbuilderHtml,
             sortListbuilderGridHtml,
             multiselectListbuilderHtml,
+            columnpickerListbuilderHtml,
             dataSet1,
             bbWindow,
+            bbColumnPicker,
             $document,
             el,
             fxOff;
@@ -33,13 +36,14 @@
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_, _bbViewKeeperBuilder_, _bbWindow_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_, _bbViewKeeperBuilder_, _bbWindow_, _bbColumnPicker_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $timeout = _$timeout_;
             $document = _$document_;
             bbViewKeeperBuilder = _bbViewKeeperBuilder_;
             bbWindow = _bbWindow_;
+            bbColumnPicker = _bbColumnPicker_;
 
             $scope.listCtrl = {
                 gridOptions: {
@@ -70,6 +74,14 @@
                 itemsChanged: function (selectedIds, allSelected) {
                     $scope.listCtrl.selectedIds = selectedIds;
                     $scope.listCtrl.allSelected = allSelected;
+                },
+                subsetLabel: 'myLabel',
+                subsetProperty: 'myProperty',
+                helpKey: 'myKey',
+                subsetExclude: true,
+                onlySelected: true,
+                selectedColumnIdsChanged: function (selectedColumnIds) {
+                    $scope.listCtrl.gridOptions.selectedColumnIds = selectedColumnIds;
                 }
             };
             
@@ -129,6 +141,26 @@
                     '</bb-listbuilder-multiselect-clear-all>' +
                     '</bb-listbuilder-multiselect>' +
                     '</bb-listbuilder-toolbar-multiselect>' +
+                    '</bb-listbuilder-toolbar>';
+
+            columnpickerToolbarHtml = '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText">' +
+                    '<bb-listbuilder-toolbar-secondary-actions>' +
+                    '<bb-listbuilder-secondary-actions bb-listbuilder-secondary-actions-append-to-body="true">' +
+                    '<bb-listbuilder-column-picker ' +
+                    'bb-listbuilder-column-picker-selected-column-ids="listCtrl.gridOptions.selectedColumnIds" ' +
+                    'bb-listbuilder-column-picker-columns="listCtrl.gridOptions.columns" ' +
+                    'bb-listbuilder-column-picker-selected-column-ids-changed="listCtrl.selectedColumnIdsChanged(selectedColumnIds)" ' +
+                    'bb-listbuilder-column-picker-subset-label="listCtrl.subsetLabel" ' +
+                    'bb-listbuilder-column-picker-help-key="listCtrl.helpKey" ' +
+                    'bb-listbuilder-column-picker-subset-property="listCtrl.subsetProperty" ' +
+                    'bb-listbuilder-column-picker-subset-exclude="listCtrl.subsetExclude" ' +
+                    'bb-listbuilder-column-picker-only-selected="listCtrl.onlySelected" ' +
+                    '> ' +
+                    '</bb-listbuilder-column-picker> ' +
+                    '</bb-listbuilder-secondary-actions> ' +
+                    '</bb-listbuilder-toolbar-secondary-actions> ' +
                     '</bb-listbuilder-toolbar>';
 
             gridContentHtml = '<bb-listbuilder-content>' +
@@ -194,6 +226,11 @@
                 multiselectToolbarHtml +
                 multiselectGridContentHtml +
                 '</bb-listbuilder>';
+
+            columnpickerListbuilderHtml = '<bb-listbuilder>' +
+            columnpickerToolbarHtml +
+            multipleContentHtml +
+            '</bb-listbuilder>';
 
             el = {};
             fxOff =  $.fx.off;
@@ -636,11 +673,48 @@
             expect(headerEl.eq(0).find('.bb-check-wrapper input')).not.toBeVisible();
         });
 
-        it('allows use of the column picker component', function () {
+        function getSecondaryActions() {
+                return $('body .bb-dropdown-menu bb-listbuilder-secondary-action .bb-dropdown-item .btn');
+            }
 
+        function getSecondaryDropdownButton(el) {
+            return el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-ellipsis-h');
+        }
+
+        it('allows use of the column picker component', function () {
+            var actualOptions,
+                secondaryActionsEl;
+
+            spyOn(bbColumnPicker, 'openColumnPicker').and.callFake(function (openOptions) {
+                actualOptions = openOptions;
+                actualOptions.selectedColumnIdsChangedCallback([2]);
+            });
+            el = initializeListbuilder(columnpickerListbuilderHtml);
+
+            secondaryActionsEl = getSecondaryActions();
+            secondaryActionsEl.eq(0).click();
+            $scope.$digest();
+            expect(actualOptions.columns).toEqual($scope.listCtrl.gridOptions.columns);
+            expect(actualOptions.selectedColumnIds).toEqual([1, 2, 3]);
+            expect(actualOptions.helpKey).toEqual($scope.listCtrl.helpKey);
+            expect(actualOptions.subsetLabel).toEqual($scope.listCtrl.subsetLabel);
+            expect(actualOptions.subsetProperty).toEqual($scope.listCtrl.subsetProperty);
+            expect(actualOptions.subsetExclude).toEqual($scope.listCtrl.subsetExclude);
+            expect(actualOptions.onlySelected).toEqual($scope.listCtrl.onlySelected);
+            expect($scope.listCtrl.gridOptions.selectedColumnIds).toEqual([2]);
         });
 
         it('destroys column picker component when not in grid view', function () {
+            var secondaryButtonEl;
+            el = initializeListbuilder(columnpickerListbuilderHtml);
+
+            secondaryButtonEl = getSecondaryDropdownButton(el);
+            expect(secondaryButtonEl).toBeVisible();
+
+            clickSwitcherItem(0);
+
+            secondaryButtonEl = getSecondaryDropdownButton(el);
+            expect(secondaryButtonEl).not.toBeVisible();
 
         });
 
