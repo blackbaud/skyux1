@@ -9,6 +9,10 @@
             $timeout,
             bbViewKeeperBuilder,
             basicListbuilderGridHtml,
+            searchToolbarHtml,
+            sortToolbarHtml,
+            gridContentHtml,
+            sortListbuilderGridHtml,
             dataSet1,
             $document,
             el,
@@ -80,17 +84,39 @@
                 }
             ];
 
-            basicListbuilderGridHtml = '<bb-listbuilder>' +
-                    '<bb-listbuilder-toolbar ' +
+            searchToolbarHtml = '<bb-listbuilder-toolbar ' +
                     'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
                     'bb-listbuilder-search-text="listCtrl.searchText">' +
-                    '</bb-listbuilder-toolbar>' +
-                    '<bb-listbuilder-content>' +
+                    '</bb-listbuilder-toolbar>';
+
+            sortToolbarHtml = '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText">' +
+                    '<bb-listbuilder-sort>' +
+                    '<bb-sort>' +
+                    '<bb-sort-item ' +
+                    'bb-sort-item-select="listCtrl.sortItems(item)">' +
+                    'Sort item' +
+                    '</bb-sort-item>' +
+                    '</bb-sort>' +
+                    '</bb-listbuilder-sort>' +
+                    '</bb-listbuilder-toolbar>';
+
+            gridContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-grid>' +
                     '<bb-grid bb-grid-options="listCtrl.gridOptions">' +
                     '</bb-grid>' +
                     '</bb-listbuilder-grid>' +
-                    '</bb-listbuilder-content>' +
+                    '</bb-listbuilder-content>';
+
+            basicListbuilderGridHtml = '<bb-listbuilder>' +
+                    searchToolbarHtml +
+                    gridContentHtml +
+                    '</bb-listbuilder>';
+
+            sortListbuilderGridHtml = '<bb-listbuilder>' +
+                    sortToolbarHtml +
+                    gridContentHtml +
                     '</bb-listbuilder>';
 
             el = {};
@@ -116,6 +142,15 @@
 
             $scope.$digest();
             return el;
+        }
+
+        function getHeaders(el) {
+            return el.find('.bb-grid-container .table-responsive .ui-jqgrid-hbox > table > thead > tr > th');
+        }
+
+        function setGridData(data) {
+            $scope.listCtrl.gridOptions.data = data;
+            $scope.$digest();
         }
 
         it('uses the listbuilder toolbar as the verticaloffsetElId element for the grid header view keepers', function () {
@@ -144,11 +179,53 @@
         });
 
         it('allows header based sort to occur in grids if the sort component does not exist', function () {
+            var headerEl;
 
+            el = initializeListbuilder(basicListbuilderGridHtml);
+
+            headerEl = getHeaders(el);
+
+            setGridData(dataSet1);
+
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+            expect(angular.isUndefined($scope.listCtrl.gridOptions.sortOptions)).toBe(true);
+
+            headerEl.eq(0).click();
+
+            expect(headerEl.eq(0)).toHaveClass('sorting-asc');
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+
+            expect($scope.listCtrl.gridOptions.sortOptions.column).toBe('name');
+            expect($scope.listCtrl.gridOptions.sortOptions.descending).toBe(false);
+
+            headerEl.eq(0).click();
+
+            expect(headerEl.eq(0)).toHaveClass('sorting-desc');
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+            expect($scope.listCtrl.gridOptions.sortOptions.column).toBe('name');
+            expect($scope.listCtrl.gridOptions.sortOptions.descending).toBe(true);
         });
 
         it('does not allow header based sort to occur in grids if the sort component does exist', function () {
+            var headerEl;
 
+            el = initializeListbuilder(sortListbuilderGridHtml);
+
+            headerEl = getHeaders(el);
+
+            setGridData(dataSet1);
+
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+            expect(angular.isUndefined($scope.listCtrl.gridOptions.sortOptions)).toBe(true);
+
+            headerEl.eq(0).click();
+
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
+            expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
+            expect($scope.listCtrl.gridOptions.sortOptions).toEqual({});
+            
         });
 
         it('scrolls the listbuilder top scrollbar element when grid table wrapper is scrolled', function () {
