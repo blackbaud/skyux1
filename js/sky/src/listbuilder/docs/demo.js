@@ -425,13 +425,13 @@
         }
 
         function getNextData(top, skip, searchText, appliedFilters, sortProperty, sortDescending, maxRecordsShown, showOnlySelected, selectedIds) {
-            var allFilteredData = getAllFilteredData(searchText, filters, sortProperty, sortDescending, showOnlySelected, selectedIds),
+            var allFilteredData = getAllFilteredData(searchText, appliedFilters, sortProperty, sortDescending, showOnlySelected, selectedIds),
                 newDataLength,
                 nextFilteredData;
 
-            nextFilteredData = filteredData.slice(skip, top);
+            nextFilteredData = allFilteredData.slice(skip, top + skip);
             newDataLength = self.gridOptions.data.length + nextFilteredData.length
-            self.hasMoreData = filteredData.length > newDataLength;
+            self.hasMoreData = allFilteredData.length > newDataLength;
             nextSkip = newDataLength;
             return nextFilteredData;
         }
@@ -456,7 +456,6 @@
             return $timeout(function () {
                 loadData();
             }, 4000);
-            
         }
 
         function onAddClick() {

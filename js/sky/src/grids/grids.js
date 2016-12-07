@@ -1151,6 +1151,24 @@
                                 return listbuilderCtrl !== null && listbuilderCtrl.sortComponentPresent();
                             }
 
+                            function createHeaderViewKeeper(hasListbuilder) {
+                                var verticalOffSetElId = hasListbuilder ? listbuilderCtrl.getListbuilderToolbarId() : toolbarContainerId;
+                                vkHeader = new bbViewKeeperBuilder.create({
+                                        el: header[0],
+                                        boundaryEl: tableWrapper[0],
+                                        verticalOffSetElId: verticalOffSetElId,
+                                        setWidth: true,
+                                        onStateChanged: function () {
+                                            if (vkHeader.isFixed) {
+                                                header.scrollLeft(tableWrapper.scrollLeft());
+                                            } else {
+                                                header.scrollLeft(0);
+                                            }
+
+                                        }
+                                    });        
+                            }
+
                             function initGrid() {
                                 var columns,
                                     jqGridOptions,
@@ -1265,38 +1283,9 @@
                                     getTopScrollbar().width(tableWrapper.width());
                                     resetTopScrollbar();
 
-                                    if (!$scope.options.fixedToolbar && !$scope.hasListbuilder) {
-                                        vkHeader = new bbViewKeeperBuilder.create({
-                                            el: header[0],
-                                            boundaryEl: tableWrapper[0],
-                                            verticalOffSetElId: toolbarContainerId,
-                                            setWidth: true,
-                                            onStateChanged: function () {
-                                                if (vkHeader.isFixed) {
-                                                    header.scrollLeft(tableWrapper.scrollLeft());
-                                                } else {
-                                                    header.scrollLeft(0);
-                                                }
-
-                                            }
-                                        });
-                                    } else if ($scope.hasListbuilder) {
-                                        vkHeader = new bbViewKeeperBuilder.create({
-                                            el: header[0],
-                                            boundaryEl: tableWrapper[0],
-                                            verticalOffSetElId: listbuilderCtrl.getListbuilderToolbarId(),
-                                            setWidth: true,
-                                            onStateChanged: function () {
-                                                if (vkHeader.isFixed) {
-                                                    header.scrollLeft(tableWrapper.scrollLeft());
-                                                } else {
-                                                    header.scrollLeft(0);
-                                                }
-
-                                            }
-                                        });
-                                    }
-
+                                    if (!$scope.options.fixedToolbar) {
+                                        createHeaderViewKeeper($scope.hasListbuilder);
+                                    } 
                                     setSortStyles();
 
                                     setUpFancyCheckHeader();
