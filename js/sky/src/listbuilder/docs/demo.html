@@ -76,13 +76,6 @@
         bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
         bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
         >
-
-      <bb-listbuilder-grid>
-        <bb-grid
-            bb-grid-options="listCtrl.gridOptions"
-            bb-grid-multiselect-selected-ids="listCtrl.selectedIds">
-        </bb-grid>
-      </bb-listbuilder-grid>
       <bb-listbuilder-cards>
         <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.gridOptions.data">
             <bb-card bb-card-selectable="true" bb-card-selected="item.selected">
@@ -148,6 +141,12 @@
             </bb-repeater-item>
         </bb-repeater>
       </bb-listbuilder-repeater>
+      <bb-listbuilder-grid>
+        <bb-grid
+            bb-grid-options="listCtrl.gridOptions"
+            bb-grid-multiselect-selected-ids="listCtrl.selectedIds">
+        </bb-grid>
+      </bb-listbuilder-grid>
       <bb-listbuilder-content-custom 
         bb-listbuilder-content-custom-view-name="custom-1" 
         bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"

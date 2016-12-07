@@ -568,7 +568,7 @@
         self.selectedColumnIdsChanged = selectedColumnIdsChanged;
         self.gridOptions = gridOptions;
         self.gridOptions.data = [];
-        self.activeView = 'grid';
+        self.activeView = 'card';
         loadData();
 
         self.sortOptions = sortOptions;
