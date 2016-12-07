@@ -13,6 +13,8 @@
             sortToolbarHtml,
             gridContentHtml,
             gridScrollbarContentHtml,
+            multipleContentHtml,
+            viewSwitcherListbuilderHtml,
             scrollbarListbuilderHtml,
             sortListbuilderGridHtml,
             dataSet1,
@@ -113,6 +115,22 @@
                     '</bb-listbuilder-grid>' +
                     '</bb-listbuilder-content>';
 
+            multipleContentHtml = '<bb-listbuilder-content>' +
+                    '<bb-listbuilder-grid>' +
+                    '<bb-grid bb-grid-options="listCtrl.gridOptions">' +
+                    '</bb-grid>' +
+                    '</bb-listbuilder-grid>' +
+                    '<bb-listbuilder-cards>' +
+                    '<bb-listbuilder-card ng-repeat="item in listCtrl.gridOptions.data">' +
+                    '<bb-card>' +
+                    '<bb-card-title>' +
+                    '{{item.name}}' +
+                    '</bb-card-title>' +
+                    '</bb-card>' +
+                    '</bb-listbuilder-card>' +
+                    '</bb-listbuilder-cards>' +
+                    '</bb-listbuilder-content>';
+
             gridScrollbarContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-grid>' +
                     '<div style="width: 300px"> ' +
@@ -136,6 +154,11 @@
                     searchToolbarHtml +
                     gridScrollbarContentHtml +
                     '</bb-listbuilder>';
+
+            viewSwitcherListbuilderHtml = '<bb-listbuilder>' +
+                searchToolbarHtml +
+                multipleContentHtml +
+                '</bb-listbuilder>';
 
             el = {};
             fxOff =  $.fx.off;
@@ -185,6 +208,88 @@
             } catch (aException) {
                 $timeout.flush();
             }
+        }
+
+        function getSwitcherButton(el) {
+            return el.find('.bb-listbuilder-switcher button');
+        }
+
+        function getSwitcherItems() {
+            return $('.bb-listbuilder-switcher-menu li');
+        }
+
+        function clickSwitcherItem(index) {
+            var switcherMenuItemsEl;
+            switcherMenuItemsEl = getSwitcherItems();
+            switcherMenuItemsEl.eq(index).find('a').click();
+            $scope.$digest();
+        }
+
+        function verifySwitcherButton(el, type) {
+            var switcherButtonEl = getSwitcherButton(el),
+                className,
+                title;
+            switch (type) {
+                case 'card':
+                    className = 'fa-th-large';
+                    title = 'Switch to card view';
+                    break;
+                case 'repeater':
+                    className = 'fa-list';
+                    title = 'Switch to repeater view';
+                    break;
+                case 'grid': 
+                    className = 'fa-table';
+                    title = 'Switch to grid view';
+                    break;
+                case 'custom':
+                    className = 'fa-pied-piper';
+                    title = 'Switch to custom';
+                    break;
+            }
+            expect(switcherButtonEl.find('i')).toHaveClass(className);
+            expect(switcherButtonEl).toHaveAttr('title', title);
+        }
+
+        function verifySwitcherItems(el, types) {
+            var switcherMenuItemsEl = getSwitcherItems(el),
+                className,
+                title,
+                i;
+
+            expect(switcherMenuItemsEl.length).toBe(types.length);
+            
+            for (i = 0; i < types.length; i++) {
+                switch (types[i]) {
+                    case 'card':
+                        className = 'fa-th-large';
+                        title = 'Switch to card view';
+                        break;
+                    case 'repeater':
+                        className = 'fa-list';
+                        title = 'Switch to repeater view';
+                        break;
+                    case 'grid': 
+                        className = 'fa-table';
+                        title = 'Switch to grid view';
+                        break;
+                    case 'custom':
+                        className = 'fa-pied-piper';
+                        title = 'Switch to custom';
+                        break;
+                }
+                expect(switcherMenuItemsEl.find('a').eq(i)).toHaveAttr('title', title);
+                expect(switcherMenuItemsEl.find('i').eq(i)).toHaveClass(className);
+            }
+
+        }
+
+        function getCards(el) {
+            return el.find('.bb-card');
+        }
+
+        function getGridRows(el) {
+            return el.find('.ui-jqgrid-bdiv tr.ui-row-ltr');
         }
 
         it('uses the listbuilder toolbar as the verticaloffsetElId element for the grid header view keepers', function () {
@@ -386,6 +491,29 @@
         });
 
         it('creates the proper view switcher when multiple views are present', function () {
+            var cardEl,
+                rowEl;
+
+            el = initializeListbuilder(viewSwitcherListbuilderHtml);
+            setGridData(dataSet1);
+
+            verifySwitcherButton(el, 'grid');
+            verifySwitcherItems(el, ['card']);
+
+            rowEl = getGridRows(el);
+            expect(rowEl.length).toBe(4);
+            cardEl = getCards(el);
+            expect(cardEl.length).toBe(0);
+
+            clickSwitcherItem(0);
+
+            verifySwitcherButton(el, 'card');
+            verifySwitcherItems(el, ['grid']);
+
+            rowEl = getGridRows(el);
+            expect(rowEl.length).toBe(0);
+            cardEl = getCards(el);
+            expect(cardEl.length).toBe(4);
 
         });
 
