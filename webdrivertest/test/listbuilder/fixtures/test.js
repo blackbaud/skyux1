@@ -5,6 +5,43 @@
     function ListbuilderTestController($timeout) {
         var self = this,
             contentCount = 1,
+            gridOptions = {
+                columns: [
+                    {
+                        caption: 'Name',
+                        jsonmap: 'name',
+                        id: 1,
+                        name: 'name',
+                        right_align: true,
+                        category: 'My category',
+                        description: 'Column description',
+                        width_all: 300,
+                        width_xs: 100
+                    },
+                    {
+                        caption: 'Content',
+                        jsonmap: 'content',
+                        id: 2,
+                        name: 'content',
+                        width_all: 300,
+                        width_xs: 100
+                    }
+                ],
+                getContextMenuItems: function () {
+                    return [
+                        {
+                            id: 'menu',
+                            title: 'Option1',
+                            cmd: function () {
+                                return false;
+                            }
+                        }
+                    ];
+                },
+                multiselect: true,
+                selectedColumnIds: [1, 2],
+                columnPickerHelpKey: 'bb-security-users.html'
+            },
             data;
 
         function createData(amount) {
@@ -43,7 +80,7 @@
                
 
             }
-            self.data = filteredData;
+            self.gridOptions.data = filteredData;
             if (angular.isFunction(highlightResults)) {
                 highlightResults();
             } 
@@ -55,7 +92,7 @@
                 var newData = createData(5);
 
                 data = data.concat(newData);
-                self.data = data;
+                self.gridOptions.data = data;
                 loadingComplete();
             }, 4000);
             
@@ -68,7 +105,8 @@
         self.onLoadMore = onLoadMore;
       
         data = createData(5);
-        self.data = data;
+        self.gridOptions = gridOptions;
+        self.gridOptions.data = data;
         
     }
 

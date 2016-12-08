@@ -39,12 +39,24 @@ describe('listbuilder', function () {
         return browser
             .setupTest('/listbuilder/fixtures/test.full.html')
             .click('.bb-listbuilder-switcher button')
-            .click('.bb-listbuilder-switcher-menu a')
+            .click('.bb-listbuilder-switcher-menu a[title="Switch to repeater view"]')
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'listbuilder_repeater',
                 selector: '#screenshot-listbuilder',
                 checkAccessibility: true
+            });
+    });
+
+    it('match the listbuilder grid screenshot', function () {
+        return browser
+            .setupTest('/listbuilder/fixtures/test.full.html')
+            .click('.bb-listbuilder-switcher button')
+            .click('.bb-listbuilder-switcher-menu a[title="Switch to grid view"]')
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'listbuilder_grid',
+                selector: '#screenshot-listbuilder'
             });
     });
 

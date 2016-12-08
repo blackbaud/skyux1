@@ -225,7 +225,7 @@
                         template_url: 'bbGrid/samples/date.html'
                     }
                 ],
-                getContextMenuItems: function (rowid, rowObject) {
+                getContextMenuItems: function () {
                     return [
                         {
                             id: 'menu',
