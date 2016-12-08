@@ -37,6 +37,7 @@
         white-space: nowrap;
         text-align: left;
         @include bb-field-label();
+        background-color: $bb-color-white;
     }
 
     tr.jqgrow:nth-child(even) {
