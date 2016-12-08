@@ -21,21 +21,31 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-filter` &mdash; *(Optional.)* Container for the filter button in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
   - `bb-listbuilder-sort` &mdash; *(Optional.)* Container for the sort button in the listbuilder toolbar. See the [sort](../sort) module for content that can be placed here.
   - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
-  - `bb-listbuilder-toolbar-secondary-actions` &mdash; *(Optional.)* Container for the secondary actions dropdown in the listbuilder toolbar.
+  - `bb-listbuilder-toolbar-secondary-actions` &mdash; *(Optional.)* Container for the secondary actions dropdown in the listbuilder toolbar. Also contains the column picker component when using a grid in listbuilder.
     - `bb-listbuilder-secondary-actions` &mdash; Component for the secondary actions dropdown.
       - `bb-listbuilder-secondary-actions-append-to-body` &mdash; *(Optional.)* Specifies whether the dropdown should be appended to the document body. *(Default = `false`)*
       - `bb-listbuilder-secondary-action` &mdash; Component for an individual action in the secondary actions dropdown.
         - `bb-listbuilder-secondary-action-click` &mdash; Specifies a function that will be called when a user clicks the action.
         - `bb-listbuilder-secondary-action-disabled` &mdash; *(Optional.)* Specifies whether the action is disabled. *(Default = `false`)*
+      - `bb-listbuilder-column-picker` &mdash; Component for choosing columns when using a grid within listbuilder.
+        - `bb-listbuilder-column-picker-columns` &mdash; An array of columns that should be displayed in the column picker. See [grid](../grids) columns for column data options.
+        - `bb-listbuilder-column-picker-selected-column-ids` &mdash; An array of unique identifiers that indicated the current visible columns.
+        - `bb-listbuilder-column-picker-selected-column-ids-changed` &mdash; A function that will be called when new columns are selected. It has the following arguments: 
+          - `selectedColumnIds` &mdash; The new array of unique identifiers that indicate the current visible columns.
+        - `bb-listbuilder-column-picker-help-key` &mdash; *(Optional.)* Sets the help key for the column picker modal.
+        - `bb-listbuilder-column-picker-subset-label` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the columns.
+        - `bb-listbuilder-column-picker-subset-property` &mdash; *(Optional.)* Specifies a property name of the column that will be used to filter by subset. The property will be set to `true` if it is a member of the subset.
+        - `bb-listbuilder-column-picker-subset-exclude` &mdash; *(Optional.)* When set to true, instructs the column picker to exclude columns with the `bbListbuilderColumnPickerSubsetProperty` set to true when the subset checkbox is selected. When set to false, the column picker includes the columns with the `bbListbuilderColumnPickerSubsetProperty` set to true when the subset checkbox is selected.
+        - `bb-listbuilder-column-picker-only-selected` &mdash; *(Optional.)* When set to true, instructs the column picker to include a checkbox which hides unselected items when checked.
   - `bb-listbuilder-toolbar-multiselect` &mdash; *(Optional.)* Container for the multiselect area in the listbuilder toolbar.
-    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder. When using multiselect with cards, `bb-listbuilder-card-id`, `bb-card-selectable`, and `bb-card-selected` should all be set. When using multiselect with repeater items, `bb-listbuilder-repeater-item-id`, `bb-repeater-item-selectable`, and `bb-repeater-item-selected` should all be set. Display actions for selected items using the [summary action bar](../summaryactionbar) module. 
+    - `bb-listbuilder-multiselect` &mdash; Component for handling multiselect functionality in the listbuilder. When using multiselect with cards, `bb-listbuilder-card-id`, `bb-card-selectable`, and `bb-card-selected` should all be set. When using multiselect with repeater items, `bb-listbuilder-repeater-item-id`, `bb-repeater-item-selectable`, and `bb-repeater-item-selected` should all be set. When using multiselect with grids, set `bb-grid-options` `multiselect` property to true, and set the `bb-grid-multiselect-selected-ids` property to the same object being updated by the `bb-listbuilder-multiselect-items-changed` callback. Display actions for selected items using the [summary action bar](../summaryactionbar) module. 
       - `bb-listbuilder-multiselect-items-changed` &mdash; Callback that will be executed when users select or deselect items in the listbuilder. It has the following arguments: 
         - `selectedIds` &mdash; The array of unique identifiers that have been selected.
         - `allSelected` &mdash; Set to true if the multiselect items were changed by selecting all items, set to false otherwise.
       - `bb-listbuilder-multiselect-selected-ids` &mdash; *(Optional.)* Specifies the array of selected unique identifiers. 
-      - `bb-listbuilder-multiselect-available-items` &mdash *(Optional.)* Specifies the array of items in the listbuilder. When specified, the selected property of the item will be updated when `bb-listbuilder-multiselect-selected-ids` are changed, when the select all button is clicked, and when the clear all button is clicked.
-      - `bb-listbuilder-multiselect-item-selected-property` &mdash *(Optional.)* Specifies the name for the selected property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `selected`)*
-      - `bb-listbuilder-multiselect-item-selected-property` &mdash *(Optional.)* Specifies the name for the id property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `id`)*
+      - `bb-listbuilder-multiselect-available-items` &mdash; *(Optional.)* Specifies the array of items in the listbuilder. When specified, the selected property of the item will be updated when `bb-listbuilder-multiselect-selected-ids` are changed, when the select all button is clicked, and when the clear all button is clicked.
+      - `bb-listbuilder-multiselect-item-selected-property` &mdash; *(Optional.)* Specifies the name for the selected property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `selected`)*
+      - `bb-listbuilder-multiselect-item-selected-property` &mdash; *(Optional.)* Specifies the name for the id property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `id`)*
       - `bb-listbuilder-on-show-only-selected` &mdash; Callback that will be executed when users select or deselect the 'Show only selected' checkbox in the multiselect area. It has the following arguments: 
         - `showOnlySelected` &mdash; Set to true if the list should contain only selected items, set to false otherwise.
       - `bb-listbuilder-show-only-selected` &mdash; *(Optional.)* Specifies the value of the 'Show only selected' checkbox. *(Default = `false`)*
@@ -53,7 +63,17 @@ The listbuilder component contains functionality for displaying and executing di
         - `bb-listbuilder-card-id` &mdash; *(Optional.)* Specifies a unique identifier for the card. Required when using multiselect with cards.
   - `bb-listbuilder-repeater` &mdash; Component that contains a repeater view for the listbuilder.
     - `bb-listbuilder-repeater-item` &mdash; Attribute that can be placed on an individual repeater item in the listbuilder to highlight last search text on load.
-    - `bb-listbuilder-repeater-item-id` &mdash; *(Optional.)* Specifies a unique identifier for the repeater item. Required when using multiselect with repeater itemss.
+    - `bb-listbuilder-repeater-item-id` &mdash; *(Optional.)* Specifies a unique identifier for the repeater item. Required when using multiselect with repeater items.
+  - `bb-listbuilder-grid` &mdash; Component that contains a grid view for the listbuilder. You can add a column picker in the listbuilder secondary actions by using the `bb-listbuilder-column-picker` component. When placing a `bb-grid` within this component, the following attributes can be used (see [grid](../grids) documentation for information about grid options).
+    - `bb-grid-options`
+      - `columns`
+      - `data`
+      - `getContextMenuItems`
+      - `multiselect`
+      - `resources`
+      - `selectedColumnIds`
+      - `sortOptions`
+    - `bb-grid-multiselect-selected-ids`
   - `bb-listbuilder-content-custom` &mdash; Component that contains a custom view in the listbuilder.
     - `bb-listbuilder-content-custom-view-name` &mdash; Specifies a unique name for the custom view.
     - `bb-listbuilder-content-custom-view-switcher-class` &mdash; Specifies a css class for the icon for this custom view to be used in the view switcher.
