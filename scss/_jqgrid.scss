@@ -38,6 +38,7 @@
         text-align: left;
         @include bb-field-label();
         background-color: $bb-color-white;
+        background-clip: padding-box; /* workaround for background-color with borders in cells for firefox */
     }
 
     tr.jqgrow:nth-child(even) {
