@@ -1,5 +1,5 @@
 {
-  "_LRM_PKTAG659": "skyux-l10n_11_6 - CHANGES-ONLY",
+  "_LRM_PKTAG854": "skyux-l10n_12_6 - CHANGES-ONLY",
   "action_bar_actions": {
     "message": "Actions"
   },
@@ -373,11 +373,17 @@
   "listbuilder_footer_back_to_top": {
     "message": "Retour au début"
   },
+  "listbuilder_grid_switcher": {
+    "message": "Passer en vue grille"
+  },
   "listbuilder_multiselect_clear_all": {
     "message": "Tout effacer"
   },
   "listbuilder_multiselect_select_all": {
     "message": "Tout sélectionner"
+  },
+  "listbuilder_pick_columns": {
+    "message": "Choisir les colonnes"
   },
   "listbuilder_repeater_switcher": {
     "message": "Passer en vue répéteur"
