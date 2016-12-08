@@ -9,13 +9,18 @@
                 transclude: true,
                 replace: true,
                 restrict: 'A',
-                require: '^^bbSplitpanelContentCustom',
                 controller: function ($scope) {
                     var ctrl = this;
                     $scope.selectItem = function () {
-                        $scope.item.$index = $scope.$index;
-                        $scope.$parent.$parent.$parent.$ctrl.listbuilderContentCtrl.OnSelectedItem($scope.item);
+                        $scope.$parent.item.$index = $scope.$parent.$index;
+                        $scope.bbListbuilderContentItem = $scope.$parent.item;
+
+                        $scope.bbListbuilderContentGetPanelData();
                     }
+                },
+                scope: {
+                    bbListbuilderContentItem: '=?',
+                    bbListbuilderContentGetPanelData: '&?'
                 }
             };
         });

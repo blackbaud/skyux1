@@ -115,10 +115,10 @@
             }
         }
 
-        function OnSelectedItem(item) {
-            ctrl.bbListbuilderContentItem = item;
-            ctrl.bbListbuilderContentGetPanelData();
-        }
+        //function OnSelectedItem(item) {
+        //    ctrl.bbListbuilderContentItem = item;
+        //    ctrl.bbListbuilderContentGetPanelData();
+        //}
 
         ctrl.$onInit = onInit;
         ctrl.$onChanges = onChanges;
@@ -144,9 +144,7 @@
             bindings: {
                 bbListbuilderContentActiveView: '@?',
                 bbListbuilderContentSelectedItem: '@?',
-                bbListbuilderContentItem: '=?',
                 bbListbuilderContentViewChanged: '&?',
-                bbListbuilderContentGetPanelData: '&?'
             }
         });
 

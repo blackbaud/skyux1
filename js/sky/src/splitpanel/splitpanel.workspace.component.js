@@ -9,13 +9,10 @@
     Controller.$inject = ['$timeout', 'bbResources'];
 
     angular.module('sky.splitpanel.workspace.component', ['sky.card', 'sky.resources'])
-        .component('bbsplitpanelWorkspace', {
-            templateUrl: 'sky/templates/splitpanel/splitpanel.cards.component.html',
+        .component('bbSplitpanelWorkspace', {
+            templateUrl: 'sky/templates/splitpanel/splitpanel.workspace.component.html',
             transclude: true,
+            replace:true,
             controller: Controller,
-            require: {
-                listbuilderContentCustomCtrl: '^^bbSplitpanelContentCustom'
-            }
-
         });
 }());

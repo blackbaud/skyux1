@@ -72,69 +72,66 @@
                     duesPaid: true
                 },
                 {
-                    name: 'Janet Smith',
-                    occupation: 'Accountant',
-                    joinDate: new Date('2/23/2006'),
+                    name: '$250.00',
+                    occupation: 'Walt Disney world 0914',
+                    joinDate: new Date('2/23/2016'),
+                    newField: 'David johnson (Visa3333)',
                     duesPaid: true
                 },
                 {
-                    name: 'James Wheeler',
-                    occupation: 'Marketing Director',
-                    joinDate: new Date('4/12/2013'),
+                    name: '- $25.00',
+                    occupation: 'Amazon',
+                    joinDate: new Date('2/23/2016'),
+                    newField: 'Nicole Guersey (Visa1234)',
                     duesPaid: true
                 },
                 {
-                    name: 'Jarod Douglas',
-                    occupation: 'Real Estate Agent',
-                    joinDate: new Date('12/12/2012'),
-                    duesPaid: false
+                    name: '$15.00',
+                    occupation: 'Wallmart',
+                    joinDate: new Date('2/23/2016'),
+                    newField: 'David johnson (Visa3333)',
+                    duesPaid: true
                 },
                 {
-                    name: 'Sarah Silver',
-                    occupation: 'Software Engineer',
+                    name: '$100.00',
+                    occupation: 'Walt Disney world 0914',
+                    newField: 'Nicole Guersey (Visa1234)',
                     joinDate: new Date('11/7/1999'),
                     duesPaid: true
                 },
                 {
-                    name: 'Tina Maller',
-                    occupation: 'Sales',
-                    joinDate: new Date('3/5/2016'),
+                    name: '$25.00',
+                    occupation: 'Amazon market palce amz.com',
+                    joinDate: new Date('09/14/2016'),
+                    newField: 'Nicole Guersey (Visa1234)',
                     duesPaid: true
                 },
                 {
-                    name: 'Megan Johnson',
-                    occupation: 'Manager',
-                    joinDate: new Date('1/1/2013'),
+                    name: '$250.00',
+                    occupation: 'Walt Disney world 0914',
+                    joinDate: new Date('2/23/2016'),
+                    newField: 'David johnson (Visa3333)',
                     duesPaid: true
                 },
                 {
-                    name: 'Reed Sawyer',
-                    occupation: 'Accountant',
-                    joinDate: new Date('3/9/2006'),
+                    name: '- $25.00',
+                    occupation: 'Amazon',
+                    joinDate: new Date('2/23/2016'),
+                    newField: 'Nicole Guersey (Visa1234)',
                     duesPaid: true
                 },
                 {
-                    name: 'James Dunn',
-                    occupation: 'Auto Technician',
-                    joinDate: new Date('6/12/2015'),
-                    duesPaid: false
-                },
-                {
-                    name: 'Douglas Herman',
-                    occupation: 'Lawyer',
-                    joinDate: new Date('3/1/2012'),
+                    name: '$15.00',
+                    occupation: 'Wallmart',
+                    joinDate: new Date('2/23/2016'),
+                    newField: 'David johnson (Visa3333)',
                     duesPaid: true
                 },
                 {
-                    name: 'Helen Walker',
-                    occupation: 'Software Consultant',
-                    joinDate: new Date('4/7/2007'),
-                    duesPaid: true
-                },
-                {
-                    name: 'Christopher Lewen',
-                    occupation: 'Sales',
-                    joinDate: new Date('5/26/2016'),
+                    name: '$100.00',
+                    occupation: 'Walt Disney world 0914',
+                    newField: 'Nicole Guersey (Visa1234)',
+                    joinDate: new Date('11/7/1999'),
                     duesPaid: true
                 }
             ];

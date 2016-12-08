@@ -1,3 +1,3 @@
-<div class="bb-custom-content-selectable-item" ng-class="{'selectedItem': $id === this.$parent.active ||(this.$parent.active == null && $first)}" ng-click="this.$parent.active = $id; selectItem()">
+<div class="bb-custom-content-selectable-item" ng-class="{'selectedItem': $id === this.$parent.$parent.active ||(this.$parent.$parent.active == null && this.$parent.$first)}" ng-click="this.$parent.$parent.active = $id; selectItem()">
     <ng-transclude></ng-transclude>
 </div>
