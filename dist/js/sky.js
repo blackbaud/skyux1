@@ -148,6 +148,7 @@
             'sky.listbuilder.content.custom.item.directive',
             'sky.listbuilder.card.component',
             'sky.listbuilder.cards.component',
+            'sky.listbuilder.grid.component',
             'sky.listbuilder.switcher.component',
             'sky.listbuilder.repeater.component',
             'sky.listbuilder.repeater.item.directive'
@@ -5315,7 +5316,7 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
-                    require: ['bbGrid'],
+                    require: ['bbGrid', '?^^bbListbuilder'],
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
@@ -5440,7 +5441,10 @@
                         });
                     }],
                     link: function ($scope, element, attr, ctrls, $transclude) {
-                        var bbGrid = ctrls[0];
+                        var bbGrid = ctrls[0],
+                            listbuilderCtrl = ctrls[1];
+                            
+                        $scope.hasListbuilder = ctrls[1] !== null;
 
                         $scope.customToolbar = {
                             hasCustomToolbar: false
@@ -5487,11 +5491,20 @@
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
-                                return element.find('.bb-grid-top-scrollbar');                           
+                                if (!$scope.hasListbuilder) {
+                                    return element.find('.bb-grid-top-scrollbar');
+                                } else {
+                                    return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl();
+                                }
+                                
                             }
 
                             function getTopScrollbarDiv() {
-                                return element.find('.bb-grid-top-scrollbar > div');
+                                if (!$scope.hasListbuilder) {
+                                    return element.find('.bb-grid-top-scrollbar > div');
+                                } else {
+                                    return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl().find(' > div');
+                                }
                             }
 
                             function updateGridLoadedTimestampAndRowCount(count) {
@@ -5954,13 +5967,17 @@
                             function highlightSearchText(highlightText) {
                                 var options = $scope.options;
 
-                                if (!highlightText && options && options.searchText) {
-                                    highlightText = options.searchText;
-                                }
+                                if (!$scope.hasListbuilder) {
+                                    if (!highlightText && options && options.searchText) {
+                                        highlightText = options.searchText;
+                                    }
 
-                                bbHighlight.clear(tableEl);
-                                if (highlightText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                    bbHighlight.clear(tableEl);
+                                    if (highlightText) {
+                                        bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                    }
+                                } else {
+                                    listbuilderCtrl.highlightLastSearchText();
                                 }
                             }
 
@@ -6128,6 +6145,7 @@
                             }
 
 
+
                             function addSelectedItem(id, selectedIds) {
                                 /* istanbul ignore else */
                                 /* sanity check */
@@ -6148,6 +6166,8 @@
 
                                 if ($scope.bbGridMultiselectIdProperty) {
                                     multiselectId = $scope.bbGridMultiselectIdProperty;
+                                } else if (listbuilderCtrl !== null) {
+                                    multiselectId = listbuilderCtrl.getListbuilderMultiselectIdProperty();
                                 }
                                 
                                 return row[multiselectId];
@@ -6377,6 +6397,28 @@
                                 return 'bb-grid-row-' + $scope.$id + '-';
                             }
 
+                            function listbuilderSortComponentPresent() {
+                                return listbuilderCtrl !== null && listbuilderCtrl.sortComponentPresent();
+                            }
+
+                            function createHeaderViewKeeper(hasListbuilder) {
+                                var verticalOffSetElId = hasListbuilder ? listbuilderCtrl.getListbuilderToolbarId() : toolbarContainerId;
+                                vkHeader = new bbViewKeeperBuilder.create({
+                                        el: header[0],
+                                        boundaryEl: tableWrapper[0],
+                                        verticalOffSetElId: verticalOffSetElId,
+                                        setWidth: true,
+                                        onStateChanged: function () {
+                                            if (vkHeader.isFixed) {
+                                                header.scrollLeft(tableWrapper.scrollLeft());
+                                            } else {
+                                                header.scrollLeft(0);
+                                            }
+
+                                        }
+                                    });        
+                            }
+
                             function initGrid() {
                                 var columns,
                                     jqGridOptions,
@@ -6473,7 +6515,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive && !listbuilderSortComponentPresent()) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
@@ -6492,22 +6534,8 @@
                                     resetTopScrollbar();
 
                                     if (!$scope.options.fixedToolbar) {
-                                        vkHeader = new bbViewKeeperBuilder.create({
-                                            el: header[0],
-                                            boundaryEl: tableWrapper[0],
-                                            verticalOffSetElId: toolbarContainerId,
-                                            setWidth: true,
-                                            onStateChanged: function () {
-                                                if (vkHeader.isFixed) {
-                                                    header.scrollLeft(tableWrapper.scrollLeft());
-                                                } else {
-                                                    header.scrollLeft(0);
-                                                }
-
-                                            }
-                                        });
-                                    }
-
+                                        createHeaderViewKeeper($scope.hasListbuilder);
+                                    } 
                                     setSortStyles();
 
                                     setUpFancyCheckHeader();
@@ -6785,22 +6813,25 @@
                                 }
                             }
 
-                            $scope.$watchCollection('selectedRows', function (newSelections) {
-                                
-                                if (localRowSelect) {
-                                    localRowSelect = false;
-                                    return;
-                                }
+                            if (!$scope.hasListbuilder) {
+                                $scope.$watchCollection('selectedRows', function (newSelections) {
+                                    
+                                    if (localRowSelect) {
+                                        localRowSelect = false;
+                                        return;
+                                    }
 
-                                function indexCallback(selectedItem) {
-                                    return arrayObjectIndexOf($scope.options.data, selectedItem);
-                                }
+                                    function indexCallback(selectedItem) {
+                                        return arrayObjectIndexOf($scope.options.data, selectedItem);
+                                    }
 
-                                setGridMultiselectRows(newSelections, indexCallback);
-                                
-                            });
+                                    setGridMultiselectRows(newSelections, indexCallback);
+                                    
+                                });
+                            }
 
                             $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
+
                                 if (localRowSelect) {
                                     localRowSelect = false;
                                     return;
@@ -6808,6 +6839,8 @@
                                 
                                 if (angular.isUndefined(newSelections)) {
                                     $scope.bbGridMultiselectSelectedIds = [];
+                                    localRowSelect = true;
+                                    return;
                                 }
 
                                 function indexCallback(selectedItem) {
@@ -6822,6 +6855,7 @@
 
                                 setGridMultiselectRows(newSelections, indexCallback);
                             }); 
+
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
@@ -6903,12 +6937,34 @@
                                 }
                             };
 
+                            if ($scope.hasListbuilder) {
+                                listbuilderCtrl.topScrollbarScrollAction = $scope.locals.topScrollbarScroll;
+                            }
+
+                            function destroyListbuilder() {
+                                var topScrollbarEl,
+                                    topScrollbarDivEl;
+                                
+                                if ($scope.hasListbuilder) {
+                                    listbuilderCtrl.topScrollbarScrollAction = undefined;
+                                    topScrollbarEl = getTopScrollbar();
+                                    topScrollbarDivEl = getTopScrollbarDiv();
+                                    topScrollbarEl.width(0);
+                                    topScrollbarEl.height(0);
+                                    topScrollbarDivEl.width(0);
+                                    topScrollbarDivEl.height(0);
+                                }
+                                
+                            }
+
                             $scope.locals.hasWaitAndEmpty = function () {
                                 return $scope.options && $scope.options.loading && (!$scope.options.data || $scope.options.data.length < 1);
                             };
 
 
                             element.on('$destroy', function () {
+
+                                destroyListbuilder();
 
                                 /*istanbul ignore else */
                                 /* sanity check */
@@ -7630,6 +7686,54 @@
 (function () {
     'use strict';
 
+    function Controller(bbColumnPicker) {
+
+        var ctrl = this;
+
+        function openColumnPicker() {
+            bbColumnPicker.openColumnPicker({
+                        columns: ctrl.bbListbuilderColumnPickerColumns,
+                        selectedColumnIds: ctrl.bbListbuilderColumnPickerSelectedColumnIds,
+                        helpKey: ctrl.bbListbuilderColumnPickerHelpKey,
+                        subsetLabel: ctrl.bbListbuilderColumnPickerSubsetLabel,
+                        subsetProperty: ctrl.bbListbuilderColumnPickerSubsetProperty,
+                        subsetExclude: ctrl.bbListbuilderColumnPickerSubsetExclude,
+                        onlySelected: ctrl.bbListbuilderColumnPickerOnlySelected,
+                        selectedColumnIdsChangedCallback: function (selectedColumnIds) {
+                            ctrl.bbListbuilderColumnPickerSelectedColumnIdsChanged({selectedColumnIds: selectedColumnIds});
+                        }
+                    });
+        }
+
+        ctrl.openColumnPicker = openColumnPicker;
+        
+    }
+
+    Controller.$inject = ['bbColumnPicker'];
+
+    angular.module('sky.listbuilder.column.picker.component', ['sky.grids.columnpicker.factory', 'sky.resources'])
+        .component('bbListbuilderColumnPicker', {
+            controller: Controller,
+            require: {
+                dropdownCtrl: '^^bbListbuilderSecondaryActionsDropdown'
+            },
+            bindings: {
+                bbListbuilderColumnPickerSelectedColumnIds: '<',
+                bbListbuilderColumnPickerColumns: '<',
+                bbListbuilderColumnPickerHelpKey: '<?',
+                bbListbuilderColumnPickerSubsetLabel: '<?',
+                bbListbuilderColumnPickerSubsetProperty: '<?',
+                bbListbuilderColumnPickerSubsetExclude: '<?',
+                bbListbuilderColumnPickerOnlySelected: '<?',
+                bbListbuilderColumnPickerSelectedColumnIdsChanged: '&'
+            },
+            templateUrl: 'sky/templates/listbuilder/listbuilder.column.picker.component.html'
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
     function Controller($element) {
         var ctrl = this,
             lastSearchText;
@@ -7639,6 +7743,46 @@
             /* sanity check */
             if (angular.isFunction(ctrl.highlightSearchContent)) {
                 ctrl.highlightSearchContent(lastSearchText);
+            }
+        }
+
+        function getListbuilderToolbarId() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getToolbarId)) {
+                return ctrl.getToolbarId();
+            }
+        }
+
+        function getListbuilderToolbarTopScrollbarEl() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getTopScrollbar)) {
+                return ctrl.getTopScrollbar();
+            }   
+        }
+
+        function sortComponentPresent() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.toolbarSortComponentPresent)) {
+                return ctrl.toolbarSortComponentPresent();
+            }   
+        }
+
+        function getListbuilderMultiselectIdProperty() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getMultiselectIdProperty)) {
+                return ctrl.getMultiselectIdProperty();
+            }
+        }
+
+        function updateSelectedIds(selectedIds) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.updateMultiselectSelectedIds)) {
+                return ctrl.updateMultiselectSelectedIds(selectedIds);
             }
         }
 
@@ -7658,7 +7802,7 @@
         }
 
         function getContentContainer() {
-            return $element.find('.bb-listbuilder-content');
+            return $element.find('.bb-listbuilder-content-container');
         }
 
         function onInit() {
@@ -7667,6 +7811,11 @@
 
         ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
+        ctrl.getListbuilderToolbarId = getListbuilderToolbarId;
+        ctrl.getListbuilderToolbarTopScrollbarEl = getListbuilderToolbarTopScrollbarEl;
+        ctrl.getListbuilderMultiselectIdProperty = getListbuilderMultiselectIdProperty;
+        ctrl.sortComponentPresent = sortComponentPresent;
+        ctrl.updateSelectedIds = updateSelectedIds;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
         ctrl.itemToggled = itemToggled;
@@ -7723,7 +7872,17 @@
         }
 
         function highlightSearchContent(searchText) {
-            var contentEl = $element.find('.' + ctrl.listbuilderCtrl.currentView.highlightClass);
+            var contentEl,
+                highlightSelector;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (ctrl.listbuilderCtrl.currentView.highlightClass) {
+                highlightSelector = '.' + ctrl.listbuilderCtrl.currentView.highlightClass;
+            } else if (ctrl.listbuilderCtrl.currentView.highlightSelector) {
+                highlightSelector = ctrl.listbuilderCtrl.currentView.highlightSelector;
+            }
+            
+            contentEl = $element.find(highlightSelector);
             lastSearchText = searchText;
             /*istanbul ignore else */
             /* sanity check */
@@ -7998,6 +8157,62 @@
 (function () {
     'use strict';
 
+    function Controller(bbResources, $scope) {
+        var ctrl = this;
+
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
+        function setUpGridMultiselectEvent() {
+            $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, data) {
+                ctrl.listbuilderCtrl.updateSelectedIds(data);
+                
+                event.stopPropagation();
+                event.preventDefault(); 
+            });
+        }
+
+        function initGrid() {
+            ctrl.viewName = 'grid';
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-table', 
+                highlightSelector: 'td:not(.bb-grid-no-search)',
+                viewSwitcherLabel: bbResources.listbuilder_grid_switcher,
+                viewContentClass: 'bb-listbuilder-content-grid-view'
+            });
+
+            setUpGridMultiselectEvent();
+
+        }
+
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
+        }
+
+        ctrl.$postLink = initGrid;
+        ctrl.$onDestroy = onDestroy;
+        ctrl.viewIsActive = viewIsActive;
+    }
+
+    Controller.$inject = ['bbResources', '$scope'];
+
+    angular.module('sky.listbuilder.grid.component', ['sky.resources'])
+        .component('bbListbuilderGrid', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.grid.component.html',
+            transclude: true,
+            controller: Controller,
+            require: {
+                listbuilderContentCtrl: '^bbListbuilderContent',
+                listbuilderCtrl: '^^bbListbuilder'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
     function Controller() {
         var ctrl = this;
 
@@ -8140,6 +8355,13 @@
             ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: isSelected});
         }
 
+        function updateMultiselectSelectedIds(selectedIds) {
+            listbuilderSelectedIds = selectedIds;
+            setAvailableItems(listbuilderSelectedIds);
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: false});
+
+        }
+
         function setListbuilderSelectedItems() {
             if (!angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedIds)) {
                 listbuilderSelectedIds = ctrl.bbListbuilderMultiselectSelectedIds;
@@ -8157,6 +8379,9 @@
 
             setListbuilderSelectedItems();
             ctrl.listbuilderCtrl.multiselectItemToggled = multiselectItemToggled;
+            ctrl.listbuilderCtrl.getMultiselectIdProperty = getIdProperty;
+            ctrl.listbuilderCtrl.getMultiselectSelectedProperty = getSelectedProperty;
+            ctrl.listbuilderCtrl.updateMultiselectSelectedIds = updateMultiselectSelectedIds;
         }
 
         function bindingChanges(changesObj) {
@@ -8407,6 +8632,7 @@
             'ui.bootstrap.dropdown', 
             'sky.resources', 
             'sky.listbuilder.secondary.action.component',
+            'sky.listbuilder.column.picker.component',
             'sky.listbuilder.secondary.actions.dropdown.component'
         ])
         .component('bbListbuilderSecondaryActions', {
@@ -8489,7 +8715,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbViewKeeperBuilder) {
+    function Controller($element, bbViewKeeperBuilder, $scope, $transclude) {
         var ctrl = this,
             vkToolbar;
 
@@ -8534,6 +8760,12 @@
             }
         }
 
+        function destroyViewKeeper() {
+            if (vkToolbar) {
+                vkToolbar.destroy();
+            }
+        }
+
         function viewChanged(newView) {
             /* istanbul ignore else */
             /* sanity check */
@@ -8555,19 +8787,65 @@
             }
         }
 
+        function getToolbarId() {
+            return ctrl.listbuilderToolbarId;
+        }
+
+        function getTopScrollbar() {
+            return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
+        }
+
+        function sortComponentPresent() {
+            return $transclude.isSlotFilled('bbListbuilderSort');
+        }
+
+        function setupTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.on('scroll', function () {
+                    /* istanbul ignore else */
+                    /* sanity check */
+                    if (angular.isFunction(ctrl.listbuilderCtrl.topScrollbarScrollAction)) {
+                        ctrl.listbuilderCtrl.topScrollbarScrollAction();
+                    }
+                });
+            }
+        }
+
+        function destroyTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.off('scroll');
+            }
+        }
+
         function initToolbar() {
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
             }
+
+            ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
+            ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
+            ctrl.listbuilderCtrl.toolbarSortComponentPresent = sortComponentPresent;
+
+            ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
+            
+            setupTopScrollbar();
             
             setupViewKeeper();
 
         }
 
         function destroyToolbar() {
-            if (vkToolbar) {
-                vkToolbar.destroy();
-            }
+            destroyViewKeeper();
+            destroyTopScrollbar();
+
         }
 
         // Lifecycle hooks
@@ -8582,7 +8860,7 @@
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope', '$transclude'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [
@@ -14856,7 +15134,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","card_select":"Select card","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","help_button_label":"Open help","listbuilder_footer_back_to_top":"Back to top","listbuilder_add_title":"Add","listbuilder_card_switcher":"Switch to card view","listbuilder_repeater_switcher":"Switch to repeater view","listbuilder_show_only_selected":"Show only selected","listbuilder_multiselect_select_all":"Select all","listbuilder_multiselect_clear_all":"Clear all","listbuilder_show_secondary_actions":"Show secondary actions","modal_close":"Close modal","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","datepicker_open":"Open datepicker","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","summary_actionbar_open_secondary":"Show secondary actions","summary_actionbar_show_summary":"Show summary","summary_actionbar_hide_summary":"Hide summary","pagination_previous":"Previous","pagination_next":"Next"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","card_select":"Select card","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","help_button_label":"Open help","listbuilder_footer_back_to_top":"Back to top","listbuilder_add_title":"Add","listbuilder_card_switcher":"Switch to card view","listbuilder_grid_switcher":"Switch to grid view","listbuilder_repeater_switcher":"Switch to repeater view","listbuilder_show_only_selected":"Show only selected","listbuilder_multiselect_select_all":"Select all","listbuilder_multiselect_clear_all":"Clear all","listbuilder_pick_columns":"Choose columns","listbuilder_show_secondary_actions":"Show secondary actions","modal_close":"Close modal","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","datepicker_open":"Open datepicker","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","summary_actionbar_open_secondary":"Show secondary actions","summary_actionbar_show_summary":"Show summary","summary_actionbar_hide_summary":"Hide summary","pagination_previous":"Previous","pagination_next":"Next"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -15599,7 +15877,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section class="bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">\n' +
         '\n' +
         '\n' +
-        '    <div class="bb-grid-toolbar-viewkeeper">\n' +
+        '    <div class="bb-grid-toolbar-viewkeeper" ng-if="!hasListbuilder">\n' +
         '        <div ng-show="locals.showToolbar">\n' +
         '            <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">\n' +
         '                <ng-transclude></ng-transclude>\n' +
@@ -15612,31 +15890,31 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div class="clearfix"></div>\n' +
+        '    <div class="clearfix" ng-if="!hasListbuilder"></div>\n' +
         '\n' +
         '    <div class="table-responsive" bb-wait="options.loading">\n' +
         '        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll &amp;&amp; !hasListbuilder" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
         '        <span class="fa fa-cloud-download"></span>\n' +
         '        <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll">\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll &amp;&amp; !hasListbuilder">\n' +
         '        <bb-infinite-scroll\n' +
         '            bb-infinite-scroll-load="locals.loadMore()"\n' +
         '            bb-infinite-scroll-has-more="options.hasMoreRows">\n' +
         '        </bb-infinite-scroll>        \n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
+        '    <div ng-if="paginationOptions &amp;&amp; !hasListbuilder" class="bb-grid-pagination-container">\n' +
         '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div class="bb-grid-action-bar-and-back-to-top">\n' +
+        '    <div class="bb-grid-action-bar-and-back-to-top" ng-if="!hasListbuilder">\n' +
         '        <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">\n' +
         '        </bb-grid-action-bar>\n' +
         '        <div class="bb-table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">\n' +
@@ -15764,19 +16042,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="row" ng-if="$ctrl.viewIsActive()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.column.picker.component.html',
+        '<div class="bb-listbuilder-column-picker" ng-if="$ctrl.dropdownCtrl.bbListbuilderSecondaryActionsCurrentView &amp;&amp; $ctrl.dropdownCtrl.bbListbuilderSecondaryActionsCurrentView.viewName === \'grid\'">\n' +
+        '    <bb-listbuilder-secondary-action\n' +
+        '        bb-listbuilder-secondary-action-click="$ctrl.openColumnPicker()">\n' +
+        '        {{\'listbuilder_pick_columns\' | bbResources}}\n' +
+        '    </bb-listbuilder-secondary-action>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/listbuilder/listbuilder.component.html',
         '<div class="bb-listbuilder">\n' +
         '    <div class="bb-listbuilder-toolbar-container" ng-transclude="bbListbuilderToolbar">\n' +
         '    </div>\n' +
         '\n' +
-        '    <div class="bb-listbuilder-content" ng-transclude="bbListbuilderContent">\n' +
+        '    <div class="bb-listbuilder-content-container" ng-transclude="bbListbuilderContent">\n' +
         '    </div>\n' +
         '\n' +
         '    <div class="bb-listbuilder-footer-container" ng-transclude="bbListbuilderFooter">\n' +
         '    </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.content.component.html',
-        '<div>\n' +
+        '<div ng-class="$ctrl.listbuilderCtrl.currentView.viewContentClass" class="bb-listbuilder-content">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.content.custom.component.html',
@@ -15795,6 +16081,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.grid.component.html',
+        '<div ng-if="$ctrl.viewIsActive()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.multiselect.clearall.component.html',
         '<button class="btn btn-link bb-listbuilder-clear-all" ng-click="$ctrl.clearAllItems()">\n' +
         '    {{\'listbuilder_multiselect_clear_all\' | bbResources}}\n' +
@@ -15897,7 +16187,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </ul>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.toolbar.component.html',
-        '<div class="bb-listbuilder-toolbar-summary-container">\n' +
+        '<div class="bb-listbuilder-toolbar-summary-container" ng-attr-id="{{$ctrl.listbuilderToolbarId}}">\n' +
         '    <div class="bb-listbuilder-toolbar" bb-search-container>\n' +
         '        <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">\n' +
         '        </div>\n' +
@@ -15943,6 +16233,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-listbuilder-toolbar-multiselect-container">\n' +
         '        <div ng-transclude="bbListbuilderToolbarMultiselect">\n' +
         '        </div>\n' +
+        '    </div>\n' +
+        '\n' +
+        '    <div class="bb-listbuilder-toolbar-top-scrollbar">\n' +
+        '        <div></div>    \n' +
         '    </div>\n' +
         '    \n' +
         '</div>');
