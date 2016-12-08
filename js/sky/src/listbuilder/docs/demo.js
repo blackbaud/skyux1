@@ -194,7 +194,6 @@
                         jsonmap: 'name',
                         id: 1,
                         name: 'name',
-                        right_align: true,
                         category: 'My category',
                         description: 'Column description',
                         width_all: 300,
