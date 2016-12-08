@@ -97,6 +97,13 @@
             ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: isSelected});
         }
 
+        function updateMultiselectSelectedIds(selectedIds) {
+            listbuilderSelectedIds = selectedIds;
+            setAvailableItems(listbuilderSelectedIds);
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: false});
+
+        }
+
         function setListbuilderSelectedItems() {
             if (!angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedIds)) {
                 listbuilderSelectedIds = ctrl.bbListbuilderMultiselectSelectedIds;
@@ -114,6 +121,9 @@
 
             setListbuilderSelectedItems();
             ctrl.listbuilderCtrl.multiselectItemToggled = multiselectItemToggled;
+            ctrl.listbuilderCtrl.getMultiselectIdProperty = getIdProperty;
+            ctrl.listbuilderCtrl.getMultiselectSelectedProperty = getSelectedProperty;
+            ctrl.listbuilderCtrl.updateMultiselectSelectedIds = updateMultiselectSelectedIds;
         }
 
         function bindingChanges(changesObj) {

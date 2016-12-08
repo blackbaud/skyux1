@@ -32,7 +32,7 @@ describe('Grid multiselect', function () {
     }
 
     function setGridData(data) {
-        $scope.locals.gridOptions.data = data;
+        $scope.locals.gridOptions.data = angular.copy(data);
         $scope.$digest();
     }
 
@@ -54,6 +54,7 @@ describe('Grid multiselect', function () {
 
     function clickSelectAll(headerEl) {
         headerEl.eq(0).find('.bb-check-wrapper input').click();
+        $scope.$digest();
     }
 
     function shiftClickRowMultiselect(rowEl, index) {
@@ -409,10 +410,12 @@ describe('Grid multiselect', function () {
         //make sure it also works with clicking fancy check
         rowEl.eq(0).find('td .bb-check-checkbox').click();
         $timeout.flush();
+
         expect($scope.locals.selectedIds).toEqual([dataSet1[0].id]);
 
         expect(rowEl.eq(0)).toHaveClass('ui-state-highlight');
         expect(findCheckBox(rowEl.eq(0))).toBeChecked();
+
 
         $scope.locals.selectedIds = [1, 2, 43];
 

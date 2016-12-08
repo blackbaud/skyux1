@@ -543,6 +543,10 @@
         "_description": "Text for the card view switcher",
         "message": "Switch to card view"
     },
+    "listbuilder_grid_switcher": {
+        "_description": "Text for the grid view switcher",
+        "message": "Switch to grid view"
+    },
     "listbuilder_repeater_switcher": {
         "_description": "Text for repeater view switcher",
         "message": "Switch to repeater view"
@@ -558,6 +562,10 @@
     "listbuilder_multiselect_clear_all": {
         "_description": "Text for the button that clears all items in the listbuilder",
         "message": "Clear all"
+    },
+    "listbuilder_pick_columns": {
+        "_description": "Text for the button that opens a column picker in the listbuilder",
+        "message": "Choose columns"
     },
     "listbuilder_show_secondary_actions": {
         "_description": "Label for the button that opens the secondary actions menu in the listbuilder",

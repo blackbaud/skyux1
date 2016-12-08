@@ -13,6 +13,7 @@
             'sky.listbuilder.content.custom.item.directive',
             'sky.listbuilder.card.component',
             'sky.listbuilder.cards.component',
+            'sky.listbuilder.grid.component',
             'sky.listbuilder.switcher.component',
             'sky.listbuilder.repeater.component',
             'sky.listbuilder.repeater.item.directive'

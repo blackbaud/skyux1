@@ -68,7 +68,7 @@
                 </bb-listbuilder-toolbar>
                 <bb-listbuilder-content>
                 <bb-listbuilder-cards>
-                    <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.data">
+                    <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.gridOptions.data">
                         <bb-card bb-card-selectable="{{listCtrl.showMultiselect}}" bb-card-selected="item.selected">
                             <bb-card-title>
                             {{item.name}}
@@ -91,7 +91,7 @@
                         <bb-repeater-item 
                             bb-listbuilder-repeater-item 
                             bb-listbuilder-repeater-item-id="item.id" 
-                            ng-repeat="item in listCtrl.data"
+                            ng-repeat="item in listCtrl.gridOptions.data"
                             bb-repeater-item-selectable="{{listCtrl.showMultiselect}}"
                             bb-repeater-item-selected="item.selected">
                             <bb-repeater-item-title>
@@ -120,6 +120,12 @@
                         </bb-repeater-item>
                     </bb-repeater>
                 </bb-listbuilder-repeater>
+                <bb-listbuilder-grid>
+                    <bb-grid
+                        bb-grid-options="listCtrl.gridOptions"
+                        bb-grid-multiselect-selected-ids="listCtrl.selectedIds">
+                    </bb-grid>
+                </bb-listbuilder-grid>
                 </bb-listbuilder-content>
                 <bb-listbuilder-footer
                     bb-listbuilder-on-load-more="listCtrl.onLoadMore()"

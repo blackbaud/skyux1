@@ -148,7 +148,98 @@
                     joinDate: new Date('5/26/2016'),
                     duesPaid: true
                 }
-            ];
+            ],
+        sortOptions = [
+            {
+                id: 1,
+                label: 'Name (A - Z)',
+                name: 'name',
+                descending: false
+            },
+            {
+                id: 2,
+                label: 'Name (Z - A)',
+                name: 'name',
+                descending: true
+            },
+            {
+                id: 3,
+                label: 'Date joined (newest first)',
+                name: 'joinDate',
+                descending: true
+            },
+            {
+                id: 4,
+                label: 'Date joined (oldest first)',
+                name: 'joinDate',
+                descending: false
+            },
+            {
+                id: 5,
+                label: 'Occupation (A - Z)',
+                name: 'occupation',
+                descending: false
+            },
+            {
+                id: 6,
+                label: 'Occupation (Z - A)',
+                name: 'occupation',
+                descending: true
+            }
+        ],
+        gridOptions = {
+                columns: [
+                    {
+                        caption: 'Name',
+                        jsonmap: 'name',
+                        id: 1,
+                        name: 'name',
+                        category: 'My category',
+                        description: 'Column description',
+                        width_all: 300,
+                        width_xs: 100
+                    },
+                    {
+                        caption: 'Occupation',
+                        jsonmap: 'occupation',
+                        id: 2,
+                        name: 'occupation',
+                        width_all: 300,
+                        width_xs: 100
+                    },
+                    {
+                        caption: 'Dues paid',
+                        jsonmap: 'duesPaid',
+                        id: 3,
+                        name: 'duesPaid',
+                        width_all: 300,
+                        template_url: 'bbGrid/samples/mycolumn.html'
+                    },
+                    {
+                        caption: 'Date',
+                        jsonmap: 'joinDate',
+                        id: 4,
+                        name: 'joinDate',
+                        width_all: 200,
+                        template_url: 'bbGrid/samples/date.html'
+                    }
+                ],
+                getContextMenuItems: function () {
+                    return [
+                        {
+                            id: 'menu',
+                            title: 'Option1',
+                            cmd: function () {
+                                alert('Context menu option chosen!');
+                                return false;
+                            }
+                        }
+                    ];
+                },
+                multiselect: true,
+                selectedColumnIds: [1, 2, 3, 4],
+                columnPickerHelpKey: 'bb-security-users.html'
+            };
 
         function getData(top, skip) {
             var i,
@@ -205,8 +296,15 @@
             }
         }
 
-        function sortArray(sortProperty, sortDescending, array) {
+        function sortArray(sortProperty, sortDescending, array) {    
+
             if (sortProperty) {
+
+                self.gridOptions.sortOptions = {
+                    column: sortProperty,
+                    descending: sortDescending
+                };
+
                 return array.sort(function (a, b) {
                     var descending = sortDescending ? -1 : 1;
 
@@ -264,7 +362,7 @@
             return array;
         }
 
-        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
+        function getAllFilteredData(searchText, filters, sortProperty, sortDescending, showOnlySelected, selectedIds) {
             var filteredData,
                 baseData = angular.copy(dataSet);
             filteredData = searchArray(searchText, baseData);
@@ -272,9 +370,15 @@
             filteredData = applyMultiselectOptions(filteredData, showOnlySelected, selectedIds);
             filteredData = sortArray(sortProperty, sortDescending, filteredData);
 
-            self.data = filteredData.slice(0, maxData);
-            self.hasMoreData = filteredData.length > self.data.length;
-            nextSkip = self.data.length;
+            return filteredData;
+        }
+
+        function applySearchFilterSort(searchText, filters, sortProperty, sortDescending, maxData, showOnlySelected, selectedIds) {
+            var filteredData = getAllFilteredData(searchText, filters, sortProperty, sortDescending, showOnlySelected, selectedIds);
+
+            self.gridOptions.data = filteredData.slice(0, maxData);
+            self.hasMoreData = filteredData.length > self.gridOptions.data.length;
+            nextSkip = self.gridOptions.data.length;
 
         }
 
@@ -319,22 +423,41 @@
                 });
         }
 
+        function getNextData(top, skip, searchText, appliedFilters, sortProperty, sortDescending, maxRecordsShown, showOnlySelected, selectedIds) {
+            var allFilteredData = getAllFilteredData(searchText, appliedFilters, sortProperty, sortDescending, showOnlySelected, selectedIds),
+                newDataLength,
+                nextFilteredData;
+
+            nextFilteredData = allFilteredData.slice(skip, top + skip);
+            newDataLength = self.gridOptions.data.length + nextFilteredData.length
+            self.hasMoreData = allFilteredData.length > newDataLength;
+            nextSkip = newDataLength;
+            return nextFilteredData;
+        }
+
         function loadData() {
-            var newData = getData(nextTop, nextSkip);
-                
-            
-            self.data = self.data.concat(newData);
-            if (maxRecordsShown < self.data.length) {
-                maxRecordsShown = self.data.length;
+            var newData = getNextData(
+                                nextTop, 
+                                nextSkip, 
+                                self.searchText, 
+                                self.appliedFilters, 
+                                sortProperty, 
+                                sortDescending, 
+                                maxRecordsShown, 
+                                self.showOnlySelected, 
+                                self.selectedIds);
+
+            self.gridOptions.data = self.gridOptions.data.concat(newData);
+            if (maxRecordsShown < self.gridOptions.data.length) {
+                maxRecordsShown = self.gridOptions.data.length;
             }
-            applyAllAndUpdateSelectOptions(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown, self.showOnlySelected, self.selectedIds);
+
         }
 
         function onLoadMore() {
             return $timeout(function () {
                 loadData();
             }, 4000);
-            
         }
 
         function onAddClick() {
@@ -359,7 +482,7 @@
             self.payMembershipSelections = [];
             self.secondarySelections = [];
             for (i = 0; i < selectedIds.length; i++) {
-                item = getItemById(selectedIds[i], self.data);
+                item = getItemById(selectedIds[i], self.gridOptions.data);
                 if (item) {
                     if (!item.duesPaid) {
                         self.payMembershipSelections.push(selectedIds[i]);
@@ -375,7 +498,7 @@
                 item;
             for (i = 0; i < selections.length; i++) {
                 //simulate client side duesPaid changing
-                item = getItemById(selections[i], self.data); 
+                item = getItemById(selections[i], self.gridOptions.data); 
                 item.duesPaid = true;
 
                 //simulate server side duesPaid changing
@@ -383,6 +506,9 @@
                 item.duesPaid = true;
             }
             self.payMembershipSelections = [];
+
+            //Refresh data for bbGrid
+            self.gridOptions.data = angular.copy(self.gridOptions.data);
         }
 
         function secondaryAction(selections) {
@@ -398,7 +524,7 @@
         }
 
         function multiselectAvailable() {
-            return self.activeView === 'repeater' || self.activeView === 'card';
+            return self.activeView === 'repeater' || self.activeView === 'card' || self.activeView === 'grid';
         }
 
         function actionsShown() {
@@ -407,6 +533,10 @@
 
         function saveAction() {
             alert('List has been saved!');
+        }
+
+        function selectedColumnIdsChanged(selectedColumnIds) {
+            self.gridOptions.selectedColumnIds = selectedColumnIds;
         }
 
         self.saveAction = saveAction;
@@ -434,48 +564,13 @@
         self.viewChanged = viewChanged;
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
-        self.data = [];
+        self.selectedColumnIdsChanged = selectedColumnIdsChanged;
+        self.gridOptions = gridOptions;
+        self.gridOptions.data = [];
         self.activeView = 'card';
         loadData();
 
-        self.sortOptions = [
-            {
-                id: 1,
-                label: 'Name (A - Z)',
-                name: 'name',
-                descending: false
-            },
-            {
-                id: 2,
-                label: 'Name (Z - A)',
-                name: 'name',
-                descending: true
-            },
-            {
-                id: 3,
-                label: 'Date joined (newest first)',
-                name: 'joinDate',
-                descending: true
-            },
-            {
-                id: 4,
-                label: 'Date joined (oldest first)',
-                name: 'joinDate',
-                descending: false
-            },
-            {
-                id: 5,
-                label: 'Occupation (A - Z)',
-                name: 'occupation',
-                descending: false
-            },
-            {
-                id: 6,
-                label: 'Occupation (Z - A)',
-                name: 'occupation',
-                descending: true
-            }
-        ];
+        self.sortOptions = sortOptions;
 
         self.initialState = self.sortOptions[4].id;
 
@@ -483,9 +578,24 @@
 
     ListbuilderTestController.$inject = ['$timeout', 'bbModal'];
 
-    
+    function RunTemplateCache($templateCache) {
+        $templateCache.put('bbGrid/samples/date.html', '<div>{{data | date: \'medium\'}}</div>');
+
+        $templateCache.put('bbGrid/samples/mycolumn.html',
+            '<div>' +
+            '<div ng-if="data" style="margin-bottom: 10px; margin-top: 10px;">' +
+                ' <span class="label label-success">Membership dues paid</span>' +
+            '</div>' +
+            '<div ng-if="!data" style="margin-bottom: 10px; margin-top: 10px;">' +
+                '<span class="label label-danger">Membership dues not paid</span>' +
+            '</div>' +
+            '</div>');
+    }
+    RunTemplateCache.$inject = ['$templateCache'];
+
     angular
         .module('stache')
         .controller('ListbuilderTestController', ListbuilderTestController)
-        .controller('ListbuilderFilterController', ListbuilderFilterController);
-}());
+        .controller('ListbuilderFilterController', ListbuilderFilterController)
+        .run(RunTemplateCache);
+})();

@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbViewKeeperBuilder) {
+    function Controller($element, bbViewKeeperBuilder, $scope, $transclude) {
         var ctrl = this,
             vkToolbar;
 
@@ -47,6 +47,12 @@
             }
         }
 
+        function destroyViewKeeper() {
+            if (vkToolbar) {
+                vkToolbar.destroy();
+            }
+        }
+
         function viewChanged(newView) {
             /* istanbul ignore else */
             /* sanity check */
@@ -68,19 +74,65 @@
             }
         }
 
+        function getToolbarId() {
+            return ctrl.listbuilderToolbarId;
+        }
+
+        function getTopScrollbar() {
+            return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
+        }
+
+        function sortComponentPresent() {
+            return $transclude.isSlotFilled('bbListbuilderSort');
+        }
+
+        function setupTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.on('scroll', function () {
+                    /* istanbul ignore else */
+                    /* sanity check */
+                    if (angular.isFunction(ctrl.listbuilderCtrl.topScrollbarScrollAction)) {
+                        ctrl.listbuilderCtrl.topScrollbarScrollAction();
+                    }
+                });
+            }
+        }
+
+        function destroyTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.off('scroll');
+            }
+        }
+
         function initToolbar() {
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
             }
+
+            ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
+            ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
+            ctrl.listbuilderCtrl.toolbarSortComponentPresent = sortComponentPresent;
+
+            ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
+            
+            setupTopScrollbar();
             
             setupViewKeeper();
 
         }
 
         function destroyToolbar() {
-            if (vkToolbar) {
-                vkToolbar.destroy();
-            }
+            destroyViewKeeper();
+            destroyTopScrollbar();
+
         }
 
         // Lifecycle hooks
@@ -95,7 +147,7 @@
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope', '$transclude'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [

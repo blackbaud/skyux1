@@ -1,4 +1,4 @@
-<div class="bb-listbuilder-toolbar-summary-container">
+<div class="bb-listbuilder-toolbar-summary-container" ng-attr-id="{{$ctrl.listbuilderToolbarId}}">
     <div class="bb-listbuilder-toolbar" bb-search-container>
         <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">
         </div>
@@ -44,6 +44,10 @@
     <div class="bb-listbuilder-toolbar-multiselect-container">
         <div ng-transclude="bbListbuilderToolbarMultiselect">
         </div>
+    </div>
+
+    <div class="bb-listbuilder-toolbar-top-scrollbar">
+        <div></div>    
     </div>
     
 </div>

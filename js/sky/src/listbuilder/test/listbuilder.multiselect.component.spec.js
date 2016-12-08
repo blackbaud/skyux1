@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    describe('multiselect', function () {
+    describe('listbuilder multiselect', function () {
         var cardMultiselectHtml,
             repeaterMultiselectHtml,
             customMultiselectHtml,

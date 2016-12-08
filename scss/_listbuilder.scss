@@ -29,6 +29,9 @@
 /* Content */
 .bb-listbuilder-content {
     margin-top: $margin;
+    &.bb-listbuilder-content-grid-view {
+        margin-top: 0;
+    }
     .bb-card {
         margin-right: 0;
         width: 100%
@@ -73,4 +76,21 @@
 
 .bb-listbuilder-clear-all {
     margin-left: $padding;
+}
+
+.bb-listbuilder-toolbar-top-scrollbar {
+    background-color: $bb-color-white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.bb-listbuilder {
+    .ui-jqgrid-hbox {
+        .ui-jqgrid-htable th {
+            cursor: default;
+        }
+        .bb-check-wrapper {
+            display: none;
+        }
+    }
 }

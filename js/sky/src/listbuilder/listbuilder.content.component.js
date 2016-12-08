@@ -36,7 +36,17 @@
         }
 
         function highlightSearchContent(searchText) {
-            var contentEl = $element.find('.' + ctrl.listbuilderCtrl.currentView.highlightClass);
+            var contentEl,
+                highlightSelector;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (ctrl.listbuilderCtrl.currentView.highlightClass) {
+                highlightSelector = '.' + ctrl.listbuilderCtrl.currentView.highlightClass;
+            } else if (ctrl.listbuilderCtrl.currentView.highlightSelector) {
+                highlightSelector = ctrl.listbuilderCtrl.currentView.highlightSelector;
+            }
+            
+            contentEl = $element.find(highlightSelector);
             lastSearchText = searchText;
             /*istanbul ignore else */
             /* sanity check */
