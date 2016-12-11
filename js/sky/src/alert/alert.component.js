@@ -9,6 +9,8 @@
             vm.bbAlertClosed = true;
         };
     }   
+    
+    
 
     angular.module('sky.alert.component', ['sky.resources'])
         .component('bbAlert', {
