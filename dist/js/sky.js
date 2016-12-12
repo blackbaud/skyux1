@@ -11305,7 +11305,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
 
-    function Controller($element, bbMediaBreakpoints, bbResources) {
+    function Controller($element, bbMediaBreakpoints, bbResources, $scope) {
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
@@ -11532,6 +11532,15 @@ angular.module('sky.palette.config', [])
             }
         }
 
+        function listenForApplyEvent() {
+            $scope.$on('bbSearchInputApply', function (event, searchText) {
+                if (angular.isDefined(searchText)) {
+                    ctrl.bbSearchText = searchText;
+                }
+                applySearchText(ctrl.bbSearchText);
+            });
+        }
+
         function initSearch() {
             
             if (ctrl.bbSearchText) {
@@ -11543,6 +11552,8 @@ angular.module('sky.palette.config', [])
             } else {
                 ctrl.placeholderText = ctrl.bbSearchPlaceholder;
             }
+
+            listenForApplyEvent();
         }
 
 
@@ -11564,7 +11575,7 @@ angular.module('sky.palette.config', [])
         ctrl.inputFocused = inputFocused;
     }
 
-    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources'];
+    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources', '$scope'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
