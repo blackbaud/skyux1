@@ -527,5 +527,63 @@
                 searchEl.remove();
             });
         });
+
+        describe('apply search text event', function () {
+            it('should apply current search text when searchText is not defined in the event', function () {
+                var actualSearchText,
+                searchEl,
+                clearButtonEl;
+            
+                $scope.searchCtrl = {
+                    applySearchText: function (searchText) {
+                        actualSearchText = searchText;
+                    }
+                };
+
+                searchEl = initSearch(searchHtml);
+
+                changeInput(searchEl, 'myText');
+
+                expect(angular.isUndefined(actualSearchText)).toBe(true);
+                clearButtonEl = findClearButton(searchEl);
+                expect(clearButtonEl).not.toBeVisible();
+
+                $scope.$broadcast('bbSearchInputApply');
+                $scope.$digest();
+
+                expect(actualSearchText).toBe('myText');
+                expect(clearButtonEl).toBeVisible();
+
+                searchEl.remove();
+            });
+
+            it('should apply given search text when searchText is defined in the event', function () {
+                var actualSearchText,
+                searchEl,
+                clearButtonEl;
+            
+                $scope.searchCtrl = {
+                    applySearchText: function (searchText) {
+                        actualSearchText = searchText;
+                    }
+                };
+
+                searchEl = initSearch(searchHtml);
+
+                changeInput(searchEl, 'myText');
+
+                expect(angular.isUndefined(actualSearchText)).toBe(true);
+                clearButtonEl = findClearButton(searchEl);
+                expect(clearButtonEl).not.toBeVisible();
+
+                $scope.$broadcast('bbSearchInputApply', 'new text');
+                $scope.$digest();
+
+                expect(actualSearchText).toBe('new text');
+                expect(clearButtonEl).toBeVisible();
+
+                searchEl.remove();
+            });
+        });
     });
 })();
