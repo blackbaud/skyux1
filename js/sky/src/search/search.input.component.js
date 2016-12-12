@@ -3,7 +3,7 @@
     'use strict';
 
 
-    function Controller($element, bbMediaBreakpoints, bbResources) {
+    function Controller($element, bbMediaBreakpoints, bbResources, $scope) {
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
@@ -230,6 +230,15 @@
             }
         }
 
+        function listenForApplyEvent() {
+            $scope.$on('bbSearchInputApply', function (event, searchText) {
+                if (angular.isDefined(searchText)) {
+                    ctrl.bbSearchText = searchText;
+                }
+                applySearchText(ctrl.bbSearchText);
+            });
+        }
+
         function initSearch() {
             
             if (ctrl.bbSearchText) {
@@ -241,6 +250,8 @@
             } else {
                 ctrl.placeholderText = ctrl.bbSearchPlaceholder;
             }
+
+            listenForApplyEvent();
         }
 
 
@@ -262,7 +273,7 @@
         ctrl.inputFocused = inputFocused;
     }
 
-    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources'];
+    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources', '$scope'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
