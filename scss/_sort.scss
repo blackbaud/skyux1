@@ -10,3 +10,12 @@
 .dropdown-menu .divider.bb-sort-heading-divider {
     margin: 0;
 }
+
+.bb-sort > .dropdown-toggle:focus {
+    //default
+    outline: thin dotted;
+
+    //webkit
+    outline: -webkit-focus-ring-color auto 5px;
+    outline-offset: -2px;
+}
