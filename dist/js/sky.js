@@ -1362,7 +1362,7 @@
 
     var SEARCH_PROPS = ['title', 'description'];
 
-    function BBChecklistController($scope, bbChecklistUtility) {
+    function BBChecklistController($scope, bbChecklistUtility, bbResources) {
         var vm = this;
 
         function itemMatchesCategory(item, category) {
@@ -1545,6 +1545,9 @@
         if (angular.isDefined(vm.bbChecklistCategories)) {
             vm.allCategories = 'bbChecklistAllCategories';
             vm.selectedOption = vm.allCategories;
+            if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
+                vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
+            }
             $scope.$watch(function () {
                 return vm.selectedOption;
             }, function (newValue, oldValue) {
@@ -1583,9 +1586,9 @@
 
     }
 
-    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];
+    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility', 'bbResources'];
 
-    angular.module('sky.checklist.controller', ['sky.checklist.utility'])
+    angular.module('sky.checklist.controller', ['sky.checklist.utility', 'sky.resources'])
         .controller('BBChecklistController', BBChecklistController);
 }());
 
@@ -1615,7 +1618,8 @@
                 bbChecklistSelectStyle: '@?',
                 bbChecklistIsLoading: '=?',
                 bbChecklistSubsetLabel: '=?',
-                bbChecklistSubsetProperty: '@?'
+                bbChecklistSubsetProperty: '@?',
+                bbChecklistAllCategoriesLabel: '<?'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',
@@ -15328,7 +15332,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">\n' +
         '      <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">\n' +
         '        <select ng-attr-aria-label="{{\'checklist_categories_label\' | bbResources}}" class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">\n' +
-        '          <option value="{{bbChecklist.allCategories}}">{{\'grid_column_picker_all_categories\' | bbResources}}</option>\n' +
+        '          <option value="{{bbChecklist.allCategories}}">{{bbChecklist.bbChecklistAllCategoriesLabel}}</option>\n' +
         '          <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>\n' +
         '        </select>\n' +
         '      </div>\n' +
