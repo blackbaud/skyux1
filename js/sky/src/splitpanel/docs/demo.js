@@ -271,6 +271,7 @@
             //displaying panel data for first item
             if (self.data && self.data[0] && self.data[0] !== null) {
                 self.selectedItem = self.data[0];
+                self.selectedItem.$index = 0;
             }
         }
 
@@ -297,6 +298,23 @@
 
         }
 
+        function next() {
+            if (self.selectedItem.$index < self.data.length) {
+                var newIndex = self.selectedItem.$index + 1;
+                self.selectedItem = this.data[newIndex];
+                self.selectedItem.$index = newIndex;
+            }
+        }
+
+        function previous() {
+
+            if (self.selectedItem.$index !== 0) {
+                var newIndex = self.selectedItem.$index - 1;
+                self.selectedItem = this.data[newIndex];
+                self.selectedItem.$index = newIndex;
+            }
+        }
+
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
@@ -307,6 +325,8 @@
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
         self.data = [];
+        self.next = next;
+        self.previous = previous;
         loadData();
 
         self.sortOptions = [

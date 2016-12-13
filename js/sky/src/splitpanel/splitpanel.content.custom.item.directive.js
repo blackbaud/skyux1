@@ -18,6 +18,7 @@
                         $scope.bbListbuilderContentGetPanelData();
                     }
                 },
+                //require: '^bbSplitpanelContentCustom',
                 scope: {
                     bbListbuilderContentItem: '=?',
                     bbListbuilderContentGetPanelData: '&?'
