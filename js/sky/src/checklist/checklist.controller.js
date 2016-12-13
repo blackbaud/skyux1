@@ -5,7 +5,7 @@
 
     var SEARCH_PROPS = ['title', 'description'];
 
-    function BBChecklistController($scope, bbChecklistUtility) {
+    function BBChecklistController($scope, bbChecklistUtility, bbResources) {
         var vm = this;
 
         function itemMatchesCategory(item, category) {
@@ -188,6 +188,9 @@
         if (angular.isDefined(vm.bbChecklistCategories)) {
             vm.allCategories = 'bbChecklistAllCategories';
             vm.selectedOption = vm.allCategories;
+            if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
+                vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
+            }
             $scope.$watch(function () {
                 return vm.selectedOption;
             }, function (newValue, oldValue) {
@@ -226,8 +229,8 @@
 
     }
 
-    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];
+    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility', 'bbResources'];
 
-    angular.module('sky.checklist.controller', ['sky.checklist.utility'])
+    angular.module('sky.checklist.controller', ['sky.checklist.utility', 'sky.resources'])
         .controller('BBChecklistController', BBChecklistController);
 }());
