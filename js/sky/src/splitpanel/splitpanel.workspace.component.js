@@ -11,8 +11,8 @@
     angular.module('sky.splitpanel.workspace.component', ['sky.card', 'sky.resources'])
         .component('bbSplitpanelWorkspace', {
             templateUrl: 'sky/templates/splitpanel/splitpanel.workspace.component.html',
+            replace: true,
             transclude: true,
-            replace:true,
-            controller: Controller,
+            //controller: Controller,
         });
 }());

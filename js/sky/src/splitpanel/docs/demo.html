@@ -22,10 +22,7 @@
     }
 
     .bb-split-panel .bb-custom-content {
-        /*float: left;*/
-        /*width: 30%;*/
         flex: 1;
-        /*overflow-y: auto;*/
     }
 
     .bb-custom-content-selectable-item {
@@ -33,15 +30,13 @@
     }
 
     .split-panel-workspace {
-        /*float: left;*/
-        /*width: 70%;*/
         flex: 2;
         border-left: grey 5px solid;
         padding-left: 10px;
     }
 
     .split-panel-workspace-container {
-        height: 90vh;
+        height: 71vh;
         overflow-y: auto;
     }
 
@@ -61,7 +56,7 @@
     }
 
     .fixedHeader {
-        display: flex;
+        border-bottom: 1px solid #e5e5e5;
     }
 
     .split-panel-list-container {
@@ -79,6 +74,10 @@
         background-color: lightgray;
         padding: 10px;
         border: 1px solid gray;
+    }
+
+    .bb-split-panel-width-100 {
+        width:100%;
     }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
@@ -116,11 +115,11 @@
                                            bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
                 <div class="split-pattern-container">
                     <div class="bb-custom-content">
-                        <div class="fixedHeader">
+                        <bb-splitpanel-list-header>
                             Transactions {{listCtrl.data.length}}
-                        </div>
+                        </bb-splitpanel-list-header>
                         <div class="split-panel-list-container">
-                            <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata()" bb-listbuilder-content-item="listCtrl.selectedItem" ng-class="{'selectedItem': $index === listCtrl.selectedItem.$index}">
+                            <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
                                 <div style="margin-bottom: 10px">
                                     {{item.name}}
                                 </div>
@@ -138,20 +137,15 @@
                     </div>
 
                     <bb-splitpanel-workspace class="split-panel-workspace">
-                        <!--<div class="split-panel-workspace-fixed-header">
-                            <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
-                            <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
-
-                        </div>-->
-                        <bb-modal>
-                            <div class="modal-header">
-                                <h1 class="bb-dialog-header">Transaction</h1>
-                                <div style="float:right;">
-                                    <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
-                                    <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
-                                </div>
+                        <bb-splitpanel-workspace-fixed-header>
+                            <h1 style="float:left;">Transaction</h1>
+                            <div style="float:right;">
+                                <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
+                                <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
                             </div>
-                            <div class="split-panel-workspace-container">
+                        </bb-splitpanel-workspace-fixed-header>
+                        <bb-splitpanel-workspace-container>
+                            <form>
                                 Transaction
                                 {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
 
@@ -225,26 +219,14 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <!--<div class="work-space-footer">
-                <input type="button" name="name" value="Record transaction" />
-                <input type="button" name="name" value="Submit" />
+                            </form>
+                        </bb-splitpanel-workspace-container>
 
-             </div>
-            </form>-->
-                            </div>
-
-                            <bb-modal-footer>
-                                <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
-                                <bb-modal-footer-button>Sample button</bb-modal-footer-button>
-                                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
-                            </bb-modal-footer>
-                        </bb-modal>
-                        <!--<div class="split-panel-workspace-footer">
-
-                            <input type="button" name="name" value="Record transaction" />
-                            <input type="button" name="name" value="Submit" />
-
-                        </div>-->
+                        <bb-modal-footer>
+                            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+                            <bb-modal-footer-button>Sample button</bb-modal-footer-button>
+                            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+                        </bb-modal-footer>
                     </bb-splitpanel-workspace>
                 </div>
             </bb-listbuilder-content-custom>
@@ -256,7 +238,13 @@
 <script type="text/ng-template" id="demo/listbuilder/filters.html">
     <bb-modal>
         <div class="modal-form">
-            <bb-modal-header>Food preferences</bb-modal-header>
+            <bb-modal-header>
+                Food preferences
+                <div style="float:right;">
+                    <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
+                    <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
+                </div>
+            </bb-modal-header>
             <div bb-modal-body>
                 <form>
                     <label style="margin-top: 15px;">

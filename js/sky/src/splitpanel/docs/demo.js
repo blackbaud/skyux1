@@ -291,10 +291,11 @@
         }
 
         //this is used to get panel data on selection of item
-        function getPaneldata() {
+        function getPaneldata(p) {
             //get data from database for particualar item
             //not confirm it should be in panel directive or listBuilder-content
-
+            console.log(p);
+            self.selectedItem = p;
 
         }
 

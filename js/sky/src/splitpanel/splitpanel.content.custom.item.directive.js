@@ -13,14 +13,12 @@
                     var ctrl = this;
                     $scope.selectItem = function () {
                         $scope.$parent.item.$index = $scope.$parent.$index;
-                        $scope.bbListbuilderContentItem = $scope.$parent.item;
-
-                        $scope.bbListbuilderContentGetPanelData();
+                        $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
                     }
                 },
                 //require: '^bbSplitpanelContentCustom',
                 scope: {
-                    bbListbuilderContentItem: '=?',
+                    bbSplitpanelItemIsActive: '=?',
                     bbListbuilderContentGetPanelData: '&?'
                 }
             };
