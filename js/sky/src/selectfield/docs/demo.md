@@ -16,4 +16,4 @@ The select field directive launches a modal that displays items for users to sel
     - `bb-select-field-click` &mdash; *(Optional.)* Specifies a function to be called when users click the select field. This function is useful when you must fetch the initial items on the modal remotely each time the modal launches.
     - `bb-select-field-picker` &mdash; Defines the content to display in the select field modal.
       - `bb-select-field-picker-template` &mdash; Specifies a template for the content of the modal. The modal generally includes [a `bb-checklist` directive ](../checklist) to create a filterable checkbox list for users to select items.
-      - `bb-select-field-picker-header` &mdash; *(Optional.)* Specifies a header for the select field modal. *(Default: 'Select value')*
+      - `bb-select-field-picker-header` &mdash; *(Optional.)* Specifies a header for the select field modal. *(Default: `Select value`)*

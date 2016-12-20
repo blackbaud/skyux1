@@ -93,3 +93,11 @@
     font: 300 22px $bb-font-family-narrow;
     color: $text-color;
 }
+
+@mixin bb-focus-indication {
+    outline: thin dotted;
+
+    //webkit
+    outline: -webkit-focus-ring-color auto 5px;
+    outline-offset: -2px;
+}
