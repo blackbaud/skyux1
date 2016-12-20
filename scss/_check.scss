@@ -62,12 +62,7 @@
 
 .bb-check-wrapper input:focus + .bb-check-checkbox,
 .bb-check-wrapper input:focus + .bb-check-radio {
-    //default
-    outline: thin dotted;
-
-    //webkit
-    outline: -webkit-focus-ring-color auto 5px;
-    outline-offset: -2px;
+    @include bb-focus-indication();
 }
 
 @media (min-width: $screen-sm-min) {
