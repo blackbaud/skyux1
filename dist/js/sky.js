@@ -16315,7 +16315,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="bb-page-summary-image" ng-show="bbPageSummary.imageCtrl"></div>\n' +
         '        <div>\n' +
         '          <h1 class="bb-page-summary-title" ng-show="bbPageSummary.titleCtrl"></h1>\n' +
-        '          <h2 class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></h2>\n' +
+        '          <div class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></div>\n' +
         '          <div class="bb-page-summary-status" ng-show="bbPageSummary.statusCtrl"></div>\n' +
         '          <div class="bb-page-summary-key-info-xs"></div>\n' +
         '          <div class="bb-page-summary-content"></div>\n' +

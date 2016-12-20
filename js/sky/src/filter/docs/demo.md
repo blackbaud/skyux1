@@ -25,5 +25,3 @@ The filter summary component indicates which filters have been applied.
     - `bb-filter-summary-item-on-click` &mdash; *(Optional.)* Specifies a function to be called when users click a summary item.
     - `bb-filter-summary-item-is-dismissible` &mdash; *(Optional.)* Indicates whether to include close icons on summary items. *(Default: `true`)*
     - `bb-filter-summary-item-on-dismiss` &mdash; *(Optional.)* Specifies a function to be called when users click the close icons on summary items.
-
----

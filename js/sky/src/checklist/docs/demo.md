@@ -16,12 +16,12 @@ The checklist directive allows you to build a filterable checkbox list. The `bb-
         - `bb-checklist-filter-callback` &mdash; Specifies the function to be called when a user modifies the search text. The consumer uses this to update the `bb-checklist-items` array based on the search text. A single object is passed to the function as a parameter that contains the `searchText` and `category`, and `subsetSelected` properties. This is useful to load items remotely or to filter items with custom logic other than simple case-insensitive string matching.
         - `bb-checklist-filter-local` &mdash; Instructs the checklist directive to filter items in the list by making sure the properties of each item match a specified category or search text.
         - `bb-checklist-search-debounce` &mdash; Specifies the number of milliseconds to debounce changes to the search text. When making web requests in `bb-checklist-filter-callback`, this avoids new requests after each character that users type.
-        - `bb-checklist-no-items-message` &mdash; Specifies a message to display when the list displays no items. *(Default: 'No items found')*
-        - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or grid. List mode is preferred because it is mobile-responsive, but grid mode is the default for backwards-compatibility. *(Default=`grid`)*
+        - `bb-checklist-no-items-message` &mdash; Specifies a message to display when the list displays no items. *(Default: `No items found`)*
+        - `bb-checklist-mode` &mdash; Specifies whether to display the checklist as a list or grid. List mode is preferred because it is mobile-responsive, but grid mode is the default for backwards-compatibility. *(Default: `grid`)*
             - `list` &mdash; Displays items in a list with titles and descriptions. Items are expected to have `title`, `description`, and `category` properties. This view is preferred to grid mode because it is mobile-responsive.
             - `grid` &mdash; Displays items in a grid with columns specified by `bb-checklist-column` elements. For backwards-compatibility reasons, this view is the default, but list mode is preferred because it is mobile-responsive.
         - `bb-checklist-categories` &mdash; An array of category names to build category filters at the top of the list.
-        - `bb-checklist-all-categories-label` &mdash; *(Optional.)* Specifies text for the category that includes all checklist items.  *(Default=`All categories`)*
+        - `bb-checklist-all-categories-label` &mdash; *(Optional.)* Specifies text for the category that includes all checklist items.  *(Default: `All categories`)*
         - `bb-checklist-select-style` &mdash; *(Optional.)* When set to `single`, the checklist will only allow selection of one item in the checklist.
         - `bb-checklist-is-loading` &mdash; *(Optional.)* User can set to true to give indication that the checklist is loading items. Useful for when using remote search.
         - `bb-checklist-subset-label` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the checklist items.

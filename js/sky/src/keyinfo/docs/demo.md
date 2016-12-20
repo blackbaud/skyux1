@@ -8,6 +8,6 @@ The key info directive highlights important information. It can display any type
 
 ### Key info settings ###
     - `bb-key-info` &mdash; Highlights important information such as summary numbers.
-        - `bb-key-info-layout` &mdash; *(Optional.)* Indicates whether to display key info in a vertical layout with the label under the primary value or in a horizontal layout with the label beside the primary value. To display key info horizontally, set this property to `horizontal`. *(Default = `vertical`)*
+        - `bb-key-info-layout` &mdash; *(Optional.)* Indicates whether to display key info in a vertical layout with the label under the primary value or in a horizontal layout with the label beside the primary value. To display key info horizontally, set this property to `horizontal`. *(Default: `vertical`)*
         - `bb-key-info-value` &mdash; Specifies the primary content to display in large, bold text. 
         - `bb-key-info-label` &mdash; Specifies a label to display in smaller, plain text under or beside the primary value.

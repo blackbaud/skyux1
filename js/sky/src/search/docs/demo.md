@@ -17,5 +17,4 @@ The search component creates a mobile-responsive input control for users to ente
 - `bb-search-container` &mdash; Makes the `bb-search-input` component responsive on small screens. You include this directive as an attribute with no value on the container for the `bb-search-input` component.
 
 ### Search events ###
-- `bbSearchInputApply` &mdash; When the search input receives this event, it applies search text as if the search button was clicked. If optional `searchText` is sent with the event as an argument, then the text in the input will be updated. If no `searchText` is sent with the event, then the existing text in the input will be applied.   
----
+- `bbSearchInputApply` &mdash; When the search input control receives this event, it applies search text as if a user clicked the search button. If the event includes the optional `searchText` as an argument, then the text in the input is updated. If the event does not include `searchText`, then the existing text in the input is applied.

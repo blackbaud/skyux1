@@ -4,7 +4,7 @@
       <uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in tabsetTestCtrl.tabs" class="bb-tab-close">
          <uib-tab-heading>
            {{t.title}}
-            <button type="button" class="bb-tab-close-icon" ng-click="tabsetTestCtrl.closeTab($index, $event)"></button>
+            <button type="button" aria-label="Close tab" class="bb-tab-close-icon" ng-click="tabsetTestCtrl.closeTab($index, $event)"></button>
          </uib-tab-heading>
          {{t.content}}
       </uib-tab>
