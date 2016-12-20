@@ -13,3 +13,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 
 ### Popover settings ###
 - `bb-popover-template` &mdash; Creates an HTML-formatted popover for a trigger element to display.
+
+### Accessibility ###
+
+By default the popover is appended to the parent element making it available in the correct reading sequence and focus order. It is not recommended to use the `popover-append-to-body` property in Angular UI Bootstrap to append the popover to the body element. This would make it difficult for people who use assistive technology or keyboard input to access. 
