@@ -53,12 +53,7 @@
     }
 
     &:focus {
-      //default
-      outline: thin dotted;
-
-      //webkit
-      outline: -webkit-focus-ring-color auto 5px;
-      outline-offset: -2px;
+      @include bb-focus-indication();
     }
 }
 
