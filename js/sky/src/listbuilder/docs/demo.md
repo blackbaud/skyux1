@@ -14,7 +14,7 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-search-text` &mdash; *(Optional.)* Text that the user can provide to set the text in the toolbar's search input.
   - `bb-listbuilder-search-placeholder` &mdash; *(Optional.)* Specifies the placeholder text for the search input.
   - `bb-listbuilder-vertical-offset-id` &mdash; *(Optional.)* Id of the element that should float above the listbuilder toolbar when the window is scrolled.
-  - `bb-listbuilder-toolbar-fixed` &mdash; *(Optional.)* Set to true if the toolbar should not float when the window is scrolled. *(Default = `false`)*
+  - `bb-listbuilder-toolbar-fixed` &mdash; *(Optional.)* Set to true if the toolbar should not float when the window is scrolled. *(Default: `false`)*
   - `bb-listbuilder-add-button` &mdash; *(Optional.)* A component for the add button in a listbuilder toolbar
     - `bb-listbuilder-add-action` &mdash; *(Optional.)* Specifies a function that will be called when the add button is clicked.
     - `bb-listbuilder-add-label` &mdash; *(Optional.)* Specifies text for the add button title.
@@ -23,10 +23,10 @@ The listbuilder component contains functionality for displaying and executing di
   - `bb-listbuilder-filter-summary` &mdash; *(Optional.)* Container for the filter summary in the listbuilder toolbar. See the [filter](../filter) module for content that can be placed here.
   - `bb-listbuilder-toolbar-secondary-actions` &mdash; *(Optional.)* Container for the secondary actions dropdown in the listbuilder toolbar. Also contains the column picker component when using a grid in listbuilder.
     - `bb-listbuilder-secondary-actions` &mdash; Component for the secondary actions dropdown.
-      - `bb-listbuilder-secondary-actions-append-to-body` &mdash; *(Optional.)* Specifies whether the dropdown should be appended to the document body. *(Default = `false`)*
+      - `bb-listbuilder-secondary-actions-append-to-body` &mdash; *(Optional.)* Specifies whether the dropdown should be appended to the document body. *(Default: `false`)*
       - `bb-listbuilder-secondary-action` &mdash; Component for an individual action in the secondary actions dropdown.
         - `bb-listbuilder-secondary-action-click` &mdash; Specifies a function that will be called when a user clicks the action.
-        - `bb-listbuilder-secondary-action-disabled` &mdash; *(Optional.)* Specifies whether the action is disabled. *(Default = `false`)*
+        - `bb-listbuilder-secondary-action-disabled` &mdash; *(Optional.)* Specifies whether the action is disabled. *(Default: `false`)*
       - `bb-listbuilder-column-picker` &mdash; Component for choosing columns when using a grid within listbuilder.
         - `bb-listbuilder-column-picker-columns` &mdash; An array of columns that should be displayed in the column picker. See [grid](../grids) columns for column data options.
         - `bb-listbuilder-column-picker-selected-column-ids` &mdash; An array of unique identifiers that indicated the current visible columns.
@@ -44,11 +44,11 @@ The listbuilder component contains functionality for displaying and executing di
         - `allSelected` &mdash; Set to true if the multiselect items were changed by selecting all items, set to false otherwise.
       - `bb-listbuilder-multiselect-selected-ids` &mdash; *(Optional.)* Specifies the array of selected unique identifiers. 
       - `bb-listbuilder-multiselect-available-items` &mdash; *(Optional.)* Specifies the array of items in the listbuilder. When specified, the selected property of the item will be updated when `bb-listbuilder-multiselect-selected-ids` are changed, when the select all button is clicked, and when the clear all button is clicked.
-      - `bb-listbuilder-multiselect-item-selected-property` &mdash; *(Optional.)* Specifies the name for the selected property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `selected`)*
-      - `bb-listbuilder-multiselect-item-selected-property` &mdash; *(Optional.)* Specifies the name for the id property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default = `id`)*
+      - `bb-listbuilder-multiselect-item-selected-property` &mdash; *(Optional.)* Specifies the name for the selected property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default: `selected`)*
+      - `bb-listbuilder-multiselect-item-selected-property` &mdash; *(Optional.)* Specifies the name for the id property of items in the `bb-listbuilder-multiselect-available-items` array. *(Default: `id`)*
       - `bb-listbuilder-on-show-only-selected` &mdash; Callback that will be executed when users select or deselect the 'Show only selected' checkbox in the multiselect area. It has the following arguments: 
         - `showOnlySelected` &mdash; Set to true if the list should contain only selected items, set to false otherwise.
-      - `bb-listbuilder-show-only-selected` &mdash; *(Optional.)* Specifies the value of the 'Show only selected' checkbox. *(Default = `false`)*
+      - `bb-listbuilder-show-only-selected` &mdash; *(Optional.)* Specifies the value of the 'Show only selected' checkbox. *(Default: `false`)*
       - `bb-listbuilder-multiselect-select-all` &mdash; Component that creates a 'Select all' button.
         - `bb-listbuilder-multiselect-on-select-all` &mdash; *(Optional.)* Callback that will be executed when the 'Select all' button is clicked. The function should return an array of unique identifiers to be selected. When not specified, and when the `bb-listbuilder-multiselect-available-items` array is specified, all items in the array will be selected.
       - `bb-listbuilder-multiselect-clear-all` &mdash; Component that creates a 'Clear all' button.
@@ -85,5 +85,3 @@ The listbuilder component contains functionality for displaying and executing di
 `bb-listbuilder-footer` &mdash; Component for the listbuilder footer, which contains the ability to load data using infinite scroll.
     - `bb-listbuilder-show-load-more` &mdash; When true, indicates that there is more data ready to be loaded by the listbuilder.
     - `bb-listbuilder-on-load-more` &mdash; Callback that will be executed when the listbuilder's load more functionality is invoked.
-       
----

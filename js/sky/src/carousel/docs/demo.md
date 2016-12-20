@@ -8,7 +8,6 @@ The carousel component displays a series of items such as cards for users to cyc
 
 ### Carousel settings ###
 - `bb-carousel` &mdash; Creates a carousel to display a series of items such as cards.
-    - `bb-carousel-selected-index` &mdash; Specifies the index of the item to select. *(Default: 0)*
+    - `bb-carousel-selected-index` &mdash; Specifies the index of the item to select. *(Default: `0`)*
     - `bb-carousel-selected-index-change` &mdash; Specifies the function to be called when users select items in the carousel. This function accepts an `index` parameter that represents the selected item.
     - `bb-carousel-style` &mdash; Specifies the style for the carousel. The `card-large` and `card-small` styles are optimized to display [card components](../card/) and set the appropriate height and width. *(Default: `card-large`)*
----
