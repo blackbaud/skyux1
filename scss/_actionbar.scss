@@ -32,8 +32,7 @@
                 background-color: $dropdown-link-hover-bg;
             }
             .bb-action-bar-item-button:focus {
-                outline: 5px auto -webkit-focus-ring-color;
-                outline-offset: -2px;
+                @include bb-focus-indication();
             }
         }
     }
