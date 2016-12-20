@@ -20,4 +20,3 @@ The summary action bar contains actions and a responsive summary section.
       - `bb-summary-action-disabled` &mdash; *(Optional.)* Specifies whether the action should be disabled.
       - `bb-summary-action-click` &mdash; *(Optional.)* Specifies a callback that will be executed when the action is clicked.
   - `bb-summary-actionbar-summary` &mdash; Specifies the container for the summary section.
----
