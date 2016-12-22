@@ -16,4 +16,4 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popover](h
 
 ### Accessibility ###
 
-By default the popover is appended to the parent element making it available in the correct reading sequence and focus order. It is not recommended to use the `popover-append-to-body` property in Angular UI Bootstrap to append the popover to the body element. This would make it difficult for people who use assistive technology or keyboard input to access. 
+By default, the popover is appended to its parent element to make it available in the correct reading sequence and focus order. Do not use the Angular UI Bootstrap `popover-append-to-body` property to append the popover to the `body` element because this makes access difficult for people who use assistive technology or keyboard input. 
