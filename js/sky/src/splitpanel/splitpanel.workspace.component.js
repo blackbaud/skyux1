@@ -2,17 +2,10 @@
 (function () {
     'use strict';
 
-    function Controller($timeout, bbResources) {
-        var ctrl = this;
-    }
-
-    Controller.$inject = ['$timeout', 'bbResources'];
-
-    angular.module('sky.splitpanel.workspace.component', ['sky.card', 'sky.resources'])
+    angular.module('sky.splitpanel.workspace.component', [])
         .component('bbSplitpanelWorkspace', {
             templateUrl: 'sky/templates/splitpanel/splitpanel.workspace.component.html',
             replace: true,
             transclude: true,
-            //controller: Controller,
         });
 }());

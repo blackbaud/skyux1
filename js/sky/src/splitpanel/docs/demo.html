@@ -137,13 +137,13 @@
                     </div>
 
                     <bb-splitpanel-workspace class="split-panel-workspace">
-                        <bb-splitpanel-workspace-fixed-header>
+                        <bb-splitpanel-workspace-header>
                             <h1 style="float:left;">Transaction</h1>
                             <div style="float:right;">
                                 <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
                                 <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
                             </div>
-                        </bb-splitpanel-workspace-fixed-header>
+                        </bb-splitpanel-workspace-header>
                         <bb-splitpanel-workspace-container>
                             <form>
                                 Transaction
@@ -238,13 +238,7 @@
 <script type="text/ng-template" id="demo/listbuilder/filters.html">
     <bb-modal>
         <div class="modal-form">
-            <bb-modal-header>
-                Food preferences
-                <div style="float:right;">
-                    <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
-                    <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
-                </div>
-            </bb-modal-header>
+            <bb-modal-header>Food preferences</bb-modal-header>
             <div bb-modal-body>
                 <form>
                     <label style="margin-top: 15px;">

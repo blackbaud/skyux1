@@ -10,7 +10,6 @@
                 replace: true,
                 restrict: 'A',
                 controller: function ($scope) {
-                    var ctrl = this;
                     $scope.selectItem = function () {
                         $scope.$parent.item.$index = $scope.$parent.$index;
                         $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
