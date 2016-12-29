@@ -56,7 +56,7 @@
 
     ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
 
-    function ListbuilderTestController($timeout, bbModal) {
+    function ListbuilderTestController($scope, $timeout, bbModal) {
         var self = this,
             sortProperty,
             sortDescending,
@@ -300,7 +300,7 @@
         }
 
         function next() {
-            if (self.selectedItem.$index < self.data.length) {
+            if (self.selectedItem.$index < self.data.length - 1) {
                 var newIndex = self.selectedItem.$index + 1;
                 self.selectedItem = this.data[newIndex];
                 self.selectedItem.$index = newIndex;
@@ -379,7 +379,7 @@
 
     }
 
-    ListbuilderTestController.$inject = ['$timeout', 'bbModal'];
+    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal'];
 
 
     angular

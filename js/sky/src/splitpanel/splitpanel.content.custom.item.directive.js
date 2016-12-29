@@ -9,13 +9,12 @@
                 transclude: true,
                 replace: true,
                 restrict: 'A',
-                controller: function ($scope) {
+                controller: ['$scope', function ($scope) {
                     $scope.selectItem = function () {
                         $scope.$parent.item.$index = $scope.$parent.$index;
                         $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
                     }
-                },
-                //require: '^bbSplitpanelContentCustom',
+                }],
                 scope: {
                     bbSplitpanelItemIsActive: '=?',
                     bbListbuilderContentGetPanelData: '&?'

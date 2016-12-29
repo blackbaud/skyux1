@@ -140,18 +140,19 @@
                         <bb-splitpanel-workspace-header>
                             <h1 style="float:left;">Transaction</h1>
                             <div style="float:right;">
-                                <button type="button" class="btn btn-default" ng-click="listCtrl.previous()">Back</button>
-                                <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Next</button>
+                                <button type="button" class="btn btn-default" ng-disabled="listCtrl.selectedItem.$index === 0" ng-click="listCtrl.previous()">Back</button>
+                                <button type="button" class="btn btn-default" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.next()">Next</button>
                             </div>
                         </bb-splitpanel-workspace-header>
                         <bb-splitpanel-workspace-container>
-                            <form>
                                 Transaction
                                 {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
 
 
                                 <br />
                                 <br />
+                                <br />
+                                Name: <input type="text" ng-model="listCtrl.selectedItem.name" />
                                 <br />
                                 <br />
                                 <bb-card bb-card-size="large" bb-card-selectable="{{listCtrl.showCheckbox}}" bb-card-selected="listCtrl.cardSelected">
@@ -219,7 +220,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </form>
                         </bb-splitpanel-workspace-container>
 
                         <bb-modal-footer>
