@@ -77,7 +77,7 @@
     }
 
     .bb-split-panel-width-100 {
-        width:100%;
+        width: 100%;
     }
 </style>
 <div ng-controller="ListbuilderTestController as listCtrl">
@@ -145,6 +145,7 @@
                             </div>
                         </bb-splitpanel-workspace-header>
                         <bb-splitpanel-workspace-container>
+                            <form name="forms.containerForm">
                                 Transaction
                                 {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
 
@@ -169,7 +170,7 @@
                                         </div>
                                     </bb-card-content>
                                     <bb-card-actions ng-if="listCtrl.showActions">
-                                        <button type="button" class="btn btn-default" ng-click="listCtrl.next()">Click me</button>
+                                        <button type="button" class="btn btn-default" ng-click="next()">Click me</button>
                                     </bb-card-actions>
                                 </bb-card>
                                 <br />
@@ -220,6 +221,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                            </form>
                         </bb-splitpanel-workspace-container>
 
                         <bb-modal-footer>
@@ -231,7 +233,6 @@
                 </div>
             </bb-listbuilder-content-custom>
         </bb-listbuilder-content>
-
     </bb-listbuilder>
 </div>
 
@@ -257,5 +258,22 @@
         </div>
     </bb-modal>
 </script>
+<script type="text/ng-template" id="demo/splitpanel/confirmpopup.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Save changes?</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    Do you want to save changes to this transaction? Your  changes will be lost if  you  don't save them.
 
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary ng-click="ctrl.save()">Save</bb-modal-footer-button-primary>
+                <bb-modal-footer-button>Don't save</bb-modal-footer-button>
+                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
 

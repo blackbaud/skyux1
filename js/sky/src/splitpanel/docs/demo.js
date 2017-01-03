@@ -56,7 +56,25 @@
 
     ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
 
-    function ListbuilderTestController($scope, $timeout, bbModal) {
+
+    function ListbuilderModalController(cope) {
+        var self = this;
+        function save() {
+
+            console.log('save');
+        }
+
+        function doNotsSave() {
+        }
+        self.save = save;
+        self.doNotsSave = doNotsSave;
+
+    }
+
+    ListbuilderModalController.$inject = ['cope'];
+
+    function ListbuilderTestController($scope, $timeout, bbModal, $window) {
+        debugger;
         var self = this,
             sortProperty,
             sortDescending,
@@ -294,10 +312,38 @@
         function getPaneldata(p) {
             //get data from database for particualar item
             //not confirm it should be in panel directive or listBuilder-content
-            console.log(p);
+            self.dirtyValue = p;
+            console.log($scope);
+            if (!checkDirtyForm())
+                return;
             self.selectedItem = p;
 
         }
+
+        //check dirty and open modal
+        function checkDirtyForm() {
+            var cope = $scope.forms.containerForm;
+            if ($scope.forms.containerForm.$dirty) {
+                bbModal.open({
+                    controller: 'ListbuilderTestController as ctrl',
+                    templateUrl: 'demo/splitpanel/confirmpopup.html'
+                    ,
+                    resolve: {
+                        cope: function () {
+                            return $scope;
+                        }
+                    }
+                })
+                //.result
+                //                .then(function (result) {
+                //                    //self.appliedFilters = angular.copy(result);
+                //                    //applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+                //                });
+                return false;
+            }
+            return true;
+        }
+
 
         function next() {
             if (self.selectedItem.$index < self.data.length - 1) {
@@ -307,6 +353,8 @@
             }
         }
 
+
+
         function previous() {
 
             if (self.selectedItem.$index !== 0) {
@@ -315,6 +363,25 @@
                 self.selectedItem.$index = newIndex;
             }
         }
+
+
+        function save() {
+            //$scope.forms.containerForm.setPristine();
+
+            //getPaneldata(self.dirtyValue);
+        }
+        //var win = $window;
+        //$scope.$watch('splitpanel-container-form.$dirty', function (value) {
+        //    if (value) {
+        //        win.onbeforeunload = function () {
+        //            return 'Your message here';
+        //        };
+        //    }
+        //});
+
+        //splitpanel - container - form
+
+
 
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
@@ -327,6 +394,7 @@
         self.onDismissFilter = onDismissFilter;
         self.data = [];
         self.next = next;
+        self.save = save;
         self.previous = previous;
         loadData();
 
@@ -377,13 +445,16 @@
         self.showActions = true;
         self.showCheckbox = true;
 
+        $scope.forms = {};
+
     }
 
-    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal'];
+    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window'];
 
 
     angular
         .module('stache')
         .controller('ListbuilderTestController', ListbuilderTestController)
-        .controller('ListbuilderFilterController', ListbuilderFilterController);
+        .controller('ListbuilderFilterController', ListbuilderFilterController)
+        .controller('ListbuilderModalController', ListbuilderModalController);
 }());
