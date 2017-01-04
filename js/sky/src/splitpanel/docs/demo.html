@@ -116,7 +116,8 @@
                 <div class="split-pattern-container">
                     <div class="bb-custom-content">
                         <bb-splitpanel-list-header>
-                            Transactions {{listCtrl.data.length}}
+                             {{listCtrl.data.length}} Transactions
+                            <br /> as of {{listCtrl.updatedDate}} <span><a ng-click="listCtrl.downloadTransactions()">Refresh</a> </span>
                         </bb-splitpanel-list-header>
                         <div class="split-panel-list-container">
                             <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
@@ -270,7 +271,7 @@
             </div>
             <bb-modal-footer>
                 <bb-modal-footer-button-primary ng-click="ctrl.save()">Save</bb-modal-footer-button-primary>
-                <bb-modal-footer-button>Don't save</bb-modal-footer-button>
+                <bb-modal-footer-button ng-click="ctrl.doNotSave()">Don't save</bb-modal-footer-button>
                 <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
             </bb-modal-footer>
         </div>

@@ -57,24 +57,23 @@
     ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
 
 
-    function ListbuilderModalController(cope) {
+    function ListbuilderModalController($uibModalInstance) {
         var self = this;
         function save() {
-
-            console.log('save');
+            $uibModalInstance.close(true);
         }
 
-        function doNotsSave() {
+        function doNotSave() {
+            $uibModalInstance.close(false);
         }
         self.save = save;
-        self.doNotsSave = doNotsSave;
+        self.doNotSave = doNotSave;
 
     }
 
-    ListbuilderModalController.$inject = ['cope'];
+    ListbuilderModalController.$inject = ['$uibModalInstance'];
 
     function ListbuilderTestController($scope, $timeout, bbModal, $window) {
-        debugger;
         var self = this,
             sortProperty,
             sortDescending,
@@ -153,6 +152,8 @@
                     duesPaid: true
                 }
             ];
+        self.dirtyValue;
+
 
         function getData(top, skip) {
             var i,
@@ -291,6 +292,14 @@
                 self.selectedItem = self.data[0];
                 self.selectedItem.$index = 0;
             }
+
+            self.updatedDate = getFormattedDate(new Date());
+
+        }
+
+        function getFormattedDate(date) {
+            var p = date;
+            return (p.getMonth() + 1) + "/" + p.getDate() + "/" + p.getFullYear();
         }
 
         function onLoadMore() {
@@ -322,28 +331,25 @@
 
         //check dirty and open modal
         function checkDirtyForm() {
-            var cope = $scope.forms.containerForm;
+            var listScope = $scope;
             if ($scope.forms.containerForm.$dirty) {
                 bbModal.open({
-                    controller: 'ListbuilderTestController as ctrl',
-                    templateUrl: 'demo/splitpanel/confirmpopup.html'
-                    ,
-                    resolve: {
-                        cope: function () {
-                            return $scope;
-                        }
-                    }
+                    controller: 'ListbuilderModalController as ctrl',
+                    templateUrl: 'demo/splitpanel/confirmpopup.html',
+                    //scope: $scope
                 })
-                //.result
-                //                .then(function (result) {
-                //                    //self.appliedFilters = angular.copy(result);
-                //                    //applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-                //                });
+                .result.then(function (result) {
+                    listScope.forms.containerForm.$setPristine();
+                    if (result) {
+                        self.save();
+                    } else {
+                        self.doNotSave();
+                    }
+                });
                 return false;
             }
             return true;
         }
-
 
         function next() {
             if (self.selectedItem.$index < self.data.length - 1) {
@@ -352,8 +358,6 @@
                 self.selectedItem.$index = newIndex;
             }
         }
-
-
 
         function previous() {
 
@@ -364,11 +368,23 @@
             }
         }
 
-
         function save() {
-            //$scope.forms.containerForm.setPristine();
 
-            //getPaneldata(self.dirtyValue);
+            alert("data saved");
+            //TODO : will save here
+            self.getPaneldata(self.dirtyValue);
+        }
+
+        function doNotSave() {
+            alert("data not saved");
+            loadData(); // ideally it should refersh the data, then no need revert unsaved data
+            self.getPaneldata(self.dirtyValue);
+        }
+
+        function downloadTransactions() {
+            //download transaction and update date
+            self.updatedDate = getFormattedDate(new Date());
+
         }
         //var win = $window;
         //$scope.$watch('splitpanel-container-form.$dirty', function (value) {
@@ -378,10 +394,6 @@
         //        };
         //    }
         //});
-
-        //splitpanel - container - form
-
-
 
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
@@ -395,7 +407,10 @@
         self.data = [];
         self.next = next;
         self.save = save;
+        self.doNotSave = doNotSave; 
         self.previous = previous;
+        self.downloadTransactions = downloadTransactions;
+
         loadData();
 
         self.sortOptions = [
@@ -445,8 +460,8 @@
         self.showActions = true;
         self.showCheckbox = true;
 
+        self.updatedDate;
         $scope.forms = {};
-
     }
 
     ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window'];
