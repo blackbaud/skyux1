@@ -8,7 +8,7 @@
         function clearAllFilters() {
             self.filters = {
                 tenYears: false,
-                onlyUnpaid: false
+                showUnrecorded: false
             };
         }
 
@@ -19,8 +19,8 @@
                 result.push({ name: 'tenYears', value: true, label: 'members with ten years' });
             }
 
-            if (filters.onlyUnpaid) {
-                result.push({ name: 'onlyUnpaid', value: true, label: 'unpaid members' });
+            if (filters.showUnrecorded) {
+                result.push({ name: 'showUnrecorded', value: true, label: 'unpaid members' });
             }
 
             return result;
@@ -93,7 +93,7 @@
                     occupation: 'Walt Disney world 0914',
                     joinDate: new Date('2/23/2016'),
                     newField: 'David johnson (Visa3333)',
-                    duesPaid: true
+                    duesPaid: false
                 },
                 {
                     name: '- $25.00',
@@ -114,7 +114,7 @@
                     occupation: 'Walt Disney world 0914',
                     newField: 'Nicole Guersey (Visa1234)',
                     joinDate: new Date('11/7/1999'),
-                    duesPaid: true
+                    duesPaid: false
                 },
                 {
                     name: '$25.00',
@@ -198,7 +198,7 @@
                             return new Date().getFullYear() - filterObj.joinDate.getFullYear() >= 10;
                         });
                     }
-                    if (item.name === 'onlyUnpaid') {
+                    if (item.name === 'showUnrecorded') {
                         newData = newData.filter(function (filterObj) {
                             return filterObj.duesPaid === false;
                         });
@@ -252,6 +252,7 @@
         function onDismissFilter(index) {
             self.appliedFilters.splice(index, 1);
             applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            self.showUnrecord = false;
         }
 
         function sortItems(item) {
@@ -273,6 +274,7 @@
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
                     applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+                    self.showUnrecord = false;
                 });
         }
 
@@ -288,12 +290,17 @@
 
 
             //displaying panel data for first item
+            selectFirstItem();
+
+            self.updatedDate = getFormattedDate(new Date());
+
+        }
+
+        function selectFirstItem() {
             if (self.data && self.data[0] && self.data[0] !== null) {
                 self.selectedItem = self.data[0];
                 self.selectedItem.$index = 0;
             }
-
-            self.updatedDate = getFormattedDate(new Date());
 
         }
 
@@ -321,16 +328,18 @@
         function getPaneldata(p) {
             //get data from database for particualar item
             //not confirm it should be in panel directive or listBuilder-content
-            self.dirtyValue = p;
+
             console.log($scope);
-            if (!checkDirtyForm())
+
+            if (!checkDirtyForm(p))
                 return;
             self.selectedItem = p;
 
         }
 
         //check dirty and open modal
-        function checkDirtyForm() {
+        function checkDirtyForm(selectedItem) {
+            self.dirtyValue = selectedItem;
             var listScope = $scope;
             if ($scope.forms.containerForm.$dirty) {
                 bbModal.open({
@@ -354,6 +363,10 @@
         function next() {
             if (self.selectedItem.$index < self.data.length - 1) {
                 var newIndex = self.selectedItem.$index + 1;
+                var selectedItem = this.data[newIndex];
+                selectedItem.$index = newIndex;
+                if (!checkDirtyForm(selectedItem))
+                    return;
                 self.selectedItem = this.data[newIndex];
                 self.selectedItem.$index = newIndex;
             }
@@ -386,14 +399,30 @@
             self.updatedDate = getFormattedDate(new Date());
 
         }
-        //var win = $window;
-        //$scope.$watch('splitpanel-container-form.$dirty', function (value) {
-        //    if (value) {
-        //        win.onbeforeunload = function () {
-        //            return 'Your message here';
-        //        };
-        //    }
-        //});
+
+        function onlyShowRecorded() {
+
+            selectFirstItem();
+            //TODO: loadData with filter of unrecorded transcation
+
+            var appliedFilters = [];
+            if (self.appliedFilters) {
+                appliedFilters = angular.copy(self.appliedFilters);
+            }
+
+
+            if (self.showUnrecord) {
+                appliedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
+            }
+            else {
+                //appliedFilters.pop();
+            }
+
+            //self.appliedFilters = angular.copy(appliedFilters);
+
+            applySearchFilterSort(self.searchText, appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+
+        }
 
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
@@ -407,9 +436,10 @@
         self.data = [];
         self.next = next;
         self.save = save;
-        self.doNotSave = doNotSave; 
+        self.doNotSave = doNotSave;
         self.previous = previous;
         self.downloadTransactions = downloadTransactions;
+        self.onlyShowRecorded = onlyShowRecorded;
 
         loadData();
 

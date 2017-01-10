@@ -57,6 +57,8 @@
 
     .fixedHeader {
         border-bottom: 1px solid #e5e5e5;
+        padding-bottom: 6px;
+        padding-left: 17px;
     }
 
     .split-panel-list-container {
@@ -116,9 +118,12 @@
                 <div class="split-pattern-container">
                     <div class="bb-custom-content">
                         <bb-splitpanel-list-header>
-                             {{listCtrl.data.length}} Transactions
+                            <span>{{listCtrl.data.length}}</span> Transactions
                             <br /> as of {{listCtrl.updatedDate}} <span><a ng-click="listCtrl.downloadTransactions()">Refresh</a> </span>
                         </bb-splitpanel-list-header>
+                        <div class="fixedHeader" style="padding-top: 6px;">
+                            <input bb-check type="checkbox" ng-change="listCtrl.onlyShowRecorded()" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
+                        </div>
                         <div class="split-panel-list-container">
                             <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.getPaneldata(arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
                                 <div style="margin-bottom: 10px">
@@ -246,10 +251,6 @@
                     <label style="margin-top: 15px;">
                         <input type="checkbox" bb-check ng-model="filterCtrl.filters.tenYears" />
                         Show only members with 10 years experience
-                    </label>
-                    <label style="margin-top: 15px;">
-                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.onlyUnpaid" />
-                        Show only members with unpaid dues
                     </label>
                 </form>
             </div>
