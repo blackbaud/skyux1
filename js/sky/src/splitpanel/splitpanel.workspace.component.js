@@ -6,6 +6,6 @@
         .component('bbSplitpanelWorkspace', {
             templateUrl: 'sky/templates/splitpanel/splitpanel.workspace.component.html',
             replace: true,
-            transclude: true,
+            transclude: true
         });
 }());

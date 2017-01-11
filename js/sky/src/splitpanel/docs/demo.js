@@ -252,7 +252,12 @@
         function onDismissFilter(index) {
             self.appliedFilters.splice(index, 1);
             applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+
+            //initialize sub filter
             self.showUnrecord = false;
+
+            //selecting first item after filteration
+            selectFirstItem();
         }
 
         function sortItems(item) {
@@ -274,7 +279,12 @@
                 .then(function (result) {
                     self.appliedFilters = angular.copy(result);
                     applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+
+                    //initialize sub filter
                     self.showUnrecord = false;
+
+                    //selecting first item after filteration
+                    selectFirstItem();
                 });
         }
 
@@ -329,45 +339,43 @@
             //get data from database for particualar item
             //not confirm it should be in panel directive or listBuilder-content
 
-            console.log($scope);
-
-            if (!checkDirtyForm(p))
-                return;
             self.selectedItem = p;
-
         }
 
         //check dirty and open modal
-        function checkDirtyForm(selectedItem) {
-            self.dirtyValue = selectedItem;
+        function checkDirtyForm(func, param) {
+            self.dirtyValue = self.selectedItem;
             var listScope = $scope;
             if ($scope.forms.containerForm.$dirty) {
                 bbModal.open({
                     controller: 'ListbuilderModalController as ctrl',
-                    templateUrl: 'demo/splitpanel/confirmpopup.html',
-                    //scope: $scope
+                    templateUrl: 'demo/splitpanel/confirmpopup.html'
                 })
                 .result.then(function (result) {
                     listScope.forms.containerForm.$setPristine();
                     if (result) {
-                        self.save();
+                        self.save(func, param);
                     } else {
-                        self.doNotSave();
+                        self.doNotSave(func, param);
                     }
                 });
-                return false;
+            } else {
+                invokeMethodWithParameters(func, param);
             }
-            return true;
+        }
+
+        function invokeMethodWithParameters(func, param) {
+            if (param === undefined) {
+                func();
+            } else {
+                func(param);
+            }
         }
 
         function next() {
             if (self.selectedItem.$index < self.data.length - 1) {
                 var newIndex = self.selectedItem.$index + 1;
-                var selectedItem = this.data[newIndex];
-                selectedItem.$index = newIndex;
-                if (!checkDirtyForm(selectedItem))
-                    return;
-                self.selectedItem = this.data[newIndex];
+                self.selectedItem = self.data[newIndex];
                 self.selectedItem.$index = newIndex;
             }
         }
@@ -376,27 +384,29 @@
 
             if (self.selectedItem.$index !== 0) {
                 var newIndex = self.selectedItem.$index - 1;
-                self.selectedItem = this.data[newIndex];
+                self.selectedItem = self.data[newIndex];
                 self.selectedItem.$index = newIndex;
             }
         }
 
-        function save() {
+        function save(func, param) {
 
             alert("data saved");
             //TODO : will save here
-            self.getPaneldata(self.dirtyValue);
+            invokeMethodWithParameters(func, param);
         }
 
-        function doNotSave() {
+        function doNotSave(func, param) {
             alert("data not saved");
-            loadData(); // ideally it should refersh the data, then no need revert unsaved data
-            self.getPaneldata(self.dirtyValue);
+            //loadData(); // ideally it should refersh the data, then no need revert unsaved data
+            invokeMethodWithParameters(func, param);
+
         }
 
         function downloadTransactions() {
             //download transaction and update date
             self.updatedDate = getFormattedDate(new Date());
+            alert('Transactions are downloaded')
 
         }
 
@@ -413,9 +423,6 @@
 
             if (self.showUnrecord) {
                 appliedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
-            }
-            else {
-                //appliedFilters.pop();
             }
 
             //self.appliedFilters = angular.copy(appliedFilters);
@@ -440,6 +447,7 @@
         self.previous = previous;
         self.downloadTransactions = downloadTransactions;
         self.onlyShowRecorded = onlyShowRecorded;
+        self.checkDirtyForm = checkDirtyForm;
 
         loadData();
 
