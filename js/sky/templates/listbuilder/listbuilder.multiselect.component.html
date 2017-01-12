@@ -1,0 +1,12 @@
+<div class="bb-listbuilder-multiselect">
+  <ng-transclude></ng-transclude>
+  <label ng-if="$ctrl.hasOnlySelected" class="control-label bb-listbuilder-show-selected">
+    <input 
+        type="checkbox" 
+        bb-check 
+        ng-model="$ctrl.bbListbuilderShowOnlySelected" 
+        ng-change="$ctrl.toggleOnlySelected($ctrl.bbListbuilderShowOnlySelected)">
+    {{'listbuilder_show_only_selected' | bbResources}}
+  </label>
+
+</div>

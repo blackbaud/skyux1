@@ -5,6 +5,8 @@
     describe('Listbuilder toolbar', function () {
         var $compile,
             $scope,
+            $timeout,
+            $document,
             simpleCardContentHtml = '<bb-listbuilder-content>' +
                     '<bb-listbuilder-cards>' +
                     '<bb-listbuilder-card>' +
@@ -25,16 +27,16 @@
             'sky.templates'
         ));
 
-        beforeEach(inject(function (_$rootScope_, _$compile_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _$document_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
+            $timeout = _$timeout_;
+            $document = _$document_;
         }));
         
         
         describe('search', function () {
-            var $document,
-                $timeout,
-                searchHtml,
+            var searchHtml,
                 localSearchText,
                 listCtrl = {
                     onSearch: function (searchText) {
@@ -42,9 +44,8 @@
                     }
                 };
             
-            beforeEach(inject(function (_$document_, _$timeout_) {
-                $document = _$document_;
-                $timeout = _$timeout_;
+            beforeEach(function () {
+
                 searchHtml = angular.element(
                     '<bb-listbuilder>' +
                     '<bb-listbuilder-toolbar ' +
@@ -54,7 +55,7 @@
                     simpleCardContentHtml +
                     '</bb-listbuilder>');
                 
-            }));
+            });
 
             function findSearchInput(el) {
                 return el.find('.bb-search-input');
@@ -139,6 +140,62 @@
                 
                 el.remove();
 
+            });
+
+            it('can set placeholder text if specified', function () {
+                var el,
+                    placeholderHtml;
+
+                $scope.listCtrl = listCtrl;
+                $scope.listCtrl.placeholder = 'New text';
+
+                placeholderHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText" ' +
+                    'bb-listbuilder-search-placeholder="listCtrl.placeholder" ' +
+                    '>' +
+                    '</bb-listbuilder-toolbar>' +
+                    simpleCardContentHtml +
+                    '</bb-listbuilder>');
+
+                el = initListbuilderTest(placeholderHtml);
+
+                expect(el.find('.bb-search-input-container input')).toHaveAttr('placeholder', $scope.listCtrl.placeholder);
+
+                el.remove();
+            });
+
+            it('will call a function on search text changed if specified', function () {
+                var el,
+                    newText,
+                    searchChangeHtml;
+
+                $scope.listCtrl = listCtrl;
+                $scope.listCtrl.searchTextChanged = function (searchText) {
+                    newText = searchText;
+                };
+
+                searchChangeHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar ' +
+                    'bb-listbuilder-on-search="listCtrl.onSearch(searchText)" ' +
+                    'bb-listbuilder-on-search-text-changed="listCtrl.searchTextChanged(searchText)" ' +
+                    'bb-listbuilder-search-text="listCtrl.searchText" ' +
+                    'bb-listbuilder-search-placeholder="listCtrl.placeholder" ' +
+                    '>' +
+                    '</bb-listbuilder-toolbar>' +
+                    simpleCardContentHtml +
+                    '</bb-listbuilder>');
+
+                el = initListbuilderTest(searchChangeHtml);
+
+                changeInput(el, 'First');
+
+                expect(newText).toBe('First');
+
+                el.remove();
             });
 
             it('calls the search callback, and resolves highlight promise on input enter when returning a promise', function () {
@@ -243,18 +300,60 @@
         });
 
         describe('filters', function () {
-            it('should transclude a filter button', function () {
+            it('should transclude a filter button and filter summary', function () {
+                var el,
+                    filterHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-filter> ' +
+                    '<bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()"> ' +
+                    '</bb-filter-button> ' +
+                    '</bb-listbuilder-filter> ' +
+                    '<bb-listbuilder-filter-summary> ' +
+                    '<bb-filter-summary> ' +
+                    '<bb-filter-summary-item ' +
+                    'bb-filter-summary-item-on-click="listCtrl.openFilters()" ' +
+                    'bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter()" ' +
+                    '> ' +
+                    'Filter item' +
+                    '</bb-filter-summary-item> ' +
+                    '</bb-filter-summary> ' +
+                    '</bb-listbuilder-filter-summary> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
-            });
 
-            it('should transclude a filter summary', function () {
+                el = $compile(filterHtml)($scope);
 
+                $scope.$digest();
+
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-filter').length).toBe(1);
+                expect(el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-filter-summary-container .bb-filter-summary').length).toBe(1);
             });
         });
 
         describe('sorting', function () {
             it('should transclude a sort button', function () {
+                var el,
+                    sortHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-sort> ' +
+                    '<bb-sort> ' +
+                    '<bb-sort-item ' +
+                    'bb-sort-item-select="listCtrl.sortItems(item)"> ' +
+                    'Sort item' +
+                    '</bb-sort-item> ' +
+                    '</bb-sort>' +
+                    '</bb-listbuilder-sort> ' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
 
+
+                el = $compile(sortHtml)($scope);
+
+                $scope.$digest();
+                expect(el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-sort').length).toBe(1);
             });
         });
 
@@ -289,7 +388,7 @@
                 $scope.$digest();
                 spyArgs = bbViewKeeperBuilder.create.calls.mostRecent().args[0];
                 expect(spyArgs.el).toEqual(el.find('.bb-listbuilder-toolbar-summary-container'));
-                expect(spyArgs.boundaryEl).toEqual(el.find('.bb-listbuilder-content'));
+                expect(spyArgs.boundaryEl).toEqual(el.find('.bb-listbuilder-content-container'));
                 expect(spyArgs.setWidth).toBe(true);
                 expect(spyArgs.verticalOffSetElId).toBe('myoffsetid');
 
@@ -377,6 +476,138 @@
                 expect(addCalled).toBe(true);
                 expect(addButtonEl).toHaveAttr('title', $scope.listCtrl.addLabel);
             });
+        });
+
+        describe('secondary actions', function () {
+
+            var secondaryHtml;
+
+            beforeEach(function () {
+                secondaryHtml = angular.element(
+                    '<bb-listbuilder>' +
+                    '<bb-listbuilder-toolbar>' +
+                    '<bb-listbuilder-toolbar-secondary-actions> ' +
+                    '<bb-listbuilder-secondary-actions bb-listbuilder-secondary-actions-append-to-body="listCtrl.appendToBody"> ' +
+                    '<bb-listbuilder-secondary-action ' +
+                    'bb-listbuilder-secondary-action-click="listCtrl.action1()" ' +
+                    'ng-if="!listCtrl.hideActions" ' +
+                    'bb-listbuilder-secondary-action-disabled="true"> ' +
+                    'Action 1' +
+                    '</bb-listbuilder-secondary-action>' +
+                    '<bb-listbuilder-secondary-action ' +
+                    'ng-if="!listCtrl.hideActions" ' +
+                    'bb-listbuilder-secondary-action-click="listCtrl.action2()"> ' +
+                    'Action 2' +
+                    '</bb-listbuilder-secondary-action>' +
+                    '</bb-listbuilder-secondary-actions>' +
+                    '</bb-listbuilder-toolbar-secondary-actions>' +
+                    '</bb-listbuilder-toolbar>' +
+                    '</bb-listbuilder>');
+            });
+
+            function getSecondaryActions(el, appendToBody) {
+                if (appendToBody) {
+                    return $('body .bb-dropdown-menu bb-listbuilder-secondary-action .bb-dropdown-item .btn');
+                } else {
+                    return el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-dropdown-menu .bb-dropdown-item .btn');
+                }
+            }
+
+            function getSecondaryDropdownButton(el) {
+                return el.find('.bb-listbuilder-toolbar .bb-listbuilder-toolbar-item .bb-btn-secondary .fa-ellipsis-h');
+            }
+
+            it('creates a secondary action dropdown with items that can be clicked and disabled', function () {
+                var el,
+                    action1Clicked,
+                    action2Clicked,
+                    dropdownEl,
+                    actionEl;
+
+                $scope.listCtrl = {
+                    action1: function () {
+                        action1Clicked = true;
+                    }, 
+                    action2: function () {
+                        action2Clicked = true;
+                    }
+                };
+
+                el = $compile(secondaryHtml)($scope);
+                el.appendTo($document.find('body'));
+
+                $scope.$digest();
+
+                dropdownEl = getSecondaryDropdownButton(el);
+
+                expect(dropdownEl.length).toBe(1);
+                expect(dropdownEl).toBeVisible();
+
+                actionEl = getSecondaryActions(el); 
+
+                expect(actionEl.eq(0)).toBeDisabled();
+                actionEl.eq(0).click();
+                $scope.$digest();
+                expect(action1Clicked).toBe(true);
+
+                expect(actionEl.eq(1)).not.toBeDisabled();
+                actionEl.eq(1).click();
+                $scope.$digest();
+                expect(action2Clicked).toBe(true);
+
+                el.remove();
+            });
+
+            it('can append the secondary action dropdown to the body', function () {
+                var el,
+                    actionEl;
+                
+                $scope.listCtrl = {
+                    appendToBody: true
+                };
+
+                el = $compile(secondaryHtml)($scope);
+                el.appendTo($document.find('body'));
+
+                $scope.$digest();
+
+                actionEl = getSecondaryActions(el, true); 
+
+                expect(actionEl.length).toBe(2);
+
+                el.remove();
+            });
+
+            it('does not show the secondary actions dropdown button if none exist', function () {
+                var el,
+                    actionEl;
+                
+                $scope.listCtrl = {
+                    appendToBody: true
+                };
+
+                el = $compile(secondaryHtml)($scope);
+                el.appendTo($document.find('body'));
+
+                $scope.$digest();
+
+                actionEl = getSecondaryActions(el, true); 
+
+                expect(actionEl.length).toBe(2);
+
+                $scope.listCtrl.hideActions = true;
+
+                $scope.$digest();
+
+                actionEl = getSecondaryActions(el, true); 
+                expect(actionEl.length).toBe(0);
+                
+                expect(getSecondaryDropdownButton(el)).not.toBeVisible();
+
+                el.remove();
+            });
+
+
         });
     });
 }());

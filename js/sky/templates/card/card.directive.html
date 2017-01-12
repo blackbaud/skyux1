@@ -7,7 +7,12 @@
       </div>
       <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.cardIsSelectable()"></div>
       <div class="bb-card-check" ng-if="bbCard.cardIsSelectable()">
-        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />
+        <input 
+            type="checkbox" 
+            ng-attr-id="{{bbCard.cardCheckId}}"
+            bb-check 
+            ng-model="bbCard.bbCardSelected" 
+            ng-change="bbCard.cardSelectionToggled(bbCard.bbCardSelected)"/>
       </div>
     </label>
   </header>

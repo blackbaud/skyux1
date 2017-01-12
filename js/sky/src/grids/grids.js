@@ -66,14 +66,16 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
-                    require: 'bbGrid',
+                    require: ['bbGrid', '?^^bbListbuilder'],
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
                         multiselectActions: '=?bbMultiselectActions',
                         updateMultiselectActions: '&bbSelectionsUpdated',
                         paginationOptions: '=?bbGridPagination',
-                        selectedRows: '=?bbSelectedRows'
+                        selectedRows: '=?bbSelectedRows',
+                        bbGridMultiselectIdProperty: '@?',
+                        bbGridMultiselectSelectedIds: '<?'
                     },
                     controller: ['$scope', function ($scope) {
                         var locals,
@@ -188,7 +190,12 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr, bbGrid, $transclude) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
+                        var bbGrid = ctrls[0],
+                            listbuilderCtrl = ctrls[1];
+                            
+                        $scope.hasListbuilder = ctrls[1] !== null;
+
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
@@ -234,11 +241,20 @@
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
-                                return element.find('.bb-grid-top-scrollbar');
+                                if (!$scope.hasListbuilder) {
+                                    return element.find('.bb-grid-top-scrollbar');
+                                } else {
+                                    return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl();
+                                }
+                                
                             }
 
                             function getTopScrollbarDiv() {
-                                return element.find('.bb-grid-top-scrollbar > div');
+                                if (!$scope.hasListbuilder) {
+                                    return element.find('.bb-grid-top-scrollbar > div');
+                                } else {
+                                    return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl().find(' > div');
+                                }
                             }
 
                             function updateGridLoadedTimestampAndRowCount(count) {
@@ -700,14 +716,18 @@
 
                             function highlightSearchText(highlightText) {
                                 var options = $scope.options;
-                                
-                                if (!highlightText && options && options.searchText) {
-                                    highlightText = options.searchText;
-                                }
 
-                                bbHighlight.clear(tableEl);
-                                if (highlightText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                if (!$scope.hasListbuilder) {
+                                    if (!highlightText && options && options.searchText) {
+                                        highlightText = options.searchText;
+                                    }
+
+                                    bbHighlight.clear(tableEl);
+                                    if (highlightText) {
+                                        bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                    }
+                                } else {
+                                    listbuilderCtrl.highlightLastSearchText();
                                 }
                             }
 
@@ -717,6 +737,30 @@
                                 });
                             }
 
+                            function setRowMultiselect(rowid) {
+                                var row,
+                                    rowIndex = tableEl.getInd(rowid),
+                                    multiselectId;
+
+
+                                row = $scope.options.data[(rowIndex - 1)];
+
+                                if (row) {
+                                    multiselectId = getMultiselectId(row);
+                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) { 
+                                        if (arrayObjectIndexOf($scope.selectedRows, row) > -1) {
+                                            tableEl.setSelection(rowid, false);
+                                        }
+                                    } else if (angular.isDefined(multiselectId)) {
+                                        if ($scope.bbGridMultiselectSelectedIds.indexOf(multiselectId) > -1) {
+                                            tableEl.setSelection(rowid, false);
+                                        }
+                                    }
+                                }
+
+                                
+                            }
+
                             function afterInsertRow(rowid, rowdata, rowelem) {
                                 /*jshint validthis: true */
                                 var cell,
@@ -724,8 +768,7 @@
                                     columnData,
                                     i,
                                     itemScope,
-                                    row,
-                                    rowIndex;
+                                    row;
 
                                 if (hasTemplatedColumns) {
 
@@ -775,16 +818,8 @@
                                     }
                                 }
 
-                                rowIndex = tableEl.getInd(rowid);
-
-                                //check if row should be multiselected
-                                if ($scope.selectedRows && $scope.selectedRows.length > 0) {
-
-                                    row = $scope.options.data[(rowIndex - 1)];
-                                    if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
-                                        tableEl.setSelection(rowid, false);
-                                    }
-                                }
+                                setRowMultiselect(rowid);
+                                
                             }
 
                             function setColumnHeaderAlignment() {
@@ -859,31 +894,98 @@
                                 return sortable;
                             }
 
-                            function clearSelectedRowsObject() {
-                                $scope.selectedRows = [];
+
+
+                            function addSelectedItem(id, selectedIds) {
+                                /* istanbul ignore else */
+                                /* sanity check */
+                                if (selectedIds.indexOf(id) === -1) {
+                                    selectedIds.push(id);
+                                }
                             }
 
+                            function removeSelectedItem(id, selectedIds) {
+                                var itemIndex = selectedIds.indexOf(id);
+                                if (itemIndex !== -1) {
+                                    selectedIds.splice(itemIndex, 1);
+                                }
+                            }
+
+                            function getMultiselectId(row) {
+                                var multiselectId;
+
+                                if ($scope.bbGridMultiselectIdProperty) {
+                                    multiselectId = $scope.bbGridMultiselectIdProperty;
+                                } else if (listbuilderCtrl !== null) {
+                                    multiselectId = listbuilderCtrl.getListbuilderMultiselectIdProperty();
+                                }
+                                
+                                return row[multiselectId];
+                            }
+
+                            function updateSelectedIds(selectedIds) {
+                                $scope.$emit('bbGridMultiselectSelectedIdsChanged', selectedIds);
+                            }
+
+                            function toggleSelectedId(isSelected, id) {
+                                if (isSelected) {
+                                    addSelectedItem(id, $scope.bbGridMultiselectSelectedIds);
+                                } else {
+                                    removeSelectedItem(id, $scope.bbGridMultiselectSelectedIds);
+                                }
+
+                                updateSelectedIds($scope.bbGridMultiselectSelectedIds);
+                            }
+
+                            function hasSelectedIdsMultiselect() {
+                                return $scope.options && $scope.options.data && $scope.options.data.length > 0 && angular.isDefined(getMultiselectId($scope.options.data[0]));
+                            }
+
+                            function clearSelectedRowsObject() {
+                                var i,
+                                    multiselectId;
+                                if (hasSelectedIdsMultiselect()) {
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        multiselectId = getMultiselectId($scope.options.data[i]);
+                                        removeSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                    }
+                                } else {
+                                    $scope.selectedRows = [];
+                                }   
+                            }
 
                             function resetMultiselect() {
                                 clearSelectedRowsObject();
                                 tableEl.resetSelection();
                             }
 
-
+                            function selectAllItems() {
+                                var allRowData,
+                                    multiselectId,
+                                    i;
+                                if (hasSelectedIdsMultiselect()) {
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        multiselectId = getMultiselectId($scope.options.data[i]);
+                                        addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                    }
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
+                                } else {
+                                    allRowData = $scope.options.data;
+                                    if (allRowData && allRowData.length > 0) {
+                                        $scope.selectedRows = allRowData.slice();
+                                    }
+                                }
+                            }
 
                             function onSelectAll(rowIds, status) {
                                 /*jslint unparam: true */
-                                var allRowData;
 
                                 localRowSelect = true;
 
                                 clearSelectedRowsObject();
 
                                 if (status === true) {
-                                    allRowData = $scope.options.data;
-                                    if (allRowData && allRowData.length > 0) {
-                                        $scope.selectedRows = allRowData.slice();
-                                    }
+                                    selectAllItems();
                                 }
                                 $scope.$apply();
                             }
@@ -907,27 +1009,43 @@
                                 $timeout(function () {
                                     var index,
                                         rowIndex = tableEl.getInd(rowId),
+                                        multiselectId,
                                         row;
+
                                     row = $scope.options.data[(rowIndex - 1)];
+                                    
+                                    multiselectId = getMultiselectId(row);
 
                                     localRowSelect = true;
 
-                                    index = arrayObjectIndexOf($scope.selectedRows, row);
+                                    if (angular.isUndefined(multiselectId)) {
 
-                                    if (status === true && index === -1 && row) {
-                                        $scope.selectedRows.push(row);
-                                    } else if (status === false && index > -1) {
-                                        $scope.selectedRows.splice(index, 1);
+                                        index = arrayObjectIndexOf($scope.selectedRows, row);
+
+                                        if (status === true && index === -1 && row) {
+                                            $scope.selectedRows.push(row);
+                                        } else if (status === false && index > -1) {
+                                            $scope.selectedRows.splice(index, 1);
+                                        }
+                                    } else {
+                                        toggleSelectedId(status, multiselectId);
                                     }
                                 });
                             }
 
                             function setMultiselectRow(rowId, rowIndex) {
-                                var row;
+                                var row,
+                                    multiselectId;
 
                                 tableEl.setSelection(rowId, false);
                                 row  = $scope.options.data[(rowIndex - 1)];
-                                $scope.selectedRows.push(row);
+                                multiselectId = getMultiselectId(row);
+                                if (angular.isUndefined(multiselectId)) {
+                                    $scope.selectedRows.push(row);
+                                } else {
+                                    addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                }
+                                
                             }
 
                             function beforeSelectRow(rowId, e) {
@@ -965,6 +1083,8 @@
                                         $scope.$apply();
                                         return true;
                                     }
+
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
 
                                     $scope.$apply();
                                     return false;
@@ -1025,6 +1145,28 @@
 
                             function getIdPrefix() {
                                 return 'bb-grid-row-' + $scope.$id + '-';
+                            }
+
+                            function listbuilderSortComponentPresent() {
+                                return listbuilderCtrl !== null && listbuilderCtrl.sortComponentPresent();
+                            }
+
+                            function createHeaderViewKeeper(hasListbuilder) {
+                                var verticalOffSetElId = hasListbuilder ? listbuilderCtrl.getListbuilderToolbarId() : toolbarContainerId;
+                                vkHeader = new bbViewKeeperBuilder.create({
+                                        el: header[0],
+                                        boundaryEl: tableWrapper[0],
+                                        verticalOffSetElId: verticalOffSetElId,
+                                        setWidth: true,
+                                        onStateChanged: function () {
+                                            if (vkHeader.isFixed) {
+                                                header.scrollLeft(tableWrapper.scrollLeft());
+                                            } else {
+                                                header.scrollLeft(0);
+                                            }
+
+                                        }
+                                    });        
                             }
 
                             function initGrid() {
@@ -1123,7 +1265,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive && !listbuilderSortComponentPresent()) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
@@ -1142,22 +1284,8 @@
                                     resetTopScrollbar();
 
                                     if (!$scope.options.fixedToolbar) {
-                                        vkHeader = new bbViewKeeperBuilder.create({
-                                            el: header[0],
-                                            boundaryEl: tableWrapper[0],
-                                            verticalOffSetElId: toolbarContainerId,
-                                            setWidth: true,
-                                            onStateChanged: function () {
-                                                if (vkHeader.isFixed) {
-                                                    header.scrollLeft(tableWrapper.scrollLeft());
-                                                } else {
-                                                    header.scrollLeft(0);
-                                                }
-
-                                            }
-                                        });
-                                    }
-
+                                        createHeaderViewKeeper($scope.hasListbuilder);
+                                    } 
                                     setSortStyles();
 
                                     setUpFancyCheckHeader();
@@ -1242,10 +1370,37 @@
                                 }
                             }
 
-                            function setRows(rows) {
-                                /*istanbul ignore else */
+                            function newRowsAreConcatenated(newRows, oldRows) {
+                                var i;
+                                if (newRows && oldRows && newRows.length > oldRows.length && oldRows.length > 0) {
+                                    for (i = 0; i < oldRows.length; i++) {
+                                        if (oldRows[i] !== newRows[i]) {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
+
+                            function gridRowsUpdated(newRows) {
+                                $timeout(function () {
+                                    highlightSearchText(locals.appliedSearchText);
+                                });
+                                handleTableWrapperResize();
+                                /*istanbul ignore next */
                                 /* sanity check */
-                                if (tableDomEl.addJSONData) {
+                                updateGridLoadedTimestampAndRowCount(newRows ? newRows.length : 0);
+
+                                setUpFancyCheckCell();
+                            }
+
+                            function setRows(rows, oldRows) {
+
+                                if (newRowsAreConcatenated(rows, oldRows)) {
+                                    tableEl.addRowData('', rows.slice(oldRows.length, rows.length));
+                                    gridRowsUpdated(rows);
+                                } else if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
 
                                         if (locals.multiselect) {
@@ -1258,15 +1413,7 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(function () {
-                                            highlightSearchText(locals.appliedSearchText);
-                                        });
-                                        handleTableWrapperResize();
-                                        /*istanbul ignore next */
-                                        /* sanity check */
-                                        updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
-
-                                        setUpFancyCheckCell();
+                                        gridRowsUpdated(rows);
 
                                     });
                                 }
@@ -1393,25 +1540,20 @@
                                 }
                             }, true);
 
-                            $scope.$watchCollection('selectedRows', function (newSelections) {
+                            function setGridMultiselectRows(selections, indexCallback) {
                                 var i,
                                     index,
                                     rowIds;
 
-                                if (localRowSelect) {
-                                    localRowSelect = false;
-                                    return;
-                                }
-
-                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
+                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0 && selections) {
                                     //blow away existing selections
                                     tableEl.resetSelection();
 
                                     rowIds = tableEl.getDataIDs();
 
-                                    for (i = 0; i < newSelections.length; i++) {
+                                    for (i = 0; i < selections.length; i++) {
 
-                                        index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
+                                        index = indexCallback(selections[i]);
 
                                         if (index > -1) {
                                             tableEl.setSelection(rowIds[index], false);
@@ -1419,16 +1561,59 @@
 
                                     }
                                 }
+                            }
 
-                            });
+                            if (!$scope.hasListbuilder) {
+                                $scope.$watchCollection('selectedRows', function (newSelections) {
+                                    
+                                    if (localRowSelect) {
+                                        localRowSelect = false;
+                                        return;
+                                    }
+
+                                    function indexCallback(selectedItem) {
+                                        return arrayObjectIndexOf($scope.options.data, selectedItem);
+                                    }
+
+                                    setGridMultiselectRows(newSelections, indexCallback);
+                                    
+                                });
+                            }
+
+                            $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
+
+                                if (localRowSelect) {
+                                    localRowSelect = false;
+                                    return;
+                                }
+                                
+                                if (angular.isUndefined(newSelections)) {
+                                    $scope.bbGridMultiselectSelectedIds = [];
+                                    localRowSelect = true;
+                                    return;
+                                }
+
+                                function indexCallback(selectedItem) {
+                                    var i;
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        if (getMultiselectId($scope.options.data[i]) === selectedItem) {
+                                            return i;
+                                        }
+                                    }
+                                    return -1;
+                                }
+
+                                setGridMultiselectRows(newSelections, indexCallback);
+                            }); 
+
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', function (newValue) {
+                            $scope.$watchCollection('options.data', function (newValue, oldValue) {
                                 if (doNotResetRows) {
                                     doNotResetRows = false;
                                 } else {
-                                    setRows(newValue);
+                                    setRows(newValue, oldValue);
                                 }
                             });
 
@@ -1502,12 +1687,34 @@
                                 }
                             };
 
+                            if ($scope.hasListbuilder) {
+                                listbuilderCtrl.topScrollbarScrollAction = $scope.locals.topScrollbarScroll;
+                            }
+
+                            function destroyListbuilder() {
+                                var topScrollbarEl,
+                                    topScrollbarDivEl;
+                                
+                                if ($scope.hasListbuilder) {
+                                    listbuilderCtrl.topScrollbarScrollAction = undefined;
+                                    topScrollbarEl = getTopScrollbar();
+                                    topScrollbarDivEl = getTopScrollbarDiv();
+                                    topScrollbarEl.width(0);
+                                    topScrollbarEl.height(0);
+                                    topScrollbarDivEl.width(0);
+                                    topScrollbarDivEl.height(0);
+                                }
+                                
+                            }
+
                             $scope.locals.hasWaitAndEmpty = function () {
                                 return $scope.options && $scope.options.loading && (!$scope.options.data || $scope.options.data.length < 1);
                             };
 
 
                             element.on('$destroy', function () {
+
+                                destroyListbuilder();
 
                                 /*istanbul ignore else */
                                 /* sanity check */

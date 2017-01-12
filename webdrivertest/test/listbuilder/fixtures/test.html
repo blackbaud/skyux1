@@ -1,61 +1,80 @@
-<div class="container">
+<style>
+.bb-test-listbuilder .bb-summary-actionbar {
+    bottom: 200px !important;
+}
+</style>
+
+<div class="container bb-test-listbuilder" ng-controller="ListbuilderTestController as listCtrl">
+    <button class="btn btn-primary bb-list-multiselect-button" type="button" ng-click="listCtrl.showMultiselect = true">Activate multiselect</button>
     <div style="height: 100px; width: 100px;">
     </div>
     <div id="screenshot-listbuilder">
-        <div ng-controller="ListbuilderTestController as listCtrl">
+        
+        <div>     
             <bb-listbuilder>
                 <bb-listbuilder-toolbar 
                     bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
                     bb-listbuilder-search-text="listCtrl.searchText">
-                <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
-                    Add Stuff
-                </bb-listbuilder-add>
-                <bb-listbuilder-filter> 
-                    <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">  
-                    </bb-filter-button>
-                </bb-listbuilder-filter>
-                <bb-listbuilder-sort>
-                    <bb-sort bb-sort-append-to-body>
-                        <bb-sort-item 
-                            ng-repeat="item in listCtrl.sortOptions" 
-                            bb-sort-item-active="listCtrl.initialState === item.id"
-                            bb-sort-item-select="listCtrl.sortItems(item)">
-                        {{item.label}}
-                        </bb-sort-item>
-                    </bb-sort>
-                </bb-listbuilder-sort>
-                <bb-listbuilder-filter-summary>
-                    <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
-                        <bb-filter-summary-item
-                            ng-repeat="item in listCtrl.appliedFilters"
-                            bb-filter-summary-item-on-click="listCtrl.openFilters()"
-                            bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)"
-                            >
+                    <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
+                        Add Stuff
+                    </bb-listbuilder-add>
+                    <bb-listbuilder-filter> 
+                        <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">  
+                        </bb-filter-button>
+                    </bb-listbuilder-filter>
+                    <bb-listbuilder-sort>
+                        <bb-sort bb-sort-append-to-body>
+                            <bb-sort-item 
+                                ng-repeat="item in listCtrl.sortOptions" 
+                                bb-sort-item-active="listCtrl.initialState === item.id"
+                                bb-sort-item-select="listCtrl.sortItems(item)">
                             {{item.label}}
-                        </bb-filter-summary-item>
-                    </bb-filter-summary>
-                </bb-listbuilder-filter-summary>
+                            </bb-sort-item>
+                        </bb-sort>
+                    </bb-listbuilder-sort>
+                    <bb-listbuilder-toolbar-secondary-actions>
+                        <bb-listbuilder-secondary-actions bb-listbuilder-secondary-actions-append-to-body="true">
+                            <bb-listbuilder-secondary-action 
+                                bb-listbuilder-secondary-action-click="listCtrl.saveAction()">
+                                Save list
+                            </bb-listbuilder-secondary-action>
+                        </bb-listbuilder-secondary-actions>
+                    </bb-listbuilder-toolbar-secondary-actions>
+                    <bb-listbuilder-filter-summary>
+                        <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
+                            <bb-filter-summary-item
+                                ng-repeat="item in listCtrl.appliedFilters"
+                                bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                                bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)"
+                                >
+                                {{item.label}}
+                            </bb-filter-summary-item>
+                        </bb-filter-summary>
+                    </bb-listbuilder-filter-summary>
+                    <bb-listbuilder-toolbar-multiselect>
+                        <bb-listbuilder-multiselect
+                            ng-show="listCtrl.showMultiselect"
+                            bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)"
+                            bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedItems, allSelected)"
+                            bb-listbuilder-multiselect-selected-items="listCtrl.selectedIds">
+                            <bb-listbuilder-multiselect-select-all
+                            bb-listbuilder-multiselect-on-select-all="listCtrl.selectAll()">
+                            </bb-listbuilder-multiselect-select-all>
+                            <bb-listbuilder-multiselect-clear-all
+                            bb-listbuilder-multiselect-on-clear-all="listCtrl.clearAll()">
+                            </bb-listbuilder-multiselect-clear-all>
+                        </bb-listbuilder-multiselect>
+                    </bb-listbuilder-toolbar-multiselect>
                 </bb-listbuilder-toolbar>
                 <bb-listbuilder-content>
                 <bb-listbuilder-cards>
-                    <bb-listbuilder-card ng-repeat="item in listCtrl.data">
-                        <bb-card>
+                    <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.gridOptions.data">
+                        <bb-card bb-card-selectable="{{listCtrl.showMultiselect}}" bb-card-selected="item.selected">
                             <bb-card-title>
                             {{item.name}}
                             </bb-card-title>
                             <bb-card-content>
-                                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                                    <span class="label label-success">Membership dues paid</span>
-                                </div>
-                                <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                                    <span class="label label-danger">Membership dues not paid</span>
-                                </div>
-                                <div style="margin-bottom: 10px">
-                                    Occupation: {{item.occupation}}
-                                </div>
-                                <div>
-                                    Joined on: {{item.joinDate | date}}
-                                </div>
+                                {{item.content}}
                                 
                             </bb-card-content>
                             <bb-card-actions>
@@ -69,8 +88,12 @@
                 </bb-listbuilder-cards>
                 <bb-listbuilder-repeater>
                     <bb-repeater>
-                    <bb-listbuilder-repeater-item ng-repeat="item in listCtrl.data">
-                        <bb-repeater-item>
+                        <bb-repeater-item 
+                            bb-listbuilder-repeater-item 
+                            bb-listbuilder-repeater-item-id="item.id" 
+                            ng-repeat="item in listCtrl.gridOptions.data"
+                            bb-repeater-item-selectable="{{listCtrl.showMultiselect}}"
+                            bb-repeater-item-selected="item.selected">
                             <bb-repeater-item-title>
                             {{item.name}}
                             </bb-repeater-item-title>
@@ -95,15 +118,37 @@
                                 </bb-context-menu>
                             </bb-repeater-item-context-menu>
                         </bb-repeater-item>
-                    </bb-listbuilder-repeater-item>
                     </bb-repeater>
                 </bb-listbuilder-repeater>
+                <bb-listbuilder-grid>
+                    <bb-grid
+                        bb-grid-options="listCtrl.gridOptions"
+                        bb-grid-multiselect-selected-ids="listCtrl.selectedIds">
+                    </bb-grid>
+                </bb-listbuilder-grid>
                 </bb-listbuilder-content>
                 <bb-listbuilder-footer
                     bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
                     bb-listbuilder-show-load-more="listCtrl.hasMoreData">
                 </bb-listbuilder-footer>
             </bb-listbuilder>
+            <bb-summary-actionbar 
+                ng-show="listCtrl.showMultiselect">
+                <bb-summary-actionbar-actions>
+                    <bb-summary-actionbar-primary
+                        bb-summary-action-disabled="listCtrl.payMembershipSelections.length < 1" 
+                        bb-summary-action-click="listCtrl.payMembership(listCtrl.payMembershipSelections)">
+                        Pay membership dues ({{listCtrl.payMembershipSelections.length}})
+                    </bb-summary-actionbar-primary>
+                    <bb-summary-actionbar-secondary-actions>
+                        <bb-summary-actionbar-secondary
+                            bb-summary-action-disabled="listCtrl.secondarySelections.length < 1" 
+                            bb-summary-action-click="listCtrl.secondaryAction(listCtrl.secondarySelections)">
+                            Secondary action ({{listCtrl.secondarySelections.length}})
+                        </bb-summary-actionbar-secondary>
+                    </bb-summary-actionbar-secondary-actions>
+                </bb-summary-actionbar-actions>
+            </bb-summary-actionbar>
         </div>   
     </div>
     

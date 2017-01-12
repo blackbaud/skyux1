@@ -401,4 +401,26 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
+    it('should format the phone number of a country that uses its area code as its dial code with a +1 dial code (such as Cayman Islands and Bahamas).', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** act **
+        setCountry(el, 'bs'); // 'bs' is Bahamas iso 2
+        setNumber(el, '2423591234');
+
+        // ** assert **
+        expect($scope.phoneNumber).toBe('+1 (242) 359-1234');
+
+        // ** clean up **
+        el.remove();
+    });
+
 });

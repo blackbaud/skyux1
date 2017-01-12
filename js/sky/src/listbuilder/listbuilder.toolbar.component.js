@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbViewKeeperBuilder) {
+    function Controller($element, bbViewKeeperBuilder, $scope, $transclude) {
         var ctrl = this,
             vkToolbar;
 
@@ -22,6 +22,12 @@
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbListbuilderOnSearchTextChanged)) {
+                ctrl.bbListbuilderOnSearchTextChanged({searchText: searchText});
+            }  
+        }
+
         // Floating headers
         function setupViewKeeper() {
             if (ctrl.bbListbuilderToolbarFixed !== 'true') {
@@ -38,6 +44,12 @@
                     setWidth: true,
                     verticalOffSetElId: ctrl.bbListbuilderVerticalOffsetElId
                 });
+            }
+        }
+
+        function destroyViewKeeper() {
+            if (vkToolbar) {
+                vkToolbar.destroy();
             }
         }
 
@@ -62,19 +74,65 @@
             }
         }
 
+        function getToolbarId() {
+            return ctrl.listbuilderToolbarId;
+        }
+
+        function getTopScrollbar() {
+            return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
+        }
+
+        function sortComponentPresent() {
+            return $transclude.isSlotFilled('bbListbuilderSort');
+        }
+
+        function setupTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.on('scroll', function () {
+                    /* istanbul ignore else */
+                    /* sanity check */
+                    if (angular.isFunction(ctrl.listbuilderCtrl.topScrollbarScrollAction)) {
+                        ctrl.listbuilderCtrl.topScrollbarScrollAction();
+                    }
+                });
+            }
+        }
+
+        function destroyTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.off('scroll');
+            }
+        }
+
         function initToolbar() {
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
             }
+
+            ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
+            ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
+            ctrl.listbuilderCtrl.toolbarSortComponentPresent = sortComponentPresent;
+
+            ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
+            
+            setupTopScrollbar();
             
             setupViewKeeper();
 
         }
 
         function destroyToolbar() {
-            if (vkToolbar) {
-                vkToolbar.destroy();
-            }
+            destroyViewKeeper();
+            destroyTopScrollbar();
+
         }
 
         // Lifecycle hooks
@@ -84,11 +142,12 @@
 
         ctrl.applySearchText = applySearchText;
 
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.viewChanged = viewChanged;
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope', '$transclude'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [
@@ -96,13 +155,18 @@
             'sky.viewkeeper', 
             'sky.listbuilder.add.component',       
             'sky.filter',
-            'sky.search'
+            'sky.search',
+            'sky.sort',
+            'sky.listbuilder.multiselect.component',
+            'sky.listbuilder.secondary.actions.component'
         ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
             bindings: {
                 bbListbuilderOnSearch: '&?',
+                bbListbuilderOnSearchTextChanged: '&?',
                 bbListbuilderSearchText: '<?',
+                bbListbuilderSearchPlaceholder: '<?',
                 bbListbuilderVerticalOffsetElId: '<?',
                 bbListbuilderToolbarFixed: '@?'
             },
@@ -110,7 +174,9 @@
                 bbListbuilderAdd: '?bbListbuilderAdd',
                 bbListbuilderFilter: '?bbListbuilderFilter',
                 bbListbuilderSort: '?bbListbuilderSort',
-                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary'
+                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary',
+                bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect',
+                bbListbuilderToolbarSecondaryActions: '?bbListbuilderToolbarSecondaryActions'
             },
             controller: Controller,
             require: {

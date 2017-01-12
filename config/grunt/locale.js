@@ -11,7 +11,12 @@ module.exports = function (grunt, env, utils) {
             momentMap: {
                 'en-AU': 'en-au',
                 'en-CA': 'en-ca',
-                'en-GB': 'en-gb'
+                'en-GB': 'en-gb',
+                'es-ES': 'es',
+                'fr-CA': 'fr-ca',
+                'fr-FR': 'fr',
+                'it-IT': 'it',
+                'nl-NL': 'nl'
             }
         }
     });

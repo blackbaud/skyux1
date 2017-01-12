@@ -21,12 +21,12 @@
             primaryClicked = false,
             actionbar2SecondaryHtml = '<bb-summary-actionbar>' +
                 '<bb-summary-actionbar-actions>' +
-                '<bb-summary-actionbar-primary ng-click="summaryCtrl.primaryAction()">Primary action</bb-summary-actionbar-primary>' +
+                '<bb-summary-actionbar-primary bb-summary-action-disabled="summaryCtrl.primaryDisabled" bb-summary-action-click="summaryCtrl.primaryAction()">Primary action</bb-summary-actionbar-primary>' +
                 '<bb-summary-actionbar-secondary-actions>' +
-                '<bb-summary-actionbar-secondary ng-click="summaryCtrl.action1()">Secondary action</bb-summary-actionbar-secondary>' +
-                '<bb-summary-actionbar-secondary ng-click="summaryCtrl.action2()">Secondary action 2</bb-summary-actionbar-secondary>' +
+                '<bb-summary-actionbar-secondary bb-summary-action-disabled="summaryCtrl.secondaryDisabled" bb-summary-action-click="summaryCtrl.action1()">Secondary action</bb-summary-actionbar-secondary>' +
+                '<bb-summary-actionbar-secondary bb-summary-action-click="summaryCtrl.action2()">Secondary action 2</bb-summary-actionbar-secondary>' +
                 '</bb-summary-actionbar-secondary-actions>' +
-                '<bb-summary-actionbar-cancel ng-click="summaryCtrl.cancel()">Cancel</bb-summary-actionbar-cancel>' +
+                '<bb-summary-actionbar-cancel bb-summary-action-disabled="summaryCtrl.cancelDisabled" bb-summary-action-click="summaryCtrl.cancel()">Cancel</bb-summary-actionbar-cancel>' +
                 '</bb-summary-actionbar-actions>' +
                 '<bb-summary-actionbar-summary>' +
                 '<div class="bb-test-summary" style="width: 100px; height: 100px;">' +
@@ -36,13 +36,13 @@
                 '</bb-summary-actionbar>',
             actionbar3SecondaryHtml = '<bb-summary-actionbar>' +
                 '<bb-summary-actionbar-actions>' +
-                '<bb-summary-actionbar-primary ng-click="summaryCtrl.primaryAction()">Primary action</bb-summary-actionbar-primary>' +
+                '<bb-summary-actionbar-primary bb-summary-action-click="summaryCtrl.primaryAction()">Primary action</bb-summary-actionbar-primary>' +
                 '<bb-summary-actionbar-secondary-actions>' +
-                '<bb-summary-actionbar-secondary ng-click="summaryCtrl.action1()">Secondary action</bb-summary-actionbar-secondary>' +
-                '<bb-summary-actionbar-secondary ng-click="summaryCtrl.action2()">Secondary action 2</bb-summary-actionbar-secondary>' +
-                '<bb-summary-actionbar-secondary ng-click="summaryCtrl.action3()">Secondary action 3</bb-summary-actionbar-secondary>' +
+                '<bb-summary-actionbar-secondary bb-summary-action-click="summaryCtrl.action1()">Secondary action</bb-summary-actionbar-secondary>' +
+                '<bb-summary-actionbar-secondary bb-summary-action-click="summaryCtrl.action2()">Secondary action 2</bb-summary-actionbar-secondary>' +
+                '<bb-summary-actionbar-secondary bb-summary-action-click="summaryCtrl.action3()">Secondary action 3</bb-summary-actionbar-secondary>' +
                 '</bb-summary-actionbar-secondary-actions>' +
-                '<bb-summary-actionbar-cancel ng-click="summaryCtrl.cancel()">Cancel</bb-summary-actionbar-cancel>' +
+                '<bb-summary-actionbar-cancel bb-summary-action-click="summaryCtrl.cancel()">Cancel</bb-summary-actionbar-cancel>' +
                 '</bb-summary-actionbar-actions>' +
                 '<bb-summary-actionbar-summary>' +
                 '<div class="bb-test-summary">' +
@@ -146,11 +146,23 @@
                 summaryEl,
                 actionbarEl;
             
+            $scope.summaryCtrl.primaryDisabled = true;
+            $scope.summaryCtrl.secondaryDisabled = true;
+            $scope.summaryCtrl.cancelDisabled = true;
+
             actionbarEl = initActionbar(actionbar2SecondaryHtml);
 
             primaryButtonEl = getPrimaryActionButton(actionbarEl);
             expect(primaryButtonEl.length).toBe(1);
             expect(primaryButtonEl).toHaveText('Primary action');
+            expect(primaryButtonEl).toBeDisabled();
+            primaryButtonEl.click();
+            $scope.$digest();
+
+            $scope.summaryCtrl.primaryDisabled = false;
+            $scope.$digest();
+
+            expect(primaryButtonEl).not.toBeDisabled();
             primaryButtonEl.click();
             $scope.$digest();
             expect(primaryClicked).toBe(true);
@@ -162,7 +174,16 @@
             expect(secondaryButtonEl.eq(0)).toBeVisible();
             expect(secondaryButtonEl.eq(1)).toBeVisible();
 
+            expect(secondaryButtonEl.eq(0)).toBeDisabled();
+
             secondaryButtonEl.eq(0).click(); 
+            $scope.$digest();
+
+            $scope.summaryCtrl.secondaryDisabled = false;
+            $scope.$digest();
+
+            expect(secondaryButtonEl.eq(0)).not.toBeDisabled();
+            secondaryButtonEl.eq(0).click();
             $scope.$digest();
             expect(secondary1Clicked).toBe(true);
 
@@ -173,9 +194,16 @@
             cancelButtonEl = getCancelButton(actionbarEl);
             expect(cancelButtonEl.length).toBe(1);
             expect(cancelButtonEl).toHaveText('Cancel');
+            expect(cancelButtonEl).toBeDisabled();
             cancelButtonEl.click();
             $scope.$digest();
 
+            $scope.summaryCtrl.cancelDisabled = false;
+            $scope.$digest();
+
+            expect(cancelButtonEl).not.toBeDisabled();
+            cancelButtonEl.click();
+            $scope.$digest();
             expect(cancelClicked).toBe(true);
 
             summaryEl = getSummary(actionbarEl);

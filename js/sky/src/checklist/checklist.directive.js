@@ -24,7 +24,8 @@
                 bbChecklistSelectStyle: '@?',
                 bbChecklistIsLoading: '=?',
                 bbChecklistSubsetLabel: '=?',
-                bbChecklistSubsetProperty: '@?'
+                bbChecklistSubsetProperty: '@?',
+                bbChecklistAllCategoriesLabel: '<?'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',

@@ -49,13 +49,13 @@
 
       <bb-grid 
         bb-grid-options="gridCtrl.gridOptions" 
-        bb-multiselect-actions="gridCtrl.gridActions" 
-        bb-selections-updated="gridCtrl.updateActions(selections)" 
-        bb-selected-rows="gridCtrl.selectedRows"
+        bb-grid-multiselect-id-property="id"
+        bb-grid-multiselect-selected-ids="gridCtrl.selectedIds"
         bb-grid-infinite-scroll>
           <bb-grid-toolbar
             bb-grid-filter-click="gridCtrl.openFilters()"
-            bb-grid-search="gridCtrl.onGridSearch(searchText)">
+            bb-grid-search="gridCtrl.onGridSearch(searchText)"
+            >
 
               <button type="button" class="btn bb-btn-secondary bb-grid-toolbar-btn" ng-click="gridCtrl.clickCustom()">This is a custom button</button>
               <bb-grid-toolbar-sort>
@@ -82,6 +82,23 @@
               
           </bb-grid-toolbar>
       </bb-grid>
+      <bb-summary-actionbar 
+        ng-show="gridCtrl.actionsShown()">
+        <bb-summary-actionbar-actions>
+            <bb-summary-actionbar-primary
+                bb-summary-action-disabled="gridCtrl.action1Selections.length < 1" 
+                bb-summary-action-click="gridCtrl.action1Clicked()">
+                Guitar action ({{gridCtrl.action1Selections.length}})
+            </bb-summary-actionbar-primary>
+            <bb-summary-actionbar-secondary-actions>
+                <bb-summary-actionbar-secondary
+                    bb-summary-action-disabled="gridCtrl.action2Selections.length < 1" 
+                    bb-summary-action-click="gridCtrl.action2Clicked()">
+                    Drum action ({{gridCtrl.action2Selections.length}})
+                </bb-summary-actionbar-secondary>
+            </bb-summary-actionbar-secondary-actions>
+        </bb-summary-actionbar-actions>
+    </bb-summary-actionbar>
 
       <div class="clearfix"></div>
     </div>

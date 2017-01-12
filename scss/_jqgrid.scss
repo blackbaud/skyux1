@@ -36,6 +36,9 @@
     .ui-th-column, .ui-jqgrid-htable th.ui-th-column {
         white-space: nowrap;
         text-align: left;
+        @include bb-field-label();
+        background-color: $bb-color-white;
+        background-clip: padding-box; /* workaround for background-color with borders in cells for firefox */
     }
 
     tr.jqgrow:nth-child(even) {
@@ -151,7 +154,6 @@
     .ui-jqgrid-htable th.ui-th-column {
         overflow: visible;
         position: relative;
-        font-weight: 600;
     }
 
     .ui-jqgrid-htable th {
