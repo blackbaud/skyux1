@@ -108,7 +108,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
     - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows.
         - `top` &mdash; Indicates how many records to retrieve and display in the grid. The value is the same as the `itemsPerPage` property in the `bb-grid-pagination` directive.
         - `skip` &mdash; Indicates how many records to skip before the first record displayed in the grid. The value equals the number of pages skipped multiplied by the number of items per page.
-        - `promise` &mdash; *(Deprecated.)* When new grid data is concatenated, `bb-grid` automatically only loads new rows instead of reloading the entire grid. <s>Provides a promise that the consumer of the event can resolve with new data that the grid appends to the existing data.</s>
+        - `promise` &mdash; Provides a promise that the consumer of the event can resolve to notify infinite scroll that data has finished loading.
     - `columnsResized` &mdash; Fires after users resize the columns in the grid. You can use this event to listen for column size changes and save them for subsequent visits to the grid. The event contains an object with the following properties:
         - `index` &mdash; Specifies the index of the resized column.
         - `newWidth` &mdash; Specifies the width of the resized column.
