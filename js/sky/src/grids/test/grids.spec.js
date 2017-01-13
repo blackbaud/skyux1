@@ -363,6 +363,38 @@ describe('Grid directive', function () {
         verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
     });
 
+    it('can load more data when using infinite scroll through concatenation and resolving a promise', function () {
+
+        var rowEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            locals.gridOptions.data = locals.gridOptions.data.concat(angular.copy(dataSet1));
+            data.promise.resolve();
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+        
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
+
     it('does not reload data when options.data is changed through concatenation', function () {
 
         var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
