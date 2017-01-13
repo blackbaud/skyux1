@@ -9,4 +9,4 @@ The `bb-check` directive allows you to change an input element of type checkbox 
 
 ### Accessibility ###
 
-When using multiple checkboxes or radio buttons as a group, use `fieldset` and `legend` elements to provide semantic structure. These elements group the related input fields and provide a label for someone using assistive technology. For more information on how to use fieldset and legend, see [WebAIM examples and guidance](http://webaim.org/techniques/forms/controls#checkbox).
+When using multiple checkboxes or radio buttons as a group, use `fieldset` and `legend` elements to provide semantic structure. These elements group the related input fields and provide the `legend` text with the controls in the `fieldset` to people using assistive technology. For more information on how to use `fieldset` and `legend`, see [WebAIM examples and guidance](http://webaim.org/techniques/forms/controls#checkbox).
