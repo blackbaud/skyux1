@@ -80,6 +80,7 @@
             maxRecordsShown = 0,
             nextSkip = 0,
             nextTop = 12,
+            recordedFilters = [],
             dataSet = [
                 {
                     name: '$25.00',
@@ -246,6 +247,8 @@
                 self.searchText = searchText;
                 applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
 
+                //apply internal filter
+                onlyShowRecorded();
             });
         }
 
@@ -253,17 +256,18 @@
             self.appliedFilters.splice(index, 1);
             applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
 
-            //initialize sub filter
-            self.showUnrecord = false;
+            //apply internal filter
+            onlyShowRecorded();
 
-            //selecting first item after filteration
-            selectFirstItem();
+            //initialize sub filter
+            
         }
 
         function sortItems(item) {
             sortProperty = item.name;
             sortDescending = item.descending;
-            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            //applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            onlyShowRecorded();
         }
 
         function onFilterClick() {
@@ -280,11 +284,9 @@
                     self.appliedFilters = angular.copy(result);
                     applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
 
-                    //initialize sub filter
-                    self.showUnrecord = false;
 
-                    //selecting first item after filteration
-                    selectFirstItem();
+                    onlyShowRecorded();
+
                 });
         }
 
@@ -415,20 +417,20 @@
             selectFirstItem();
             //TODO: loadData with filter of unrecorded transcation
 
-            var appliedFilters = [];
-            if (self.appliedFilters) {
-                appliedFilters = angular.copy(self.appliedFilters);
-            }
-
-
             if (self.showUnrecord) {
-                appliedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
+                recordedFilters = [];
+                if (self.appliedFilters) {
+                    recordedFilters = angular.copy(self.appliedFilters);
+                }
+
+                recordedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
+
+                applySearchFilterSort(self.searchText, recordedFilters, sortProperty, sortDescending, maxRecordsShown);
+            } else {
+
+                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+
             }
-
-            //self.appliedFilters = angular.copy(appliedFilters);
-
-            applySearchFilterSort(self.searchText, appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
         }
 
         self.onFilterClick = onFilterClick;
