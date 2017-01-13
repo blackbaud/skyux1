@@ -6728,10 +6728,12 @@
                             };
 
                             function addMoreRowsToGrid(moreRows) {
-                                tableEl.addRowData('', moreRows);
-                                $scope.options.data = $scope.options.data.concat(moreRows);
-                                setUpFancyCheckCell();
-                                doNotResetRows = true;
+                                if (moreRows && moreRows.length > 0) {
+                                    tableEl.addRowData('', moreRows);
+                                    $scope.options.data = $scope.options.data.concat(moreRows);
+                                    setUpFancyCheckCell();
+                                    doNotResetRows = true;
+                                }
                             }
 
                             function loadMore() {
