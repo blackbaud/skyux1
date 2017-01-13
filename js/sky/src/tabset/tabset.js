@@ -44,7 +44,7 @@
 
     tabset.$inject = ['$compile', '$templateCache'];
 
-    function BBTabsetCollapsibleController($scope) {
+    function BBTabsetCollapsibleController($scope, $timeout) {
         var self = this;
 
         self.updateCollapsibleHeader = function (header) {
@@ -52,11 +52,12 @@
         };
 
         self.tabAdded = function () {
-
-            if ($scope.bbTabsetOptions.isSmallScreen) {
-                $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
-            }
-            $scope.bbTabsetOptions.tabCount++;
+            $timeout(function () {
+                $scope.bbTabsetOptions.tabCount++;
+                if ($scope.bbTabsetOptions.isSmallScreen) {
+                    $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
+                }
+            });
         };
 
         self.tabRemoved = function () {
@@ -64,7 +65,7 @@
         };
     }
 
-    BBTabsetCollapsibleController.$inject = ['$scope'];
+    BBTabsetCollapsibleController.$inject = ['$scope', '$timeout'];
 
     function bbTabsetCollapsible($compile, $templateCache, $window, bbMediaBreakpoints) {
         return {
@@ -120,8 +121,6 @@
 
                 }
 
-
-
                 function setupCollapsibleTabs(isCollapsed) {
                     var tabsEl,
                         dropdownContainerEl,
@@ -130,7 +129,6 @@
 
                     tabsEl = getBootstrapTabs();
                     dropdownButtonsEl = el.find('.bb-tab-button-wrap');
-
                     ulEl = getTabUl();
                     if (isCollapsed) {
                         dropdownContainerEl = el.find('.bb-tabset-dropdown');

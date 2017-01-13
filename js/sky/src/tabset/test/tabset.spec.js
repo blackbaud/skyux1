@@ -346,12 +346,39 @@ describe('Tabset module', function () {
             openButtonEl,
             callback,
             collapsibleTabsHtml,
+            collapsibleSpecificTabsHtml,
+            collapsibleSpecificNoAddOpenTabsHtml,
             dropdownWrapperEl,
             tabTitleEl,
             tabCount,
             tabsEl;
 
         beforeEach(function () {
+            var specificTabs = '<uib-tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
+                    'Tab 1' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</uib-tab-heading>' +
+                '<span class="bb-test-content">1 content</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
+            '</uib-tab>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
+                    'Tab 2' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</uib-tab-heading>' +
+                '<span class="bb-test-content">2 content</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
+            '</uib-tab>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
+                    'Tab 3' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</uib-tab-heading>' +
+                '<span class="bb-test-content">3 content</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
+            '</uib-tab>' + 
+            '</uib-tabset>';
             collapsibleTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
             '<uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
                 '<uib-tab-heading>' +
@@ -362,6 +389,10 @@ describe('Tabset module', function () {
                 '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
             '</uib-tab>' +
             '</uib-tabset>';
+            collapsibleSpecificTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
+                specificTabs;
+            collapsibleSpecificNoAddOpenTabsHtml = '<uib-tabset bb-tabset-collapsible>' +
+                specificTabs;
 
 
             $scope.myTabs = [
@@ -440,6 +471,8 @@ describe('Tabset module', function () {
             $document.find('body').eq(0).append(el);
             $compile(el)($scope);
 
+            $scope.$digest();
+            $timeout.flush();
             $scope.$digest();
             return el;
         }
@@ -584,31 +617,8 @@ describe('Tabset module', function () {
         });
 
         it('collapses in xs when tabs are specifically defined', function () {
-            var collapsibleNoAddOpenTabsHtml = '<uib-tabset bb-tabset-collapsible>' +
-            '<uib-tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
-                '<uib-tab-heading>' +
-                    'Tab 1' +
-                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</uib-tab-heading>' +
-                '1 content' +
-            '</uib-tab>' +
-            '<uib-tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
-                '<uib-tab-heading>' +
-                    'Tab 2' +
-                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</uib-tab-heading>' +
-                '2 content' +
-            '</uib-tab>' +
-            '<uib-tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
-                '<uib-tab-heading>' +
-                    'Tab 3' +
-                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</uib-tab-heading>' +
-                '3 content' +
-            '</uib-tab>' +
-            '</uib-tabset>',
-                el;
-            el = setupCollapsibleTest(collapsibleNoAddOpenTabsHtml);
+            var el;
+            el = setupCollapsibleTest(collapsibleSpecificNoAddOpenTabsHtml);
             callback({xs: true});
             $scope.$digest();
 
@@ -620,13 +630,22 @@ describe('Tabset module', function () {
             verifyNoAddOpenButtons(el);
 
             el.remove();
-
         });
 
         it('works correctly when starting in extra small mode', function () {
             var el;
 
             el = setupCollapsibleTest(collapsibleTabsHtml, callBreakpointImmediate);
+
+            validateSmallMode(el);
+
+            el.remove();
+        });
+
+        it('works correctly when starting in extra small mode when tabs are specifically defined', function () {
+            var el;
+
+            el = setupCollapsibleTest(collapsibleSpecificTabsHtml, callBreakpointImmediate);
 
             validateSmallMode(el);
 
