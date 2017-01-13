@@ -46,7 +46,8 @@ describe('modals', function () {
         return browser
             .setupTest('/modal/fixtures/test.full.html')
             .click('.bb-test-fullpage')
-            .click('.bb-test-second-modal')
+            .pause(1000)
+            .click('.bb-btn-secondary')
             .pause(1000)
             .compareScreenshot({
                 screenshotName: 'modal_fullpage_second',
