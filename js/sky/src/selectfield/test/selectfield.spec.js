@@ -162,6 +162,41 @@ describe('Select field directive', function () {
             el.remove();
         });
 
+        it('should display a dialog with one footer button when enter key pressed', function () {
+            var $scope = $rootScope.$new(),
+                e,
+                selectEl,
+                el;
+
+            el = $compile(
+                '<bb-select-field bb-select-field-style="single">' +
+                    '<bb-select-field-picker bb-select-field-picker-template="bbSelectField/single/test.html"></bb-select-field-picker>' +
+                '</bb-select-field>'
+            )($scope);
+
+            el.appendTo(document.body);
+
+            $scope.$digest();
+
+            selectEl = el.find('.bb-select-field-single');
+
+            e = $.Event('keypress');
+            e.which = 13;
+            e.keyCode = 13;
+
+            selectEl.trigger(e);
+            
+            $animate.flush();
+
+            expect('.bb-modal').toExist();
+            expect('.bb-modal .modal-footer').toExist();
+            expect('.bb-modal .modal-footer button.bb-btn-secondary').toHaveText('Clear selection');
+
+            closeCurrentModal();
+
+            el.remove();
+        });
+
         it('should not cause an error if the user clicks the field and no picker is defined', function () {
             var $scope = $rootScope.$new(),
                 el;

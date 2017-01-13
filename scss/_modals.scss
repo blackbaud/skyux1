@@ -29,6 +29,14 @@
         margin-left: auto;
     }
 
+    .close {
+        margin-left: auto;
+    }
+
+    .bb-helpbutton+.close {
+        margin-left: 0;
+    }
+
 }
 
 .modal-body {
@@ -208,5 +216,12 @@
         content: "*";
         color: $bb-error-color;
         padding-left: 5px;
+    }
+}
+
+.bb-modal-fullpage-backdrop {
+    background-color: $bb-color-white;
+    &.in {
+        opacity: 1;
     }
 }

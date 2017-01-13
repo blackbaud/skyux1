@@ -16,5 +16,5 @@ The avatar component displays an image to identify a record.
 
 
  ### bbAvatarConfig settings ###
- - `maxFileSize` &mdash; The maximum allowed size of a file to be uploaded in bytes.  Default is 500000.
+ - `maxFileSize` &mdash; The maximum allowed size of a file to be uploaded in bytes. *(Default: `500000`)*
 

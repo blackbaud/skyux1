@@ -35,6 +35,10 @@
         "_description": "Message title displayed when the user attempts to upload an avatar image with a file size that is too large",
         "message": "File is too large."
     },
+    "card_select": {
+        "_description": "Label for the input in a card that selects the card",
+        "message": "Select card"
+    },
     "carousel_button_label_next": {
         "_description": "The accessibility label for the carousel next button",
         "message": "Go to next item"
@@ -539,9 +543,33 @@
         "_description": "Text for the card view switcher",
         "message": "Switch to card view"
     },
+    "listbuilder_grid_switcher": {
+        "_description": "Text for the grid view switcher",
+        "message": "Switch to grid view"
+    },
     "listbuilder_repeater_switcher": {
         "_description": "Text for repeater view switcher",
         "message": "Switch to repeater view"
+    },
+    "listbuilder_show_only_selected": {
+        "_description": "Text for the checkbox in listbuilder that filters by selected items",
+        "message": "Show only selected"
+    },
+    "listbuilder_multiselect_select_all": {
+        "_description": "Text for the button that selects all items in the listbuilder",
+        "message": "Select all"
+    },
+    "listbuilder_multiselect_clear_all": {
+        "_description": "Text for the button that clears all items in the listbuilder",
+        "message": "Clear all"
+    },
+    "listbuilder_pick_columns": {
+        "_description": "Text for the button that opens a column picker in the listbuilder",
+        "message": "Choose columns"
+    },
+    "listbuilder_show_secondary_actions": {
+        "_description": "Label for the button that opens the secondary actions menu in the listbuilder",
+        "message": "Show secondary actions"
     },
     "modal_close": {
         "_description": "Text for modal close button",

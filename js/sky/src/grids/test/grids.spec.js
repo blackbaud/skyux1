@@ -267,10 +267,18 @@ describe('Grid directive', function () {
 
     });
 
-    it('can load more data when clicking load more through a promise', function () {
+    function verifyRow(rowEl, rowIndex, name, instrument, text) {
+        var cellEl = rowEl.eq(rowIndex).find('td');
 
+        expect(cellEl.length).toBe(3);
+
+        expect(cellEl.eq(0)).toHaveText(name);
+        expect(cellEl.eq(1)).toHaveText(instrument);
+        expect(cellEl.eq(2)).toHaveText(text);
+    }
+
+    it('can load more data when clicking load more through a promise', function () {
         var rowEl,
-            cellEl,
             loadMoreButton;
 
         locals.gridOptions.hasMoreRows = true;
@@ -290,37 +298,12 @@ describe('Grid directive', function () {
         rowEl = getGridRows(el);
 
         expect(rowEl.length).toBe(8);
-        cellEl = rowEl.eq(4).find('td');
 
-        expect(cellEl.length).toBe(3);
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
 
-        expect(cellEl.eq(0)).toHaveText('John');
-        expect(cellEl.eq(1)).toHaveText('Rhythm guitar');
-        expect(cellEl.eq(2)).toHaveText('');
-
-        cellEl = rowEl.eq(5).find('td');
-
-        expect(cellEl.length).toBe(3);
-
-        expect(cellEl.eq(0)).toHaveText('Paul');
-        expect(cellEl.eq(1)).toHaveText('Bass');
-        expect(cellEl.eq(2)).toHaveText('Lorem');
-
-        cellEl = rowEl.eq(6).find('td');
-
-        expect(cellEl.length).toBe(3);
-
-        expect(cellEl.eq(0)).toHaveText('George');
-        expect(cellEl.eq(1)).toHaveText('Lead guitar');
-        expect(cellEl.eq(2)).toHaveText('');
-
-        cellEl = rowEl.eq(7).find('td');
-
-        expect(cellEl.length).toBe(3);
-
-        expect(cellEl.eq(0)).toHaveText('Ringo');
-        expect(cellEl.eq(1)).toHaveText('Drums');
-        expect(cellEl.eq(2)).toHaveText('');
     });
 
     function timeoutFlushIfAvailable() {
@@ -347,10 +330,11 @@ describe('Grid directive', function () {
 
     }
 
+    
+
     it('can load more data when using infinite scroll through a promise', function () {
 
         var rowEl,
-            cellEl,
             infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
 
         locals.gridOptions.hasMoreRows = true;
@@ -372,37 +356,66 @@ describe('Grid directive', function () {
         rowEl = getGridRows(el);
 
         expect(rowEl.length).toBe(8);
-        cellEl = rowEl.eq(4).find('td');
 
-        expect(cellEl.length).toBe(3);
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
 
-        expect(cellEl.eq(0)).toHaveText('John');
-        expect(cellEl.eq(1)).toHaveText('Rhythm guitar');
-        expect(cellEl.eq(2)).toHaveText('');
+    it('does not reload data when options.data is changed through concatenation', function () {
 
-        cellEl = rowEl.eq(5).find('td');
+        var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
+            rowEl;
 
-        expect(cellEl.length).toBe(3);
+        el = setUpGrid(gridHtml, locals);
 
-        expect(cellEl.eq(0)).toHaveText('Paul');
-        expect(cellEl.eq(1)).toHaveText('Bass');
-        expect(cellEl.eq(2)).toHaveText('Lorem');
+        setGridData(dataSet1);
+        
+        $scope.locals.gridOptions.data = $scope.locals.gridOptions.data.concat([{
+                name: 'Jimbo',
+                instrument: 'Trumpet'
+            }]);
 
-        cellEl = rowEl.eq(6).find('td');
+        $scope.$digest();
 
-        expect(cellEl.length).toBe(3);
+        rowEl = getGridRows(el);
 
-        expect(cellEl.eq(0)).toHaveText('George');
-        expect(cellEl.eq(1)).toHaveText('Lead guitar');
-        expect(cellEl.eq(2)).toHaveText('');
+        expect(rowEl.length).toBe(5);
 
-        cellEl = rowEl.eq(7).find('td');
+        verifyRow(rowEl, 0, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 1, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 2, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 3, 'Ringo', 'Drums', '');
+        verifyRow(rowEl, 4, 'Jimbo', 'Trumpet', '');
 
-        expect(cellEl.length).toBe(3);
+    });
 
-        expect(cellEl.eq(0)).toHaveText('Ringo');
-        expect(cellEl.eq(1)).toHaveText('Drums');
-        expect(cellEl.eq(2)).toHaveText('');
+    it('reloads data when options.data is not changed through concatenation', function () {
+
+        var gridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
+            rowEl;
+
+        el = setUpGrid(gridHtml, locals);
+
+        setGridData(dataSet1);
+        $scope.locals.gridOptions.data.unshift({
+                name: 'Jimbo',
+                instrument: 'Trumpet'
+            });
+
+        $scope.$digest();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(5);
+
+        verifyRow(rowEl, 1, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 2, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 3, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 4, 'Ringo', 'Drums', '');
+        verifyRow(rowEl, 0, 'Jimbo', 'Trumpet', '');
+
     });
 
     it('reinitializes the grid in response to a reInitGrid event', function () {

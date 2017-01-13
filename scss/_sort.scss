@@ -10,3 +10,8 @@
 .dropdown-menu .divider.bb-sort-heading-divider {
     margin: 0;
 }
+
+.bb-sort > .dropdown-toggle:focus {
+    //default
+    @include bb-focus-indication();
+}

@@ -14,6 +14,46 @@
             }
         }
 
+        function getListbuilderToolbarId() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getToolbarId)) {
+                return ctrl.getToolbarId();
+            }
+        }
+
+        function getListbuilderToolbarTopScrollbarEl() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getTopScrollbar)) {
+                return ctrl.getTopScrollbar();
+            }   
+        }
+
+        function sortComponentPresent() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.toolbarSortComponentPresent)) {
+                return ctrl.toolbarSortComponentPresent();
+            }   
+        }
+
+        function getListbuilderMultiselectIdProperty() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getMultiselectIdProperty)) {
+                return ctrl.getMultiselectIdProperty();
+            }
+        }
+
+        function updateSelectedIds(selectedIds) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.updateMultiselectSelectedIds)) {
+                return ctrl.updateMultiselectSelectedIds(selectedIds);
+            }
+        }
+
         function highlightSearchText(searchText) {
             lastSearchText = searchText;
             if (angular.isFunction(ctrl.highlightSearchContent)) {
@@ -21,8 +61,16 @@
             }
         }
 
+        function itemToggled(isSelected, itemId) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.multiselectItemToggled)) {
+                ctrl.multiselectItemToggled(isSelected, itemId);
+            }
+        }
+
         function getContentContainer() {
-            return $element.find('.bb-listbuilder-content');
+            return $element.find('.bb-listbuilder-content-container');
         }
 
         function onInit() {
@@ -31,8 +79,14 @@
 
         ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
+        ctrl.getListbuilderToolbarId = getListbuilderToolbarId;
+        ctrl.getListbuilderToolbarTopScrollbarEl = getListbuilderToolbarTopScrollbarEl;
+        ctrl.getListbuilderMultiselectIdProperty = getListbuilderMultiselectIdProperty;
+        ctrl.sortComponentPresent = sortComponentPresent;
+        ctrl.updateSelectedIds = updateSelectedIds;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
+        ctrl.itemToggled = itemToggled;
     }
 
     Controller.$inject = ['$element'];

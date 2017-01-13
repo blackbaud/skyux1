@@ -11,9 +11,9 @@ Note that collapsed text will have newlines removed. Also, if one or more newlin
 ### Text expand settings ###
 
  - `bb-text-expand` &mdash; The text to truncate.
- - `bb-text-expand-max-length` &mdash; *(Default: 200)* The number of characters to show before truncating the text. The directive will attempt to look back up to 10 characters for a space and truncate there in order to avoid truncating in the middle of a word.
- - `bb-text-expand-max-expanded-length` &mdash; *(Default: 600)* The maximum number of characters to show in the inline expanded view. If there are more characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked.
- - `bb-text-expand-max-expanded-newlines` &mdash; *(Default: 2)* The maximum number of newline characters to show in the inline expanded view. If there are more newline characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked.
+ - `bb-text-expand-max-length` &mdash; The number of characters to show before truncating the text. The directive will attempt to look back up to 10 characters for a space and truncate there in order to avoid truncating in the middle of a word. *(Default: `200`)*
+ - `bb-text-expand-max-expanded-length` &mdash; The maximum number of characters to show in the inline expanded view. If there are more characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked. *(Default: `600`)*
+ - `bb-text-expand-max-expanded-newlines` &mdash; The maximum number of newline characters to show in the inline expanded view. If there are more newline characters in the content, then a modal view with the content will be displayed when the 'See more' link is clicked. *(Default: `2`)*
  - `bb-text-expand-modal-title` &mdash; The title to display in the modal expanded view.
 
 The Text Expand Repeater directive truncates a list of repeater items and will initially display a set number of items. Any items over the set maximum limit are hidden until the user elects to expand the list.

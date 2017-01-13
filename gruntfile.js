@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 
     // Load required external modules
     grunt.loadNpmTasks('grunt-bump');
-    grunt.loadNpmTasks('grunt-concat-sourcemap');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');

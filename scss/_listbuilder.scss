@@ -29,37 +29,12 @@
 /* Content */
 .bb-listbuilder-content {
     margin-top: $margin;
+    &.bb-listbuilder-content-grid-view {
+        margin-top: 0;
+    }
     .bb-card {
         margin-right: 0;
         width: 100%
-    }
-}
-
-/* Footer */
-.bb-listbuilder-backtotop-left {
-    float: left;
-}
-
-.bb-listbuilder-backtotop-right {
-    float: right;
-}
-
-.bb-listbuilder-backtotop-left, .bb-listbuilder-backtotop-right, .bb-listbuilder-loadmore {
-    cursor: pointer;
-}
-
-.bb-listbuilder-actionbar {
-    box-shadow: 0 -5px 5px 0 #ccc;
-    width: 100%;
-    background-color: $bb-color-white;
-    padding: $padding;
-    text-align: center;
-    margin-top: $margin-half;  
-    position: fixed;
-    bottom: 0;
-
-    .btn-link {
-        vertical-align: baseline; 
     }
 }
 
@@ -85,4 +60,37 @@
             margin: 0;
             text-align: center;
         } 
+}
+
+.bb-listbuilder-multiselect {
+    padding: $padding-half $padding;
+    display: flex;
+    align-items: center;
+    background-color: $bb-color-white;
+    @include bb-border(dark, bottom);
+    .bb-listbuilder-show-selected {
+        margin-bottom: 0;
+        margin-left: auto;
+    }
+}
+
+.bb-listbuilder-clear-all {
+    margin-left: $padding;
+}
+
+.bb-listbuilder-toolbar-top-scrollbar {
+    background-color: $bb-color-white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.bb-listbuilder {
+    .ui-jqgrid-hbox {
+        .ui-jqgrid-htable th {
+            cursor: default;
+        }
+        .bb-check-wrapper {
+            display: none;
+        }
+    }
 }

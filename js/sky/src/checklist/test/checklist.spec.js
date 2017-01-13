@@ -794,6 +794,46 @@ describe('Checklist directive', function () {
                 expect(optionEls.eq(2)).toHaveText('Category 2');
             });
 
+            it('should allow an all categories label to be specified', function () {
+                var optionEls,
+                    categoryBarEl,
+                    el;
+
+                $scope.categories = categories;
+                $scope.items = itemsWithCategories;
+
+                $scope.categoriesLabel = 'New all categories';
+
+                checklistHtml =
+                        '<bb-checklist ' +
+                            'bb-checklist-items="items" ' +
+                            'bb-checklist-selected-items="selectedItems" ' +
+                            'bb-checklist-search-placeholder="\'My Placeholder\'" ' +
+                            'bb-checklist-no-items-message="\'No items found\'" ' +
+                            'bb-checklist-mode="list" ' +
+                            'bb-checklist-categories="categories" ' +
+                            'bb-checklist-all-categories-label="categoriesLabel" ' +
+                            'bb-checklist-subset-label="subsetLabel" ' +
+                            'bb-checklist-subset-property="inactive" ' +
+                            'bb-checklist-filter-local>' +
+                        '</bb-checklist>';
+
+                el = $compile(checklistHtml)($scope);
+
+                $scope.$digest();
+
+                categoryBarEl = el.find('.bb-checklist-category-bar');
+
+                expect(categoryBarEl).toExist();
+
+                optionEls = categoryBarEl.find('option');
+
+                expect(optionEls.length).toBe(3);
+                expect(optionEls.eq(0)).toHaveText('New all categories');
+                expect(optionEls.eq(1)).toHaveText('Category 1');
+                expect(optionEls.eq(2)).toHaveText('Category 2');
+            });
+
             it('should automatically filter the list of items when a category is clicked and filtering is set to local', function () {
                 var selectEl,
                     categoryBarEl,

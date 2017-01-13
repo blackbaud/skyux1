@@ -148,6 +148,7 @@
             'sky.listbuilder.content.custom.item.directive',
             'sky.listbuilder.card.component',
             'sky.listbuilder.cards.component',
+            'sky.listbuilder.grid.component',
             'sky.listbuilder.switcher.component',
             'sky.listbuilder.repeater.component',
             'sky.listbuilder.repeater.item.directive'
@@ -917,7 +918,7 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBCardController() {
+    function BBCardController($timeout, $scope) {
         var vm = this;
 
         function addComponentSetter(component) {
@@ -937,6 +938,17 @@
         function cardIsSelectable() {
             return vm.bbCardSelectable === 'true';
         }
+
+        function cardSelectionToggled(isSelected) {
+            $timeout(function () {
+                if (angular.isFunction(vm.bbCardSelectionToggled)) {
+                    vm.bbCardSelectionToggled({isSelected: isSelected});
+                }
+            });
+            
+        }
+
+        vm.cardSelectionToggled = cardSelectionToggled;
 
         vm.cardIsSelectable = cardIsSelectable;
 
@@ -964,10 +976,17 @@
 
         nextId++;
         vm.cardCheckId = 'bb-card-check-' + nextId;
+
+        $scope.$emit('bbCardInitialized', {
+            cardCtrl: vm
+        });
     }
 
+    BBCardController.$inject = ['$timeout', '$scope'];
+
     function bbCard() {
-        function link(scope, el, attrs, vm) {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0];
             function watchForComponent(component) {
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
@@ -987,8 +1006,10 @@
             bindToController: {
                 bbCardSelectable: '@?',
                 bbCardSelected: '=?',
+                bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
+            require: ['bbCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,
@@ -1341,7 +1362,7 @@
 
     var SEARCH_PROPS = ['title', 'description'];
 
-    function BBChecklistController($scope, bbChecklistUtility) {
+    function BBChecklistController($scope, bbChecklistUtility, bbResources) {
         var vm = this;
 
         function itemMatchesCategory(item, category) {
@@ -1524,6 +1545,9 @@
         if (angular.isDefined(vm.bbChecklistCategories)) {
             vm.allCategories = 'bbChecklistAllCategories';
             vm.selectedOption = vm.allCategories;
+            if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
+                vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
+            }
             $scope.$watch(function () {
                 return vm.selectedOption;
             }, function (newValue, oldValue) {
@@ -1562,9 +1586,9 @@
 
     }
 
-    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility'];
+    BBChecklistController.$inject = ['$scope', 'bbChecklistUtility', 'bbResources'];
 
-    angular.module('sky.checklist.controller', ['sky.checklist.utility'])
+    angular.module('sky.checklist.controller', ['sky.checklist.utility', 'sky.resources'])
         .controller('BBChecklistController', BBChecklistController);
 }());
 
@@ -1594,7 +1618,8 @@
                 bbChecklistSelectStyle: '@?',
                 bbChecklistIsLoading: '=?',
                 bbChecklistSubsetLabel: '=?',
-                bbChecklistSubsetProperty: '@?'
+                bbChecklistSubsetProperty: '@?',
+                bbChecklistAllCategoriesLabel: '<?'
             },
             controller: 'BBChecklistController',
             controllerAs: 'bbChecklist',
@@ -4744,6 +4769,54 @@
         });
 }());
 
+/* global angular */ 
+(function () {
+    'use strict';
+
+    function bbColumnPicker(bbModal) {
+        function openColumnPicker(columnPickerOptions) {
+            bbModal.open({
+                templateUrl: 'sky/templates/grids/columnpicker.html',
+                controller: 'BBGridColumnPickerController',
+                resolve: {
+                    columns: function () {
+                        return columnPickerOptions.columns;
+                    },
+                    selectedColumnIds: function () {
+                        return columnPickerOptions.selectedColumnIds;
+                    },
+                    columnPickerHelpKey: function () {
+                        return columnPickerOptions.helpKey;
+                    },
+                    subsetLabel: function () {
+                        return columnPickerOptions.subsetLabel;
+                    },
+                    subsetProperty: function () {
+                        return columnPickerOptions.subsetProperty;
+                    },
+                    subsetExclude: function () {
+                        return columnPickerOptions.subsetExclude;
+                    },
+                    onlySelected: function () {
+                        return columnPickerOptions.onlySelected;
+                    }
+                }
+            }).result.then(function (selectedColumnIds) {
+                columnPickerOptions.selectedColumnIdsChangedCallback(selectedColumnIds);
+            });
+        }
+
+        return {
+            openColumnPicker: openColumnPicker
+        };
+    }
+
+    bbColumnPicker.$inject = ['bbModal'];
+
+    angular.module('sky.grids.columnpicker.factory', ['sky.modal', 'sky.grids.columnpicker'])
+        .factory('bbColumnPicker', bbColumnPicker);
+    
+})();
 /*jslint browser: false, plusplus: true */
 /*global angular */
 
@@ -5247,14 +5320,16 @@
                     transclude: {
                         'bbGridToolbar': '?bbGridToolbar'    
                     },
-                    require: 'bbGrid',
+                    require: ['bbGrid', '?^^bbListbuilder'],
                     restrict: 'E',
                     scope: {
                         options: '=bbGridOptions',
                         multiselectActions: '=?bbMultiselectActions',
                         updateMultiselectActions: '&bbSelectionsUpdated',
                         paginationOptions: '=?bbGridPagination',
-                        selectedRows: '=?bbSelectedRows'
+                        selectedRows: '=?bbSelectedRows',
+                        bbGridMultiselectIdProperty: '@?',
+                        bbGridMultiselectSelectedIds: '<?'
                     },
                     controller: ['$scope', function ($scope) {
                         var locals,
@@ -5369,7 +5444,12 @@
                             }
                         });
                     }],
-                    link: function ($scope, element, attr, bbGrid, $transclude) {
+                    link: function ($scope, element, attr, ctrls, $transclude) {
+                        var bbGrid = ctrls[0],
+                            listbuilderCtrl = ctrls[1];
+                            
+                        $scope.hasListbuilder = ctrls[1] !== null;
+
                         $scope.customToolbar = {
                             hasCustomToolbar: false
                         };
@@ -5415,11 +5495,20 @@
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
-                                return element.find('.bb-grid-top-scrollbar');
+                                if (!$scope.hasListbuilder) {
+                                    return element.find('.bb-grid-top-scrollbar');
+                                } else {
+                                    return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl();
+                                }
+                                
                             }
 
                             function getTopScrollbarDiv() {
-                                return element.find('.bb-grid-top-scrollbar > div');
+                                if (!$scope.hasListbuilder) {
+                                    return element.find('.bb-grid-top-scrollbar > div');
+                                } else {
+                                    return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl().find(' > div');
+                                }
                             }
 
                             function updateGridLoadedTimestampAndRowCount(count) {
@@ -5881,14 +5970,18 @@
 
                             function highlightSearchText(highlightText) {
                                 var options = $scope.options;
-                                
-                                if (!highlightText && options && options.searchText) {
-                                    highlightText = options.searchText;
-                                }
 
-                                bbHighlight.clear(tableEl);
-                                if (highlightText) {
-                                    bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                if (!$scope.hasListbuilder) {
+                                    if (!highlightText && options && options.searchText) {
+                                        highlightText = options.searchText;
+                                    }
+
+                                    bbHighlight.clear(tableEl);
+                                    if (highlightText) {
+                                        bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), highlightText, 'highlight');
+                                    }
+                                } else {
+                                    listbuilderCtrl.highlightLastSearchText();
                                 }
                             }
 
@@ -5898,6 +5991,30 @@
                                 });
                             }
 
+                            function setRowMultiselect(rowid) {
+                                var row,
+                                    rowIndex = tableEl.getInd(rowid),
+                                    multiselectId;
+
+
+                                row = $scope.options.data[(rowIndex - 1)];
+
+                                if (row) {
+                                    multiselectId = getMultiselectId(row);
+                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) { 
+                                        if (arrayObjectIndexOf($scope.selectedRows, row) > -1) {
+                                            tableEl.setSelection(rowid, false);
+                                        }
+                                    } else if (angular.isDefined(multiselectId)) {
+                                        if ($scope.bbGridMultiselectSelectedIds.indexOf(multiselectId) > -1) {
+                                            tableEl.setSelection(rowid, false);
+                                        }
+                                    }
+                                }
+
+                                
+                            }
+
                             function afterInsertRow(rowid, rowdata, rowelem) {
                                 /*jshint validthis: true */
                                 var cell,
@@ -5905,8 +6022,7 @@
                                     columnData,
                                     i,
                                     itemScope,
-                                    row,
-                                    rowIndex;
+                                    row;
 
                                 if (hasTemplatedColumns) {
 
@@ -5956,16 +6072,8 @@
                                     }
                                 }
 
-                                rowIndex = tableEl.getInd(rowid);
-
-                                //check if row should be multiselected
-                                if ($scope.selectedRows && $scope.selectedRows.length > 0) {
-
-                                    row = $scope.options.data[(rowIndex - 1)];
-                                    if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
-                                        tableEl.setSelection(rowid, false);
-                                    }
-                                }
+                                setRowMultiselect(rowid);
+                                
                             }
 
                             function setColumnHeaderAlignment() {
@@ -6040,31 +6148,98 @@
                                 return sortable;
                             }
 
-                            function clearSelectedRowsObject() {
-                                $scope.selectedRows = [];
+
+
+                            function addSelectedItem(id, selectedIds) {
+                                /* istanbul ignore else */
+                                /* sanity check */
+                                if (selectedIds.indexOf(id) === -1) {
+                                    selectedIds.push(id);
+                                }
                             }
 
+                            function removeSelectedItem(id, selectedIds) {
+                                var itemIndex = selectedIds.indexOf(id);
+                                if (itemIndex !== -1) {
+                                    selectedIds.splice(itemIndex, 1);
+                                }
+                            }
+
+                            function getMultiselectId(row) {
+                                var multiselectId;
+
+                                if ($scope.bbGridMultiselectIdProperty) {
+                                    multiselectId = $scope.bbGridMultiselectIdProperty;
+                                } else if (listbuilderCtrl !== null) {
+                                    multiselectId = listbuilderCtrl.getListbuilderMultiselectIdProperty();
+                                }
+                                
+                                return row[multiselectId];
+                            }
+
+                            function updateSelectedIds(selectedIds) {
+                                $scope.$emit('bbGridMultiselectSelectedIdsChanged', selectedIds);
+                            }
+
+                            function toggleSelectedId(isSelected, id) {
+                                if (isSelected) {
+                                    addSelectedItem(id, $scope.bbGridMultiselectSelectedIds);
+                                } else {
+                                    removeSelectedItem(id, $scope.bbGridMultiselectSelectedIds);
+                                }
+
+                                updateSelectedIds($scope.bbGridMultiselectSelectedIds);
+                            }
+
+                            function hasSelectedIdsMultiselect() {
+                                return $scope.options && $scope.options.data && $scope.options.data.length > 0 && angular.isDefined(getMultiselectId($scope.options.data[0]));
+                            }
+
+                            function clearSelectedRowsObject() {
+                                var i,
+                                    multiselectId;
+                                if (hasSelectedIdsMultiselect()) {
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        multiselectId = getMultiselectId($scope.options.data[i]);
+                                        removeSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                    }
+                                } else {
+                                    $scope.selectedRows = [];
+                                }   
+                            }
 
                             function resetMultiselect() {
                                 clearSelectedRowsObject();
                                 tableEl.resetSelection();
                             }
 
-
+                            function selectAllItems() {
+                                var allRowData,
+                                    multiselectId,
+                                    i;
+                                if (hasSelectedIdsMultiselect()) {
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        multiselectId = getMultiselectId($scope.options.data[i]);
+                                        addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                    }
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
+                                } else {
+                                    allRowData = $scope.options.data;
+                                    if (allRowData && allRowData.length > 0) {
+                                        $scope.selectedRows = allRowData.slice();
+                                    }
+                                }
+                            }
 
                             function onSelectAll(rowIds, status) {
                                 /*jslint unparam: true */
-                                var allRowData;
 
                                 localRowSelect = true;
 
                                 clearSelectedRowsObject();
 
                                 if (status === true) {
-                                    allRowData = $scope.options.data;
-                                    if (allRowData && allRowData.length > 0) {
-                                        $scope.selectedRows = allRowData.slice();
-                                    }
+                                    selectAllItems();
                                 }
                                 $scope.$apply();
                             }
@@ -6088,27 +6263,43 @@
                                 $timeout(function () {
                                     var index,
                                         rowIndex = tableEl.getInd(rowId),
+                                        multiselectId,
                                         row;
+
                                     row = $scope.options.data[(rowIndex - 1)];
+                                    
+                                    multiselectId = getMultiselectId(row);
 
                                     localRowSelect = true;
 
-                                    index = arrayObjectIndexOf($scope.selectedRows, row);
+                                    if (angular.isUndefined(multiselectId)) {
 
-                                    if (status === true && index === -1 && row) {
-                                        $scope.selectedRows.push(row);
-                                    } else if (status === false && index > -1) {
-                                        $scope.selectedRows.splice(index, 1);
+                                        index = arrayObjectIndexOf($scope.selectedRows, row);
+
+                                        if (status === true && index === -1 && row) {
+                                            $scope.selectedRows.push(row);
+                                        } else if (status === false && index > -1) {
+                                            $scope.selectedRows.splice(index, 1);
+                                        }
+                                    } else {
+                                        toggleSelectedId(status, multiselectId);
                                     }
                                 });
                             }
 
                             function setMultiselectRow(rowId, rowIndex) {
-                                var row;
+                                var row,
+                                    multiselectId;
 
                                 tableEl.setSelection(rowId, false);
                                 row  = $scope.options.data[(rowIndex - 1)];
-                                $scope.selectedRows.push(row);
+                                multiselectId = getMultiselectId(row);
+                                if (angular.isUndefined(multiselectId)) {
+                                    $scope.selectedRows.push(row);
+                                } else {
+                                    addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
+                                }
+                                
                             }
 
                             function beforeSelectRow(rowId, e) {
@@ -6146,6 +6337,8 @@
                                         $scope.$apply();
                                         return true;
                                     }
+
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
 
                                     $scope.$apply();
                                     return false;
@@ -6206,6 +6399,28 @@
 
                             function getIdPrefix() {
                                 return 'bb-grid-row-' + $scope.$id + '-';
+                            }
+
+                            function listbuilderSortComponentPresent() {
+                                return listbuilderCtrl !== null && listbuilderCtrl.sortComponentPresent();
+                            }
+
+                            function createHeaderViewKeeper(hasListbuilder) {
+                                var verticalOffSetElId = hasListbuilder ? listbuilderCtrl.getListbuilderToolbarId() : toolbarContainerId;
+                                vkHeader = new bbViewKeeperBuilder.create({
+                                        el: header[0],
+                                        boundaryEl: tableWrapper[0],
+                                        verticalOffSetElId: verticalOffSetElId,
+                                        setWidth: true,
+                                        onStateChanged: function () {
+                                            if (vkHeader.isFixed) {
+                                                header.scrollLeft(tableWrapper.scrollLeft());
+                                            } else {
+                                                header.scrollLeft(0);
+                                            }
+
+                                        }
+                                    });        
                             }
 
                             function initGrid() {
@@ -6304,7 +6519,7 @@
 
                                         columnName = getColumnNameFromElementId(this.id);
 
-                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive) {
+                                        if (columnIsSortable(columnName) && !bbGrid.headerSortInactive && !listbuilderSortComponentPresent()) {
                                             sortOptions.column = columnName;
                                             sortOptions.descending = $(this).hasClass('sorting-asc');
                                             $scope.$apply();
@@ -6323,22 +6538,8 @@
                                     resetTopScrollbar();
 
                                     if (!$scope.options.fixedToolbar) {
-                                        vkHeader = new bbViewKeeperBuilder.create({
-                                            el: header[0],
-                                            boundaryEl: tableWrapper[0],
-                                            verticalOffSetElId: toolbarContainerId,
-                                            setWidth: true,
-                                            onStateChanged: function () {
-                                                if (vkHeader.isFixed) {
-                                                    header.scrollLeft(tableWrapper.scrollLeft());
-                                                } else {
-                                                    header.scrollLeft(0);
-                                                }
-
-                                            }
-                                        });
-                                    }
-
+                                        createHeaderViewKeeper($scope.hasListbuilder);
+                                    } 
                                     setSortStyles();
 
                                     setUpFancyCheckHeader();
@@ -6423,10 +6624,37 @@
                                 }
                             }
 
-                            function setRows(rows) {
-                                /*istanbul ignore else */
+                            function newRowsAreConcatenated(newRows, oldRows) {
+                                var i;
+                                if (newRows && oldRows && newRows.length > oldRows.length && oldRows.length > 0) {
+                                    for (i = 0; i < oldRows.length; i++) {
+                                        if (oldRows[i] !== newRows[i]) {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
+
+                            function gridRowsUpdated(newRows) {
+                                $timeout(function () {
+                                    highlightSearchText(locals.appliedSearchText);
+                                });
+                                handleTableWrapperResize();
+                                /*istanbul ignore next */
                                 /* sanity check */
-                                if (tableDomEl.addJSONData) {
+                                updateGridLoadedTimestampAndRowCount(newRows ? newRows.length : 0);
+
+                                setUpFancyCheckCell();
+                            }
+
+                            function setRows(rows, oldRows) {
+
+                                if (newRowsAreConcatenated(rows, oldRows)) {
+                                    tableEl.addRowData('', rows.slice(oldRows.length, rows.length));
+                                    gridRowsUpdated(rows);
+                                } else if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
 
                                         if (locals.multiselect) {
@@ -6439,15 +6667,7 @@
 
                                         destroyCellScopes();
                                         tableDomEl.addJSONData(rows);
-                                        $timeout(function () {
-                                            highlightSearchText(locals.appliedSearchText);
-                                        });
-                                        handleTableWrapperResize();
-                                        /*istanbul ignore next */
-                                        /* sanity check */
-                                        updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
-
-                                        setUpFancyCheckCell();
+                                        gridRowsUpdated(rows);
 
                                     });
                                 }
@@ -6574,25 +6794,20 @@
                                 }
                             }, true);
 
-                            $scope.$watchCollection('selectedRows', function (newSelections) {
+                            function setGridMultiselectRows(selections, indexCallback) {
                                 var i,
                                     index,
                                     rowIds;
 
-                                if (localRowSelect) {
-                                    localRowSelect = false;
-                                    return;
-                                }
-
-                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0) {
+                                if (tableEl[0].grid && $scope.options.data && $scope.options.data.length > 0 && selections) {
                                     //blow away existing selections
                                     tableEl.resetSelection();
 
                                     rowIds = tableEl.getDataIDs();
 
-                                    for (i = 0; i < newSelections.length; i++) {
+                                    for (i = 0; i < selections.length; i++) {
 
-                                        index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
+                                        index = indexCallback(selections[i]);
 
                                         if (index > -1) {
                                             tableEl.setSelection(rowIds[index], false);
@@ -6600,16 +6815,59 @@
 
                                     }
                                 }
+                            }
 
-                            });
+                            if (!$scope.hasListbuilder) {
+                                $scope.$watchCollection('selectedRows', function (newSelections) {
+                                    
+                                    if (localRowSelect) {
+                                        localRowSelect = false;
+                                        return;
+                                    }
+
+                                    function indexCallback(selectedItem) {
+                                        return arrayObjectIndexOf($scope.options.data, selectedItem);
+                                    }
+
+                                    setGridMultiselectRows(newSelections, indexCallback);
+                                    
+                                });
+                            }
+
+                            $scope.$watchCollection('bbGridMultiselectSelectedIds', function (newSelections) {
+
+                                if (localRowSelect) {
+                                    localRowSelect = false;
+                                    return;
+                                }
+                                
+                                if (angular.isUndefined(newSelections)) {
+                                    $scope.bbGridMultiselectSelectedIds = [];
+                                    localRowSelect = true;
+                                    return;
+                                }
+
+                                function indexCallback(selectedItem) {
+                                    var i;
+                                    for (i = 0; i < $scope.options.data.length; i++) {
+                                        if (getMultiselectId($scope.options.data[i]) === selectedItem) {
+                                            return i;
+                                        }
+                                    }
+                                    return -1;
+                                }
+
+                                setGridMultiselectRows(newSelections, indexCallback);
+                            }); 
+
 
                             $scope.$watch('paginationOptions', initializePagination, true);
 
-                            $scope.$watchCollection('options.data', function (newValue) {
+                            $scope.$watchCollection('options.data', function (newValue, oldValue) {
                                 if (doNotResetRows) {
                                     doNotResetRows = false;
                                 } else {
-                                    setRows(newValue);
+                                    setRows(newValue, oldValue);
                                 }
                             });
 
@@ -6683,12 +6941,34 @@
                                 }
                             };
 
+                            if ($scope.hasListbuilder) {
+                                listbuilderCtrl.topScrollbarScrollAction = $scope.locals.topScrollbarScroll;
+                            }
+
+                            function destroyListbuilder() {
+                                var topScrollbarEl,
+                                    topScrollbarDivEl;
+                                
+                                if ($scope.hasListbuilder) {
+                                    listbuilderCtrl.topScrollbarScrollAction = undefined;
+                                    topScrollbarEl = getTopScrollbar();
+                                    topScrollbarDivEl = getTopScrollbarDiv();
+                                    topScrollbarEl.width(0);
+                                    topScrollbarEl.height(0);
+                                    topScrollbarDivEl.width(0);
+                                    topScrollbarDivEl.height(0);
+                                }
+                                
+                            }
+
                             $scope.locals.hasWaitAndEmpty = function () {
                                 return $scope.options && $scope.options.loading && (!$scope.options.data || $scope.options.data.length < 1);
                             };
 
 
                             element.on('$destroy', function () {
+
+                                destroyListbuilder();
 
                                 /*istanbul ignore else */
                                 /* sanity check */
@@ -6727,14 +7007,16 @@
     'use strict';
 
 
-    function BBGridToolbar(bbResources, bbModal) {
+    function BBGridToolbar(bbResources, bbColumnPicker) {
         return {
             require: '?^bbGrid',
             scope: {
                 options: '=?bbToolbarOptions',
                 bbGridFilterClick: '&?bbGridFilterClick',
                 bbGridSearch: '&?bbGridSearch',
-                bbGridSearchText: '<?bbGridSearchText'
+                bbGridSearchText: '<?bbGridSearchText',
+                bbGridSearchTextChanged: '&?',
+                bbGridSearchPlaceholder: '<?bbGridSearchPlaceholder'
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
@@ -6773,35 +7055,24 @@
                     
                 }
 
+                function searchTextChanged(searchText) {
+                    if (angular.isFunction($scope.bbGridSearchTextChanged)) {
+                        $scope.bbGridSearchTextChanged({searchText: searchText});
+                    }
+                }
+
                 function openColumnPicker() {
-                    bbModal.open({
-                        templateUrl: 'sky/templates/grids/columnpicker.html',
-                        controller: 'BBGridColumnPickerController',
-                        resolve: {
-                            columns: function () {
-                                return $scope.options.columns;
-                            },
-                            selectedColumnIds: function () {
-                                return $scope.options.selectedColumnIds;
-                            },
-                            columnPickerHelpKey: function () {
-                                return $scope.options.columnPickerHelpKey;
-                            },
-                            subsetLabel: function () {
-                                return $scope.options.columnPickerSubsetLabel;
-                            },
-                            subsetProperty: function () {
-                                return $scope.options.columnPickerSubsetProperty;
-                            },
-                            subsetExclude: function () {
-                                return $scope.options.columnPickerSubsetExclude;
-                            },
-                            onlySelected: function () {
-                                return $scope.options.columnPickerOnlySelected;
-                            }
+                    bbColumnPicker.openColumnPicker({
+                        columns: $scope.options.columns,
+                        selectedColumnIds: $scope.options.selectedColumnIds,
+                        helpKey: $scope.options.columnPickerHelpKey,
+                        subsetLabel: $scope.options.columnPickerSubsetLabel,
+                        subsetProperty: $scope.options.columnPickerSubsetProperty,
+                        subsetExclude: $scope.options.columnPickerSubsetExclude,
+                        onlySelected: $scope.options.columnPickerOnlySelected,
+                        selectedColumnIdsChangedCallback: function (selectedColumnIds) {
+                            $scope.options.selectedColumnIds = selectedColumnIds;
                         }
-                    }).result.then(function (selectedColumnIds) {
-                        $scope.options.selectedColumnIds = selectedColumnIds;
                     });
                 }
 
@@ -6827,6 +7098,7 @@
 
                 $scope.toolbarLocals = {
                     applySearchText: applySearchText,
+                    searchTextChanged: searchTextChanged,
                     openColumnPicker: openColumnPicker,
                     toggleFilterMenu: toggleFilterMenu,
                     toolbarSearch: toolbarSearch
@@ -6901,9 +7173,16 @@
         };
     }
 
-    BBGridToolbar.$inject = ['bbResources', 'bbModal'];
+    BBGridToolbar.$inject = ['bbResources', 'bbColumnPicker'];
 
-    angular.module('sky.grids.toolbar', ['sky.resources', 'sky.modal', 'sky.grids.columnpicker', 'sky.filter', 'sky.search', 'sky.sort'])
+    angular.module('sky.grids.toolbar', 
+        [
+            'sky.resources', 
+            'sky.grids.columnpicker.factory', 
+            'sky.filter', 
+            'sky.search', 
+            'sky.sort'
+        ])
         .directive('bbGridToolbar', BBGridToolbar);
 }());
 
@@ -7314,15 +7593,32 @@
 (function () {
     'use strict';
 
-    function Controller() {
+    function Controller($scope) {
         var ctrl = this;
+
+        function listbuilderCardToggled(selectedArgs) {
+            ctrl.listbuilderCtrl.itemToggled(selectedArgs.isSelected, ctrl.bbListbuilderCardId);
+        }
+
+        function onInit() {
+            if (angular.isDefined(ctrl.bbListbuilderCardId)) {
+                $scope.$on('bbCardInitialized', function (event, data) {
+                    data.cardCtrl.bbCardSelectionToggled = listbuilderCardToggled;
+                    event.stopPropagation();
+                    event.preventDefault(); 
+                });
+            }
+        }
 
         function postLink() {
             ctrl.cardsCtrl.addCard();
         }
 
         ctrl.$postLink = postLink;
+        ctrl.$onInit = onInit;
     }
+
+    Controller.$inject = ['$scope'];
 
     angular.module('sky.listbuilder.card.component', [])
         .component('bbListbuilderCard', {
@@ -7330,7 +7626,11 @@
             transclude: true,
             controller: Controller,
             require: {
-                cardsCtrl: '^bbListbuilderCards'
+                cardsCtrl: '^bbListbuilderCards',
+                listbuilderCtrl: '^^bbListbuilder'
+            },
+            bindings: {
+                bbListbuilderCardId: '<?'
             }
 
         });
@@ -7390,6 +7690,54 @@
 (function () {
     'use strict';
 
+    function Controller(bbColumnPicker) {
+
+        var ctrl = this;
+
+        function openColumnPicker() {
+            bbColumnPicker.openColumnPicker({
+                        columns: ctrl.bbListbuilderColumnPickerColumns,
+                        selectedColumnIds: ctrl.bbListbuilderColumnPickerSelectedColumnIds,
+                        helpKey: ctrl.bbListbuilderColumnPickerHelpKey,
+                        subsetLabel: ctrl.bbListbuilderColumnPickerSubsetLabel,
+                        subsetProperty: ctrl.bbListbuilderColumnPickerSubsetProperty,
+                        subsetExclude: ctrl.bbListbuilderColumnPickerSubsetExclude,
+                        onlySelected: ctrl.bbListbuilderColumnPickerOnlySelected,
+                        selectedColumnIdsChangedCallback: function (selectedColumnIds) {
+                            ctrl.bbListbuilderColumnPickerSelectedColumnIdsChanged({selectedColumnIds: selectedColumnIds});
+                        }
+                    });
+        }
+
+        ctrl.openColumnPicker = openColumnPicker;
+        
+    }
+
+    Controller.$inject = ['bbColumnPicker'];
+
+    angular.module('sky.listbuilder.column.picker.component', ['sky.grids.columnpicker.factory', 'sky.resources'])
+        .component('bbListbuilderColumnPicker', {
+            controller: Controller,
+            require: {
+                dropdownCtrl: '^^bbListbuilderSecondaryActionsDropdown'
+            },
+            bindings: {
+                bbListbuilderColumnPickerSelectedColumnIds: '<',
+                bbListbuilderColumnPickerColumns: '<',
+                bbListbuilderColumnPickerHelpKey: '<?',
+                bbListbuilderColumnPickerSubsetLabel: '<?',
+                bbListbuilderColumnPickerSubsetProperty: '<?',
+                bbListbuilderColumnPickerSubsetExclude: '<?',
+                bbListbuilderColumnPickerOnlySelected: '<?',
+                bbListbuilderColumnPickerSelectedColumnIdsChanged: '&'
+            },
+            templateUrl: 'sky/templates/listbuilder/listbuilder.column.picker.component.html'
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
     function Controller($element) {
         var ctrl = this,
             lastSearchText;
@@ -7402,6 +7750,46 @@
             }
         }
 
+        function getListbuilderToolbarId() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getToolbarId)) {
+                return ctrl.getToolbarId();
+            }
+        }
+
+        function getListbuilderToolbarTopScrollbarEl() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getTopScrollbar)) {
+                return ctrl.getTopScrollbar();
+            }   
+        }
+
+        function sortComponentPresent() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.toolbarSortComponentPresent)) {
+                return ctrl.toolbarSortComponentPresent();
+            }   
+        }
+
+        function getListbuilderMultiselectIdProperty() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.getMultiselectIdProperty)) {
+                return ctrl.getMultiselectIdProperty();
+            }
+        }
+
+        function updateSelectedIds(selectedIds) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.updateMultiselectSelectedIds)) {
+                return ctrl.updateMultiselectSelectedIds(selectedIds);
+            }
+        }
+
         function highlightSearchText(searchText) {
             lastSearchText = searchText;
             if (angular.isFunction(ctrl.highlightSearchContent)) {
@@ -7409,8 +7797,16 @@
             }
         }
 
+        function itemToggled(isSelected, itemId) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (angular.isFunction(ctrl.multiselectItemToggled)) {
+                ctrl.multiselectItemToggled(isSelected, itemId);
+            }
+        }
+
         function getContentContainer() {
-            return $element.find('.bb-listbuilder-content');
+            return $element.find('.bb-listbuilder-content-container');
         }
 
         function onInit() {
@@ -7419,8 +7815,14 @@
 
         ctrl.$onInit = onInit;
         ctrl.highlightSearchText = highlightSearchText;
+        ctrl.getListbuilderToolbarId = getListbuilderToolbarId;
+        ctrl.getListbuilderToolbarTopScrollbarEl = getListbuilderToolbarTopScrollbarEl;
+        ctrl.getListbuilderMultiselectIdProperty = getListbuilderMultiselectIdProperty;
+        ctrl.sortComponentPresent = sortComponentPresent;
+        ctrl.updateSelectedIds = updateSelectedIds;
         ctrl.getContentContainer = getContentContainer;
         ctrl.highlightLastSearchText = highlightLastSearchText;
+        ctrl.itemToggled = itemToggled;
     }
 
     Controller.$inject = ['$element'];
@@ -7474,7 +7876,17 @@
         }
 
         function highlightSearchContent(searchText) {
-            var contentEl = $element.find('.' + ctrl.listbuilderCtrl.currentView.highlightClass);
+            var contentEl,
+                highlightSelector;
+            /* istanbul ignore else */
+            /* sanity check */
+            if (ctrl.listbuilderCtrl.currentView.highlightClass) {
+                highlightSelector = '.' + ctrl.listbuilderCtrl.currentView.highlightClass;
+            } else if (ctrl.listbuilderCtrl.currentView.highlightSelector) {
+                highlightSelector = ctrl.listbuilderCtrl.currentView.highlightSelector;
+            }
+            
+            contentEl = $element.find(highlightSelector);
             lastSearchText = searchText;
             /*istanbul ignore else */
             /* sanity check */
@@ -7485,8 +7897,6 @@
                 }
             }
         }
-
-        
 
         function getCurrentView() {
             return ctrl.listbuilderCtrl.currentView;
@@ -7534,6 +7944,7 @@
             ctrl.listbuilderCtrl.highlightSearchContent = highlightSearchContent;
             ctrl.listbuilderCtrl.setCurrentView = setCurrentView;
             ctrl.highlightLastSearchText = ctrl.listbuilderCtrl.highlightLastSearchText;
+            
             if (ctrl.bbListbuilderContentActiveView) {
                 setActiveView(ctrl.bbListbuilderContentActiveView);
             }
@@ -7668,16 +8079,43 @@
 (function () {
     'use strict';
 
-    function linkFn(scope, el, attr, customCtrl) {
-        customCtrl.addItem();
+    function Controller($scope) {
+        var ctrl = this;
+        
+        function listbuilderCustomItemToggled(selectedArgs) {
+            ctrl.listbuilderCtrl.itemToggled(selectedArgs.isSelected, ctrl.geCustomItemId());
+        }
+
+        $scope.$on('bbListbuilderCustomItemInitialized', function (event, data) {
+            data.customItemCtrl.bbCustomItemSelectionToggled = listbuilderCustomItemToggled;
+            event.stopPropagation();
+            event.preventDefault(); 
+        });
     }
+
+    function linkFn(scope, el, attr, ctrls) {
+        var ctrl = ctrls[0],
+            customCtrl = ctrls[1];
+        customCtrl.addItem();
+
+        ctrl.listbuilderCtrl = ctrls[2];
+
+        function getCustomItemId() {
+            return scope.$eval(attr.bbListbuilderContentCustomItemId);
+        }
+
+        ctrl.geCustomItemId = getCustomItemId;
+    }
+
+    Controller.$inject = ['$scope'];
 
     angular.module('sky.listbuilder.content.custom.item.directive', [])
         .directive('bbListbuilderContentCustomItem', function () {
             return {
                 restrict: 'A',
                 link: linkFn,
-                require: '^^bbListbuilderContentCustom'
+                require: ['bbListbuilderContentCustomItem', '^^bbListbuilderContentCustom', '^^bbListbuilder'],
+                controller: Controller
             };
         });
 })();
@@ -7719,6 +8157,323 @@
             }
         });
 }());
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller(bbResources, $scope) {
+        var ctrl = this;
+
+        function viewIsActive() {
+            return ctrl.listbuilderContentCtrl.getCurrentView() && ctrl.listbuilderContentCtrl.getCurrentView().viewName === ctrl.viewName;
+        }
+
+        function setUpGridMultiselectEvent() {
+            $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, data) {
+                ctrl.listbuilderCtrl.updateSelectedIds(data);
+                
+                event.stopPropagation();
+                event.preventDefault(); 
+            });
+        }
+
+        function initGrid() {
+            ctrl.viewName = 'grid';
+            ctrl.listbuilderContentCtrl.addListbuilderView({ 
+                viewName: ctrl.viewName, 
+                viewSwitcherClass: 'fa-table', 
+                highlightSelector: 'td:not(.bb-grid-no-search)',
+                viewSwitcherLabel: bbResources.listbuilder_grid_switcher,
+                viewContentClass: 'bb-listbuilder-content-grid-view'
+            });
+
+            setUpGridMultiselectEvent();
+
+        }
+
+        function onDestroy() {
+            ctrl.listbuilderContentCtrl.removeListbuilderView(ctrl.viewName);
+        }
+
+        ctrl.$postLink = initGrid;
+        ctrl.$onDestroy = onDestroy;
+        ctrl.viewIsActive = viewIsActive;
+    }
+
+    Controller.$inject = ['bbResources', '$scope'];
+
+    angular.module('sky.listbuilder.grid.component', ['sky.resources'])
+        .component('bbListbuilderGrid', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.grid.component.html',
+            transclude: true,
+            controller: Controller,
+            require: {
+                listbuilderContentCtrl: '^bbListbuilderContent',
+                listbuilderCtrl: '^^bbListbuilder'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this;
+
+        function listbuilderMultiselectToggled(result) {
+            if (angular.isArray(result)) {
+                ctrl.bbListbuilderMultiselect.multiselectItemsToggled(false, result);
+            }
+        }
+
+        function clearAllItems() {
+            var clearAllResult;
+            if (angular.isFunction(ctrl.bbListbuilderMultiselectOnClearAll)) {
+                clearAllResult = ctrl.bbListbuilderMultiselectOnClearAll();
+
+
+                if (clearAllResult && angular.isFunction(clearAllResult.then)) {
+                    clearAllResult.then(function (result) {
+                        listbuilderMultiselectToggled(result);
+                    });
+                } else {
+                    listbuilderMultiselectToggled(clearAllResult);
+                }
+            } else {
+                ctrl.bbListbuilderMultiselect.toggleAllAvailableItems(false);
+            }  
+            
+        }
+
+        ctrl.clearAllItems = clearAllItems;
+    }
+
+    angular.module('sky.listbuilder.multiselect.clearall.component', ['sky.resources'])
+        .component('bbListbuilderMultiselectClearAll', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.multiselect.clearall.component.html',
+            bindings: {
+                bbListbuilderMultiselectOnClearAll: '&?'
+            },
+            require: {
+                bbListbuilderMultiselect: '^^bbListbuilderMultiselect'
+            },
+            controller: Controller
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this,
+            listbuilderSelectedIds;
+
+        function toggleOnlySelected(isSelected) {
+            ctrl.bbListbuilderOnShowOnlySelected({showOnlySelected: isSelected});
+        }
+
+        function addSelectedItem(id, selectedIds) {
+            if (selectedIds.indexOf(id) === -1) {
+                selectedIds.push(id);
+            }
+        }
+
+        function removeSelectedItem(id, selectedIds) {
+            var itemIndex = selectedIds.indexOf(id);
+            if (itemIndex !== -1) {
+                selectedIds.splice(itemIndex, 1);
+            }
+        }
+
+        function multiselectItemToggled(isSelected, id) {
+            if (isSelected) {
+                addSelectedItem(id, listbuilderSelectedIds);
+            } else {
+                removeSelectedItem(id, listbuilderSelectedIds);
+            }
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: false});
+        }
+
+        function getIdProperty() {
+            return ctrl.bbListbuilderMultiselectItemIdProperty || 'id';
+        }
+
+        function getSelectedProperty() {
+            return ctrl.bbListbuilderMultiselectItemSelectedProperty || 'selected';
+        }
+
+        function setAvailableItems(selectedIds) {
+            var idProperty,
+                selectedProperty,
+                itemsLength,
+                i;
+            if (angular.isDefined(ctrl.bbListbuilderMultiselectAvailableItems)) {
+                idProperty = getIdProperty();
+                selectedProperty = getSelectedProperty();
+
+                itemsLength = ctrl.bbListbuilderMultiselectAvailableItems.length;
+                for (i = 0; i < itemsLength; i++) {
+                    if (selectedIds.indexOf(ctrl.bbListbuilderMultiselectAvailableItems[i][idProperty]) !== -1) {
+                        ctrl.bbListbuilderMultiselectAvailableItems[i][selectedProperty] = true;
+                    } else {
+                        ctrl.bbListbuilderMultiselectAvailableItems[i][selectedProperty] = false;
+                    }
+                }
+            }
+        }
+
+        function toggleAllAvailableItems(isSelected) {
+            var idProperty,
+                selectedProperty,
+                i,
+                itemsLength;
+
+            if (angular.isDefined(ctrl.bbListbuilderMultiselectAvailableItems)) {
+                idProperty = getIdProperty();
+                selectedProperty = getSelectedProperty();
+                itemsLength = ctrl.bbListbuilderMultiselectAvailableItems.length;
+                for (i = 0; i < itemsLength; i++) {
+                    ctrl.bbListbuilderMultiselectAvailableItems[i][selectedProperty] = isSelected;
+                    if (isSelected) {
+                        addSelectedItem(ctrl.bbListbuilderMultiselectAvailableItems[i][idProperty], listbuilderSelectedIds);
+                    } else {
+                        removeSelectedItem(ctrl.bbListbuilderMultiselectAvailableItems[i][idProperty], listbuilderSelectedIds);
+                    }
+                }
+            }
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: isSelected});
+        }
+
+        function multiselectItemsToggled(isSelected, selectedIds) {
+            var length = selectedIds.length,
+                i;
+
+            for (i = 0; i < length; i++) {
+                if (isSelected) {
+                    addSelectedItem(selectedIds[i], listbuilderSelectedIds);
+                } else {
+                    removeSelectedItem(selectedIds[i], listbuilderSelectedIds);
+                }
+            }
+            setAvailableItems(listbuilderSelectedIds);
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: isSelected});
+        }
+
+        function updateMultiselectSelectedIds(selectedIds) {
+            listbuilderSelectedIds = selectedIds;
+            setAvailableItems(listbuilderSelectedIds);
+            ctrl.bbListbuilderMultiselectItemsChanged({selectedIds: listbuilderSelectedIds, allSelected: false});
+
+        }
+
+        function setListbuilderSelectedItems() {
+            if (!angular.isUndefined(ctrl.bbListbuilderMultiselectSelectedIds)) {
+                listbuilderSelectedIds = ctrl.bbListbuilderMultiselectSelectedIds;
+            } else {
+                listbuilderSelectedIds = [];
+            }
+
+            setAvailableItems(listbuilderSelectedIds);
+        }
+
+        function onInit() {
+            if (angular.isFunction(ctrl.bbListbuilderOnShowOnlySelected)) {
+                ctrl.hasOnlySelected = true;
+            }
+
+            setListbuilderSelectedItems();
+            ctrl.listbuilderCtrl.multiselectItemToggled = multiselectItemToggled;
+            ctrl.listbuilderCtrl.getMultiselectIdProperty = getIdProperty;
+            ctrl.listbuilderCtrl.getMultiselectSelectedProperty = getSelectedProperty;
+            ctrl.listbuilderCtrl.updateMultiselectSelectedIds = updateMultiselectSelectedIds;
+        }
+
+        function bindingChanges(changesObj) {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (changesObj.bbListbuilderMultiselectSelectedIds || changesObj.bbListbuilderMultiselectAvailableItems) {
+                setListbuilderSelectedItems();
+            }
+        }
+
+        ctrl.toggleOnlySelected = toggleOnlySelected;
+        ctrl.multiselectItemToggled = multiselectItemToggled;
+        ctrl.multiselectItemsToggled = multiselectItemsToggled;
+        ctrl.toggleAllAvailableItems = toggleAllAvailableItems;
+
+        ctrl.$onInit = onInit;
+        ctrl.$onChanges = bindingChanges;
+    }
+
+    angular.module('sky.listbuilder.multiselect.component', 
+      [
+          'sky.resources',
+          'sky.listbuilder.multiselect.selectall.component',
+          'sky.listbuilder.multiselect.clearall.component'
+      ])
+        .component('bbListbuilderMultiselect', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.multiselect.component.html',
+            bindings: {
+                bbListbuilderOnShowOnlySelected: '&?',
+                bbListbuilderShowOnlySelected: '<?',
+                bbListbuilderMultiselectSelectedIds: '<?',
+                bbListbuilderMultiselectItemsChanged: '&?',
+                bbListbuilderMultiselectAvailableItems: '<?',
+                bbListbuilderMultiselectItemIdProperty: '@?',
+                bbListbuilderMultiselectItemSelectedProperty: '@?'
+            },
+            require: {
+                listbuilderCtrl: '^^bbListbuilder'
+            },
+            transclude: true,
+            controller: Controller
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this;
+
+        function listbuilderMultiselectToggled(result) {
+            if (angular.isArray(result)) {
+                ctrl.bbListbuilderMultiselect.multiselectItemsToggled(true, result);
+            }
+        }
+
+        function selectAllItems() {
+            var selectAllResult;
+            if (angular.isFunction(ctrl.bbListbuilderMultiselectOnSelectAll)) {
+                selectAllResult = ctrl.bbListbuilderMultiselectOnSelectAll();
+
+                if (selectAllResult && angular.isFunction(selectAllResult.then)) {
+                    selectAllResult.then(function (result) {
+                        listbuilderMultiselectToggled(result);
+                    });
+                } else {
+                    listbuilderMultiselectToggled(selectAllResult);
+                }
+            } else {
+                ctrl.bbListbuilderMultiselect.toggleAllAvailableItems(true);
+            }  
+        }
+
+        ctrl.selectAllItems = selectAllItems;
+    }
+
+    angular.module('sky.listbuilder.multiselect.selectall.component', ['sky.resources'])
+        .component('bbListbuilderMultiselectSelectAll', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.multiselect.selectall.component.html',
+            bindings: {
+                bbListbuilderMultiselectOnSelectAll: '&?'
+            },
+            require: {
+                bbListbuilderMultiselect: '^^bbListbuilderMultiselect'
+            },
+            controller: Controller
+        });
+})();
 /* global angular */
 (function () {
     'use strict';
@@ -7774,7 +8529,34 @@
 (function () {
     'use strict';
 
-    function linkFn(scope, el, attr, repeaterCtrl) {
+    function Controller($scope) {
+        var ctrl = this;
+        
+        function listbuilderRepeaterItemToggled(selectedArgs) {
+            ctrl.listbuilderCtrl.itemToggled(selectedArgs.isSelected, ctrl.getRepeaterItemId());
+        }
+
+        $scope.$on('bbRepeaterItemInitialized', function (event, data) {
+            data.repeaterItemCtrl.bbRepeaterItemSelectionToggled = listbuilderRepeaterItemToggled;
+            event.stopPropagation();
+            event.preventDefault(); 
+        });
+    }
+
+    Controller.$inject = ['$scope'];
+
+    function linkFn($scope, el, attr, ctrls) {
+        var ctrl = ctrls[0],
+            repeaterCtrl = ctrls[1];
+
+        ctrl.listbuilderCtrl = ctrls[2];
+
+        function getRepeaterItemId() {
+            return $scope.$eval(attr.bbListbuilderRepeaterItemId);
+        }
+
+        ctrl.getRepeaterItemId = getRepeaterItemId;
+        
         repeaterCtrl.addRepeaterItem();
     }
 
@@ -7783,10 +8565,117 @@
             return {
                 restrict: 'A',
                 link: linkFn,
-                require: '^^bbListbuilderRepeater'
+                controller: Controller,
+                require: ['bbListbuilderRepeaterItem', '^^bbListbuilderRepeater', '^^bbListbuilder']
             }; 
         });
 }());
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this;
+
+        function onInit() {
+            ctrl.dropdownCtrl.dropdownItemChanged(true);
+        }
+
+        function onDestroy() {
+            ctrl.dropdownCtrl.dropdownItemChanged(false);
+        }
+
+        ctrl.$onInit = onInit;
+        ctrl.$onDestroy = onDestroy;
+    }
+
+    angular.module('sky.listbuilder.secondary.action.component', [])
+        .component('bbListbuilderSecondaryAction', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.action.component.html',
+            transclude: true,
+            controller: Controller,
+            require: {
+                dropdownCtrl: '^^bbListbuilderSecondaryActionsDropdown'
+            },
+            bindings: {
+                bbListbuilderSecondaryActionDisabled: '<?',
+                bbListbuilderSecondaryActionClick: '&?'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller($scope) {
+        var ctrl = this;
+
+        function itemChanged(itemAdded) {
+            if (itemAdded) {
+                ctrl.totalSecondaryActions++;
+            } else {
+                ctrl.totalSecondaryActions--;
+            }
+        }
+
+        function onInit() {
+            ctrl.secondaryMenuId = 'bb-listbuilder-secondary-actions-' + $scope.$id;
+            ctrl.totalSecondaryActions = 0;
+        }
+
+        ctrl.itemChanged = itemChanged;
+
+        ctrl.$onInit = onInit;
+
+    }
+
+    Controller.$inject = ['$scope'];
+
+    angular.module('sky.listbuilder.secondary.actions.component', 
+        [
+            'ui.bootstrap.dropdown', 
+            'sky.resources', 
+            'sky.listbuilder.secondary.action.component',
+            'sky.listbuilder.column.picker.component',
+            'sky.listbuilder.secondary.actions.dropdown.component'
+        ])
+        .component('bbListbuilderSecondaryActions', {
+            templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.component.html',
+            controller: Controller,
+            transclude: true,
+            bindings: {
+                bbListbuilderSecondaryActionsAppendToBody: '<?'
+            },
+            require: {
+                listbuilderCtrl: '^^bbListbuilder'
+            }
+        });
+})();
+/* global angular */
+(function () {
+    'use strict';
+
+    function Controller() {
+        var ctrl = this;
+
+        function dropdownItemChanged(itemAdded) {
+            ctrl.bbListbuilderSecondaryActionsItemChanged({itemAdded: itemAdded});
+        }
+
+        ctrl.dropdownItemChanged = dropdownItemChanged;
+    }
+
+    angular.module('sky.listbuilder.secondary.actions.dropdown.component', [])
+        .component('bbListbuilderSecondaryActionsDropdown', {
+            controller: Controller,
+            transclude: true,
+            bindings: {
+                bbListbuilderSecondaryActionsItemChanged: '&',
+                bbListbuilderSecondaryActionsCurrentView: '<'
+            },
+            templateUrl: 'sky/templates/listbuilder/listbuilder.secondary.actions.dropdown.component.html'
+        });
+})();
  /* global angular */
  (function () {
      'use strict';
@@ -7830,7 +8719,7 @@
 (function () {
     'use strict';
 
-    function Controller($element, bbViewKeeperBuilder) {
+    function Controller($element, bbViewKeeperBuilder, $scope, $transclude) {
         var ctrl = this,
             vkToolbar;
 
@@ -7850,6 +8739,12 @@
             
         }
 
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbListbuilderOnSearchTextChanged)) {
+                ctrl.bbListbuilderOnSearchTextChanged({searchText: searchText});
+            }  
+        }
+
         // Floating headers
         function setupViewKeeper() {
             if (ctrl.bbListbuilderToolbarFixed !== 'true') {
@@ -7866,6 +8761,12 @@
                     setWidth: true,
                     verticalOffSetElId: ctrl.bbListbuilderVerticalOffsetElId
                 });
+            }
+        }
+
+        function destroyViewKeeper() {
+            if (vkToolbar) {
+                vkToolbar.destroy();
             }
         }
 
@@ -7890,19 +8791,65 @@
             }
         }
 
+        function getToolbarId() {
+            return ctrl.listbuilderToolbarId;
+        }
+
+        function getTopScrollbar() {
+            return $element.find('.bb-listbuilder-toolbar-top-scrollbar');
+        }
+
+        function sortComponentPresent() {
+            return $transclude.isSlotFilled('bbListbuilderSort');
+        }
+
+        function setupTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.on('scroll', function () {
+                    /* istanbul ignore else */
+                    /* sanity check */
+                    if (angular.isFunction(ctrl.listbuilderCtrl.topScrollbarScrollAction)) {
+                        ctrl.listbuilderCtrl.topScrollbarScrollAction();
+                    }
+                });
+            }
+        }
+
+        function destroyTopScrollbar() {
+            var topScrollbarEl = getTopScrollbar();
+
+            /* istanbul ignore else */
+            /* sanity check */
+            if (topScrollbarEl.length > 0) {
+                topScrollbarEl.off('scroll');
+            }
+        }
+
         function initToolbar() {
             if (ctrl.bbListbuilderSearchText) {
                 ctrl.listbuilderCtrl.highlightSearchText(ctrl.bbListbuilderSearchText);
             }
+
+            ctrl.listbuilderCtrl.getToolbarId = getToolbarId;
+            ctrl.listbuilderCtrl.getTopScrollbar = getTopScrollbar;
+            ctrl.listbuilderCtrl.toolbarSortComponentPresent = sortComponentPresent;
+
+            ctrl.listbuilderToolbarId = 'bb-listbuilder-toolbar-' + $scope.$id;
+            
+            setupTopScrollbar();
             
             setupViewKeeper();
 
         }
 
         function destroyToolbar() {
-            if (vkToolbar) {
-                vkToolbar.destroy();
-            }
+            destroyViewKeeper();
+            destroyTopScrollbar();
+
         }
 
         // Lifecycle hooks
@@ -7912,11 +8859,12 @@
 
         ctrl.applySearchText = applySearchText;
 
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.viewChanged = viewChanged;
 
     }
 
-    Controller.$inject = ['$element', 'bbViewKeeperBuilder'];
+    Controller.$inject = ['$element', 'bbViewKeeperBuilder', '$scope', '$transclude'];
 
     angular.module('sky.listbuilder.toolbar.component', 
         [
@@ -7924,13 +8872,18 @@
             'sky.viewkeeper', 
             'sky.listbuilder.add.component',       
             'sky.filter',
-            'sky.search'
+            'sky.search',
+            'sky.sort',
+            'sky.listbuilder.multiselect.component',
+            'sky.listbuilder.secondary.actions.component'
         ])
         .component('bbListbuilderToolbar', {
             templateUrl: 'sky/templates/listbuilder/listbuilder.toolbar.component.html',
             bindings: {
                 bbListbuilderOnSearch: '&?',
+                bbListbuilderOnSearchTextChanged: '&?',
                 bbListbuilderSearchText: '<?',
+                bbListbuilderSearchPlaceholder: '<?',
                 bbListbuilderVerticalOffsetElId: '<?',
                 bbListbuilderToolbarFixed: '@?'
             },
@@ -7938,7 +8891,9 @@
                 bbListbuilderAdd: '?bbListbuilderAdd',
                 bbListbuilderFilter: '?bbListbuilderFilter',
                 bbListbuilderSort: '?bbListbuilderSort',
-                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary'
+                bbListbuilderFilterSummary: '?bbListbuilderFilterSummary',
+                bbListbuilderToolbarMultiselect: '?bbListbuilderToolbarMultiselect',
+                bbListbuilderToolbarSecondaryActions: '?bbListbuilderToolbarSecondaryActions'
             },
             controller: Controller,
             require: {
@@ -9389,6 +10344,14 @@ angular.module('sky.palette.config', [])
                     if (selectedCountryData.iso2 && phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
+                        // Any country with a dial code that starts with 1
+                        // is so small that its dial code matches its area code.
+                        // So, its dial code should just be 1 because the area code includes the dial code.
+                        // Example countries: Bahamas, Cayman Islands, Barbados.
+                        if (selectedCountryData.dialCode.toString()[0] === '1') {
+                            selectedCountryData.dialCode = 1;
+                        }
+
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
                     }
                 }
@@ -9885,6 +10848,7 @@ angular.module('sky.palette.config', [])
 
             function selectItem() {
                 vm.bbRepeaterItemSelected = !vm.bbRepeaterItemSelected;
+                vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
             vm.getCls = function () {
@@ -9925,6 +10889,8 @@ angular.module('sky.palette.config', [])
             var animateEnabled,
                 bbRepeater = ctrls[1],
                 vm = ctrls[0];
+
+            vm.listbuilderRepeaterItemCtrl = ctrls[2];
 
 
             function titleElExists() {
@@ -10032,11 +10998,25 @@ angular.module('sky.palette.config', [])
 
             vm.itemIsSelectable = itemIsSelectable;
 
+            function repeaterItemSelectionToggled(isSelected) {
+                $timeout(function () {
+                    if (angular.isFunction(vm.bbRepeaterItemSelectionToggled)) {
+                        vm.bbRepeaterItemSelectionToggled({isSelected: isSelected});
+                    }
+                });
+                
+            }
+
+            vm.repeaterItemSelectionToggled = repeaterItemSelectionToggled;
+
             $timeout(function () {
                 // This will enable expand/collapse animation only after the initial load.
                 animateEnabled = true;
             });
 
+            scope.$emit('bbRepeaterItemInitialized', {
+                repeaterItemCtrl: vm
+            });
         }
 
         return {
@@ -10044,6 +11024,7 @@ angular.module('sky.palette.config', [])
                 bbRepeaterItemExpanded: '=?',
                 bbRepeaterItemSelectable: '@?',
                 bbRepeaterItemSelected: '=?',
+                bbRepeaterItemSelectionToggled: '&?',
                 bbRepeaterItemInputLabel: '=?'
             },
             controller: BBRepeaterItemController,
@@ -10328,7 +11309,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
 
-    function Controller($element, bbMediaBreakpoints, bbResources) {
+    function Controller($element, bbMediaBreakpoints, bbResources, $scope) {
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
@@ -10348,6 +11329,12 @@ angular.module('sky.palette.config', [])
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
             
+        }
+
+        function searchTextChanged(searchText) {
+            if (angular.isFunction(ctrl.bbOnSearchTextChanged)) {
+                ctrl.bbOnSearchTextChanged({searchText: searchText});
+            }
         }
 
         function setInputFocus() {
@@ -10520,8 +11507,7 @@ angular.module('sky.palette.config', [])
         }
 
         function searchTextBindingChanged() {
-            ctrl.showClear = true;
-            
+            ctrl.showClear = angular.isDefined(ctrl.bbSearchText) && ctrl.bbSearchText !== '';
             if (ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs) {
                 openSearchInput(true);
             }
@@ -10540,6 +11526,23 @@ angular.module('sky.palette.config', [])
                     searchTextBindingChanged();
                 }
             }
+
+            if (changesObj.bbSearchPlaceholder) {
+                /* istanbul ignore else */
+                /* sanity check */
+                if (angular.isDefined(changesObj.bbSearchPlaceholder.currentValue)) {
+                    ctrl.placeholderText = changesObj.bbSearchPlaceholder.currentValue;
+                }
+            }
+        }
+
+        function listenForApplyEvent() {
+            $scope.$on('bbSearchInputApply', function (event, searchText) {
+                if (angular.isDefined(searchText)) {
+                    ctrl.bbSearchText = searchText;
+                }
+                applySearchText(ctrl.bbSearchText);
+            });
         }
 
         function initSearch() {
@@ -10548,9 +11551,13 @@ angular.module('sky.palette.config', [])
                 searchTextBindingChanged();
             }
 
-            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && $element.attr('bb-search-placeholder') === '') {
-                ctrl.bbSearchPlaceholder = bbResources.search_placeholder;
+            if (angular.isUndefined(ctrl.bbSearchPlaceholder) && angular.isDefined($element.attr('bb-search-placeholder'))) {
+                ctrl.placeholderText = bbResources.search_placeholder;
+            } else {
+                ctrl.placeholderText = ctrl.bbSearchPlaceholder;
             }
+
+            listenForApplyEvent();
         }
 
 
@@ -10565,13 +11572,14 @@ angular.module('sky.palette.config', [])
         ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
+        ctrl.searchTextChanged = searchTextChanged;
         ctrl.clearSearchText = clearSearchText;
         ctrl.openSearchInput = openSearchInput;
         ctrl.dismissSearchInput = dismissSearchInput;
         ctrl.inputFocused = inputFocused;
     }
 
-    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources'];
+    Controller.$inject = ['$element', 'bbMediaBreakpoints', 'bbResources', '$scope'];
 
     angular.module('sky.search.input.component', ['sky.resources', 'sky.mediabreakpoints'])
         .component('bbSearchInput', {
@@ -10579,6 +11587,7 @@ angular.module('sky.palette.config', [])
             controller: Controller,
             bindings: {
                 bbOnSearch: '&?',
+                bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?'
             }
@@ -11020,7 +12029,11 @@ angular.module('sky.palette.config', [])
     angular.module('sky.summary.actionbar.cancel.component', [])
         .component('bbSummaryActionbarCancel', {
             transclude: true,
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.cancel.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.cancel.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
+            }
         });
 })();
 /* global angular */
@@ -11291,7 +12304,11 @@ angular.module('sky.palette.config', [])
     angular.module('sky.summary.actionbar.primary.component', [])
         .component('bbSummaryActionbarPrimary', {
             transclude: true,
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.primary.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.primary.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
+            }
         });
 })();
 /* global angular */
@@ -11366,7 +12383,11 @@ angular.module('sky.palette.config', [])
             require: {
                 bbSummaryActionbarSecondaryActions: '^bbSummaryActionbarSecondaryActions'
             },
-            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html'
+            templateUrl: 'sky/templates/summaryactionbar/summary.actionbar.secondary.component.html',
+            bindings: {
+                bbSummaryActionDisabled: '<?',
+                bbSummaryActionClick: '&?'
+            }
         });
 })();
 /*jslint nomen: true, plusplus: true */
@@ -14128,7 +15149,7 @@ angular.module('sky.palette.config', [])
 
 var bbResourcesOverrides;
 
-bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","help_button_label":"Open help","listbuilder_footer_back_to_top":"Back to top","listbuilder_add_title":"Add","listbuilder_card_switcher":"Switch to card view","listbuilder_repeater_switcher":"Switch to repeater view","modal_close":"Close modal","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","datepicker_open":"Open datepicker","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","summary_actionbar_open_secondary":"Show secondary actions","summary_actionbar_show_summary":"Show summary","summary_actionbar_hide_summary":"Hide summary","pagination_previous":"Previous","pagination_next":"Next"};
+bbResourcesOverrides = {"action_bar_actions":"Actions","alert_close":"Close","autonumeric_abbr_billions":"b","autonumeric_abbr_millions":"m","autonumeric_abbr_thousands":"k","avatar_error_not_image_description":"Please choose a file that is a valid image.","avatar_error_not_image_title":"File is not an image.","avatar_error_too_large_description":"Please choose an image that is less than {0}.","avatar_error_too_large_title":"File is too large.","card_select":"Select card","carousel_button_label_next":"Go to next item","carousel_button_label_previous":"Go to previous item","carousel_dot_label":"Go to item {0}","checklist_select_all":"Select all","checklist_clear_all":"Clear all","checklist_only_selected_items":"Only show selected items","checklist_no_items":"No items found","checklist_check_title":"Select item","checklist_search_label":"Search","checklist_categories_label":"Categories","chevron_collapse":"Collapse","chevron_expand":"Expand","context_menu_default_label":"Context menu","definition_list_none_found":"None found","grid_back_to_top":"Back to top","grid_column_picker_all_categories":"All categories","grid_column_picker_description_header":"Description","grid_column_picker_header":"Choose columns to show in the list","grid_column_picker_name_header":"Column","grid_column_picker_search_placeholder":"Search by name","grid_column_picker_submit":"Apply changes","grid_columns_button":" Choose columns","grid_filters_apply":"Apply filters","grid_filters_button":"Filters","grid_filters_clear":"Clear","grid_filters_header":"Filter","grid_filters_hide":"Hide","grid_filters_summary_header":"Filter:","grid_load_more":"Load more","grid_search_placeholder":"Find in this list","grid_column_picker_search_no_columns":"No columns found","infinite_scroll_load_more":"Load more","modal_footer_cancel_button":"Cancel","modal_footer_primary_button":"Save","month_short_april":"Apr","month_short_august":"Aug","month_short_december":"Dec","month_short_february":"Feb","month_short_january":"Jan","month_short_july":"Jul","month_short_june":"Jun","month_short_march":"Mar","month_short_may":"May","month_short_november":"Nov","month_short_october":"Oct","month_short_september":"Sep","page_noaccess_button":"Return to a non-classified page","page_noaccess_description":"Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator.","page_noaccess_header":"Move along, there's nothing to see here","text_expand_see_less":"See less","text_expand_see_more":"See more","text_expand_modal_title":"Expanded view","text_expand_close_text":"Close","grid_action_bar_clear_selection":"Clear selection","grid_action_bar_cancel_mobile_actions":"Cancel","grid_action_bar_choose_action":"Choose an action","date_field_invalid_date_message":"Please enter a valid date","date_range_picker_this_week":"This week","date_range_picker_last_week":"Last week","date_range_picker_next_week":"Next week","date_range_picker_this_month":"This month","date_range_picker_last_month":"Last month","date_range_picker_next_month":"Next month","date_range_picker_this_calendar_year":"This calendar year","date_range_picker_last_calendar_year":"Last calendar year","date_range_picker_next_calendar_year":"Next calendar year","date_range_picker_this_fiscal_year":"This fiscal year","date_range_picker_last_fiscal_year":"Last fiscal year","date_range_picker_next_fiscal_year":"Next fiscal year","date_range_picker_this_quarter":"This quarter","date_range_picker_last_quarter":"Last quarter","date_range_picker_next_quarter":"Next quarter","date_range_picker_at_any_time":"At any time","date_range_picker_today":"Today","date_range_picker_tomorrow":"Tomorrow","date_range_picker_yesterday":"Yesterday","date_range_picker_specific_range":"Specific range","date_range_picker_filter_description_this_week":"{0} for this week","date_range_picker_filter_description_last_week":"{0} from last week","date_range_picker_filter_description_next_week":"{0} for next week","date_range_picker_filter_description_this_month":"{0} for this month","date_range_picker_filter_description_last_month":"{0} from last month","date_range_picker_filter_description_next_month":"{0} for next month","date_range_picker_filter_description_this_calendar_year":"{0} for this calendar year","date_range_picker_filter_description_last_calendar_year":"{0} from last calendar year","date_range_picker_filter_description_next_calendar_year":"{0} for next calendar year","date_range_picker_filter_description_this_fiscal_year":"{0} for this fiscal year","date_range_picker_filter_description_last_fiscal_year":"{0} from last fiscal year","date_range_picker_filter_description_next_fiscal_year":"{0} for next fiscal year","date_range_picker_filter_description_this_quarter":"{0} for this quarter","date_range_picker_filter_description_last_quarter":"{0} from last quarter","date_range_picker_filter_description_next_quarter":"{0} for next quarter","date_range_picker_filter_description_at_any_time":"{0} at any time","date_range_picker_filter_description_today":"{0} for today","date_range_picker_filter_description_yesterday":"{0} from yesterday","date_range_picker_filter_description_tomorrow":"{0} for tomorrow","date_range_picker_filter_description_specific_range":"{0} from {1} to {2}","date_range_picker_from_date":"From date","date_range_picker_to_date":"To date","date_range_picker_min_date_error":"End date must be after start date","date_range_picker_max_date_error":"Start date must be before end date","errormodal_ok":"OK","error_description_broken":"Try to refresh this page or come back later.","error_description_construction":"Thanks for your patience while improvements are made!\nPlease check back in a little while.","error_title_broken":"Sorry, something went wrong.","error_title_construction":"This page will return soon.","error_title_notfound":"Sorry, we can't reach that page.","file_size_b_plural":"{0} bytes","file_size_b_singular":"{0} byte","file_size_kb":"{0} KB","file_size_mb":"{0} MB","file_size_gb":"{0} GB","file_upload_drag_or_click":"Drag a file here or click to browse","file_upload_drag_file_here":"Drag a file here","file_upload_drop_files_here":"Drop files here","file_upload_invalid_file":"This file type is invalid","file_upload_link_placeholder":"http://www.something.com/file","file_upload_or_click_to_browse":"or click to browse","file_upload_paste_link":"Paste a link to a file","file_upload_paste_link_done":"Done","file_upload_link_input":"Add a link to a file","file_item_delete":"Delete file","help_button_label":"Open help","listbuilder_footer_back_to_top":"Back to top","listbuilder_add_title":"Add","listbuilder_card_switcher":"Switch to card view","listbuilder_grid_switcher":"Switch to grid view","listbuilder_repeater_switcher":"Switch to repeater view","listbuilder_show_only_selected":"Show only selected","listbuilder_multiselect_select_all":"Select all","listbuilder_multiselect_clear_all":"Clear all","listbuilder_pick_columns":"Choose columns","listbuilder_show_secondary_actions":"Show secondary actions","modal_close":"Close modal","search_label":"Search items","search_open":"Open search","search_dismiss":"Dismiss search","search_placeholder":"Find in this list","searchfield_searching":"Searching...","searchfield_no_records":"Sorry, no matching records found","selectfield_summary_text":"{0} items selected","selectfield_remove":"Remove","selectfieldpicker_select":"Select","selectfieldpicker_select_value":"Select value","selectfieldpicker_select_values":"Select values","selectfieldpicker_clear":"Clear selection","tile_chevron_label":"Expand or collapse","wizard_navigator_finish":"Finish","wizard_navigator_next":"Next","wizard_navigator_previous":"Previous","datepicker_today":"Today","datepicker_clear":"Clear","datepicker_close":"Done","datepicker_open":"Open datepicker","reorder_top":"Top","tab_add":"Add tab","tab_open":"Open","filter_modal_apply":"Apply filters","filter_modal_clear":"Clear all filters","filter_button_title":"Filters","filter_summary_header":"Filter","filter_summary_close":"Close","sort_menu_heading":"Sort by","sort_button_label":"Sort","summary_actionbar_open_secondary":"Show secondary actions","summary_actionbar_show_summary":"Show summary","summary_actionbar_hide_summary":"Hide summary","pagination_previous":"Previous","pagination_next":"Next"};
 
 angular.module('sky.resources')
     .config(['bbResources', function (bbResources) {
@@ -14207,7 +15228,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      </div>\n' +
         '      <div class="bb-card-heading-right" ng-if="bbCard.headingRightCtrl &amp;&amp; !bbCard.cardIsSelectable()"></div>\n' +
         '      <div class="bb-card-check" ng-if="bbCard.cardIsSelectable()">\n' +
-        '        <input type="checkbox" id="{{bbCard.cardCheckId}}" bb-check ng-model="bbCard.bbCardSelected"  />\n' +
+        '        <input \n' +
+        '            type="checkbox" \n' +
+        '            ng-attr-id="{{bbCard.cardCheckId}}"\n' +
+        '            bb-check \n' +
+        '            ng-model="bbCard.bbCardSelected" \n' +
+        '            ng-change="bbCard.cardSelectionToggled(bbCard.bbCardSelected)"/>\n' +
         '      </div>\n' +
         '    </label>\n' +
         '  </header>\n' +
@@ -14306,7 +15332,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">\n' +
         '      <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">\n' +
         '        <select ng-attr-aria-label="{{\'checklist_categories_label\' | bbResources}}" class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">\n' +
-        '          <option value="{{bbChecklist.allCategories}}">{{\'grid_column_picker_all_categories\' | bbResources}}</option>\n' +
+        '          <option value="{{bbChecklist.allCategories}}">{{bbChecklist.bbChecklistAllCategoriesLabel}}</option>\n' +
         '          <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>\n' +
         '        </select>\n' +
         '      </div>\n' +
@@ -14866,7 +15892,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section class="bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">\n' +
         '\n' +
         '\n' +
-        '    <div class="bb-grid-toolbar-viewkeeper">\n' +
+        '    <div class="bb-grid-toolbar-viewkeeper" ng-if="!hasListbuilder">\n' +
         '        <div ng-show="locals.showToolbar">\n' +
         '            <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">\n' +
         '                <ng-transclude></ng-transclude>\n' +
@@ -14879,31 +15905,31 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div class="clearfix"></div>\n' +
+        '    <div class="clearfix" ng-if="!hasListbuilder"></div>\n' +
         '\n' +
         '    <div class="table-responsive" bb-wait="options.loading">\n' +
         '        <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '        <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll &amp;&amp; !hasListbuilder" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">\n' +
         '        <span class="fa fa-cloud-download"></span>\n' +
         '        <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll">\n' +
+        '    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll &amp;&amp; !hasListbuilder">\n' +
         '        <bb-infinite-scroll\n' +
         '            bb-infinite-scroll-load="locals.loadMore()"\n' +
         '            bb-infinite-scroll-has-more="options.hasMoreRows">\n' +
         '        </bb-infinite-scroll>        \n' +
         '    </div>\n' +
         '\n' +
-        '    <div ng-if="paginationOptions" class="bb-grid-pagination-container">\n' +
+        '    <div ng-if="paginationOptions &amp;&amp; !hasListbuilder" class="bb-grid-pagination-container">\n' +
         '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
-        '    <div class="bb-grid-action-bar-and-back-to-top">\n' +
+        '    <div class="bb-grid-action-bar-and-back-to-top" ng-if="!hasListbuilder">\n' +
         '        <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">\n' +
         '        </bb-grid-action-bar>\n' +
         '        <div class="bb-table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">\n' +
@@ -14954,7 +15980,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            ng-if="bbGridSearch"\n' +
         '            bb-search-text="bbGridSearchText"\n' +
         '            bb-on-search="toolbarLocals.toolbarSearch(searchText)"\n' +
-        '            bb-search-placeholder\n' +
+        '            bb-on-search-text-changed="toolbarLocals.searchTextChanged(searchText)"\n' +
+        '            bb-search-placeholder="bbGridSearchPlaceholder"\n' +
         '            >\n' +
         '        </bb-search-input>\n' +
         '\n' +
@@ -15030,19 +16057,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="row" ng-if="$ctrl.viewIsActive()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.column.picker.component.html',
+        '<div class="bb-listbuilder-column-picker" ng-if="$ctrl.dropdownCtrl.bbListbuilderSecondaryActionsCurrentView &amp;&amp; $ctrl.dropdownCtrl.bbListbuilderSecondaryActionsCurrentView.viewName === \'grid\'">\n' +
+        '    <bb-listbuilder-secondary-action\n' +
+        '        bb-listbuilder-secondary-action-click="$ctrl.openColumnPicker()">\n' +
+        '        {{\'listbuilder_pick_columns\' | bbResources}}\n' +
+        '    </bb-listbuilder-secondary-action>\n' +
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/listbuilder/listbuilder.component.html',
         '<div class="bb-listbuilder">\n' +
         '    <div class="bb-listbuilder-toolbar-container" ng-transclude="bbListbuilderToolbar">\n' +
         '    </div>\n' +
         '\n' +
-        '    <div class="bb-listbuilder-content" ng-transclude="bbListbuilderContent">\n' +
+        '    <div class="bb-listbuilder-content-container" ng-transclude="bbListbuilderContent">\n' +
         '    </div>\n' +
         '\n' +
         '    <div class="bb-listbuilder-footer-container" ng-transclude="bbListbuilderFooter">\n' +
         '    </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.content.component.html',
-        '<div>\n' +
+        '<div ng-class="$ctrl.listbuilderCtrl.currentView.viewContentClass" class="bb-listbuilder-content">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.content.custom.component.html',
@@ -15061,8 +16096,73 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.grid.component.html',
+        '<div ng-if="$ctrl.viewIsActive()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.multiselect.clearall.component.html',
+        '<button class="btn btn-link bb-listbuilder-clear-all" ng-click="$ctrl.clearAllItems()">\n' +
+        '    {{\'listbuilder_multiselect_clear_all\' | bbResources}}\n' +
+        '</button>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.multiselect.component.html',
+        '<div class="bb-listbuilder-multiselect">\n' +
+        '  <ng-transclude></ng-transclude>\n' +
+        '  <label ng-if="$ctrl.hasOnlySelected" class="control-label bb-listbuilder-show-selected">\n' +
+        '    <input \n' +
+        '        type="checkbox" \n' +
+        '        bb-check \n' +
+        '        ng-model="$ctrl.bbListbuilderShowOnlySelected" \n' +
+        '        ng-change="$ctrl.toggleOnlySelected($ctrl.bbListbuilderShowOnlySelected)">\n' +
+        '    {{\'listbuilder_show_only_selected\' | bbResources}}\n' +
+        '  </label>\n' +
+        '\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.multiselect.selectall.component.html',
+        '<button class="btn btn-link bb-listbuilder-select-all" ng-click="$ctrl.selectAllItems()">\n' +
+        '    {{\'listbuilder_multiselect_select_all\' | bbResources}}\n' +
+        '</button>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.repeater.component.html',
         '<div ng-if="$ctrl.viewIsActive()">\n' +
+        '    <ng-transclude></ng-transclude>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.secondary.action.component.html',
+        '<div class="bb-dropdown-item" role="presentation"> \n' +
+        '    <button \n' +
+        '        role="menuitem" \n' +
+        '        class="btn bb-btn-secondary"\n' +
+        '        ng-disabled="$ctrl.bbListbuilderSecondaryActionDisabled" \n' +
+        '        ng-click="$ctrl.bbListbuilderSecondaryActionClick()">\n' +
+        '        <ng-transclude></ng-transclude>\n' +
+        '    </button>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.secondary.actions.component.html',
+        '<div \n' +
+        '    ng-show="$ctrl.totalSecondaryActions > 0"\n' +
+        '    class="bb-listbuilder-secondary-actions"\n' +
+        '    uib-dropdown \n' +
+        '    ng-attr-dropdown-append-to-body="{{$ctrl.bbListbuilderSecondaryActionsAppendToBody}}">\n' +
+        '    <button \n' +
+        '        type="button" \n' +
+        '        class="btn bb-btn-secondary" \n' +
+        '        uib-dropdown-toggle\n' +
+        '        ng-attr-aria-controls="{{$ctrl.secondaryMenuId}}"\n' +
+        '        ng-attr-title="{{\'listbuilder_show_secondary_actions\' | bbResources}}">\n' +
+        '        <i class="fa fa-lg fa-ellipsis-h"></i>\n' +
+        '    </button>\n' +
+        '    <div\n' +
+        '        uib-dropdown-menu \n' +
+        '        ng-attr-id="{{$ctrl.secondaryMenuId}}" \n' +
+        '        role="menu"\n' +
+        '        class="bb-dropdown-menu">\n' +
+        '        <bb-listbuilder-secondary-actions-dropdown\n' +
+        '             bb-listbuilder-secondary-actions-item-changed="$ctrl.itemChanged(itemAdded)"\n' +
+        '             bb-listbuilder-secondary-actions-current-view="$ctrl.listbuilderCtrl.currentView">\n' +
+        '            <ng-transclude></ng-transclude>\n' +
+        '        </bb-listbuilder-secondary-actions-dropdown>\n' +
+        '    </div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/listbuilder/listbuilder.secondary.actions.dropdown.component.html',
+        '<div>\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.switcher.component.html',
@@ -15102,13 +16202,15 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </ul>\n' +
         '</div>');
     $templateCache.put('sky/templates/listbuilder/listbuilder.toolbar.component.html',
-        '<div class="bb-listbuilder-toolbar-summary-container">\n' +
+        '<div class="bb-listbuilder-toolbar-summary-container" ng-attr-id="{{$ctrl.listbuilderToolbarId}}">\n' +
         '    <div class="bb-listbuilder-toolbar" bb-search-container>\n' +
         '        <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">\n' +
         '        </div>\n' +
         '        <div class="bb-listbuilder-toolbar-item">\n' +
         '            <bb-search-input\n' +
         '                bb-search-text="$ctrl.bbListbuilderSearchText"\n' +
+        '                bb-on-search-text-changed="$ctrl.searchTextChanged(searchText)"\n' +
+        '                bb-search-placeholder="$ctrl.bbListbuilderSearchPlaceholder"\n' +
         '                bb-on-search="$ctrl.applySearchText(searchText)"\n' +
         '                >\n' +
         '            </bb-search-input>\n' +
@@ -15120,6 +16222,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '\n' +
         '        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderSort">\n' +
         '\n' +
+        '        </div>\n' +
+        '\n' +
+        '        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderToolbarSecondaryActions">\n' +
+        '        \n' +
         '        </div>\n' +
         '\n' +
         '        <ng-transclude></ng-transclude>\n' +
@@ -15137,6 +16243,15 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-listbuilder-filter-summary-container">\n' +
         '        <div ng-transclude="bbListbuilderFilterSummary">\n' +
         '        </div>\n' +
+        '    </div>\n' +
+        '\n' +
+        '    <div class="bb-listbuilder-toolbar-multiselect-container">\n' +
+        '        <div ng-transclude="bbListbuilderToolbarMultiselect">\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '\n' +
+        '    <div class="bb-listbuilder-toolbar-top-scrollbar">\n' +
+        '        <div></div>    \n' +
         '    </div>\n' +
         '    \n' +
         '</div>');
@@ -15200,7 +16315,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="bb-page-summary-image" ng-show="bbPageSummary.imageCtrl"></div>\n' +
         '        <div>\n' +
         '          <h1 class="bb-page-summary-title" ng-show="bbPageSummary.titleCtrl"></h1>\n' +
-        '          <h2 class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></h2>\n' +
+        '          <div class="bb-page-summary-subtitle" ng-show="bbPageSummary.subtitleCtrl"></div>\n' +
         '          <div class="bb-page-summary-status" ng-show="bbPageSummary.statusCtrl"></div>\n' +
         '          <div class="bb-page-summary-key-info-xs"></div>\n' +
         '          <div class="bb-page-summary-content"></div>\n' +
@@ -15266,7 +16381,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">\n' +
         '  <div class="bb-repeater-item-left">\n' +
         '    <div class="bb-repeater-item-multiselect" ng-show="bbRepeaterItem.itemIsSelectable()">\n' +
-        '      <input ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" type="checkbox" bb-check ng-model="bbRepeaterItem.bbRepeaterItemSelected" />\n' +
+        '      <input \n' +
+        '        ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" \n' +
+        '        type="checkbox" \n' +
+        '        bb-check \n' +
+        '        ng-model="bbRepeaterItem.bbRepeaterItemSelected"\n' +
+        '        ng-change="bbRepeaterItem.repeaterItemSelectionToggled(bbRepeaterItem.bbRepeaterItemSelected)" />\n' +
         '    </div>\n' +
         '    <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">\n' +
         '    </div>\n' +
@@ -15304,12 +16424,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    type="text" \n' +
         '                    class="form-control bb-search-input"\n' +
         '                    ng-model="$ctrl.bbSearchText"\n' +
+        '                    ng-change="$ctrl.searchTextChanged($ctrl.bbSearchText)"\n' +
         '                    ng-keyup="$event.keyCode == 13 && $ctrl.applySearchText($ctrl.bbSearchText)" \n' +
         '                    ng-focus="$ctrl.inputFocused(true)"\n' +
         '                    ng-blur="$ctrl.inputFocused(false)"\n' +
         '                    data-bbauto-field="SearchBox"\n' +
         '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
-        '                    ng-attr-placeholder="{{$ctrl.bbSearchPlaceholder}}"\n' +
+        '                    ng-attr-placeholder="{{$ctrl.placeholderText}}"\n' +
         '                    />    \n' +
         '\n' +
         '                <span class="input-group-btn">\n' +
@@ -15409,7 +16530,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
-        '<div role="button" tabindex="0" class="btn btn-default bb-select-field-single" ng-click="bbSelectField.selectFieldClick()">\n' +
+        '<div \n' +
+        '    role="button" \n' +
+        '    tabindex="0" \n' +
+        '    class="btn btn-default bb-select-field-single" \n' +
+        '    ng-click="bbSelectField.selectFieldClick()"\n' +
+        '    ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.selectFieldClick()">\n' +
         '  <div class="bb-select-field-single-inner">\n' +
         '    <div class="bb-select-field-single-title">{{bbSelectField.bbSelectFieldSelectedItems[0].title}}<span class="bb-select-field-single-title-placeholder" ng-if="!bbSelectField.bbSelectFieldSelectedItems[0].title">{{bbSelectField.bbSelectFieldText}}</span></div>\n' +
         '    <span \n' +
@@ -15469,7 +16595,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <ng-transclude></ng-transclude>\n' +
         '</div>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.cancel.component.html',
-        '<button class="btn btn-link" type="button">\n' +
+        '<button class="btn btn-link" type="button" ng-disabled="$ctrl.bbSummaryActionDisabled" ng-click="$ctrl.bbSummaryActionClick()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.component.html',
@@ -15498,7 +16624,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.primary.component.html',
-        '<button type="button" class="btn btn-primary">\n' +
+        '<button type="button" class="btn btn-primary" ng-disabled="$ctrl.bbSummaryActionDisabled" ng-click="$ctrl.bbSummaryActionClick()">\n' +
         '    <ng-transclude></ng-transclude>\n' +
         '</button>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.secondary.actions.component.html',
@@ -15524,7 +16650,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/summaryactionbar/summary.actionbar.secondary.component.html',
         '<div class="bb-dropdown-item" role="presentation"> \n' +
-        '    <button type="button" class="btn bb-btn-secondary" role="menuitem">\n' +
+        '    <button type="button" class="btn bb-btn-secondary" role="menuitem" ng-disabled="$ctrl.bbSummaryActionDisabled" ng-click="$ctrl.bbSummaryActionClick()">\n' +
         '        <ng-transclude></ng-transclude>\n' +
         '    </button>\n' +
         '</div>');
