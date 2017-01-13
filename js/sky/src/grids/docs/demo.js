@@ -440,12 +440,12 @@
                 return newData;
             }
 
-            $scope.$on('loadMoreRows', function () {
+            $scope.$on('loadMoreRows', function (event, data) {
                 $timeout(function () {
                     self.gridOptions.hasMoreRows = false;
                     self.gridOptions.data = self.gridOptions.data.concat(getLoadMoreDataSet());
+                    data.promise.resolve();
                 }, 2000);
-
             });
 
             $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, selectedIds) {
