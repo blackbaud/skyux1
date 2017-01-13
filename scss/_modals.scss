@@ -97,6 +97,8 @@
 
     .modal-content {
         border: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
     }
 
     .modal-dialog,
@@ -139,6 +141,10 @@
         top: 0;
         bottom: 0;
     }
+}
+
+.bb-modal-fullpage+.bb-modal-fullpage {
+    display: none;
 }
 
 .bb-modal-open-fullpage {
