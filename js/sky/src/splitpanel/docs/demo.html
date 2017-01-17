@@ -1,7 +1,6 @@
-
 <style>
     .bb-custom-content-item {
-        border-bottom: 1px solid green;
+        border-bottom: 1px solid grey;
         padding: 20px;
     }
 
@@ -22,7 +21,9 @@
     }
 
     .bb-split-panel .bb-custom-content {
-        flex: 1;
+        flex: .8;
+        background-color: white;
+        border-right: 1px solid #f3f3f4;
     }
 
     .bb-custom-content-selectable-item {
@@ -31,20 +32,23 @@
 
     .split-panel-workspace {
         flex: 2;
-        border-left: grey 5px solid;
-        padding-left: 10px;
+        /*padding-left: 10px;*/
+        border-left: 9px solid #f3f3f4;
+        border-right: 9px solid #f3f3f4;
     }
 
     .split-panel-workspace-container {
-        height: 71vh;
+        height: 62vh;
         overflow-y: auto;
+        padding-left: 20px;
     }
 
 
 
     .selectedItem {
-        border-left: #1c84c6 3px solid;
-        padding-left: 17px;
+        border-left: #1c84c6 7px solid;
+        padding-left: 13px;
+        background-color: #f3f3f4;
     }
 
     .split-panel .work-space-footer {
@@ -62,7 +66,7 @@
     }
 
     .split-panel-list-container {
-        height: 90vh;
+        height: 73vh;
         overflow-y: auto;
     }
 
@@ -81,7 +85,15 @@
     .bb-split-panel-width-100 {
         width: 100%;
     }
+
+    .align-center {
+        vertical-align: middle;
+        text-align: center;
+        line-height: 73vh;
+    }
 </style>
+
+
 <div ng-controller="ListbuilderTestController as listCtrl">
     <bb-listbuilder class="bb-split-panel">
         <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.checkDirtyForm(listCtrl.onSearch,searchText)"
@@ -100,8 +112,8 @@
                 </bb-sort>
             </bb-listbuilder-sort>
             <bb-listbuilder-filter-summary>
-                <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
-                    <bb-filter-summary-item ng-repeat="item in listCtrl.appliedFilters"
+                <bb-filter-summary ng-show="listCtrl.allAppliedFilters.length > 0">
+                    <bb-filter-summary-item ng-repeat="item in listCtrl.allAppliedFilters"
                                             bb-filter-summary-item-on-click="listCtrl.openFilters()"
                                             bb-filter-summary-item-on-dismiss="listCtrl.checkDirtyForm(listCtrl.onDismissFilter,$index)">
                         {{item.label}}
@@ -124,7 +136,7 @@
                         <div class="fixedHeader" style="padding-top: 6px;">
                             <input bb-check type="checkbox" ng-change="listCtrl.checkDirtyForm(listCtrl.onlyShowRecorded)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
                         </div>
-                        <div class="split-panel-list-container">
+                        <div ng-if="listCtrl.data.length > 0" class="split-panel-list-container">
                             <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
                                 <div style="margin-bottom: 10px">
                                     {{item.name}}
@@ -140,6 +152,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div ng-if="listCtrl.data.length === 0" class="split-panel-list-container" ng-class="{'align-center':listCtrl.data.length===0}">
+                            <i> No Items found</i>
+                        </div>
                     </div>
 
                     <bb-splitpanel-workspace class="split-panel-workspace">
@@ -150,7 +166,7 @@
                                 <button type="button" class="btn btn-default" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.checkDirtyForm(listCtrl.next)">Next</button>
                             </div>
                         </bb-splitpanel-workspace-header>
-                        <bb-splitpanel-workspace-container>
+                        <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
                             <form name="forms.containerForm">
                                 Transaction
                                 {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
@@ -230,10 +246,10 @@
                             </form>
                         </bb-splitpanel-workspace-container>
 
-                        <bb-modal-footer>
-                            <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
-                            <bb-modal-footer-button>Sample button</bb-modal-footer-button>
-                            <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+                        <bb-modal-footer ng-if="listCtrl.data.length > 0">
+                            <bb-modal-footer-button-primary>Record transaction</bb-modal-footer-button-primary>
+                            <bb-modal-footer-button>Save</bb-modal-footer-button>
+                            <bb-modal-footer-button>Ignore transaction</bb-modal-footer-button>
                         </bb-modal-footer>
                     </bb-splitpanel-workspace>
                 </div>

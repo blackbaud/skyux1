@@ -81,78 +81,79 @@
             nextSkip = 0,
             nextTop = 12,
             recordedFilters = [],
-            dataSet = [
-                {
-                    name: '$25.00',
-                    occupation: 'Amazon market palce amz.com',
-                    joinDate: new Date('09/14/2016'),
-                    newField: 'Nicole Guersey (Visa1234)',
-                    duesPaid: true
-                },
-                {
-                    name: '$250.00',
-                    occupation: 'Walt Disney world 0914',
-                    joinDate: new Date('2/23/2016'),
-                    newField: 'David johnson (Visa3333)',
-                    duesPaid: false
-                },
-                {
-                    name: '- $25.00',
-                    occupation: 'Amazon',
-                    joinDate: new Date('2/23/2016'),
-                    newField: 'Nicole Guersey (Visa1234)',
-                    duesPaid: true
-                },
-                {
-                    name: '$15.00',
-                    occupation: 'Wallmart',
-                    joinDate: new Date('2/23/2016'),
-                    newField: 'David johnson (Visa3333)',
-                    duesPaid: true
-                },
-                {
-                    name: '$100.00',
-                    occupation: 'Walt Disney world 0914',
-                    newField: 'Nicole Guersey (Visa1234)',
-                    joinDate: new Date('11/7/1999'),
-                    duesPaid: false
-                },
-                {
-                    name: '$25.00',
-                    occupation: 'Amazon market palce amz.com',
-                    joinDate: new Date('09/14/2016'),
-                    newField: 'Nicole Guersey (Visa1234)',
-                    duesPaid: true
-                },
-                {
-                    name: '$250.00',
-                    occupation: 'Walt Disney world 0914',
-                    joinDate: new Date('2/23/2016'),
-                    newField: 'David johnson (Visa3333)',
-                    duesPaid: true
-                },
-                {
-                    name: '- $25.00',
-                    occupation: 'Amazon',
-                    joinDate: new Date('2/23/2016'),
-                    newField: 'Nicole Guersey (Visa1234)',
-                    duesPaid: true
-                },
-                {
-                    name: '$15.00',
-                    occupation: 'Wallmart',
-                    joinDate: new Date('2/23/2016'),
-                    newField: 'David johnson (Visa3333)',
-                    duesPaid: true
-                },
-                {
-                    name: '$100.00',
-                    occupation: 'Walt Disney world 0914',
-                    newField: 'Nicole Guersey (Visa1234)',
-                    joinDate: new Date('11/7/1999'),
-                    duesPaid: true
-                }
-            ];
+            //dataSet = [];
+        dataSet = [
+            {
+                name: '$25.00',
+                occupation: 'Amazon market palce amz.com',
+                joinDate: new Date('09/14/2016'),
+                newField: 'Nicole Guersey (Visa1234)',
+                duesPaid: true
+            },
+            {
+                name: '$250.00',
+                occupation: 'Walt Disney world 0914',
+                joinDate: new Date('2/23/2016'),
+                newField: 'David johnson (Visa3333)',
+                duesPaid: false
+            },
+            {
+                name: '- $25.00',
+                occupation: 'Amazon',
+                joinDate: new Date('2/23/2016'),
+                newField: 'Nicole Guersey (Visa1234)',
+                duesPaid: true
+            },
+            {
+                name: '$15.00',
+                occupation: 'Wallmart',
+                joinDate: new Date('2/23/2016'),
+                newField: 'David johnson (Visa3333)',
+                duesPaid: true
+            },
+            {
+                name: '$100.00',
+                occupation: 'Walt Disney world 0914',
+                newField: 'Nicole Guersey (Visa1234)',
+                joinDate: new Date('11/7/1999'),
+                duesPaid: false
+            },
+            {
+                name: '$25.00',
+                occupation: 'Amazon market palce amz.com',
+                joinDate: new Date('09/14/2016'),
+                newField: 'Nicole Guersey (Visa1234)',
+                duesPaid: true
+            },
+            {
+                name: '$250.00',
+                occupation: 'Walt Disney world 0914',
+                joinDate: new Date('2/23/2016'),
+                newField: 'David johnson (Visa3333)',
+                duesPaid: true
+            },
+            {
+                name: '- $25.00',
+                occupation: 'Amazon',
+                joinDate: new Date('2/23/2016'),
+                newField: 'Nicole Guersey (Visa1234)',
+                duesPaid: true
+            },
+            {
+                name: '$15.00',
+                occupation: 'Wallmart',
+                joinDate: new Date('2/23/2016'),
+                newField: 'David johnson (Visa3333)',
+                duesPaid: true
+            },
+            {
+                name: '$100.00',
+                occupation: 'Walt Disney world 0914',
+                newField: 'Nicole Guersey (Visa1234)',
+                joinDate: new Date('11/7/1999'),
+                duesPaid: true
+            }
+        ];
         self.dirtyValue;
 
 
@@ -245,29 +246,21 @@
             return $timeout(function () {
                 var searchedData
                 self.searchText = searchText;
-                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
-                //apply internal filter
-                onlyShowRecorded();
+                applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
             });
         }
 
         function onDismissFilter(index) {
-            self.appliedFilters.splice(index, 1);
-            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
-            //apply internal filter
+            self.allAppliedFilters.splice(index, 1);
             onlyShowRecorded();
 
-            //initialize sub filter
-            
+
         }
 
         function sortItems(item) {
             sortProperty = item.name;
             sortDescending = item.descending;
-            //applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-            onlyShowRecorded();
+            applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
         }
 
         function onFilterClick() {
@@ -276,14 +269,12 @@
                 templateUrl: 'demo/listbuilder/filters.html',
                 resolve: {
                     existingFilters: function () {
-                        return angular.copy(self.appliedFilters);
+                        return angular.copy(self.allAppliedFilters);
                     }
                 }
             }).result
                 .then(function (result) {
-                    self.appliedFilters = angular.copy(result);
-                    applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
+                    self.allAppliedFilters = angular.copy(result);
 
                     onlyShowRecorded();
 
@@ -298,7 +289,7 @@
             if (maxRecordsShown < self.data.length) {
                 maxRecordsShown = self.data.length;
             }
-            applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
+            applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
 
 
             //displaying panel data for first item
@@ -346,9 +337,10 @@
 
         //check dirty and open modal
         function checkDirtyForm(func, param) {
-            self.dirtyValue = self.selectedItem;
-            var listScope = $scope;
-            if ($scope.forms.containerForm.$dirty) {
+
+            if (angular.isDefined($scope.forms) && angular.isDefined($scope.forms.containerForm) && $scope.forms.containerForm.$dirty) {
+                self.dirtyValue = self.selectedItem;
+                var listScope = $scope;
                 bbModal.open({
                     controller: 'ListbuilderModalController as ctrl',
                     templateUrl: 'demo/splitpanel/confirmpopup.html'
@@ -417,20 +409,16 @@
             selectFirstItem();
             //TODO: loadData with filter of unrecorded transcation
 
-            if (self.showUnrecord) {
-                recordedFilters = [];
-                if (self.appliedFilters) {
-                    recordedFilters = angular.copy(self.appliedFilters);
+            self.recordedFilters = [];
+            if (self.allAppliedFilters) {
+                    self.recordedFilters = angular.copy(self.allAppliedFilters);
                 }
 
-                recordedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
+            if (self.showUnrecord) {
+                self.recordedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
+            } 
 
-                applySearchFilterSort(self.searchText, recordedFilters, sortProperty, sortDescending, maxRecordsShown);
-            } else {
-
-                applySearchFilterSort(self.searchText, self.appliedFilters, sortProperty, sortDescending, maxRecordsShown);
-
-            }
+            applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
         }
 
         self.onFilterClick = onFilterClick;
@@ -450,6 +438,8 @@
         self.downloadTransactions = downloadTransactions;
         self.onlyShowRecorded = onlyShowRecorded;
         self.checkDirtyForm = checkDirtyForm;
+        self.recordedFilters = recordedFilters;
+
 
         loadData();
 
