@@ -77,17 +77,19 @@
         var self = this,
             sortProperty,
             sortDescending,
+            isPersonal,
             maxRecordsShown = 0,
             nextSkip = 0,
             nextTop = 12,
             recordedFilters = [],
             //dataSet = [];
-        dataSet = [
+            dataSet = [
             {
                 name: '$25.00',
                 occupation: 'Amazon market palce amz.com',
                 joinDate: new Date('09/14/2016'),
                 newField: 'Nicole Guersey (Visa1234)',
+                isPersonal: false,
                 duesPaid: true
             },
             {
@@ -95,6 +97,7 @@
                 occupation: 'Walt Disney world 0914',
                 joinDate: new Date('2/23/2016'),
                 newField: 'David johnson (Visa3333)',
+                isPersonal: true,
                 duesPaid: false
             },
             {
@@ -102,13 +105,15 @@
                 occupation: 'Amazon',
                 joinDate: new Date('2/23/2016'),
                 newField: 'Nicole Guersey (Visa1234)',
-                duesPaid: true
+                isPersonal: true,
+                duesPaid: false
             },
             {
                 name: '$15.00',
                 occupation: 'Wallmart',
                 joinDate: new Date('2/23/2016'),
                 newField: 'David johnson (Visa3333)',
+                isPersonal: false,
                 duesPaid: true
             },
             {
@@ -116,6 +121,7 @@
                 occupation: 'Walt Disney world 0914',
                 newField: 'Nicole Guersey (Visa1234)',
                 joinDate: new Date('11/7/1999'),
+                isPersonal: false,
                 duesPaid: false
             },
             {
@@ -123,6 +129,7 @@
                 occupation: 'Amazon market palce amz.com',
                 joinDate: new Date('09/14/2016'),
                 newField: 'Nicole Guersey (Visa1234)',
+                isPersonal: false,
                 duesPaid: true
             },
             {
@@ -130,6 +137,7 @@
                 occupation: 'Walt Disney world 0914',
                 joinDate: new Date('2/23/2016'),
                 newField: 'David johnson (Visa3333)',
+                isPersonal: true,
                 duesPaid: true
             },
             {
@@ -137,6 +145,7 @@
                 occupation: 'Amazon',
                 joinDate: new Date('2/23/2016'),
                 newField: 'Nicole Guersey (Visa1234)',
+                isPersonal: false,
                 duesPaid: true
             },
             {
@@ -144,6 +153,7 @@
                 occupation: 'Wallmart',
                 joinDate: new Date('2/23/2016'),
                 newField: 'David johnson (Visa3333)',
+                isPersonal: false,
                 duesPaid: true
             },
             {
@@ -151,6 +161,7 @@
                 occupation: 'Walt Disney world 0914',
                 newField: 'Nicole Guersey (Visa1234)',
                 joinDate: new Date('11/7/1999'),
+                isPersonal: true,
                 duesPaid: true
             }
         ];
@@ -411,12 +422,12 @@
 
             self.recordedFilters = [];
             if (self.allAppliedFilters) {
-                    self.recordedFilters = angular.copy(self.allAppliedFilters);
-                }
+                self.recordedFilters = angular.copy(self.allAppliedFilters);
+            }
 
             if (self.showUnrecord) {
                 self.recordedFilters.push({ label: "showUnrecord transaction", name: "showUnrecorded", value: true });
-            } 
+            }
 
             applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
         }

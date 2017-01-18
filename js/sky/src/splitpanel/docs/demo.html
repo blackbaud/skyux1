@@ -35,6 +35,7 @@
         /*padding-left: 10px;*/
         border-left: 9px solid #f3f3f4;
         border-right: 9px solid #f3f3f4;
+        background-color: white;
     }
 
     .split-panel-workspace-container {
@@ -150,6 +151,20 @@
                                 <div style="margin-bottom: 10px">
                                     {{item.newField}}
                                 </div>
+
+                                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <span class="label label-success">Recorded</span>
+                                </div>
+
+                                <!--<div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <span class="label label-danger">Unrecorded</span>
+                                </div>-->
+
+                                <div ng-if="item.name.indexOf('-') === 0 && !item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <span class="label label-danger">Refund</span>
+                                </div>
+
+
                             </div>
                         </div>
 
@@ -170,7 +185,9 @@
                             <form name="forms.containerForm">
                                 Transaction
                                 {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}
+                                <br />
 
+                                <input type="checkbox" bb-check ng-model="listCtrl.isPersonal" /> Personal
 
                                 <br />
                                 <br />
