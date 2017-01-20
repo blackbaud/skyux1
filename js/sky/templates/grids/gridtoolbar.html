@@ -32,7 +32,8 @@
             ng-if="bbGridSearch"
             bb-search-text="bbGridSearchText"
             bb-on-search="toolbarLocals.toolbarSearch(searchText)"
-            bb-search-placeholder
+            bb-on-search-text-changed="toolbarLocals.searchTextChanged(searchText)"
+            bb-search-placeholder="bbGridSearchPlaceholder"
             >
         </bb-search-input>
 

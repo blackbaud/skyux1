@@ -65,7 +65,7 @@
         return name.charAt(0).toLowerCase() + name.substr(1) + 'Ctrl';
     }
 
-    function BBCardController() {
+    function BBCardController($timeout, $scope) {
         var vm = this;
 
         function addComponentSetter(component) {
@@ -85,6 +85,17 @@
         function cardIsSelectable() {
             return vm.bbCardSelectable === 'true';
         }
+
+        function cardSelectionToggled(isSelected) {
+            $timeout(function () {
+                if (angular.isFunction(vm.bbCardSelectionToggled)) {
+                    vm.bbCardSelectionToggled({isSelected: isSelected});
+                }
+            });
+            
+        }
+
+        vm.cardSelectionToggled = cardSelectionToggled;
 
         vm.cardIsSelectable = cardIsSelectable;
 
@@ -112,10 +123,17 @@
 
         nextId++;
         vm.cardCheckId = 'bb-card-check-' + nextId;
+
+        $scope.$emit('bbCardInitialized', {
+            cardCtrl: vm
+        });
     }
 
+    BBCardController.$inject = ['$timeout', '$scope'];
+
     function bbCard() {
-        function link(scope, el, attrs, vm) {
+        function link(scope, el, attrs, ctrls) {
+            var vm = ctrls[0];
             function watchForComponent(component) {
                 scope.$watch(function () {
                     return vm[getCtrlPropName(component)];
@@ -135,8 +153,10 @@
             bindToController: {
                 bbCardSelectable: '@?',
                 bbCardSelected: '=?',
+                bbCardSelectionToggled: '&?',
                 bbCardSize: '@?'
             },
+            require: ['bbCard'],
             controller: 'BBCardController',
             controllerAs: 'bbCard',
             link: link,

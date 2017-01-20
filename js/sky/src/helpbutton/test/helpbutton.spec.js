@@ -1,5 +1,5 @@
 /*jshint browser: true, jasmine: true */
-/*global angular, inject, module */
+/*global angular, inject, module, $ */
 
 describe('Helpbutton directive', function () {
     'use strict';
@@ -82,5 +82,44 @@ describe('Helpbutton directive', function () {
         $scope.$apply();
 
         expect(openCalled).toBe(true);
+    });
+
+    it('opens the help widget on enter press', function () {
+        var el = angular.element('<div bb-help-button bb-help-key="bb-security-users.html"></div>'),
+            e;
+
+        $compile(el)($scope);
+
+        expect(openCalled).toBe(false);
+
+        e = $.Event('keyup');
+        e.which = 15;
+        e.keyCode = 15;
+
+        el.trigger(e);
+
+        $scope.$apply();
+
+        expect(openCalled).toBe(false);
+
+        e = $.Event('keyup');
+        e.which = 13;
+        e.keyCode = 13;
+        el.trigger(e);
+
+        $scope.$apply();
+
+        expect(openCalled).toBe(true);
+    });
+
+    it('does not set role or aria label when it should not', function () {
+        var el = angular.element('<button aria-label="Words" bb-help-button bb-help-key="bb-security-users.html"></button>');
+
+        $compile(el)($scope);
+
+        $scope.$digest();
+
+        expect(el.attr('role')).not.toBe('button');
+        expect(el.attr('aria-label')).toBe('Words');
     });
 });

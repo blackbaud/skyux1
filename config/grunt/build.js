@@ -5,7 +5,7 @@ module.exports = function (grunt, env, utils) {
     grunt.config.merge({
         skyux: {
             paths: {
-                dist: (env.isCurrent(env.SUPPORTED.LOCAL) ? 'bin/' : 'dist/'),
+                dist: (env.isCurrent(env.SUPPORTED.LOCAL) || env.isCurrent(env.SUPPORTED.LOCAL_BS) ? 'bin/' : 'dist/'),
                 src: 'js/sky/src/',
                 paletteCss: '.tmp/palette/palette.css',
                 paletteTemplate: 'js/sky/palette/',
@@ -47,10 +47,9 @@ module.exports = function (grunt, env, utils) {
                 ]
             }
         },
-        concat_sourcemap: {
+        concat: {
             options: {
-                sourcesContent: true,
-                sourceRoot: '../..'
+                sourceMap: true
             },
             dist: {
                 files: {
@@ -321,7 +320,7 @@ module.exports = function (grunt, env, utils) {
             'l10n': true,
             'buildpaletteservice': true,
             'html2js': true,
-            'concat_sourcemap': true,
+            'concat': true,
             'uglify': false
         });
     });

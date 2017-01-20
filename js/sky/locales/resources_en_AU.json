@@ -1,30 +1,541 @@
 {
-    "autonumeric_abbr_billions": {
-        "_description": "The suffix to show after an abbreviated value in the billions (e.g. $1.2b)",
-        "message": "bn"
-    },
-    "date_range_picker_this_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "This financial year"
-    },
-    "date_range_picker_last_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "Last financial year"
-    },
-    "date_range_picker_next_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "Next financial year"
-    },
-    "date_range_picker_filter_description_this_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "{0} for this financial year"
-    },
-    "date_range_picker_filter_description_last_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "{0} from last financial year"
-    },
-    "date_range_picker_filter_description_next_fiscal_year": {
-        "_description": "text for date range picker",
-        "message": "{0} for next financial year"
-    }
+  "_LRM_PKTAG290": "skyux-l10n_12_3 - CHANGES-ONLY",
+  "action_bar_actions": {
+    "message": "Actions"
+  },
+  "alert_close": {
+    "message": "Close"
+  },
+  "autonumeric_abbr_billions": {
+    "message": "b"
+  },
+  "autonumeric_abbr_millions": {
+    "message": "m"
+  },
+  "autonumeric_abbr_thousands": {
+    "message": "k"
+  },
+  "avatar_error_not_image_description": {
+    "message": "Please choose a file that is a valid image."
+  },
+  "avatar_error_not_image_title": {
+    "message": "File is not an image."
+  },
+  "avatar_error_too_large_description": {
+    "message": "Please choose an image that is less than {0}."
+  },
+  "avatar_error_too_large_title": {
+    "message": "File is too large."
+  },
+  "card_select": {
+    "message": "Select card"
+  },
+  "carousel_button_label_next": {
+    "message": "Go to next item"
+  },
+  "carousel_button_label_previous": {
+    "message": "Go to previous item"
+  },
+  "carousel_dot_label": {
+    "message": "Go to item {0}"
+  },
+  "checklist_categories_label": {
+    "message": "Categories"
+  },
+  "checklist_check_title": {
+    "message": "Select item"
+  },
+  "checklist_clear_all": {
+    "message": "Clear all"
+  },
+  "checklist_no_items": {
+    "message": "No items found"
+  },
+  "checklist_only_selected_items": {
+    "message": "Only show selected items"
+  },
+  "checklist_search_label": {
+    "message": "Search"
+  },
+  "checklist_select_all": {
+    "message": "Select all"
+  },
+  "chevron_collapse": {
+    "message": "Collapse"
+  },
+  "chevron_expand": {
+    "message": "Expand"
+  },
+  "context_menu_default_label": {
+    "message": "Context menu"
+  },
+  "date_field_invalid_date_message": {
+    "message": "Please enter a valid date"
+  },
+  "date_range_picker_at_any_time": {
+    "message": "At any time"
+  },
+  "date_range_picker_filter_description_at_any_time": {
+    "message": "{0} at any time"
+  },
+  "date_range_picker_filter_description_last_calendar_year": {
+    "message": "{0} from last calendar year"
+  },
+  "date_range_picker_filter_description_last_fiscal_year": {
+    "message": "{0} from last fiscal year"
+  },
+  "date_range_picker_filter_description_last_month": {
+    "message": "{0} from last month"
+  },
+  "date_range_picker_filter_description_last_quarter": {
+    "message": "{0} from last quarter"
+  },
+  "date_range_picker_filter_description_last_week": {
+    "message": "{0} from last week"
+  },
+  "date_range_picker_filter_description_next_calendar_year": {
+    "message": "{0} for next calendar year"
+  },
+  "date_range_picker_filter_description_next_fiscal_year": {
+    "message": "{0} for next fiscal year"
+  },
+  "date_range_picker_filter_description_next_month": {
+    "message": "{0} for next month"
+  },
+  "date_range_picker_filter_description_next_quarter": {
+    "message": "{0} for next quarter"
+  },
+  "date_range_picker_filter_description_next_week": {
+    "message": "{0} for next week"
+  },
+  "date_range_picker_filter_description_specific_range": {
+    "message": "{0} from {1} to {2}"
+  },
+  "date_range_picker_filter_description_this_calendar_year": {
+    "message": "{0} for this calendar year"
+  },
+  "date_range_picker_filter_description_this_fiscal_year": {
+    "message": "{0} for this fiscal year"
+  },
+  "date_range_picker_filter_description_this_month": {
+    "message": "{0} for this month"
+  },
+  "date_range_picker_filter_description_this_quarter": {
+    "message": "{0} for this quarter"
+  },
+  "date_range_picker_filter_description_this_week": {
+    "message": "{0} for this week"
+  },
+  "date_range_picker_filter_description_today": {
+    "message": "{0} for today"
+  },
+  "date_range_picker_filter_description_tomorrow": {
+    "message": "{0} for tomorrow"
+  },
+  "date_range_picker_filter_description_yesterday": {
+    "message": "{0} from yesterday"
+  },
+  "date_range_picker_from_date": {
+    "message": "From date"
+  },
+  "date_range_picker_last_calendar_year": {
+    "message": "Last calendar year"
+  },
+  "date_range_picker_last_fiscal_year": {
+    "message": "Last financial year"
+  },
+  "date_range_picker_last_month": {
+    "message": "Last month"
+  },
+  "date_range_picker_last_quarter": {
+    "message": "Last quarter"
+  },
+  "date_range_picker_last_week": {
+    "message": "Last week"
+  },
+  "date_range_picker_max_date_error": {
+    "message": "Start date must be before end date"
+  },
+  "date_range_picker_min_date_error": {
+    "message": "End date must be after start date"
+  },
+  "date_range_picker_next_calendar_year": {
+    "message": "Next calendar year"
+  },
+  "date_range_picker_next_fiscal_year": {
+    "message": "Next fiscal year"
+  },
+  "date_range_picker_next_month": {
+    "message": "Next month"
+  },
+  "date_range_picker_next_quarter": {
+    "message": "Next quarter"
+  },
+  "date_range_picker_next_week": {
+    "message": "Next week"
+  },
+  "date_range_picker_specific_range": {
+    "message": "Specific range"
+  },
+  "date_range_picker_this_calendar_year": {
+    "message": "This calendar year"
+  },
+  "date_range_picker_this_fiscal_year": {
+    "message": "This financial year"
+  },
+  "date_range_picker_this_month": {
+    "message": "This month"
+  },
+  "date_range_picker_this_quarter": {
+    "message": "This quarter"
+  },
+  "date_range_picker_this_week": {
+    "message": "This week"
+  },
+  "date_range_picker_to_date": {
+    "message": "To date"
+  },
+  "date_range_picker_today": {
+    "message": "Today"
+  },
+  "date_range_picker_tomorrow": {
+    "message": "Tomorrow"
+  },
+  "date_range_picker_yesterday": {
+    "message": "Yesterday"
+  },
+  "datepicker_clear": {
+    "message": "Clear"
+  },
+  "datepicker_close": {
+    "message": "Done"
+  },
+  "datepicker_open": {
+    "message": "Open datepicker"
+  },
+  "datepicker_today": {
+    "message": "Today"
+  },
+  "definition_list_none_found": {
+    "message": "None found"
+  },
+  "error_description_broken": {
+    "message": "Try to refresh this page or come back later."
+  },
+  "error_description_construction": {
+    "message": "Thanks for your patience while improvements are being made!\nPlease check back in a little while."
+  },
+  "error_title_broken": {
+    "message": "Sorry, something went wrong."
+  },
+  "error_title_construction": {
+    "message": "This page will return soon."
+  },
+  "error_title_notfound": {
+    "message": "Sorry, we cannot reach that page."
+  },
+  "errormodal_ok": {
+    "message": "OK"
+  },
+  "file_item_delete": {
+    "message": "Delete file"
+  },
+  "file_size_b_plural": {
+    "message": "{0} bytes"
+  },
+  "file_size_b_singular": {
+    "message": "{0} byte"
+  },
+  "file_size_gb": {
+    "message": "{0} GB"
+  },
+  "file_size_kb": {
+    "message": "{0} KB"
+  },
+  "file_size_mb": {
+    "message": "{0} MB"
+  },
+  "file_upload_drag_file_here": {
+    "message": "Drag a file here"
+  },
+  "file_upload_drag_or_click": {
+    "message": "Drag a file here or click to browse"
+  },
+  "file_upload_drop_files_here": {
+    "message": "Drop files here"
+  },
+  "file_upload_invalid_file": {
+    "message": "This file type is invalid"
+  },
+  "file_upload_link_input": {
+    "message": "Add a link to a file"
+  },
+  "file_upload_link_placeholder": {
+    "message": "http://www.something.com/file"
+  },
+  "file_upload_or_click_to_browse": {
+    "message": "or click to browse"
+  },
+  "file_upload_paste_link": {
+    "message": "Paste a link to a file"
+  },
+  "file_upload_paste_link_done": {
+    "message": "Done"
+  },
+  "filter_button_title": {
+    "message": "Filters"
+  },
+  "filter_modal_apply": {
+    "message": "Apply filters"
+  },
+  "filter_modal_clear": {
+    "message": "Clear all filters"
+  },
+  "filter_summary_close": {
+    "message": "Close"
+  },
+  "filter_summary_header": {
+    "message": "Filter"
+  },
+  "grid_action_bar_cancel_mobile_actions": {
+    "message": "Cancel"
+  },
+  "grid_action_bar_choose_action": {
+    "message": "Choose an action"
+  },
+  "grid_action_bar_clear_selection": {
+    "message": "Clear selection"
+  },
+  "grid_back_to_top": {
+    "message": "Back to top"
+  },
+  "grid_column_picker_all_categories": {
+    "message": "All categories"
+  },
+  "grid_column_picker_description_header": {
+    "message": "Description"
+  },
+  "grid_column_picker_header": {
+    "message": "Choose columns to show in the list"
+  },
+  "grid_column_picker_name_header": {
+    "message": "Column"
+  },
+  "grid_column_picker_search_no_columns": {
+    "message": "No columns found"
+  },
+  "grid_column_picker_search_placeholder": {
+    "message": "Search by name"
+  },
+  "grid_column_picker_submit": {
+    "message": "Apply changes"
+  },
+  "grid_columns_button": {
+    "message": " Choose columns"
+  },
+  "grid_filters_apply": {
+    "message": "Apply filters"
+  },
+  "grid_filters_button": {
+    "message": "Filters"
+  },
+  "grid_filters_clear": {
+    "message": "Clear"
+  },
+  "grid_filters_header": {
+    "message": "Filter"
+  },
+  "grid_filters_hide": {
+    "message": "Hide"
+  },
+  "grid_filters_summary_header": {
+    "message": "Filter:"
+  },
+  "grid_load_more": {
+    "message": "Load more"
+  },
+  "grid_search_placeholder": {
+    "message": "Find in this list"
+  },
+  "help_button_label": {
+    "description": "Label for the help button",
+    "message": "Open help"
+  },
+  "infinite_scroll_load_more": {
+    "message": "Load more"
+  },
+  "listbuilder_add_title": {
+    "message": "Add"
+  },
+  "listbuilder_card_switcher": {
+    "message": "Switch to card view"
+  },
+  "listbuilder_footer_back_to_top": {
+    "message": "Back to top"
+  },
+  "listbuilder_grid_switcher": {
+    "message": "Switch to grid view"
+  },
+  "listbuilder_multiselect_clear_all": {
+    "message": "Clear all"
+  },
+  "listbuilder_multiselect_select_all": {
+    "message": "Select all"
+  },
+  "listbuilder_pick_columns": {
+    "message": "Choose columns"
+  },
+  "listbuilder_repeater_switcher": {
+    "message": "Switch to repeater view"
+  },
+  "listbuilder_show_only_selected": {
+    "message": "Show only selected"
+  },
+  "listbuilder_show_secondary_actions": {
+    "message": "Show secondary actions"
+  },
+  "modal_close": {
+    "message": "Close modal"
+  },
+  "modal_footer_cancel_button": {
+    "message": "Cancel"
+  },
+  "modal_footer_primary_button": {
+    "message": "Save"
+  },
+  "month_short_april": {
+    "message": "Apr"
+  },
+  "month_short_august": {
+    "message": "Aug"
+  },
+  "month_short_december": {
+    "message": "Dec"
+  },
+  "month_short_february": {
+    "message": "Feb"
+  },
+  "month_short_january": {
+    "message": "Jan"
+  },
+  "month_short_july": {
+    "message": "Jul"
+  },
+  "month_short_june": {
+    "message": "Jun"
+  },
+  "month_short_march": {
+    "message": "Mar"
+  },
+  "month_short_may": {
+    "message": "May"
+  },
+  "month_short_november": {
+    "message": "Nov"
+  },
+  "month_short_october": {
+    "message": "Oct"
+  },
+  "month_short_september": {
+    "message": "Sep"
+  },
+  "page_noaccess_button": {
+    "message": "Return to a non-classified page"
+  },
+  "page_noaccess_description": {
+    "message": "Sorry, you don't have rights to this page.\nIf you feel you should, please contact your system administrator."
+  },
+  "page_noaccess_header": {
+    "message": "Move along, there's nothing to see here"
+  },
+  "pagination_next": {
+    "message": "Next"
+  },
+  "pagination_previous": {
+    "message": "Previous"
+  },
+  "reorder_top": {
+    "message": "Top"
+  },
+  "search_dismiss": {
+    "message": "Dismiss search"
+  },
+  "search_label": {
+    "message": "Search items"
+  },
+  "search_open": {
+    "message": "Open search"
+  },
+  "search_placeholder": {
+    "message": "Find in this list"
+  },
+  "searchfield_no_records": {
+    "message": "Sorry, no matching records found"
+  },
+  "searchfield_searching": {
+    "message": "Searching..."
+  },
+  "selectfield_remove": {
+    "message": "Remove"
+  },
+  "selectfield_summary_text": {
+    "message": "{0} items selected"
+  },
+  "selectfieldpicker_clear": {
+    "message": "Clear selection"
+  },
+  "selectfieldpicker_select": {
+    "message": "Select"
+  },
+  "selectfieldpicker_select_value": {
+    "message": "Select value"
+  },
+  "selectfieldpicker_select_values": {
+    "message": "Select values"
+  },
+  "sort_button_label": {
+    "message": "Sort"
+  },
+  "sort_menu_heading": {
+    "message": "Sort by"
+  },
+  "summary_actionbar_hide_summary": {
+    "message": "Hide summary"
+  },
+  "summary_actionbar_open_secondary": {
+    "message": "Show secondary actions"
+  },
+  "summary_actionbar_show_summary": {
+    "message": "Show summary"
+  },
+  "tab_add": {
+    "message": "Add tab"
+  },
+  "tab_open": {
+    "message": "Open"
+  },
+  "text_expand_close_text": {
+    "message": "Close"
+  },
+  "text_expand_modal_title": {
+    "message": "Expanded view"
+  },
+  "text_expand_see_less": {
+    "message": "See less"
+  },
+  "text_expand_see_more": {
+    "message": "See more"
+  },
+  "tile_chevron_label": {
+    "message": "Expand or collapse"
+  },
+  "wizard_navigator_finish": {
+    "message": "Finish"
+  },
+  "wizard_navigator_next": {
+    "message": "Next"
+  },
+  "wizard_navigator_previous": {
+    "message": "Previous"
+  }
 }

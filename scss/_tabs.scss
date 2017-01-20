@@ -48,10 +48,14 @@
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
+            
         }
         .bb-tab-button-wrap:active, .bb-tab-button-wrap:hover, .bb-tab-button-wrap:focus {
             box-shadow: none;
             outline: none;
+            .bb-btn-secondary {
+                @include bb-focus-indication();
+            }
         }
         .bb-tab-button-add {
             .bb-btn-secondary {
@@ -135,6 +139,11 @@
                 box-shadow: none;
                 outline: none;
             }
+            
+            .bb-tab-close-icon:focus:before {
+                @include bb-focus-indication();
+            }
+             
         }
 
         > a:hover {

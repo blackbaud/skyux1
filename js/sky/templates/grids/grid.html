@@ -1,7 +1,7 @@
 <section class="bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">
 
 
-    <div class="bb-grid-toolbar-viewkeeper">
+    <div class="bb-grid-toolbar-viewkeeper" ng-if="!hasListbuilder">
         <div ng-show="locals.showToolbar">
             <bb-grid-toolbar ng-if="!customToolbar.hasCustomToolbar">
                 <ng-transclude></ng-transclude>
@@ -14,31 +14,31 @@
         </div>
     </div>
 
-    <div class="clearfix"></div>
+    <div class="clearfix" ng-if="!hasListbuilder"></div>
 
     <div class="table-responsive" bb-wait="options.loading">
         <table id="{{locals.gridId}}" class="bb-grid-table" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
         <div class="bb-grid-empty-wait" ng-if="locals.hasWaitAndEmpty()"></div>
     </div>
 
-    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">
+    <div ng-if="!paginationOptions &amp;&amp; !locals.hasInfiniteScroll &amp;&amp; !hasListbuilder" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore()">
         <span class="fa fa-cloud-download"></span>
         <button type="button" class="btn btn-link">{{resources.grid_load_more}}</button>
     </div>
 
-    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll">
+    <div ng-if="!paginationOptions &amp;&amp; locals.hasInfiniteScroll &amp;&amp; !hasListbuilder">
         <bb-infinite-scroll
             bb-infinite-scroll-load="locals.loadMore()"
             bb-infinite-scroll-has-more="options.hasMoreRows">
         </bb-infinite-scroll>        
     </div>
 
-    <div ng-if="paginationOptions" class="bb-grid-pagination-container">
+    <div ng-if="paginationOptions &amp;&amp; !hasListbuilder" class="bb-grid-pagination-container">
         <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>
         <div class="clearfix"></div>
     </div>
 
-    <div class="bb-grid-action-bar-and-back-to-top">
+    <div class="bb-grid-action-bar-and-back-to-top" ng-if="!hasListbuilder">
         <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">
         </bb-grid-action-bar>
         <div class="bb-table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">

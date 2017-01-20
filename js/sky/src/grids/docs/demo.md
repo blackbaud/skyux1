@@ -16,8 +16,12 @@ The grid directive builds a full-featured grid with a search box, column picker,
 - `bb-grid ` &mdash; Creates a full-featured grid that includes a search box, column picker, and filter form.
     - `bb-grid-toolbar` &mdash; Directive that contains the filter summary and custom content for the grid toolbar. Custom content will be displayed between the add button and the search input.
       - `bb-grid-filter-click` &mdash; *(Optional.)* Specifies a function to be called when the filter button is clicked.
-      - `bb-grid-search` &mdash; *(Optional.)* Specifies a function to be called when search text is applied.
+      - `bb-grid-search` &mdash; *(Optional.)* Specifies a function to be called when search text is applied. The callback should have the following arguments: 
+        - `searchText` &mdash; Search text that has been applied.
       - `bb-grid-search-text` &mdash; *(Optional.)* Specifies search text that users can supply to the grid search box.
+      - `bb-grid-search-text-changed` &mdash; *(Optional.)* Specifies a function to be called when search text in the input changes. The callback should have the following arguments: 
+        - `searchText` &mdash; New search text in the search input.
+      - `bb-grid-search-placeholder` &mdash; *(Optional.)* Specifies placeholder text for the grid search box. *(Default: `Find in this list`)*
       - `bb-grid-toolbar-filter-summary` &mdash; *(Optional.)* Contains content that will be placed in the filter summary section of the grid toolbar. See the [filter](../filter) module for the `bb-filter-summary` component which can be placed inside of here.
       - `bb-grid-toolbar-sort` &mdash; *(Optional.)* Contains content that will be placed in the sort section of the grid toolbar. See the [sort](../sort) module for the `bb-sort` component which can be placed inside of here.
     - `bb-grid-filters` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>*(Optional.)* Creates a flyout filter menu within the `bb-grid` directive.</s>
@@ -29,7 +33,7 @@ The grid directive builds a full-featured grid with a search box, column picker,
     - `bb-grid-filters-summary` &mdash; *(Optional.)* *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Creates a summary toolbar for applied filters within the `bb-grid` directive.</s>
         - `bb-options` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Specifies an options object for the `bb-grid-filters-summary` directive.</s>
             - `clearFilters` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>Specifies a function to be called when users click the button to clear filters. You can set `args.filters` to pass updated filters to `bb-grid`.</s>
-        - `bb-grid-filters-summary-dismissable` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>*(Optional.)* Specifies whether the filter summary can be dismissed. *(Default: true)*</s>
+        - `bb-grid-filters-summary-dismissable` &mdash; *(Deprecated.)* Use the components in the [filter](../filter) module instead. <s>*(Optional.)* Specifies whether the filter summary can be dismissed. *(Default: `true`)*</s>
     - `bb-grid-options` &mdash; Specifies an object with the following properties for the `bb-grid` directive.
         - `columns` &mdash; An array of available columns. Each column can have the following properties:
             - `allow_see_more` &mdash; *(Optional.)* Indicates whether to include a link for users to view overflow content. To display the link, set this property to `true`.
@@ -44,8 +48,8 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `name` &mdash; Specifies a unique name for the column. If the `name` value is different than the `jsonmap` value, then it must not match the value for any properties in the `bb-grid-option` property's `data` property.
             - `right_align` &mdash; *(Optional.)* Indicates whether to right-align the content in the column. To right-align content, set this property to `true`. By default, content is left-aligned.
             - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data object, use the format `data.property_name`.
-            - `title` &mdash; *(Optional.)* Indicates whether to display the column's content in tooltips. By default, column cells display tooltips because jqGrid places cell content in `title` attributes. To hide tooltips by not creating `title` attributes, set this property to `false`. *(Default: true)*
-            - `width_all` &mdash; *(Optional.)* Sets the default column width (in pixels). To override the default column width for certain screen sizes, you can set breakpoint-specific column widths with the `width_xs`, `width_sm`, `width_md`, and `width_lg` properties. When columns do not take up the entire the grid, the last column extends beyond its default width to take up the remaining space. *(Default: 150px)*
+            - `title` &mdash; *(Optional.)* Indicates whether to display the column's content in tooltips. By default, column cells display tooltips because jqGrid places cell content in `title` attributes. To hide tooltips by not creating `title` attributes, set this property to `false`. *(Default: `true`)*
+            - `width_all` &mdash; *(Optional.)* Sets the default column width (in pixels). To override the default column width for certain screen sizes, you can set breakpoint-specific column widths with the `width_xs`, `width_sm`, `width_md`, and `width_lg` properties. When columns do not take up the entire the grid, the last column extends beyond its default width to take up the remaining space. *(Default: `150px`)*
             - `width_xs` &mdash; *(Optional.)* Sets the column width for screen sizes less than 768px.
             - `width_sm` &mdash; *(Optional.)* Sets the column width for screen sizes from 768px to 991px.
             - `width_md` &mdash; *(Optional.)* Sets the column width for screen sizes from 992px to 1199px.
@@ -53,10 +57,10 @@ The grid directive builds a full-featured grid with a search box, column picker,
         - `columnPickerHelpKey` &mdash; *(Optional.)* Sets the help key for the column picker.
         - `columnPickerSubsetLabel` &mdash; *(Optional.)* Specifies a label for a checkbox to include or exclude a subset of the columns.
         - `columnPickerSubsetProperty` &mdash; *(Optional.)* Specifies a property name of the column that will be used to filter by subset. The property will be set to `true` if it is a member of the subset.
-        - `columnPickerSubsetExclude` &mdash; *(Optional.)* When set to true, instructs the column picker to exclude columns with the `columnPickerSubsetProperty` set to true when the subset checkbox is selected. When set to false, the column picker includes the columns with the `columnPickerSubsetProperty` set to true when the subset checkbox is selected. *(Default = `false`)*
+        - `columnPickerSubsetExclude` &mdash; *(Optional.)* When set to true, instructs the column picker to exclude columns with the `columnPickerSubsetProperty` set to true when the subset checkbox is selected. When set to false, the column picker includes the columns with the `columnPickerSubsetProperty` set to true when the subset checkbox is selected. *(Default: `false`)*
         - `columnPickerOnlySelected` &mdash; *(Optional.)* When set to true, instructs the column picker to include a checkbox which hides unselected items when checked.
         - `data` &mdash; An array of objects that represents the rows in the grid. Each row should have properties that correspond to the `jsonmap` properties within the `columns` property.
-        - `fixedToolbar` &mdash; *(Optional.)* Indicates whether to prevent the toolbar and grid headers from scrolling with the window. To prevent them from scrolling, set this property to `true`. *(Default = `false`)*
+        - `fixedToolbar` &mdash; *(Optional.)* Indicates whether to prevent the toolbar and grid headers from scrolling with the window. To prevent them from scrolling, set this property to `true`. *(Default; `false`)*
         - `filtersAreActive` &mdash; *(Optional.)* Indicates whether to highlight the filter button to indicate that the grid is filtered. To highlight the button, set this property to `true`.
         - `filtersOpen` &mdash; *(Optional.)* Indicates whether to open the flyout filter menu. To open the flyout, set this property to `true`.
         - `getContextMenuItems` &mdash; *(Optional.)* Specifies a function that allows grid rows to create a context menu based on the function's return value. The function returns an array of objects that represents the items in the dropdown. The objects contain the following properties:
@@ -79,28 +83,32 @@ The grid directive builds a full-featured grid with a search box, column picker,
             - `column` &mdash; Specifies the name of the column that has been sorted.
             - `descending` &mdash; Indicates whether the sort is in descending order. When set to `true` the arrow icon in the specified column header will point downwards, otherwise the arrow icon will point upwards.
     - `bb-grid-pagination` &mdash; *(Optional.)* Specifies an object with the following properties to indicate that the grid uses pagination instead of infinite scrolling.
-        - `currentPage` &mdash; *(Optional.)* Specifies the current page starting at 1. *(Default = 1)*
-        - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default = 5)*
-        - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar. *(Default = 5)*
-        - `boundaryLinks` &mdash; *(Optional.)* Specifies whether or not to show the first and last page numbers with ellipses in the pagination bar. *(Default = `false`)*
+        - `currentPage` &mdash; *(Optional.)* Specifies the current page starting at 1. *(Default: `1`)*
+        - `itemsPerPage` &mdash; *(Optional.)* Specifies the number of rows per page to display in the grid. *(Default: `5`)*
+        - `maxPages` &mdash; *(Optional.)* Specifies the maximum number of pages to display in the pagination bar. *(Default: `5`)*
+        - `boundaryLinks` &mdash; *(Optional.)* Specifies whether or not to show the first and last page numbers with ellipses in the pagination bar. *(Default: `false`)*
         - `recordCount` &mdash; Specifies the total number of records available through pagination.
-    - `bb-multiselect-actions` &mdash; *(Optional.)* Specifies an array of actions with the following properties to display in the multi-select action bar.
-        - `actionCallback` &mdash; Specifies a function to be called when users click the action.
-        - `automationId` &mdash; *(Optional.)* Specifies a unique identifier to place in the `data-bbauto` attribute for automation purposes.
-        - `isPrimary` &mdash; *(Optional.)* Indicates whether to use the primary button color for the action. To use the primary button color, set this property to `true`.
-        - `selections` &mdash; Specifies the row objects from the grid to associate with the action. You can update this through the `bb-selections-updated` function.
-        - `title` &mdash; Specifies the text to display on the button for the action.
-    - `bb-selected-rows` &mdash; *(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.
-    - `bb-selections-updated` &mdash; *(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.
+    - `bb-multiselect-actions` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>*(Optional.)* Specifies an array of actions with the following properties to display in the multi-select action bar.</s>
+        - `actionCallback` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>Specifies a function to be called when users click the action.</s>
+        - `automationId` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>*(Optional.)* Specifies a unique identifier to place in the `data-bbauto` attribute for automation purposes.</s>
+        - `isPrimary` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>*(Optional.)* Indicates whether to use the primary button color for the action. To use the primary button color, set this property to `true`.</s>
+        - `selections` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s>Specifies the row objects from the grid to associate with the action. You can update this through the `bb-selections-updated` function.</s>
+        - `title` &mdash; *(Deprecated.)* Use the [summary actionbar component](../summaryactionbar) component instead. <s> Specifies the text to display on the button for the action. </s>
+    - `bb-selected-rows` &mdash; *(Deprecated.)* Use `bb-grid-multiselect-id-propery` and `bb-grid-multiselect-selected-ids` instead. <s>*(Optional.)* Specifies an object with two-way binding to multi-selected rows. It can set the multi-selected rows from the `bb-grid` directive's parent controller.</s>
+    - `bb-selections-updated` &mdash; *(Deprecated.)* Listen for the `bbGridMultisselectSelectedIdsChanged` event instead. <s>*(Optional.)* Specifies a function to be called when users update multi-select selections. The selections are passed to the function as an argument, and you can update multi-select actions accordingly.</s>
+    - `bb-grid-multiselect-id-property` &mdash; *(Optional.)* Specifies the property on a row in the grid data that will be used as a unique identifier for multiselect.
+    - `bb-grid-multiselect-selected-ids` &mdash; *(Optional.)* Specifies an array of unique identifiers for rows in the grid data that are selected.
     - `bb-grid-infinite-scroll` &mdash; *(Optional.)* When present, indicates that the grid will use infinite scroll to load instead of the load more button. When using infinite scroll, you must load data with the `loadMoreRows` event `promise` property.
 
 ### Grid events ###
+    - `bbGridMultiselectSelectedIdsChanged` &mdash; Fires when selected rows in the grid are changed. The event contains the following data: 
+        - `selectedIds` &mdash; An array of unique identifiers for rows that have been selected. 
     - `includedColumnsChanged` &mdash; Fires when users change the columns to display in the grid.
         - `willResetData` &mdash; Indicates whether to reload the grid with data from the server after users change the columns to display. To reload the grid, set this property to `true` on the event handler's `data` parameter. This avoids reloading the grid with existing data after the `includedColumnsChanged` event fires.
-    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows, the event provides the `promise` property to add new data to the grid.
+    - `loadMoreRows` &mdash; Fires when users change pages in paginated grids or load more rows in nonpaginated grids. When users change pages, the event includes a data object with `top` and `skip` parameters so that the calling controller can retrieve the proper paged data. When users load more rows.
         - `top` &mdash; Indicates how many records to retrieve and display in the grid. The value is the same as the `itemsPerPage` property in the `bb-grid-pagination` directive.
         - `skip` &mdash; Indicates how many records to skip before the first record displayed in the grid. The value equals the number of pages skipped multiplied by the number of items per page.
-        - `promise` &mdash; Provides a promise that the consumer of the event can resolve with new data that the grid appends to the existing data.
+        - `promise` &mdash; Provides a promise that the consumer of the event can resolve to notify infinite scroll that data has finished loading.
     - `columnsResized` &mdash; Fires after users resize the columns in the grid. You can use this event to listen for column size changes and save them for subsequent visits to the grid. The event contains an object with the following properties:
         - `index` &mdash; Specifies the index of the resized column.
         - `newWidth` &mdash; Specifies the width of the resized column.
@@ -108,4 +116,4 @@ The grid directive builds a full-featured grid with a search box, column picker,
 
 ### Viewkeeper configuration ###
   - `bbViewKeeperConfig` &mdash; A global configuration object for a service that fixes the grid headers and toolbar in place when the browser window scrolls.
-    - `hasOmnibar` &mdash; *(Optional.)* Indicates whether the viewkeeper leaves space for an omnibar. *(Default = `true`)*
+    - `hasOmnibar` &mdash; *(Optional.)* Indicates whether the viewkeeper leaves space for an omnibar. *(Default: `true`)*

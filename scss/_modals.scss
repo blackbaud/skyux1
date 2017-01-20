@@ -5,6 +5,8 @@
 .modal-header {
     min-height: 45px;
     background: $form-background;
+    display: flex;
+    align-items: center;
 
     .bb-dialog-header {
         white-space: nowrap;
@@ -22,18 +24,19 @@
     }
 
     .bb-helpbutton {
-        float: right;
-        margin-right: 20px;
         font-size: 16px;
-
-        &.close {
-            margin-top: 2px;
-        }
+        margin-right: 20px;
+        margin-left: auto;
     }
 
     .close {
-        margin-top: 3px;
+        margin-left: auto;
     }
+
+    .bb-helpbutton+.close {
+        margin-left: 0;
+    }
+
 }
 
 .modal-body {
@@ -94,6 +97,8 @@
 
     .modal-content {
         border: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
     }
 
     .modal-dialog,
@@ -136,6 +141,10 @@
         top: 0;
         bottom: 0;
     }
+}
+
+.bb-modal-fullpage+.bb-modal-fullpage {
+    display: none;
 }
 
 .bb-modal-open-fullpage {
@@ -213,5 +222,12 @@
         content: "*";
         color: $bb-error-color;
         padding-left: 5px;
+    }
+}
+
+.bb-modal-fullpage-backdrop {
+    background-color: $bb-color-white;
+    &.in {
+        opacity: 1;
     }
 }

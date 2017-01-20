@@ -38,7 +38,7 @@ module.exports = function (config) {
                 base: base,
                 browser: 'safari',
                 os: 'OS X',
-                os_version: 'Yosemite'
+                os_version: 'El Capitan'
             },
             bs_osx_chrome_latest: {
                 base: base,

@@ -1,0 +1,20 @@
+<div class="bb-summary-actionbar-secondary-actions">
+    <div class="bb-summary-actionbar-secondary-buttons" ng-show="!$ctrl.isXsScreen &amp;&amp; $ctrl.secondaryButtonCount < 5" role="menubar">
+        <ng-transclude></ng-transclude>
+    </div>
+    <div ng-show="$ctrl.isXsScreen || $ctrl.secondaryButtonCount > 4">
+        <div class="dropup" uib-dropdown>
+            <button 
+                type="button" 
+                class="btn bb-btn-secondary" 
+                ng-attr-title="{{'summary_actionbar_open_secondary' | bbResources}}"
+                uib-dropdown-toggle
+                ng-attr-aria-controls="{{$ctrl.menuId}}">
+                <i class="fa fa-lg fa-ellipsis-h"></i>
+            </button>
+            <div ng-attr-id="{{$ctrl.menuId}}" class="bb-dropdown-menu" uib-dropdown-menu role="menu">
+                <ng-transclude></ng-transclude>
+            </div>
+        </div>
+    </div>    
+</div>

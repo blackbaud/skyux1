@@ -1,0 +1,96 @@
+/* Toolbar */
+.bb-listbuilder-toolbar {
+    min-height: 39px;
+    background-color: $bb-color-white;
+    padding: $padding-half $padding $padding-half $padding;
+    @include bb-border(dark, top, bottom);
+    display: flex;
+    align-items: center;
+}
+
+.bb-listbuilder-filter-summary-container {
+    .bb-filter-summary {
+        border-top: none;
+        padding-left: $padding;
+        padding-right: $padding;
+        padding-top: $padding-half;
+        padding-bottom: $padding-half;
+    }
+}
+
+.bb-listbuilder-toolbar-item {
+    margin-right: $padding-half;
+}
+
+.bb-listbuilder-no-search span.highlight {
+  background-color: transparent;
+}
+
+/* Content */
+.bb-listbuilder-content {
+    margin-top: $margin;
+    &.bb-listbuilder-content-grid-view {
+        margin-top: 0;
+    }
+    .bb-card {
+        margin-right: 0;
+        width: 100%
+    }
+}
+
+.bb-listbuilder-add-label {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .bb-listbuilder-add-label {
+        display: inline-block;
+    }
+}
+
+.bb-listbuilder-toolbar-switcher-container {
+    margin-left: auto;
+}
+
+.dropdown-menu.bb-listbuilder-switcher-menu {
+    min-width: 0px;
+    left: 1px;
+        > li > a {
+            padding: 6px 12px;
+            margin: 0;
+            text-align: center;
+        } 
+}
+
+.bb-listbuilder-multiselect {
+    padding: $padding-half $padding;
+    display: flex;
+    align-items: center;
+    background-color: $bb-color-white;
+    @include bb-border(dark, bottom);
+    .bb-listbuilder-show-selected {
+        margin-bottom: 0;
+        margin-left: auto;
+    }
+}
+
+.bb-listbuilder-clear-all {
+    margin-left: $padding;
+}
+
+.bb-listbuilder-toolbar-top-scrollbar {
+    background-color: $bb-color-white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.bb-listbuilder {
+    .ui-jqgrid-hbox {
+        .ui-jqgrid-htable th {
+            cursor: default;
+        }
+        .bb-check-wrapper {
+            display: none;
+        }
+    }
+}

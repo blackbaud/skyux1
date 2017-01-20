@@ -1,0 +1,53 @@
+<div class="bb-listbuilder-toolbar-summary-container" ng-attr-id="{{$ctrl.listbuilderToolbarId}}">
+    <div class="bb-listbuilder-toolbar" bb-search-container>
+        <div class="bb-listbuilder-toolbar-item bb-listbuilder-add-container" ng-transclude="bbListbuilderAdd">
+        </div>
+        <div class="bb-listbuilder-toolbar-item">
+            <bb-search-input
+                bb-search-text="$ctrl.bbListbuilderSearchText"
+                bb-on-search-text-changed="$ctrl.searchTextChanged(searchText)"
+                bb-search-placeholder="$ctrl.bbListbuilderSearchPlaceholder"
+                bb-on-search="$ctrl.applySearchText(searchText)"
+                >
+            </bb-search-input>
+        </div>
+        
+        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderFilter">
+
+        </div>
+
+        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderSort">
+
+        </div>
+
+        <div class="bb-listbuilder-toolbar-item" ng-transclude="bbListbuilderToolbarSecondaryActions">
+        
+        </div>
+
+        <ng-transclude></ng-transclude>
+        
+        <div class="bb-listbuilder-toolbar-switcher-container">
+            <bb-listbuilder-switcher 
+                bb-listbuilder-switcher-views="$ctrl.listbuilderCtrl.contentViews" 
+                bb-listbuilder-switcher-current-view="$ctrl.listbuilderCtrl.currentView"
+                bb-listbuilder-switcher-view-change="$ctrl.viewChanged(newView)"
+                >
+            </bb-listbuilder-switcher>
+        </div>    
+    </div>
+
+    <div class="bb-listbuilder-filter-summary-container">
+        <div ng-transclude="bbListbuilderFilterSummary">
+        </div>
+    </div>
+
+    <div class="bb-listbuilder-toolbar-multiselect-container">
+        <div ng-transclude="bbListbuilderToolbarMultiselect">
+        </div>
+    </div>
+
+    <div class="bb-listbuilder-toolbar-top-scrollbar">
+        <div></div>    
+    </div>
+    
+</div>

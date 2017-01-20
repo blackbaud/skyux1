@@ -1,0 +1,10 @@
+<div class="bb-listbuilder-footer">
+
+    <ng-transclude></ng-transclude>
+
+    <bb-infinite-scroll
+        bb-infinite-scroll-has-more="$ctrl.bbListbuilderShowLoadMore && $ctrl.listbuilderCtrl.currentView.viewName"
+        bb-infinite-scroll-load="$ctrl.loadCallback()">
+    </bb-infinite-scroll>
+
+</div>

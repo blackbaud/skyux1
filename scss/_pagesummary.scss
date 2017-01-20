@@ -16,6 +16,8 @@
     font-weight: 400;
     margin-top: 0;
     margin-bottom: $margin;
+    font-family: $font-family-base;
+    line-height: $headings-line-height;
 }
 
 .bb-page-summary-status {

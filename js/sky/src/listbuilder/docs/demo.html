@@ -1,0 +1,233 @@
+
+<style>
+    .bb-custom-content-item {
+        border-bottom: 1px solid green;
+        padding: 20px;
+    }
+
+    
+</style>
+<div ng-controller="ListbuilderTestController as listCtrl">
+    <button type="button" class="btn btn-primary" style="margin-bottom: 10px"
+        ng-click="listCtrl.activeView = 'repeater'">
+        Change to repeater view
+    </button>
+  <bb-listbuilder>
+    <bb-listbuilder-toolbar 
+        bb-listbuilder-on-search="listCtrl.onSearch(searchText)"
+        bb-listbuilder-search-text="listCtrl.searchText">
+      <bb-listbuilder-add bb-listbuilder-add-action="listCtrl.onAddClick()">
+        Add Stuff
+      </bb-listbuilder-add>
+      <bb-listbuilder-filter> 
+        <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">  
+        </bb-filter-button>
+      </bb-listbuilder-filter>
+      <bb-listbuilder-sort>
+        <bb-sort bb-sort-append-to-body>
+            <bb-sort-item 
+                ng-repeat="item in listCtrl.sortOptions" 
+                bb-sort-item-active="listCtrl.initialState === item.id"
+                bb-sort-item-select="listCtrl.sortItems(item)">
+            {{item.label}}
+            </bb-sort-item>
+        </bb-sort>
+      </bb-listbuilder-sort>
+      <bb-listbuilder-toolbar-secondary-actions>
+          <bb-listbuilder-secondary-actions bb-listbuilder-secondary-actions-append-to-body="true">
+              <bb-listbuilder-column-picker
+                bb-listbuilder-column-picker-help-key="listCtrl.gridOptions.columnPickerHelpKey"
+                bb-listbuilder-column-picker-selected-column-ids="listCtrl.gridOptions.selectedColumnIds"
+                bb-listbuilder-column-picker-columns="listCtrl.gridOptions.columns"
+                bb-listbuilder-column-picker-selected-column-ids-changed="listCtrl.selectedColumnIdsChanged(selectedColumnIds)">
+              </bb-listbuilder-column-picker>
+              <bb-listbuilder-secondary-action 
+                bb-listbuilder-secondary-action-click="listCtrl.saveAction()">
+                  Save list
+              </bb-listbuilder-secondary-action>
+          </bb-listbuilder-secondary-actions>
+      </bb-listbuilder-toolbar-secondary-actions>
+      <bb-listbuilder-filter-summary>
+        <bb-filter-summary ng-show="listCtrl.appliedFilters.length > 0">
+            <bb-filter-summary-item
+                ng-repeat="item in listCtrl.appliedFilters"
+                bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                bb-filter-summary-item-on-dismiss="listCtrl.onDismissFilter($index)"
+                >
+                {{item.label}}
+            </bb-filter-summary-item>
+        </bb-filter-summary>
+      </bb-listbuilder-filter-summary>
+      <bb-listbuilder-toolbar-multiselect>
+          <bb-listbuilder-multiselect
+            ng-show="listCtrl.multiselectAvailable()"
+            bb-listbuilder-on-show-only-selected="listCtrl.toggleOnlySelected(showOnlySelected)"
+            bb-listbuilder-multiselect-items-changed="listCtrl.itemsChanged(selectedIds, allSelected)"
+            bb-listbuilder-multiselect-selected-ids="listCtrl.selectedIds"
+            bb-listbuilder-multiselect-available-items="listCtrl.gridOptions.data">
+            <bb-listbuilder-multiselect-select-all>
+            </bb-listbuilder-multiselect-select-all>
+            <bb-listbuilder-multiselect-clear-all>
+            </bb-listbuilder-multiselect-clear-all>
+          </bb-listbuilder-multiselect>
+
+      </bb-listbuilder-toolbar-multiselect>
+    </bb-listbuilder-toolbar>
+    <bb-listbuilder-content 
+        bb-listbuilder-content-active-view="{{listCtrl.activeView}}"
+        bb-listbuilder-content-view-changed="listCtrl.viewChanged(newView)"
+        >
+      <bb-listbuilder-cards>
+        <bb-listbuilder-card bb-listbuilder-card-id="item.id" ng-repeat="item in listCtrl.gridOptions.data">
+            <bb-card bb-card-selectable="true" bb-card-selected="item.selected">
+                <bb-card-title>
+                {{item.name}}
+                </bb-card-title>
+                <bb-card-content>
+                    <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-success">Membership dues paid</span>
+                    </div>
+                    <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                        <span class="label label-danger">Membership dues not paid</span>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        Occupation: {{item.occupation}}
+                    </div>
+                    <div>
+                        Joined on: {{item.joinDate | date}}
+                    </div>
+                    
+                </bb-card-content>
+                <bb-card-actions>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </bb-card-actions>
+            </bb-card>
+        </bb-listbuilder-card>
+      </bb-listbuilder-cards>
+      <bb-listbuilder-repeater>
+        <bb-repeater>
+            <bb-repeater-item 
+                bb-listbuilder-repeater-item 
+                bb-listbuilder-repeater-item-id="item.id" 
+                ng-repeat="item in listCtrl.gridOptions.data"
+                bb-repeater-item-selectable="true"
+                bb-repeater-item-selected="item.selected"
+                >
+                <bb-repeater-item-title>
+                {{item.name}}
+                </bb-repeater-item-title>
+                <bb-repeater-item-content>
+                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-success">Membership dues paid</span>
+                </div>
+                <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-danger">Membership dues not paid</span>
+                </div>
+                <div style="margin-bottom: 10px">
+                    Occupation: {{item.occupation}}
+                </div>
+                <div>
+                    Joined on: {{item.joinDate | date}}
+                </div>
+                </bb-repeater-item-content>
+                <bb-repeater-item-context-menu>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </bb-repeater-item-context-menu>
+            </bb-repeater-item>
+        </bb-repeater>
+      </bb-listbuilder-repeater>
+      <bb-listbuilder-grid>
+        <bb-grid
+            bb-grid-options="listCtrl.gridOptions"
+            bb-grid-multiselect-selected-ids="listCtrl.selectedIds">
+        </bb-grid>
+      </bb-listbuilder-grid>
+      <bb-listbuilder-content-custom 
+        bb-listbuilder-content-custom-view-name="custom-1" 
+        bb-listbuilder-content-custom-view-switcher-class="fa-pied-piper"
+        bb-listbuilder-content-custom-highlight-class="bb-custom-content-item"
+        bb-listbuilder-content-custom-view-switcher-label="Switch to custom">
+
+        <div class="bb-custom-content">
+            <div class="bb-custom-content-item" bb-listbuilder-content-custom-item ng-repeat="item in listCtrl.gridOptions.data">
+                <div>
+                {{item.name}}
+                </div>
+                <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-success">Membership dues paid</span>
+                </div>
+                <div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
+                    <span class="label label-danger">Membership dues not paid</span>
+                </div>
+                <div style="margin-bottom: 10px">
+                    Occupation: {{item.occupation}}
+                </div>
+                <div>
+                    Joined on: {{item.joinDate | date}}
+                </div>
+                
+                <div>
+                    <bb-context-menu>
+                        <bb-context-menu-item>Action 1</bb-context-menu-item>
+                        <bb-context-menu-item>Action 2</bb-context-menu-item>
+                    </bb-context-menu>
+                </div>
+            </div>
+        </div> 
+      </bb-listbuilder-content-custom>
+      
+    </bb-listbuilder-content>
+    <bb-listbuilder-footer
+        bb-listbuilder-on-load-more="listCtrl.onLoadMore()"
+        bb-listbuilder-show-load-more="listCtrl.hasMoreData">
+    </bb-listbuilder-footer>
+  </bb-listbuilder>
+  <bb-summary-actionbar 
+    ng-show="listCtrl.actionsShown()">
+      <bb-summary-actionbar-actions>
+          <bb-summary-actionbar-primary
+            bb-summary-action-disabled="listCtrl.payMembershipSelections.length < 1" 
+            bb-summary-action-click="listCtrl.payMembership(listCtrl.payMembershipSelections)">
+              Pay membership dues ({{listCtrl.payMembershipSelections.length}})
+          </bb-summary-actionbar-primary>
+          <bb-summary-actionbar-secondary-actions>
+              <bb-summary-actionbar-secondary
+                bb-summary-action-disabled="listCtrl.secondarySelections.length < 1" 
+                bb-summary-action-click="listCtrl.secondaryAction(listCtrl.secondarySelections)">
+                  Secondary action ({{listCtrl.secondarySelections.length}})
+              </bb-summary-actionbar-secondary>
+          </bb-summary-actionbar-secondary-actions>
+      </bb-summary-actionbar-actions>
+  </bb-summary-actionbar>
+</div>
+
+</script>
+<script type="text/ng-template" id="demo/listbuilder/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Food preferences</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.tenYears" />
+                        Show only members with 10 years experience
+                    </label>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.onlyUnpaid" />
+                        Show only members with unpaid dues
+                    </label>
+                </form>
+            </div>
+            <bb-filter-modal-footer
+                bb-filter-modal-apply="filterCtrl.applyFilters()"
+                bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>

@@ -1,0 +1,541 @@
+{
+  "_LRM_PKTAG854": "skyux-l10n_12_6 - CHANGES-ONLY",
+  "action_bar_actions": {
+    "message": "Actions"
+  },
+  "alert_close": {
+    "message": "Fermer"
+  },
+  "autonumeric_abbr_billions": {
+    "message": "m"
+  },
+  "autonumeric_abbr_millions": {
+    "message": "m"
+  },
+  "autonumeric_abbr_thousands": {
+    "message": "m"
+  },
+  "avatar_error_not_image_description": {
+    "message": "Veuillez choisir un fichier qui est une image valide."
+  },
+  "avatar_error_not_image_title": {
+    "message": "Le fichier n'est pas une image."
+  },
+  "avatar_error_too_large_description": {
+    "message": "Veuillez choisir une image qui est inférieure à {0}."
+  },
+  "avatar_error_too_large_title": {
+    "message": "Le fichier est trop volumineux."
+  },
+  "card_select": {
+    "message": "Sélectionner la carte"
+  },
+  "carousel_button_label_next": {
+    "message": "Passer à l'élément suivant"
+  },
+  "carousel_button_label_previous": {
+    "message": "Passer à l'élément précédent"
+  },
+  "carousel_dot_label": {
+    "message": "Passer à l'élément {0}"
+  },
+  "checklist_categories_label": {
+    "message": "Catégories"
+  },
+  "checklist_check_title": {
+    "message": "Sélectionner un élément"
+  },
+  "checklist_clear_all": {
+    "message": "Tout effacer"
+  },
+  "checklist_no_items": {
+    "message": "Aucun élément trouvé"
+  },
+  "checklist_only_selected_items": {
+    "message": "Afficher uniquement les éléments sélectionnés"
+  },
+  "checklist_search_label": {
+    "message": "Rechercher"
+  },
+  "checklist_select_all": {
+    "message": "Tout sélectionner"
+  },
+  "chevron_collapse": {
+    "message": "Réduire"
+  },
+  "chevron_expand": {
+    "message": "Développer"
+  },
+  "context_menu_default_label": {
+    "message": "Menu contextuel"
+  },
+  "date_field_invalid_date_message": {
+    "message": "Saisissez une date valide"
+  },
+  "date_range_picker_at_any_time": {
+    "message": "À tout moment"
+  },
+  "date_range_picker_filter_description_at_any_time": {
+    "message": "{0} à tout moment"
+  },
+  "date_range_picker_filter_description_last_calendar_year": {
+    "message": "{0} de la dernière année civile"
+  },
+  "date_range_picker_filter_description_last_fiscal_year": {
+    "message": "{0} de la dernière année fiscale"
+  },
+  "date_range_picker_filter_description_last_month": {
+    "message": "{0} du mois dernier"
+  },
+  "date_range_picker_filter_description_last_quarter": {
+    "message": "{0} du dernier trimestre"
+  },
+  "date_range_picker_filter_description_last_week": {
+    "message": "{0} de la semaine dernière"
+  },
+  "date_range_picker_filter_description_next_calendar_year": {
+    "message": "{0} pour la prochaine année civile"
+  },
+  "date_range_picker_filter_description_next_fiscal_year": {
+    "message": "{0} pour l'année fiscale à venir"
+  },
+  "date_range_picker_filter_description_next_month": {
+    "message": "{0} pour le mois à venir"
+  },
+  "date_range_picker_filter_description_next_quarter": {
+    "message": "{0} pour le trimestre à venir"
+  },
+  "date_range_picker_filter_description_next_week": {
+    "message": "{0} pour la semaine prochaine"
+  },
+  "date_range_picker_filter_description_specific_range": {
+    "message": "{0} de {1} à {2}"
+  },
+  "date_range_picker_filter_description_this_calendar_year": {
+    "message": "{0} pour cette année civile"
+  },
+  "date_range_picker_filter_description_this_fiscal_year": {
+    "message": "{0} pour cette année fiscale"
+  },
+  "date_range_picker_filter_description_this_month": {
+    "message": "{0} pour ce mois"
+  },
+  "date_range_picker_filter_description_this_quarter": {
+    "message": "{0} pour ce trimestre"
+  },
+  "date_range_picker_filter_description_this_week": {
+    "message": "{0} pour cette semaine"
+  },
+  "date_range_picker_filter_description_today": {
+    "message": "{0} pour aujourd'hui"
+  },
+  "date_range_picker_filter_description_tomorrow": {
+    "message": "{0} pour demain"
+  },
+  "date_range_picker_filter_description_yesterday": {
+    "message": "{0} d'hier"
+  },
+  "date_range_picker_from_date": {
+    "message": "À partir de la date"
+  },
+  "date_range_picker_last_calendar_year": {
+    "message": "Dernière année civile"
+  },
+  "date_range_picker_last_fiscal_year": {
+    "message": "Dernière année fiscale"
+  },
+  "date_range_picker_last_month": {
+    "message": "Mois dernier"
+  },
+  "date_range_picker_last_quarter": {
+    "message": "Trimestre dernier"
+  },
+  "date_range_picker_last_week": {
+    "message": "Semaine dernière"
+  },
+  "date_range_picker_max_date_error": {
+    "message": "La date de début doit être antérieure à la date de fin"
+  },
+  "date_range_picker_min_date_error": {
+    "message": "La date de fin doit être postérieure à la date de début"
+  },
+  "date_range_picker_next_calendar_year": {
+    "message": "Année civile suivante"
+  },
+  "date_range_picker_next_fiscal_year": {
+    "message": "Année fiscale suivante"
+  },
+  "date_range_picker_next_month": {
+    "message": "Mois suivant"
+  },
+  "date_range_picker_next_quarter": {
+    "message": "Trimestre suivant"
+  },
+  "date_range_picker_next_week": {
+    "message": "Semaine suivante"
+  },
+  "date_range_picker_specific_range": {
+    "message": "Plage spécifique"
+  },
+  "date_range_picker_this_calendar_year": {
+    "message": "Cette année civile"
+  },
+  "date_range_picker_this_fiscal_year": {
+    "message": "Cette année fiscale"
+  },
+  "date_range_picker_this_month": {
+    "message": "Ce mois"
+  },
+  "date_range_picker_this_quarter": {
+    "message": "Ce trimestre"
+  },
+  "date_range_picker_this_week": {
+    "message": "Cette semaine"
+  },
+  "date_range_picker_to_date": {
+    "message": "À ce jour"
+  },
+  "date_range_picker_today": {
+    "message": "Aujourd'hui"
+  },
+  "date_range_picker_tomorrow": {
+    "message": "Demain"
+  },
+  "date_range_picker_yesterday": {
+    "message": "Hier"
+  },
+  "datepicker_clear": {
+    "message": "Effacer"
+  },
+  "datepicker_close": {
+    "message": "Terminé"
+  },
+  "datepicker_open": {
+    "message": "Ouvrir le sélecteur de date"
+  },
+  "datepicker_today": {
+    "message": "Aujourd'hui"
+  },
+  "definition_list_none_found": {
+    "message": "Aucun trouvé"
+  },
+  "error_description_broken": {
+    "message": "Essayez d'actualiser cette page ou revenez plus tard."
+  },
+  "error_description_construction": {
+    "message": "Merci de votre patience pendant que nous procédons à des améliorations.\nVeuillez réessayer un peu plus tard."
+  },
+  "error_title_broken": {
+    "message": "Désolé, un problème est survenu."
+  },
+  "error_title_construction": {
+    "message": "Cette page sera bientôt à nouveau disponible."
+  },
+  "error_title_notfound": {
+    "message": "Désolé, nous ne pouvons pas afficher cette page."
+  },
+  "errormodal_ok": {
+    "message": "OK"
+  },
+  "file_item_delete": {
+    "message": "Supprimer le fichier"
+  },
+  "file_size_b_plural": {
+    "message": "{0} octets"
+  },
+  "file_size_b_singular": {
+    "message": "{0} octet"
+  },
+  "file_size_gb": {
+    "message": "{0} Go"
+  },
+  "file_size_kb": {
+    "message": "{0} Ko"
+  },
+  "file_size_mb": {
+    "message": "{0} Mo"
+  },
+  "file_upload_drag_file_here": {
+    "message": "Faites glisser un fichier jusqu'ici"
+  },
+  "file_upload_drag_or_click": {
+    "message": "Glissez un fichier ici ou cliquez pour parcourir"
+  },
+  "file_upload_drop_files_here": {
+    "message": "Déposez des fichiers ici"
+  },
+  "file_upload_invalid_file": {
+    "message": "Ce type de fichier n'est pas valide"
+  },
+  "file_upload_link_input": {
+    "message": "Ajouter un lien à un fichier"
+  },
+  "file_upload_link_placeholder": {
+    "message": "http://www.something.com/file"
+  },
+  "file_upload_or_click_to_browse": {
+    "message": "ou cliquez pour parcourir"
+  },
+  "file_upload_paste_link": {
+    "message": "Coller un lien dans un fichier"
+  },
+  "file_upload_paste_link_done": {
+    "message": "Terminé"
+  },
+  "filter_button_title": {
+    "message": "Filtres"
+  },
+  "filter_modal_apply": {
+    "message": "Appliquer les filtres"
+  },
+  "filter_modal_clear": {
+    "message": "Effacer tous les filtres"
+  },
+  "filter_summary_close": {
+    "message": "Fermer"
+  },
+  "filter_summary_header": {
+    "message": "Filtre"
+  },
+  "grid_action_bar_cancel_mobile_actions": {
+    "message": "Annuler"
+  },
+  "grid_action_bar_choose_action": {
+    "message": "Choisir une action"
+  },
+  "grid_action_bar_clear_selection": {
+    "message": "Effacer la sélection"
+  },
+  "grid_back_to_top": {
+    "message": "Retour au début"
+  },
+  "grid_column_picker_all_categories": {
+    "message": "Toutes les catégories"
+  },
+  "grid_column_picker_description_header": {
+    "message": "Description"
+  },
+  "grid_column_picker_header": {
+    "message": "Choisir les colonnes à afficher dans la liste"
+  },
+  "grid_column_picker_name_header": {
+    "message": "Colonne"
+  },
+  "grid_column_picker_search_no_columns": {
+    "message": "Aucune colonne trouvée"
+  },
+  "grid_column_picker_search_placeholder": {
+    "message": "Rechercher par nom"
+  },
+  "grid_column_picker_submit": {
+    "message": "Appliquer les modifications"
+  },
+  "grid_columns_button": {
+    "message": " Choisir les colonnes"
+  },
+  "grid_filters_apply": {
+    "message": "Appliquer les filtres"
+  },
+  "grid_filters_button": {
+    "message": "Filtres"
+  },
+  "grid_filters_clear": {
+    "message": "Effacer"
+  },
+  "grid_filters_header": {
+    "message": "Filtre"
+  },
+  "grid_filters_hide": {
+    "message": "Masquer"
+  },
+  "grid_filters_summary_header": {
+    "message": "Filtre :"
+  },
+  "grid_load_more": {
+    "message": "Charger plus"
+  },
+  "grid_search_placeholder": {
+    "message": "Trouver dans cette liste"
+  },
+  "help_button_label": {
+    "description": "Label for the help button",
+    "message": "Ouvrir l'aide"
+  },
+  "infinite_scroll_load_more": {
+    "message": "Charger plus"
+  },
+  "listbuilder_add_title": {
+    "message": "Ajouter"
+  },
+  "listbuilder_card_switcher": {
+    "message": "Passer en vue carte"
+  },
+  "listbuilder_footer_back_to_top": {
+    "message": "Retour au début"
+  },
+  "listbuilder_grid_switcher": {
+    "message": "Passer en vue grille"
+  },
+  "listbuilder_multiselect_clear_all": {
+    "message": "Tout effacer"
+  },
+  "listbuilder_multiselect_select_all": {
+    "message": "Tout sélectionner"
+  },
+  "listbuilder_pick_columns": {
+    "message": "Choisir les colonnes"
+  },
+  "listbuilder_repeater_switcher": {
+    "message": "Passer en vue répéteur"
+  },
+  "listbuilder_show_only_selected": {
+    "message": "Afficher seulement les articles sélectionnés"
+  },
+  "listbuilder_show_secondary_actions": {
+    "message": "Afficher les options secondaires"
+  },
+  "modal_close": {
+    "message": "Fermer le modal"
+  },
+  "modal_footer_cancel_button": {
+    "message": "Annuler"
+  },
+  "modal_footer_primary_button": {
+    "message": "Enregistrer"
+  },
+  "month_short_april": {
+    "message": "Avr"
+  },
+  "month_short_august": {
+    "message": "Aoû"
+  },
+  "month_short_december": {
+    "message": "Déc"
+  },
+  "month_short_february": {
+    "message": "Fév"
+  },
+  "month_short_january": {
+    "message": "Jan"
+  },
+  "month_short_july": {
+    "message": "Jul"
+  },
+  "month_short_june": {
+    "message": "Jun"
+  },
+  "month_short_march": {
+    "message": "Mar"
+  },
+  "month_short_may": {
+    "message": "Mai"
+  },
+  "month_short_november": {
+    "message": "Nov"
+  },
+  "month_short_october": {
+    "message": "Oct"
+  },
+  "month_short_september": {
+    "message": "Sep"
+  },
+  "page_noaccess_button": {
+    "message": "Revenir à une page non classée"
+  },
+  "page_noaccess_description": {
+    "message": "Désolé, vous ne disposez pas des droits requis pour accéder à cette page.\nSi vous souhaitez y accéder, veuillez contacter votre administrateur système."
+  },
+  "page_noaccess_header": {
+    "message": "Circulez, il n'y a rien à voir"
+  },
+  "pagination_next": {
+    "message": "Suivant"
+  },
+  "pagination_previous": {
+    "message": "Précédent"
+  },
+  "reorder_top": {
+    "message": "Haut"
+  },
+  "search_dismiss": {
+    "message": "Abandonner la recherche"
+  },
+  "search_label": {
+    "message": "Rechercher des éléments"
+  },
+  "search_open": {
+    "message": "Ouvrir la recherche"
+  },
+  "search_placeholder": {
+    "message": "Trouver dans cette liste"
+  },
+  "searchfield_no_records": {
+    "message": "Désolé, aucun enregistrement correspondant trouvé"
+  },
+  "searchfield_searching": {
+    "message": "Recherche en cours..."
+  },
+  "selectfield_remove": {
+    "message": "Supprimer"
+  },
+  "selectfield_summary_text": {
+    "message": "{0} élément(s) sélectionné(s)"
+  },
+  "selectfieldpicker_clear": {
+    "message": "Effacer la sélection"
+  },
+  "selectfieldpicker_select": {
+    "message": "Sélectionner"
+  },
+  "selectfieldpicker_select_value": {
+    "message": "Sélectionner une valeur"
+  },
+  "selectfieldpicker_select_values": {
+    "message": "Sélectionner des valeurs"
+  },
+  "sort_button_label": {
+    "message": "Trier"
+  },
+  "sort_menu_heading": {
+    "message": "Trier par"
+  },
+  "summary_actionbar_hide_summary": {
+    "message": "Masquer la synthèse"
+  },
+  "summary_actionbar_open_secondary": {
+    "message": "Afficher les options secondaires"
+  },
+  "summary_actionbar_show_summary": {
+    "message": "Afficher la synthèse"
+  },
+  "tab_add": {
+    "message": "Ajouter un onglet"
+  },
+  "tab_open": {
+    "message": "Ouvrir"
+  },
+  "text_expand_close_text": {
+    "message": "Fermer"
+  },
+  "text_expand_modal_title": {
+    "message": "Vue développée"
+  },
+  "text_expand_see_less": {
+    "message": "Afficher moins"
+  },
+  "text_expand_see_more": {
+    "message": "Afficher plus"
+  },
+  "tile_chevron_label": {
+    "message": "Développer ou réduire"
+  },
+  "wizard_navigator_finish": {
+    "message": "Terminer"
+  },
+  "wizard_navigator_next": {
+    "message": "Suivant"
+  },
+  "wizard_navigator_previous": {
+    "message": "Précédent"
+  }
+}

@@ -1,6 +1,13 @@
 <div class="modal-header">
     <h1 class="bb-dialog-header" ng-transclude></h1>
-    <div class="fa fa-times close" ng-click="$parent.$parent.$dismiss('close');"></div>
     <div bb-help-button bb-help-key="{{bbModalHelpKey}}" bb-set-help-key-override="true" data-bbauto-field="ModalHelpButton" ng-if="bbModalHelpKey"></div>
-    <div class="clearfix"></div>
+    <div 
+        role="button" 
+        aria-label="{{'modal_close' | bbResources}}"
+        tabindex="0" 
+        class="fa fa-times close" 
+        ng-click="$parent.$parent.$dismiss('close');"
+        ng-keyup="$event.which === 13 &amp;&amp; $parent.$parent.$dismiss('close');">
+    </div>
+    
 </div>

@@ -21,4 +21,13 @@ The modal directive and service allow you to launch modals in a consistent way i
         - `bb-modal-footer-button` &mdash; Displays a generic button. You provide HTML within this tag to specify the content of the button. You must register events for the button manually.
         - `bb-modal-footer-button-primary` &mdash; Displays a primary button and applies the `btn-primary` class to highlight it. "Save" is the default content for the button, but you can provide HTML within this tag to override the default content. You must register events for the button manually.
         - `bb-modal-footer-button-cancel` &mdash; Displays a cancel button to close the modal form. "Cancel" is the default content for the button, but you can provide HTML within this tag to override the default content.
- 
+
+
+ ### Accessibility ###
+
+ Follow these guidelines to ensure that people using assistive technology or their keyboards can use modals:
+
+ 1. When a modal opens, focus should be on the first focusable item in the modal. If the modal does not include focusable items, then focus should be on the modal container element.
+ 2. While a modal is open, focus should remain on elements in the modal when using Tab key to navigate. Focus should not move back to the initiating page behind the modal.
+ 3. When a modal closes, focus should return to the element that had focus before the modal opened. Usually this is the element that opened the modal.
+ 4. To ensure that users can close a modal by pressing the Escape key, do not change the `uibModalOptions` object’s `keyboard` option from its default value of `true`.

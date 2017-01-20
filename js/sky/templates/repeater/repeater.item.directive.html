@@ -1,7 +1,12 @@
 <section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">
   <div class="bb-repeater-item-left">
     <div class="bb-repeater-item-multiselect" ng-show="bbRepeaterItem.itemIsSelectable()">
-      <input ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" type="checkbox" bb-check ng-model="bbRepeaterItem.bbRepeaterItemSelected" />
+      <input 
+        ng-attr-aria-label="{{bbRepeaterItem.bbRepeaterItemInputLabel}}" 
+        type="checkbox" 
+        bb-check 
+        ng-model="bbRepeaterItem.bbRepeaterItemSelected"
+        ng-change="bbRepeaterItem.repeaterItemSelectionToggled(bbRepeaterItem.bbRepeaterItemSelected)" />
     </div>
     <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">
     </div>

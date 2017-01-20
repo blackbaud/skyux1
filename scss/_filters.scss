@@ -23,6 +23,7 @@
     display: flex;
     align-items: center;
     @include bb-border(dark, top, bottom);
+    padding: $padding-half $padding $padding-half $padding; 
 }
 
 .bb-filter-summary-items {

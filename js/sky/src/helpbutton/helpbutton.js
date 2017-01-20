@@ -4,8 +4,8 @@
 (function () {
     'use strict';
 
-    angular.module('sky.helpbutton', ['sky.help'])
-        .directive('bbHelpButton', ['$state', '$window', 'bbHelp', function ($state, $window, bbHelp) {
+    angular.module('sky.helpbutton', ['sky.help', 'sky.resources'])
+        .directive('bbHelpButton', ['$state', '$window', 'bbHelp', 'bbResources', function ($state, $window, bbHelp, bbResources) {
             /// <summary>
             /// This directive provides a button that launches the Blackbaud Help Widget.
             /// The bbHelpKey attribute sets the help key. The widget will show the given key's corresponding help page
@@ -28,8 +28,23 @@
                     });
                 }
 
+                if (!el.is('button')) {
+                    el.attr('role', 'button');
+                    el.attr('tabindex', '0');
+                }
+
+                if (!el.attr('aria-label')) {
+                    el.attr('aria-label', bbResources.help_button_label);
+                }
+
                 el.click(function () {
                     bbHelp.open(attrs.bbHelpKey);
+                });
+
+                el.on('keyup', function ($event) {
+                    if ($event.which === 13) {
+                        bbHelp.open(attrs.bbHelpKey);
+                    }
                 });
             }
 

@@ -18,5 +18,4 @@ if [[ ! -e $binaryFile ]]; then
   unzip $binaryZip
 fi
 
-$binaryFile -v -onlyAutomate -forcelocal $BROWSER_STACK_ACCESS_KEY &
-sleep 3
+$binaryFile --key $BROWSER_STACK_ACCESS_KEY --only-automate --force-local --force --local-identifier SKYUXBROWSERSTACKLOCAL --parallel-runs 10 &

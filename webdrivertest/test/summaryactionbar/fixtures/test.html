@@ -1,0 +1,139 @@
+<style>
+    .bb-test-sactionbar .bb-summary-actionbar {
+        bottom: 500px !important;
+    }
+
+    .bb-modal-fullpage .modal-footer {
+        bottom: 300px !important;
+    }
+    
+</style>
+<div ng-controller="SummaryModalButtonController as summaryModalBtnCtrl">
+  <button type="button" class="btn btn-primary bb-test-open-modal" ng-click="summaryModalBtnCtrl.open()">Open standard modal</button>
+  <button type="button" class="btn btn-primary bb-test-open-modal-fullpage" ng-click="summaryModalBtnCtrl.open(true)">Open full page modal</button>
+  <button type="button" class="btn btn-primary bb-test-show-third" ng-click="summaryCtrl.thirdButton = true">Third button</button>
+  <div style="width: 100px; height: 1000px"></div>
+  <div class="bb-test-sactionbar">
+      <bb-summary-actionbar>
+    <bb-summary-actionbar-actions>
+        <bb-summary-actionbar-primary>Primary action</bb-summary-actionbar-primary>
+        <bb-summary-actionbar-secondary-actions>
+            <bb-summary-actionbar-secondary>Secondary action</bb-summary-actionbar-secondary>
+            <bb-summary-actionbar-secondary>Secondary action 2</bb-summary-actionbar-secondary>
+            <bb-summary-actionbar-secondary ng-if="summaryCtrl.thirdButton">Secondary action 3</bb-summary-actionbar-secondary>
+        </bb-summary-actionbar-secondary-actions>
+        <bb-summary-actionbar-cancel>Cancel</bb-summary-actionbar-cancel>
+    </bb-summary-actionbar-actions>
+    <bb-summary-actionbar-summary>
+        <div>
+        <bb-key-info>
+        <bb-key-info-value>$123.00</bb-key-info-value>
+        <bb-key-info-label>Field 1</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>$456.00</bb-key-info-value>
+        <bb-key-info-label>Field 2</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>18</bb-key-info-value>
+        <bb-key-info-label>Field 3</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>$123.00</bb-key-info-value>
+        <bb-key-info-label>Field 1</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>$456.00</bb-key-info-value>
+        <bb-key-info-label>Field 2</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>18</bb-key-info-value>
+        <bb-key-info-label>Field 3</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>$123.00</bb-key-info-value>
+        <bb-key-info-label>Field 1</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>$456.00</bb-key-info-value>
+        <bb-key-info-label>Field 2</bb-key-info-label>
+        </bb-key-info>
+        <bb-key-info>
+        <bb-key-info-value>18</bb-key-info-value>
+        <bb-key-info-label>Field 3</bb-key-info-label>
+        </bb-key-info>
+    </div>
+    </bb-summary-actionbar-summary>
+    </bb-summary-actionbar>
+  </div>
+  
+      
+</div>
+
+<script type="text/ng-template" id="demo/summaryactionbar/modalform.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header bb-modal-help-key="'bb-security-users.html'">Modal header</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <div class="form-group">
+                        <label for="modal-test-input" class="control-label">Something</label>
+                        <input id="modal-test-input" type="text" class="form-control" autofocus />
+                    </div>
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-summary-actionbar>
+                    <bb-summary-actionbar-actions>
+                        <bb-summary-actionbar-primary>Primary action</bb-summary-actionbar-primary>
+                        <bb-summary-actionbar-secondary-actions>
+                            <bb-summary-actionbar-secondary>Secondary action</bb-summary-actionbar-secondary>
+                            <bb-summary-actionbar-secondary>Secondary action 2</bb-summary-actionbar-secondary>
+                        </bb-summary-actionbar-secondary-actions>
+                        <bb-summary-actionbar-cancel>Cancel</bb-summary-actionbar-cancel>
+                    </bb-summary-actionbar-actions>
+                    <bb-summary-actionbar-summary>
+                        <div>
+                        <bb-key-info>
+                        <bb-key-info-value>$123.00</bb-key-info-value>
+                        <bb-key-info-label>Field 1</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>$456.00</bb-key-info-value>
+                        <bb-key-info-label>Field 2</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>18</bb-key-info-value>
+                        <bb-key-info-label>Field 3</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>$123.00</bb-key-info-value>
+                        <bb-key-info-label>Field 1</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>$456.00</bb-key-info-value>
+                        <bb-key-info-label>Field 2</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>18</bb-key-info-value>
+                        <bb-key-info-label>Field 3</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>$123.00</bb-key-info-value>
+                        <bb-key-info-label>Field 1</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>$456.00</bb-key-info-value>
+                        <bb-key-info-label>Field 2</bb-key-info-label>
+                        </bb-key-info>
+                        <bb-key-info>
+                        <bb-key-info-value>18</bb-key-info-value>
+                        <bb-key-info-label>Field 3</bb-key-info-label>
+                        </bb-key-info>
+                    </div>
+                    </bb-summary-actionbar-summary>
+                </bb-summary-actionbar>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>

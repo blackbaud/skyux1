@@ -12,7 +12,7 @@
         $templateCache.put('bbGrid/samples/mycolumn.html',
             '<div>' +
                 '<div><span class="bb-grid-no-search"> Title: </span>{{data.title}}</div>' +
-                '<a href="" tooltip-trigger="focus" tooltip-placement="bottom" bb-tooltip="bbGrid/samples/gridtooltip.html"> <span class="bb-grid-no-search"> Info:</span> {{data.info}}</a>' +
+                '<a href="" tooltip-trigger="focus" tooltip-placement="bottom" uib-tooltip-template="\'bbGrid/samples/gridtooltip.html\'"> <span class="bb-grid-no-search"> Info:</span> {{data.info}}</a>' +
                 '<button class="btn btn-success" ng-click="templateCtrl.clickIt()">My Button</button>' +
             '</div>');
     }
@@ -133,19 +133,34 @@
             ],
             self = this;
 
-        function updateActions(selections) {
+        function actionsShown() {
+            return (self.action1Selections && self.action1Selections.length > 0) || (self.action2Selections && self.action2Selections.length > 0);
+        }
+
+        self.actionsShown = actionsShown;
+
+        function getItemById(id) {
+            var i;
+            for (i = 0; i < self.gridOptions.data.length; i++) {
+                if (id === self.gridOptions.data[i].id) {
+                    return self.gridOptions.data[i];
+                }
+            }
+        }
+
+        function updateActions(selectedIds) {
             var i,
                 selection;
 
-            action1.selections = [];
-            action2.selections = [];
+            self.action1Selections = [];
+            self.action2Selections = [];
 
-            for (i = 0; i < selections.length; i++) {
-                selection = selections[i];
+            for (i = 0; i < selectedIds.length; i++) {
+                selection = getItemById(selectedIds[i]);
                 if (selection.instrument.indexOf('guitar') > -1) {
-                    action1.selections.push(selection);
+                    self.action1Selections.push(selection);
                 } else if (selection.instrument.indexOf('Drum') > -1) {
-                    action2.selections.push(selection);
+                    self.action2Selections.push(selection);
                 }
             }
         }
@@ -153,10 +168,10 @@
         function action1Clicked() {
             var i,
                 message = 'The selected guitar players are ';
-            if (action1.selections && action1.selections.length > 0) {
-                for (i = 0; i < action1.selections.length; i = i + 1) {
-                    message += action1.selections[i].name;
-                    if (i !== (action1.selections.length - 1)) {
+            if (self.action1Selections && self.action1Selections.length > 0) {
+                for (i = 0; i < self.action1Selections.length; i = i + 1) {
+                    message += self.action1Selections[i].name;
+                    if (i !== (self.action1Selections.length - 1)) {
                         message += ', ';
                     }
                 }
@@ -164,11 +179,16 @@
             }
         }
 
+        self.action1Clicked = action1Clicked;
+
+
         function action2Clicked() {
             var message = 'Drum Drum Drum!';
 
             alert(message);
         }
+
+        self.action2Clicked = action2Clicked;
 
         function search(array, text) {
             if (angular.isDefined(text) && text !== '') {
@@ -253,31 +273,10 @@
 
         self.summaryIsDismissible = true;
 
-        action1 = {
-            actionCallback: action1Clicked,
-            automationId: 'Action1Button',
-            isPrimary: true,
-            selections: [],
-            title: 'Guitar action'
-        };
-
-        action2 = {
-            actionCallback: action2Clicked,
-            automationId: 'Action2Button',
-            isPrimary: false,
-            selections: [],
-            title: 'Drum action'
-        };
-
-
         self.clickCustom = function () {
             alert('custom button clicked');
         };
 
-        self.gridActions = [
-            action1,
-            action2
-        ];
         $timeout(function () {
             self.gridOptions = {
                 columns: [
@@ -349,11 +348,10 @@
             };
 
 
-            self.updateActions = updateActions;
 
             self.setSelections = setSelections;
 
-            self.selectedRows = [dataSetBand[1]];
+            self.selectedIds = [dataSetBand[1].id];
 
             self.sortOptions = [
                 {
@@ -395,6 +393,8 @@
                 }
             ];
 
+            
+
             function sortItems(item) {
                 self.gridOptions.data.sort(function (a, b) {
                     var descending = item.descending ? -1 : 1,
@@ -417,10 +417,12 @@
             self.sortItems = sortItems;
 
             function setSelections() {
-                self.selectedRows = [dataSetBand[3]];
+                self.selectedIds = [dataSetBand[3].id];
             }
 
             self.gridOptions.hasMoreRows = true;
+            self.action1Selections = [];
+            self.action2Selections = [];
 
             /* This function creates unique data sets to be appended to our
                grid */
@@ -439,15 +441,17 @@
             }
 
             $scope.$on('loadMoreRows', function (event, data) {
-                /* If a promise exists on the event data, then we can resolve
-                       it with the next set of data that should be concatenated
-                       to the grid */
                 $timeout(function () {
                     self.gridOptions.hasMoreRows = false;
-                    data.promise.resolve(getLoadMoreDataSet());
-                    
+                    self.gridOptions.data = self.gridOptions.data.concat(getLoadMoreDataSet());
+                    data.promise.resolve();
                 }, 2000);
+            });
 
+            $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, selectedIds) {
+                event.preventDefault();
+                event.stopPropagation();
+                updateActions(selectedIds);
             });
 
             $scope.$on('includedColumnsChanged', function (event, data) {
