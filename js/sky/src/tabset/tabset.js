@@ -127,6 +127,8 @@
                     }
 
                     dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH - TAB_PADDING;
+
+                    /* If widths are available, we can override the default max-width of the dropdown button and menu to be more specific */
                     if (dropdownTextMaxWidth > 0) {
                         el.find('> .bb-tabset-dropdown > .bb-tab-dropdown-button > .bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
                     }
