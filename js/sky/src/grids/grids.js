@@ -554,7 +554,7 @@
                             }
 
                             function getLastColumnWidth() {
-                              return element.find('th.ui-th-column').last().width();
+                                return element.find('th.ui-th-column').last().width();
                             }
 
                             function resetGridWidth(oldWidth, newWidth) {
@@ -580,7 +580,7 @@
                                         resetTopScrollbar();
 
                                         if (needsExtendedColumnResize) {
-                                          currentExtendedColumnWidth = getLastColumnWidth();
+                                            currentExtendedColumnWidth = getLastColumnWidth();
                                         }
                                     }
                                 }
