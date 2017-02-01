@@ -432,6 +432,22 @@
             applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
         }
 
+
+        function back() {
+            var elem = angular.element('.bb-custom-content');
+            elem.removeClass('bb-splitpanel-hidden');
+
+            //listbuilder toolbar
+            elem = angular.element('.bb-listbuilder-toolbar-container');
+            elem.removeClass('bb-splitpanel-hidden');
+            elem = angular.element('.bb-splitPanel-pageHeader');
+            elem.removeClass('bb-splitpanel-hidden');
+
+            elem = angular.element('.split-panel-workspace');
+            elem.addClass('bb-splitpanel-hidden');
+            
+        }
+
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
@@ -450,6 +466,7 @@
         self.onlyShowRecorded = onlyShowRecorded;
         self.checkDirtyForm = checkDirtyForm;
         self.recordedFilters = recordedFilters;
+        self.back = back;
 
 
         loadData();

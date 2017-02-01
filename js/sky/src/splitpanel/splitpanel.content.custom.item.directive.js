@@ -13,6 +13,19 @@
                     $scope.selectItem = function () {
                         $scope.$parent.item.$index = $scope.$parent.$index;
                         $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
+
+                        var elem = angular.element('.bb-custom-content');
+                        elem.addClass('bb-splitpanel-hidden');
+
+                        elem = angular.element('.bb-listbuilder-toolbar-container');
+                        elem.addClass('bb-splitpanel-hidden');
+
+                        elem = angular.element('.bb-splitPanel-pageHeader');
+                        elem.addClass('bb-splitpanel-hidden');
+
+                        elem = angular.element('.split-panel-workspace');
+                        elem.removeClass('bb-splitpanel-hidden');
+                        
                     };
                 }],
                 scope: {
