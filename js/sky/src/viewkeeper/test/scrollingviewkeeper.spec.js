@@ -237,7 +237,8 @@ describe('Scrolling viewkeeper', function () {
                 
                 $($window).trigger('scroll');
                 
-                expect(scrollEl[0].style.top).toBe("0px");
+                // windows 8.1 flakiness
+                expect(scrollEl[0].style.top).toBe("0px" || "0.5px");
             
                 expect(scrollEl).not.toHaveClass('bb-grid-filters-fixed-bottom');
                 expect(scrollEl).not.toHaveClass('bb-grid-filters-fixed-top');
