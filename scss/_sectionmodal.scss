@@ -1,0 +1,97 @@
+@import "mixins";
+
+.bb-sectionmodal {
+    .bb-sectionedform {
+        height: 100%
+    }
+
+    .modal-body {
+        height: 460px;
+        max-height:460px;
+        padding: 0;
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+    .bb-sectionedform {
+        .nav-tabs {
+            @include animation(fadeInLeft 500ms);
+            @include make-xs-column(12);
+            border-right-style: none !important;
+
+            .nav-link:focus:not(:hover) {
+                background-color: transparent;
+            }
+        }
+
+        .tab-content {
+            @include animation(fadeInRight 500ms);
+            @include make-xs-column(12);
+        }
+    }
+}
+
+.bb-sectionedform {
+    .nav-tabs {
+        @include make-sm-column(3);
+        @include bb-border('tab', 'right');
+        border-bottom-style: none;
+        float: left;
+        height: inherit;
+        padding-left: 0;
+        padding-right: 0;
+
+        .control-label {
+            &.invalid:after {
+                color: $bb-error-color;
+                content: " \f071";
+                font-family: 'FontAwesome';
+            }
+        }
+
+        li {
+            .nav-link {
+                border-left: 4px solid transparent;
+            }
+        }
+
+        li.active {
+            .nav-link {
+                background-color: $gray-lightest !important;
+                border-left: 4px solid $bb-color-blue !important;
+                color: inherit !important;
+            }
+        }
+    }
+    
+    .nav-link {
+        border-radius: 0;
+        margin-right: 0;
+    }
+
+    .tab-content {
+        @include make-sm-column(9);
+        overflow: hidden;
+        height: inherit;
+        margin-top: 0;
+    }
+    
+    .bb-sectionedform-navigationicon {
+        &.fa-chevron-left {
+            padding-right: $padding-half;
+        }
+
+        &.fa-chevron-right {
+            padding-left: $padding-half;
+        }
+
+        padding-top: 3px;
+    }
+
+    .bb-sectionedform-contentnavigationcontainer {
+        background-color: lightgray;
+        cursor: pointer;
+        padding-bottom: $padding;
+        padding-top: $padding;
+    }
+}

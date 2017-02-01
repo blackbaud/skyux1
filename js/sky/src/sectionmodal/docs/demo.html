@@ -1,0 +1,88 @@
+<div ng-controller="SectionModalPageTestController as secModalCtrl">
+  <button class="btn btn-primary" ng-click="secModalCtrl.openForm()">Open tab sectioned modal</button>
+</div>
+
+<script type="text/ng-template" id="demo/sectionmodal/tabsectionmodalform.html">
+  <bb-modal bb-section-modal>
+    <div class="modal-form" ng-controller="TabSectionModalTestController as tabSecModalCtrl">
+      <bb-modal-header>Tab sectioned modal</bb-modal-header>
+      <form ng-submit="tabSecModalCtrl.save()">
+        <div bb-modal-body>
+          <bb-sectioned-form bb-sectioned-form-sections="tabSecModalCtrl.sections" bb-section-validator="tabSecModalCtrl.sectionValidator" sections-hidden="tabSecModalCtrl.sectionsHidden" show-section-navigation="tabSecModalCtrl.showSectionNavigation"></bb-sectioned-form>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button ng-click="tabSecModalCtrl.showSectionNavigation = tabSecModalCtrl.showSectionNavigation + 1" ng-show="tabSecModalCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
+          <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>
+
+<script type="text/ng-template" id="demo/sectionmodal/basicinfo.html">
+  <div class=" form-group">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <label class="control-label required">Name</label>
+        <input class="form-control" type="text"/>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <label class="control-label">Spouse name</label>
+        <input class="form-control" type="text" />
+      </div>
+    </div>
+    <div class="row" style="padding-top: 10px;">
+      <div class="col-xs-12">
+        <label class="control-label">
+          <input class="form-control" type="checkbox" bb-check /> Fundraiser
+        </label>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="demo/sectionmodal/addresses.html">
+  <div class=" form-group">
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Home</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label class="control-label">410 17th Street<br/>Denver, CO 80202-4402</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Vacation</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label class="control-label">3345 Franciscan Way<br/>Tampa, FL 10255-0098</label>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="demo/sectionmodal/phonenumbers.html">
+  <div class=" form-group">
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Home</label> <label class="control-label">303.997.3301</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Mobile</label> <label class="control-label">888.387.1211</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Work</label> <label class="control-label">303.997.2000</label>
+      </div>
+    </div>
+  </div>
+</script>
