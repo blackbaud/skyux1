@@ -545,8 +545,7 @@
                     jsonmap: 'name',
                     id: 1,
                     name: 'name',
-                    width_xs: 100,
-                    width_all: 300,
+                    width_all: 150,
                     title: false
                 },
                 {
@@ -555,11 +554,12 @@
                     id: 2,
                     name: 'skills',
                     allow_see_more: true,
-                    width_all: 100
+                    width_all: 350
                 },
                 {
                     caption: 'Number of cats',
                     jsonmap: 'cats',
+                    width_all: 50,
                     id: 3,
                     name: 'cats'
                 }
