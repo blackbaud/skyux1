@@ -846,8 +846,6 @@ describe('Tabset module', function () {
                 //switch tabs
                 tabsEl = getSmallScreenTabs(el);
 
-                debugger;
-
                 tabTitleEl = getTabDropdownButton(el);
                 tabTitleEl.click();
                 $scope.$digest();
@@ -863,14 +861,14 @@ describe('Tabset module', function () {
                 expect(dropdownMenuItemEl[3].style.maxWidth).toBe('');
 
                 //change to second inner tab
-                tabsEl.eq(2).click();
+                tabsEl.eq(3).click();
                 $scope.$digest();
 
                 //verify button/dropdown
                 dropdownTextEl = el.find('.bb-tab-header-text');
                 dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
                 dropdownMenuListItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li');
-                expect(dropdownTextEl.eq(1)).toHaveText('Third tab');
+                expect(dropdownTextEl.eq(1)).toHaveText('Fourth tab');
                 expect(dropdownMenuItemEl.eq(2)).toHaveText('Third tab');
                 expect(dropdownMenuItemEl.eq(3)).toHaveText('Fourth tab');
                 expect(dropdownMenuListItemEl.eq(3)).toHaveClass('active');
@@ -882,11 +880,10 @@ describe('Tabset module', function () {
                 $scope.$digest();
 
                 //verify inner tabs
-
                 dropdownTextEl = el.find('.bb-tab-header-text');
                 dropdownMenuItemEl = el.find('ul.nav-tabs li a');
                 dropdownMenuListItemEl = el.find('ul.nav-tabs li');
-                expect(dropdownTextEl.eq(1)).toHaveText('Third tab');
+                expect(dropdownTextEl.eq(1)).toHaveText('Fourth tab');
                 expect(dropdownMenuItemEl.eq(2)).toHaveText('Third tab');
                 expect(dropdownMenuItemEl.eq(3)).toHaveText('Fourth tab');
                 expect(dropdownMenuListItemEl.eq(3)).toHaveClass('active');
