@@ -23,18 +23,18 @@
         return -1;
     }
 
-    angular.module('sky.grids', 
+    angular.module('sky.grids',
             [
                 'sky.infinitescroll',
-                'sky.contextmenu', 
-                'sky.mediabreakpoints', 
-                'sky.viewkeeper', 
-                'sky.highlight', 
-                'sky.resources', 
-                'sky.data', 
-                'sky.grids.filters', 
-                'sky.grids.actionbar', 
-                'sky.window', 
+                'sky.contextmenu',
+                'sky.mediabreakpoints',
+                'sky.viewkeeper',
+                'sky.highlight',
+                'sky.resources',
+                'sky.data',
+                'sky.grids.filters',
+                'sky.grids.actionbar',
+                'sky.window',
                 'sky.grids.toolbar'
                 ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
@@ -64,7 +64,7 @@
                 return {
                     replace: true,
                     transclude: {
-                        'bbGridToolbar': '?bbGridToolbar'    
+                        'bbGridToolbar': '?bbGridToolbar'
                     },
                     require: ['bbGrid', '?^^bbListbuilder'],
                     restrict: 'E',
@@ -162,7 +162,7 @@
                             }
                         };
 
-                        
+
 
                         self.scope = $scope;
 
@@ -193,7 +193,7 @@
                     link: function ($scope, element, attr, ctrls, $transclude) {
                         var bbGrid = ctrls[0],
                             listbuilderCtrl = ctrls[1];
-                            
+
                         $scope.hasListbuilder = ctrls[1] !== null;
 
                         $scope.customToolbar = {
@@ -246,7 +246,7 @@
                                 } else {
                                     return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl();
                                 }
-                                
+
                             }
 
                             function getTopScrollbarDiv() {
@@ -553,6 +553,10 @@
                                 resetTopScrollbar();
                             }
 
+                            function getLastColumnWidth() {
+                              return element.find('th.ui-th-column').last().width();
+                            }
+
                             function resetGridWidth(oldWidth, newWidth) {
                                 var changedWidth,
                                     topScrollbar = getTopScrollbar(),
@@ -574,6 +578,10 @@
                                     if (width > 0) {
                                         tableEl.setGridWidth(width);
                                         resetTopScrollbar();
+
+                                        if (needsExtendedColumnResize) {
+                                          currentExtendedColumnWidth = getLastColumnWidth();
+                                        }
                                     }
                                 }
                             }
@@ -747,7 +755,7 @@
 
                                 if (row) {
                                     multiselectId = getMultiselectId(row);
-                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) { 
+                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) {
                                         if (arrayObjectIndexOf($scope.selectedRows, row) > -1) {
                                             tableEl.setSelection(rowid, false);
                                         }
@@ -758,7 +766,7 @@
                                     }
                                 }
 
-                                
+
                             }
 
                             function afterInsertRow(rowid, rowdata, rowelem) {
@@ -819,7 +827,7 @@
                                 }
 
                                 setRowMultiselect(rowid);
-                                
+
                             }
 
                             function setColumnHeaderAlignment() {
@@ -919,7 +927,7 @@
                                 } else if (listbuilderCtrl !== null) {
                                     multiselectId = listbuilderCtrl.getListbuilderMultiselectIdProperty();
                                 }
-                                
+
                                 return row[multiselectId];
                             }
 
@@ -951,7 +959,7 @@
                                     }
                                 } else {
                                     $scope.selectedRows = [];
-                                }   
+                                }
                             }
 
                             function resetMultiselect() {
@@ -1013,7 +1021,7 @@
                                         row;
 
                                     row = $scope.options.data[(rowIndex - 1)];
-                                    
+
                                     multiselectId = getMultiselectId(row);
 
                                     localRowSelect = true;
@@ -1045,7 +1053,7 @@
                                 } else {
                                     addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
                                 }
-                                
+
                             }
 
                             function beforeSelectRow(rowId, e) {
@@ -1166,7 +1174,7 @@
                                             }
 
                                         }
-                                    });        
+                                    });
                             }
 
                             function initGrid() {
@@ -1285,7 +1293,7 @@
 
                                     if (!$scope.options.fixedToolbar) {
                                         createHeaderViewKeeper($scope.hasListbuilder);
-                                    } 
+                                    }
                                     setSortStyles();
 
                                     setUpFancyCheckHeader();
@@ -1567,7 +1575,7 @@
 
                             if (!$scope.hasListbuilder) {
                                 $scope.$watchCollection('selectedRows', function (newSelections) {
-                                    
+
                                     if (localRowSelect) {
                                         localRowSelect = false;
                                         return;
@@ -1578,7 +1586,7 @@
                                     }
 
                                     setGridMultiselectRows(newSelections, indexCallback);
-                                    
+
                                 });
                             }
 
@@ -1588,7 +1596,7 @@
                                     localRowSelect = false;
                                     return;
                                 }
-                                
+
                                 if (angular.isUndefined(newSelections)) {
                                     $scope.bbGridMultiselectSelectedIds = [];
                                     localRowSelect = true;
@@ -1606,7 +1614,7 @@
                                 }
 
                                 setGridMultiselectRows(newSelections, indexCallback);
-                            }); 
+                            });
 
 
                             $scope.$watch('paginationOptions', initializePagination, true);
@@ -1696,7 +1704,7 @@
                             function destroyListbuilder() {
                                 var topScrollbarEl,
                                     topScrollbarDivEl;
-                                
+
                                 if ($scope.hasListbuilder) {
                                     listbuilderCtrl.topScrollbarScrollAction = undefined;
                                     topScrollbarEl = getTopScrollbar();
@@ -1706,7 +1714,7 @@
                                     topScrollbarDivEl.width(0);
                                     topScrollbarDivEl.height(0);
                                 }
-                                
+
                             }
 
                             $scope.locals.hasWaitAndEmpty = function () {
