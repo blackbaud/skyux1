@@ -5277,18 +5277,18 @@
         return -1;
     }
 
-    angular.module('sky.grids', 
+    angular.module('sky.grids',
             [
                 'sky.infinitescroll',
-                'sky.contextmenu', 
-                'sky.mediabreakpoints', 
-                'sky.viewkeeper', 
-                'sky.highlight', 
-                'sky.resources', 
-                'sky.data', 
-                'sky.grids.filters', 
-                'sky.grids.actionbar', 
-                'sky.window', 
+                'sky.contextmenu',
+                'sky.mediabreakpoints',
+                'sky.viewkeeper',
+                'sky.highlight',
+                'sky.resources',
+                'sky.data',
+                'sky.grids.filters',
+                'sky.grids.actionbar',
+                'sky.window',
                 'sky.grids.toolbar'
                 ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
@@ -5318,7 +5318,7 @@
                 return {
                     replace: true,
                     transclude: {
-                        'bbGridToolbar': '?bbGridToolbar'    
+                        'bbGridToolbar': '?bbGridToolbar'
                     },
                     require: ['bbGrid', '?^^bbListbuilder'],
                     restrict: 'E',
@@ -5416,7 +5416,7 @@
                             }
                         };
 
-                        
+
 
                         self.scope = $scope;
 
@@ -5447,7 +5447,7 @@
                     link: function ($scope, element, attr, ctrls, $transclude) {
                         var bbGrid = ctrls[0],
                             listbuilderCtrl = ctrls[1];
-                            
+
                         $scope.hasListbuilder = ctrls[1] !== null;
 
                         $scope.customToolbar = {
@@ -5500,7 +5500,7 @@
                                 } else {
                                     return listbuilderCtrl.getListbuilderToolbarTopScrollbarEl();
                                 }
-                                
+
                             }
 
                             function getTopScrollbarDiv() {
@@ -5807,6 +5807,10 @@
                                 resetTopScrollbar();
                             }
 
+                            function getLastColumnWidth() {
+                                return element.find('th.ui-th-column').last().width();
+                            }
+
                             function resetGridWidth(oldWidth, newWidth) {
                                 var changedWidth,
                                     topScrollbar = getTopScrollbar(),
@@ -5828,6 +5832,10 @@
                                     if (width > 0) {
                                         tableEl.setGridWidth(width);
                                         resetTopScrollbar();
+
+                                        if (needsExtendedColumnResize) {
+                                            currentExtendedColumnWidth = getLastColumnWidth();
+                                        }
                                     }
                                 }
                             }
@@ -6001,7 +6009,7 @@
 
                                 if (row) {
                                     multiselectId = getMultiselectId(row);
-                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) { 
+                                    if (angular.isUndefined(multiselectId) && $scope.selectedRows && $scope.selectedRows.length > 0) {
                                         if (arrayObjectIndexOf($scope.selectedRows, row) > -1) {
                                             tableEl.setSelection(rowid, false);
                                         }
@@ -6012,7 +6020,7 @@
                                     }
                                 }
 
-                                
+
                             }
 
                             function afterInsertRow(rowid, rowdata, rowelem) {
@@ -6073,7 +6081,7 @@
                                 }
 
                                 setRowMultiselect(rowid);
-                                
+
                             }
 
                             function setColumnHeaderAlignment() {
@@ -6173,7 +6181,7 @@
                                 } else if (listbuilderCtrl !== null) {
                                     multiselectId = listbuilderCtrl.getListbuilderMultiselectIdProperty();
                                 }
-                                
+
                                 return row[multiselectId];
                             }
 
@@ -6205,7 +6213,7 @@
                                     }
                                 } else {
                                     $scope.selectedRows = [];
-                                }   
+                                }
                             }
 
                             function resetMultiselect() {
@@ -6267,7 +6275,7 @@
                                         row;
 
                                     row = $scope.options.data[(rowIndex - 1)];
-                                    
+
                                     multiselectId = getMultiselectId(row);
 
                                     localRowSelect = true;
@@ -6299,7 +6307,7 @@
                                 } else {
                                     addSelectedItem(multiselectId, $scope.bbGridMultiselectSelectedIds);
                                 }
-                                
+
                             }
 
                             function beforeSelectRow(rowId, e) {
@@ -6420,7 +6428,7 @@
                                             }
 
                                         }
-                                    });        
+                                    });
                             }
 
                             function initGrid() {
@@ -6539,7 +6547,7 @@
 
                                     if (!$scope.options.fixedToolbar) {
                                         createHeaderViewKeeper($scope.hasListbuilder);
-                                    } 
+                                    }
                                     setSortStyles();
 
                                     setUpFancyCheckHeader();
@@ -6821,7 +6829,7 @@
 
                             if (!$scope.hasListbuilder) {
                                 $scope.$watchCollection('selectedRows', function (newSelections) {
-                                    
+
                                     if (localRowSelect) {
                                         localRowSelect = false;
                                         return;
@@ -6832,7 +6840,7 @@
                                     }
 
                                     setGridMultiselectRows(newSelections, indexCallback);
-                                    
+
                                 });
                             }
 
@@ -6842,7 +6850,7 @@
                                     localRowSelect = false;
                                     return;
                                 }
-                                
+
                                 if (angular.isUndefined(newSelections)) {
                                     $scope.bbGridMultiselectSelectedIds = [];
                                     localRowSelect = true;
@@ -6860,7 +6868,7 @@
                                 }
 
                                 setGridMultiselectRows(newSelections, indexCallback);
-                            }); 
+                            });
 
 
                             $scope.$watch('paginationOptions', initializePagination, true);
@@ -6950,7 +6958,7 @@
                             function destroyListbuilder() {
                                 var topScrollbarEl,
                                     topScrollbarDivEl;
-                                
+
                                 if ($scope.hasListbuilder) {
                                     listbuilderCtrl.topScrollbarScrollAction = undefined;
                                     topScrollbarEl = getTopScrollbar();
@@ -6960,7 +6968,7 @@
                                     topScrollbarDivEl.width(0);
                                     topScrollbarDivEl.height(0);
                                 }
-                                
+
                             }
 
                             $scope.locals.hasWaitAndEmpty = function () {
@@ -12626,18 +12634,30 @@ angular.module('sky.palette.config', [])
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
+                function hasCollapsedTabs() {
+                    return el.children('ul.nav.nav-tabs').length < 1;
+                }
+
                 function getTabUl() {
                     var ulEl = el.children('ul.nav.nav-tabs');
                     if (ulEl.length > 0) {
                         return ulEl.eq(0);
                     } else {
-                        return el.find('.bb-tabset-dropdown.nav.nav-tabs ul').eq(0);
+                        return el.find('> .bb-tabset-dropdown.nav.nav-tabs > ul').eq(0);
+                    }
+                }
+
+                function getAddOpenButtons() {
+                    if (hasCollapsedTabs()) {
+                        return el.find('> .bb-tabset-dropdown > .bb-tab-button-wrap');
+                    } else {
+                        return el.find('> ul.nav.nav-tabs > li.bb-tab-button > .bb-tab-button-wrap');
                     }
                 }
 
                 function getBootstrapTabs() {
                     var ulEl = getTabUl();
-                    return ulEl.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
+                    return ulEl.children('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
                 }
 
                 function getDropdownEl() {
@@ -12646,7 +12666,8 @@ angular.module('sky.palette.config', [])
 
                 function setTabMaxWidth() {
                     //later this will resize tabs to fit the window
-                    el.find('ul.nav-tabs li a').css('max-width', '');
+                    var ulEl = getTabUl();
+                    ulEl.find('> li > a').css('max-width', '');
                 }
 
                 function setDropdownMaxWidth() {
@@ -12658,7 +12679,7 @@ angular.module('sky.palette.config', [])
 
                     availableWidth = el.width();
 
-                    addOpenButtonEl = el.find('.bb-tab-button-wrap');
+                    addOpenButtonEl = getAddOpenButtons();
 
                     for (i = 0; i < addOpenButtonEl.length; i++) {
                         addOpenWidth += addOpenButtonEl.eq(i).width();
@@ -12666,10 +12687,15 @@ angular.module('sky.palette.config', [])
 
                     dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH - TAB_PADDING;
 
-                    el.find('.bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
-
-                    el.find('.bb-tabset-dropdown ul.dropdown-menu li a').css('max-width', (availableWidth.toString() + 'px'));
-
+                    /* If widths are available, we can override the default max-width of the dropdown button and menu to be more specific */
+                    if (dropdownTextMaxWidth > 0) {
+                        el.find('> .bb-tabset-dropdown > .bb-tab-dropdown-button > .bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
+                    }
+                    
+                    if (availableWidth > 0) {
+                        el.find('> .bb-tabset-dropdown > ul.dropdown-menu > li >  a').css('max-width', (availableWidth.toString() + 'px'));
+                    } 
+                    
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -12679,10 +12705,10 @@ angular.module('sky.palette.config', [])
                         dropdownButtonsEl;
 
                     tabsEl = getBootstrapTabs();
-                    dropdownButtonsEl = el.find('.bb-tab-button-wrap');
+                    dropdownButtonsEl = getAddOpenButtons();
                     ulEl = getTabUl();
                     if (isCollapsed) {
-                        dropdownContainerEl = el.find('.bb-tabset-dropdown');
+                        dropdownContainerEl = el.children('.bb-tabset-dropdown');
 
                         ulEl.addClass('dropdown-menu');
                         ulEl.removeClass('nav');
@@ -12697,7 +12723,7 @@ angular.module('sky.palette.config', [])
 
                         el.prepend(ulEl);
 
-                        ulEl.find('.bb-tab-button').append(dropdownButtonsEl);
+                        ulEl.children('.bb-tab-button').append(dropdownButtonsEl);
                         setTabMaxWidth();
                     }
                 }
@@ -12843,7 +12869,7 @@ angular.module('sky.palette.config', [])
             link: function ($scope, el, attr) {
                 var anchorEl;
 
-                anchorEl = el.find('a');
+                anchorEl = el.children('a');
                 anchorEl.wrapInner(getTemplate($templateCache, 'largeheading'));
                 anchorEl.append($compile(getTemplate($templateCache, 'smallheading'))($scope));
 
