@@ -92,14 +92,30 @@
 
                         <bb-splitpanel-workspace class="split-panel-workspace bb-splitpanel-hidden">
                             <bb-splitpanel-workspace-header class="bb-splitpanel-show-xs">
-                                
-                                <div ng-click="listCtrl.checkDirtyForm(listCtrl.back)" style="float:left;"> <div class="glyphicon glyphicon-chevron-left" style="color:gray"></div> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</div>
+
+                                <div ng-click="listCtrl.checkDirtyForm(listCtrl.back)" class="navigation-panel"> <div class="glyphicon glyphicon-chevron-left" style="color:gray"></div> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</div>
 
                                 <div style="float:right;">
                                     <span type="button" class="glyphicon glyphicon-menu-up" ng-disabled="listCtrl.selectedItem.$index === 0" ng-click="listCtrl.checkDirtyForm(listCtrl.previous)"></span>
                                     <span type="button" class="glyphicon glyphicon-menu-down" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.checkDirtyForm(listCtrl.next)"></span>
                                 </div>
                             </bb-splitpanel-workspace-header>
+
+                            <bb-splitpanel-selected-item>
+                                <div>
+                                    {{listCtrl.selectedItem.name}}
+                                </div>
+                                <div>
+                                    {{listCtrl.selectedItem.joinDate | date}}
+                                </div>
+                                <div>
+                                    {{listCtrl.selectedItem.occupation}}
+                                </div>
+                                <div>
+                                    {{listCtrl.selectedItem.newField}}
+                                </div>
+                            </bb-splitpanel-selected-item>
+
                             <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
                                 <form name="forms.containerForm">
 

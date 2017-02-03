@@ -134,6 +134,36 @@
             background-color: white;
             border: none;
         }
+
+        .selected-item-xs {
+            border-left: #1c84c6 7px solid;
+            padding-left: 13px;
+            background-color: #f3f3f4;
+        }
+
+        .navigation-panel {
+            float: left;
+            font: larger bold;
+        }
+
+        .bb-custom-content-item-xs{
+            padding: 7px 13px;
+        }
+
+
+        /*.absolute {
+            position: absolute;
+            left: -100px;
+            width: 100px;
+            height: 100px;
+            background: blue;
+            transition: 1s;
+        }
+
+        .wrapper:hover #slide {
+            transition: 1s;
+            left: 0;
+        }*/
         /*//appear from right
         front {
             .enter-setup {

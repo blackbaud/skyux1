@@ -16,14 +16,18 @@
 
                         var elem = angular.element('.bb-custom-content');
                         elem.addClass('bb-splitpanel-hidden');
+                        //elem.hide("slide", { direction: "left" }, 500);
 
                         elem = angular.element('.bb-listbuilder-toolbar-container');
+                        //elem.hide("slide", { direction: "left" }, 500);
                         elem.addClass('bb-splitpanel-hidden');
 
                         elem = angular.element('.bb-splitPanel-pageHeader');
+                        //elem.hide("slide", { direction: "left" }, 500);
                         elem.addClass('bb-splitpanel-hidden');
 
                         elem = angular.element('.split-panel-workspace');
+                        //elem.show("slide", { direction: "right" }, 800);
                         elem.removeClass('bb-splitpanel-hidden');
                         
                     };

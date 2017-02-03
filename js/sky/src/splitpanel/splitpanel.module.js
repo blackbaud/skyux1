@@ -10,6 +10,7 @@
             'sky.splitpanel.workspace.component',
             'sky.splitpanel.workspace.header.component',
             'sky.splitpanel.workspace.container.component',
-            'sky.splitpanel.list.header.component'
+            'sky.splitpanel.list.header.component',
+            'sky.splitpanel.Selected.item.component'
         ]);
 }());

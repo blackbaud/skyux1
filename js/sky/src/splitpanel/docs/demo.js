@@ -435,15 +435,19 @@
 
         function back() {
             var elem = angular.element('.bb-custom-content');
+            //elem.show("slide", { direction: "left" }, 1000);
             elem.removeClass('bb-splitpanel-hidden');
 
             //listbuilder toolbar
             elem = angular.element('.bb-listbuilder-toolbar-container');
+            //elem.show("slide", { direction: "left" }, 1000);
             elem.removeClass('bb-splitpanel-hidden');
             elem = angular.element('.bb-splitPanel-pageHeader');
+            //elem.show("slide", { direction: "left" }, 1000);
             elem.removeClass('bb-splitpanel-hidden');
 
             elem = angular.element('.split-panel-workspace');
+            //elem.hide("slide", { direction: "right" }, 500);
             elem.addClass('bb-splitpanel-hidden');
             
         }
