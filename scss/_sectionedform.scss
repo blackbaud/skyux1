@@ -1,6 +1,6 @@
 @import "mixins";
 
-.bb-sectionmodal {
+.bb-sectionedmodal {
     .bb-sectionedform {
         height: 100%
     }
@@ -18,10 +18,6 @@
             @include animation(fadeInLeft 500ms);
             @include make-xs-column(12);
             border-right-style: none !important;
-
-            .nav-link:focus:not(:hover) {
-                background-color: transparent;
-            }
         }
 
         .tab-content {
@@ -38,6 +34,7 @@
         border-bottom-style: none;
         float: left;
         height: inherit;
+        overflow: auto;
         padding-left: 0;
         padding-right: 0;
 
@@ -49,9 +46,18 @@
             }
         }
 
-        li {
-            .nav-link {
-                border-left: 4px solid transparent;
+        .nav-link {
+            border-left: 4px solid transparent;
+            border-radius: 0;
+            margin-right: 0;
+            padding-left: 10px;
+
+            &:focus:not(:hover) {
+                background-color: transparent;
+            }
+
+            &:hover {
+                border-bottom-color: transparent;
             }
         }
 
@@ -64,24 +70,21 @@
         }
     }
     
-    .nav-link {
-        border-radius: 0;
-        margin-right: 0;
-    }
-
     .tab-content {
         @include make-sm-column(9);
-        overflow: hidden;
         height: inherit;
         margin-top: 0;
+        overflow: auto;
     }
     
     .bb-sectionedform-navigationicon {
         &.fa-chevron-left {
+            float: left;
             padding-right: $padding-half;
         }
 
         &.fa-chevron-right {
+            float: right;
             padding-left: $padding-half;
         }
 

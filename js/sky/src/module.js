@@ -45,7 +45,7 @@
         'sky.resources',
         'sky.scrollintoview',
         'sky.search',
-        'sky.sectionmodal',
+        'sky.sectionedform',
         'sky.selectfield',
         'sky.sort',
         'sky.summary.actionbar',
