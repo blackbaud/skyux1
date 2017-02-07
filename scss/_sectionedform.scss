@@ -78,23 +78,11 @@
     }
     
     .bb-sectionedform-navigationicon {
-        &.fa-chevron-left {
-            float: left;
-            padding-right: $padding-half;
-        }
-
         &.fa-chevron-right {
             float: right;
             padding-left: $padding-half;
         }
 
         padding-top: 3px;
-    }
-
-    .bb-sectionedform-contentnavigationcontainer {
-        background-color: lightgray;
-        cursor: pointer;
-        padding-bottom: $padding;
-        padding-top: $padding;
     }
 }
