@@ -12,8 +12,12 @@
         };
     }
 
-    function TabSectionedModalTestController() {
+    function TabSectionedModalTestController($scope) {
         var self = this;
+
+        self.basicInfo = {
+            nameIsRequired: true
+        };
 
         self.sections = [
             {
@@ -33,7 +37,13 @@
             }
         ];
 
-        self.nameIsRequired = true;
+        self.showSections = function () {
+            $scope.$broadcast('reinitializeSectionDisplay');
+        };
+
+        $scope.$on('sectionsVisibilityChanged', function (event, data) {
+            self.sectionsHidden = !data.visible;
+        });
     }
 
     SectionedModalTestPageController.$inject = ['bbModal'];

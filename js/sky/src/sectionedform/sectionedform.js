@@ -85,7 +85,7 @@
 
                     function toggleNavivationDisplay(show) {
                         toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
-                        $scope.sectionsHidden = !show;
+                        $scope.$emit('sectionsVisibilityChanged', { visible: show });
                     }
 
                     $scope.displayFormSectionsAndContent = function () {
@@ -116,7 +116,6 @@
                     });
 
                     $scope.$watch('isMobile', setInitialState);
-                    $scope.$watch('showSectionNavigation', setInitialState);
 
                     $scope.formController = ctrls[0];
 
@@ -124,13 +123,13 @@
                     $scope.$on('$destroy', function () {
                         bbMediaBreakpoints.unregister(mediaBreakpointHandler);
                     });
+
+                    $scope.$on('reinitializeSectionDisplay', setInitialState);
                 },
                 restrict: 'E',
                 require: ['^form'],
                 scope: {
-                    sections: '=bbSectionedFormSections',
-                    showSectionNavigation: '=',
-                    sectionsHidden: '='
+                    sections: '=bbSectionedFormSections'
                 },
                 templateUrl: 'sky/templates/sectionedform/sectionedform.html'
             };

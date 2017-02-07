@@ -12,3 +12,7 @@ Sectioned forms are used when displaying a large amount of conceptually related 
     - `heading` &mdash; The display text used to identify the section.
     - `itemCount` &mdash; *(Optional.)* The number of items contained within a given section.
     - `templateUrl` &mdash; The URL to the section's content template.
+
+### Sectioned form events ###
+- `reinitializeSectionDisplay` &mdash; Causes the form to revert to its initial display state.
+- `sectionsVisibilityChanged` &mdash; Fires when the section navigation is hidden or shown.
