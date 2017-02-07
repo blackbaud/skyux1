@@ -12,7 +12,6 @@ describe('SectionedForm', function () {
 
     beforeEach(function () {
         angular.mock.module(
-            'ngMock',
             'sky.templates',
             'sky.sectionedform',
             'uib/template/tabs/tabset.html',
