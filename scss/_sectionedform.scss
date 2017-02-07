@@ -30,7 +30,7 @@
 .bb-sectionedform {
     .nav-tabs {
         @include make-sm-column(3);
-        @include bb-border('tab', 'right');
+        @include bb-border('light', 'right');
         border-bottom-style: none;
         float: left;
         height: inherit;
