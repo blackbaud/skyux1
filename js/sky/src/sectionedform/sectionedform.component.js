@@ -135,6 +135,6 @@
             require: {
                 form: '^^form'
             },
-            templateUrl: 'sky/templates/sectionedform/sectionedform.html'
+            templateUrl: 'sky/templates/sectionedform/sectionedform.component.html'
         });
 }());

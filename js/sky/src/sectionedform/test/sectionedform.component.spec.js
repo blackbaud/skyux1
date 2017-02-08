@@ -1,7 +1,7 @@
 /*jshint jasmine: true */
 /*global angular */
 
-describe('component: SectionedForm', function () {
+describe('SectionedForm', function () {
     'use strict';
 
     var $compile,
@@ -60,7 +60,7 @@ describe('component: SectionedForm', function () {
         expect(getContentElement(el)).toBeHidden();
     }
 
-    describe('directive', function () {
+    describe('component', function () {
         it('should change the style of a section if a required field exists in the content', function () {
             var sutView;
             
