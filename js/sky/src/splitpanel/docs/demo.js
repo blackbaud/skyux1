@@ -419,7 +419,7 @@
             elem.addClass('bb-splitpanel-hidden');
 
         }
-       
+
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
@@ -490,7 +490,7 @@
 
         self.updatedDate;
         $scope.forms = {};
-        self.splitpanelNavigator = bbSplitpanelNavigator.init($scope.forms, save, doNotSave);
+        self.splitpanelNavigator = bbSplitpanelNavigator.init({ enableFormDirtyCheck: true, forms: $scope.forms, saveCallback: save, doNotSaveCallback: doNotSave });
     }
 
     ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbSplitpanelNavigator'];

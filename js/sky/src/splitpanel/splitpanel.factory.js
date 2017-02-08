@@ -4,12 +4,14 @@
 
     function bbSplitpanelNavigator(bbModal) {
         return {
-            init: function (forms, saveCallback, doNotSaveCallback) {
+            init: function (options) {
+                var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, saveCallback = options.saveCallback,
+                    doNotSaveCallback = options.doNotSaveCallback;
                 //check dirty and open modal
                 function checkDirtyForm(func, param) {
 
                     //check for dirty form
-                    if (angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
+                    if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
                         bbModal.open({
                             controller: 'ListbuilderModalController as ctrl',
                             templateUrl: 'demo/splitpanel/confirmpopup.html'
