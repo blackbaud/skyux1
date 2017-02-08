@@ -22,7 +22,7 @@
         }
 
         function mediaBreakpointHandler(breakpoints) {
-            if(vm.isMobile !== breakpoints.xs) {
+            if (vm.isMobile !== breakpoints.xs) {
                 vm.isMobile = breakpoints.xs;
                 setInitialState();
             }
