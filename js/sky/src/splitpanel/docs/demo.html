@@ -14,17 +14,17 @@
             </div>
         </bb-splitpanel-header>
         <bb-listbuilder>
-            <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.checkDirtyForm(listCtrl.onSearch,searchText)"
+            <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onSearch,searchText)"
                                     bb-listbuilder-search-text="listCtrl.searchText">
                 <bb-listbuilder-filter>
-                    <bb-filter-button bb-filter-button-on-click="listCtrl.checkDirtyForm(listCtrl.onFilterClick)">
+                    <bb-filter-button bb-filter-button-on-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onFilterClick)">
                     </bb-filter-button>
                 </bb-listbuilder-filter>
                 <bb-listbuilder-sort>
                     <bb-sort bb-sort-append-to-body>
                         <bb-sort-item ng-repeat="item in listCtrl.sortOptions"
                                       bb-sort-item-active="listCtrl.initialState === item.id"
-                                      bb-sort-item-select="listCtrl.checkDirtyForm(listCtrl.sortItems,item)">
+                                      bb-sort-item-select="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.sortItems,item)">
                             {{item.label}}
                         </bb-sort-item>
                     </bb-sort>
@@ -33,7 +33,7 @@
                     <bb-filter-summary ng-show="listCtrl.allAppliedFilters.length > 0">
                         <bb-filter-summary-item ng-repeat="item in listCtrl.allAppliedFilters"
                                                 bb-filter-summary-item-on-click="listCtrl.openFilters()"
-                                                bb-filter-summary-item-on-dismiss="listCtrl.checkDirtyForm(listCtrl.onDismissFilter,$index)">
+                                                bb-filter-summary-item-on-dismiss="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onDismissFilter,$index)">
                             {{item.label}}
                         </bb-filter-summary-item>
                     </bb-filter-summary>
@@ -52,10 +52,10 @@
                                 <br /> as of {{listCtrl.updatedDate}} <span><a style="cursor: pointer" ng-click="listCtrl.downloadTransactions()">Refresh</a> </span>
                             </bb-splitpanel-list-header>
                             <div class="fixedHeader hidden-xs" style="padding-top: 6px;">
-                                <input bb-check type="checkbox" ng-change="listCtrl.checkDirtyForm(listCtrl.onlyShowRecorded)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
+                                <input bb-check type="checkbox" ng-change="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onlyShowRecorded)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
                             </div>
                             <div ng-if="listCtrl.data.length > 0" class="split-panel-list-container">
-                                <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
+                                <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
                                     <div style="margin-bottom: 10px">
                                         {{item.name}}
                                     </div>
@@ -93,11 +93,11 @@
                         <bb-splitpanel-workspace class="split-panel-workspace bb-splitpanel-hidden">
                             <bb-splitpanel-workspace-header class="bb-splitpanel-show-xs">
 
-                                <div ng-click="listCtrl.checkDirtyForm(listCtrl.back)" class="navigation-panel"> <div class="glyphicon glyphicon-chevron-left" style="color:gray"></div> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</div>
+                                <div ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.back)" class="navigation-panel"> <div class="glyphicon glyphicon-chevron-left" style="color:gray"></div> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</div>
 
                                 <div style="float:right;">
-                                    <span type="button" class="glyphicon glyphicon-menu-up" ng-disabled="listCtrl.selectedItem.$index === 0" ng-click="listCtrl.checkDirtyForm(listCtrl.previous)"></span>
-                                    <span type="button" class="glyphicon glyphicon-menu-down" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.checkDirtyForm(listCtrl.next)"></span>
+                                    <span type="button" class="glyphicon glyphicon-menu-up" ng-disabled="listCtrl.selectedItem.$index === 0" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.previous)"></span>
+                                    <span type="button" class="glyphicon glyphicon-menu-down" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.next)"></span>
                                 </div>
                             </bb-splitpanel-workspace-header>
 
@@ -117,7 +117,7 @@
                             </bb-splitpanel-selected-item>
 
                             <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
-                                <form name="forms.containerForm">
+                                <form name="forms.workspaceContainerForm">
 
                                     <input type="checkbox" bb-check ng-model="listCtrl.isPersonal" /> Personal
 

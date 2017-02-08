@@ -73,7 +73,7 @@
 
     ListbuilderModalController.$inject = ['$uibModalInstance'];
 
-    function ListbuilderTestController($scope, $timeout, bbModal, $window) {
+    function ListbuilderTestController($scope, $timeout, bbModal, $window, bbSplitpanelNavigator) {
         var self = this,
             sortProperty,
             sortDescending,
@@ -82,7 +82,6 @@
             nextSkip = 0,
             nextTop = 12,
             recordedFilters = [],
-            //dataSet = [];
             dataSet = [
             {
                 name: '$25.00',
@@ -164,9 +163,7 @@
                 isPersonal: true,
                 duesPaid: true
             }
-        ];
-        self.dirtyValue;
-
+            ];
 
         function getData(top, skip) {
             var i,
@@ -346,37 +343,6 @@
             self.selectedItem = p;
         }
 
-        //check dirty and open modal
-        function checkDirtyForm(func, param) {
-
-            if (angular.isDefined($scope.forms) && angular.isDefined($scope.forms.containerForm) && $scope.forms.containerForm.$dirty) {
-                self.dirtyValue = self.selectedItem;
-                var listScope = $scope;
-                bbModal.open({
-                    controller: 'ListbuilderModalController as ctrl',
-                    templateUrl: 'demo/splitpanel/confirmpopup.html'
-                })
-                .result.then(function (result) {
-                    listScope.forms.containerForm.$setPristine();
-                    if (result) {
-                        self.save(func, param);
-                    } else {
-                        self.doNotSave(func, param);
-                    }
-                });
-            } else {
-                invokeMethodWithParameters(func, param);
-            }
-        }
-
-        function invokeMethodWithParameters(func, param) {
-            if (param === undefined) {
-                func();
-            } else {
-                func(param);
-            }
-        }
-
         function next() {
             if (self.selectedItem.$index < self.data.length - 1) {
                 var newIndex = self.selectedItem.$index + 1;
@@ -398,14 +364,17 @@
 
             alert("data saved");
             //TODO : will save here
-            invokeMethodWithParameters(func, param);
+
+            //call it in then block of save 
+            self.splitpanelNavigator.invokeMethodWithParameters(func, param);
         }
 
         function doNotSave(func, param) {
             alert("data not saved");
-            //loadData(); // ideally it should refersh the data, then no need revert unsaved data
-            invokeMethodWithParameters(func, param);
+            //loadData(); // it will refersh the data, then no need revert unsaved data
 
+            //call it after load data 
+            self.splitpanelNavigator.invokeMethodWithParameters(func, param);
         }
 
         function downloadTransactions() {
@@ -432,7 +401,6 @@
             applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
         }
 
-
         function back() {
             var elem = angular.element('.bb-custom-content');
             //elem.show("slide", { direction: "left" }, 1000);
@@ -449,9 +417,9 @@
             elem = angular.element('.split-panel-workspace');
             //elem.hide("slide", { direction: "right" }, 500);
             elem.addClass('bb-splitpanel-hidden');
-            
-        }
 
+        }
+       
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
@@ -468,10 +436,8 @@
         self.previous = previous;
         self.downloadTransactions = downloadTransactions;
         self.onlyShowRecorded = onlyShowRecorded;
-        self.checkDirtyForm = checkDirtyForm;
         self.recordedFilters = recordedFilters;
         self.back = back;
-
 
         loadData();
 
@@ -524,9 +490,10 @@
 
         self.updatedDate;
         $scope.forms = {};
+        self.splitpanelNavigator = bbSplitpanelNavigator.init($scope.forms, save, doNotSave);
     }
 
-    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window'];
+    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbSplitpanelNavigator'];
 
 
     angular
