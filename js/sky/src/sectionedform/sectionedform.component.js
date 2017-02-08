@@ -126,7 +126,7 @@
 
     Controller.$inject = ['$scope', '$element', 'bbMediaBreakpoints'];
 
-    angular.module('sky.sectionedform', ['sky.tabset', 'ui.bootstrap.tabs', 'sky.mediabreakpoints'])
+    angular.module('sky.sectionedform.component', ['sky.tabset', 'ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .component('bbSectionedForm', {
             bindings: {
                 sections: '<bbSectionedFormSections'
