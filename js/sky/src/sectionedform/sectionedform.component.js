@@ -116,12 +116,15 @@
             return vm.isMobile;
         }, setInitialState);
 
-        bbMediaBreakpoints.register(mediaBreakpointHandler);
-        $scope.$on('$destroy', function () {
-            bbMediaBreakpoints.unregister(mediaBreakpointHandler);
-        });
-
         $scope.$on('reinitializeSectionDisplay', setInitialState);
+
+        vm.$onInit = function () {
+            bbMediaBreakpoints.register(mediaBreakpointHandler);
+        };
+
+        vm.$onDestroy = function () {
+            bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+        };
     }
 
     Controller.$inject = ['$scope', '$element', 'bbMediaBreakpoints'];
