@@ -18,12 +18,12 @@ describe('SectionedForm', function () {
             'uib/template/tabs/tab.html'
         );
 
-        angular.mock.inject(function (_$rootScope_, _$compile_, _$templateCache_, _bbMediaBreakpoints_, _$document_) {
+        angular.mock.inject(function (_$rootScope_, _$compile_, _$document_, _$templateCache_, _bbMediaBreakpoints_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
+            $document = _$document_;
             $templateCache = _$templateCache_;
             bbMediaBreakpoints = _bbMediaBreakpoints_;
-            $document = _$document_;
         });
     });
 
@@ -125,16 +125,20 @@ describe('SectionedForm', function () {
         });
         
         it('should transition from sections to content when a section is selected on mobile', function () {
-            var sutController,
+            var bbMediaBreakpointsCallback,
+                sutController,
                 sutView;
 
             $scope.sections = [{}];
+            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
+                bbMediaBreakpointsCallback = callback;
+            });
 
             sutView = compileSectionedForm();
             $document.find('body:first').append(sutView);
 
             sutController = sutView.controller('bbSectionedForm');
-            sutController.isMobile = true;
+            bbMediaBreakpointsCallback({xs: true});
             $scope.$digest();
 
             expectSectionsVisibleContentHidden(sutView);
@@ -146,16 +150,20 @@ describe('SectionedForm', function () {
         });
         
         it('should transition from content to sections when event is triggered on mobile', function () {
-            var sutController,
+            var bbMediaBreakpointsCallback,
+                sutController,
                 sutView;
 
             $scope.sections = [{}];
+            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
+                bbMediaBreakpointsCallback = callback;
+            });
 
             sutView = compileSectionedForm();
             $document.find('body:first').append(sutView);
 
             sutController = sutView.controller('bbSectionedForm');
-            sutController.isMobile = true;
+            bbMediaBreakpointsCallback({xs: true});
             $scope.$digest();
 
             sutController.activeSection = 0;

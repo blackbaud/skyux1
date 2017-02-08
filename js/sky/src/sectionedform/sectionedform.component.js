@@ -22,7 +22,10 @@
         }
 
         function mediaBreakpointHandler(breakpoints) {
-            vm.isMobile = breakpoints.xs;
+            if(vm.isMobile !== breakpoints.xs) {
+                vm.isMobile = breakpoints.xs;
+                setInitialState();
+            }
         }
 
         function setInitialState() {
@@ -111,10 +114,6 @@
                 }
             }
         });
-
-        $scope.$watch(function () {
-            return vm.isMobile;
-        }, setInitialState);
 
         $scope.$on('reinitializeSectionDisplay', setInitialState);
 
