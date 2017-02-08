@@ -1,7 +1,7 @@
 /*jshint jasmine: true */
 /*global angular */
 
-describe('SectionedForm', function () {
+describe('component: SectionedForm', function () {
     'use strict';
 
     var $compile,
@@ -35,7 +35,7 @@ describe('SectionedForm', function () {
 
         $scope.$digest();
 
-        return el;
+        return el.children();
     }
 
     function getContentElement(el) {
@@ -62,7 +62,7 @@ describe('SectionedForm', function () {
 
     describe('directive', function () {
         it('should change the style of a section if a required field exists in the content', function () {
-            var sut;
+            var sutView;
             
             $scope.sections = [
                 {
@@ -77,14 +77,14 @@ describe('SectionedForm', function () {
                     '<input name="reqField" ng-model="reqField" required />' +
                 '</ng-form>');
 
-            sut = compileSectionedForm();
+            sutView = compileSectionedForm();
 
-            expect(getFirstSectionTabElement(sut)).toHaveClass('required');
+            expect(getFirstSectionTabElement(sutView)).toHaveClass('required');
         });
 
         it('should change the style of a section if the section is invalid', function () {
-            var sectionedFormScope,
-                sut;
+            var sutController,
+                sutView;
             
             $scope.sections = [
                 {
@@ -99,18 +99,18 @@ describe('SectionedForm', function () {
                     '<input name="reqField" ng-model="reqField" required />' +
                 '</ng-form>');
 
-            sut = compileSectionedForm();
+            sutView = compileSectionedForm();
 
-            sectionedFormScope = sut.children().isolateScope();
-            sectionedFormScope.formController.$submitted = true;
-            sectionedFormScope.$digest();
+            sutController = sutView.controller('bbSectionedForm');
+            sutController.form.$submitted = true;
+            $scope.$digest();
 
-            expect(getFirstSectionTabElement(sut)).toHaveClass('invalid');
-            expect(getFirstSectionTabElement(sut)).not.toHaveClass('required');
+            expect(getFirstSectionTabElement(sutView)).toHaveClass('invalid');
+            expect(getFirstSectionTabElement(sutView)).not.toHaveClass('required');
         });
 
         it('should show the item count in the section heading', function () {
-            var sut;
+            var sutView;
 
             $scope.sections = [
                 {
@@ -119,53 +119,53 @@ describe('SectionedForm', function () {
                 }
             ];
 
-            sut = compileSectionedForm();
+            sutView = compileSectionedForm();
 
-            expect(getFirstSectionTabElement(sut)).toHaveText('testHeading (5)');
+            expect(getFirstSectionTabElement(sutView)).toHaveText('testHeading (5)');
         });
         
         it('should transition from sections to content when a section is selected on mobile', function () {
-            var sectionedFormScope,
-                sut;
+            var sutController,
+                sutView;
 
             $scope.sections = [{}];
 
-            sut = compileSectionedForm();
-            $document.find('body:first').append(sut);
+            sutView = compileSectionedForm();
+            $document.find('body:first').append(sutView);
 
-            sectionedFormScope = sut.children().isolateScope();
-            sectionedFormScope.isMobile = true;
-            sectionedFormScope.$digest();
+            sutController = sutView.controller('bbSectionedForm');
+            sutController.isMobile = true;
+            $scope.$digest();
 
-            expectSectionsVisibleContentHidden(sut);
+            expectSectionsVisibleContentHidden(sutView);
 
-            sectionedFormScope.activeSection = 0;
-            sectionedFormScope.$digest();
+            sutController.activeSection = 0;
+            $scope.$digest();
 
-            expectSectionsHiddenContentVisible(sut); 
+            expectSectionsHiddenContentVisible(sutView); 
         });
         
         it('should transition from content to sections when event is triggered on mobile', function () {
-            var sectionedFormScope,
-                sut;
+            var sutController,
+                sutView;
 
             $scope.sections = [{}];
 
-            sut = compileSectionedForm();
-            $document.find('body:first').append(sut);
+            sutView = compileSectionedForm();
+            $document.find('body:first').append(sutView);
 
-            sectionedFormScope = sut.children().isolateScope();
-            sectionedFormScope.isMobile = true;
-            sectionedFormScope.$digest();
+            sutController = sutView.controller('bbSectionedForm');
+            sutController.isMobile = true;
+            $scope.$digest();
 
-            sectionedFormScope.activeSection = 0;
-            sectionedFormScope.$digest();
+            sutController.activeSection = 0;
+            $scope.$digest();
 
-            expectSectionsHiddenContentVisible(sut);
+            expectSectionsHiddenContentVisible(sutView);
 
             $scope.$broadcast('reinitializeSectionDisplay');
 
-            expectSectionsVisibleContentHidden(sut);
+            expectSectionsVisibleContentHidden(sutView);
         });
     });
 });

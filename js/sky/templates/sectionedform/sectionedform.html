@@ -1,8 +1,8 @@
-<uib-tabset active="activeSection" class="bb-sectionedform" vertical="true">
-    <uib-tab ng-repeat="section in sections">
+<uib-tabset active="$ctrl.activeSection" class="bb-sectionedform" vertical="true">
+    <uib-tab ng-repeat="section in $ctrl.sections">
         <uib-tab-heading>
-            <span class="control-label" ng-class="{'required': sectionHasRequiredField(section) && !sectionIsInvalid(section), 'invalid': sectionIsInvalid(section)}">{{buildSectionHeading(section)}}</span>
-            <span class="fa fa-chevron-right bb-sectionedform-navigationicon" ng-show="isMobile"></span>
+            <span class="control-label" ng-class="{'required': $ctrl.sectionHasRequiredField(section) && !$ctrl.sectionIsInvalid(section), 'invalid': $ctrl.sectionIsInvalid(section)}">{{$ctrl.buildSectionHeading(section)}}</span>
+            <span class="fa fa-chevron-right bb-sectionedform-navigationicon" ng-show="$ctrl.isMobile"></span>
         </uib-tab-heading>
         <ng-include src="section.templateUrl"></ng-include>
     </uib-tab>
