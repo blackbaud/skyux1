@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    function Controller($scope, $element, bbMediaBreakpoints) {
+    function Controller($scope, $element, $timeout, bbMediaBreakpoints) {
         var defaultSelectedTabIndex = 0,
             noSelectedTabIndex = -1,
             vm = this;
@@ -17,10 +17,6 @@
             if (section && section.formName && vm.form.hasOwnProperty(section.formName)) {
                 return vm.form[section.formName];
             }
-        }
-
-        function isValidSectionIndex(sectionIndex) {
-            return angular.isDefined(sectionIndex) && sectionIndex !== null && sectionIndex !== noSelectedTabIndex && vm.sections[sectionIndex] !== undefined;
         }
 
         function mediaBreakpointHandler(breakpoints) {
@@ -108,30 +104,31 @@
             return parentFormSubmitted && sectionInvalid;
         };
 
-        $scope.$watch(function () {
-            return vm.activeSection;
-        }, function (sectionIndex) {
+        vm.tabSelected = function () {
             if (vm.isMobile) {
-                if (isValidSectionIndex(sectionIndex)) {
-                    displayOnlyFormContent();
-                } else {
-                    displayOnlyFormSections();
-                }
+                displayOnlyFormContent();
             }
-        });
+        };
 
         $scope.$on('reinitializeSectionDisplay', setInitialState);
+
+        vm.$onDestroy = function () {
+            bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+        };
 
         vm.$onInit = function () {
             bbMediaBreakpoints.register(mediaBreakpointHandler);
         };
 
-        vm.$onDestroy = function () {
-            bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+        vm.$postLink = function () {
+            // Ref: https://docs.angularjs.org/guide/component
+            // postLink fires before child elements load their templates and since setInitialState tries to manipulate tab elements
+            // use $timeout to call setInitialState on the next digest
+            $timeout(setInitialState);
         };
     }
 
-    Controller.$inject = ['$scope', '$element', 'bbMediaBreakpoints'];
+    Controller.$inject = ['$scope', '$element', '$timeout', 'bbMediaBreakpoints'];
 
     angular.module('sky.sectionedform.component', ['sky.tabset', 'ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .component('bbSectionedForm', {

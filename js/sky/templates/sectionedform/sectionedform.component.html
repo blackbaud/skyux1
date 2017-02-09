@@ -1,5 +1,5 @@
 <uib-tabset active="$ctrl.activeSection" class="bb-sectionedform" vertical="true">
-    <uib-tab ng-repeat="section in $ctrl.sections">
+    <uib-tab ng-repeat="section in $ctrl.sections" select="$ctrl.tabSelected()">
         <uib-tab-heading>
             <span class="control-label" ng-class="{'required': $ctrl.sectionHasRequiredField(section) && !$ctrl.sectionIsInvalid(section), 'invalid': $ctrl.sectionIsInvalid(section)}">{{$ctrl.buildSectionHeading(section)}}</span>
             <span class="fa fa-chevron-right bb-sectionedform-navigationicon" ng-show="$ctrl.isMobile"></span>
