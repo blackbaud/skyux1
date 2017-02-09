@@ -29,7 +29,6 @@
                                     doNotSaveCallback(func, param);
                                 }
                             }
-                            invokeMethodWithParameters(func, param);
                         });
                     } else {
 
