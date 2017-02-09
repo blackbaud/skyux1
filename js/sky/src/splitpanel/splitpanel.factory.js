@@ -13,8 +13,8 @@
                     //check for dirty form
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
                         bbModal.open({
-                            controller: 'ListbuilderModalController as ctrl',
-                            templateUrl: 'demo/splitpanel/confirmpopup.html'
+                            controller: options.modalController,
+                            templateUrl: options.modalTemplate
                         })
                         .result.then(function (result) {
 

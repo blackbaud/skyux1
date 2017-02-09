@@ -490,7 +490,14 @@
 
         self.updatedDate;
         $scope.forms = {};
-        self.splitpanelNavigator = bbSplitpanelNavigator.init({ enableFormDirtyCheck: true, forms: $scope.forms, saveCallback: save, doNotSaveCallback: doNotSave });
+        self.splitpanelNavigator = bbSplitpanelNavigator.init({
+            enableFormDirtyCheck: true,
+            forms: $scope.forms,
+            saveCallback: save,
+            doNotSaveCallback: doNotSave,
+            modalController: 'ListbuilderModalController as ctrl',
+            modalTemplate: 'demo/splitpanel/confirmpopup.html'
+        });
     }
 
     ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbSplitpanelNavigator'];
