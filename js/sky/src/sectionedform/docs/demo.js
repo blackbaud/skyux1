@@ -37,13 +37,13 @@
             }
         ];
 
+        self.sectionsVisibilityChanged = function (data) {
+            self.sectionsHidden = !data.visible;
+        }
+
         self.showSections = function () {
             $scope.$broadcast('reinitializeSectionDisplay');
         };
-
-        $scope.$on('sectionsVisibilityChanged', function (event, data) {
-            self.sectionsHidden = !data.visible;
-        });
     }
 
     SectionedModalTestPageController.$inject = ['bbModal'];

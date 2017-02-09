@@ -4,7 +4,9 @@
     'use strict';
 
     function Controller($scope, $element, bbMediaBreakpoints) {
-        var vm = this;
+        var defaultSelectedTabIndex = 0,
+            noSelectedTabIndex = -1,
+            vm = this;
 
         function getFirstEl(selector) {
             var foundElements = $element.find(selector);
@@ -18,7 +20,7 @@
         }
 
         function isValidSectionIndex(sectionIndex) {
-            return angular.isDefined(sectionIndex) && sectionIndex !== null && sectionIndex !== -1 && vm.sections[sectionIndex] !== undefined;
+            return angular.isDefined(sectionIndex) && sectionIndex !== null && sectionIndex !== noSelectedTabIndex && vm.sections[sectionIndex] !== undefined;
         }
 
         function mediaBreakpointHandler(breakpoints) {
@@ -56,13 +58,16 @@
 
         function toggleNavivationDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
-            $scope.$emit('sectionsVisibilityChanged', { visible: show });
+
+            if (angular.isFunction(vm.onSectionsVisibilityChange)) {
+                vm.onSectionsVisibilityChange({ data: { visible: show }});
+            }
         }
 
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            vm.activeSection = 0;
+            vm.activeSection = defaultSelectedTabIndex;
         }
 
         function displayOnlyFormContent() {
@@ -73,7 +78,7 @@
         function displayOnlyFormSections() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(false);
-            vm.activeSection = -1;
+            vm.activeSection = noSelectedTabIndex;
         }
 
         vm.buildSectionHeading = function (section) {
@@ -131,6 +136,7 @@
     angular.module('sky.sectionedform.component', ['sky.tabset', 'ui.bootstrap.tabs', 'sky.mediabreakpoints'])
         .component('bbSectionedForm', {
             bindings: {
+                onSectionsVisibilityChange: '&bbSectionedFormOnSectionsVisibilityChange',
                 sections: '<bbSectionedFormSections'
             },
             controller: Controller,

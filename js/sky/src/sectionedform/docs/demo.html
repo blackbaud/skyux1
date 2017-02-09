@@ -8,7 +8,7 @@
       <bb-modal-header>Tab sectioned modal</bb-modal-header>
       <form ng-submit="tabSecModalCtrl.save()" novalidate>
         <div bb-modal-body>
-          <bb-sectioned-form bb-sectioned-form-sections="tabSecModalCtrl.sections"></bb-sectioned-form>
+          <bb-sectioned-form bb-sectioned-form-sections="tabSecModalCtrl.sections" bb-sectioned-form-on-sections-visibility-change="tabSecModalCtrl.sectionsVisibilityChanged(data)"></bb-sectioned-form>
         </div>
         <bb-modal-footer>
           <bb-modal-footer-button ng-click="tabSecModalCtrl.showSections()" ng-show="tabSecModalCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
