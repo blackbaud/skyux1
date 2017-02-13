@@ -14,7 +14,7 @@
         }
 
         function getSectionFormController(section) {
-            if (section && section.formName && vm.form.hasOwnProperty(section.formName)) {
+            if (section && section.formName && vm.form && vm.form.hasOwnProperty(section.formName)) {
                 return vm.form[section.formName];
             }
         }
@@ -138,7 +138,7 @@
             },
             controller: Controller,
             require: {
-                form: '^^form'
+                form: '?^^form'
             },
             templateUrl: 'sky/templates/sectionedform/sectionedform.component.html'
         });
