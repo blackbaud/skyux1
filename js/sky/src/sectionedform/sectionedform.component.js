@@ -20,6 +20,7 @@
         }
 
         function mediaBreakpointHandler(breakpoints) {
+            /* istanbul ignore else */
             if (vm.isMobile !== breakpoints.xs) {
                 vm.isMobile = breakpoints.xs;
                 setInitialState();
@@ -55,6 +56,7 @@
         function toggleNavivationDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
 
+            /* istanbul ignore else */
             if (angular.isFunction(vm.onSectionsVisibilityChange)) {
                 vm.onSectionsVisibilityChange({ data: { visible: show }});
             }
