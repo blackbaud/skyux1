@@ -21,6 +21,7 @@
 
         function mediaBreakpointHandler(breakpoints) {
             /* istanbul ignore else */
+            /* sanity check */
             if (vm.isMobile !== breakpoints.xs) {
                 vm.isMobile = breakpoints.xs;
                 setInitialState();
@@ -57,6 +58,7 @@
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
 
             /* istanbul ignore else */
+            /* sanity check */
             if (angular.isFunction(vm.onSectionsVisibilityChange)) {
                 vm.onSectionsVisibilityChange({ data: { visible: show }});
             }
@@ -140,7 +142,7 @@
             },
             controller: Controller,
             require: {
-                form: '?^^form'
+                form: '^^form'
             },
             templateUrl: 'sky/templates/sectionedform/sectionedform.component.html'
         });
