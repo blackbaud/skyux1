@@ -17,7 +17,7 @@
         .nav-tabs {
             @include animation(fadeInLeft 500ms);
             @include make-xs-column(12);
-            border-right-style: none !important;
+            border-right-style: none;
         }
 
         .tab-content {
@@ -27,10 +27,21 @@
     }
 }
 
+@media (min-width: $screen-sm-min) {
+    .bb-sectionedform {
+        .nav-tabs {
+            @include bb-border('light', 'right');
+            @include make-sm-column(3);
+        }
+
+        .tab-content {
+            @include make-sm-column(9);
+        }
+    }
+}
+
 .bb-sectionedform {
     .nav-tabs {
-        @include make-sm-column(3);
-        @include bb-border('light', 'right');
         border-bottom-style: none;
         float: left;
         height: inherit;
@@ -71,7 +82,6 @@
     }
     
     .tab-content {
-        @include make-sm-column(9);
         height: inherit;
         margin-top: 0;
         overflow: auto;
