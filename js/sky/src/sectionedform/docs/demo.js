@@ -15,10 +15,6 @@
     function TabSectionedModalTestController($scope) {
         var self = this;
 
-        self.basicInfo = {
-            nameIsRequired: true
-        };
-
         self.sections = [
             {
                 formName: 'basicInfoForm',
