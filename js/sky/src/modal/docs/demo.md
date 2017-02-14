@@ -4,10 +4,10 @@ icon: list-alt
 summary: The modal component launches modals in a consistent way in SKY UX applications.
 ---
 
-The modal directive and service allow you to launch modals in a consistent way in SKY UX applications. The `bbModal` service lauches the modals instead of [the UI Bootstrap `$uibModal.open`](https://angular-ui.github.io/bootstrap/#modal), while the `bb-modal` directive provides a common look-and-feel for modal content. Within the `bb-modal` directive, you have options to display a common modal header, specify the body content, and display a common modal footer and buttons.
+The modal directive and service allow you to launch modals in a consistent way in SKY UX applications. The `bbModal` service lauches the modals instead of [the UI Bootstrap `$uibModal.open`](https://angular-ui.github.io/bootstrap/1.2.5/#/modal), while the `bb-modal` directive provides a common look-and-feel for modal content. Within the `bb-modal` directive, you have options to display a common modal header, specify the body content, and display a common modal footer and buttons.
 
 ### Modal service settings ###
-- `bbModal.open` &mdash; Launches modals in a consistent way in SKY UX applications. Used instead of `$uibModal.open`.
+- `bbModal.open` &mdash; Launches modals in a consistent way in SKY UX applications. Used instead of `$uibModal.open`. Returns a modal instance, with a result from closing or dismissing a modal.
   - `uibModalOptions` &mdash; Specifies an object with the same options as `$uibModal.open` that allows for some custom default SKY UX behavior.
   - `bbModalOptions` &mdash; *(Optional.)* Specifies an object that contains SKY UX-specific options for modals.
     -  `fullPage` &mdash; *(Optional.)* Indicates whether the modal takes up the entire page. When using a full page modal that has content behind it, you must wrap that content in a [bb-page](../page) to prevent unneeded scrollbars in the modal. *(Default: `false`)*
