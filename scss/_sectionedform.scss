@@ -1,0 +1,101 @@
+@import "mixins";
+
+.bb-sectionedmodal {
+    .bb-sectionedform {
+        height: 100%
+    }
+
+    .modal-body {
+        height: 460px;
+        max-height:460px;
+        padding: 0;
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+    .bb-sectionedform {
+        .nav-tabs {
+            @include animation(fadeInLeft 500ms);
+            @include make-xs-column(12);
+            border-right-style: none;
+        }
+
+        .tab-content {
+            @include animation(fadeInRight 500ms);
+            @include make-xs-column(12);
+        }
+    }
+}
+
+@media (min-width: $screen-sm-min) {
+    .bb-sectionedform {
+        .nav-tabs {
+            @include bb-border('light', 'right');
+            @include make-sm-column(3);
+        }
+
+        .tab-content {
+            @include make-sm-column(9);
+        }
+    }
+}
+
+.bb-sectionedform {
+    .nav-tabs {
+        border-bottom-style: none;
+        float: left;
+        height: inherit;
+        overflow: auto;
+        padding-left: 0;
+        padding-right: 0;
+
+        .control-label {
+            &.invalid:after {
+                color: $bb-error-color;
+                content: " \f071";
+                font-family: 'FontAwesome';
+            }
+        }
+
+        .nav-link {
+            border-left: 4px solid transparent;
+            border-radius: 0;
+            margin-right: 0;
+            padding-left: 10px;
+
+            &:focus:not(:hover) {
+                background-color: transparent;
+            }
+
+            &:hover {
+                border-bottom-color: transparent;
+            }
+        }
+
+        li.active {
+            .nav-link {
+                /* Marked important because the tab directive (who applies the styles we are trying to override) is closer to this element than the sectioned form. 
+                Styling these in the controller may be possible but it is complicated by having to also manage the other state transfers (focus,hover)
+                as well as the digest cycle that the tabs use to mark the li as active. */
+                background-color: $gray-lightest !important;
+                border-left: 4px solid $bb-color-blue !important;
+                color: inherit !important;
+            }
+        }
+    }
+    
+    .tab-content {
+        height: inherit;
+        margin-top: 0;
+        overflow: auto;
+    }
+    
+    .bb-sectionedform-navigationicon {
+        &.fa-chevron-right {
+            float: right;
+            padding-left: $padding-half;
+        }
+
+        padding-top: 3px;
+    }
+}

@@ -1,0 +1,88 @@
+<div ng-controller="SectionedModalTestPageController as secModalCtrl">
+  <button class="btn btn-primary" ng-click="secModalCtrl.openForm()" type="button">Open tab sectioned modal</button>
+</div>
+
+<script type="text/ng-template" id="demo/sectionedform/tabsectionedformmodal.html">
+  <bb-modal bb-sectioned-modal>
+    <div class="modal-form" ng-controller="TabSectionedModalTestController as tabSecModalCtrl">
+      <bb-modal-header>Tab sectioned modal</bb-modal-header>
+      <form ng-submit="tabSecModalCtrl.save()" novalidate>
+        <div bb-modal-body>
+          <bb-sectioned-form bb-sectioned-form-sections="tabSecModalCtrl.sections" bb-sectioned-form-on-sections-visibility-change="tabSecModalCtrl.sectionsVisibilityChanged(data)"></bb-sectioned-form>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button ng-click="tabSecModalCtrl.showSections()" ng-show="tabSecModalCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
+          <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>
+
+<script type="text/ng-template" id="demo/sectionedform/basicinfo.html">
+  <ng-form name="basicInfoForm">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <label class="control-label" for="name" ng-class="{'required': basicInfo.nameIsRequired}">Name</label>
+        <input class="form-control" name="name" ng-model="basicInfo.name" type="text" ng-required="basicInfo.nameIsRequired" />
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <label class="control-label" for="id">Id</label>
+        <input class="form-control" name="id" ng-model="basicInfo.id" type="text" />
+      </div>
+    </div>
+    <div class="row" style="padding-top: 10px;">
+      <div class="col-xs-12">
+        <label class="control-label" for="nameIsRequired">
+          <input bb-check name="nameIsRequired" ng-model="basicInfo.nameIsRequired" type="checkbox" /> Mark 'Name' required
+        </label>
+      </div>
+    </div>
+  </ng-form>
+</script>
+
+<script type="text/ng-template" id="demo/sectionedform/addresses.html">
+  <div class=" form-group">
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Home</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label class="control-label">410 17th Street<br/>Denver, CO 80202-4402</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Vacation</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label class="control-label">3345 Franciscan Way<br/>Tampa, FL 10255-0098</label>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="demo/sectionedform/phonenumbers.html">
+  <div class=" form-group">
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Home</label> <label class="control-label">303.997.3301</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Mobile</label> <label class="control-label">888.387.1211</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Work</label> <label class="control-label">303.997.2000</label>
+      </div>
+    </div>
+  </div>
+</script>

@@ -144,7 +144,7 @@
 }
 
 .bb-modal-fullpage+.bb-modal-fullpage {
-    display: none;
+    display: none !important; /* important is necessary here because an inline style of display: block; is applied to this element. */
 }
 
 .bb-modal-open-fullpage {
