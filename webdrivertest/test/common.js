@@ -98,6 +98,8 @@
 
     function checkVisualResult(results, options, browser) {
         results.forEach(function (element) {
+            console.log('checking element:', element);
+            console.log('isExactSameImage: ', element.isExactSameImage);
             expect(element.isExactSameImage).toBe(true);
         });
         if (options.checkAccessibility) {

@@ -341,8 +341,8 @@ module.exports = function (grunt, env, utils) {
             tasks = [
                 'lint',
                 'build',
-                'unittest',
-                'exec:uploadCoverage',
+                /*'unittest',
+                'exec:uploadCoverage',*/
                 'visualtest'
             ];
             break;
