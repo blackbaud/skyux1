@@ -100,7 +100,7 @@
         results.forEach(function (element) {
             console.log('checking element:', element);
             console.log('isExactSameImage: ', element.isExactSameImage);
-            expect(element.isExactSameImage).toBe(true);
+            expect(element.isWithinMisMatchTolerance).toBe(true);
         });
         if (options.checkAccessibility) {
             return checkAccessibility(browser, options);
