@@ -13,33 +13,34 @@ addons:
 
 before_install:
   # Used throughout the bash scripts
-  - export LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
-  - export RELEASE_VERSION="${LAST_COMMIT_MESSAGE#Release v}"
-  - export RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
-  - export RELEASE_BRANCH="^(master|rc-)"
-  - export PRERELEASE_BRANCH="^rc-"
-  - export SAVAGE_BRANCH="^savage-"
-  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
-  - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
+    - export LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
+    - export RELEASE_VERSION="${LAST_COMMIT_MESSAGE#Release v}"
+    - export RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
+    - export RELEASE_BRANCH="^(master|rc-)"
+    - export PRERELEASE_BRANCH="^rc-"
+    - export SAVAGE_BRANCH="^savage-"
+    - if [[ "$TRAVIS_PULL_REQUEST" == "false" && $TRAVIS_BRANCH =~ $RELEASE_BRANCH && $LAST_COMMIT_MESSAGE =~ $RELEASE_COMMENT ]]; then export IS_RELEASE=true; else export IS_RELEASE=false; fi
+    - if [[ "$IS_RELEASE" == "true" && $TRAVIS_BRANCH =~ $PRERELEASE_BRANCH ]]; then export IS_PRERELEASE=true; else export IS_PRERELEASE=false; fi
 
-  - rvm install ruby-2.3.0
+    - rvm install ruby-2.3.0
 
   # This needs to happen here instead of before_script since some of the node moduules depend on it.
-  - gem install sass
+    - gem install sass
 
   # Make our three scripts executable
-  - chmod +x ./scripts/update-skyux.sh
-  - chmod +x ./scripts/update-skyux-docs.sh
-  - chmod +x ./scripts/update-skyux-releases.sh
-  - chmod +x ./scripts/update-skyux-visualtest-results.sh
-  - chmod +x ./scripts/browserstack-local-start.sh
-  - chmod +x ./scripts/browserstack-local-stop.sh
+    - chmod +x ./scripts/update-skyux.sh
+    - chmod +x ./scripts/update-skyux-docs.sh
+    - chmod +x ./scripts/update-skyux-releases.sh
+    - chmod +x ./scripts/update-skyux-visualtest-results.sh
+    - chmod +x ./scripts/browserstack-local-start.sh
+    - chmod +x ./scripts/browserstack-local-stop.sh
 
   # https://github.com/npm/npm/issues/11283
-  - npm set progress=false
+    - npm set progress=false
 
 # Install a few additional things outside those listed in package.json
-before_script:
+install:
+  - npm install
   - npm install -g grunt-cli
 
 # We want deployment failures to fail the build
