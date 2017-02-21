@@ -57,23 +57,9 @@
     ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
 
 
-    function ListbuilderModalController($uibModalInstance) {
-        var self = this;
-        function save() {
-            $uibModalInstance.close(true);
-        }
+    
 
-        function doNotSave() {
-            $uibModalInstance.close(false);
-        }
-        self.save = save;
-        self.doNotSave = doNotSave;
-
-    }
-
-    ListbuilderModalController.$inject = ['$uibModalInstance'];
-
-    function ListbuilderTestController($scope, $timeout, bbModal, $window, bbSplitpanelNavigator) {
+    function ListbuilderTestController($scope, $timeout, bbModal, $window, bbCheckDirtyForm) {
         var self = this,
             sortProperty,
             sortDescending,
@@ -366,7 +352,7 @@
             //TODO : will save here
 
             //call it in then block of save 
-            self.splitpanelNavigator.invokeMethodWithParameters(func, param);
+            self.checkDirtyForm.invokeMethodWithParameters(func, param);
         }
 
         function doNotSave(func, param) {
@@ -374,7 +360,7 @@
             //loadData(); // it will refersh the data, then no need revert unsaved data
 
             //call it after load data 
-            self.splitpanelNavigator.invokeMethodWithParameters(func, param);
+            self.checkDirtyForm.invokeMethodWithParameters(func, param);
         }
 
         function downloadTransactions() {
@@ -490,7 +476,7 @@
 
         self.updatedDate;
         $scope.forms = {};
-        self.splitpanelNavigator = bbSplitpanelNavigator.init({
+        self.checkDirtyForm = bbCheckDirtyForm.init({
             enableFormDirtyCheck: true,
             forms: $scope.forms,
             saveCallback: save,
@@ -500,12 +486,11 @@
         });
     }
 
-    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbSplitpanelNavigator'];
+    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbCheckDirtyForm'];
 
 
     angular
         .module('stache')
         .controller('ListbuilderTestController', ListbuilderTestController)
-        .controller('ListbuilderFilterController', ListbuilderFilterController)
-        .controller('ListbuilderModalController', ListbuilderModalController);
+        .controller('ListbuilderFilterController', ListbuilderFilterController);
 }());

@@ -2,20 +2,19 @@
 (function () {
     'use strict';
 
-    function bbSplitpanelNavigator(bbModal) {
+    function bbCheckDirtyForm(bbModal, bbSplitpanelConfirmForm) {
         return {
             init: function (options) {
                 var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, saveCallback = options.saveCallback,
-                    doNotSaveCallback = options.doNotSaveCallback;
+                    doNotSaveCallback = options.doNotSaveCallback,
+                    modalBody = angular.isDefined(options.modalBody) ? options.modalBody : "Do you want to save changes to this transaction? Your  changes will be lost if  you  don't save them.";
+
                 //check dirty and open modal
                 function checkDirtyForm(func, param) {
 
                     //check for dirty form
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
-                        bbModal.open({
-                            controller: options.modalController,
-                            templateUrl: options.modalTemplate
-                        })
+                        bbSplitpanelConfirmForm.openConfirmModal(modalBody)
                         .result.then(function (result) {
 
                             forms.workspaceContainerForm.$setPristine();
@@ -55,9 +54,9 @@
 
     }
 
-    bbSplitpanelNavigator.$inject = ['bbModal'];
+    bbCheckDirtyForm.$inject = ['bbModal', 'bbSplitpanelConfirmForm'];
 
-    angular.module('sky.splitpanel.bbSplitpanelNavigator.factory', ['sky.modal'])
-        .factory('bbSplitpanelNavigator', bbSplitpanelNavigator);
+    angular.module('sky.splitpanel.bbCheckDirtyForm.factory', ['sky.modal'])
+        .factory('bbCheckDirtyForm', bbCheckDirtyForm);
 
 }());
