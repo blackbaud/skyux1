@@ -2,16 +2,16 @@
   <button class="btn btn-primary" ng-click="secModalCtrl.openForm()" type="button">Open tab sectioned modal</button>
 </div>
 
-<script type="text/ng-template" id="demo/sectionedform/tabsectionedformmodal.html">
+<script type="text/ng-template" id="demo/sectionedform/contactsectionedform.html">
   <bb-modal bb-sectioned-modal>
-    <div class="modal-form" ng-controller="TabSectionedModalTestController as tabSecModalCtrl">
+    <div class="modal-form" ng-controller="ContactSectionedFormController as contactSecFrmCtrl">
       <bb-modal-header>Tab sectioned modal</bb-modal-header>
-      <form ng-submit="tabSecModalCtrl.save()" novalidate>
+      <form name="contactForm" ng-submit="contactSecFrmCtrl.save()" novalidate>
         <div bb-modal-body>
-          <bb-sectioned-form bb-sectioned-form-sections="tabSecModalCtrl.sections" bb-sectioned-form-on-sections-visibility-change="tabSecModalCtrl.sectionsVisibilityChanged(data)"></bb-sectioned-form>
+          <bb-sectioned-form bb-sectioned-form-sections="contactSecFrmCtrl.sections" bb-sectioned-form-on-sections-visibility-change="contactSecFrmCtrl.sectionsVisibilityChanged(data)"></bb-sectioned-form>
         </div>
         <bb-modal-footer>
-          <bb-modal-footer-button ng-click="tabSecModalCtrl.showSections()" ng-show="tabSecModalCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
+          <bb-modal-footer-button ng-click="contactSecFrmCtrl.showSections()" ng-show="contactSecFrmCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
           <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
           <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
         </bb-modal-footer>
@@ -21,15 +21,15 @@
 </script>
 
 <script type="text/ng-template" id="demo/sectionedform/basicinfo.html">
-  <ng-form name="basicInfoForm">
+  <ng-form name="basicInfoForm" ng-controller="BasicInfoSectionController as basicInfo">
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <label class="control-label" for="name" ng-class="{'required': basicInfo.nameIsRequired}">Name</label>
-        <input class="form-control" name="name" ng-model="basicInfo.name" type="text" ng-required="basicInfo.nameIsRequired" />
+        <input class="form-control" name="name" ng-model="basicInfo.fields.name" type="text" ng-required="basicInfo.nameIsRequired" />
       </div>
       <div class="col-xs-12 col-sm-6">
         <label class="control-label" for="id">Id</label>
-        <input class="form-control" name="id" ng-model="basicInfo.id" type="text" />
+        <input class="form-control" name="id" ng-model="basicInfo.fields.id" type="text" />
       </div>
     </div>
     <div class="row" style="padding-top: 10px;">

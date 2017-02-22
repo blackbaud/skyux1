@@ -7,12 +7,12 @@
 
         self.openForm = function () {
             bbModal.open({
-                templateUrl: 'demo/sectionedform/tabsectionedformmodal.html'
+                templateUrl: 'demo/sectionedform/contactsectionedform.html'
             });
         };
     }
 
-    function TabSectionedModalTestController($scope) {
+    function ContactSectionedFormController($scope, ContactSectionedFormService) {
         var self = this;
 
         self.sections = [
@@ -33,6 +33,13 @@
             }
         ];
 
+        // Simulate requesting a value from within a section
+        self.save = function () {
+            alert('Name = ' + ContactSectionedFormService.basicInfo.name);
+            // Could also navigate form controllers, if using
+            // alert('Name = ' + $scope.contactForm.basicInfoForm.name.$modelValue);
+        }
+
         self.sectionsVisibilityChanged = function (data) {
             self.sectionsHidden = !data.visible;
         }
@@ -40,11 +47,25 @@
         self.showSections = function () {
             $scope.$broadcast('reinitializeSectionDisplay');
         };
+
+        // Simulate pre-populating a field within a section
+        ContactSectionedFormService.basicInfo = {
+            id: '5324901'
+        };
+    }
+
+    function BasicInfoSectionController(ContactSectionedFormService) {
+        var self = this;
+        self.fields = ContactSectionedFormService.basicInfo;
     }
 
     SectionedModalTestPageController.$inject = ['bbModal'];
+    ContactSectionedFormController.$inject = ['$scope', 'ContactSectionedFormService'];
+    BasicInfoSectionController.$inject = ['ContactSectionedFormService'];
 
     angular.module('stache')
         .controller('SectionedModalTestPageController', SectionedModalTestPageController)
-        .controller('TabSectionedModalTestController', TabSectionedModalTestController);
+        .controller('ContactSectionedFormController', ContactSectionedFormController)
+        .service('ContactSectionedFormService', function () {})
+        .controller('BasicInfoSectionController', BasicInfoSectionController);
 }());
