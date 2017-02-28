@@ -45,9 +45,19 @@
                     }
                 }
 
+                //This method is used to set dirty form to default state
+                function setDirtyFormDefault() {
+                    if (angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm)) {
+                        forms.workspaceContainerForm.$setPristine();
+                        return true;
+                    }
+                    return false;
+                }
+
                 return {
                     checkDirtyForm: checkDirtyForm,
-                    invokeMethodWithParameters: invokeMethodWithParameters
+                    invokeMethodWithParameters: invokeMethodWithParameters,
+                    setDirtyFormDefault: setDirtyFormDefault
                 };
             }
         };
