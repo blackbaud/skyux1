@@ -1091,11 +1091,12 @@ describe('Grid directive', function () {
             setGridData(dataSet1);
 
             rowEl = getGridRows(el);
-            expect($('body .bb-dropdown-menu').eq(0)).toHaveCss({"display": "none"});
+            expect($('body .bb-dropdown-menu').eq(1)).toHaveCss({"display": "none"});
 
             contextEl = rowEl.eq(0).find('td div button').eq(0);
             contextEl.click();
-            expect($('body .bb-dropdown-menu').eq(0)).not.toHaveCss({"display": "none"});
+            $scope.$digest();
+            expect($('body .bb-dropdown-menu').eq(1)).not.toHaveCss({"display": "none"});
 
             optionEl = $('body .bb-dropdown-menu .bb-dropdown-item a').eq(0);
             expect(contextMenuItemClicked).toBe(false);
@@ -1150,7 +1151,12 @@ describe('Grid directive', function () {
 
             expectedScrollbarWidth = bbWindow.getScrollbarWidth();
 
-            expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+            if (expectedScrollbarWidth === 0) {
+                expect(['0px', '']).toContain(topScrollbarEl[0].style.height);
+            } else {
+                expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+            }
+            
         });
 
         it('will not emit an includedColumnsChanged event on media breakpoint change', function () {
@@ -1224,7 +1230,7 @@ describe('Grid directive', function () {
 
             topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
 
-            expect(topScrollbarEl[0].style.height).toBe('0px');
+            expect(['0px', '']).toContain(topScrollbarEl[0].style.height);
         });
 
         it('will scroll properly on header viewkeeper state change when fixed', function () {

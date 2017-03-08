@@ -93,7 +93,6 @@ describe('Popover', function () {
             el.find('#hidelink').click();
             $scope.$digest();
             $timeout.flush();
-
             expect(el.find('#messageWrapper').length).toBe(0);
         });
 
