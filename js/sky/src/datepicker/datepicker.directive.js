@@ -152,11 +152,8 @@
             }
 
             function initializeDatepickerOptions() {
-
-                ngModel.$options = {
-                    allowInvalid: true
-                };
-
+                
+                ngModel.$options.createChild({ allowInvalid: true });
                 vm.pickerDate = '';
                 vm.pickerOpened = false;
 

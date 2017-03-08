@@ -45,7 +45,7 @@
             formatValue: formatValue
         };
 
-        self.date1 = '5/28/2015';
+        self.date1 = 'aaa';
         self.date2 = '2015-05-17T00:00:00';
         self.placeholder = 'Your date here';
         self.minDate = new Date('5/21/2014');

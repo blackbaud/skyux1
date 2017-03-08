@@ -38,7 +38,7 @@ module.exports = {
         'js/sky/src/*/*.js',
         'js/sky/templates/templates.js.tmp',
         'js/sky/test/config.js',
-        'js/**/*.spec.js'
+        'js/**/datepicker.spec.js'
     ],
     exclude: [
         'src/**/docs/*'

@@ -148,7 +148,11 @@ describe('Context menu', function () {
     });
 
     describe('submenu directive', function () {
-        function getAccordionTitle(el) {
+        function getAccordionTitleTransclude(el) {
+            return el.find('.bb-submenu .panel-title .accordion-toggle > span > div > ng-transclude');
+        }
+
+        function getAccordionTitleAttribute(el) {
             return el.find('.bb-submenu .panel-title .accordion-toggle > span > div span');
         }
 
@@ -176,7 +180,7 @@ describe('Context menu', function () {
             return el.find('button.bb-context-menu-btn');
         }
 
-        function testSubmenu(el) {
+        function testSubmenu(el, isTransclude) {
             var submenuItems,
                 firstClicked = false,
                 secondClicked = false;
@@ -195,8 +199,12 @@ describe('Context menu', function () {
             $scope.$digest();
 
             getDropdownButton(el).click();
-
-            expect(getAccordionTitle(el)).toHaveText('Submenu');
+            if (isTransclude) {
+                expect(getAccordionTitleTransclude(el)).toHaveText('Submenu');
+            } else {
+                expect(getAccordionTitleAttribute(el)).toHaveText('Submenu');
+            }
+            
             expect(getChevronIcon(el).length).toBe(1);
 
             expect(getAccordionPanel(el)).not.toHaveClass('in');
@@ -243,8 +251,7 @@ describe('Context menu', function () {
                 '</div>'
             ].join(''));
 
-            testSubmenu(el);
-
+            testSubmenu(el, false);
         });
 
         it('can have a collapsible submenu with bbSubmenuHeading directive', function () {
@@ -269,7 +276,7 @@ describe('Context menu', function () {
                 '</div>'
             ].join(''));
 
-            testSubmenu(el);
+            testSubmenu(el, true);
         });
 
     });

@@ -21,7 +21,7 @@
     <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">
       <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">
         <select ng-attr-aria-label="{{'checklist_categories_label' | bbResources}}" class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">
-          <option value="{{bbChecklist.allCategories}}">{{bbChecklist.bbChecklistAllCategoriesLabel}}</option>
+          <option ng-value="bbChecklist.allCategories">{{bbChecklist.bbChecklistAllCategoriesLabel}}</option>
           <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>
         </select>
       </div>
