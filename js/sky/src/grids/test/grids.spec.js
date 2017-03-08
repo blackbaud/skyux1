@@ -364,7 +364,7 @@ describe('Grid directive', function () {
     });
 
     it('can load more data when using infinite scroll through concatenation and resolving a promise', function () {
-
+        
         var rowEl,
             infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
 
