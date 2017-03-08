@@ -30,7 +30,7 @@ describe('Popover', function () {
             '<div>' +
             '<div id="messageWrapper">{{message}}</div>' +
             '<a id="hidelink" ng-click="hide()">Close me</a>' +
-            '/<div>');
+            '</div>');
     }));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {

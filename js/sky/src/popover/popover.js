@@ -38,6 +38,15 @@
         return {
             restrict: 'A',
             scope: { uibTitle: '@', contentExp: '&', originScope: '&' },
+            link: function ($scope) {
+
+                var origScope = $scope.originScope();
+
+                origScope.hide = function () {
+                    console.log('in is open', $scope.$parent.$parent.isOpen);
+                    $scope.$parent.$parent.isOpen = false;
+                };
+            },
             templateUrl: 'sky/templates/popover/popup.html'
         };
     }
