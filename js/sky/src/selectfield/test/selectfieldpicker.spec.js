@@ -88,7 +88,7 @@ describe('Select field picker directive', function () {
 
         afterModalOpen();
 
-        expect($('.bb-dialog-header span').text()).toBe(expected);
+        expect($('.bb-dialog-header').text()).toBe(expected);
 
         closeCurrentModal();
 

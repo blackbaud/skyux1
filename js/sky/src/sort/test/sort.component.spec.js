@@ -176,6 +176,8 @@
 
             sortEl = initSort(appendHtml);
 
+            sortEl.find('button').click();
+            $scope.$digest();
             expect($document.find('body').children('.bb-dropdown-menu').length).toBe(1);
             sortEl.remove();
         });

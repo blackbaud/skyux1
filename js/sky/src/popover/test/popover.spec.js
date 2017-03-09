@@ -81,17 +81,17 @@ describe('Popover', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
         });
 
-
         it('should close when calling close function on scope', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
 
             trigger(popoverLink, 'click');
             $scope.$digest();
-
+            
             expect(el.find('#messageWrapper').length).toBe(1);
 
             el.find('#hidelink').click();
             $scope.$digest();
+            $rootScope.$digest();
             $timeout.flush();
             expect(el.find('#messageWrapper').length).toBe(0);
         });
