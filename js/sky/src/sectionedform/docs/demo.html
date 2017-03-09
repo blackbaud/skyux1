@@ -11,7 +11,7 @@
           <bb-sectioned-form bb-sectioned-form-sections="contactSecFrmCtrl.sections" bb-sectioned-form-on-sections-visibility-change="contactSecFrmCtrl.sectionsVisibilityChanged(data)"></bb-sectioned-form>
         </div>
         <bb-modal-footer>
-          <bb-modal-footer-button ng-click="contactSecFrmCtrl.showSections()" ng-show="contactSecFrmCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
+          <bb-modal-footer-button ng-click="contactSecFrmCtrl.showSections()" ng-if="contactSecFrmCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
           <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
           <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
         </bb-modal-footer>

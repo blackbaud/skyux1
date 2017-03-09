@@ -49,11 +49,15 @@
         padding-left: 0;
         padding-right: 0;
 
-        .control-label {
-            &.invalid:after {
-                color: $bb-error-color;
-                content: " \f071";
-                font-family: 'FontAwesome';
+        uib-tab-heading {
+            display: flex;
+            .control-label {
+                flex-grow: 1;
+                &.invalid:after {
+                    color: $bb-error-color;
+                    content: " \f071";
+                    font-family: 'FontAwesome';
+                }
             }
         }
 
@@ -86,13 +90,12 @@
     
     .tab-content {
         height: inherit;
-        margin-top: 0;
+        margin-top: $margin;
         overflow: auto;
     }
     
     .bb-sectionedform-navigationicon {
         &.fa-chevron-right {
-            float: right;
             padding-left: $padding-half;
         }
 
