@@ -62,7 +62,8 @@
                 items = vm.items,
                 itemEls = getItemEls(),
                 n;
-
+            /* istanbul ignore else */
+            /* sanity check */
             if (index < itemEls.length) {
                 el = itemEls[index];
 
