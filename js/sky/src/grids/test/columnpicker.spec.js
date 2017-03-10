@@ -27,6 +27,7 @@ describe('Grid column picker', function () {
         $compile(el)($scope);
 
         $scope.$digest();
+        $timeout.flush();
 
         return el;
     }

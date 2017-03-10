@@ -63,8 +63,16 @@ describe('Grid directive', function () {
         $compile(el)($scope);
 
         $scope.$digest();
-
+        $timeout.flush();
         return el;
+    }
+
+    function timeoutFlushIfAvailable() {
+        try {
+            $timeout.verifyNoPendingTasks();
+        } catch (aException) {
+            $timeout.flush();
+        }
     }
 
     function setGridData(data) {
@@ -364,7 +372,7 @@ describe('Grid directive', function () {
     });
 
     it('can load more data when using infinite scroll through concatenation and resolving a promise', function () {
-        
+
         var rowEl,
             infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
 
@@ -896,7 +904,7 @@ describe('Grid directive', function () {
 
             $scope.$digest();
 
-            $timeout.flush();
+            timeoutFlushIfAvailable();
 
             rowEl = getGridRows(el);
 
@@ -927,7 +935,7 @@ describe('Grid directive', function () {
 
             $scope.$digest();
 
-            $timeout.flush();
+            timeoutFlushIfAvailable();
 
             searchEl.eq(0).val('Paul').trigger('change');
 
@@ -1156,7 +1164,7 @@ describe('Grid directive', function () {
             } else {
                 expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
             }
-            
+
         });
 
         it('will not emit an includedColumnsChanged event on media breakpoint change', function () {

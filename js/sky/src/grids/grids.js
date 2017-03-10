@@ -81,114 +81,118 @@
                         var locals,
                             self = this;
 
-                        function searchApplied(searchText) {
-                            locals.appliedSearchText = searchText;
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.highlightSearchText)) {
-                                locals.highlightSearchText(locals.appliedSearchText);
-                            }
-                        }
-
-                        self.searchApplied = searchApplied;
-
-                        self.setFilters = function (filters) {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.setFilters)) {
-                                locals.setFilters(filters);
-                            }
-                        };
-
-                        self.syncViewKeepers = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if ($scope.syncViewKeepers) {
-                                $scope.syncViewKeepers();
-                            }
-                        };
-
-                        self.syncActionBarViewKeeper = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction($scope.syncActionBarViewKeeper)) {
-                                $scope.syncActionBarViewKeeper();
-                            }
-                        };
-
-                        self.resetMultiselect = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.resetMultiselect)) {
-                                locals.resetMultiselect();
-                            }
-                        };
-
-                        self.getVisibleSelections = function (data, selected) {
-                            var i,
-                                index,
-                                result = [];
-
-                            for (i = 0; i < selected.length; i++) {
-                                index = arrayObjectIndexOf(data, selected[i]);
-                                if (index > -1) {
-                                    result.push(selected[i]);
-                                }
-                            }
-                            return result;
-                        };
-
-                        self.toggleMultiselectRows = function (visibleSelectedRows) {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.toggleMultiselectRows)) {
-                                locals.toggleMultiselectRows(visibleSelectedRows);
-                            }
-                        };
-
-                        self.syncGridHeaderScrollToTopScrollbar = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.topScrollbarScroll)) {
-                                locals.topScrollbarScroll();
-                            }
-                        };
-
-                        self.highlightSearchText = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.highlightSearchText)) {
-                                locals.highlightSearchText();
-                            }
-                        };
-
-
-
-                        self.scope = $scope;
-
-                        $scope.resources = bbResources;
-
-                        locals = $scope.locals = {
-                            gridId: 'bbgrid-table-' + $scope.$id,
-                            hasAdd: false,
-                            hasColPicker: true,
-                            hasFilters: true,
-                            applySearchText: function () {
+                        function onInit() {
+                            function searchApplied(searchText) {
+                                locals.appliedSearchText = searchText;
                                 /*istanbul ignore else */
                                 /* sanity check */
-                                if (angular.isFunction(self.applySearchText)) {
-                                    self.applySearchText();
+                                if (angular.isFunction(locals.highlightSearchText)) {
+                                    locals.highlightSearchText(locals.appliedSearchText);
                                 }
                             }
-                        };
 
-                        $scope.$watch('options.viewKeeperOffsetElId', function (newValue, oldValue) {
-                            if (newValue !== oldValue) {
-                                if (self.viewKeeperChangedHandler) {
-                                    self.viewKeeperChangedHandler(newValue);
+                            self.searchApplied = searchApplied;
+
+                            self.setFilters = function (filters) {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.setFilters)) {
+                                    locals.setFilters(filters);
                                 }
-                            }
-                        });
+                            };
+
+                            self.syncViewKeepers = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if ($scope.syncViewKeepers) {
+                                    $scope.syncViewKeepers();
+                                }
+                            };
+
+                            self.syncActionBarViewKeeper = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction($scope.syncActionBarViewKeeper)) {
+                                    $scope.syncActionBarViewKeeper();
+                                }
+                            };
+
+                            self.resetMultiselect = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.resetMultiselect)) {
+                                    locals.resetMultiselect();
+                                }
+                            };
+
+                            self.getVisibleSelections = function (data, selected) {
+                                var i,
+                                    index,
+                                    result = [];
+
+                                for (i = 0; i < selected.length; i++) {
+                                    index = arrayObjectIndexOf(data, selected[i]);
+                                    if (index > -1) {
+                                        result.push(selected[i]);
+                                    }
+                                }
+                                return result;
+                            };
+
+                            self.toggleMultiselectRows = function (visibleSelectedRows) {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.toggleMultiselectRows)) {
+                                    locals.toggleMultiselectRows(visibleSelectedRows);
+                                }
+                            };
+
+                            self.syncGridHeaderScrollToTopScrollbar = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.topScrollbarScroll)) {
+                                    locals.topScrollbarScroll();
+                                }
+                            };
+
+                            self.highlightSearchText = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.highlightSearchText)) {
+                                    locals.highlightSearchText();
+                                }
+                            };
+
+
+
+                            self.scope = $scope;
+
+                            $scope.resources = bbResources;
+
+                            locals = $scope.locals = {
+                                gridId: 'bbgrid-table-' + $scope.$id,
+                                hasAdd: false,
+                                hasColPicker: true,
+                                hasFilters: true,
+                                applySearchText: function () {
+                                    /*istanbul ignore else */
+                                    /* sanity check */
+                                    if (angular.isFunction(self.applySearchText)) {
+                                        self.applySearchText();
+                                    }
+                                }
+                            };
+
+                            $scope.$watch('options.viewKeeperOffsetElId', function (newValue, oldValue) {
+                                if (newValue !== oldValue) {
+                                    if (self.viewKeeperChangedHandler) {
+                                        self.viewKeeperChangedHandler(newValue);
+                                    }
+                                }
+                            });
+                        }
+
+                        self.$onInit = onInit;
                     }],
                     link: function ($scope, element, attr, ctrls, $transclude) {
                         var bbGrid = ctrls[0],
@@ -201,7 +205,7 @@
                         };
                         $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
-                        $scope.$watch('locals.hasCustomToolbar', function () {
+                        $timeout(function () {
                             var breakpoints = {},
                                 cellScopes,
                                 columnCount = 0,
@@ -481,8 +485,7 @@
                                 var topScrollbar = getTopScrollbar(),
                                     topScrollbarDiv = getTopScrollbarDiv(),
                                     scrollbarWidth = bbWindow.getScrollbarWidth();
-
-                                if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
+                                if (totalColumnWidth > (tableWrapper.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
                                     topScrollbarDiv.height(scrollbarWidth);
                                 } else {
@@ -490,7 +493,7 @@
                                     topScrollbarDiv.height(0);
                                 }
                             }
-
+                            
                             function resetTopScrollbar() {
                                 var topScrollbarDiv = getTopScrollbarDiv();
                                 topScrollbarDiv.width(totalColumnWidth);
