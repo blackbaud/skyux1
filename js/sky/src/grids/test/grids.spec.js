@@ -314,14 +314,6 @@ describe('Grid directive', function () {
 
     });
 
-    function timeoutFlushIfAvailable() {
-            try {
-                $timeout.verifyNoPendingTasks();
-            } catch (aException) {
-                $timeout.flush();
-            }
-        }
-
     function setupScrollInfinite(inView, parentScrollable) {
         var windowVal = 10,
             offsetVal;
