@@ -16,38 +16,43 @@
                 vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
-            vm.getCls = function () {
-                var cls = [];
+            function onInit() {
+                vm.getCls = function () {
+                    var cls = [];
 
-                if (allowCollapse()) {
-                    cls.push('bb-repeater-item-collapsible');
-                }
-
-                if (vm.contextMenuElExists()) {
-                    cls.push('bb-repeater-item-with-context-menu');
-                }
-
-                if (vm.itemIsSelectable()) {
-                    cls.push('bb-repeater-item-selectable');
-
-                    if (vm.bbRepeaterItemSelected) {
-                        cls.push('bb-repeater-item-selected');
+                    if (allowCollapse()) {
+                        cls.push('bb-repeater-item-collapsible');
                     }
-                }
 
-                return cls;
-            };
+                    if (vm.contextMenuElExists()) {
+                        cls.push('bb-repeater-item-with-context-menu');
+                    }
 
-            vm.selectItem = selectItem;
+                    if (vm.itemIsSelectable()) {
+                        cls.push('bb-repeater-item-selectable');
 
-            vm.headerClick = function ($event) {
-                if (vm.isCollapsible) {
-                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
-                    $event.stopPropagation();
-                } 
-            };
+                        if (vm.bbRepeaterItemSelected) {
+                            cls.push('bb-repeater-item-selected');
+                        }
+                    }
 
-            vm.allowCollapse = allowCollapse;
+                    return cls;
+                };
+
+                vm.selectItem = selectItem;
+
+                vm.headerClick = function ($event) {
+                    if (vm.isCollapsible) {
+                        vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                        $event.stopPropagation();
+                    } 
+                };
+
+                vm.allowCollapse = allowCollapse;
+            }
+
+            vm.$onInit = onInit;
+            
         }
 
         function link(scope, el, attrs, ctrls) {
