@@ -63,7 +63,7 @@
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
-                return ngModel.$pristine || (modelValue && input.intlTelInput('isValidNumber'));
+                return ngModel.$pristine || !modelValue || (modelValue && input.intlTelInput('isValidNumber'));
             };
 
             // ** bbPhoneFieldConfig properties **
