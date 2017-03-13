@@ -6256,6 +6256,8 @@
 
                                 if (status === true) {
                                     selectAllItems();
+                                } else {
+                                    updateSelectedIds($scope.bbGridMultiselectSelectedIds);
                                 }
                                 $scope.$apply();
                             }
