@@ -54,10 +54,12 @@ describe('repeaters', function () {
 
     it('should match the baseline repeater component screenshot when no title exists', function () {
         return createBrowserResult(true)
+            .click('#screenshot-repeaters-expand-mode-none')
             .click('#screenshot-repeaters-hide-title')
             .compareScreenshot({
                 screenshotName: 'repeaters_component_expanded_no_title',
-                selector: '#screenshot-repeaters-component-full'
+                selector: '#screenshot-repeaters-component-full',
+                checkAccessibility: true
             });
     });
     
