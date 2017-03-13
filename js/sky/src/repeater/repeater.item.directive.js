@@ -64,11 +64,11 @@
 
 
             function titleElExists() {
-                return vm.titleEl[0] && vm.titleEl[0].children.length > 0;
+                return vm.titleEl[0] && vm.titleEl.eq(0).contents().length > 0;
             }
 
             function contextMenuElExists() {
-                return vm.contextMenuEl[0] && vm.contextMenuEl[0].children.length > 0;
+                return vm.contextMenuEl[0] && vm.contextMenuEl.eq(0).contents().length > 0;
             }
 
             function getContentEl() {
