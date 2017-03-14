@@ -14,4 +14,10 @@
     </table>
   </div>
   <div bb-pagination="paginationCtrl.itemsPaged"></div>
+  <div>
+      <uib-pagination 
+            total-items="paginationCtrl.count" 
+            ng-model="paginationCtrl.currentPage"> 
+            </uib-pagination>
+    </div>
 </div>

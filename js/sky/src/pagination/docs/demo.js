@@ -20,6 +20,9 @@
         self = this;
 
         self.itemsPaged = bbPaging.init(items);
+
+        self.count = 15;
+        self.currentPage = 1;
     }
 
     PaginationTestController.$inject = ['bbPaging'];
