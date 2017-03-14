@@ -104,8 +104,8 @@
                 vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
             }
 
-            vm.titleEl = el.find('.bb-repeater-item-title');
-            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu');
+            vm.titleEl = el.find('.bb-repeater-item-title-container');
+            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu-container');
 
             vm.titleElExists = titleElExists;
             vm.contextMenuElExists = contextMenuElExists;
