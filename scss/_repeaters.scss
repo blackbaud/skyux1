@@ -60,11 +60,19 @@
         display: inline-block;
     }
 
+    bb-repeater-item-title {
+        display: flex;
+    }
+
     .bb-repeater-item-title {
         font-family: $font-family-base;
         font-size: $bb-font-size-lg;
         font-weight: bold;
-        margin: $margin 0;
+        margin: $margin 0; 
+        flex-grow: 1;
+    }
+
+    .bb-repeater-item-title-container {
         flex-grow: 1;
     }
 

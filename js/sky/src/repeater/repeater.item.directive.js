@@ -214,7 +214,13 @@
     bbRepeaterItem.$inject = ['$timeout'];
 
 
-    angular.module('sky.repeater.item.directive', ['sky.chevron', 'sky.check', 'sky.resources'])
+    angular.module('sky.repeater.item.directive', [
+            'sky.chevron', 
+            'sky.check', 
+            'sky.resources', 
+            'sky.repeater.item.title.component',
+            'sky.repeater.item.contextmenu.component'
+            ])
         .directive('bbRepeaterItem', bbRepeaterItem);
 
-}());
+})();

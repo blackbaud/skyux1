@@ -58,7 +58,8 @@ describe('repeaters', function () {
             .click('#screenshot-repeaters-hide-title')
             .compareScreenshot({
                 screenshotName: 'repeaters_component_expanded_no_title',
-                selector: '#screenshot-repeaters-component-full'
+                selector: '#screenshot-repeaters-component-full',
+                checkAccessibility: true
             });
     });
     
