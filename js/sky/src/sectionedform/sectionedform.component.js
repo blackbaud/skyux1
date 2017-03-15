@@ -67,7 +67,9 @@
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            vm.activeSection = defaultSelectedTabIndex;
+            if (vm.activeSection <= 0) {
+                vm.activeSection = defaultSelectedTabIndex;
+            }
         }
 
         function displayOnlyFormContent() {
@@ -116,6 +118,12 @@
 
         $scope.$on('reinitializeSectionDisplay', setInitialState);
 
+        $scope.$watch('$ctrl.activeSection', function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                vm.onActiveSectionChange({index: newValue});
+            }
+        });
+
         vm.$onDestroy = function () {
             bbMediaBreakpoints.unregister(mediaBreakpointHandler);
         };
@@ -138,7 +146,9 @@
         .component('bbSectionedForm', {
             bindings: {
                 onSectionsVisibilityChange: '&bbSectionedFormOnSectionsVisibilityChange',
-                sections: '<bbSectionedFormSections'
+                sections: '<bbSectionedFormSections',
+                activeSection: '<bbSectionedFormActiveSectionIndex',
+                onActiveSectionChange: '&bbSectionedFormOnActiveSectionIndexChange'
             },
             controller: Controller,
             require: {
