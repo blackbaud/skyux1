@@ -33,6 +33,9 @@
             }
         ];
 
+        //Open to addresses section
+        self.activeSectionIndex = 1;
+
         // Simulate requesting a value from within a section
         self.save = function () {
             alert('Name = ' + ContactSectionedFormService.basicInfo.name);
