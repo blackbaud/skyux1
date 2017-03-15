@@ -15,6 +15,9 @@ Sectioned forms are used when displaying a large amount of conceptually related 
 - `bb-sectioned-form-on-sections-visibility-change()` &mdash; An optional expression called when the form sections' visibility is changed.  The expression will be called with the following properties:
     - `data` &mdash; State representation pertaining to the visibility change.
         - `visible` &mdash; The visible state of the sections.
+- `bb-sectioned-form-active-section-index` &mdash; The index of a section that should be made active.
+- `bb-sectioned-form-on-active-section-index-change()` &mdash; An optional expression called when the active section is changed.  The expression will be called with the following properties:
+    - `index` &mdash; The index of the active section.
 
 ### Sectioned form events ###
 - `reinitializeSectionDisplay` &mdash; Causes the form to revert to its initial display state.
