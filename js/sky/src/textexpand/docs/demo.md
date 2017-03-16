@@ -11,7 +11,7 @@ Note that collapsed text will have newlines removed. Also, if newlines are detec
 ### Text expand settings ###
 
  - `bb-text-expand` &mdash; The text to truncate.
- - `bb-text-expand-max-length` &mdash; The number of characters to display before truncating the text. To avoid truncating text in the middle of a world, the directive looks for a space in the 10 characters before the last character. *(Default: `200`)*
+ - `bb-text-expand-max-length` &mdash; The number of characters to display before truncating the text. To avoid truncating text in the middle of a word, the directive looks for a space in the 10 characters before the last character. *(Default: `200`)*
  - `bb-text-expand-max-expanded-length` &mdash; The maximum number of characters to display in the inline expanded view. If the text includes more characters, then a modal view displays the content when users click the 'See more' link. *(Default: `600`)*
  - `bb-text-expand-max-expanded-newlines` &mdash; The maximum number of newline characters to display in the inline expanded view. If the text includes more newline characters, then a modal view displays the content when users click the 'See more' link. *(Default: `2`)*
  - `bb-text-expand-modal-title` &mdash; The title to display in the modal expanded view.
