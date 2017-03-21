@@ -13,6 +13,7 @@ describe('Grid toolbars', function () {
         fxOff,
         locals,
         $scope,
+        $timeout,
         options;
 
     function setUpGrid(gridHtml, setLocals) {
@@ -29,6 +30,7 @@ describe('Grid toolbars', function () {
         $compile(el)($scope);
 
         $scope.$digest();
+        $timeout.flush();
 
         return el;
     }
@@ -61,10 +63,10 @@ describe('Grid toolbars', function () {
         'sky.templates'
     ));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbViewKeeperBuilder_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbViewKeeperBuilder_, _$timeout_) {
         $scope = _$rootScope_;
         $compile = _$compile_;
-
+        $timeout = _$timeout_;
         $document = _$document_;
 
         bbViewKeeperBuilder = _bbViewKeeperBuilder_;
@@ -428,7 +430,7 @@ describe('Grid toolbars', function () {
                     el.find('.bb-filter-btn .bb-btn-secondary').click();
                     $scope.$digest();
                     expect(filterButtonClicked).toBe(true);
-                    
+
                 });
 
             });
@@ -438,9 +440,9 @@ describe('Grid toolbars', function () {
                     var customToolbarGridHtml = '<div>' +
                         '<bb-grid bb-grid-options="locals.gridOptions">' +
                         '<bb-grid-toolbar bb-grid-filter-click="locals.clickFilter()">' +
-                        '<bb-grid-toolbar-filter-summary>' + 
+                        '<bb-grid-toolbar-filter-summary>' +
                         '<bb-filter-summary>' +
-                        '<bb-filter-summary-item>' + 
+                        '<bb-filter-summary-item>' +
                         'One filter' +
                         '</bb-filter-summary-item>' +
                         '</bb-filter-summary>' +
@@ -455,7 +457,7 @@ describe('Grid toolbars', function () {
 
                     summaryContainerEl = el.find('.bb-grid-filter-summary-container');
                     expect(summaryContainerEl.find('.bb-filter-summary .bb-filter-summary-item')).toHaveText('One filter');
-                    
+
                 });
             });
         });
@@ -465,8 +467,8 @@ describe('Grid toolbars', function () {
             var searchGridHtml,
                 searchPlaceholderHtml,
                 searchExtraCallbackHtml;
-            
-            
+
+
             beforeEach(function () {
                 searchExtraCallbackHtml = '<div>' +
                         '<bb-grid bb-grid-options="locals.gridOptions">' +
@@ -496,7 +498,7 @@ describe('Grid toolbars', function () {
                         '</div>';
             });
 
-            
+
 
             it('sets searchText on search', function () {
                 var searchEl,
@@ -575,7 +577,7 @@ describe('Grid toolbars', function () {
             it('calls search text changed when function is specified', function () {
                 var newText,
                     searchEl;
-                
+
                 locals.searchTextChanged = function (searchText) {
                     newText = searchText;
                 };
@@ -593,8 +595,8 @@ describe('Grid toolbars', function () {
 
         describe('sorting', function () {
             var sortGridHtml;
-            
-            
+
+
             beforeEach(function () {
                 sortGridHtml = '<div>' +
                         '<bb-grid bb-grid-options="locals.gridOptions">' +
@@ -625,7 +627,7 @@ describe('Grid toolbars', function () {
 
             it('prevents sort action on header click when sort content is specified', function () {
                 var headerEl;
-                
+
                 el = setUpGrid(sortGridHtml, locals);
                 setOptions(options);
 
@@ -641,8 +643,8 @@ describe('Grid toolbars', function () {
                 expect(headerEl.eq(0)).not.toHaveClass('sorting-asc');
                 expect(headerEl.eq(0)).not.toHaveClass('sorting-desc');
 
-                
+
             });
-        });     
+        });
     });
 });

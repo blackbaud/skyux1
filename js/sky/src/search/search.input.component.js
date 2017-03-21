@@ -240,6 +240,7 @@
         }
 
         function initSearch() {
+            bbMediaBreakpoints.register(mediaBreakpointCallback);
             
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
@@ -258,8 +259,6 @@
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
         }
-
-        bbMediaBreakpoints.register(mediaBreakpointCallback);
 
         ctrl.$onInit = initSearch;
         ctrl.$onChanges = bindingChanges;

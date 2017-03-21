@@ -117,9 +117,6 @@
             bbChecklistUtility.remove(vm.bbChecklistSelectedItems, item);
         }
 
-        vm.bbChecklistSelectedItems = vm.bbChecklistSelectedItems || [];
-        vm.itemIsSelected = itemIsSelected;
-
         vm.selectAll = function () {
             eachFilteredItem(selectItem);
         };
@@ -170,63 +167,68 @@
             vm.columns = columns;
         };
 
-        $scope.$watch(function () {
-            return vm.bbChecklistItems;
-        }, function () {
-            vm.filteredItems = vm.bbChecklistItems;
-            vm.highlightRefresh = new Date().getTime();
-        });
+        function onInit() {
+            vm.bbChecklistSelectedItems = vm.bbChecklistSelectedItems || [];
+            vm.itemIsSelected = itemIsSelected;
 
-        $scope.$watch(function () {
-            return vm.searchText;
-        }, function (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                invokeFilter();
-            }
-        });
-
-        if (angular.isDefined(vm.bbChecklistCategories)) {
-            vm.allCategories = 'bbChecklistAllCategories';
-            vm.selectedOption = vm.allCategories;
-            if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
-                vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
-            }
             $scope.$watch(function () {
-                return vm.selectedOption;
+                return vm.bbChecklistItems;
+            }, function () {
+                vm.filteredItems = vm.bbChecklistItems;
+                vm.highlightRefresh = new Date().getTime();
+            });
+
+            $scope.$watch(function () {
+                return vm.searchText;
             }, function (newValue, oldValue) {
-                if (newValue === vm.allCategories) {
-                    vm.selectedCategory = null;
-                } else {
-                    vm.selectedCategory = newValue;
-                }
                 if (newValue !== oldValue) {
                     invokeFilter();
                 }
             });
-        }
 
-        if (angular.isDefined(vm.bbChecklistSubsetLabel)) {
+            if (angular.isDefined(vm.bbChecklistCategories)) {
+                vm.allCategories = 'bbChecklistAllCategories';
+                vm.selectedOption = vm.allCategories;
+                if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
+                    vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
+                }
+                $scope.$watch(function () {
+                    return vm.selectedOption;
+                }, function (newValue, oldValue) {
+                    if (newValue === vm.allCategories) {
+                        vm.selectedCategory = null;
+                    } else {
+                        vm.selectedCategory = newValue;
+                    }
+                    if (newValue !== oldValue) {
+                        invokeFilter();
+                    }
+                });
+            }
+
+            if (angular.isDefined(vm.bbChecklistSubsetLabel)) {
+                $scope.$watch(function () {
+                    return vm.subsetSelected;
+                }, function () {
+                    invokeFilter();
+                });
+            }
+
             $scope.$watch(function () {
-                return vm.subsetSelected;
+                return vm.onlyShowSelected;
             }, function () {
                 invokeFilter();
             });
+
+
+            $scope.$emit('bbPickerReady', {
+                setSelectedItems: function (selectedItems) {
+                    vm.bbChecklistSelectedItems = selectedItems;
+                }
+            });
         }
 
-        $scope.$watch(function () {
-            return vm.onlyShowSelected;
-        }, function () {
-            invokeFilter();
-        });
-
-
-        $scope.$emit('bbPickerReady', {
-            setSelectedItems: function (selectedItems) {
-                vm.bbChecklistSelectedItems = selectedItems;
-            }
-        });
-
-
+        vm.$onInit = onInit;
     }
 
     BBChecklistController.$inject = ['$scope', 'bbChecklistUtility', 'bbResources'];

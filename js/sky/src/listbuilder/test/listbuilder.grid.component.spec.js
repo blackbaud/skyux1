@@ -84,7 +84,7 @@
                     $scope.listCtrl.gridOptions.selectedColumnIds = selectedColumnIds;
                 }
             };
-            
+
             dataSet1 = [
                 {
                     id: 0,
@@ -254,6 +254,7 @@
             $compile(el)($scope);
 
             $scope.$digest();
+            $timeout.flush();
             return el;
         }
 
@@ -269,7 +270,7 @@
         function getTopScrollbarEl(el) {
             return el.find('.bb-listbuilder-toolbar-summary-container .bb-listbuilder-toolbar-top-scrollbar');
         }
-        
+
         function getTableWrapperEl(el) {
             return el.find('.table-responsive');
         }
@@ -316,7 +317,7 @@
                     className = 'fa-list';
                     title = 'Switch to repeater view';
                     break;
-                case 'grid': 
+                case 'grid':
                     className = 'fa-table';
                     title = 'Switch to grid view';
                     break;
@@ -336,7 +337,7 @@
                 i;
 
             expect(switcherMenuItemsEl.length).toBe(types.length);
-            
+
             for (i = 0; i < types.length; i++) {
                 switch (types[i]) {
                     case 'card':
@@ -347,7 +348,7 @@
                         className = 'fa-list';
                         title = 'Switch to repeater view';
                         break;
-                    case 'grid': 
+                    case 'grid':
                         className = 'fa-table';
                         title = 'Switch to grid view';
                         break;
@@ -402,11 +403,11 @@
             }
 
             tableWrapper = el.find('.table-responsive');
-            
+
             expect(spyArgs.boundaryEl).toEqual(tableWrapper[0]);
             expect(spyArgs.setWidth).toBe(true);
             expect(spyArgs.verticalOffSetElId).toBe(el.find('.bb-listbuilder-toolbar-summary-container').attr('id'));
-            
+
         });
 
         it('allows header based sort to occur in grids if the sort component does not exist', function () {
@@ -578,7 +579,7 @@
             setGridData(dataSet1);
             timeoutFlushIfAvailable();
 
-            expect(el.find('td[data-grid-field="name"]').eq(0).find('span')).toHaveClass('highlight');        
+            expect(el.find('td[data-grid-field="name"]').eq(0).find('span')).toHaveClass('highlight');
         });
 
         it('creates the proper view switcher when multiple views are present', function () {
@@ -620,7 +621,7 @@
                     expect(rowEl.eq(i)).not.toHaveClass('ui-state-highlight');
                     expect(findCheckBox(rowEl.eq(i))).not.toBeChecked();
                 }
-                
+
             }
 
         }

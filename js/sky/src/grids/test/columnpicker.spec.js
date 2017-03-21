@@ -24,10 +24,10 @@ describe('Grid column picker', function () {
         } else {
             $scope.locals = locals;
         }
-
         $compile(el)($scope);
 
         $scope.$digest();
+        $timeout.flush();
 
         return el;
     }
@@ -155,7 +155,7 @@ describe('Grid column picker', function () {
         modalEl = getModal();
 
         //verify title
-        modalTitleEl = modalEl.eq(0).find('.modal-header .bb-dialog-header span');
+        modalTitleEl = modalEl.eq(0).find('.modal-header .bb-dialog-header');
         expect(modalTitleEl.eq(0)).toHaveText('Choose columns to show in the list');
 
         //make sure the expected check boxes are here
