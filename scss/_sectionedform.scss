@@ -31,19 +31,20 @@
     .bb-sectionedform {
         .nav-tabs {
             @include bb-border('light', 'right');
-            @include make-sm-column(3);
         }
 
         .tab-content {
-            @include make-sm-column(9);
+            padding-left: $padding-plus-half;
+            padding-right: $padding-plus-half;
         }
     }
 }
 
 .bb-sectionedform {
+    display: flex;
+    
     .nav-tabs {
         border-bottom-style: none;
-        float: left;
         height: inherit;
         overflow: auto;
         padding-left: 0;
@@ -90,7 +91,8 @@
     
     .tab-content {
         height: inherit;
-        margin-top: $margin;
+        padding-top: $padding;
+        margin-top: 0;
         overflow: auto;
     }
     
