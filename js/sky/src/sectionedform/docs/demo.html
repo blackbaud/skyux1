@@ -5,10 +5,14 @@
 <script type="text/ng-template" id="demo/sectionedform/contactsectionedform.html">
   <bb-modal bb-sectioned-modal>
     <div class="modal-form" ng-controller="ContactSectionedFormController as contactSecFrmCtrl">
-      <bb-modal-header>Tab sectioned modal</bb-modal-header>
+      <bb-modal-header>Tab sectioned modal - Index: <span>{{contactSecFrmCtrl.activeSectionIndex}}</span></bb-modal-header>
       <form name="contactForm" ng-submit="contactSecFrmCtrl.save()" novalidate>
         <div bb-modal-body>
-          <bb-sectioned-form bb-sectioned-form-sections="contactSecFrmCtrl.sections" bb-sectioned-form-on-sections-visibility-change="contactSecFrmCtrl.sectionsVisibilityChanged(data)"></bb-sectioned-form>
+          <bb-sectioned-form bb-sectioned-form-sections="contactSecFrmCtrl.sections" 
+                             bb-sectioned-form-on-sections-visibility-change="contactSecFrmCtrl.sectionsVisibilityChanged(data)"
+                             bb-sectioned-form-active-section-index="contactSecFrmCtrl.activeSectionIndex" 
+                             bb-sectioned-form-on-active-section-index-change="contactSecFrmCtrl.activeSectionIndex = index">            
+          </bb-sectioned-form>
         </div>
         <bb-modal-footer>
           <bb-modal-footer-button ng-click="contactSecFrmCtrl.showSections()" ng-if="contactSecFrmCtrl.sectionsHidden">Show sections</bb-modal-footer-button>
