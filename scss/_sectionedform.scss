@@ -31,6 +31,7 @@
     .bb-sectionedform {
         .nav-tabs {
             @include bb-border('light', 'right');
+            flex-basis: 25%;
         }
 
         .tab-content {
@@ -53,6 +54,8 @@
         uib-tab-heading {
             display: flex;
             .control-label {
+                white-space: normal;
+                min-width: 0;
                 flex-grow: 1;
                 &.invalid:after {
                     color: $bb-error-color;
@@ -77,6 +80,10 @@
             }
         }
 
+        li {
+            margin-bottom: 0;
+        }
+
         li.active {
             .nav-link {
                 /* Marked important because the tab directive (who applies the styles we are trying to override) is closer to this element than the sectioned form. 
@@ -90,6 +97,7 @@
     }
     
     .tab-content {
+        flex-grow: 1;
         height: inherit;
         padding-top: $padding;
         margin-top: 0;
