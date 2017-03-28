@@ -67,8 +67,9 @@
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            if (!angular.isDefined(vm.activeSection) ||  vm.activeSection <= 0) {
+            if (angular.isUndefined(vm.activeSection) || vm.activeSection <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
+                vm.onActiveSectionChange({index: vm.activeSection});
             }
         }
 
@@ -122,7 +123,7 @@
             if (newValue !== oldValue) {
                 vm.onActiveSectionChange({index: newValue});
             }
-        });
+        });   
 
         vm.$onDestroy = function () {
             bbMediaBreakpoints.unregister(mediaBreakpointHandler);
