@@ -67,7 +67,7 @@
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            if (vm.activeSection <= 0) {
+            if (!angular.isDefined(vm.activeSection) ||  vm.activeSection <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
             }
         }
