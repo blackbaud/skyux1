@@ -9,6 +9,7 @@ describe('SectionedForm', function () {
         $scope,
         $templateCache,
         bbMediaBreakpoints,
+        $timeout,
         element;
 
     beforeEach(function () {
@@ -21,12 +22,13 @@ describe('SectionedForm', function () {
 
         element = null;
 
-        angular.mock.inject(function (_$rootScope_, _$compile_, _$document_, _$templateCache_, _bbMediaBreakpoints_) {
+        angular.mock.inject(function (_$rootScope_, _$compile_, _$document_, _$templateCache_, _bbMediaBreakpoints_, _$timeout_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $document = _$document_;
             $templateCache = _$templateCache_;
             bbMediaBreakpoints = _bbMediaBreakpoints_;
+            $timeout = _$timeout_;
         });
     });
 
@@ -98,6 +100,7 @@ describe('SectionedForm', function () {
                 '</ng-form>');
 
             sutView = compileSectionedForm();
+            $timeout.flush();
 
             expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
             expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);
