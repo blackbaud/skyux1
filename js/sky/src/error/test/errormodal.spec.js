@@ -11,11 +11,14 @@ describe('Error modal', function () {
 
     function afterModalOpened() {
         $animate.flush();
+        $rootScope.$digest();
     }
 
     function afterModalClosed() {
         $animate.flush();
+        $rootScope.$digest();
         $animate.flush();
+        $rootScope.$digest();
     }
 
     beforeEach(module(

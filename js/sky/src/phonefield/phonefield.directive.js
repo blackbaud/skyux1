@@ -24,6 +24,8 @@
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (selectedCountryData.iso2 && phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
@@ -61,7 +63,7 @@
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
-                return ngModel.$pristine || (modelValue && input.intlTelInput('isValidNumber'));
+                return ngModel.$pristine || !modelValue || (modelValue && input.intlTelInput('isValidNumber'));
             };
 
             // ** bbPhoneFieldConfig properties **

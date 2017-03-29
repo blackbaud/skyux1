@@ -19,7 +19,6 @@
                 if (angular.isDefined(attrs.bbSubmenuHeading)) {
                     vm.staticHeader = true;
                 }
-
                 vm.toggleAccordion = function ($event) {
                     bbContextMenuToggleAccordion($event, vm);
                 };

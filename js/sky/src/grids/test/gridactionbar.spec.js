@@ -34,6 +34,7 @@ describe('Grid actionbar', function () {
         $compile(el)($scope);
 
         $scope.$digest();
+        $timeout.flush();
 
         return el;
     }

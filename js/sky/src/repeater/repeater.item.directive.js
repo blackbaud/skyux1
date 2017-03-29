@@ -16,38 +16,43 @@
                 vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
-            vm.getCls = function () {
-                var cls = [];
+            function onInit() {
+                vm.getCls = function () {
+                    var cls = [];
 
-                if (allowCollapse()) {
-                    cls.push('bb-repeater-item-collapsible');
-                }
-
-                if (vm.contextMenuElExists()) {
-                    cls.push('bb-repeater-item-with-context-menu');
-                }
-
-                if (vm.itemIsSelectable()) {
-                    cls.push('bb-repeater-item-selectable');
-
-                    if (vm.bbRepeaterItemSelected) {
-                        cls.push('bb-repeater-item-selected');
+                    if (allowCollapse()) {
+                        cls.push('bb-repeater-item-collapsible');
                     }
-                }
 
-                return cls;
-            };
+                    if (vm.contextMenuElExists()) {
+                        cls.push('bb-repeater-item-with-context-menu');
+                    }
 
-            vm.selectItem = selectItem;
+                    if (vm.itemIsSelectable()) {
+                        cls.push('bb-repeater-item-selectable');
 
-            vm.headerClick = function ($event) {
-                if (vm.isCollapsible) {
-                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
-                    $event.stopPropagation();
-                } 
-            };
+                        if (vm.bbRepeaterItemSelected) {
+                            cls.push('bb-repeater-item-selected');
+                        }
+                    }
 
-            vm.allowCollapse = allowCollapse;
+                    return cls;
+                };
+
+                vm.selectItem = selectItem;
+
+                vm.headerClick = function ($event) {
+                    if (vm.isCollapsible) {
+                        vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                        $event.stopPropagation();
+                    } 
+                };
+
+                vm.allowCollapse = allowCollapse;
+            }
+
+            vm.$onInit = onInit;
+            
         }
 
         function link(scope, el, attrs, ctrls) {
@@ -99,8 +104,8 @@
                 vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
             }
 
-            vm.titleEl = el.find('.bb-repeater-item-title');
-            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu');
+            vm.titleEl = el.find('.bb-repeater-item-title-container');
+            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu-container');
 
             vm.titleElExists = titleElExists;
             vm.contextMenuElExists = contextMenuElExists;
@@ -209,7 +214,13 @@
     bbRepeaterItem.$inject = ['$timeout'];
 
 
-    angular.module('sky.repeater.item.directive', ['sky.chevron', 'sky.check', 'sky.resources'])
+    angular.module('sky.repeater.item.directive', [
+            'sky.chevron', 
+            'sky.check', 
+            'sky.resources', 
+            'sky.repeater.item.title.component',
+            'sky.repeater.item.contextmenu.component'
+            ])
         .directive('bbRepeaterItem', bbRepeaterItem);
 
-}());
+})();

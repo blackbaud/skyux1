@@ -34,7 +34,17 @@
     </div>
 
     <div ng-if="paginationOptions &amp;&amp; !hasListbuilder" class="bb-grid-pagination-container">
-        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>
+        <ul 
+            uib-pagination 
+            ng-show="paginationOptions.recordCount > options.data.length" 
+            total-items="paginationOptions.recordCount" 
+            items-per-page="paginationOptions.itemsPerPage" 
+            ng-model="paginationOptions.currentPage" 
+            ng-change="paginationOptions.pageChanged()" 
+            max-size="paginationOptions.maxPages" 
+            boundary-link-numbers="paginationOptions.boundaryLinks" 
+            force-ellipses="paginationOptions.boundaryLinks">
+        </ul>
         <div class="clearfix"></div>
     </div>
 

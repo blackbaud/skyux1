@@ -37,7 +37,8 @@
                 windowEl = $(window);
 
             function setViewkeeperMarginTop(margin) {
-
+                /* istanbul ignore else */
+                /* sanity check */
                 if (!marginStyleEl) {
                     marginStyleEl = $('<style></style>').appendTo(document.body);
                 }
@@ -104,13 +105,15 @@
                 bodyEl = newValue;
                 fitToWindow();
             });
-
+            
             $scope.$watch(function () {
                 if ($scope.headerEl) {
                     return $scope.headerEl.outerHeight();
                 }
             }, function (newValue) {
                 if (isFullPage()) {
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (!viewkeeperMarginTopOverride) {
                         viewkeeperMarginTopOverride = {};
                         
@@ -178,21 +181,27 @@
         }
 
         function Controller($scope) {
-            this.setBodyEl = function (bodyEl) {
-                $scope.bodyEl = bodyEl;
-            };
+            var ctrl = this;
+            function onInit() {
+                ctrl.setBodyEl = function (bodyEl) {
+                    $scope.bodyEl = bodyEl;
+                };
 
-            this.setHeaderEl = function (headerEl) {
-                $scope.headerEl = headerEl;
-            };
+                ctrl.setHeaderEl = function (headerEl) {
+                    $scope.headerEl = headerEl;
+                };
 
-            this.setFooterEl = function (footerEl) {
-                $scope.footerEl = footerEl;
-            };
+                ctrl.setFooterEl = function (footerEl) {
+                    $scope.footerEl = footerEl;
+                };
 
-            this.fitToWindow = function () {
-                $scope.fitToWindow();
-            };
+                ctrl.fitToWindow = function () {
+                    $scope.fitToWindow();
+                };
+            }
+
+            ctrl.$onInit = onInit;
+            
         }
 
         Controller.$inject = ['$scope'];

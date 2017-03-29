@@ -12,7 +12,7 @@
             restrict: 'E',
             templateUrl: 'sky/templates/modal/modalfooterbuttonprimary.html',
             link: function ($scope, el) {
-                if (el.children().length === 0) {
+                if (el.contents().length === 0) {
                     el.append("<span>" + bbResources.modal_footer_primary_button + "</span>");
                 }
             }
