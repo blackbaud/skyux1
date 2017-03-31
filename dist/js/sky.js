@@ -11333,13 +11333,13 @@ angular.module('sky.palette.config', [])
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
-        
+
         function applySearchText(searchText) {
             //select input
             var searchEl = $element.find('.bb-search-input');
 
             ctrl.showClear = searchText && searchText !== '';
-            
+
             /*istanbul ignore else */
             /* sanity check */
             if (angular.isFunction(searchEl.select) && searchEl.length > 0 && searchText) {
@@ -11348,7 +11348,7 @@ angular.module('sky.palette.config', [])
 
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
-            
+
         }
 
         function searchTextChanged(searchText) {
@@ -11363,12 +11363,12 @@ angular.module('sky.palette.config', [])
 
         function clearSearchText() {
             ctrl.bbSearchText = '';
-            
+
             setInputFocus();
 
             ctrl.showClear = false;
             ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
-            
+
         }
 
         function mediaBreakpointCallback(breakpoint) {
@@ -11405,11 +11405,11 @@ angular.module('sky.palette.config', [])
             var openEl,
                 offset,
                 buttonWidth;
-            
+
             openEl = findOpenEl();
             offset = $element.position();
             buttonWidth = openEl.outerWidth();
-            
+
             return offset.left + buttonWidth;
         }
 
@@ -11434,7 +11434,7 @@ angular.module('sky.palette.config', [])
 
         function toggleInputShown(isVisible) {
             var inputContainerEl = findInputContainerEl(),
-                inputHiddenClass = 'bb-search-input-container-hidden'; 
+                inputHiddenClass = 'bb-search-input-container-hidden';
 
             if (isVisible) {
                 inputContainerEl.removeClass(inputHiddenClass);
@@ -11466,29 +11466,29 @@ angular.module('sky.palette.config', [])
 
             var inputContainerEl,
                 expectedWidth = getExpectedInputWidth();
-                
-            inputContainerEl = findInputContainerEl();   
+
+            inputContainerEl = findInputContainerEl();
 
             toggleMobileInputVisible(ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs);
-            
+
             setupInputAnimation(inputContainerEl, expectedWidth);
             toggleDismissShown(true);
             ctrl.openButtonShown = false;
-            
+
             inputContainerEl.animate(
                 {
                     width: '100%',
                     opacity: 1
-                }, 
+                },
                 animationSpeed,
                 animationEase
             );
-            
+
             //Do not focus input on mediabreakpoint change, only on actual interaction
             if (focusInput) {
                 setInputFocus();
             }
-            
+
         }
 
         function dismissSearchInput() {
@@ -11566,7 +11566,7 @@ angular.module('sky.palette.config', [])
         }
 
         function initSearch() {
-            
+
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
@@ -11585,11 +11585,13 @@ angular.module('sky.palette.config', [])
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
         }
 
-        bbMediaBreakpoints.register(mediaBreakpointCallback);
+        if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
+            bbMediaBreakpoints.register(mediaBreakpointCallback);
+            ctrl.$onDestroy = destroySearch;
+        }
 
         ctrl.$onInit = initSearch;
         ctrl.$onChanges = bindingChanges;
-        ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
         ctrl.searchTextChanged = searchTextChanged;
@@ -11609,10 +11611,12 @@ angular.module('sky.palette.config', [])
                 bbOnSearch: '&?',
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
-                bbSearchPlaceholder: '<?'
+                bbSearchPlaceholder: '<?',
+                bbSearchMobileResponseEnabled: '<?'
             }
         });
 })();
+
 /* global angular */
 
 (function () {
