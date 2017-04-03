@@ -1,0 +1,13 @@
+<div>{{tabset.containsGroups}}
+  <uib-accordion close-others="closeOthers">
+    <ul class="nav nav-tabs"
+        ng-transclude></ul>
+  </uib-accordion>
+  <div class="tab-content">
+    <div class="tab-pane"
+         ng-repeat="tab in tabset.tabs"
+         ng-class="{active: tabset.active === tab.index}"
+         uib-tab-content-transclude="tab">
+    </div>
+  </div>
+</div>

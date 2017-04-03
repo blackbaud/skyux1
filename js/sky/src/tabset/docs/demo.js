@@ -81,7 +81,7 @@
             $scope.$close(self.selectedTabs);
         };
     }
-    
+
     function TabsetPageController() {
         var self = this;
         self.pages = [
@@ -108,9 +108,15 @@
 
     TabsetTestController.$inject = ['bbModal'];
 
+    function VerticalTabsetDemoController() {
+
+    }
+
+    VerticalTabsetDemoController.$inject = [];
 
     angular.module('stache')
         .controller('CheckModalController', CheckModalController)
         .controller('TabsetTestController', TabsetTestController)
-        .controller('TabsetPageController', TabsetPageController);
+        .controller('TabsetPageController', TabsetPageController)
+        .controller('VerticalTabsetDemoController', VerticalTabsetDemoController);
 }());
