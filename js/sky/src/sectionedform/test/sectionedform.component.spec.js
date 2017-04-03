@@ -126,7 +126,6 @@ describe('SectionedForm', function () {
             $scope.sections = multipleSections;
 
             sutView = compileSectionedForm();
-            $timeout.flush();
 
             expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
             expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);

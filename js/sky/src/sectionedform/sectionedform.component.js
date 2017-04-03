@@ -73,9 +73,10 @@
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
             
-            if (angular.isUndefined(vm.activeSection) || vm.activeSection <= 0) {
+            if (angular.isUndefined(vm.activeSectionIndex) || vm.activeSectionIndex <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
-                vm.onActiveSectionChange({index: vm.activeSection});
+                vm.activeSectionIndex = defaultSelectedTabIndex;
+                vm.onActiveSectionIndexChange({index: vm.activeSectionIndex});
             }
         }
 
