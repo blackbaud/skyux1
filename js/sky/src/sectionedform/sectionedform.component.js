@@ -53,7 +53,7 @@
         function toggleContentDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .tab-content', show);
         }
-
+        
         function toggleNavivationDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
 
@@ -67,6 +67,7 @@
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
+            
             if (angular.isUndefined(vm.activeSection) || vm.activeSection <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
                 vm.onActiveSectionChange({index: vm.activeSection});
