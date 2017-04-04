@@ -328,7 +328,7 @@
 
     bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
 
-    function BBVerticalTabsetController($element) {
+    function BBVerticalTabsetController() {
         var self = this;
 
         self.addTabGroup = addTabGroup;
@@ -339,7 +339,7 @@
         }
     }
 
-    BBVerticalTabsetController.$inject = ['$element'];
+    BBVerticalTabsetController.$inject = [];
 
     function bbVerticalTabset($log, $parse) {
         return {
