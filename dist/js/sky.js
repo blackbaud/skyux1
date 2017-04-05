@@ -11443,13 +11443,13 @@ angular.module('sky.palette.config', [])
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
-        
+
         function applySearchText(searchText) {
             //select input
             var searchEl = $element.find('.bb-search-input');
 
             ctrl.showClear = searchText && searchText !== '';
-            
+
             /*istanbul ignore else */
             /* sanity check */
             if (angular.isFunction(searchEl.select) && searchEl.length > 0 && searchText) {
@@ -11458,7 +11458,7 @@ angular.module('sky.palette.config', [])
 
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
-            
+
         }
 
         function searchTextChanged(searchText) {
@@ -11473,12 +11473,12 @@ angular.module('sky.palette.config', [])
 
         function clearSearchText() {
             ctrl.bbSearchText = '';
-            
+
             setInputFocus();
 
             ctrl.showClear = false;
             ctrl.bbOnSearch({searchText: ctrl.bbSearchText});
-            
+
         }
 
         function mediaBreakpointCallback(breakpoint) {
@@ -11515,11 +11515,11 @@ angular.module('sky.palette.config', [])
             var openEl,
                 offset,
                 buttonWidth;
-            
+
             openEl = findOpenEl();
             offset = $element.position();
             buttonWidth = openEl.outerWidth();
-            
+
             return offset.left + buttonWidth;
         }
 
@@ -11544,7 +11544,7 @@ angular.module('sky.palette.config', [])
 
         function toggleInputShown(isVisible) {
             var inputContainerEl = findInputContainerEl(),
-                inputHiddenClass = 'bb-search-input-container-hidden'; 
+                inputHiddenClass = 'bb-search-input-container-hidden';
 
             if (isVisible) {
                 inputContainerEl.removeClass(inputHiddenClass);
@@ -11576,29 +11576,29 @@ angular.module('sky.palette.config', [])
 
             var inputContainerEl,
                 expectedWidth = getExpectedInputWidth();
-                
-            inputContainerEl = findInputContainerEl();   
+
+            inputContainerEl = findInputContainerEl();
 
             toggleMobileInputVisible(ctrl.currentBreakpoint && ctrl.currentBreakpoint.xs);
-            
+
             setupInputAnimation(inputContainerEl, expectedWidth);
             toggleDismissShown(true);
             ctrl.openButtonShown = false;
-            
+
             inputContainerEl.animate(
                 {
                     width: '100%',
                     opacity: 1
-                }, 
+                },
                 animationSpeed,
                 animationEase
             );
-            
+
             //Do not focus input on mediabreakpoint change, only on actual interaction
             if (focusInput) {
                 setInputFocus();
             }
-            
+
         }
 
         function dismissSearchInput() {
@@ -11676,7 +11676,10 @@ angular.module('sky.palette.config', [])
         }
 
         function initSearch() {
-            bbMediaBreakpoints.register(mediaBreakpointCallback);
+            if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
+                bbMediaBreakpoints.register(mediaBreakpointCallback);
+                ctrl.$onDestroy = destroySearch;
+            }
             
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
@@ -11698,7 +11701,6 @@ angular.module('sky.palette.config', [])
 
         ctrl.$onInit = initSearch;
         ctrl.$onChanges = bindingChanges;
-        ctrl.$onDestroy = destroySearch;
 
         ctrl.applySearchText = applySearchText;
         ctrl.searchTextChanged = searchTextChanged;
@@ -11718,10 +11720,12 @@ angular.module('sky.palette.config', [])
                 bbOnSearch: '&?',
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
-                bbSearchPlaceholder: '<?'
+                bbSearchPlaceholder: '<?',
+                bbSearchMobileResponseEnabled: '<?'
             }
         });
 })();
+
 /* global angular */
 
 (function () {
@@ -11730,6 +11734,7 @@ angular.module('sky.palette.config', [])
     function Controller($scope, $element, $timeout, bbMediaBreakpoints) {
         var defaultSelectedTabIndex = 0,
             noSelectedTabIndex = -1,
+            postLinkComplete = false,
             vm = this;
 
         function getFirstEl(selector) {
@@ -11754,7 +11759,11 @@ angular.module('sky.palette.config', [])
 
         function setInitialState() {
             if (vm.isMobile) {
-                displayOnlyFormSections();
+                if (!angular.isDefined(vm.activeSectionIndex) || vm.activeSectionIndex === null ||  vm.activeSectionIndex < 0) {
+                    displayOnlyFormSections();
+                } else {
+                    displayOnlyFormContent();
+                }                
             } else {
                 displayFormSectionsAndContent();
             }
@@ -11777,7 +11786,7 @@ angular.module('sky.palette.config', [])
         function toggleContentDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .tab-content', show);
         }
-
+        
         function toggleNavivationDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
 
@@ -11791,9 +11800,11 @@ angular.module('sky.palette.config', [])
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            if (angular.isUndefined(vm.activeSection) || vm.activeSection <= 0) {
+            
+            if (angular.isUndefined(vm.activeSectionIndex) || vm.activeSectionIndex <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
-                vm.onActiveSectionChange({index: vm.activeSection});
+                vm.activeSectionIndex = defaultSelectedTabIndex;
+                vm.onActiveSectionIndexChange({index: vm.activeSectionIndex});
             }
         }
 
@@ -11835,17 +11846,43 @@ angular.module('sky.palette.config', [])
             return parentFormSubmitted && sectionInvalid;
         };
 
-        vm.tabSelected = function () {
+        vm.tabSelected = function ($index) {
             if (vm.isMobile) {
                 displayOnlyFormContent();
+                
+                //Only raise onActiveSectionIndexChange after post link sets the initial state.
+                if (postLinkComplete && $index !== vm.activeSectionIndex) {
+                    vm.onActiveSectionIndexChange({index: $index});
+                }
             }
         };
 
-        $scope.$on('reinitializeSectionDisplay', setInitialState);
+        $scope.$on('reinitializeSectionDisplay', function reinitializeSectionDisplay() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (vm.isMobile) {
+                vm.activeSection = noSelectedTabIndex;
+                vm.activeSectionIndex = undefined;
+                vm.onActiveSectionIndexChange({index: undefined});
+            }
+            setInitialState();
+        });
 
         $scope.$watch('$ctrl.activeSection', function (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                vm.onActiveSectionChange({index: newValue});
+            if (newValue !== oldValue) {                
+                //When the active section bound to the tab component changes, raise that change out
+                //Do not do this on mobile, where the value is set initially to 0 even though the tabs aren't being displayed.  For mobile,
+                //this will be triggerd by clicking tabSelected instead of the watch
+                if (!vm.isMobile) {
+                    vm.onActiveSectionIndexChange({index: newValue});
+                }
+            }
+        });
+
+        $scope.$watch('$ctrl.activeSectionIndex', function () {
+            //When input for active section index changes, update the activeSection bound to the tab component.
+            if (vm.activeSectionIndex !== vm.activeSection) {
+                vm.activeSection = vm.activeSectionIndex;
             }
         });   
 
@@ -11861,7 +11898,10 @@ angular.module('sky.palette.config', [])
             // Ref: https://docs.angularjs.org/guide/component
             // postLink fires before child elements load their templates and since setInitialState tries to manipulate tab elements
             // use $timeout to call setInitialState on the next digest
-            $timeout(setInitialState);
+            $timeout(function () {
+                postLinkComplete = true;
+                setInitialState();
+            });
         };
     }
 
@@ -11872,8 +11912,8 @@ angular.module('sky.palette.config', [])
             bindings: {
                 onSectionsVisibilityChange: '&bbSectionedFormOnSectionsVisibilityChange',
                 sections: '<bbSectionedFormSections',
-                activeSection: '<bbSectionedFormActiveSectionIndex',
-                onActiveSectionChange: '&bbSectionedFormOnActiveSectionIndexChange'
+                activeSectionIndex: '<bbSectionedFormActiveSectionIndex',
+                onActiveSectionIndexChange: '&bbSectionedFormOnActiveSectionIndexChange'
             },
             controller: Controller,
             require: {
@@ -16811,7 +16851,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/sectionedform/sectionedform.component.html',
         '<uib-tabset active="$ctrl.activeSection" class="bb-sectionedform" vertical="true">\n' +
-        '    <uib-tab ng-repeat="section in $ctrl.sections" select="$ctrl.tabSelected()">\n' +
+        '    <uib-tab ng-repeat="section in $ctrl.sections" select="$ctrl.tabSelected($index)">\n' +
         '        <uib-tab-heading>\n' +
         '            <span class="control-label" ng-class="{\'required\': $ctrl.sectionHasRequiredField(section) && !$ctrl.sectionIsInvalid(section), \'invalid\': $ctrl.sectionIsInvalid(section)}">{{$ctrl.buildSectionHeading(section)}}</span>\n' +
         '            <span class="fa fa-chevron-right bb-sectionedform-navigationicon" ng-show="$ctrl.isMobile"></span>\n' +
