@@ -6,6 +6,7 @@
     function Controller($scope, $element, $timeout, bbMediaBreakpoints) {
         var defaultSelectedTabIndex = 0,
             noSelectedTabIndex = -1,
+            postLinkComplete = false,
             vm = this;
 
         function getFirstEl(selector) {
@@ -30,7 +31,11 @@
 
         function setInitialState() {
             if (vm.isMobile) {
-                displayOnlyFormSections();
+                if (!angular.isDefined(vm.activeSectionIndex) || vm.activeSectionIndex === null ||  vm.activeSectionIndex < 0) {
+                    displayOnlyFormSections();
+                } else {
+                    displayOnlyFormContent();
+                }                
             } else {
                 displayFormSectionsAndContent();
             }
@@ -68,9 +73,10 @@
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
             
-            if (angular.isUndefined(vm.activeSection) || vm.activeSection <= 0) {
+            if (angular.isUndefined(vm.activeSectionIndex) || vm.activeSectionIndex <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
-                vm.onActiveSectionChange({index: vm.activeSection});
+                vm.activeSectionIndex = defaultSelectedTabIndex;
+                vm.onActiveSectionIndexChange({index: vm.activeSectionIndex});
             }
         }
 
@@ -112,17 +118,43 @@
             return parentFormSubmitted && sectionInvalid;
         };
 
-        vm.tabSelected = function () {
+        vm.tabSelected = function ($index) {
             if (vm.isMobile) {
                 displayOnlyFormContent();
+                
+                //Only raise onActiveSectionIndexChange after post link sets the initial state.
+                if (postLinkComplete && $index !== vm.activeSectionIndex) {
+                    vm.onActiveSectionIndexChange({index: $index});
+                }
             }
         };
 
-        $scope.$on('reinitializeSectionDisplay', setInitialState);
+        $scope.$on('reinitializeSectionDisplay', function reinitializeSectionDisplay() {
+            /* istanbul ignore else */
+            /* sanity check */
+            if (vm.isMobile) {
+                vm.activeSection = noSelectedTabIndex;
+                vm.activeSectionIndex = undefined;
+                vm.onActiveSectionIndexChange({index: undefined});
+            }
+            setInitialState();
+        });
 
         $scope.$watch('$ctrl.activeSection', function (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                vm.onActiveSectionChange({index: newValue});
+            if (newValue !== oldValue) {                
+                //When the active section bound to the tab component changes, raise that change out
+                //Do not do this on mobile, where the value is set initially to 0 even though the tabs aren't being displayed.  For mobile,
+                //this will be triggerd by clicking tabSelected instead of the watch
+                if (!vm.isMobile) {
+                    vm.onActiveSectionIndexChange({index: newValue});
+                }
+            }
+        });
+
+        $scope.$watch('$ctrl.activeSectionIndex', function () {
+            //When input for active section index changes, update the activeSection bound to the tab component.
+            if (vm.activeSectionIndex !== vm.activeSection) {
+                vm.activeSection = vm.activeSectionIndex;
             }
         });   
 
@@ -138,7 +170,10 @@
             // Ref: https://docs.angularjs.org/guide/component
             // postLink fires before child elements load their templates and since setInitialState tries to manipulate tab elements
             // use $timeout to call setInitialState on the next digest
-            $timeout(setInitialState);
+            $timeout(function () {
+                postLinkComplete = true;
+                setInitialState();
+            });
         };
     }
 
@@ -149,8 +184,8 @@
             bindings: {
                 onSectionsVisibilityChange: '&bbSectionedFormOnSectionsVisibilityChange',
                 sections: '<bbSectionedFormSections',
-                activeSection: '<bbSectionedFormActiveSectionIndex',
-                onActiveSectionChange: '&bbSectionedFormOnActiveSectionIndexChange'
+                activeSectionIndex: '<bbSectionedFormActiveSectionIndex',
+                onActiveSectionIndexChange: '&bbSectionedFormOnActiveSectionIndexChange'
             },
             controller: Controller,
             require: {

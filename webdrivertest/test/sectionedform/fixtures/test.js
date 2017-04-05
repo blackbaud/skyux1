@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    function SectionedFormTestController() {
+    function SectionedFormTestController($scope) {
         var vm = this;
 
         vm.sections = [
@@ -18,7 +18,13 @@
                 templateUrl: 'demo/sectionedform/section2.html'
             }
         ];
+
+        vm.showMobile = function () {
+            $scope.$broadcast('reinitializeSectionDisplay');
+        };
     }
+
+    SectionedFormTestController.$inject = ['$scope'];
 
     angular.module('screenshots', ['sky'])
         .controller('SectionedFormTestController', SectionedFormTestController);
