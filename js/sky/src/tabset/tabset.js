@@ -373,6 +373,10 @@
                 $log.warn('uibTabset vertical attribute values other than true are incompatible with bbVerticalTabset and will be ignored');
             }
 
+            scope.closeOthers = angular.isDefined(attr.bbVerticalTabsetCloseOthers) ?
+                $parse(attr.bbVerticalTabsetCloseOthers)($scope) :
+                false;
+
             $scope.$watch(
                 function () {
                     return $parse(attr.bbVerticalTabsetCloseOthers)($scope);
@@ -385,14 +389,14 @@
                 function () {
                     return uibTabsetCtrl.active;
                 },
-                openTabGroup
+                activateTabGroup
             );
 
             if (angular.isDefined(uibTabsetCtrl.active)) {
-                openTabGroup(uibTabsetCtrl.active);
+                activateTabGroup(uibTabsetCtrl.active);
             }
 
-            function openTabGroup(newIndex) {
+            function activateTabGroup(newIndex) {
                 var activeGroup = bbVerticalTabsetCtrl.tabGroups
                     .filter(function (tabGroup) {
                         return tabGroup.tabs.filter(function (tab) {
@@ -400,8 +404,13 @@
                         }).length > 0;
                     });
 
+                bbVerticalTabsetCtrl.tabGroups
+                    .forEach(function (tabGroup) {
+                        tabGroup.active = false;
+                    });
+
                 if (activeGroup.length > 0) {
-                    activeGroup[0].openTabGroup();
+                    activeGroup[0].activateTabGroup();
                 }
             }
         }
@@ -413,13 +422,14 @@
         var self = this;
 
         self.addTab = addTab;
-        self.openTabGroup = openTabGroup;
+        self.activateTabGroup = activateTabGroup;
         self.tabs = [];
 
         function addTab(tab) {
             self.tabs.push(tab);
         }
-        function openTabGroup() {
+        function activateTabGroup() {
+            self.active = true;
             self.isOpen = true;
         }
     }
@@ -457,44 +467,27 @@
 
     bbVerticalTabsetGroup.$inject = [];
 
-    function bbVerticalTabsetHeading() {
-        return {
-            link: link,
-            // replace is deprecated, use anyway to mimic uib-accordion-heading
-            replace: true,
-            require: '^uibAccordionGroup',
-            restrict: 'AE',
-            // effectively remove element
-            template: '',
-            transclude: true
-        };
-
-        function link($scope, el, attr, ctrl, transclude) {
-            ctrl.setHeading(transclude($scope, angular.noop));
-        }
-    }
-
-    bbVerticalTabsetHeading.$inject = [];
-
     function uibTabsetDirectiveDecorator($delegate) {
-        var originalTemplateUrl = $delegate[0].templateUrl;
-        $delegate[0].templateUrl = function (el, attr) {
-            if (angular.isUndefined(attr.bbVerticalTabset)) {
-                return angular.isFunction(originalTemplateUrl) ?
-                    originalTemplateUrl.apply(this, arguments) :
-                    originalTemplateUrl;
+        decorateTemplateUrl(
+             $delegate[0],
+            'sky/templates/tabset/verticaltabset.html',
+            function (el, attr) {
+                return angular.isDefined(attr.bbVerticalTabset);
             }
-            return angular.isDefined(attr.templateUrl) ?
-                attr.templateUrl :
-                'sky/templates/tabset/verticaltabset.html';
-        };
-
+        );
         return $delegate;
     }
 
     uibTabsetDirectiveDecorator.$inject = ['$delegate'];
 
     function uibTabDirectiveDecorator($delegate) {
+        decorateTemplateUrl(
+            $delegate[0],
+            'sky/templates/tabset/verticaltabsettab.html',
+            function (el) {
+                return el.parent('[bb-vertical-tabset], [bb-vertical-tabset-group]').length > 0;
+            }
+        );
         decorateLink(
             $delegate[0],
             '^bbVerticalTabsetGroup',
@@ -507,7 +500,26 @@
 
     uibTabDirectiveDecorator.$inject = ['$delegate'];
 
-    function decorateLink(fn, requiredDirective, delegate) {
+    function decorateTemplateUrl(delegate, newTemplateUrl, conditionFn) {
+        var originalTemplateUrl = delegate.templateUrl;
+        conditionFn = conditionFn || function () {
+            return true;
+        };
+        delegate.templateUrl = function (el, attr) {
+            if (conditionFn(el, attr)) {
+                return angular.isDefined(attr.templateUrl) ?
+                    attr.templateUrl :
+                    angular.isFunction(newTemplateUrl) ?
+                        newTemplateUrl.apply(this, arguments) :
+                        newTemplateUrl;
+            }
+            return angular.isFunction(originalTemplateUrl) ?
+                originalTemplateUrl.apply(this, arguments) :
+                originalTemplateUrl;
+        };
+    }
+
+    function decorateLink(delegate, requiredDirective, linkFn) {
         var originalRequireIsArray = angular.isArray(delegate.require),
             originalLink = delegate.link,
             newDir = '?' + requiredDirective;
@@ -517,7 +529,7 @@
         delegate.compile = function () {
             return function ($scope, el, attr, ctrls, transclude) {
                 if (ctrls[0] !== null) {
-                    fn.call(this, $scope, el, attr, ctrls[0], transclude);
+                    linkFn.call(this, $scope, el, attr, ctrls[0], transclude);
                 }
                 return originalLink.call(
                     this,
@@ -539,7 +551,6 @@
         .directive('bbTabHeadingXs', bbTabHeadingXs)
         .directive('bbVerticalTabset', bbVerticalTabset)
         .directive('bbVerticalTabsetGroup', bbVerticalTabsetGroup)
-        .directive('bbVerticalTabsetHeading', bbVerticalTabsetHeading)
         .decorator('uibTabsetDirective', uibTabsetDirectiveDecorator)
         .decorator('uibTabDirective', uibTabDirectiveDecorator);
 

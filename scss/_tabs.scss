@@ -48,7 +48,7 @@
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
-            
+
         }
         .bb-tab-button-wrap:active, .bb-tab-button-wrap:hover, .bb-tab-button-wrap:focus {
             box-shadow: none;
@@ -139,11 +139,11 @@
                 box-shadow: none;
                 outline: none;
             }
-            
+
             .bb-tab-close-icon:focus:before {
                 @include bb-focus-indication();
             }
-             
+
         }
 
         > a:hover {
@@ -246,6 +246,160 @@
         width: auto;
         >a {
             border: none;
+        }
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+    .bb-vertical-tabset {
+        .bb-vertical-tabset-tabs {
+            @include animation(fadeInLeft 500ms);
+            @include make-xs-column(12);
+            border-right-style: none;
+        }
+
+        .tab-content {
+            @include animation(fadeInRight 500ms);
+            @include make-xs-column(12);
+        }
+    }
+}
+
+@media (min-width: $screen-sm-min) {
+    .bb-vertical-tabset {
+        .bb-vertical-tabset-tabs {
+            flex-basis: 25%;
+        }
+
+        .tab-content {
+            padding-left: $padding-plus-half;
+            padding-right: $padding-plus-half;
+        }
+    }
+}
+
+.bb-vertical-tabset {
+    display: flex;
+
+    .panel-group .panel.panel-default {
+        box-shadow: none;
+
+        &.panel-open {
+            @include bb-border('light', 'bottom');
+        }
+
+        > .panel-heading {
+            @extend .bb-subsection-heading;
+            @include bb-border('light', 'bottom');
+            background-color: $bb-color-white;
+            padding: 0;
+        }
+        .panel-heading + .panel-collapse > .panel-body,
+        .panel-group .panel-heading+.panel-collapse > .list-group {
+            border-top-width: 0;
+        }
+    }
+
+    .panel-body {
+        padding-right: 0;
+    }
+
+    .panel-title {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+    }
+
+    .bb-vertical-tabset-tabs {
+        height: inherit;
+
+        .nav.nav-tabs {
+            border-bottom-style: none;
+            overflow: auto;
+            padding-left: 0;
+            padding-right: 0;
+
+            li {
+                display: flex;
+                margin-bottom: 0;
+                width: 100%;
+
+                & > a {
+                    width: 100%;
+                }
+
+                .control-label {
+                    flex-basis: 100%;
+                    flex-grow: 1;
+                    min-width: 0;
+                    white-space: normal;
+                }
+
+                &.active .bb-field-label,
+                &:hover .bb-field-label {
+                    color: $text-color !important;
+                }
+                &.active .bb-field-label {
+                    font-weight: 600;
+                }
+
+                &.active .nav-link {
+                    // Override uib-tab styling
+                    background-color: $gray-lightest !important;
+                    border-left: 4px solid $bb-color-blue !important;
+                }
+            }
+
+            .nav-link {
+                border-left: 4px solid transparent;
+                border-radius: 0;
+                margin-right: 0;
+                padding-left: 10px;
+
+                &:focus:not(:hover) {
+                    background-color: transparent;
+                }
+
+                &:hover {
+                    border-bottom-color: transparent;
+                }
+            }
+        }
+    }
+
+    .tab-content {
+        flex-grow: 1;
+        height: inherit;
+        margin-top: 0;
+        overflow: auto;
+        padding-top: $padding;
+    }
+
+    .bb-vertical-tabset-group-heading {
+        padding: 10px 15px;
+    }
+
+    .bb-vertical-tabset-group {
+        border-width: 0;
+
+        .panel-heading:hover .panel-title,
+        .bb-vertical-tabset-group-active {
+            color: $text-color;
+        }
+        .bb-vertical-tabset-group-active {
+            font-weight: 600;
+        }
+    }
+
+    .bb-vertical-tabset-group-chevron {
+        @extend .fa;
+        @extend .fa-chevron-down;
+
+        float: right;
+        transition: all 0.3s linear;
+
+        &.bb-vertical-tabset-group-chevron-open {
+            transform:rotate(180deg);
         }
     }
 }

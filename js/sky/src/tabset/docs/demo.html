@@ -44,21 +44,18 @@
 
 <div ng-controller="VerticalTabsetDemoController as verticalTabsetDemoCtrl">
   <h3>Vertical tabset</h3>
-    <uib-tabset bb-vertical-tabset bb-vertical-tabset-close-others="true">
+    <uib-tabset bb-vertical-tabset>
       <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1" bb-vertical-tabset-group-is-open="verticalTabsetDemoCtrl.isOpen">
         <uib-tab heading="Group 1 - Tab 1">
           <p>Group 1, tab 1 content</p>
           <p>Group 1 is open: {{verticalTabsetDemoCtrl.isOpen}}</p>
         </uib-tab>
-        <uib-tab heading="Tab 2">
+        <uib-tab heading="Group 1 - Tab 2">
           <p>Group 1, tab 2 content</p>
           <p>Group 1 is open: {{verticalTabsetDemoCtrl.isOpen}}</p>
         </uib-tab>
       </div>
-      <div bb-vertical-tabset-group>
-        <bb-vertical-tabset-heading>
-          Group heading with HTML <span class="fa fa-plane"></span>
-        </bb-vertical-tabset-heading>
+      <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 2">
         <uib-tab heading="Group 2 - Tab 1">
           <p>Group 2, tab 1 content</p>
           <p>Group 1 is open: {{verticalTabsetDemoCtrl.isOpen}}</p>

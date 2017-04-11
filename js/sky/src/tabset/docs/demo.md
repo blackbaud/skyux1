@@ -19,7 +19,7 @@ The tabset module includes the following attributes to enhance `uib-tabset`.
 The tabset module includes the following attributes to enhance direct children of the `bb-vertical-tabset` directive.
 
 - `bb-vertical-tabset-group` &mdash; *(Optional.)* Creates a collpsible group of child `uib-tab` elements.
-- `bb-vertical-tabset-group-heading` &mdash; *(Optional.)* Specifies the text to use in the heading of the collapsible group of tabs. As an alternative, the `bb-vertical-tabset-heading` element can be used in a `bb-vertical-tabset-group` to supply a heading.
+- `bb-vertical-tabset-group-heading` &mdash; *(Optional.)* Specifies the text to use in the heading of the collapsible group of tabs.
 - `bb-vertical-tabset-group-is-disabled` &mdash; *(Optional.)* Boolean value that can be set to disabled expanding and collapsing a collapsible group.
 - `bb-vertical-tabset-group-is-open` &mdash; *(Optional.)* Boolean value indicating if the collapsible group is open.
 
