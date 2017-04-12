@@ -366,10 +366,10 @@
             if (angular.isDefined(attr.justified)) {
                 $log.warn('uibTabset justified attribute is incompatible with bbVerticalTabset, it will be ignored');
             }
-            if (angular.isDefined(attr.type) && attr.type !== 'tabs') {
+            if (angular.isDefined(attr.type) && $parse(attr.type)($scope) !== 'tabs') {
                 $log.warn('uibTabset type attribute values other than \'tabs\' are incompatible with bbVerticalTabset and will be ignored');
             }
-            if (angular.isDefined(attr.vertical) && !attr.vertical) {
+            if (angular.isDefined(attr.vertical) && !$parse(attr.vertical)($scope)) {
                 $log.warn('uibTabset vertical attribute values other than true are incompatible with bbVerticalTabset and will be ignored');
             }
 
