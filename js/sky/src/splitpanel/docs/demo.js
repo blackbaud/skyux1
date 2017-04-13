@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function ListbuilderFilterController($uibModalInstance, existingFilters) {
+    function ListbuilderFilterController($uibModalInstance, existingFilters, bbSplitpanelNavigator) {
         var self = this;
 
         function clearAllFilters() {
@@ -51,27 +51,28 @@
 
         self.clearAllFilters = clearAllFilters;
         self.applyFilters = applyFilters;
+        self.splitpanelNavigator = bbSplitpanelNavigator;
 
     }
 
-    ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters'];
+    ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters', 'bbSplitpanelNavigator'];
 
 
-    function ListbuilderModalController($uibModalInstance) {
+    function ListbuilderModalController($uibModalInstance, params) {
         var self = this;
         function save() {
-            $uibModalInstance.close(true);
+            $uibModalInstance.close({ result: true, params: params });
         }
 
         function doNotSave() {
-            $uibModalInstance.close(false);
+            $uibModalInstance.close({ result: false });
         }
         self.save = save;
         self.doNotSave = doNotSave;
 
     }
 
-    ListbuilderModalController.$inject = ['$uibModalInstance'];
+    ListbuilderModalController.$inject = ['$uibModalInstance', 'params'];
 
     function ListbuilderTestController($scope, $timeout, bbModal, $window, bbSplitpanelNavigator) {
         var self = this,
@@ -82,6 +83,7 @@
             nextSkip = 0,
             nextTop = 12,
             recordedFilters = [],
+            isSetFocusToVendor = true,
             dataSet = [
             {
                 name: '$25.00',
@@ -278,6 +280,8 @@
                 resolve: {
                     existingFilters: function () {
                         return angular.copy(self.allAppliedFilters);
+                    }, bbSplitpanelNavigator: function () {
+                        return self.splitpanelNavigator;
                     }
                 }
             }).result
@@ -344,17 +348,18 @@
         }
 
         function next() {
+            var newIndex = 0;
             if (self.selectedItem.$index < self.data.length - 1) {
-                var newIndex = self.selectedItem.$index + 1;
+                newIndex = self.selectedItem.$index + 1;
                 self.selectedItem = self.data[newIndex];
                 self.selectedItem.$index = newIndex;
             }
         }
 
         function previous() {
-
+            var newIndex = 0;
             if (self.selectedItem.$index !== 0) {
-                var newIndex = self.selectedItem.$index - 1;
+                newIndex = self.selectedItem.$index - 1;
                 self.selectedItem = self.data[newIndex];
                 self.selectedItem.$index = newIndex;
             }
@@ -367,6 +372,8 @@
 
             //call it in then block of save 
             self.splitpanelNavigator.invokeMethodWithParameters(func, param);
+
+            self.splitpanelNavigator.setDirtyFormDefault();
         }
 
         function doNotSave(func, param) {
@@ -375,6 +382,8 @@
 
             //call it after load data 
             self.splitpanelNavigator.invokeMethodWithParameters(func, param);
+
+            self.splitpanelNavigator.setDirtyFormDefault();
         }
 
         function downloadTransactions() {
@@ -438,6 +447,7 @@
         self.onlyShowRecorded = onlyShowRecorded;
         self.recordedFilters = recordedFilters;
         self.back = back;
+        self.navigateUpAndDown = navigateUpAndDown;
 
         loadData();
 
@@ -496,8 +506,36 @@
             saveCallback: save,
             doNotSaveCallback: doNotSave,
             modalController: 'ListbuilderModalController as ctrl',
-            modalTemplate: 'demo/splitpanel/confirmpopup.html'
+            modalTemplate: 'demo/splitpanel/confirmpopup.html',
+            scope: $scope
         });
+
+        //this method is used to select item by up/down arrow keys in the list
+        function navigateUpAndDown() {
+            var code = event.keyCode;
+            if ((code == 38 && self.selectedItem.$index !== 0) || code == 40) {
+                self.splitpanelNavigator.checkDirtyForm(nextAndPreviousHandler, code);
+                //setting flag ot have focus on vendor control
+                isSetFocusToVendor = false;
+            }
+        }
+
+        //this method is used to handle next and previous on arrow keys
+        function nextAndPreviousHandler(keyCode) {
+            switch (keyCode) {
+                case 38:
+                    self.previous();
+                    break;
+                case 40:
+                    self.next();
+                    break;
+            }
+
+            if (angular.element("#item" + self.selectedItem.$index) && angular.element("#item" + self.selectedItem.$index)[0]) {
+                angular.element("#item" + self.selectedItem.$index)[0].focus();
+            }
+        }
+
     }
 
     ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbSplitpanelNavigator'];

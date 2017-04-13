@@ -14,18 +14,21 @@
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
                         bbModal.open({
                             controller: options.modalController,
-                            templateUrl: options.modalTemplate
+                            templateUrl: options.modalTemplate,
+                            resolve: {
+                                params: function () {
+                                    return null;
+                                }
+                            }
                         })
-                        .result.then(function (result) {
+                        .result.then(function (modalResult) {
 
-                            forms.workspaceContainerForm.$setPristine();
-
-                            if (result) {
-                                if (saveCallback !== undefined) {
+                            if (modalResult.result) {
+                                if (saveCallback) {
                                     saveCallback(func, param);
                                 }
                             } else {
-                                if (doNotSaveCallback !== undefined) {
+                                if (doNotSaveCallback) {
                                     doNotSaveCallback(func, param);
                                 }
                             }
@@ -39,16 +42,65 @@
 
                 //This method is used to invoke passed method
                 function invokeMethodWithParameters(func, param) {
-                    if (param === undefined) {
-                        func();
-                    } else {
-                        func(param);
+                    if (func) {
+                        if (param) {
+                            func(param);
+                        } else {
+                            func();
+                        }
                     }
                 }
 
+                //this method is used to ser dirty form to default state
+                function setDirtyFormDefault() {
+                    if (angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm)) {
+                        forms.workspaceContainerForm.$setPristine();
+                        return true;
+                    }
+                    return false;
+                }
+
+
+                options.scope.$on('$stateChangeStart', function (event, toState, toParams) {
+                    if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
+                        event.preventDefault();
+                        bbModal.open({
+                            controller: options.modalController,
+                            templateUrl: options.modalTemplate,
+                            resolve: {
+                                params: function () {
+                                    return {
+                                        toState: toState, toParams: toParams
+                                    };
+                                }
+                            }
+                        }).result.then(function (modalResult) {
+                            if (modalResult.result) {
+                                if (saveCallback) {
+                                    saveCallback(navigatetoState, modalResult.params);
+                                }
+                            } else {
+                                if (doNotSaveCallback) {
+                                    doNotSaveCallback();
+                                }
+                            }
+                        }
+
+                        );
+                    }
+                });
+
+
+                //this function used to navigate to passed url 
+                function navigatetoState(nextState) {
+                    options.scope.$$listeners.$stateChangeStart = [];
+                    $state.go(nextState.toState, nextState.toParams);
+                }
+
                 return {
-                    checkDirtyForm: checkDirtyForm,
-                    invokeMethodWithParameters: invokeMethodWithParameters
+                    checkDirtyForm: checkDirtyForm
+                    , setDirtyFormDefault: setDirtyFormDefault
+                    , invokeMethodWithParameters: invokeMethodWithParameters
                 };
             }
         };

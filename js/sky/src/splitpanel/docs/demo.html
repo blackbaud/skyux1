@@ -17,7 +17,7 @@
             <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onSearch,searchText)"
                                     bb-listbuilder-search-text="listCtrl.searchText">
                 <bb-listbuilder-filter>
-                    <bb-filter-button bb-filter-button-on-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onFilterClick)">
+                    <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
                     </bb-filter-button>
                 </bb-listbuilder-filter>
                 <bb-listbuilder-sort>
@@ -52,10 +52,10 @@
                                 <br /> as of {{listCtrl.updatedDate}} <span><a style="cursor: pointer" ng-click="listCtrl.downloadTransactions()">Refresh</a> </span>
                             </bb-splitpanel-list-header>
                             <div class="fixedHeader hidden-xs" style="padding-top: 6px;">
-                                <input bb-check type="checkbox" ng-change="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onlyShowRecorded)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
+                                <input bb-check type="checkbox" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onlyShowRecorded)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
                             </div>
                             <div ng-if="listCtrl.data.length > 0" class="split-panel-list-container">
-                                <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index">
+                                <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown()">
                                     <div style="margin-bottom: 10px">
                                         {{item.name}}
                                     </div>
@@ -220,7 +220,7 @@
                     </label>
                 </form>
             </div>
-            <bb-filter-modal-footer bb-filter-modal-apply="filterCtrl.applyFilters()"
+            <bb-filter-modal-footer bb-filter-modal-apply="filterCtrl.splitpanelNavigator.checkDirtyForm(filterCtrl.applyFilters)"
                                     bb-filter-modal-clear="filterCtrl.clearAllFilters()">
             </bb-filter-modal-footer>
         </div>
