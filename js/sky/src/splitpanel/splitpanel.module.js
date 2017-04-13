@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.splitpanel', 
+    angular.module('sky.splitpanel',
         [
             'sky.splitpanel.header.component',
             'sky.splitpanel.content.custom.item.directive',
@@ -12,6 +12,7 @@
             'sky.splitpanel.workspace.container.component',
             'sky.splitpanel.list.header.component',
             'sky.splitpanel.selected.item.component',
-         'sky.splitpanel.bbSplitpanelNavigator.factory'
+            'sky.splitpanel.bbCheckDirtyForm.factory',
+            'sky.splitpanel.bbSplitpanelConfirmForm.factory'
         ]);
 }());
