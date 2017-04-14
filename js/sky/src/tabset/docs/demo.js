@@ -108,11 +108,17 @@
 
     TabsetTestController.$inject = ['bbModal'];
 
-    function VerticalTabsetDemoController() {
+    function VerticalTabsetDemoController($scope) {
+        var self = this;
 
+        self.showTabs = showTabs;
+
+        function showTabs() {
+            $scope.$broadcast('reinitializeVerticalTabsetDisplay');
+        }
     }
 
-    VerticalTabsetDemoController.$inject = [];
+    VerticalTabsetDemoController.$inject = ['$scope'];
 
     angular.module('stache')
         .controller('CheckModalController', CheckModalController)

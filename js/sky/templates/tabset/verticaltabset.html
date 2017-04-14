@@ -1,10 +1,12 @@
 <div class="bb-vertical-tabset">
   <uib-accordion class="bb-vertical-tabset-tabs"
-      close-others="closeOthers">
+      close-others="closeOthers"
+      ng-hide="isMobile && !showTabs">
     <ul class="nav nav-tabs nav-stacked"
         ng-transclude></ul>
   </uib-accordion>
-  <div class="tab-content bb-vertical-tabset-tab-content">
+  <div class="tab-content"
+      ng-hide="isMobile && showTabs">
     <div class="tab-pane"
          ng-repeat="tab in tabset.tabs"
          ng-class="{active: tabset.active === tab.index}"

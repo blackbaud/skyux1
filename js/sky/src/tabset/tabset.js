@@ -341,7 +341,7 @@
 
     BBVerticalTabsetController.$inject = [];
 
-    function bbVerticalTabset($log, $parse) {
+    function bbVerticalTabset($log, $parse, bbMediaBreakpoints) {
         return {
             controller: BBVerticalTabsetController,
             link: link,
@@ -376,6 +376,18 @@
             scope.closeOthers = angular.isDefined(attr.bbVerticalTabsetCloseOthers) ?
                 $parse(attr.bbVerticalTabsetCloseOthers)($scope) :
                 false;
+            scope.showTabs = true;
+
+            bbMediaBreakpoints.register(mobileBreakpointHandler);
+            $scope.$on('$destroy', function () {
+                bbMediaBreakpoints.unregister(mobileBreakpointHandler);
+            });
+            $scope.$on('reinitializeVerticalTabsetDisplay', function () {
+                scope.showTabs = scope.isMobile;
+                if (scope.isMobile) {
+                    uibTabsetCtrl.active = -1;
+                }
+            });
 
             $scope.$watch(
                 function () {
@@ -389,11 +401,18 @@
                 function () {
                     return uibTabsetCtrl.active;
                 },
-                activateTabGroup
+                function (value) {
+                    scope.showTabs = angular.isUndefined(value) || value === null || value < 0;
+                    activateTabGroup(value);
+                }
             );
 
             if (angular.isDefined(uibTabsetCtrl.active)) {
                 activateTabGroup(uibTabsetCtrl.active);
+            }
+
+            function mobileBreakpointHandler(breakpoints) {
+                scope.isMobile = breakpoints.xs;
             }
 
             function activateTabGroup(newIndex) {
@@ -416,7 +435,7 @@
         }
     }
 
-    bbVerticalTabset.$inject = ['$log', '$parse'];
+    bbVerticalTabset.$inject = ['$log', '$parse', 'bbMediaBreakpoints'];
 
     function BBVerticalTabsetGroupController() {
         var self = this;
@@ -502,16 +521,11 @@
 
     function decorateTemplateUrl(delegate, newTemplateUrl, conditionFn) {
         var originalTemplateUrl = delegate.templateUrl;
-        conditionFn = conditionFn || function () {
-            return true;
-        };
         delegate.templateUrl = function (el, attr) {
             if (conditionFn(el, attr)) {
                 return angular.isDefined(attr.templateUrl) ?
                     attr.templateUrl :
-                    angular.isFunction(newTemplateUrl) ?
-                        newTemplateUrl.apply(this, arguments) :
-                        newTemplateUrl;
+                    newTemplateUrl;
             }
             return angular.isFunction(originalTemplateUrl) ?
                 originalTemplateUrl.apply(this, arguments) :

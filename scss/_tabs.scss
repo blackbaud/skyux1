@@ -256,6 +256,10 @@
             @include animation(fadeInLeft 500ms);
             @include make-xs-column(12);
             border-right-style: none;
+
+            &.ng-hide.ng-animate {
+                display: none !important;
+            }
         }
 
         .tab-content {
@@ -267,6 +271,8 @@
 
 @media (min-width: $screen-sm-min) {
     .bb-vertical-tabset {
+        display: flex;
+
         .bb-vertical-tabset-tabs {
             flex-basis: 25%;
         }
@@ -279,8 +285,6 @@
 }
 
 .bb-vertical-tabset {
-    display: flex;
-
     .panel-group .panel.panel-default {
         box-shadow: none;
 
@@ -312,6 +316,9 @@
 
     .bb-vertical-tabset-tabs {
         height: inherit;
+        overflow: auto;
+        padding-left: 0;
+        padding-right: 0;
 
         .nav.nav-tabs {
             border-bottom-style: none;

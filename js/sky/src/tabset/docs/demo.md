@@ -36,6 +36,11 @@ The tabset module includes the following classes to enhance `uib-tab-heading`.
 - `bb-tab-close-icon` &mdash; When `bb-tab-close` makes a tab closeable, displays a close icon on the tab.
 - `bb-tab-header-count` &mdash; *(Optional.)* Displays a counter alongside the tab header.
 
+### Vertical tabset events ###
+Vertical tabsets will listen for the following events.
+
+- `reinitializeVerticalTabsetDisplay` &mdash; Causes the vertical tabset to revert to its initial display state.
+
 
 <!--
 
