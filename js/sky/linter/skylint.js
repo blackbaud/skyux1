@@ -519,7 +519,7 @@
             message: message
         };
     }
-
+ 
     function findDeprecatedDirectives(el, msgs) {
         var deprecatedDirective,
             deprecatedEls,
