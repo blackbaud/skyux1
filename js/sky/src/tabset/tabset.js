@@ -529,6 +529,7 @@
             }
             return angular.isFunction(originalTemplateUrl) ?
                 originalTemplateUrl.apply(this, arguments) :
+                /* istanbul ignore next: sanity check */
                 originalTemplateUrl;
         };
     }
@@ -536,8 +537,9 @@
     function decorateLink(delegate, requiredDirective, linkFn) {
         var originalRequireIsArray = angular.isArray(delegate.require),
             originalLink = delegate.link,
-            newDir = '?' + requiredDirective;
+            newDir = '?'.concat(requiredDirective);
         delegate.require = originalRequireIsArray ?
+            /* istanbul ignore next: sanity check */
             [newDir].concat(delegate.require) :
             [newDir, delegate.require];
         delegate.compile = function () {
@@ -550,7 +552,10 @@
                     $scope,
                     el,
                     attr,
-                    originalRequireIsArray ? ctrls.slice(1) : ctrls[1],
+                    originalRequireIsArray ?
+                        /* istanbul ignore next: sanity check */
+                        ctrls.slice(1) :
+                        ctrls[1],
                     transclude
                 );
             };
