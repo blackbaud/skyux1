@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function bbSplitpanelNavigator(bbModal) {
+    function bbCheckDirtyForm(bbModal, $state) {
         return {
             init: function (options) {
                 var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, saveCallback = options.saveCallback,
@@ -98,18 +98,18 @@
                 }
 
                 return {
-                    checkDirtyForm: checkDirtyForm
-                    , setDirtyFormDefault: setDirtyFormDefault
-                    , invokeMethodWithParameters: invokeMethodWithParameters
+                    checkDirtyForm: checkDirtyForm,
+                    setDirtyFormDefault: setDirtyFormDefault,
+                    invokeMethodWithParameters: invokeMethodWithParameters
                 };
             }
         };
 
     }
 
-    bbSplitpanelNavigator.$inject = ['bbModal'];
+    bbCheckDirtyForm.$inject = ['bbModal', '$state'];
 
-    angular.module('sky.splitpanel.bbSplitpanelNavigator.factory', ['sky.modal'])
-        .factory('bbSplitpanelNavigator', bbSplitpanelNavigator);
+    angular.module('sky.splitpanel.bbCheckDirtyForm.factory', ['sky.modal'])
+        .factory('bbCheckDirtyForm', bbCheckDirtyForm);
 
 }());

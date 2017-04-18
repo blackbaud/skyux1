@@ -1,4 +1,4 @@
-<div ng-controller="ListbuilderTestController as listCtrl">
+<div ng-controller="SplitPanelTestController as listCtrl">
     <div class="bb-splitpanel">
         <bb-splitpanel-header>
             <div>
@@ -57,7 +57,9 @@
                             <div ng-if="listCtrl.data.length > 0" class="split-panel-list-container">
                                 <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown()">
                                     <div style="margin-bottom: 10px">
-                                        {{item.name}}
+                                        {{item.amount}}
+                                        <span style="float: right" ng-if="item.status=='Recorded'"><i class="fa fa-check-circle fa-2x bb-SplitPanel-icon-sucess " aria-hidden="true"></i></span>
+                                        <span style="float: right" ng-if="item.status=='Ignored'"><i class="fa fa-ban fa-2x" aria-hidden="true"></i></span>
                                     </div>
                                     <div style="margin-bottom: 10px">
                                         {{item.joinDate | date}}
@@ -66,22 +68,8 @@
                                         {{item.occupation}}
                                     </div>
                                     <div style="margin-bottom: 10px">
-                                        {{item.newField}}
+                                        {{item.merchant}}
                                     </div>
-
-                                    <div ng-if="item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                                        <span class="label label-success">Recorded</span>
-                                    </div>
-
-                                    <!--<div ng-if="!item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                                        <span class="label label-danger">Unrecorded</span>
-                                    </div>-->
-
-                                    <div ng-if="item.name.indexOf('-') === 0 && !item.duesPaid" style="margin-bottom: 10px; margin-top: 10px;">
-                                        <span class="label label-danger">Refund</span>
-                                    </div>
-
-
                                 </div>
                             </div>
 
@@ -103,7 +91,7 @@
 
                             <bb-splitpanel-selected-item>
                                 <div>
-                                    {{listCtrl.selectedItem.name}}
+                                    {{listCtrl.selectedItem.amount}}
                                 </div>
                                 <div>
                                     {{listCtrl.selectedItem.joinDate | date}}
@@ -112,7 +100,7 @@
                                     {{listCtrl.selectedItem.occupation}}
                                 </div>
                                 <div>
-                                    {{listCtrl.selectedItem.newField}}
+                                    {{listCtrl.selectedItem.merchant}}
                                 </div>
                             </bb-splitpanel-selected-item>
 
@@ -124,14 +112,14 @@
                                     <br />
                                     <br />
                                     <br />
-                                    Name: <input type="text" ng-model="listCtrl.selectedItem.name" />
+                                    Amount: <input type="text" ng-model="listCtrl.selectedItem.amount" />
                                     <br />
                                     <br />
                                     <bb-card bb-card-size="large" bb-card-selectable="{{listCtrl.showCheckbox}}" bb-card-selected="listCtrl.cardSelected">
                                         <bb-card-title ng-if="listCtrl.showTitle">Large card</bb-card-title>
                                         <bb-card-content ng-if="listCtrl.showContent">
                                             <div style="margin-bottom: 10px">
-                                                {{listCtrl.selectedItem.name}}
+                                                {{listCtrl.selectedItem.amount}}
                                             </div>
                                             <div style="margin-bottom: 10px">
                                                 {{listCtrl.selectedItem.joinDate | date}}
@@ -196,7 +184,7 @@
                             </bb-splitpanel-workspace-container>
 
                             <bb-modal-footer ng-if="listCtrl.data.length > 0">
-                                <bb-modal-footer-button-primary>Record transaction</bb-modal-footer-button-primary>
+                                <bb-modal-footer-button-primary ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.record)">Record transaction</bb-modal-footer-button-primary>
                                 <bb-modal-footer-button>Save</bb-modal-footer-button>
                                 <bb-modal-footer-button>Ignore transaction</bb-modal-footer-button>
                             </bb-modal-footer>

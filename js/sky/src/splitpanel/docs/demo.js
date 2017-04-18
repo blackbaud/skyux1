@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function ListbuilderFilterController($uibModalInstance, existingFilters, bbSplitpanelNavigator) {
+    function ListbuilderFilterController($uibModalInstance, existingFilters, bbCheckDirtyForm) {
         var self = this;
 
         function clearAllFilters() {
@@ -51,11 +51,11 @@
 
         self.clearAllFilters = clearAllFilters;
         self.applyFilters = applyFilters;
-        self.splitpanelNavigator = bbSplitpanelNavigator;
+        self.splitpanelNavigator = bbCheckDirtyForm;
 
     }
 
-    ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters', 'bbSplitpanelNavigator'];
+    ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters', 'bbCheckDirtyForm'];
 
 
     function ListbuilderModalController($uibModalInstance, params) {
@@ -74,7 +74,7 @@
 
     ListbuilderModalController.$inject = ['$uibModalInstance', 'params'];
 
-    function ListbuilderTestController($scope, $timeout, bbModal, $window, bbSplitpanelNavigator) {
+    function SplitPanelTestController($scope, $timeout, bbModal, $window, bbWait, bbCheckDirtyForm) {
         var self = this,
             sortProperty,
             sortDescending,
@@ -83,87 +83,93 @@
             nextSkip = 0,
             nextTop = 12,
             recordedFilters = [],
+            isItemRecorded = false,
             isSetFocusToVendor = true,
             dataSet = [
             {
-                name: '$25.00',
+                amount: '$25.00',
                 occupation: 'Amazon market palce amz.com',
                 joinDate: new Date('09/14/2016'),
-                newField: 'Nicole Guersey (Visa1234)',
+                merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
-                duesPaid: true
+                recorded: false
             },
             {
-                name: '$250.00',
+                amount: '$250.00',
                 occupation: 'Walt Disney world 0914',
                 joinDate: new Date('2/23/2016'),
-                newField: 'David johnson (Visa3333)',
+                merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
-                duesPaid: false
+                status: "Recorded",
+                recorded: true
             },
             {
-                name: '- $25.00',
+                amount: '- $25.00',
                 occupation: 'Amazon',
                 joinDate: new Date('2/23/2016'),
-                newField: 'Nicole Guersey (Visa1234)',
+                merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: true,
-                duesPaid: false
+                status: "Recorded",
+                recorded: true
             },
             {
-                name: '$15.00',
+                amount: '$15.00',
                 occupation: 'Wallmart',
                 joinDate: new Date('2/23/2016'),
-                newField: 'David johnson (Visa3333)',
+                merchant: 'David johnson (Visa3333)',
                 isPersonal: false,
-                duesPaid: true
+                recorded: false
             },
             {
-                name: '$100.00',
+                amount: '$100.00',
                 occupation: 'Walt Disney world 0914',
-                newField: 'Nicole Guersey (Visa1234)',
+                merchant: 'Nicole Guersey (Visa1234)',
                 joinDate: new Date('11/7/1999'),
                 isPersonal: false,
-                duesPaid: false
+                status: "Recorded",
+                recorded: true
             },
             {
-                name: '$25.00',
+                amount: '$25.00',
                 occupation: 'Amazon market palce amz.com',
                 joinDate: new Date('09/14/2016'),
-                newField: 'Nicole Guersey (Visa1234)',
+                merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
-                duesPaid: true
+                status: "Recorded",
+                recorded: true
             },
             {
-                name: '$250.00',
+                amount: '$250.00',
                 occupation: 'Walt Disney world 0914',
                 joinDate: new Date('2/23/2016'),
-                newField: 'David johnson (Visa3333)',
+                merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
-                duesPaid: true
+                status: "Recorded",
+                recorded: true
             },
             {
-                name: '- $25.00',
+                amount: '- $25.00',
                 occupation: 'Amazon',
                 joinDate: new Date('2/23/2016'),
-                newField: 'Nicole Guersey (Visa1234)',
+                merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
-                duesPaid: true
+                recorded: false
             },
             {
-                name: '$15.00',
+                amount: '$15.00',
                 occupation: 'Wallmart',
                 joinDate: new Date('2/23/2016'),
-                newField: 'David johnson (Visa3333)',
+                merchant: 'David johnson (Visa3333)',
                 isPersonal: false,
-                duesPaid: true
+                recorded: false
             },
             {
-                name: '$100.00',
+                amount: '$100.00',
                 occupation: 'Walt Disney world 0914',
-                newField: 'Nicole Guersey (Visa1234)',
+                merchant: 'Nicole Guersey (Visa1234)',
                 joinDate: new Date('11/7/1999'),
                 isPersonal: true,
-                duesPaid: true
+                recorded: false
             }
             ];
 
@@ -184,7 +190,7 @@
                 filteredData = array.filter(function (item) {
                     var property;
                     for (property in item) {
-                        if (item.hasOwnProperty(property) && (property === 'name' || property === 'occupation')) {
+                        if (item.hasOwnProperty(property) && (property === 'amount' || property === 'occupation')) {
                             if (item[property].indexOf(searchText) > -1) {
                                 return true;
                             }
@@ -212,7 +218,7 @@
                     }
                     if (item.name === 'showUnrecorded') {
                         newData = newData.filter(function (filterObj) {
-                            return filterObj.duesPaid === false;
+                            return filterObj.recorded === false;
                         });
                     }
                 }
@@ -280,7 +286,7 @@
                 resolve: {
                     existingFilters: function () {
                         return angular.copy(self.allAppliedFilters);
-                    }, bbSplitpanelNavigator: function () {
+                    }, bbCheckDirtyForm: function () {
                         return self.splitpanelNavigator;
                     }
                 }
@@ -308,13 +314,47 @@
             selectFirstItem();
 
             self.updatedDate = getFormattedDate(new Date());
-
+            $scope.$emit("bbEndWait");
         }
 
         function selectFirstItem() {
-            if (self.data && self.data[0] && self.data[0] !== null) {
-                self.selectedItem = self.data[0];
-                self.selectedItem.$index = 0;
+            var newIndex;
+            if (!isItemRecorded) {
+                if (self.data && self.data.length > 0) {
+                    self.selectedItem = self.data[0];
+                    self.selectedItem.$index = 0;
+
+                    //Whenever first item is selected its imperative that we make the item visible in the viewport
+                    $timeout(function () {
+                        if ($(".split-panel-list-container").length > 0) {
+                            $(".split-panel-list-container")[0].scrollTop = 0;
+                        }
+                    });
+                }
+            } else {
+                //move the selectedItem to next in the list
+                if (!self.showUnrecord) {
+                    if (self.data.length !== (self.selectedItem.$index + 1)) {
+                        newIndex = self.selectedItem.$index + 1;
+                    } else {
+                        newIndex = 0;
+                    }
+                } else {
+                    if (self.data.length !== (self.selectedItem.$index)) {
+                        newIndex = self.selectedItem.$index;
+                    } else {
+                        newIndex = 0;
+                    }
+                }
+                if (newIndex === 0) {
+                    $timeout(function () {
+                        $(".split-panel-list-container")[0].scrollTop = 0;
+                    }, 4000);
+                }
+                self.selectedItem = self.data[newIndex];
+                self.selectedItem.$index = newIndex;
+
+                isItemRecorded = false;
             }
 
         }
@@ -429,6 +469,22 @@
 
         }
 
+        function record() {
+            $scope.$emit("bbBeginWait");
+
+            //adding 2 sec wait to show bbwait, no need of it in implementation
+            return $timeout(function () {
+                //setting itemRecorded flag as success and status of current item as recorded
+                isItemRecorded = true;
+                if (self.data && angular.isDefined(self.selectedItem.$index) && self.data[self.selectedItem.$index]) {
+                    self.data[self.selectedItem.$index].recorded = true;
+                    self.data[self.selectedItem.$index].status = "Recorded";
+                }
+                loadData();
+            }, 2000);
+
+        }
+
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
@@ -448,20 +504,21 @@
         self.recordedFilters = recordedFilters;
         self.back = back;
         self.navigateUpAndDown = navigateUpAndDown;
+        self.record = record;
 
         loadData();
 
         self.sortOptions = [
             {
                 id: 1,
-                label: 'Name (A - Z)',
-                name: 'name',
+                label: 'Amount (ascending)',
+                name: 'amount',
                 descending: false
             },
             {
                 id: 2,
-                label: 'Name (Z - A)',
-                name: 'name',
+                label: 'Amount (Descending)',
+                name: 'amount',
                 descending: true
             },
             {
@@ -500,7 +557,7 @@
 
         self.updatedDate;
         $scope.forms = {};
-        self.splitpanelNavigator = bbSplitpanelNavigator.init({
+        self.splitpanelNavigator = bbCheckDirtyForm.init({
             enableFormDirtyCheck: true,
             forms: $scope.forms,
             saveCallback: save,
@@ -538,12 +595,12 @@
 
     }
 
-    ListbuilderTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbSplitpanelNavigator'];
+    SplitPanelTestController.$inject = ['$scope', '$timeout', 'bbModal', '$window', 'bbWait', 'bbCheckDirtyForm'];
 
 
     angular
         .module('stache')
-        .controller('ListbuilderTestController', ListbuilderTestController)
+        .controller('SplitPanelTestController', SplitPanelTestController)
         .controller('ListbuilderFilterController', ListbuilderFilterController)
         .controller('ListbuilderModalController', ListbuilderModalController);
 }());

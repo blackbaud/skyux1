@@ -12,7 +12,6 @@
             'sky.splitpanel.workspace.container.component',
             'sky.splitpanel.list.header.component',
             'sky.splitpanel.selected.item.component',
-            'sky.splitpanel.bbCheckDirtyForm.factory',
-            'sky.splitpanel.bbSplitpanelConfirmForm.factory'
+            'sky.splitpanel.bbCheckDirtyForm.factory'
         ]);
 }());

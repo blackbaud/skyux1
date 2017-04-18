@@ -102,6 +102,9 @@
         padding: 5px;
     }
 
+    .bb-SplitPanel-icon-sucess {
+        color: $bb-color-green;
+    }
 
     @media (max-width: $screen-xs-max) {
         .selectedItem {
@@ -146,73 +149,8 @@
             font: larger bold;
         }
 
-        .bb-custom-content-item-xs{
+        .bb-custom-content-item-xs {
             padding: 7px 13px;
         }
-
-
-        /*.absolute {
-            position: absolute;
-            left: -100px;
-            width: 100px;
-            height: 100px;
-            background: blue;
-            transition: 1s;
-        }
-
-        .wrapper:hover #slide {
-            transition: 1s;
-            left: 0;
-        }*/
-        /*//appear from right
-        front {
-            .enter-setup {
-                position: absolute;
-                -webkit-transition: 0.5s ease-out all;
-                -webkit-transform: translate3d(100%,0,0);
-            }
-
-            .enter-setup.enter-start {
-                position: absolute;
-                -webkit-transform: translate3d(0,0,0);
-            }
-
-            .leave-setup {
-                position: absolute;
-                -webkit-transition: 0.5s ease-out all;
-                -webkit-transform: translate3d(0,0,0);
-            }
-
-            .leave-setup.leave-start {
-                position: absolute;
-                -webkit-transform: translate3d(-100%,0,0);
-            }
-        }
-
-        // appear from left
-        back {
-
-            .enter-setup {
-                position: absolute;
-                -webkit-transition: 0.5s ease-out all;
-                -webkit-transform: translate3d(-100%,0,0);
-            }
-
-            .enter-setup.enter-start {
-                position: absolute;
-                -webkit-transform: translate3d(0,0,0);
-            }
-
-            .leave-setup {
-                position: absolute;
-                -webkit-transition: 0.5s ease-out all;
-                -webkit-transform: translate3d(0,0,0);
-            }
-
-            .leave-setup.leave-start {
-                position: absolute;
-                -webkit-transform: translate3d(100%,0,0);
-            }
-        }*/
     }
 }
