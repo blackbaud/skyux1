@@ -52,6 +52,10 @@ describe('Tabset module', function () {
         return el.find('li.bb-tab-button button.bb-tab-button-wrap.bb-tab-button-open');
     }
 
+    function getTabs(el) {
+        return el.find('ul.nav-tabs > li');
+    }
+
     describe('tabs with active attribute', function () {
         var tabsHtml,
             el;
@@ -78,10 +82,6 @@ describe('Tabset module', function () {
                 }
             ];
         });
-
-        function getTabs(el) {
-            return el.find('ul.nav-tabs > li');
-        }
 
         it('should change the tab when tab active is set to true', function () {
             var tabsEl;
@@ -345,13 +345,42 @@ describe('Tabset module', function () {
         var addButtonEl,
             openButtonEl,
             callback,
+            allCallbacks,
             collapsibleTabsHtml,
+             collapsibleTabsInnerTabHtml,
+            collapsibleSpecificTabsHtml,
+            collapsibleSpecificNoAddOpenTabsHtml,
             dropdownWrapperEl,
             tabTitleEl,
             tabCount,
             tabsEl;
 
         beforeEach(function () {
+            var specificTabs = '<uib-tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
+                    'Tab 1' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</uib-tab-heading>' +
+                '<span class="bb-test-content">1 content</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
+            '</uib-tab>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
+                    'Tab 2' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</uib-tab-heading>' +
+                '<span class="bb-test-content">2 content</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
+            '</uib-tab>' +
+            '<uib-tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
+                '<uib-tab-heading>' +
+                    'Tab 3' +
+                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
+                '</uib-tab-heading>' +
+                '<span class="bb-test-content">3 content</span>' +
+                '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
+            '</uib-tab>' + 
+            '</uib-tabset>';
             collapsibleTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
             '<uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
                 '<uib-tab-heading>' +
@@ -362,6 +391,31 @@ describe('Tabset module', function () {
                 '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
             '</uib-tab>' +
             '</uib-tabset>';
+            collapsibleTabsInnerTabHtml = '<uib-tabset bb-tabset-collapsible>' +
+                '<uib-tab bb-tab-collapse-header="\'Testing\'">' +
+                '<uib-tab-heading>Testing</uib-tab-heading>' +
+                '<div>' + 
+                'tab body one' +
+                '</div>' +
+                '</uib-tab>' +
+                '<uib-tab bb-tab-collapse-header="\'Second tab\'">' +
+                '<uib-tab-heading>Second tab</uib-tab-heading>' +
+                '<div>' +
+                '<uib-tabset bb-tabset-collapsible>' +
+                '<uib-tab bb-tab-collapse-header="\'Third tab\'">' +
+                '<uib-tab-heading>Third tab</uib-tab-heading>' +
+                '</uib-tab>' +
+                '<uib-tab bb-tab-collapse-header="\'Fourth tab\'">' +
+                '<uib-tab-heading>Fourth tab</uib-tab-heading>' +
+                '</uib-tab>' +
+                '</uib-tabset>' +
+                '</div>' +
+                '</uib-tab>' +
+                '</uib-tabset>';
+            collapsibleSpecificTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
+                specificTabs;
+            collapsibleSpecificNoAddOpenTabsHtml = '<uib-tabset bb-tabset-collapsible>' +
+                specificTabs;
 
 
             $scope.myTabs = [
@@ -427,12 +481,14 @@ describe('Tabset module', function () {
 
         function setupCollapsibleTest(htmlTemplate, spyFunction) {
             var el;
+            allCallbacks = [];
 
             if (angular.isDefined(spyFunction)) {
                 spyOn(bbMediaBreakpoints, 'register').and.callFake(spyFunction);
             } else {
                 spyOn(bbMediaBreakpoints, 'register').and.callFake(function (tabCallback) {
-                    callback = tabCallback;
+                    allCallbacks.push(tabCallback);
+                    callback = allCallbacks[0];
                 });
             }
 
@@ -440,6 +496,8 @@ describe('Tabset module', function () {
             $document.find('body').eq(0).append(el);
             $compile(el)($scope);
 
+            $scope.$digest();
+            $timeout.flush();
             $scope.$digest();
             return el;
         }
@@ -584,31 +642,8 @@ describe('Tabset module', function () {
         });
 
         it('collapses in xs when tabs are specifically defined', function () {
-            var collapsibleNoAddOpenTabsHtml = '<uib-tabset bb-tabset-collapsible>' +
-            '<uib-tab bb-tab-collapse-header="\'Tab 1\'" class="bb-tab-close">' +
-                '<uib-tab-heading>' +
-                    'Tab 1' +
-                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</uib-tab-heading>' +
-                '1 content' +
-            '</uib-tab>' +
-            '<uib-tab bb-tab-collapse-header="\'Tab 2\'" class="bb-tab-close">' +
-                '<uib-tab-heading>' +
-                    'Tab 2' +
-                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</uib-tab-heading>' +
-                '2 content' +
-            '</uib-tab>' +
-            '<uib-tab bb-tab-collapse-header="\'Tab 3\'" class="bb-tab-close">' +
-                '<uib-tab-heading>' +
-                    'Tab 3' +
-                    '<button type="button" class="bb-tab-close-icon" ng-click="closeTab($index, $event)"></button>' +
-                '</uib-tab-heading>' +
-                '3 content' +
-            '</uib-tab>' +
-            '</uib-tabset>',
-                el;
-            el = setupCollapsibleTest(collapsibleNoAddOpenTabsHtml);
+            var el;
+            el = setupCollapsibleTest(collapsibleSpecificNoAddOpenTabsHtml);
             callback({xs: true});
             $scope.$digest();
 
@@ -620,13 +655,22 @@ describe('Tabset module', function () {
             verifyNoAddOpenButtons(el);
 
             el.remove();
-
         });
 
         it('works correctly when starting in extra small mode', function () {
             var el;
 
             el = setupCollapsibleTest(collapsibleTabsHtml, callBreakpointImmediate);
+
+            validateSmallMode(el);
+
+            el.remove();
+        });
+
+        it('works correctly when starting in extra small mode when tabs are specifically defined', function () {
+            var el;
+
+            el = setupCollapsibleTest(collapsibleSpecificTabsHtml, callBreakpointImmediate);
 
             validateSmallMode(el);
 
@@ -778,6 +822,71 @@ describe('Tabset module', function () {
                 dropdownMenuItemEl = el.find('ul.nav-tabs li a');
                 expect(dropdownMenuItemEl[0].style.maxWidth).toBe('');
                 expect(dropdownMenuItemEl[1].style.maxWidth).toBe('');
+
+                el.remove();
+            });
+
+            it('does not set max-width when nested tabs are hidden', function () {
+                var el,
+                    dropdownTextEl,
+                    dropdownMenuItemEl,
+                    dropdownMenuListItemEl,
+                    tabTitleEl;
+
+                el = setupCollapsibleTest(collapsibleTabsInnerTabHtml);
+                
+                $scope.$digest();
+
+                allCallbacks[0]({xs: true});
+                allCallbacks[1]({xs: true});
+
+                $scope.$digest();
+                $scope.$digest();
+
+                //switch tabs
+                tabsEl = getSmallScreenTabs(el);
+
+                tabTitleEl = getTabDropdownButton(el);
+                tabTitleEl.click();
+                $scope.$digest();
+
+                tabsEl.eq(1).click();
+                $scope.$digest();
+
+                //verify no max width
+                dropdownTextEl = el.find('.bb-tab-header-text');
+                dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
+                expect(dropdownTextEl[1].style.maxWidth).toBe('');
+                expect(dropdownMenuItemEl[2].style.maxWidth).toBe('');
+                expect(dropdownMenuItemEl[3].style.maxWidth).toBe('');
+
+                //change to second inner tab
+                tabsEl.eq(3).click();
+                $scope.$digest();
+
+                //verify button/dropdown
+                dropdownTextEl = el.find('.bb-tab-header-text');
+                dropdownMenuItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li a');
+                dropdownMenuListItemEl = el.find('.bb-tabset-dropdown ul.dropdown-menu li');
+                expect(dropdownTextEl.eq(1)).toHaveText('Fourth tab');
+                expect(dropdownMenuItemEl.eq(2)).toHaveText('Third tab');
+                expect(dropdownMenuItemEl.eq(3)).toHaveText('Fourth tab');
+                expect(dropdownMenuListItemEl.eq(3)).toHaveClass('active');
+
+                //switch to large screen
+                allCallbacks[0]({xs: false});
+                allCallbacks[1]({xs: false});
+
+                $scope.$digest();
+
+                //verify inner tabs
+                dropdownTextEl = el.find('.bb-tab-header-text');
+                dropdownMenuItemEl = el.find('ul.nav-tabs li a');
+                dropdownMenuListItemEl = el.find('ul.nav-tabs li');
+                expect(dropdownTextEl.eq(1)).toHaveText('Fourth tab');
+                expect(dropdownMenuItemEl.eq(2)).toHaveText('Third tab');
+                expect(dropdownMenuItemEl.eq(3)).toHaveText('Fourth tab');
+                expect(dropdownMenuListItemEl.eq(3)).toHaveClass('active');
 
                 el.remove();
             });

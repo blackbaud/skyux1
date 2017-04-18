@@ -317,11 +317,11 @@ describe('Grid directive', function () {
     function setupScrollInfinite(inView, parentScrollable) {
         var windowVal = 10,
             offsetVal;
-        offsetVal = inView ? 0 : 30; 
+        offsetVal = inView ? 0 : 30;
 
         spyOn($.fn, 'scrollTop').and.returnValue(windowVal);
         spyOn($.fn, 'height').and.returnValue(windowVal);
-        
+
         if (!parentScrollable) {
             spyOn($.fn, 'offset').and.returnValue({ top: offsetVal });
         } else {
@@ -330,7 +330,7 @@ describe('Grid directive', function () {
 
     }
 
-    
+
 
     it('can load more data when using infinite scroll through a promise', function () {
 
@@ -352,7 +352,39 @@ describe('Grid directive', function () {
 
         $($window).scroll();
         timeoutFlushIfAvailable();
-        
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
+
+    it('can load more data when using infinite scroll through concatenation and resolving a promise', function () {
+
+        var rowEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            locals.gridOptions.data = locals.gridOptions.data.concat(angular.copy(dataSet1));
+            data.promise.resolve();
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+
         rowEl = getGridRows(el);
 
         expect(rowEl.length).toBe(8);
@@ -371,7 +403,7 @@ describe('Grid directive', function () {
         el = setUpGrid(gridHtml, locals);
 
         setGridData(dataSet1);
-        
+
         $scope.locals.gridOptions.data = $scope.locals.gridOptions.data.concat([{
                 name: 'Jimbo',
                 instrument: 'Trumpet'
@@ -1948,6 +1980,46 @@ describe('Grid directive', function () {
 
 
             expect(topScrollbarEl[0].style.width).toBe('599px');
+        });
+
+        it('handles an extended column when tablewrapper size is increased and then decreased', function () {
+            var tableWrapperEl,
+                tableEl,
+                lastColumnWidth,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
+                windowEl = $($window);
+
+            locals.gridOptions.columns[0].width_all = 5;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 5;
+            el = setUpGrid(gridWrapperHtml, locals);
+
+            spyOn($.fn, 'setGridWidth').and.callThrough();
+            spyOn($.fn, 'setColProp').and.callThrough();
+
+            tableWrapperEl = getTableWrapperEl(el);
+
+            tableWrapperEl.width(299);
+            windowEl.trigger('resize');
+
+            tableWrapperEl.width(400);
+            windowEl.trigger('resize');
+
+            tableWrapperEl.width(299);
+            windowEl.trigger('resize');
+            tableEl = el.find('.table-responsive .bb-grid-table');
+
+            lastColumnWidth = tableEl[0].grid.headers[2].width;
+
+            tableWrapperEl.width(400);
+            windowEl.trigger('resize');
+
+            tableWrapperEl.width(299);
+            windowEl.trigger('resize');
+            tableEl = el.find('.table-responsive .bb-grid-table');
+
+            expect(tableEl[0].grid.headers[2].width).toBe(lastColumnWidth);
+
         });
 
         it('takes away from the extended column width when there is an extended column and the tableWrapper resize is less than the extended portion of the column on window resize', function () {

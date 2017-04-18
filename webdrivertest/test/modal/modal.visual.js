@@ -40,4 +40,21 @@ describe('modals', function () {
             })
             .click('.bb-modal .modal-dialog .close');
     });
+
+    it('should match the baseline full-page modal screenshot when one is over another', function () {
+
+        return browser
+            .setupTest('/modal/fixtures/test.full.html')
+            .click('.bb-test-fullpage')
+            .pause(1000)
+            .click('.bb-btn-secondary')
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'modal_fullpage_second',
+                selector: 'body',
+                checkAccessibility: true
+            })
+            .click('.bb-modal .modal-dialog .close')
+            .click('.bb-modal .modal-dialog .close');
+    });
 });

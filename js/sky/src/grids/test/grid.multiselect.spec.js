@@ -11,6 +11,7 @@ describe('Grid multiselect', function () {
         locals,
         dataSet1,
         basicGridHtml,
+        eventArray,
         el,
         fxOff;
 
@@ -132,8 +133,10 @@ describe('Grid multiselect', function () {
 
         basicGridHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-multiselect-id-property="id" bb-grid-multiselect-selected-ids="locals.selectedIds"></bb-grid></div>';
 
+        eventArray = [];
         $scope.$on('bbGridMultiselectSelectedIdsChanged', function (event, data) {
             $scope.locals.selectedIds = data;
+            eventArray = data;
         });
 
         el = {};
@@ -297,12 +300,13 @@ describe('Grid multiselect', function () {
         el = setUpGrid(basicGridHtml, locals);
 
         headerEl = getHeaders(el);
-
         clickSelectAll(headerEl);
 
         expect($scope.locals.selectedIds).toEqual([50]);
-
+       
         clickSelectAll(headerEl);
+
+        expect(eventArray).toEqual([50]);
 
         setGridData(dataSet1);
         rowEl = getGridRows(el);
@@ -310,6 +314,7 @@ describe('Grid multiselect', function () {
         clickSelectAll(headerEl);
 
         expect($scope.locals.selectedIds).toEqual([50, dataSet1[0].id, dataSet1[1].id, dataSet1[2].id, dataSet1[3].id]);
+        expect(eventArray).toEqual([50, dataSet1[0].id, dataSet1[1].id, dataSet1[2].id, dataSet1[3].id]);
 
         expect(rowEl).toHaveClass('ui-state-highlight');
         expect(rowEl.find('td .bb-check-wrapper input')).toBeChecked();
@@ -319,6 +324,7 @@ describe('Grid multiselect', function () {
         $scope.$digest();
 
         expect($scope.locals.selectedIds).toEqual([50]);
+        expect(eventArray).toEqual([50]);
         expect(rowEl).not.toHaveClass('ui-state-highlight');
         expect(findCheckBox(rowEl)).not.toBeChecked();
         expect(headerEl.find('.bb-check-wrapper input').eq(0)).not.toBeChecked();

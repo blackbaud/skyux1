@@ -23,15 +23,29 @@
         };
     }
 
-    function ModalFullContentController() {
+    function ModalFullContentController(bbModal) {
         var vm = this;
+
+        vm.showSecondModal = function () {
+            bbModal.open({
+                controller: 'ModalSecondController as secondCtrl',
+                templateUrl: 'demo/modal/modalformsecond.html'
+            });
+        };
 
         vm.textLabel = 'Sample text box';
 
     }
 
+    function ModalSecondController() {
+        var vm = this;
+        vm.textLabel = 'Second controller';
+    }
+
     ModalTestController.$inject = ['bbModal'];
+    ModalFullContentController.$inject = ['bbModal'];
     angular.module('screenshots', ['sky'])
         .controller('ModalTestController', ModalTestController)
-        .controller('ModalFullContentController', ModalFullContentController);
+        .controller('ModalFullContentController', ModalFullContentController)
+        .controller('ModalSecondController', ModalSecondController);
 }());
