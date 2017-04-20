@@ -159,7 +159,9 @@
 
                     self.filteredItems = filterItems(items, self.appliedFilters);
 
-                });
+                },
+                    angular.noop
+                );
         };
 
         self.onDismiss = function (index) {

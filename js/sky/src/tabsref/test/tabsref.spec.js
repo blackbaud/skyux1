@@ -363,34 +363,34 @@ describe('Tab Sref directive', function () {
                 $timeout.flush();
             }).toThrowError();
         });
+        /*
+            Previously, AngularJS 1.5.x threw an error here expecting a ':' character in an object, 1.6.x does not throw that error.
+        */
+        // it('should throw error on invalid parameters', function () {
+        //     var el,
+        //         $scope = $rootScope.$new(),
+        //         uibTabHtml =
+        //             '<uib-tabset active="locals.active">' +
+        //             '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
+        //             '<uib-tab heading="2" bb-tab-sref="tabstate.b({garbage})" select="tabSelectB()"></uib-tab>' +
+        //             '</uib-tabset>';
 
-        it('should throw error on invalid parameters', function () {
-            var el,
-                $scope = $rootScope.$new(),
-                uibTabHtml =
-                    '<uib-tabset active="locals.active">' +
-                    '<uib-tab heading="1" bb-tab-sref="tabstate.a"></uib-tab>' +
-                    '<uib-tab heading="2" bb-tab-sref="tabstate.b({garbage})" select="tabSelectB()"></uib-tab>' +
-                    '</uib-tabset>';
+        //     spyOn($state, 'go');
 
-            spyOn($state, 'go');
+        //     $state.includes = function (sref) {
+        //         return sref === "tabstate.a";
+        //     };
 
-            $state.includes = function (sref) {
-                return sref === "tabstate.a";
-            };
+        //     /*jslint white: true */
+        //     el = $compile(uibTabHtml)($scope);
+        //     /*jslint white: false */
+        //     expect(function () {
+        //         $timeout.flush();
+        //         $scope.locals.active = 1;
+        //         $scope.$digest();
 
-            /*jslint white: true */
-            el = $compile(uibTabHtml)($scope);
-            /*jslint white: false */
-
-            expect(function () {
-                $timeout.flush();
-
-                $scope.locals.active = 1;
-                $scope.$digest();
-
-                $timeout.flush();
-            }).toThrowError();
-        });
+        //         $timeout.flush();
+        //     }).toThrowError();
+        // });
     });
 });

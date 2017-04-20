@@ -140,24 +140,27 @@
             controller: ['$scope', function ($scope) {
                 var ctrl = this;
 
-                $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
+                function onInit() {
+                    $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
 
-                $scope.clearFilters = function () {
-                    var args = {},
-                        options = ctrl.bbOptions;
+                    $scope.clearFilters = function () {
+                        var args = {},
+                            options = ctrl.bbOptions;
 
-                    if (options && options.clearFilters) {
-                        options.clearFilters(args);
-                        $scope.updateFilters(args.filters);
+                        if (options && options.clearFilters) {
+                            options.clearFilters(args);
+                            $scope.updateFilters(args.filters);
+                        }
+                    };
+
+                    if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                        ctrl.bbGridFiltersSummaryDismissable = true;
                     }
-                };
 
-                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
-                    ctrl.bbGridFiltersSummaryDismissable = true;
+                    $scope.resources = bbResources;
                 }
 
-                $scope.resources = bbResources;
-
+                ctrl.$onInit = onInit;
             }],
             link: function ($scope, element, attrs, bbGrid) {
                 /*jslint unparam: true */

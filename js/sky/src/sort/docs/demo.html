@@ -1,5 +1,6 @@
 <div ng-controller="SortTestController as sortCtrl">
-    <bb-sort>
+    <bb-sort
+     bb-sort-append-to-body>
         <bb-sort-item 
             ng-repeat="item in sortCtrl.sortOptions" 
             bb-sort-item-active="sortCtrl.initialState === item.id"

@@ -240,7 +240,11 @@
         }
 
         function initSearch() {
-
+            if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
+                bbMediaBreakpoints.register(mediaBreakpointCallback);
+                ctrl.$onDestroy = destroySearch;
+            }
+            
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
@@ -257,11 +261,6 @@
 
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
-        }
-
-        if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
-            bbMediaBreakpoints.register(mediaBreakpointCallback);
-            ctrl.$onDestroy = destroySearch;
         }
 
         ctrl.$onInit = initSearch;

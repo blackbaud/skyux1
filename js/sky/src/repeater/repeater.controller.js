@@ -37,39 +37,44 @@
             });
         }
 
-        vm.addItem = function (item) {
-            items.push(item);
-        };
+        function onInit() {
+            vm.addItem = function (item) {
+                items.push(item);
+            };
 
-        vm.removeItem = function (item) {
-            var itemIndex = items.indexOf(item);
+            vm.removeItem = function (item) {
+                var itemIndex = items.indexOf(item);
 
-            /*istanbul ignore else */
-            /* sanity check */
-            if (itemIndex >= 0) {
-                items.splice(itemIndex, 1);
-            }
-        };
+                /*istanbul ignore else */
+                /* sanity check */
+                if (itemIndex >= 0) {
+                    items.splice(itemIndex, 1);
+                }
+            };
 
-        vm.itemExpanded = function (expandedItem) {
-            if (vm.bbRepeaterExpandMode === 'single') {
-                items.forEach(function (item) {
-                    if (item !== expandedItem) {
-                        item.bbRepeaterItemExpanded = false;
-                    }
-                });
-            }
-        };
+            vm.itemExpanded = function (expandedItem) {
+                if (vm.bbRepeaterExpandMode === 'single') {
+                    items.forEach(function (item) {
+                        if (item !== expandedItem) {
+                            item.bbRepeaterItemExpanded = false;
+                        }
+                    });
+                }
+            };
 
-        $scope.$watch(function () {
-            return vm.bbRepeaterExpandMode;
-        }, updateForExpandMode);
+            $scope.$watch(function () {
+                return vm.bbRepeaterExpandMode;
+            }, updateForExpandMode);
 
-        $scope.$watchCollection(function () {
-            return items;
-        }, function () {
-            updateForExpandMode();
-        });
+            $scope.$watchCollection(function () {
+                return items;
+            }, function () {
+                updateForExpandMode();
+            });
+        }
+
+        vm.$onInit = onInit;
+       
     }
 
     BBRepeaterController.$inject = ['$scope'];

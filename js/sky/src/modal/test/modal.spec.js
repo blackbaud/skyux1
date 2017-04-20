@@ -29,7 +29,6 @@ describe('Modal', function () {
         'sky.helpbutton',
         'sky.modal',
         'sky.templates',
-        'uib/template/modal/backdrop.html',
         'uib/template/modal/window.html'
     ));
 
@@ -65,6 +64,11 @@ describe('Modal', function () {
         $('.modal-backdrop').remove();
     });
 
+    function afterModalOpened() {
+        $animate.flush();
+        $rootScope.$digest();
+    }
+
     describe('directive', function () {
         function getPixelValue(val) {
             val = val || '0';
@@ -91,7 +95,7 @@ describe('Modal', function () {
                 templateUrl: 'test/modal/modal.html'
             });
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             expect($('.modal-dialog .test-modal-template-url')).toBeInDOM();
 
@@ -114,7 +118,7 @@ describe('Modal', function () {
             });
             /*jlint white: false */
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             expect($('.modal-dialog .test-modal-template')).toBeInDOM();
 
@@ -139,7 +143,7 @@ describe('Modal', function () {
             });
             /*jlint white: false */
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             modalEl = $('.bb-modal .modal-dialog');
 
@@ -183,7 +187,7 @@ describe('Modal', function () {
                 template: '<bb-modal><div bb-modal-body></div></bb-modal>'
             });
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             expect(getResizeListenerCount()).toBe(resizeListenerCount + 1);
 
@@ -212,7 +216,7 @@ describe('Modal', function () {
                 }
             );
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             $(window).resize();
             $timeout.flush();
@@ -242,7 +246,7 @@ describe('Modal', function () {
                 }
             );
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             expect(bodyEl).toHaveClass('bb-modal-open-fullpage');
 
@@ -264,6 +268,8 @@ describe('Modal', function () {
                     fullPage: true
                 });
 
+            afterModalOpened();
+
             modalInstance2 = bbModal.open(
                 {
                     template: '<bb-modal><div bb-modal-body></div></bb-modal>'
@@ -273,7 +279,7 @@ describe('Modal', function () {
                 }
             );
 
-            $rootScope.$digest();
+            afterModalOpened();
 
             expect(bodyEl).toHaveClass('bb-modal-open-fullpage');
 
@@ -489,7 +495,7 @@ describe('Modal', function () {
                 btnEl = el.find('button.btn.bb-btn-secondary');
 
                 expect(btnEl).toHaveAttr('type', 'button');
-                expect(btnEl.find('span')).toHaveText('Test button');
+                expect(btnEl).toHaveText('Test button');
 
                 el.remove();
             });
@@ -542,7 +548,7 @@ describe('Modal', function () {
                 btnEl = el.find('button.btn.btn-primary');
 
                 expect(btnEl).toHaveAttr('type', 'submit');
-                expect(btnEl.find('span')).toHaveText($scope.primaryButtonText);
+                expect(btnEl).toHaveText($scope.primaryButtonText);
 
                 el.remove();
             });
@@ -595,7 +601,7 @@ describe('Modal', function () {
                 btnEl = el.find('button.btn.btn-link');
 
                 expect(btnEl).toHaveAttr('type', 'button');
-                expect(btnEl.find('span')).toHaveText($scope.cancelButtonText);
+                expect(btnEl).toHaveText($scope.cancelButtonText);
 
                 el.remove();
             });
