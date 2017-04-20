@@ -11458,7 +11458,6 @@ angular.module('sky.palette.config', [])
 
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
-
         }
 
         function searchTextChanged(searchText) {
