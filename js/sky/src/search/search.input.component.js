@@ -22,7 +22,6 @@
 
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
-
         }
 
         function searchTextChanged(searchText) {
