@@ -2,14 +2,13 @@
 (function () {
     'use strict';
 
-    function bbCheckDirtyForm(bbModal, $state) {
+    function bbCheckDirtyForm($state) {
         return {
             init: function (options) {
                 var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, saveCallback = options.saveCallback,
-                    doNotSaveCallback = options.doNotSaveCallback;
+                    doNotSaveCallback = options.doNotSaveCallback, bbModal = options.bbModal;
                 //check dirty and open modal
                 function checkDirtyForm(func, param) {
-
                     //check for dirty form
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
                         bbModal.open({
@@ -22,7 +21,6 @@
                             }
                         })
                         .result.then(function (modalResult) {
-
                             if (modalResult.result) {
                                 if (saveCallback) {
                                     saveCallback(func, param);
@@ -63,7 +61,7 @@
 
                 options.scope.$on('$stateChangeStart', function (event, toState, toParams) {
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
-                        event.preventDefault();
+                        //event.preventDefault();
                         bbModal.open({
                             controller: options.modalController,
                             templateUrl: options.modalTemplate,
@@ -107,7 +105,7 @@
 
     }
 
-    bbCheckDirtyForm.$inject = ['bbModal', '$state'];
+    bbCheckDirtyForm.$inject = ['$state'];
 
     angular.module('sky.splitpanel.bbCheckDirtyForm.factory', ['sky.modal'])
         .factory('bbCheckDirtyForm', bbCheckDirtyForm);

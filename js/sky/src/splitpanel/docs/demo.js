@@ -505,6 +505,7 @@
         self.back = back;
         self.navigateUpAndDown = navigateUpAndDown;
         self.record = record;
+        self.bbmodal = bbModal;
 
         loadData();
 
@@ -564,7 +565,8 @@
             doNotSaveCallback: doNotSave,
             modalController: 'ListbuilderModalController as ctrl',
             modalTemplate: 'demo/splitpanel/confirmpopup.html',
-            scope: $scope
+            scope: $scope,
+            bbModal: self.bbmodal
         });
 
         //this method is used to select item by up/down arrow keys in the list
