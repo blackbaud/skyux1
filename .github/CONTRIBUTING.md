@@ -22,11 +22,12 @@ Before you can contribute to SKY UX, you must have the following prerequisites i
 ### Writing the code
 
 1. Launch a command prompt, `cd` to the folder where you cloned your branch, then run `grunt watch`.  
-2. Write your code, documentation and unit tests.  All new code must have 100% unit test coverage and include documentation for how to use the feature or the pull request will not be accepted.  
+2. Write your code, documentation, unit tests, and visual regression tests.  All new code must have 100% unit test coverage and include documentation for how to use the feature or the pull request will not be accepted.  
 
   - You should include documentation for each SKY UX module you create within your source code. We use JSDoc-style comments at the top of our JavaScript files to generate Markdown documentation. You can generate the Markdown documentation by running the command `grunt docs` from the command line.
   - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watch` task will generate documentation which you can find under `demo/build`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
   - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watch` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
+  - Visual regression tests are required when creating a new component or when changing the styles of an existing component. Visual tests for components are located in named folders in the `webdrivertest/test` folder. Each visual test component folder should have a `fixtures` folder containing a `test.html` and `test.js` file. Our visual tests will take screenshots of the component created in these files. The `*.visual.js` file contains the logic for actually creating the screenshot using the `setupTest` and `compareScreenshot` functions.
   - We've also written a code analysis tool for validating SKYUX components.  Visit [grunt-skylint](https://github.com/blackbaud/grunt-skylint) to learn more.
 
 ### Visual regression tests

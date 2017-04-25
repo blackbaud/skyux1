@@ -44,7 +44,7 @@
 
     tabset.$inject = ['$compile', '$templateCache'];
 
-    function BBTabsetCollapsibleController($scope) {
+    function BBTabsetCollapsibleController($scope, $timeout) {
         var self = this;
 
         self.updateCollapsibleHeader = function (header) {
@@ -52,11 +52,12 @@
         };
 
         self.tabAdded = function () {
-
-            if ($scope.bbTabsetOptions.isSmallScreen) {
-                $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
-            }
-            $scope.bbTabsetOptions.tabCount++;
+            $timeout(function () {
+                $scope.bbTabsetOptions.tabCount++;
+                if ($scope.bbTabsetOptions.isSmallScreen) {
+                    $scope.setupCollapsibleTabs($scope.bbTabsetOptions.isSmallScreen && $scope.bbTabsetOptions.tabCount > 1);
+                }
+            });
         };
 
         self.tabRemoved = function () {
@@ -64,7 +65,7 @@
         };
     }
 
-    BBTabsetCollapsibleController.$inject = ['$scope'];
+    BBTabsetCollapsibleController.$inject = ['$scope', '$timeout'];
 
     function bbTabsetCollapsible($compile, $templateCache, $window, bbMediaBreakpoints) {
         return {
@@ -74,18 +75,30 @@
                 var lastWindowWidth,
                     tabCollapseId = $scope.$id;
 
+                function hasCollapsedTabs() {
+                    return el.children('ul.nav.nav-tabs').length < 1;
+                }
+
                 function getTabUl() {
                     var ulEl = el.children('ul.nav.nav-tabs');
                     if (ulEl.length > 0) {
                         return ulEl.eq(0);
                     } else {
-                        return el.find('.bb-tabset-dropdown.nav.nav-tabs ul').eq(0);
+                        return el.find('> .bb-tabset-dropdown.nav.nav-tabs > ul').eq(0);
+                    }
+                }
+
+                function getAddOpenButtons() {
+                    if (hasCollapsedTabs()) {
+                        return el.find('> .bb-tabset-dropdown > .bb-tab-button-wrap');
+                    } else {
+                        return el.find('> ul.nav.nav-tabs > li.bb-tab-button > .bb-tab-button-wrap');
                     }
                 }
 
                 function getBootstrapTabs() {
                     var ulEl = getTabUl();
-                    return ulEl.find('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
+                    return ulEl.children('li:not(.bb-tab-button):not(.bb-tabset-dropdown)').eq(0);
                 }
 
                 function getDropdownEl() {
@@ -94,7 +107,8 @@
 
                 function setTabMaxWidth() {
                     //later this will resize tabs to fit the window
-                    el.find('ul.nav-tabs li a').css('max-width', '');
+                    var ulEl = getTabUl();
+                    ulEl.find('> li > a').css('max-width', '');
                 }
 
                 function setDropdownMaxWidth() {
@@ -106,7 +120,7 @@
 
                     availableWidth = el.width();
 
-                    addOpenButtonEl = el.find('.bb-tab-button-wrap');
+                    addOpenButtonEl = getAddOpenButtons();
 
                     for (i = 0; i < addOpenButtonEl.length; i++) {
                         addOpenWidth += addOpenButtonEl.eq(i).width();
@@ -114,13 +128,16 @@
 
                     dropdownTextMaxWidth = availableWidth - addOpenWidth - DROPDOWN_CARET_WIDTH - TAB_PADDING;
 
-                    el.find('.bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
-
-                    el.find('.bb-tabset-dropdown ul.dropdown-menu li a').css('max-width', (availableWidth.toString() + 'px'));
-
+                    /* If widths are available, we can override the default max-width of the dropdown button and menu to be more specific */
+                    if (dropdownTextMaxWidth > 0) {
+                        el.find('> .bb-tabset-dropdown > .bb-tab-dropdown-button > .bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
+                    }
+                    
+                    if (availableWidth > 0) {
+                        el.find('> .bb-tabset-dropdown > ul.dropdown-menu > li >  a').css('max-width', (availableWidth.toString() + 'px'));
+                    } 
+                    
                 }
-
-
 
                 function setupCollapsibleTabs(isCollapsed) {
                     var tabsEl,
@@ -129,11 +146,10 @@
                         dropdownButtonsEl;
 
                     tabsEl = getBootstrapTabs();
-                    dropdownButtonsEl = el.find('.bb-tab-button-wrap');
-
+                    dropdownButtonsEl = getAddOpenButtons();
                     ulEl = getTabUl();
                     if (isCollapsed) {
-                        dropdownContainerEl = el.find('.bb-tabset-dropdown');
+                        dropdownContainerEl = el.children('.bb-tabset-dropdown');
 
                         ulEl.addClass('dropdown-menu');
                         ulEl.removeClass('nav');
@@ -148,7 +164,7 @@
 
                         el.prepend(ulEl);
 
-                        ulEl.find('.bb-tab-button').append(dropdownButtonsEl);
+                        ulEl.children('.bb-tab-button').append(dropdownButtonsEl);
                         setTabMaxWidth();
                     }
                 }
@@ -294,7 +310,7 @@
             link: function ($scope, el, attr) {
                 var anchorEl;
 
-                anchorEl = el.find('a');
+                anchorEl = el.children('a');
                 anchorEl.wrapInner(getTemplate($templateCache, 'largeheading'));
                 anchorEl.append($compile(getTemplate($templateCache, 'smallheading'))($scope));
 

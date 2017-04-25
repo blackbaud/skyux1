@@ -162,8 +162,9 @@
         }
     }
 
-    ul.dropdown-menu > li {
+    .bb-tabset-dropdown > ul.dropdown-menu > li {
         > a {
+            max-width: 300px;
             padding-right: 5px;
             .bb-tab-close-icon {
                 padding-top: 5px;
@@ -233,6 +234,7 @@
 }
 
 .bb-tab-header-text {
+    max-width: 200px;
     display: inline;
     overflow: hidden;
     text-overflow: ellipsis;

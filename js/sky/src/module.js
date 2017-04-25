@@ -45,6 +45,7 @@
         'sky.resources',
         'sky.scrollintoview',
         'sky.search',
+        'sky.sectionedform',
         'sky.selectfield',
         'sky.sort',
         'sky.splitpanel',

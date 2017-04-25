@@ -59,7 +59,7 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
 }
 
 .bb-select-field-multiple-item-title {
-    flex: 1;
+    flex-shrink: 0;
 }
 
 .bb-select-field-multiple-item-delete {
