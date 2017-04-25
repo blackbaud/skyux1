@@ -61,7 +61,7 @@
 
                 options.scope.$on('$stateChangeStart', function (event, toState, toParams) {
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
-                        //event.preventDefault();
+                        event.preventDefault();
                         bbModal.open({
                             controller: options.modalController,
                             templateUrl: options.modalTemplate,

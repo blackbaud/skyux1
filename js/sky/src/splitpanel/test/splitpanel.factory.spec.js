@@ -194,65 +194,7 @@
             expect(doNotSaveCalled).toBe(true);
 
         });
-
-        it('doNotSaveCallback should be called in case of save in dirty check1', function () {
-
-            var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
-                    getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
-
-            $scope.forms = {};
-
-            bbmodal = jasmine.createSpyObj('modal', ['open']);
-
-            deffered.resolve({ result: true });
-
-            bbmodal.open.and.returnValue({ result: deffered.promise });
-
-            $scope.listCtrl = {
-
-                getPaneldata: function () {
-                    getPaneldataCalled = true;
-                },
-                data: [{}, {}, {}],
-
-                splitpanelNavigator: bbCheckDirtyForm.init({
-                    enableFormDirtyCheck: true,
-                    forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
-                        $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
-                    },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
-                        $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
-                        doNotSaveCalled = true;
-                    },
-                    modalController: 'ListbuilderModalController as ctrl',
-                    modalTemplate: 'demo/splitpanel/confirmpopup.html',
-                    scope: $scope,
-                    bbModal: bbmodal
-                }),
-                selectedItem: { $index: 0 }
-            };
-
-
-            el = $compile(filterBtnHtml)($scope);
-            $scope.$digest();
-            $scope.forms.workspaceContainerForm.$setDirty();
-            //el.find('.split-panel-list-container div')[0].click();
-            $scope.$broadcast(
-                '$stateChangeStart',
-                { name: 'auth.profile', authenticate: true }, // toState
-                {}, // toParams                   
-                {}, // fromState
-                {}  // fromParams
-            );
-            expect(doNotSaveCalled).toBe(false);
-
-        });
-
+        
         it('setDirtyFormDefault should set the default state of workspaceContainerForm', function () {
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     el;
