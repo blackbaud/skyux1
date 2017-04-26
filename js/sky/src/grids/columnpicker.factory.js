@@ -32,9 +32,10 @@
                 }
             }).result.then(function (selectedColumnIds) {
                 columnPickerOptions.selectedColumnIdsChangedCallback(selectedColumnIds);
-            });
+            }, 
+                angular.noop
+            );
         }
-
         return {
             openColumnPicker: openColumnPicker
         };

@@ -12,4 +12,4 @@
             templateUrl: 'sky/templates/repeater/repeater.component.html',
             transclude: true
         });
-}());
+})();

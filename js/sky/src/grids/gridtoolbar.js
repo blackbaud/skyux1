@@ -17,14 +17,13 @@
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
-                'bbGridToolbarSort': '?bbGridToolbarSort'    
+                'bbGridToolbarSort': '?bbGridToolbarSort'
             },
             link: function ($scope, el, attr, bbGrid, $transclude) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
                 function applySearchText() {
                     var searchEl;
-
                     searchEl = el.find('.bb-search-container input');
                     /*istanbul ignore else */
                     /* sanity check */
@@ -49,7 +48,7 @@
                     if (bbGrid !== null) {
                         bbGrid.searchApplied(searchText);
                     }
-                    
+
                 }
 
                 function searchTextChanged(searchText) {
@@ -172,12 +171,12 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbColumnPicker'];
 
-    angular.module('sky.grids.toolbar', 
+    angular.module('sky.grids.toolbar',
         [
-            'sky.resources', 
-            'sky.grids.columnpicker.factory', 
-            'sky.filter', 
-            'sky.search', 
+            'sky.resources',
+            'sky.grids.columnpicker.factory',
+            'sky.filter',
+            'sky.search',
             'sky.sort'
         ])
         .directive('bbGridToolbar', BBGridToolbar);

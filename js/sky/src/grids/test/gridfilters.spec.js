@@ -9,6 +9,7 @@ describe('Grid filters', function () {
         bbViewKeeperBuilder,
         $compile,
         $document,
+        $timeout,
         el,
         filterGridHtml,
         fxOff,
@@ -39,6 +40,7 @@ describe('Grid filters', function () {
         $compile(el)($scope);
 
         $scope.$digest();
+        $timeout.flush();
 
         return el;
     }
@@ -53,10 +55,10 @@ describe('Grid filters', function () {
         'sky.templates'
     ));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbMediaBreakpoints_, _bbViewKeeperBuilder_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbMediaBreakpoints_, _bbViewKeeperBuilder_, _$timeout_) {
         $scope = _$rootScope_;
         $compile = _$compile_;
-
+        $timeout = _$timeout_;
         $document = _$document_;
         bbMediaBreakpoints = _bbMediaBreakpoints_;
         bbViewKeeperBuilder = _bbViewKeeperBuilder_;
@@ -154,13 +156,13 @@ describe('Grid filters', function () {
         it('can have the filter button and filter icon open a filter flyout menu', function () {
             testBasicFilters(filterGridHtml);
         });
-        
+
 
         it('can have the filter button and filter icon open a filter flyout menu when using a custom toolbar', function () {
             var customHtml = '<div><bb-grid bb-grid-options="locals.gridOptions">' +
                 '<bb-grid-filters bb-options="locals.filterOptions">' +
                 '</bb-grid-filters>' +
-                '<bb-grid-toolbar>' + 
+                '<bb-grid-toolbar>' +
                 '<button>Great button</button>' +
                 '</bb-grid-toolbar>' +
                 '</bb-grid></div>';
@@ -414,8 +416,8 @@ describe('Grid filters', function () {
             var filterToolBarEl,
                 headerEl,
                 contentEl,
-                filterSummaryGridHtml = summaryTemplateFirst + 
-                    summaryTemplateSecond + 
+                filterSummaryGridHtml = summaryTemplateFirst +
+                    summaryTemplateSecond +
                     summaryTemplateThird;
 
             el = setUpGrid(filterSummaryGridHtml);
