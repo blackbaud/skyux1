@@ -391,6 +391,19 @@
 
             $scope.$watch(
                 function () {
+                    return bbVerticalTabsetCtrl.tabGroups.length > 0;
+                },
+                function (val) {
+                    var tablist = el.find('.panel-group');
+                    if (val) {
+                        tablist.attr('role', 'tablist');
+                    } else {
+                        tablist.removeAttr('role');
+                    }
+                }
+            );
+            $scope.$watch(
+                function () {
                     return $parse(attr.bbVerticalTabsetCloseOthers)($scope);
                 },
                 function (val) {
