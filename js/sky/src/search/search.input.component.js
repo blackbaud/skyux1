@@ -7,7 +7,7 @@
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
-
+            
         function applySearchText(searchText) {
             //select input
             var searchEl = $element.find('.bb-search-input');

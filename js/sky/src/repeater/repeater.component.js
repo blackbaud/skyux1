@@ -2,7 +2,7 @@
 
 (function () {
     'use strict';
-
+    
     angular.module('sky.repeater.component', ['sky.repeater.controller'])
         .component('bbRepeater', {
             bindings: {
