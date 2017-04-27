@@ -10833,7 +10833,7 @@ angular.module('sky.palette.config', [])
 
 (function () {
     'use strict';
-
+    
     angular.module('sky.repeater.component', ['sky.repeater.controller'])
         .component('bbRepeater', {
             bindings: {
@@ -11443,7 +11443,7 @@ angular.module('sky.palette.config', [])
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
-
+            
         function applySearchText(searchText) {
             //select input
             var searchEl = $element.find('.bb-search-input');
