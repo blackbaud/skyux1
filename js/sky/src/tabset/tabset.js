@@ -461,6 +461,7 @@
             controller: BBVerticalTabsetGroupController,
             controllerAs: 'bbVerticalTabsetGroup',
             link: link,
+            replace: true,
             require: ['^bbVerticalTabset', 'bbVerticalTabsetGroup'],
             restrict: 'A',
             scope: {

@@ -285,8 +285,9 @@
 }
 
 .bb-vertical-tabset {
-    .panel-group .panel.panel-default {
+    .panel-group .panel {
         box-shadow: none;
+        width: 100%;
 
         &.panel-open {
             @include bb-border('light', 'bottom');
@@ -305,7 +306,7 @@
     }
 
     .panel-body {
-        padding-right: 0;
+        padding: 0;
     }
 
     .panel-title {
