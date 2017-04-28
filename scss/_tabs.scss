@@ -324,7 +324,6 @@
         .nav.nav-tabs {
             border-bottom-style: none;
             overflow: auto;
-            padding-left: 0;
             padding-right: 0;
 
             li {
@@ -360,11 +359,18 @@
                 &.active .nav-link {
                     // Override uib-tab styling
                     background-color: $gray-lightest !important;
+
+                    .bb-field-label {
+                        margin-left: -4px;
+                    }
+                }
+
+                &:last-of-type {
+                    margin-bottom: 5px;
                 }
             }
 
             .nav-link {
-                border-left: 4px solid transparent;
                 border-radius: 0;
                 margin-right: 0;
                 padding-left: 10px;
@@ -408,7 +414,8 @@
         @extend .fa;
         @extend .fa-chevron-down;
 
-        float: right;
+        position: absolute;
+        right: 15px;
         transition: all 0.3s linear;
 
         &.bb-vertical-tabset-group-chevron-open {
