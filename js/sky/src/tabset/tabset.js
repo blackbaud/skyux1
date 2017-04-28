@@ -335,6 +335,9 @@
         self.tabGroups = [];
 
         function addTabGroup(tabGroup) {
+            // Property is used in ARIA attributes. Ensure that it is defined
+            // so that ARIA attributes are properly initialized.
+            tabGroup.isOpen = tabGroup.isOpen || false;
             self.tabGroups.push(tabGroup);
         }
     }
@@ -352,7 +355,8 @@
         function link($scope, el, attr, ctrls) {
             var uibTabsetCtrl = ctrls[0],
                 bbVerticalTabsetCtrl = ctrls[1],
-                scope = el.isolateScope();
+                scope = el.isolateScope(),
+                unbindWatch;
 
             if (angular.isDefined(attr.bbTabsetAdd)) {
                 $log.warn('uibTabset bbTabsetAdd attribute is incompatible with bbVerticalTabset, it will be ignored');
@@ -389,17 +393,18 @@
                 }
             });
 
-            $scope.$watch(
+            unbindWatch = $scope.$watch(
                 function () {
                     return bbVerticalTabsetCtrl.tabGroups.length > 0;
                 },
                 function (val) {
-                    var tablist = el.find('.panel-group');
-                    if (val) {
-                        tablist.attr('role', 'tablist');
-                    } else {
-                        tablist.removeAttr('role');
+                    var group;
+                    if (!val) {
+                        // Remove tablist role for accessibility.
+                        group = el.find('.panel-group');
+                        group.removeAttr('role');
                     }
+                    unbindWatch();
                 }
             );
             $scope.$watch(
