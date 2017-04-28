@@ -14,6 +14,18 @@ describe('tabset', function () {
             });
     }
 
+    function verticalTabsetTest(screenWidth, groups) {
+        var selector = groups ? '#screenshot-vertical-tabset-groups' : '#screenshot-vertical-tabset-no-groups';
+        return browser
+            .setupTest('/tabset/fixtures/test.full.html', screenWidth)
+            .moveToObject(selector + ' li:nth-child(2) a')
+            .compareScreenshot({
+                screenshotName: 'vertical_tabset',
+                selector: '#screenshot-tabset-vertical-all',
+                checkAccessibility: true
+            });
+    }
+
     it('should match the baseline tabset screenshot', function () {
         return tabsetTest(1280);
     });
@@ -50,5 +62,21 @@ describe('tabset', function () {
 
     it('should match the baseline tabset screenshot on small screens', function () {
         return tabsetTest(480);
+    });
+
+    it('should match the baseline vertical tabset screenshot', function () {
+        return verticalTabsetTest(1280, true);
+    });
+
+    it('should match the baseline vertical screenshot on small screens', function () {
+        return verticalTabsetTest(480, true);
+    });
+
+    it('should match the baseline vertical tabset without groups screenshot', function () {
+        return verticalTabsetTest(1280, true);
+    });
+
+    it('should match the baseline vertical tabset without groups screenshot on small screens', function () {
+        return verticalTabsetTest(480, true);
     });
 });
