@@ -351,10 +351,15 @@
                     font-weight: 600;
                 }
 
+                &.active:before {
+                    background-color: $bb-color-blue;
+                    content: ' ';
+                    width: 4px;
+                }
+
                 &.active .nav-link {
                     // Override uib-tab styling
                     background-color: $gray-lightest !important;
-                    border-left: 4px solid $bb-color-blue !important;
                 }
             }
 
