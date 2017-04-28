@@ -11,10 +11,11 @@
                 restrict: 'A',
                 controller: ['$scope', function ($scope) {
                     $scope.selectItem = function () {
+                        var elem = angular.element('.bb-custom-content');
+
                         $scope.$parent.item.$index = $scope.$parent.$index;
                         $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
 
-                        var elem = angular.element('.bb-custom-content');
                         elem.addClass('bb-splitpanel-hidden');
 
                         elem = angular.element('.bb-listbuilder-toolbar-container');

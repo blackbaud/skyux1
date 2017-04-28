@@ -102,7 +102,7 @@
                             <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
                                 <form name="forms.workspaceContainerForm">
 
-                                    <input type="checkbox" bb-check ng-model="listCtrl.isPersonal" /> Personal
+                                    <input type="checkbox" bb-check ng-model="listCtrl.isPersonal" /> Personal expense
 
                                     <br />
                                     <br />
@@ -181,7 +181,6 @@
                             <bb-modal-footer ng-if="listCtrl.data.length > 0">
                                 <bb-modal-footer-button-primary ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.record)">Record transaction</bb-modal-footer-button-primary>
                                 <bb-modal-footer-button>Save</bb-modal-footer-button>
-                                <bb-modal-footer-button>Ignore transaction</bb-modal-footer-button>
                             </bb-modal-footer>
                         </bb-splitpanel-workspace>
                     </div>

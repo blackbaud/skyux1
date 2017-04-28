@@ -100,8 +100,7 @@
                 joinDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
-                status: "Recorded",
-                recorded: true
+                recorded: false
             },
             {
                 amount: '- $25.00',
@@ -109,8 +108,7 @@
                 joinDate: new Date('2/23/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: true,
-                status: "Recorded",
-                recorded: true
+                recorded: false
             },
             {
                 amount: '$15.00',

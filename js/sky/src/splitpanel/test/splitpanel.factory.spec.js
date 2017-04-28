@@ -6,7 +6,8 @@
         var $compile,
             $scope,
         bbCheckDirtyForm,
-        bbmodal, $q;
+        bbmodal, $q, splitpanelContent,
+        workspaceContent;
 
         beforeEach(module(
             'sky.splitpanel',
@@ -22,7 +23,7 @@
 
 
 
-        var splitpanelContent = "<bb-listbuilder-content bb-listbuilder-content-active-view='custom-1'" +
+        splitpanelContent = "<bb-listbuilder-content bb-listbuilder-content-active-view='custom-1'" +
                             "bb-listbuilder-content-view-changed='listCtrl.viewChanged(newView)' bb-listbuilder-content-selected-item='custom-1'>" +
                             "<bb-listbuilder-content-custom bb-listbuilder-content-custom-view-name='custom-1'" +
                             "bb-listbuilder-content-custom-view-switcher-class='fa-pied-piper'" +
@@ -39,8 +40,8 @@
                             "</div>" +
                             "</div>" +
                             "</bb-listbuilder-content-custom>" +
-                            "</bb-listbuilder-content>",
-            workspaceContent = "<bb-splitpanel-workspace class='split-panel-workspace bb-splitpanel-hidden'>" +
+                            "</bb-listbuilder-content>";
+        workspaceContent = "<bb-splitpanel-workspace class='split-panel-workspace bb-splitpanel-hidden'>" +
                             "<bb-splitpanel-workspace-container ng-if='listCtrl.data.length > 0'>" +
                             "<form name='forms.workspaceContainerForm'>" +
                             "</form>" +
@@ -194,7 +195,7 @@
             expect(doNotSaveCalled).toBe(true);
 
         });
-        
+
         it('setDirtyFormDefault should set the default state of workspaceContainerForm', function () {
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     el;

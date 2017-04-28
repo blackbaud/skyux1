@@ -5,7 +5,9 @@
     describe('Splitpanel content', function () {
         var $compile,
         $scope,
-        bbCheckDirtyForm;
+        bbCheckDirtyForm,
+        splitpanelContent,
+        workspaceContent;
 
         beforeEach(module(
             'sky.splitpanel',
@@ -18,32 +20,32 @@
             bbCheckDirtyForm = _bbCheckDirtyForm_;
         }));
 
-        var splitpanelContent = "<bb-listbuilder-content bb-listbuilder-content-active-view='custom-1'" +
-              "bb-listbuilder-content-view-changed='listCtrl.viewChanged(newView)' bb-listbuilder-content-selected-item='custom-1'>" +
-              "<bb-listbuilder-content-custom bb-listbuilder-content-custom-view-name='custom-1'" +
-              "bb-listbuilder-content-custom-view-switcher-class='fa-pied-piper'" +
-              "bb-listbuilder-content-custom-highlight-class='bb-custom-content-item'" +
-              "bb-listbuilder-content-custom-view-switcher-label='Switch to custom'>" +
-              "<div class='split-pattern-container'>" +
-              "<div class='bb-custom-content'>" +
-              "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +
-              "<div class='bb-custom-content-item' bb-splitpanel-content-custom-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
-              "<div style='margin-bottom: 10px'>" +
-              "</div>" +
-              "</div>" +
-              "</div>" +
-              "</div>" +
-              "</div>" +
-              "</bb-listbuilder-content-custom>" +
-              "</bb-listbuilder-content>",
-                  workspaceContent = "<bb-splitpanel-workspace class='split-panel-workspace bb-splitpanel-hidden'>" +
-              "<bb-splitpanel-workspace-container ng-if='listCtrl.data.length > 0'>" +
-              "<form name='forms.workspaceContainerForm'>" +
-              "</form>" +
-              "</bb-splitpanel-workspace-container>" +
-              "</bb-splitpanel-workspace>";
+        splitpanelContent = "<bb-listbuilder-content bb-listbuilder-content-active-view='custom-1'" +
+                            "bb-listbuilder-content-view-changed='listCtrl.viewChanged(newView)' bb-listbuilder-content-selected-item='custom-1'>" +
+                            "<bb-listbuilder-content-custom bb-listbuilder-content-custom-view-name='custom-1'" +
+                            "bb-listbuilder-content-custom-view-switcher-class='fa-pied-piper'" +
+                            "bb-listbuilder-content-custom-highlight-class='bb-custom-content-item'" +
+                            "bb-listbuilder-content-custom-view-switcher-label='Switch to custom'>" +
+                            "<div class='split-pattern-container'>" +
+                            "<div class='bb-custom-content'>" +
+                            "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +
+                            "<div class='bb-custom-content-item' bb-splitpanel-content-custom-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
+                            "<div style='margin-bottom: 10px'>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</bb-listbuilder-content-custom>" +
+                            "</bb-listbuilder-content>";
+        workspaceContent =  "<bb-splitpanel-workspace class='split-panel-workspace bb-splitpanel-hidden'>" +
+                            "<bb-splitpanel-workspace-container ng-if='listCtrl.data.length > 0'>" +
+                            "<form name='forms.workspaceContainerForm'>" +
+                            "</form>" +
+                            "</bb-splitpanel-workspace-container>" +
+                            "</bb-splitpanel-workspace>";
 
-       
+
 
         it('should create a filter button which calls a function on click', function () {
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
