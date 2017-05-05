@@ -343,7 +343,8 @@
                 }
 
                 &.active .bb-field-label,
-                &:hover .bb-field-label {
+                &:hover .bb-field-label,
+                & > a:focus .bb-field-label {
                     color: $text-color !important;
                 }
                 &.active .bb-field-label {
@@ -403,6 +404,10 @@
 
         .panel-heading:hover .panel-title,
         .bb-vertical-tabset-group-active {
+            color: $text-color;
+        }
+        .panel-heading .panel-title > a:focus .bb-vertical-tabset-group-heading {
+            @include bb-focus-indication();
             color: $text-color;
         }
         .bb-vertical-tabset-group-active {

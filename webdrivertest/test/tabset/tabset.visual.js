@@ -14,14 +14,16 @@ describe('tabset', function () {
             });
     }
 
-    function verticalTabsetTest(screenWidth, groups) {
+    function verticalTabsetTest(screenWidth, groups, active, name) {
         var selector = groups ? '#screenshot-vertical-tabset-groups' : '#screenshot-vertical-tabset-no-groups';
+        if (!active) {
+            selector += '-inactive';
+        }
         return browser
             .setupTest('/tabset/fixtures/test.full.html', screenWidth)
-            .moveToObject(selector + ' li:nth-child(2) a')
             .compareScreenshot({
-                screenshotName: 'vertical_tabset',
-                selector: '#screenshot-tabset-vertical-all',
+                screenshotName: 'vertical_tabset_' + name,
+                selector: selector,
                 checkAccessibility: true
             });
     }
@@ -65,18 +67,34 @@ describe('tabset', function () {
     });
 
     it('should match the baseline vertical tabset screenshot', function () {
-        return verticalTabsetTest(1280, true);
+        return verticalTabsetTest(1280, true, true, 'group');
     });
 
     it('should match the baseline vertical screenshot on small screens', function () {
-        return verticalTabsetTest(480, true);
+        return verticalTabsetTest(480, true, true, 'group');
     });
 
     it('should match the baseline vertical tabset without groups screenshot', function () {
-        return verticalTabsetTest(1280, true);
+        return verticalTabsetTest(1280, false, true, 'no_group');
     });
 
     it('should match the baseline vertical tabset without groups screenshot on small screens', function () {
-        return verticalTabsetTest(480, true);
+        return verticalTabsetTest(480, false, true, 'no_group');
+    });
+
+    it('should match the baseline vertical tabset screenshot', function () {
+        return verticalTabsetTest(1280, true, true, 'group_inactive');
+    });
+
+    it('should match the baseline vertical screenshot on small screens', function () {
+        return verticalTabsetTest(480, true, true, 'group_inactive');
+    });
+
+    it('should match the baseline vertical tabset without groups screenshot', function () {
+        return verticalTabsetTest(1280, false, true, 'no_group_inactive');
+    });
+
+    it('should match the baseline vertical tabset without groups screenshot on small screens', function () {
+        return verticalTabsetTest(480, false, true, 'no_group_inactive');
     });
 });

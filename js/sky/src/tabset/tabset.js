@@ -342,8 +342,6 @@
         }
     }
 
-    BBVerticalTabsetController.$inject = [];
-
     function bbVerticalTabset($log, $parse, bbMediaBreakpoints) {
         return {
             controller: BBVerticalTabsetController,
@@ -470,8 +468,6 @@
             self.isOpen = true;
         }
     }
-
-    BBVerticalTabsetGroupController.$inject = [];
 
     function bbVerticalTabsetGroup() {
         return {
