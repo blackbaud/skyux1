@@ -11720,7 +11720,9 @@ angular.module('sky.palette.config', [])
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?',
-                bbSearchMobileResponseEnabled: '<?'
+                bbSearchMobileResponseEnabled: '<?',
+                bbSearchInputId: '<?',
+                bbSearchFullWidth: '<?'
             }
         });
 })();
@@ -16776,7 +16778,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<h1 class="bb-repeater-item-title" ng-transclude>\n' +
         '</h1>');
     $templateCache.put('sky/templates/search/search.input.component.html',
-        '<div class="bb-search-input-inline">\n' +
+        '<div class="bb-search-input-inline" ng-class="{\'bb-search-full-width\': $ctrl.bbSearchFullWidth}">\n' +
         '    <div \n' +
         '        class="bb-search-open-wrapper"\n' +
         '        ng-show="$ctrl.currentBreakpoint.xs"\n' +
@@ -16805,6 +16807,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    data-bbauto-field="SearchBox"\n' +
         '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
         '                    ng-attr-placeholder="{{$ctrl.placeholderText}}"\n' +
+        '                    ng-attr-id="{{$ctrl.bbSearchInputId}}"\n' +
         '                    />    \n' +
         '\n' +
         '                <span class="input-group-btn">\n' +
