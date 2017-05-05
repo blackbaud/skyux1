@@ -499,8 +499,6 @@
         }
     }
 
-    bbVerticalTabsetGroup.$inject = [];
-
     function uibTabsetDirectiveDecorator($delegate) {
         decorateTemplateUrl(
              $delegate[0],
