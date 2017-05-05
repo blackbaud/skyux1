@@ -9,5 +9,5 @@ The string template is specified with the `bb-template` attribute, and child ele
 
 ### Template settings ###
 
- - `bb-template` &mdash; The tokenized string that represents the template. Tokens use the {n} notation where n is the ordinal of the item to replace the token.
-  - `bb-template-item` &mdash; 
+ - `bb-template` &mdash; The tokenized string that represents the template. Tokens use the `{n}` notation where n is the ordinal of the item to replace the token.
+  - `bb-template-item` &mdash; An attribute that specifies an element to be placed in the template, where the `nth` template item is placed at the `{n}` location in the template.
