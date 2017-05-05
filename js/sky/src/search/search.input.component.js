@@ -284,7 +284,8 @@
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?',
-                bbSearchMobileResponseEnabled: '<?'
+                bbSearchMobileResponseEnabled: '<?',
+                bbSearchInputId: '<?'
             }
         });
 })();
