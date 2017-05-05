@@ -16992,6 +16992,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
         '      <button \n' +
         '        class="btn bb-btn-secondary" \n' +
+        '        type="button"\n' +
         '        ng-click="$ctrl.hideSummarySection()"\n' +
         '        ng-attr-title="{{\'summary_actionbar_hide_summary\' | bbResources}}">\n' +
         '        <i class="fa fa-chevron-down"></i>\n' +
@@ -17001,6 +17002,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
         '    <button \n' +
         '      class="btn bb-btn-secondary" \n' +
+        '      type="button"\n' +
         '      ng-click="$ctrl.showSummarySection()"\n' +
         '      ng-attr-title="{{\'summary_actionbar_show_summary\' | bbResources}}">\n' +
         '      <i class="fa fa-chevron-up"></i>\n' +
