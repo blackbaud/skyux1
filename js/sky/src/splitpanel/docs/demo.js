@@ -380,7 +380,9 @@
         //this is used to get panel data on selection of item
         function getPaneldata(p) {
             //get data from database for particualar item
-            //not confirm it should be in panel directive or listBuilder-content
+
+            //hiding page header in case of mobile 
+            self.isDetailScreen = true;
 
             self.selectedItem = p;
         }
@@ -465,6 +467,7 @@
             //elem.hide("slide", { direction: "right" }, 500);
             elem.addClass('bb-splitpanel-hidden');
 
+            self.isDetailScreen = false;
         }
 
         function record() {
@@ -481,6 +484,33 @@
                 loadData();
             }, 2000);
 
+        }
+
+
+        //this method is used to select item by up/down arrow keys in the list
+        function navigateUpAndDown() {
+            var code = event.keyCode;
+            if ((code == 38 && self.selectedItem.$index !== 0) || code == 40) {
+                self.splitpanelNavigator.checkDirtyForm(nextAndPreviousHandler, code);
+                //setting flag ot have focus on vendor control
+                isSetFocusToVendor = false;
+            }
+        }
+
+        //this method is used to handle next and previous on arrow keys
+        function nextAndPreviousHandler(keyCode) {
+            switch (keyCode) {
+                case 38:
+                    self.previous();
+                    break;
+                case 40:
+                    self.next();
+                    break;
+            }
+
+            if (angular.element("#item" + self.selectedItem.$index) && angular.element("#item" + self.selectedItem.$index)[0]) {
+                angular.element("#item" + self.selectedItem.$index)[0].focus();
+            }
         }
 
         self.onFilterClick = onFilterClick;
@@ -547,13 +577,6 @@
         ];
 
         self.initialState = self.sortOptions[4].id;
-
-
-        self.showTitle = true;
-        self.showContent = true;
-        self.showActions = true;
-        self.showCheckbox = true;
-
         self.updatedDate;
         $scope.forms = {};
         self.splitpanelNavigator = bbCheckDirtyForm.init({
@@ -566,32 +589,6 @@
             scope: $scope,
             bbModal: self.bbmodal
         });
-
-        //this method is used to select item by up/down arrow keys in the list
-        function navigateUpAndDown() {
-            var code = event.keyCode;
-            if ((code == 38 && self.selectedItem.$index !== 0) || code == 40) {
-                self.splitpanelNavigator.checkDirtyForm(nextAndPreviousHandler, code);
-                //setting flag ot have focus on vendor control
-                isSetFocusToVendor = false;
-            }
-        }
-
-        //this method is used to handle next and previous on arrow keys
-        function nextAndPreviousHandler(keyCode) {
-            switch (keyCode) {
-                case 38:
-                    self.previous();
-                    break;
-                case 40:
-                    self.next();
-                    break;
-            }
-
-            if (angular.element("#item" + self.selectedItem.$index) && angular.element("#item" + self.selectedItem.$index)[0]) {
-                angular.element("#item" + self.selectedItem.$index)[0].focus();
-            }
-        }
 
     }
 

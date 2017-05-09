@@ -10,24 +10,20 @@
 
     .split-pattern-container {
         -ms-box-orient: horizontal;
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -moz-flex;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-justify-content: space-around;
-        justify-content: space-around;
-        -webkit-flex-flow: row wrap;
-        flex-flow: row wrap;
-        -webkit-align-items: stretch;
-        align-items: stretch;
+        height: 100%;
+        width: 100%;
+        display:inline-block;
     }
 
     .bb-custom-content {
-        flex: .8;
         background-color: $form-background;
         border-right: 1px solid #f3f3f4;
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 30%;
+        min-width: 15%;
+        max-width: 75%;
     }
 
     .bb-custom-content-selectable-item {
@@ -35,10 +31,13 @@
     }
 
     .split-panel-workspace {
-        flex: 2;
         border-left: 9px solid #f3f3f4;
         border-right: 9px solid #f3f3f4;
         background-color: $form-background;
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 70%;
     }
 
     .split-panel-workspace-container {
@@ -86,12 +85,22 @@
         display: none;
     }
 
-    .bb-splitPanel-pageHeader {
-        padding: $padding-half;
-    }
-
     .bb-SplitPanel-icon-sucess {
         color: $bb-color-green;
+    }
+
+    .ui-resizable-e {
+        cursor: e-resize;
+        width: 7px;
+        right: -5px;
+        top: 0;
+        height: 100%;
+    }
+
+    .ui-resizable-handle {
+        position: absolute;
+        font-size: 0.1px;
+        display: block;
     }
 
     @media (max-width: $screen-xs-max) {
@@ -110,7 +119,8 @@
         }
 
         .bb-custom-content {
-            flex: 1;
+            width: 100% !important;
+            max-width: 100% !important;
             background-color: $form-background;
             border-right: 1px solid #f3f3f4;
         }
@@ -124,6 +134,7 @@
         .split-panel-workspace {
             background-color: $form-background;
             border: none;
+            width: 100% !important;
         }
 
         .selected-item-xs {

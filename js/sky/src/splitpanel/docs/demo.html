@@ -1,18 +1,13 @@
 <div ng-controller="SplitPanelTestController as listCtrl">
-    <div class="bb-splitpanel">
-        <bb-splitpanel-header>
-            <div>
-                <h3>
-                    Page Header
-                </h3>
-                <div>
-                    <div>
-                        $10.00
-                    </div>
-                    <div style="color:gray">Item total</div>
-                </div>
-            </div>
-        </bb-splitpanel-header>
+    <bb-splitpanel>
+        <bb-page-summary ng-class="{'hidden-xs':listCtrl.isDetailScreen }">
+            <bb-page-summary-title>
+                Page Header
+            </bb-page-summary-title>
+            <bb-page-summary-key-info>
+                <div class="bb-key-info-item">$100.00</div>
+            </bb-page-summary-key-info>
+        </bb-page-summary>
         <bb-listbuilder>
             <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onSearch,searchText)"
                                     bb-listbuilder-search-text="listCtrl.searchText">
@@ -40,153 +35,117 @@
                 </bb-listbuilder-filter-summary>
             </bb-listbuilder-toolbar>
             <bb-listbuilder-content bb-listbuilder-content-active-view="custom-1">
-                    <div class="split-pattern-container">
-                        <div class="bb-custom-content">
-                            <bb-splitpanel-list-header>
+                <bb-splitpanel-container>
+                    <bb-splitpanel-list-panel max-width-in-percentage="70" min-width-in-percentage="20">
+                        <bb-splitpanel-list-fixed-header>
+                            <bb-splitpanel-list-fixed-header-item>
                                 <span>{{listCtrl.data.length}}</span> Transactions
-                                <br /> as of {{listCtrl.updatedDate}} <span><a style="cursor: pointer" ng-click="listCtrl.downloadTransactions()">Refresh</a> </span>
-                            </bb-splitpanel-list-header>
-                            <div class="fixedHeader hidden-xs" style="padding-top: 6px;">
+                            </bb-splitpanel-list-fixed-header-item>
+                            <bb-splitpanel-list-fixed-header-filter>
                                 <input bb-check type="checkbox" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onlyShowRecorded)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
-                            </div>
-                            <div ng-if="listCtrl.data.length > 0" class="split-panel-list-container">
-                                <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown()">
-                                    <div style="margin-bottom: 10px">
-                                        {{item.amount}}
-                                        <span style="float: right" ng-if="item.status=='Recorded'"><i class="fa fa-check-circle fa-2x bb-SplitPanel-icon-sucess " aria-hidden="true"></i></span>
-                                        <span style="float: right" ng-if="item.status=='Ignored'"><i class="fa fa-ban fa-2x" aria-hidden="true"></i></span>
-                                    </div>
-                                    <div style="margin-bottom: 10px">
-                                        {{item.joinDate | date}}
-                                    </div>
-                                    <div style="margin-bottom: 10px">
-                                        {{item.occupation}}
-                                    </div>
-                                    <div style="margin-bottom: 10px">
-                                        {{item.merchant}}
-                                    </div>
-                                </div>
-                            </div>
+                            </bb-splitpanel-list-fixed-header-filter>
+                        </bb-splitpanel-list-fixed-header>
 
-                            <div ng-if="listCtrl.data.length === 0" class="split-panel-list-container" ng-class="{'align-center':listCtrl.data.length===0}">
-                                <i> No Items found</i>
+                        <div ng-if="listCtrl.data.length > 0" class="split-panel-list-container">
+                            <div class="bb-custom-content-item" bb-splitpanel-content-custom-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown()">
+                                <div style="margin-bottom: 10px">
+                                    {{item.amount}}
+                                    <span style="float: right" ng-if="item.status=='Recorded'"><i class="fa fa-check-circle fa-2x bb-SplitPanel-icon-sucess " aria-hidden="true"></i></span>
+                                    <span style="float: right" ng-if="item.status=='Ignored'"><i class="fa fa-ban fa-2x" aria-hidden="true"></i></span>
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    {{item.joinDate | date}}
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    {{item.occupation}}
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    {{item.merchant}}
+                                </div>
                             </div>
                         </div>
 
-                        <bb-splitpanel-workspace class="split-panel-workspace bb-splitpanel-hidden">
-                            <bb-splitpanel-workspace-header class="bb-splitpanel-show-xs">
+                        <div ng-if="listCtrl.data.length === 0" class="split-panel-list-container" ng-class="{'align-center':listCtrl.data.length===0}">
+                            <i> No Items found</i>
+                        </div>
+                    </bb-splitpanel-list-panel>
 
-                                <div ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.back)" class="navigation-panel"> <div class="glyphicon glyphicon-chevron-left" style="color:gray"></div> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</div>
+                    <bb-splitpanel-workspace>
+                        <bb-splitpanel-mobile-workspace-header class="bb-splitpanel-show-xs">
 
-                                <div style="float:right;">
-                                    <span type="button" class="glyphicon glyphicon-menu-up" ng-disabled="listCtrl.selectedItem.$index === 0" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.previous)"></span>
-                                    <span type="button" class="glyphicon glyphicon-menu-down" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.next)"></span>
-                                </div>
-                            </bb-splitpanel-workspace-header>
+                            <div ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.back)" class="navigation-panel"> <div class="glyphicon glyphicon-chevron-left" style="color:gray"></div> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</div>
 
-                            <bb-splitpanel-selected-item>
-                                <div>
-                                    {{listCtrl.selectedItem.amount}}
-                                </div>
-                                <div>
-                                    {{listCtrl.selectedItem.joinDate | date}}
-                                </div>
-                                <div>
-                                    {{listCtrl.selectedItem.occupation}}
-                                </div>
-                                <div>
-                                    {{listCtrl.selectedItem.merchant}}
-                                </div>
-                            </bb-splitpanel-selected-item>
+                            <div style="float:right;">
+                                <span type="button" class="glyphicon glyphicon-menu-up" ng-disabled="listCtrl.selectedItem.$index === 0" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.previous)"></span>
+                                <span type="button" class="glyphicon glyphicon-menu-down" ng-disabled="listCtrl.selectedItem.$index === listCtrl.data.length-1" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.next)"></span>
+                            </div>
+                        </bb-splitpanel-mobile-workspace-header>
 
-                            <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
-                                <form name="forms.workspaceContainerForm">
+                        <bb-splitpanel-mobile-selected-item>
+                            <div>
+                                {{listCtrl.selectedItem.amount}}
+                            </div>
+                            <div>
+                                {{listCtrl.selectedItem.joinDate | date}}
+                            </div>
+                            <div>
+                                {{listCtrl.selectedItem.occupation}}
+                            </div>
+                            <div>
+                                {{listCtrl.selectedItem.merchant}}
+                            </div>
+                        </bb-splitpanel-mobile-selected-item>
 
+                        <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
+                            <form name="forms.workspaceContainerForm">
+
+                                <div class="col-xs-12" style="margin:20px">
+
+                                </div>
+
+                                <div class="col-xs-11">
                                     <input type="checkbox" bb-check ng-model="listCtrl.isPersonal" /> Personal expense
-
-                                    <br />
-                                    <br />
-                                    <br />
-                                    Amount: <input type="text" ng-model="listCtrl.selectedItem.amount" />
-                                    <br />
-                                    <br />
-                                    <bb-card bb-card-size="large" bb-card-selectable="{{listCtrl.showCheckbox}}" bb-card-selected="listCtrl.cardSelected">
-                                        <bb-card-title ng-if="listCtrl.showTitle">Large card</bb-card-title>
-                                        <bb-card-content ng-if="listCtrl.showContent">
-                                            <div style="margin-bottom: 10px">
-                                                {{listCtrl.selectedItem.amount}}
-                                            </div>
-                                            <div style="margin-bottom: 10px">
-                                                {{listCtrl.selectedItem.joinDate | date}}
-                                            </div>
-                                            <div style="margin-bottom: 10px">
-                                                {{listCtrl.selectedItem.occupation}}
-                                            </div>
-                                        </bb-card-content>
-                                        <bb-card-actions ng-if="listCtrl.showActions">
-                                            <button type="button" class="btn btn-default" ng-click="next()">Click me</button>
-                                        </bb-card-actions>
-                                    </bb-card>
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
+                                </div>
+                                <br />
+                                <div class="col-lg-4 col-xs-11">
                                     <div>
-                                        <ul class="list-unstyled">
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" bb-check ng-model="listCtrl.showTitle" /> Show title
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" bb-check ng-model="listCtrl.showContent" /> Show content
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" bb-check ng-model="listCtrl.showActions" /> Show action
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" bb-check ng-model="listCtrl.showCheckbox" /> Show checkbox
-                                                </label>
-                                            </li>
-                                        </ul>
+                                        <label class="control-label" for="name">Name</label>
+                                        <input class="form-control" name="name" ng-model="listCtrl.selectedItem.merchant" type="text" />
                                     </div>
-                                </form>
-                            </bb-splitpanel-workspace-container>
+                                </div>
+                                <br />
+                                <div class="col-lg-4 col-xs-11">
+                                    <div>
+                                        <label class="control-label" for="id">Invoice Id</label>
+                                        <input class="form-control" name="id" type="text" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="col-lg-4 col-xs-11">
+                                    <div>
+                                        <label class="control-label" for="id">Amount</label>
+                                        <input class="form-control" name="Amount" ng-model="listCtrl.selectedItem.amount" type="text" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="col-lg-4 col-xs-11">
+                                    <div>
+                                        <label class="control-label" for="id">Description</label>
+                                        <input class="form-control" name="Description" ng-model="listCtrl.selectedItem.occupation" type="text" />
+                                    </div>
+                                </div>
+                            </form>
+                        </bb-splitpanel-workspace-container>
 
-                            <bb-modal-footer ng-if="listCtrl.data.length > 0">
-                                <bb-modal-footer-button-primary ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.record)">Record transaction</bb-modal-footer-button-primary>
-                                <bb-modal-footer-button>Save</bb-modal-footer-button>
-                            </bb-modal-footer>
-                        </bb-splitpanel-workspace>
-                    </div>
+                        <bb-modal-footer ng-if="listCtrl.data.length > 0">
+                            <bb-modal-footer-button-primary ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.record)">Record transaction</bb-modal-footer-button-primary>
+                            <bb-modal-footer-button>Save</bb-modal-footer-button>
+                        </bb-modal-footer>
+                    </bb-splitpanel-workspace>
+                </bb-splitpanel-container>
             </bb-listbuilder-content>
         </bb-listbuilder>
-    </div>
+    </bb-splitpanel>
 </div>
 
 <script type="text/ng-template" id="demo/listbuilder/filters.html">

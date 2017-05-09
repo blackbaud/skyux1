@@ -9,9 +9,6 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 
 ###Splitpanel directive###
 
-
-`bb-splitpanel-header` &mdash; Header of complete split panel, hidden in the detail screen of mobile version.
-
 `bb-listbuilder ` &mdash; [Listbuilder](../listbuilder) is existing sky component which is used to show items in list. 
 
 `bb-listbuilder-toolbar ` &mdash; Component for the Listbuilder toolbar. its sub components can be refer from [Listbuilder](../listbuilder).
@@ -20,19 +17,21 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 
 	- `bb-splitpanel-list-header ` &mdash; Fixed header in left panel 
 	 
-	- `bb-splitpanel-content-custom-item ` &mdash; Attribute that should be placed on an individual custom item in the listbuilder. 
+	- `bb-splitpanel-list-item ` &mdash; Attribute that should be placed on an individual custom item in the listbuilder. 
 
 `bb-splitpanel-workspace  ` &mdash; Container for workspace panel  
-
-	- `bb-splitpanel-workspace-header ` &mdash; Workspace header visible only on mobile version.
-
-	- `bb-splitpanel-selected-item ` &mdash; Placeholder to show selected item in detail page of mobile version.
 
 	- `bb-splitpanel-workspace-container ` &mdash; workspace for detail of selected item. This can be treat as stand alone page.
 
 	- `bb-modal-footer ` &mdash; Placeholder for action buttons.
 
 
+
+###Mobile version directive###
+
+`bb-splitpanel-mobile-workspace-header ` &mdash; Workspace header visible only on mobile version.
+
+`bb-splitpanel-mobile-selected-item ` &mdash; Placeholder to show selected item in detail page of mobile version.
 
 
 
@@ -44,9 +43,9 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 
 		- `options.forms` &mdash; Form object of workspace.
 
-		- `options.saveCallback ` &mdash; Callback method which will call after save operation.
+		- `options.action1Callback ` &mdash; Callback method which will call after action 1 clicked.
 
-		- `options.doNotSaveCallback ` &mdash; Callback method which will call after do not save operation.
+		- `options.action2Callback ` &mdash; Callback method which will call after action 2 clicked.
 
 		- `options.bbModal ` &mdash; Object of bbmodal component injected in page.
 
