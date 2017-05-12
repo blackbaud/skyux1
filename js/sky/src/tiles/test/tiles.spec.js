@@ -159,6 +159,22 @@ describe('Tile', function () {
             expect(elScope.bbTile.isCollapsed).toBe(false);
         });
 
+        it('should collapse/expand when the bb-tile-collapsed is initialized to true', function () {
+            var $scope = $rootScope.$new(),
+                el,
+                elScope;
+
+            el = $compile(
+                '<bb-tile bb-tile-collapsed="true">a</bb-tile>'
+            )($scope);
+
+            $scope.$digest();
+
+            elScope = el.isolateScope();
+            expect(el).toHaveClass('collapsed');
+            expect(elScope.bbTile.isCollapsed).toBe(true);
+        });
+
         it('should update the tile state the tile dashboard is initialized', function () {
             var $scope = $rootScope.$new(),
                 el,
