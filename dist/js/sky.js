@@ -13407,13 +13407,6 @@ angular.module('sky.palette.config', [])
     uibTabsetDirectiveDecorator.$inject = ['$delegate'];
 
     function uibTabDirectiveDecorator($delegate) {
-        decorateTemplateUrl(
-            $delegate[0],
-            'sky/templates/tabset/verticaltabsettab.html',
-            function (el) {
-                return el.parent('[bb-vertical-tabset], [bb-vertical-tabset-group]').length > 0;
-            }
-        );
         decorateLink(
             $delegate[0],
             '^bbVerticalTabsetGroup',
@@ -17360,13 +17353,6 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            ng-transclude>\n' +
         '        </ul>\n' +
         '    </div>\n' +
-        '</li>\n' +
-        '');
-    $templateCache.put('sky/templates/tabset/verticaltabsettab.html',
-        '<li ng-class="[{active: active, disabled: disabled}, classes]" class="uib-tab nav-item">\n' +
-        '  <a href ng-click="select($event)" class="nav-link" uib-tab-heading-transclude>\n' +
-        '    <span class="bb-field-label">{{heading}}</span>\n' +
-        '  </a>\n' +
         '</li>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/container.html',
