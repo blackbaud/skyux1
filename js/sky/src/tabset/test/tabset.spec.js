@@ -1117,11 +1117,6 @@ describe('Tabset module', function () {
             expect(el.html()).toContain('uib-accordion');
         });
 
-        it('uses vertical tabset tab template when bb-vertical-tabset is present', function () {
-            buildVerticalTabsetElement(groupedTabsHtml);
-            expect(el.html()).toContain('bb-field-label');
-        });
-
         it('does not deactivate all tabs when reinitialized on non-mobile device', function () {
             $scope.active = 1;
             setUpBreakpointTest(false);

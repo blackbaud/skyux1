@@ -342,28 +342,26 @@
                     white-space: normal;
                 }
 
-                &.active .bb-field-label,
-                &:hover .bb-field-label,
-                & > a:focus .bb-field-label {
+                .nav-link {
+                    @extend .bb-field-label;
+                }
+
+                &.active .nav-link,
+                &:hover .nav-link,
+                & > a:focus .nav-link {
                     color: $text-color !important;
                 }
-                &.active .bb-field-label {
+                &.active .nav-link {
+                    // Override uib-tab styling
+                    background-color: $gray-lightest !important;
                     font-weight: 600;
+                    padding-left: $base-padding - 4px;
                 }
 
                 &.active:before {
                     background-color: $bb-color-blue;
                     content: ' ';
                     width: 4px;
-                }
-
-                &.active .nav-link {
-                    // Override uib-tab styling
-                    background-color: $gray-lightest !important;
-
-                    .bb-field-label {
-                        margin-left: -4px;
-                    }
                 }
 
                 &:last-of-type {

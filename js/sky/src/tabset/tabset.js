@@ -513,13 +513,6 @@
     uibTabsetDirectiveDecorator.$inject = ['$delegate'];
 
     function uibTabDirectiveDecorator($delegate) {
-        decorateTemplateUrl(
-            $delegate[0],
-            'sky/templates/tabset/verticaltabsettab.html',
-            function (el) {
-                return el.parent('[bb-vertical-tabset], [bb-vertical-tabset-group]').length > 0;
-            }
-        );
         decorateLink(
             $delegate[0],
             '^bbVerticalTabsetGroup',
