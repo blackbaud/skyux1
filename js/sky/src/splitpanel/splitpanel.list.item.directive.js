@@ -12,22 +12,23 @@
                 controller: ['$scope', function ($scope) {
                     $scope.selectItem = function () {
                         var elem = angular.element('.bb-custom-content');
-                        if (!$scope.bbSplitpanelItemIsActive) {
-                            $scope.$parent.item.$index = $scope.$parent.$index;
-                            $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
+                        $scope.$parent.item.$index = $scope.$parent.$index;
+                        $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
+                        if (elem) {
+                            elem.addClass('bb-splitpanel-hidden');
                         }
-
-                        elem.addClass('bb-splitpanel-hidden');
-
                         elem = angular.element('.bb-listbuilder-toolbar-container');
-                        elem.addClass('bb-splitpanel-hidden');
-
+                        if (elem) {
+                            elem.addClass('bb-splitpanel-hidden');
+                        }
                         elem = angular.element('.bb-splitPanel-pageHeader');
-                        elem.addClass('bb-splitpanel-hidden');
-
+                        if (elem) {
+                            elem.addClass('bb-splitpanel-hidden');
+                        }
                         elem = angular.element('.split-panel-workspace');
-                        elem.removeClass('bb-splitpanel-hidden');
-
+                        if (elem) {
+                            elem.removeClass('bb-splitpanel-hidden');
+                        }
                     };
                 }],
                 scope: {
