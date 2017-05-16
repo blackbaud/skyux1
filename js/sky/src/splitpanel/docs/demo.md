@@ -9,21 +9,33 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 
 ###Splitpanel directive###
 
+`bb-splitpanel ` &mdash; container for the entire split panel.
+
 `bb-listbuilder ` &mdash; [Listbuilder](../listbuilder) is existing sky component which is used to show items in list. 
 
 `bb-listbuilder-toolbar ` &mdash; Component for the Listbuilder toolbar. its sub components can be refer from [Listbuilder](../listbuilder).
 
 `bb-listbuilder-content ` &mdash; listbuilder custom item 
 
-	- `bb-splitpanel-list-header ` &mdash; Fixed header in left panel 
-	 
-	- `bb-splitpanel-list-item ` &mdash; Attribute that should be placed on an individual custom item in the listbuilder. 
+	- `bb-splitpanel-container ` &mdash; Container for splitpanel  
 
-`bb-splitpanel-workspace  ` &mdash; Container for workspace panel  
+		- `bb-splitpanel-list-panel ` &mdash; Draggable container for splitpanel list section having `max-width-in-percentage ` and `min-width-in-percentage ` to set maximum and minimum width of this panel.
+		
+			- `bb-splitpanel-list-fixed-header ` &mdash; Placeholder for fixed header in left Panel.
+				
+				- `bb-splitpanel-list-fixed-header-item ` &mdash; Placeholder for fixed header item.   
+				
+				- `bb-splitpanel-list-fixed-header-filter ` &mdash; Placeholder for fixed header filter. 
+	 
+			- `bb-splitpanel-list ` &mdash; Placeholder for list. 
+			
+			- `bb-splitpanel-empty-list ` &mdash; Tempalate for message when list is empty. 
+			
+`bb-splitpanel-workspace  ` &mdash; Container for workspace panel.  
 
 	- `bb-splitpanel-workspace-container ` &mdash; workspace for detail of selected item. This can be treat as stand alone page.
 
-	- `bb-modal-footer ` &mdash; Placeholder for action buttons.
+	- `bb-splitpanel-workspace-footer ` &mdash; Placeholder for action buttons in footer of workspace.
 
 
 

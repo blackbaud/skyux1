@@ -7,6 +7,6 @@
             return {
                 templateUrl: 'sky/templates/splitpanel/splitpanel.container.component.html',
                 transclude: true
-            }
+            };
         });
 }());

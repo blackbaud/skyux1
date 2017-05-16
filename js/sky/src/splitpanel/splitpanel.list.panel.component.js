@@ -8,15 +8,15 @@
                 templateUrl: 'sky/templates/splitpanel/splitpanel.list.panel.component.html',
                 replace: true,
                 transclude: true,
-                controller: ['$scope', function ($scope) {
-                    $(window).resize(function () {
+                controller: ['$window', function ($window) {
+                    $($window).resize(function () {
                         $('#workspace').width(($(".split-pattern-container").width() - 20) - $("#splitpanel_list").width());
                     });
                     $("#splitpanel_list").resizable();
                 }],
                 scope: {
-                    maxWidthInPercentage: '=?'
-                    , minWidthInPercentage: '=?'
+                    maxWidthInPercentage: '=?',
+                    minWidthInPercentage: '=?'
                 }
             }
         });

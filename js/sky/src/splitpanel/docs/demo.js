@@ -369,14 +369,6 @@
 
         }
 
-        function onAddClick() {
-            alert('Add button clicked');
-        }
-
-        function viewChanged(newView) {
-            self.activeView = newView;
-        }
-
         //this is used to get panel data on selection of item
         function getPaneldata(p) {
             //get data from database for particualar item
@@ -516,9 +508,7 @@
         self.onFilterClick = onFilterClick;
         self.onSearch = onSearch;
         self.onLoadMore = onLoadMore;
-        self.onAddClick = onAddClick;
         self.sortItems = sortItems;
-        self.viewChanged = viewChanged;
         self.getPaneldata = getPaneldata;
         self.hasMoreData = true;
         self.onDismissFilter = onDismissFilter;
