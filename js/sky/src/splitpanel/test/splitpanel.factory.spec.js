@@ -38,7 +38,7 @@
                             "<div class='split-pattern-container'>" +
                             "<div class='bb-custom-content'>" +
                             "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +
-                            "<div class='bb-custom-content-item' bb-splitpanel-content-custom-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
+                            "<div class='bb-custom-content-item' bb-splitpanel-list-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
                             "<div style='margin-bottom: 10px'>" +
                             "</div>" +
                             "</div>" +

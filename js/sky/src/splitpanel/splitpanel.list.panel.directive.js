@@ -2,10 +2,10 @@
 (function () {
     'use strict';
 
-    angular.module('sky.splitpanel.list.panel.component', [])
+    angular.module('sky.splitpanel.list.panel.directive', [])
         .directive('bbSplitpanelListPanel', function () {
             return {
-                templateUrl: 'sky/templates/splitpanel/splitpanel.list.panel.component.html',
+                templateUrl: 'sky/templates/splitpanel/splitpanel.list.panel.directive.html',
                 replace: true,
                 transclude: true,
                 controller: ['$window', function ($window) {

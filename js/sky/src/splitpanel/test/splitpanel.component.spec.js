@@ -7,12 +7,24 @@
         $scope,
         bbCheckDirtyForm,
         splitpanelContent,
-        workspaceContent;
+        workspaceContent,
+        $window;
 
         beforeEach(module(
+            //'ngMock',
             'sky.splitpanel',
             'sky.templates'
         ));
+
+        //beforeEach(module(function ($provide) {
+        //    $window = {
+        //        navigator: {
+        //            userAgent: window.navigator.userAgent
+        //        }
+        //    };
+
+        //    $provide.value('$window', $window);
+        //}));
 
         beforeEach(inject(function (_$rootScope_, _$compile_, _bbCheckDirtyForm_) {
             $scope = _$rootScope_.$new();
@@ -20,25 +32,28 @@
             bbCheckDirtyForm = _bbCheckDirtyForm_;
         }));
 
-        splitpanelContent = "<bb-listbuilder-content bb-listbuilder-content-active-view='custom-1'" +
-                            "bb-listbuilder-content-view-changed='listCtrl.viewChanged(newView)' bb-listbuilder-content-selected-item='custom-1'>" +
-                            "<bb-listbuilder-content-custom bb-listbuilder-content-custom-view-name='custom-1'" +
-                            "bb-listbuilder-content-custom-view-switcher-class='fa-pied-piper'" +
-                            "bb-listbuilder-content-custom-highlight-class='bb-custom-content-item'" +
-                            "bb-listbuilder-content-custom-view-switcher-label='Switch to custom'>" +
-                            "<div class='split-pattern-container'>" +
-                            "<div class='bb-custom-content'>" +
+        splitpanelContent = "<bb-listbuilder-content>" +
+                            //"<div class='split-pattern-container'>" +
+                            //"<div class='bb-custom-content'>" +
+                            "<bb-splitpanel-container>"+
+                            "<bb-splitpanel-list-panel max-width-in-percentage='70' min-width-in-percentage='20'>"+
                             "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +
-                            "<div class='bb-custom-content-item' bb-splitpanel-content-custom-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
+                            "<div class='bb-custom-content-item' bb-splitpanel-list-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
                             "<div style='margin-bottom: 10px'>" +
                             "</div>" +
                             "</div>" +
                             "</div>" +
                             "</div>" +
                             "</div>" +
-                            "</bb-listbuilder-content-custom>" +
+                            "</bb-splitpanel-list-panel>" +
+                            "</bb-splitpanel-container>" +
                             "</bb-listbuilder-content>";
-        workspaceContent =  "<bb-splitpanel-workspace class='split-panel-workspace bb-splitpanel-hidden'>" +
+        workspaceContent = "<bb-splitpanel-workspace>" +
+                            "<bb-splitpanel-mobile-workspace-header>" +
+                            "<bb-splitpanel-mobile-list-back bb-splitpanel-list-back-click='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.back)'> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</bb-splitpanel-mobile-list-back>" +
+                            "<bb-splitpanel-mobile-list-next bb-splitpanel-list-next-click='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.next)'></bb-splitpanel-mobile-list-next>" +
+                            "<bb-splitpanel-mobile-list-previous bb-splitpanel-list-previous-click='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.previous)'></bb-splitpanel-mobile-list-previous>" +
+                            "</bb-splitpanel-mobile-workspace-header>" +
                             "<bb-splitpanel-workspace-container ng-if='listCtrl.data.length > 0'>" +
                             "<form name='forms.workspaceContainerForm'>" +
                             "</form>" +
@@ -47,7 +62,7 @@
 
 
 
-        it('should create a filter button which calls a function on click', function () {
+        it('should call getPanelData method on click on item of list', function () {
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     getPaneldataCalled = false,
                     el;
@@ -72,6 +87,39 @@
             el.find('.split-panel-list-container div')[0].click();
 
             expect(getPaneldataCalled).toBe(true);
+        });
+
+        it('should call back method and redirect to list page', function () {
+            var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
+                    backCalled = false,
+                    el;
+
+            $scope.listCtrl = {
+                getPaneldata: function () {
+                },
+                back: function () {
+                    backCalled = true;
+                },
+                data: [{}, {}, {}],
+
+                splitpanelNavigator: {
+                    checkDirtyForm: function (func, arg) {
+                        return func(arg);
+                    }
+                },
+                selectedItem: { $index: 0 }
+
+            };
+            el = $compile(filterBtnHtml)($scope);
+            $scope.$digest();
+
+            //clicked first item
+            el.find('.split-panel-list-container div')[0].click();
+
+            //click back button
+            el.find('.navigation-panel')[0].click();
+
+            expect(backCalled).toBe(true);
         });
     });
 })();

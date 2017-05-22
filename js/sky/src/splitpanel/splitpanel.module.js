@@ -16,11 +16,11 @@
             'sky.splitpanel.list.fixed.header.item.component',
             'sky.splitpanel.list.fixed.header.filter.component',
             'sky.splitpanel.mobile.selected.item.component',
-            'sky.splitpanel.mobile.list.previous.directive',
-            'sky.splitpanel.mobile.list.next.directive',
+            'sky.splitpanel.mobile.list.previous.component',
+            'sky.splitpanel.mobile.list.next.component',
             'sky.splitpanel.mobile.list.back.directive',
             'sky.splitpanel.mobile.workspace.header.component',
-            'sky.splitpanel.list.panel.component',
+            'sky.splitpanel.list.panel.directive',
             'sky.splitpanel.workspace.footer.component',
             'sky.splitpanel.bbCheckDirtyForm.factory'
         ]);
