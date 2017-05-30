@@ -58,7 +58,7 @@
         function toggleContentDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .tab-content', show);
         }
-
+        
         function toggleNavivationDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
 
@@ -72,8 +72,11 @@
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            if (!angular.isDefined(vm.activeSection) ||  vm.activeSection <= 0) {
+            
+            if (angular.isUndefined(vm.activeSectionIndex) || vm.activeSectionIndex <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
+                vm.activeSectionIndex = defaultSelectedTabIndex;
+                vm.onActiveSectionIndexChange({index: vm.activeSectionIndex});
             }
         }
 
@@ -153,7 +156,7 @@
             if (vm.activeSectionIndex !== vm.activeSection) {
                 vm.activeSection = vm.activeSectionIndex;
             }
-        });
+        });   
 
         vm.$onDestroy = function () {
             bbMediaBreakpoints.unregister(mediaBreakpointHandler);

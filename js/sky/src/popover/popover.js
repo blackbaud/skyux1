@@ -1,6 +1,6 @@
-/*global angular, jQuery */
+/*global angular */
 
-(function ($) {
+(function () {
     'use strict';
 
     function bbPopoverTemplate($compile) {
@@ -8,6 +8,7 @@
             restrict: 'A',
             scope: true,
             link: function ($scope, el) {
+
                 var bbPopoverOpenAttr = 'bbPopoverOpen' + $scope.$id;
 
                 //prevent breaking change by adding quotes around template url and
@@ -23,7 +24,6 @@
 
                 $scope.bbPopoverAttr = el.attr('popover-is-open');
 
-
                 el.removeAttr('bb-popover-template');
                 $compile(el)($scope);
             }
@@ -33,7 +33,7 @@
     bbPopoverTemplate.$inject = ['$compile'];
 
     function bbUibPopoverTemplate($uibTooltip) {
-        var tooltip = $uibTooltip('bbUibPopoverTemplate', 'popover', 'click', {
+        var tooltip = $uibTooltip('bbUibPopoverTemplate', 'popover', 'outsideClick', {
             useContentExp: true
         });
 
@@ -42,21 +42,17 @@
 
     bbUibPopoverTemplate.$inject = ['$uibTooltip'];
 
-    function bbUibPopoverTemplatePopup($window, $parse) {
+    function bbUibPopoverTemplatePopup($parse) {
         return {
-            replace: true,
-            scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
-            link: function ($scope, el) {
+            restrict: 'A',
+            scope: { uibTitle: '@', contentExp: '&', originScope: '&' },
+            link: function ($scope) {
 
                 var origScope = $scope.originScope(),
-                    popoverIsOpenAttr,
-                    windowEl = $($window),
-                    scopeId = $scope.$id;
+                    popoverIsOpenAttr;
 
                 popoverIsOpenAttr = origScope.bbPopoverAttr;
-
-                function closePopover() {
-
+                origScope.hide = function () {
                     /* Set the popover is open attribute this way to account for
                        both variables directly on scope as well as using 'controller
                        as'
@@ -66,37 +62,17 @@
                     if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
                         $parse(popoverIsOpenAttr).assign(origScope, false);
                     }
-                }
 
-                origScope.hide = function () {
-                    closePopover();
                 };
-
-                $scope.$watch('isOpen()', function (value) {
-                    if (value) {
-                        windowEl.on('click.popover' + scopeId, function (event) {
-                            if (!el.is(event.target) && el.has(event.target).length === 0 && $scope.isOpen) {
-                                $scope.$apply(function () {
-                                    closePopover();
-                                });
-                            }
-                        });
-                    }
-
-                });
-
-
-                $scope.$on('$destroy', function () {
-                    windowEl.off('click.popover' + scopeId);
-                });
             },
             templateUrl: 'sky/templates/popover/popup.html'
         };
     }
-    bbUibPopoverTemplatePopup.$inject = ['$window', '$parse'];
+
+    bbUibPopoverTemplatePopup.$inject = ['$parse'];
 
     angular.module('sky.popover', ['ui.bootstrap.tooltip'])
         .directive('bbUibPopoverTemplatePopup', bbUibPopoverTemplatePopup)
         .directive('bbUibPopoverTemplate', bbUibPopoverTemplate)
         .directive('bbPopoverTemplate', bbPopoverTemplate);
-}(jQuery));
+}());

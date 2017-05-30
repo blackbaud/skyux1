@@ -132,6 +132,37 @@ describe('SectionedForm', function () {
             expect($scope.activeSectionIndex).toBe(0);
         });
 
+        it('should show the first section when invalid number passed', function () {
+            var sutView;
+            
+            $scope.sections = [
+                {
+                    templateUrl: 'test/sectionedform/form1.html'
+                },
+                {
+                    templateUrl: 'test/sectionedform/form2.html'
+                }
+            ];
+
+            $scope.activeSectionIndex = -1;
+            $templateCache.put(
+                'test/sectionedform/form1.html',
+                '<ng-form>' +
+                    '<div class="section1"></div>' +
+                '</ng-form>');
+
+            $templateCache.put(
+                'test/sectionedform/form2.html',
+                '<ng-form>' +
+                    '<div class="section2"></div>' +
+                '</ng-form>');
+
+            sutView = compileSectionedForm();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);
+        });
+
         it('should show the specified section on initial load', function () {
             var sutView;
             

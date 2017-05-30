@@ -18,6 +18,8 @@ describe('sectionedform', function () {
     it('should match the screenshot for the mobile view', function () {
         return browser
             .setupTest('/sectionedform/fixtures/test.full.html', mobileViewScreenSize)
+            .click('.bb-test-sectioned')
+            .pause(1000)
             .compareScreenshot({
                 screenshotName: 'sectionedform_mobile',
                 selector: '#' + sectionedFormOnPageId

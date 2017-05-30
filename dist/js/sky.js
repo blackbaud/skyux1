@@ -3,6 +3,13 @@
 (function () {
     'use strict';
 
+    angular.module('sky.accordion', ['sky.accordion.uibaccordiongroup']);
+})();
+/*global angular */
+
+(function () {
+    'use strict';
+
 
     angular.module('sky.alert', ['sky.alert.component']);
 }());
@@ -88,7 +95,7 @@
 (function () {
     'use strict';
 
-    angular.module('sky.datepicker', ['sky.datepicker.directive', 'sky.datepicker.hide']);
+    angular.module('sky.datepicker', ['sky.datepicker.directive']);
 }());
 
 /*global angular */
@@ -279,6 +286,72 @@
 
     angular.module('sky.wait', ['sky.wait.directive', 'sky.wait.factory']);
 }());
+/* global angular */
+/* 
+    From https://github.com/angular-ui/bootstrap/blob/1.2.5/src/accordion/accordion.js
+    so that we can have graceful deprecation of accordion group element directive
+*/
+(function () {
+    'use strict';
+    function uibAccoridonGroup($log) {
+        return {
+            require: '^uibAccordion',         // We need this directive to be inside an accordion
+            transclude: true,              // It transcludes the contents of the directive into the template
+            replace: true,
+            restrict: 'E',
+            templateUrl: function (element, attrs) {
+                return attrs.templateUrl || 'sky/templates/accordion/uib.accordiongroup.directive.html';
+            },
+            scope: {
+                heading: '@',               // Interpolate the heading attribute onto this scope
+                panelClass: '@?',           // Ditto with panelClass
+                isOpen: '=?',
+                isDisabled: '=?'
+            },
+            controller: function () {
+                this.setHeading = function (element) {
+                    this.heading = element;
+                };
+            },
+            link: function (scope, element, attrs, accordionCtrl) {
+                var id;
+
+                $log.warn('uibAccordionGroup should not be used as an element directive, instead use as an attribute directive');
+
+                accordionCtrl.addGroup(scope);
+
+                scope.openClass = attrs.openClass || 'panel-open';
+                scope.panelClass = attrs.panelClass || 'panel-default';
+                scope.$watch('isOpen', function (value) {
+                    element.toggleClass(scope.openClass, !!value);
+                    if (value) {
+                        accordionCtrl.closeOthers(scope);
+                    }
+                });
+
+                scope.toggleOpen = function ($event) {
+                    if (!scope.isDisabled) {
+                        if (!$event || $event.which === 32) {
+                            scope.isOpen = !scope.isOpen;
+                        }
+                    }
+                };
+
+                id = 'accordiongroup-' + scope.$id + '-' + Math.floor(Math.random() * 10000);
+                scope.headingId = id + '-tab';
+                scope.panelId = id + '-panel';
+            }
+        };
+    }
+
+    uibAccoridonGroup.$inject = ['$log'];
+
+    angular.module('sky.accordion.uibaccordiongroup', [
+            'ui.bootstrap.accordion'
+            ])
+        .directive('uibAccordionGroup', uibAccoridonGroup);
+})();
+
 /*global angular */
 
 (function () {
@@ -302,9 +375,14 @@
             controller: function () {
                 var vm = this;
 
-                if (vm.title === null || angular.isUndefined(vm.title)) {
-                    vm.title = bbResources.action_bar_actions;
+                function onInit() {
+                    if (vm.title === null || angular.isUndefined(vm.title)) {
+                        vm.title = bbResources.action_bar_actions;
+                    }
                 }
+
+                vm.$onInit = onInit;
+
             },
             controllerAs: 'bbActionBarItemGroup',
             bindToController: {
@@ -398,7 +476,7 @@
             vm.bbAlertClosed = true;
         };
     }   
-
+    
     angular.module('sky.alert.component', ['sky.resources'])
         .component('bbAlert', {
             bindings: {
@@ -1099,7 +1177,8 @@
                 items = vm.items,
                 itemEls = getItemEls(),
                 n;
-
+            /* istanbul ignore else */
+            /* sanity check */
             if (index < itemEls.length) {
                 el = itemEls[index];
 
@@ -1482,9 +1561,6 @@
             bbChecklistUtility.remove(vm.bbChecklistSelectedItems, item);
         }
 
-        vm.bbChecklistSelectedItems = vm.bbChecklistSelectedItems || [];
-        vm.itemIsSelected = itemIsSelected;
-
         vm.selectAll = function () {
             eachFilteredItem(selectItem);
         };
@@ -1535,63 +1611,68 @@
             vm.columns = columns;
         };
 
-        $scope.$watch(function () {
-            return vm.bbChecklistItems;
-        }, function () {
-            vm.filteredItems = vm.bbChecklistItems;
-            vm.highlightRefresh = new Date().getTime();
-        });
+        function onInit() {
+            vm.bbChecklistSelectedItems = vm.bbChecklistSelectedItems || [];
+            vm.itemIsSelected = itemIsSelected;
 
-        $scope.$watch(function () {
-            return vm.searchText;
-        }, function (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                invokeFilter();
-            }
-        });
-
-        if (angular.isDefined(vm.bbChecklistCategories)) {
-            vm.allCategories = 'bbChecklistAllCategories';
-            vm.selectedOption = vm.allCategories;
-            if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
-                vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
-            }
             $scope.$watch(function () {
-                return vm.selectedOption;
+                return vm.bbChecklistItems;
+            }, function () {
+                vm.filteredItems = vm.bbChecklistItems;
+                vm.highlightRefresh = new Date().getTime();
+            });
+
+            $scope.$watch(function () {
+                return vm.searchText;
             }, function (newValue, oldValue) {
-                if (newValue === vm.allCategories) {
-                    vm.selectedCategory = null;
-                } else {
-                    vm.selectedCategory = newValue;
-                }
                 if (newValue !== oldValue) {
                     invokeFilter();
                 }
             });
-        }
 
-        if (angular.isDefined(vm.bbChecklistSubsetLabel)) {
+            if (angular.isDefined(vm.bbChecklistCategories)) {
+                vm.allCategories = 'bbChecklistAllCategories';
+                vm.selectedOption = vm.allCategories;
+                if (angular.isUndefined(vm.bbChecklistAllCategoriesLabel)) {
+                    vm.bbChecklistAllCategoriesLabel = bbResources.grid_column_picker_all_categories;
+                }
+                $scope.$watch(function () {
+                    return vm.selectedOption;
+                }, function (newValue, oldValue) {
+                    if (newValue === vm.allCategories) {
+                        vm.selectedCategory = null;
+                    } else {
+                        vm.selectedCategory = newValue;
+                    }
+                    if (newValue !== oldValue) {
+                        invokeFilter();
+                    }
+                });
+            }
+
+            if (angular.isDefined(vm.bbChecklistSubsetLabel)) {
+                $scope.$watch(function () {
+                    return vm.subsetSelected;
+                }, function () {
+                    invokeFilter();
+                });
+            }
+
             $scope.$watch(function () {
-                return vm.subsetSelected;
+                return vm.onlyShowSelected;
             }, function () {
                 invokeFilter();
             });
+
+
+            $scope.$emit('bbPickerReady', {
+                setSelectedItems: function (selectedItems) {
+                    vm.bbChecklistSelectedItems = selectedItems;
+                }
+            });
         }
 
-        $scope.$watch(function () {
-            return vm.onlyShowSelected;
-        }, function () {
-            invokeFilter();
-        });
-
-
-        $scope.$emit('bbPickerReady', {
-            setSelectedItems: function (selectedItems) {
-                vm.bbChecklistSelectedItems = selectedItems;
-            }
-        });
-
-
+        vm.$onInit = onInit;
     }
 
     BBChecklistController.$inject = ['$scope', 'bbChecklistUtility', 'bbResources'];
@@ -2103,7 +2184,6 @@
                 if (angular.isDefined(attrs.bbSubmenuHeading)) {
                     vm.staticHeader = true;
                 }
-
                 vm.toggleAccordion = function ($event) {
                     bbContextMenuToggleAccordion($event, vm);
                 };
@@ -2830,13 +2910,9 @@
                     vm.appendToBody = (appendToBodyAttr === 'true');
                 }
             }
-
+            
             function initializeDatepickerOptions() {
-
-                ngModel.$options = {
-                    allowInvalid: true
-                };
-
+                ngModel.$options = ngModel.$options.createChild({ allowInvalid: true });
                 vm.pickerDate = '';
                 vm.pickerOpened = false;
 
@@ -3137,38 +3213,6 @@
 
 }());
 
-/* global angular */
-(function () {
-    'use strict';
-
-    /*  This directive addresses a positioning problem that occurs in uib-datepicker when the datepicker popup
-        attempts to position itself after a mode change while ng-if has not fully processed. This directive watches
-        the mode change, hides the element if necessary, and kicks off the event that positions the popup again */
-    function Controller($scope, $element) {
-        var ctrl = this;
-
-        function emitModeChange() {
-            $element[ctrl.bbDatepickerHideMode !== ctrl.bbDatepickerHideModeMatch ? 'addClass' : 'removeClass']('ng-hide');
-            $scope.$emit('uib:datepicker.mode');
-        }
-
-        ctrl.$onChanges = emitModeChange;
-    }
-
-    Controller.$inject = ['$scope', '$element'];
-
-    angular.module('sky.datepicker.hide', [])
-        .component('bbDatepickerHide', 
-        {
-            bindings: {
-                bbDatepickerHideMode: '<',
-                bbDatepickerHideModeMatch: '@'
-            },
-            controller: Controller,
-            transclude: true,
-            template: '<ng-transclude></ng-transclude>'
-        });
-})();
 /* global angular */
 (function () {
     'use strict';
@@ -4811,9 +4855,10 @@
                 }
             }).result.then(function (selectedColumnIds) {
                 columnPickerOptions.selectedColumnIdsChangedCallback(selectedColumnIds);
-            });
+            }, 
+                angular.noop
+            );
         }
-
         return {
             openColumnPicker: openColumnPicker
         };
@@ -5209,24 +5254,27 @@
             controller: ['$scope', function ($scope) {
                 var ctrl = this;
 
-                $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
+                function onInit() {
+                    $log.warn('The bb-grid-filters-summary directive is deprecated. Use the bb-filter-summary component instead. See http://skyux.developer.blackbaud.com/components/grids/ for examples');
 
-                $scope.clearFilters = function () {
-                    var args = {},
-                        options = ctrl.bbOptions;
+                    $scope.clearFilters = function () {
+                        var args = {},
+                            options = ctrl.bbOptions;
 
-                    if (options && options.clearFilters) {
-                        options.clearFilters(args);
-                        $scope.updateFilters(args.filters);
+                        if (options && options.clearFilters) {
+                            options.clearFilters(args);
+                            $scope.updateFilters(args.filters);
+                        }
+                    };
+
+                    if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
+                        ctrl.bbGridFiltersSummaryDismissable = true;
                     }
-                };
 
-                if (angular.isUndefined(ctrl.bbGridFiltersSummaryDismissable)) {
-                    ctrl.bbGridFiltersSummaryDismissable = true;
+                    $scope.resources = bbResources;
                 }
 
-                $scope.resources = bbResources;
-
+                ctrl.$onInit = onInit;
             }],
             link: function ($scope, element, attrs, bbGrid) {
                 /*jslint unparam: true */
@@ -5343,114 +5391,118 @@
                         var locals,
                             self = this;
 
-                        function searchApplied(searchText) {
-                            locals.appliedSearchText = searchText;
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.highlightSearchText)) {
-                                locals.highlightSearchText(locals.appliedSearchText);
-                            }
-                        }
-
-                        self.searchApplied = searchApplied;
-
-                        self.setFilters = function (filters) {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.setFilters)) {
-                                locals.setFilters(filters);
-                            }
-                        };
-
-                        self.syncViewKeepers = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if ($scope.syncViewKeepers) {
-                                $scope.syncViewKeepers();
-                            }
-                        };
-
-                        self.syncActionBarViewKeeper = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction($scope.syncActionBarViewKeeper)) {
-                                $scope.syncActionBarViewKeeper();
-                            }
-                        };
-
-                        self.resetMultiselect = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.resetMultiselect)) {
-                                locals.resetMultiselect();
-                            }
-                        };
-
-                        self.getVisibleSelections = function (data, selected) {
-                            var i,
-                                index,
-                                result = [];
-
-                            for (i = 0; i < selected.length; i++) {
-                                index = arrayObjectIndexOf(data, selected[i]);
-                                if (index > -1) {
-                                    result.push(selected[i]);
-                                }
-                            }
-                            return result;
-                        };
-
-                        self.toggleMultiselectRows = function (visibleSelectedRows) {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.toggleMultiselectRows)) {
-                                locals.toggleMultiselectRows(visibleSelectedRows);
-                            }
-                        };
-
-                        self.syncGridHeaderScrollToTopScrollbar = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.topScrollbarScroll)) {
-                                locals.topScrollbarScroll();
-                            }
-                        };
-
-                        self.highlightSearchText = function () {
-                            /*istanbul ignore else */
-                            /* sanity check */
-                            if (angular.isFunction(locals.highlightSearchText)) {
-                                locals.highlightSearchText();
-                            }
-                        };
-
-
-
-                        self.scope = $scope;
-
-                        $scope.resources = bbResources;
-
-                        locals = $scope.locals = {
-                            gridId: 'bbgrid-table-' + $scope.$id,
-                            hasAdd: false,
-                            hasColPicker: true,
-                            hasFilters: true,
-                            applySearchText: function () {
+                        function onInit() {
+                            function searchApplied(searchText) {
+                                locals.appliedSearchText = searchText;
                                 /*istanbul ignore else */
                                 /* sanity check */
-                                if (angular.isFunction(self.applySearchText)) {
-                                    self.applySearchText();
+                                if (angular.isFunction(locals.highlightSearchText)) {
+                                    locals.highlightSearchText(locals.appliedSearchText);
                                 }
                             }
-                        };
 
-                        $scope.$watch('options.viewKeeperOffsetElId', function (newValue, oldValue) {
-                            if (newValue !== oldValue) {
-                                if (self.viewKeeperChangedHandler) {
-                                    self.viewKeeperChangedHandler(newValue);
+                            self.searchApplied = searchApplied;
+
+                            self.setFilters = function (filters) {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.setFilters)) {
+                                    locals.setFilters(filters);
                                 }
-                            }
-                        });
+                            };
+
+                            self.syncViewKeepers = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if ($scope.syncViewKeepers) {
+                                    $scope.syncViewKeepers();
+                                }
+                            };
+
+                            self.syncActionBarViewKeeper = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction($scope.syncActionBarViewKeeper)) {
+                                    $scope.syncActionBarViewKeeper();
+                                }
+                            };
+
+                            self.resetMultiselect = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.resetMultiselect)) {
+                                    locals.resetMultiselect();
+                                }
+                            };
+
+                            self.getVisibleSelections = function (data, selected) {
+                                var i,
+                                    index,
+                                    result = [];
+
+                                for (i = 0; i < selected.length; i++) {
+                                    index = arrayObjectIndexOf(data, selected[i]);
+                                    if (index > -1) {
+                                        result.push(selected[i]);
+                                    }
+                                }
+                                return result;
+                            };
+
+                            self.toggleMultiselectRows = function (visibleSelectedRows) {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.toggleMultiselectRows)) {
+                                    locals.toggleMultiselectRows(visibleSelectedRows);
+                                }
+                            };
+
+                            self.syncGridHeaderScrollToTopScrollbar = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.topScrollbarScroll)) {
+                                    locals.topScrollbarScroll();
+                                }
+                            };
+
+                            self.highlightSearchText = function () {
+                                /*istanbul ignore else */
+                                /* sanity check */
+                                if (angular.isFunction(locals.highlightSearchText)) {
+                                    locals.highlightSearchText();
+                                }
+                            };
+
+
+
+                            self.scope = $scope;
+
+                            $scope.resources = bbResources;
+
+                            locals = $scope.locals = {
+                                gridId: 'bbgrid-table-' + $scope.$id,
+                                hasAdd: false,
+                                hasColPicker: true,
+                                hasFilters: true,
+                                applySearchText: function () {
+                                    /*istanbul ignore else */
+                                    /* sanity check */
+                                    if (angular.isFunction(self.applySearchText)) {
+                                        self.applySearchText();
+                                    }
+                                }
+                            };
+
+                            $scope.$watch('options.viewKeeperOffsetElId', function (newValue, oldValue) {
+                                if (newValue !== oldValue) {
+                                    if (self.viewKeeperChangedHandler) {
+                                        self.viewKeeperChangedHandler(newValue);
+                                    }
+                                }
+                            });
+                        }
+
+                        self.$onInit = onInit;
                     }],
                     link: function ($scope, element, attr, ctrls, $transclude) {
                         var bbGrid = ctrls[0],
@@ -5463,7 +5515,7 @@
                         };
                         $scope.customToolbar.hasCustomToolbar = $transclude.isSlotFilled('bbGridToolbar');
 
-                        $scope.$watch('locals.hasCustomToolbar', function () {
+                        $timeout(function () {
                             var breakpoints = {},
                                 cellScopes,
                                 columnCount = 0,
@@ -5743,8 +5795,7 @@
                                 var topScrollbar = getTopScrollbar(),
                                     topScrollbarDiv = getTopScrollbarDiv(),
                                     scrollbarWidth = bbWindow.getScrollbarWidth();
-
-                                if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
+                                if (totalColumnWidth > (tableWrapper.width()) && !breakpoints.xs) {
                                     topScrollbar.height(scrollbarWidth);
                                     topScrollbarDiv.height(scrollbarWidth);
                                 } else {
@@ -5752,7 +5803,7 @@
                                     topScrollbarDiv.height(0);
                                 }
                             }
-
+                            
                             function resetTopScrollbar() {
                                 var topScrollbarDiv = getTopScrollbarDiv();
                                 topScrollbarDiv.width(totalColumnWidth);
@@ -7040,14 +7091,13 @@
             },
             transclude: {
                 'bbGridToolbarFilterSummary': '?bbGridToolbarFilterSummary',
-                'bbGridToolbarSort': '?bbGridToolbarSort'    
+                'bbGridToolbarSort': '?bbGridToolbarSort'
             },
             link: function ($scope, el, attr, bbGrid, $transclude) {
                 var topScrollbarEl = el.find('.bb-grid-top-scrollbar');
 
                 function applySearchText() {
                     var searchEl;
-
                     searchEl = el.find('.bb-search-container input');
                     /*istanbul ignore else */
                     /* sanity check */
@@ -7072,7 +7122,7 @@
                     if (bbGrid !== null) {
                         bbGrid.searchApplied(searchText);
                     }
-                    
+
                 }
 
                 function searchTextChanged(searchText) {
@@ -7195,12 +7245,12 @@
 
     BBGridToolbar.$inject = ['bbResources', 'bbColumnPicker'];
 
-    angular.module('sky.grids.toolbar', 
+    angular.module('sky.grids.toolbar',
         [
-            'sky.resources', 
-            'sky.grids.columnpicker.factory', 
-            'sky.filter', 
-            'sky.search', 
+            'sky.resources',
+            'sky.grids.columnpicker.factory',
+            'sky.filter',
+            'sky.search',
             'sky.sort'
         ])
         .directive('bbGridToolbar', BBGridToolbar);
@@ -9086,7 +9136,8 @@
                 windowEl = $(window);
 
             function setViewkeeperMarginTop(margin) {
-
+                /* istanbul ignore else */
+                /* sanity check */
                 if (!marginStyleEl) {
                     marginStyleEl = $('<style></style>').appendTo(document.body);
                 }
@@ -9153,13 +9204,15 @@
                 bodyEl = newValue;
                 fitToWindow();
             });
-
+            
             $scope.$watch(function () {
                 if ($scope.headerEl) {
                     return $scope.headerEl.outerHeight();
                 }
             }, function (newValue) {
                 if (isFullPage()) {
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (!viewkeeperMarginTopOverride) {
                         viewkeeperMarginTopOverride = {};
                         
@@ -9227,21 +9280,27 @@
         }
 
         function Controller($scope) {
-            this.setBodyEl = function (bodyEl) {
-                $scope.bodyEl = bodyEl;
-            };
+            var ctrl = this;
+            function onInit() {
+                ctrl.setBodyEl = function (bodyEl) {
+                    $scope.bodyEl = bodyEl;
+                };
 
-            this.setHeaderEl = function (headerEl) {
-                $scope.headerEl = headerEl;
-            };
+                ctrl.setHeaderEl = function (headerEl) {
+                    $scope.headerEl = headerEl;
+                };
 
-            this.setFooterEl = function (footerEl) {
-                $scope.footerEl = footerEl;
-            };
+                ctrl.setFooterEl = function (footerEl) {
+                    $scope.footerEl = footerEl;
+                };
 
-            this.fitToWindow = function () {
-                $scope.fitToWindow();
-            };
+                ctrl.fitToWindow = function () {
+                    $scope.fitToWindow();
+                };
+            }
+
+            ctrl.$onInit = onInit;
+            
         }
 
         Controller.$inject = ['$scope'];
@@ -9384,7 +9443,7 @@
             restrict: 'E',
             templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
             link: function ($scope, el) {
-                if (el.children().length === 0) {
+                if (el.contents().length === 0) {
                     el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
                 }
             }
@@ -9437,7 +9496,7 @@
             restrict: 'E',
             templateUrl: 'sky/templates/modal/modalfooterbuttonprimary.html',
             link: function ($scope, el) {
-                if (el.children().length === 0) {
+                if (el.contents().length === 0) {
                     el.append("<span>" + bbResources.modal_footer_primary_button + "</span>");
                 }
             }
@@ -10028,7 +10087,7 @@
 
     var evtNsPos = 0;
 
-    angular.module('sky.pagination', ['ui.bootstrap.pagination', 'sky.pagination.label'])
+    angular.module('sky.pagination', ['ui.bootstrap.pagination', 'sky.pagination.label', 'sky.pagination.uibpagination'])
         .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
@@ -10076,10 +10135,10 @@
                 },
                 compile: function (el, attrs) {
                     var pagedData = attrs.bbPagination;
-
+                    
                     /*jslint white: true */
                     el.html(
-                        '<uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></uib-pagination>' +
+                        '<ul uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></ul>' +
                         '<div class="clearfix"></div>'
                     );
                     /*jslint white: false */
@@ -10246,6 +10305,41 @@
         .directive('paginationPrev', paginationPrev)
         .directive('paginationNext', paginationNext);
 })();
+/*global angular */
+(function () {
+    'use strict';
+    function uibPagination(uibPaginationConfig, $log) {
+        return {
+            scope: {
+                totalItems: '=',
+                firstText: '@',
+                previousText: '@',
+                nextText: '@',
+                lastText: '@',
+                ngDisabled: '='
+            },
+            require: ['uibPagination', 'ngModel'],
+            restrict: 'E',
+            controller: 'UibPaginationController',
+            controllerAs: 'pagination',
+            replace: true,
+            templateUrl: 'sky/templates/pagination/uib.pagination.directive.html',
+            link: function (scope, element, attrs, ctrls) {
+                var paginationCtrl = ctrls[0], ngModelCtrl = ctrls[1];
+                $log.warn('uibPagination should not be used as an element directive, instead use as an attribute directive on a ul element');
+                paginationCtrl.init(ngModelCtrl, uibPaginationConfig);
+            }
+        };
+    }
+
+    uibPagination.$inject = ['uibPaginationConfig', '$log'];
+
+    angular.module('sky.pagination.uibpagination', [
+            'ui.bootstrap.pagination'
+            ])
+        .directive('uibPagination', uibPagination);
+})();
+
 /*jshint unused: false */
 /*global angular, bbPaletteConfig */
 
@@ -10361,6 +10455,8 @@ angular.module('sky.palette.config', [])
                 if (input.val()) {
                     formattedNumber = input.intlTelInput('getNumber', intlTelInputUtils.numberFormat.NATIONAL);
                     // If the currently selected country is also the directive's default country, it is already formatted
+                    /* istanbul ignore else */
+                    /* sanity check */
                     if (selectedCountryData.iso2 && phoneField.props.countryIso2.toLowerCase() === selectedCountryData.iso2.toLowerCase()) {
                         return formattedNumber;
                     } else if (selectedCountryData && formattedNumber.indexOf('+') < 0) {
@@ -10398,7 +10494,7 @@ angular.module('sky.palette.config', [])
             });
             // tie ng-model's format validation to the plugin's validator
             ngModel.$validators.bbPhoneFormat = function (modelValue) {
-                return ngModel.$pristine || (modelValue && input.intlTelInput('isValidNumber'));
+                return ngModel.$pristine || !modelValue || (modelValue && input.intlTelInput('isValidNumber'));
             };
 
             // ** bbPhoneFieldConfig properties **
@@ -10451,9 +10547,9 @@ angular.module('sky.palette.config', [])
         .directive('bbPhoneField', bbPhoneField);
 }());
 
-/*global angular, jQuery */
+/*global angular */
 
-(function ($) {
+(function () {
     'use strict';
 
     function bbPopoverTemplate($compile) {
@@ -10461,6 +10557,7 @@ angular.module('sky.palette.config', [])
             restrict: 'A',
             scope: true,
             link: function ($scope, el) {
+
                 var bbPopoverOpenAttr = 'bbPopoverOpen' + $scope.$id;
 
                 //prevent breaking change by adding quotes around template url and
@@ -10476,7 +10573,6 @@ angular.module('sky.palette.config', [])
 
                 $scope.bbPopoverAttr = el.attr('popover-is-open');
 
-
                 el.removeAttr('bb-popover-template');
                 $compile(el)($scope);
             }
@@ -10486,7 +10582,7 @@ angular.module('sky.palette.config', [])
     bbPopoverTemplate.$inject = ['$compile'];
 
     function bbUibPopoverTemplate($uibTooltip) {
-        var tooltip = $uibTooltip('bbUibPopoverTemplate', 'popover', 'click', {
+        var tooltip = $uibTooltip('bbUibPopoverTemplate', 'popover', 'outsideClick', {
             useContentExp: true
         });
 
@@ -10495,21 +10591,17 @@ angular.module('sky.palette.config', [])
 
     bbUibPopoverTemplate.$inject = ['$uibTooltip'];
 
-    function bbUibPopoverTemplatePopup($window, $parse) {
+    function bbUibPopoverTemplatePopup($parse) {
         return {
-            replace: true,
-            scope: { title: '@', contentExp: '&', placement: '@', popupClass: '@', animation: '&', isOpen: '&', originScope: '&' },
-            link: function ($scope, el) {
+            restrict: 'A',
+            scope: { uibTitle: '@', contentExp: '&', originScope: '&' },
+            link: function ($scope) {
 
                 var origScope = $scope.originScope(),
-                    popoverIsOpenAttr,
-                    windowEl = $($window),
-                    scopeId = $scope.$id;
+                    popoverIsOpenAttr;
 
                 popoverIsOpenAttr = origScope.bbPopoverAttr;
-
-                function closePopover() {
-
+                origScope.hide = function () {
                     /* Set the popover is open attribute this way to account for
                        both variables directly on scope as well as using 'controller
                        as'
@@ -10519,40 +10611,20 @@ angular.module('sky.palette.config', [])
                     if (angular.isDefined(origScope.$eval(popoverIsOpenAttr))) {
                         $parse(popoverIsOpenAttr).assign(origScope, false);
                     }
-                }
 
-                origScope.hide = function () {
-                    closePopover();
                 };
-
-                $scope.$watch('isOpen()', function (value) {
-                    if (value) {
-                        windowEl.on('click.popover' + scopeId, function (event) {
-                            if (!el.is(event.target) && el.has(event.target).length === 0 && $scope.isOpen) {
-                                $scope.$apply(function () {
-                                    closePopover();
-                                });
-                            }
-                        });
-                    }
-
-                });
-
-
-                $scope.$on('$destroy', function () {
-                    windowEl.off('click.popover' + scopeId);
-                });
             },
             templateUrl: 'sky/templates/popover/popup.html'
         };
     }
-    bbUibPopoverTemplatePopup.$inject = ['$window', '$parse'];
+
+    bbUibPopoverTemplatePopup.$inject = ['$parse'];
 
     angular.module('sky.popover', ['ui.bootstrap.tooltip'])
         .directive('bbUibPopoverTemplatePopup', bbUibPopoverTemplatePopup)
         .directive('bbUibPopoverTemplate', bbUibPopoverTemplate)
         .directive('bbPopoverTemplate', bbPopoverTemplate);
-}(jQuery));
+}());
 
 /*global angular, jQuery */
 
@@ -10761,7 +10833,7 @@ angular.module('sky.palette.config', [])
 
 (function () {
     'use strict';
-
+    
     angular.module('sky.repeater.component', ['sky.repeater.controller'])
         .component('bbRepeater', {
             bindings: {
@@ -10771,7 +10843,7 @@ angular.module('sky.palette.config', [])
             templateUrl: 'sky/templates/repeater/repeater.component.html',
             transclude: true
         });
-}());
+})();
 
 /*global angular */
 
@@ -10812,39 +10884,44 @@ angular.module('sky.palette.config', [])
             });
         }
 
-        vm.addItem = function (item) {
-            items.push(item);
-        };
+        function onInit() {
+            vm.addItem = function (item) {
+                items.push(item);
+            };
 
-        vm.removeItem = function (item) {
-            var itemIndex = items.indexOf(item);
+            vm.removeItem = function (item) {
+                var itemIndex = items.indexOf(item);
 
-            /*istanbul ignore else */
-            /* sanity check */
-            if (itemIndex >= 0) {
-                items.splice(itemIndex, 1);
-            }
-        };
+                /*istanbul ignore else */
+                /* sanity check */
+                if (itemIndex >= 0) {
+                    items.splice(itemIndex, 1);
+                }
+            };
 
-        vm.itemExpanded = function (expandedItem) {
-            if (vm.bbRepeaterExpandMode === 'single') {
-                items.forEach(function (item) {
-                    if (item !== expandedItem) {
-                        item.bbRepeaterItemExpanded = false;
-                    }
-                });
-            }
-        };
+            vm.itemExpanded = function (expandedItem) {
+                if (vm.bbRepeaterExpandMode === 'single') {
+                    items.forEach(function (item) {
+                        if (item !== expandedItem) {
+                            item.bbRepeaterItemExpanded = false;
+                        }
+                    });
+                }
+            };
 
-        $scope.$watch(function () {
-            return vm.bbRepeaterExpandMode;
-        }, updateForExpandMode);
+            $scope.$watch(function () {
+                return vm.bbRepeaterExpandMode;
+            }, updateForExpandMode);
 
-        $scope.$watchCollection(function () {
-            return items;
-        }, function () {
-            updateForExpandMode();
-        });
+            $scope.$watchCollection(function () {
+                return items;
+            }, function () {
+                updateForExpandMode();
+            });
+        }
+
+        vm.$onInit = onInit;
+       
     }
 
     BBRepeaterController.$inject = ['$scope'];
@@ -10853,6 +10930,17 @@ angular.module('sky.palette.config', [])
         .controller('BBRepeaterController', BBRepeaterController);
 }());
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.repeater.item.contextmenu.component', [])
+        .component('bbRepeaterItemContextMenu', {
+            templateUrl: 'sky/templates/repeater/repeater.item.contextmenu.component.html',
+            transclude: true
+        });
+})();
 /*global angular */
 
 (function () {
@@ -10871,38 +10959,43 @@ angular.module('sky.palette.config', [])
                 vm.repeaterItemSelectionToggled(vm.bbRepeaterItemSelected); 
             }
 
-            vm.getCls = function () {
-                var cls = [];
+            function onInit() {
+                vm.getCls = function () {
+                    var cls = [];
 
-                if (allowCollapse()) {
-                    cls.push('bb-repeater-item-collapsible');
-                }
-
-                if (vm.contextMenuElExists()) {
-                    cls.push('bb-repeater-item-with-context-menu');
-                }
-
-                if (vm.itemIsSelectable()) {
-                    cls.push('bb-repeater-item-selectable');
-
-                    if (vm.bbRepeaterItemSelected) {
-                        cls.push('bb-repeater-item-selected');
+                    if (allowCollapse()) {
+                        cls.push('bb-repeater-item-collapsible');
                     }
-                }
 
-                return cls;
-            };
+                    if (vm.contextMenuElExists()) {
+                        cls.push('bb-repeater-item-with-context-menu');
+                    }
 
-            vm.selectItem = selectItem;
+                    if (vm.itemIsSelectable()) {
+                        cls.push('bb-repeater-item-selectable');
 
-            vm.headerClick = function ($event) {
-                if (vm.isCollapsible) {
-                    vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
-                    $event.stopPropagation();
-                } 
-            };
+                        if (vm.bbRepeaterItemSelected) {
+                            cls.push('bb-repeater-item-selected');
+                        }
+                    }
 
-            vm.allowCollapse = allowCollapse;
+                    return cls;
+                };
+
+                vm.selectItem = selectItem;
+
+                vm.headerClick = function ($event) {
+                    if (vm.isCollapsible) {
+                        vm.bbRepeaterItemExpanded = !vm.bbRepeaterItemExpanded;
+                        $event.stopPropagation();
+                    } 
+                };
+
+                vm.allowCollapse = allowCollapse;
+            }
+
+            vm.$onInit = onInit;
+            
         }
 
         function link(scope, el, attrs, ctrls) {
@@ -10954,8 +11047,8 @@ angular.module('sky.palette.config', [])
                 vm.chevronDirection = vm.bbRepeaterItemExpanded ? 'up' : 'down';
             }
 
-            vm.titleEl = el.find('.bb-repeater-item-title');
-            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu');
+            vm.titleEl = el.find('.bb-repeater-item-title-container');
+            vm.contextMenuEl = el.find('.bb-repeater-item-context-menu-container');
 
             vm.titleElExists = titleElExists;
             vm.contextMenuElExists = contextMenuElExists;
@@ -11064,11 +11157,28 @@ angular.module('sky.palette.config', [])
     bbRepeaterItem.$inject = ['$timeout'];
 
 
-    angular.module('sky.repeater.item.directive', ['sky.chevron', 'sky.check', 'sky.resources'])
+    angular.module('sky.repeater.item.directive', [
+            'sky.chevron', 
+            'sky.check', 
+            'sky.resources', 
+            'sky.repeater.item.title.component',
+            'sky.repeater.item.contextmenu.component'
+            ])
         .directive('bbRepeaterItem', bbRepeaterItem);
 
-}());
+})();
 
+/*global angular */
+
+(function () {
+    'use strict';
+
+    angular.module('sky.repeater.item.title.component', [])
+        .component('bbRepeaterItemTitle', {
+            templateUrl: 'sky/templates/repeater/repeater.item.title.component.html',
+            transclude: true
+        });
+})();
 /*global angular */
 
 (function () {
@@ -11333,7 +11443,7 @@ angular.module('sky.palette.config', [])
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
-
+            
         function applySearchText(searchText) {
             //select input
             var searchEl = $element.find('.bb-search-input');
@@ -11348,7 +11458,6 @@ angular.module('sky.palette.config', [])
 
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
-
         }
 
         function searchTextChanged(searchText) {
@@ -11566,7 +11675,11 @@ angular.module('sky.palette.config', [])
         }
 
         function initSearch() {
-
+            if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
+                bbMediaBreakpoints.register(mediaBreakpointCallback);
+                ctrl.$onDestroy = destroySearch;
+            }
+            
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
@@ -11583,11 +11696,6 @@ angular.module('sky.palette.config', [])
 
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
-        }
-
-        if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
-            bbMediaBreakpoints.register(mediaBreakpointCallback);
-            ctrl.$onDestroy = destroySearch;
         }
 
         ctrl.$onInit = initSearch;
@@ -11612,7 +11720,9 @@ angular.module('sky.palette.config', [])
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?',
-                bbSearchMobileResponseEnabled: '<?'
+                bbSearchMobileResponseEnabled: '<?',
+                bbSearchInputId: '<?',
+                bbSearchFullWidth: '<?'
             }
         });
 })();
@@ -11677,7 +11787,7 @@ angular.module('sky.palette.config', [])
         function toggleContentDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .tab-content', show);
         }
-
+        
         function toggleNavivationDisplay(show) {
             toggleElementDisplay('.bb-sectionedform .nav-tabs', show);
 
@@ -11691,8 +11801,11 @@ angular.module('sky.palette.config', [])
         function displayFormSectionsAndContent() {
             toggleNavivationDisplay(true);
             toggleContentDisplay(true);
-            if (!angular.isDefined(vm.activeSection) ||  vm.activeSection <= 0) {
+            
+            if (angular.isUndefined(vm.activeSectionIndex) || vm.activeSectionIndex <= 0) {
                 vm.activeSection = defaultSelectedTabIndex;
+                vm.activeSectionIndex = defaultSelectedTabIndex;
+                vm.onActiveSectionIndexChange({index: vm.activeSectionIndex});
             }
         }
 
@@ -11772,7 +11885,7 @@ angular.module('sky.palette.config', [])
             if (vm.activeSectionIndex !== vm.activeSection) {
                 vm.activeSection = vm.activeSectionIndex;
             }
-        });
+        });   
 
         vm.$onDestroy = function () {
             bbMediaBreakpoints.unregister(mediaBreakpointHandler);
@@ -12913,11 +13026,11 @@ angular.module('sky.palette.config', [])
                     if (dropdownTextMaxWidth > 0) {
                         el.find('> .bb-tabset-dropdown > .bb-tab-dropdown-button > .bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
                     }
-                    
+
                     if (availableWidth > 0) {
                         el.find('> .bb-tabset-dropdown > ul.dropdown-menu > li >  a').css('max-width', (availableWidth.toString() + 'px'));
-                    } 
-                    
+                    }
+
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -13109,12 +13222,256 @@ angular.module('sky.palette.config', [])
 
     bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
 
+    function BBVerticalTabsetController() {
+        var self = this;
+
+        self.addTabGroup = addTabGroup;
+        self.tabGroups = [];
+
+        function addTabGroup(tabGroup) {
+            // Property is used in ARIA attributes. Ensure that it is defined
+            // so that ARIA attributes are properly initialized.
+            tabGroup.isOpen = tabGroup.isOpen || false;
+            self.tabGroups.push(tabGroup);
+        }
+    }
+
+    function bbVerticalTabset($log, $parse, bbMediaBreakpoints) {
+        return {
+            controller: BBVerticalTabsetController,
+            link: link,
+            require: ['uibTabset', 'bbVerticalTabset'],
+            restrict: 'A'
+        };
+
+        function link($scope, el, attr, ctrls) {
+            var uibTabsetCtrl = ctrls[0],
+                bbVerticalTabsetCtrl = ctrls[1],
+                scope = el.isolateScope(),
+                unbindWatch;
+
+            if (angular.isDefined(attr.bbTabsetAdd)) {
+                $log.warn('uibTabset bbTabsetAdd attribute is incompatible with bbVerticalTabset, it will be ignored');
+            }
+            if (angular.isDefined(attr.bbTabsetOpen)) {
+                $log.warn('uibTabset bbTabsetOpen attribute is incompatible with bbVerticalTabset, it will be ignored');
+            }
+            if (angular.isDefined(attr.bbTabsetCollapsible)) {
+                $log.warn('using the uibTabset bbTabsetCollapsible attribute with bbVerticalTabset is not supported, it may yield undesirable results');
+            }
+            if (angular.isDefined(attr.justified)) {
+                $log.warn('uibTabset justified attribute is incompatible with bbVerticalTabset, it will be ignored');
+            }
+            if (angular.isDefined(attr.type) && $parse(attr.type)($scope) !== 'tabs') {
+                $log.warn('uibTabset type attribute values other than \'tabs\' are incompatible with bbVerticalTabset and will be ignored');
+            }
+            if (angular.isDefined(attr.vertical) && !$parse(attr.vertical)($scope)) {
+                $log.warn('uibTabset vertical attribute values other than true are incompatible with bbVerticalTabset and will be ignored');
+            }
+
+            scope.closeOthers = angular.isDefined(attr.bbVerticalTabsetCloseOthers) ?
+                $parse(attr.bbVerticalTabsetCloseOthers)($scope) :
+                false;
+            scope.showTabs = true;
+
+            bbMediaBreakpoints.register(mobileBreakpointHandler);
+            $scope.$on('$destroy', function () {
+                bbMediaBreakpoints.unregister(mobileBreakpointHandler);
+            });
+            $scope.$on('reinitializeVerticalTabsetDisplay', function () {
+                scope.showTabs = scope.isMobile;
+                if (scope.isMobile) {
+                    uibTabsetCtrl.active = -1;
+                }
+            });
+
+            unbindWatch = $scope.$watch(
+                function () {
+                    return bbVerticalTabsetCtrl.tabGroups.length > 0;
+                },
+                function (val) {
+                    var group;
+                    if (!val) {
+                        // Remove tablist role for accessibility.
+                        group = el.find('.panel-group');
+                        group.removeAttr('role');
+                    }
+                    unbindWatch();
+                }
+            );
+            $scope.$watch(
+                function () {
+                    return $parse(attr.bbVerticalTabsetCloseOthers)($scope);
+                },
+                function (val) {
+                    scope.closeOthers = val;
+                }
+            );
+            $scope.$watch(
+                function () {
+                    return uibTabsetCtrl.active;
+                },
+                function (value) {
+                    scope.showTabs = angular.isUndefined(value) || value === null || value < 0;
+                    activateTabGroup(value);
+                }
+            );
+
+            if (angular.isDefined(uibTabsetCtrl.active)) {
+                activateTabGroup(uibTabsetCtrl.active);
+            }
+
+            function mobileBreakpointHandler(breakpoints) {
+                scope.isMobile = breakpoints.xs;
+            }
+
+            function activateTabGroup(newIndex) {
+                var activeGroup = bbVerticalTabsetCtrl.tabGroups
+                    .filter(function (tabGroup) {
+                        return tabGroup.tabs.filter(function (tab) {
+                            return tab.index === newIndex || tab.active;
+                        }).length > 0;
+                    });
+
+                bbVerticalTabsetCtrl.tabGroups
+                    .forEach(function (tabGroup) {
+                        tabGroup.active = false;
+                    });
+
+                if (activeGroup.length > 0) {
+                    activeGroup[0].activateTabGroup();
+                }
+            }
+        }
+    }
+
+    bbVerticalTabset.$inject = ['$log', '$parse', 'bbMediaBreakpoints'];
+
+    function BBVerticalTabsetGroupController() {
+        var self = this;
+
+        self.addTab = addTab;
+        self.activateTabGroup = activateTabGroup;
+        self.tabs = [];
+
+        function addTab(tab) {
+            self.tabs.push(tab);
+        }
+        function activateTabGroup() {
+            self.active = true;
+            self.isOpen = true;
+        }
+    }
+
+    function bbVerticalTabsetGroup() {
+        return {
+            bindToController: true,
+            controller: BBVerticalTabsetGroupController,
+            controllerAs: 'bbVerticalTabsetGroup',
+            link: link,
+            replace: true,
+            require: ['^bbVerticalTabset', 'bbVerticalTabsetGroup'],
+            restrict: 'A',
+            scope: {
+                heading: '@bbVerticalTabsetGroupHeading',
+                isDisabled: '=?bbVerticalTabsetGroupIsDisabled',
+                isOpen: '=?bbVerticalTabsetGroupIsOpen'
+            },
+            templateUrl: function (el, attr) {
+                return angular.isDefined(attr.bbVerticalTabsetGroupTemplateUrl) ?
+                    attr.bbVerticalTabsetGroupTemplateUrl :
+                    'sky/templates/tabset/verticaltabsetgroup.html';
+            },
+            transclude: true
+        };
+
+        function link($scope, el, attr, ctrls) {
+            var bbVerticalTabsetCtrl = ctrls[0],
+                bbVerticalTabsetGroupCtrl = ctrls[1];
+
+            bbVerticalTabsetCtrl.addTabGroup(bbVerticalTabsetGroupCtrl);
+        }
+    }
+
+    function uibTabsetDirectiveDecorator($delegate) {
+        decorateTemplateUrl(
+             $delegate[0],
+            'sky/templates/tabset/verticaltabset.html',
+            function (el, attr) {
+                return angular.isDefined(attr.bbVerticalTabset);
+            }
+        );
+        return $delegate;
+    }
+
+    uibTabsetDirectiveDecorator.$inject = ['$delegate'];
+
+    function uibTabDirectiveDecorator($delegate) {
+        decorateLink(
+            $delegate[0],
+            '^bbVerticalTabsetGroup',
+            function ($scope, el, attr, ctrl) {
+                ctrl.addTab($scope);
+            }
+        );
+        return $delegate;
+    }
+
+    uibTabDirectiveDecorator.$inject = ['$delegate'];
+
+    function decorateTemplateUrl(delegate, newTemplateUrl, conditionFn) {
+        var originalTemplateUrl = delegate.templateUrl;
+        delegate.templateUrl = function (el, attr) {
+            if (conditionFn(el, attr)) {
+                return angular.isDefined(attr.templateUrl) ?
+                    attr.templateUrl :
+                    newTemplateUrl;
+            }
+            return angular.isFunction(originalTemplateUrl) ?
+                originalTemplateUrl.apply(this, arguments) :
+                /* istanbul ignore next: sanity check */
+                originalTemplateUrl;
+        };
+    }
+
+    function decorateLink(delegate, requiredDirective, linkFn) {
+        var originalRequireIsArray = angular.isArray(delegate.require),
+            originalLink = delegate.link,
+            newDir = '?'.concat(requiredDirective);
+        delegate.require = originalRequireIsArray ?
+            /* istanbul ignore next: sanity check */
+            [newDir].concat(delegate.require) :
+            [newDir, delegate.require];
+        delegate.compile = function () {
+            return function ($scope, el, attr, ctrls, transclude) {
+                if (ctrls[0] !== null) {
+                    linkFn.call(this, $scope, el, attr, ctrls[0], transclude);
+                }
+                return originalLink.call(
+                    this,
+                    $scope,
+                    el,
+                    attr,
+                    originalRequireIsArray ?
+                        /* istanbul ignore next: sanity check */
+                        ctrls.slice(1) :
+                        ctrls[1],
+                    transclude
+                );
+            };
+        };
+    }
+
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints', 'sky.resources'])
         .directive('uibTabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
         .directive('uibTab', tab)
-        .directive('bbTabHeadingXs', bbTabHeadingXs);
+        .directive('bbTabHeadingXs', bbTabHeadingXs)
+        .directive('bbVerticalTabset', bbVerticalTabset)
+        .directive('bbVerticalTabsetGroup', bbVerticalTabsetGroup)
+        .decorator('uibTabsetDirective', uibTabsetDirectiveDecorator)
+        .decorator('uibTabDirective', uibTabDirectiveDecorator);
 
 }(jQuery));
 
@@ -13578,15 +13935,64 @@ angular.module('sky.palette.config', [])
         var vm = this,
             displayModeChanging = false;
 
-        vm.setHeaderContentEl = function (el) {
-            vm.headerContentEl = el;
+        function onInit() {
+            vm.setHeaderContentEl = function (el) {
+                vm.headerContentEl = el;
 
-            /* istanbul ignore else */
-            /* sanity check */
-            if (angular.isFunction(vm.updateHeaderContent)) {
-                vm.updateHeaderContent();
-            }
-        };
+                /* istanbul ignore else */
+                /* sanity check */
+                if (angular.isFunction(vm.updateHeaderContent)) {
+                    vm.updateHeaderContent();
+                }
+            };
+
+            vm.updateTileState = updateTileState;
+
+            vm.isCollapsed = vm.bbTileCollapsed || false;
+            vm.smallTileDisplayMode = false;
+            vm.tileId = '';
+            vm.resources = bbResources;
+
+            vm.titleClick = function () {
+                vm.isCollapsed = !vm.isCollapsed;
+                vm.scrollIntoView = !vm.isCollapsed;
+            };
+
+            //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
+            $scope.$on('tileDisplayModeChanged', function (event, data) {
+                /*jslint unparam: true */
+                vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
+
+                if (vm.tileInitialized) {
+                    displayModeChanging = true;
+                    vm.updateTileState(data.tiles);
+                }
+            });
+
+            //if the collapsed state changes, notify the tileDashboard
+            $scope.$watch(function () {
+                return vm.isCollapsed;
+            }, function () {
+                if (vm.tileInitialized && !displayModeChanging) {
+                    $timeout(function () {
+                        $scope.$emit('tileStateChanged', {
+                            tileId: vm.tileId,
+                            collapsed: vm.isCollapsed
+                        });
+                    });
+                }
+                displayModeChanging = false;
+
+                if (!vm.isCollapsed) {
+                    $timeout(function () {
+                        $scope.$broadcast('tileRepaint');
+                    });
+                }
+
+                vm.bbTileCollapsed = vm.isCollapsed;
+
+            });
+        }
 
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
@@ -13624,52 +14030,8 @@ angular.module('sky.palette.config', [])
 
         }
 
-        vm.updateTileState = updateTileState;
-
-        vm.isCollapsed = vm.bbTileCollapsed || false;
-        vm.smallTileDisplayMode = false;
-        vm.tileId = '';
-        vm.resources = bbResources;
-
-        vm.titleClick = function () {
-            vm.isCollapsed = !vm.isCollapsed;
-            vm.scrollIntoView = !vm.isCollapsed;
-        };
-
-        //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
-        $scope.$on('tileDisplayModeChanged', function (event, data) {
-            /*jslint unparam: true */
-            vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
-
-            if (vm.tileInitialized) {
-                displayModeChanging = true;
-                vm.updateTileState(data.tiles);
-            }
-        });
-
-        //if the collapsed state changes, notify the tileDashboard
-        $scope.$watch(function () {
-            return vm.isCollapsed;
-        }, function () {
-            if (vm.tileInitialized && !displayModeChanging) {
-                $timeout(function () {
-                    $scope.$emit('tileStateChanged', {
-                        tileId: vm.tileId,
-                        collapsed: vm.isCollapsed
-                    });
-                });
-            }
-            displayModeChanging = false;
-
-            if (!vm.isCollapsed) {
-                $timeout(function () {
-                    $scope.$broadcast('tileRepaint');
-                });
-            }
-
-            vm.bbTileCollapsed = vm.isCollapsed;
-
-        });
+        vm.$onInit = onInit;
+       
     }
 
     BBTileController.$inject = ['$scope', '$timeout', 'bbResources'];
@@ -15313,6 +15675,7 @@ angular.module('sky.palette.config', [])
     'use strict';
 
     var modules = [
+        'sky.accordion',
         'sky.actionbar',
         'sky.alert',
         'sky.autonumeric',
@@ -15407,6 +15770,17 @@ angular.module('sky.resources')
 }());
 
 angular.module('sky.templates', []).run(['$templateCache', function($templateCache) {
+    $templateCache.put('sky/templates/accordion/uib.accordiongroup.directive.html',
+        '<div class="panel" ng-class="panelClass || \'panel-default\'">\n' +
+        '  <div role="tab" id="{{::headingId}}" aria-selected="{{isOpen}}" class="panel-heading" ng-keypress="toggleOpen($event)">\n' +
+        '    <h4 class="panel-title">\n' +
+        '      <a role="button" data-toggle="collapse" href aria-expanded="{{isOpen}}" aria-controls="{{::panelId}}" tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span uib-accordion-header ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></a>\n' +
+        '    </h4>\n' +
+        '  </div>\n' +
+        '  <div id="{{::panelId}}" aria-labelledby="{{::headingId}}" aria-hidden="{{!isOpen}}" role="tabpanel" class="panel-collapse collapse" uib-collapse="!isOpen">\n' +
+        '    <div class="panel-body" ng-transclude></div>\n' +
+        '  </div>\n' +
+        '</div>');
     $templateCache.put('sky/templates/actionbar/actionbar.html',
         '<div class="bb-action-bar">\n' +
         '    <ng-transclude></ng-transclude>\n' +
@@ -15581,7 +15955,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div ng-if="(bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0) || bbChecklist.bbChecklistSubsetLabel" class="bb-checklist-filter-bar bb-checklist-category-bar bb-filters-inline form-inline">\n' +
         '      <div class="form-group" ng-if="bbChecklist.bbChecklistCategories &amp;&amp; bbChecklist.bbChecklistCategories.length > 0">\n' +
         '        <select ng-attr-aria-label="{{\'checklist_categories_label\' | bbResources}}" class="form-control" ng-model="bbChecklist.selectedOption" ng-disabled="bbChecklist.onlyShowSelected">\n' +
-        '          <option value="{{bbChecklist.allCategories}}">{{bbChecklist.bbChecklistAllCategoriesLabel}}</option>\n' +
+        '          <option ng-value="bbChecklist.allCategories">{{bbChecklist.bbChecklistAllCategoriesLabel}}</option>\n' +
         '          <option ng-repeat="category in bbChecklist.bbChecklistCategories">{{category}}</option>\n' +
         '        </select>\n' +
         '      </div>\n' +
@@ -15695,7 +16069,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/contextmenu/submenu.html',
         '<div class="bb-submenu">\n' +
         '    <uib-accordion>\n' +
-        '        <uib-accordion-group template-url="sky/templates/contextmenu/submenu.accordiongroup.html" is-open="bbSubmenu.accordionOpen">\n' +
+        '        <div uib-accordion-group template-url="sky/templates/contextmenu/submenu.accordiongroup.html" is-open="bbSubmenu.accordionOpen">\n' +
         '            <uib-accordion-heading ng-if="bbSubmenu.staticHeader">\n' +
         '                <div role="button" ng-click="bbSubmenu.toggleAccordion($event)">\n' +
         '                    <span>\n' +
@@ -15705,7 +16079,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                </div>\n' +
         '            </uib-accordion-heading>\n' +
         '            <ng-transclude></ng-transclude>\n' +
-        '        </uib-accordion-group>\n' +
+        '        </div>\n' +
         '    </uib-accordion>\n' +
         '</div>\n' +
         '');
@@ -15747,7 +16121,6 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                datepicker-append-to-body="{{bbDatepicker.appendToBody}}"\n' +
         '                close-on-date-selection="{{bbDatepicker.closeOnSelection}}"\n' +
         '                alt-input-formats="bbDatepicker.altInputFormats"\n' +
-        '                datepicker-template-url="sky/templates/datepicker/uibdatepicker.html"\n' +
         '\n' +
         '                bb-datepicker-custom-validate="{{bbDatepicker.hasCustomValidation}}"\n' +
         '                bb-datepicker-min-date\n' +
@@ -15766,22 +16139,6 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '</div>\n' +
         '');
-    $templateCache.put('sky/templates/datepicker/uibdatepicker.html',
-        '<div class="uib-datepicker" role="application" ng-keydown="keydown($event)">\n' +
-        '  \n' +
-        '  <bb-datepicker-hide  bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="day">\n' +
-        '    <uib-daypicker ng-if="datepickerMode === \'day\'" tabindex="0"></uib-daypicker>\n' +
-        '  </bb-datepicker-hide>\n' +
-        '\n' +
-        '  <bb-datepicker-hide  bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="month">\n' +
-        '    <uib-monthpicker ng-if="datepickerMode === \'month\'" tabindex="0"></uib-monthpicker>\n' +
-        '  </bb-datepicker-hide>\n' +
-        '\n' +
-        '  <bb-datepicker-hide bb-datepicker-hide-mode="datepickerMode" bb-datepicker-hide-mode-match="year">\n' +
-        '    <uib-yearpicker ng-if="datepickerMode === \'year\'" tabindex="0"></uib-yearpicker>\n' +
-        '  </bb-datepicker-hide>\n' +
-        '  \n' +
-        '</div>');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
         '<div class="form-inline" ng-form="bbDateRangePickerCtrl.dateRangeForm">\n' +
         '    <div class="form-group bb-date-range-picker-form-group">\n' +
@@ -16174,7 +16531,17 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '\n' +
         '    <div ng-if="paginationOptions &amp;&amp; !hasListbuilder" class="bb-grid-pagination-container">\n' +
-        '        <uib-pagination ng-show="paginationOptions.recordCount > options.data.length" total-items="paginationOptions.recordCount" items-per-page="paginationOptions.itemsPerPage" ng-model="paginationOptions.currentPage" ng-change="paginationOptions.pageChanged()" max-size="paginationOptions.maxPages" boundary-link-numbers="paginationOptions.boundaryLinks" force-ellipses="paginationOptions.boundaryLinks"></uib-pagination>\n' +
+        '        <ul \n' +
+        '            uib-pagination \n' +
+        '            ng-show="paginationOptions.recordCount > options.data.length" \n' +
+        '            total-items="paginationOptions.recordCount" \n' +
+        '            items-per-page="paginationOptions.itemsPerPage" \n' +
+        '            ng-model="paginationOptions.currentPage" \n' +
+        '            ng-change="paginationOptions.pageChanged()" \n' +
+        '            max-size="paginationOptions.maxPages" \n' +
+        '            boundary-link-numbers="paginationOptions.boundaryLinks" \n' +
+        '            force-ellipses="paginationOptions.boundaryLinks">\n' +
+        '        </ul>\n' +
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '\n' +
@@ -16579,19 +16946,22 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>\n' +
         '<div class="bb-page-summary-action-bar"></div>\n' +
         '');
+    $templateCache.put('sky/templates/pagination/uib.pagination.directive.html',
+        '<ul class="pagination">\n' +
+        '  <li ng-if="::boundaryLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-first"><a href ng-click="selectPage(1, $event)" ng-disabled="noPrevious()||ngDisabled" uib-tabindex-toggle>{{::getText(\'first\')}}</a></li>\n' +
+        '  <li ng-if="::directionLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-prev"><a href ng-click="selectPage(page - 1, $event)" ng-disabled="noPrevious()||ngDisabled" uib-tabindex-toggle>{{::getText(\'previous\')}}</a></li>\n' +
+        '  <li ng-repeat="page in pages track by $index" ng-class="{active: page.active,disabled: ngDisabled&&!page.active}" class="pagination-page"><a href ng-click="selectPage(page.number, $event)" ng-disabled="ngDisabled&&!page.active" uib-tabindex-toggle>{{page.text}}</a></li>\n' +
+        '  <li ng-if="::directionLinks" ng-class="{disabled: noNext()||ngDisabled}" class="pagination-next"><a href ng-click="selectPage(page + 1, $event)" ng-disabled="noNext()||ngDisabled" uib-tabindex-toggle>{{::getText(\'next\')}}</a></li>\n' +
+        '  <li ng-if="::boundaryLinks" ng-class="{disabled: noNext()||ngDisabled}" class="pagination-last"><a href ng-click="selectPage(totalPages, $event)" ng-disabled="noNext()||ngDisabled" uib-tabindex-toggle>{{::getText(\'last\')}}</a></li>\n' +
+        '</ul>');
     $templateCache.put('sky/templates/popover/popup.html',
-        '<div class="popover"\n' +
-        '    tooltip-animation-class="fade"\n' +
-        '    uib-tooltip-classes\n' +
-        '    ng-class="{ in: isOpen() }">\n' +
-        '  <div class="arrow"></div>\n' +
+        '<div class="arrow"></div>\n' +
         '\n' +
-        '  <div class="popover-inner">\n' +
-        '    <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n' +
+        '<div class="popover-inner">\n' +
+        '    <h3 class="popover-title" ng-bind="uibTitle" ng-if="uibTitle"></h3>\n' +
         '    <div class="popover-content"\n' +
-        '        uib-tooltip-template-transclude="contentExp()"\n' +
-        '        tooltip-template-transclude-scope="originScope()"></div>\n' +
-        '  </div>\n' +
+        '      uib-tooltip-template-transclude="contentExp()"\n' +
+        '      tooltip-template-transclude-scope="originScope()"></div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/reorder/reorder.component.html',
@@ -16626,6 +16996,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <ng-transclude></ng-transclude>\n' +
         '</div>\n' +
         '');
+    $templateCache.put('sky/templates/repeater/repeater.item.contextmenu.component.html',
+        '<div class="bb-repeater-item-context-menu" ng-transclude>\n' +
+        '</div>');
     $templateCache.put('sky/templates/repeater/repeater.item.directive.html',
         '<section class="bb-repeater-item" ng-class="bbRepeaterItem.getCls()">\n' +
         '  <div class="bb-repeater-item-left">\n' +
@@ -16637,12 +17010,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        ng-model="bbRepeaterItem.bbRepeaterItemSelected"\n' +
         '        ng-change="bbRepeaterItem.repeaterItemSelectionToggled(bbRepeaterItem.bbRepeaterItemSelected)" />\n' +
         '    </div>\n' +
-        '    <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">\n' +
+        '    <div class="bb-repeater-item-context-menu-container" ng-transclude="bbRepeaterItemContextMenu">\n' +
         '    </div>\n' +
         '  </div>\n' +
         '  <div class="bb-repeater-item-right" ng-click="bbRepeaterItem.selectItem()">\n' +
         '    <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick($event)">\n' +
-        '      <h1 class="bb-repeater-item-title" ng-show="bbRepeaterItem.titleElExists()" ng-transclude="bbRepeaterItemTitle"></h1>\n' +
+        '      <div class="bb-repeater-item-title-container" ng-transclude="bbRepeaterItemTitle"></div>\n' +
         '      <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>\n' +
         '    </header>\n' +
         '    <div class="bb-repeater-item-content" ng-transclude="bbRepeaterItemContent">\n' +
@@ -16650,8 +17023,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '</section>\n' +
         '');
+    $templateCache.put('sky/templates/repeater/repeater.item.title.component.html',
+        '<h1 class="bb-repeater-item-title" ng-transclude>\n' +
+        '</h1>');
     $templateCache.put('sky/templates/search/search.input.component.html',
-        '<div class="bb-search-input-inline">\n' +
+        '<div class="bb-search-input-inline" ng-class="{\'bb-search-full-width\': $ctrl.bbSearchFullWidth}">\n' +
         '    <div \n' +
         '        class="bb-search-open-wrapper"\n' +
         '        ng-show="$ctrl.currentBreakpoint.xs"\n' +
@@ -16680,6 +17056,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    data-bbauto-field="SearchBox"\n' +
         '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
         '                    ng-attr-placeholder="{{$ctrl.placeholderText}}"\n' +
+        '                    ng-attr-id="{{$ctrl.bbSearchInputId}}"\n' +
         '                    />    \n' +
         '\n' +
         '                <span class="input-group-btn">\n' +
@@ -16867,6 +17244,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
         '      <button \n' +
         '        class="btn bb-btn-secondary" \n' +
+        '        type="button"\n' +
         '        ng-click="$ctrl.hideSummarySection()"\n' +
         '        ng-attr-title="{{\'summary_actionbar_hide_summary\' | bbResources}}">\n' +
         '        <i class="fa fa-chevron-down"></i>\n' +
@@ -16876,6 +17254,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
         '    <button \n' +
         '      class="btn bb-btn-secondary" \n' +
+        '      type="button"\n' +
         '      ng-click="$ctrl.showSummarySection()"\n' +
         '      ng-attr-title="{{\'summary_actionbar_show_summary\' | bbResources}}">\n' +
         '      <i class="fa fa-chevron-up"></i>\n' +
@@ -16936,6 +17315,45 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/tabset/tabbutton.html',
         '<li class="bb-tab-button"></li>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/verticaltabset.html',
+        '<div class="bb-vertical-tabset">\n' +
+        '  <uib-accordion class="bb-vertical-tabset-tabs"\n' +
+        '      close-others="closeOthers"\n' +
+        '      ng-hide="isMobile && !showTabs">\n' +
+        '    <ul class="nav nav-tabs nav-stacked"\n' +
+        '        ng-transclude></ul>\n' +
+        '  </uib-accordion>\n' +
+        '  <div class="tab-content"\n' +
+        '      ng-hide="isMobile && showTabs">\n' +
+        '    <div class="tab-pane"\n' +
+        '         ng-repeat="tab in tabset.tabs"\n' +
+        '         ng-class="{active: tabset.active === tab.index}"\n' +
+        '         uib-tab-content-transclude="tab">\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/verticaltabsetgroup.html',
+        '<li>\n' +
+        '    <div uib-accordion-group\n' +
+        '        class="bb-vertical-tabset-group"\n' +
+        '        is-open="bbVerticalTabsetGroup.isOpen"\n' +
+        '        is-disabled="bbVerticalTabsetGroup.isDisabled">\n' +
+        '        <uib-accordion-heading>\n' +
+        '            <div class="bb-vertical-tabset-group-heading">\n' +
+        '                <span ng-class="{\'bb-vertical-tabset-group-active\':bbVerticalTabsetGroup.active}">\n' +
+        '                    {{bbVerticalTabsetGroup.heading}}\n' +
+        '                </span>\n' +
+        '                <span class="bb-vertical-tabset-group-chevron"\n' +
+        '                    ng-class="{\'bb-vertical-tabset-group-chevron-open\':bbVerticalTabsetGroup.isOpen}"></span>\n' +
+        '            </div>\n' +
+        '        </uib-accordion-heading>\n' +
+        '        <ul class="nav nav-tabs nav-stacked"\n' +
+        '            ng-transclude>\n' +
+        '        </ul>\n' +
+        '    </div>\n' +
+        '</li>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/container.html',
         '<div class="bb-text-expand-container"></div>\n' +

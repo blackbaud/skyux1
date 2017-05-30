@@ -7,7 +7,7 @@
         var ctrl = this,
             animationSpeed = 150,
             animationEase = 'linear';
-
+            
         function applySearchText(searchText) {
             //select input
             var searchEl = $element.find('.bb-search-input');
@@ -22,7 +22,6 @@
 
             //search callback
             ctrl.bbOnSearch({searchText: searchText});
-
         }
 
         function searchTextChanged(searchText) {
@@ -240,7 +239,11 @@
         }
 
         function initSearch() {
-
+            if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
+                bbMediaBreakpoints.register(mediaBreakpointCallback);
+                ctrl.$onDestroy = destroySearch;
+            }
+            
             if (ctrl.bbSearchText) {
                 searchTextBindingChanged();
             }
@@ -257,11 +260,6 @@
 
         function destroySearch() {
             bbMediaBreakpoints.unregister(mediaBreakpointCallback);
-        }
-
-        if (angular.isUndefined(ctrl.bbSearchMobileResponseEnabled) || ctrl.bbSearchMobileResponseEnabled) {
-            bbMediaBreakpoints.register(mediaBreakpointCallback);
-            ctrl.$onDestroy = destroySearch;
         }
 
         ctrl.$onInit = initSearch;
@@ -286,7 +284,9 @@
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?',
-                bbSearchMobileResponseEnabled: '<?'
+                bbSearchMobileResponseEnabled: '<?',
+                bbSearchInputId: '<?',
+                bbSearchFullWidth: '<?'
             }
         });
 })();

@@ -10,7 +10,9 @@ describe('Tabset module', function () {
         $scope,
         bbMediaBreakpoints,
         $timeout,
-        bbResources;
+        bbResources,
+        $log,
+        $templateCache;
 
     beforeEach(module(
         'ngMock',
@@ -20,13 +22,15 @@ describe('Tabset module', function () {
         'uib/template/tabs/tab.html'
     ));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_, _$timeout_, _bbResources_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$document_, _bbMediaBreakpoints_, _$timeout_, _bbResources_, _$log_, _$templateCache_) {
         $compile = _$compile_;
         $scope = _$rootScope_.$new();
         $document = _$document_;
         bbMediaBreakpoints = _bbMediaBreakpoints_;
         $timeout = _$timeout_;
         bbResources = _bbResources_;
+        $log = _$log_;
+        $templateCache = _$templateCache_;
 
         dynamicTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()">' +
                 '<uib-tab>' +
@@ -379,7 +383,7 @@ describe('Tabset module', function () {
                 '</uib-tab-heading>' +
                 '<span class="bb-test-content">3 content</span>' +
                 '<ul class="bb-test-ul"><li class="bb-test-li">1</li></ul>' +
-            '</uib-tab>' + 
+            '</uib-tab>' +
             '</uib-tabset>';
             collapsibleTabsHtml = '<uib-tabset bb-tabset-add="addTab()" bb-tabset-open="openTab()" bb-tabset-collapsible>' +
             '<uib-tab bb-tab-collapse-header="t.title" ng-repeat="t in myTabs" class="bb-tab-close">' +
@@ -394,7 +398,7 @@ describe('Tabset module', function () {
             collapsibleTabsInnerTabHtml = '<uib-tabset bb-tabset-collapsible>' +
                 '<uib-tab bb-tab-collapse-header="\'Testing\'">' +
                 '<uib-tab-heading>Testing</uib-tab-heading>' +
-                '<div>' + 
+                '<div>' +
                 'tab body one' +
                 '</div>' +
                 '</uib-tab>' +
@@ -834,7 +838,7 @@ describe('Tabset module', function () {
                     tabTitleEl;
 
                 el = setupCollapsibleTest(collapsibleTabsInnerTabHtml);
-                
+
                 $scope.$digest();
 
                 allCallbacks[0]({xs: true});
@@ -942,6 +946,220 @@ describe('Tabset module', function () {
 
                 el.remove();
             });
+        });
+    });
+
+    describe('vertical tabset', function () {
+        var groupedTabsHtml,
+            ungroupedTabsHtml,
+            invalidTabsHtml,
+            verticalTabsetTemplateOverrideHtml,
+            tabsetTemplateOverrideHtml,
+            el,
+            isolateScope;
+
+        beforeEach(function () {
+            groupedTabsHtml = '' +
+                '<uib-tabset active="active" bb-vertical-tabset bb-vertical-tabset-close-others="closeOthers">' +
+                '  <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1" bb-vertical-tabset-group-is-open="isOpen">' +
+                '    <uib-tab heading="Group 1 - Tab 1">' +
+                '      <p>Group 1, tab 1 content</p>' +
+                '    </uib-tab>' +
+                '    <uib-tab heading="Group 1 - Tab 2">' +
+                '      <p>Group 1, tab 2 content</p>' +
+                '    </uib-tab>' +
+                '  </div>' +
+                '  <div bb-vertical-tabset-group bb-vertical-tabset-group-is-disabled="true" bb-vertical-tabset-group-heading="Group 2">' +
+                '    <uib-tab heading="Group 2 - Tab 1">' +
+                '      <p>Group 2, tab 1 contents</p>' +
+                '    </uib-tab>' +
+                '  </div>' +
+                '</uib-tabset>';
+
+            ungroupedTabsHtml = '' +
+                '<uib-tabset bb-vertical-tabset active="active">' +
+                '  <uib-tab heading="Tab 1">' +
+                '    <p>Tab 1 content</p>' +
+                '  </uib-tab>' +
+                '  <uib-tab heading="Tab 2">' +
+                '    <p>Tab 2 content</p>' +
+                '  </uib-tab>' +
+                '</uib-tabset>';
+
+            invalidTabsHtml = '' +
+                '<uib-tabset bb-vertical-tabset bb-tabset-add bb-tabset-open bb-tabset-collapsible justified="true" type="pills" vertical="false">' +
+                '</uib-tabset>';
+
+            verticalTabsetTemplateOverrideHtml = '' +
+                '<uib-tabset active="active" bb-vertical-tabset bb-vertical-tabset-close-others="closeOthers">' +
+                '  <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1" bb-vertical-tabset-group-is-open="isOpen" bb-vertical-tabset-group-template-url="sky/templates/tabset/verticaltabsetgroupoverride.html">' +
+                '    <uib-tab heading="Group 1 - Tab 1">' +
+                '      <p>Group 1, tab 1 content</p>' +
+                '    </uib-tab>' +
+                '    <uib-tab heading="Group 1 - Tab 2">' +
+                '      <p>Group 1, tab 2 content</p>' +
+                '    </uib-tab>' +
+                '  </div>' +
+                '  <div bb-vertical-tabset-group bb-vertical-tabset-group-is-disabled="true" bb-vertical-tabset-group-heading="Group 2">' +
+                '    <uib-tab heading="Group 2 - Tab 1">' +
+                '      <p>Group 2, tab 1 contents</p>' +
+                '    </uib-tab>' +
+                '  </div>' +
+                '</uib-tabset>';
+
+            tabsetTemplateOverrideHtml = '' +
+                '<uib-tabset active="active" bb-vertical-tabset bb-vertical-tabset-close-others="closeOthers" ' +
+                '   template-url="sky/templates/tabset/verticaltabsetoverride.html">' +
+                '  <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1" bb-vertical-tabset-group-is-open="isOpen">' +
+                '    <uib-tab heading="Group 1 - Tab 1">' +
+                '      <p>Group 1, tab 1 content</p>' +
+                '    </uib-tab>' +
+                '    <uib-tab heading="Group 1 - Tab 2">' +
+                '      <p>Group 1, tab 2 content</p>' +
+                '    </uib-tab>' +
+                '  </div>' +
+                '  <div bb-vertical-tabset-group bb-vertical-tabset-group-is-disabled="true" bb-vertical-tabset-group-heading="Group 2">' +
+                '    <uib-tab heading="Group 2 - Tab 1">' +
+                '      <p>Group 2, tab 1 contents</p>' +
+                '    </uib-tab>' +
+                '  </div>' +
+                '</uib-tabset>';
+        });
+
+        function setUpBreakpointTest(isMobile) {
+            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (fn) {
+                fn({
+                    xs: isMobile
+                });
+            });
+            spyOn(bbMediaBreakpoints, 'unregister').and.stub();
+        }
+
+        function buildVerticalTabsetElement(html) {
+            el = $compile(html)($scope);
+            $scope.$digest();
+            $timeout.flush();
+            isolateScope = el.isolateScope();
+        }
+
+        it('warns of use of incompatible features', function () {
+            spyOn($log, 'warn').and.stub();
+            buildVerticalTabsetElement(invalidTabsHtml);
+            expect($log.warn.calls.count()).toEqual(6);
+        });
+
+        it('allows overriding tabset group template URL', function () {
+            $templateCache.put('sky/templates/tabset/verticaltabsetgroupoverride.html',
+                '<li uib-accordion-group' +
+                '    class="bb-vertical-tabset-group override"' +
+                '    is-open="bbVerticalTabsetGroup.isOpen"' +
+                '    is-disabled="bbVerticalTabsetGroup.isDisabled">' +
+                '    <uib-accordion-heading>' +
+                '        <div class="bb-vertical-tabset-group-heading">' +
+                '            <span ng-class="{\'bb-vertical-tabset-group-active\':bbVerticalTabsetGroup.active}">' +
+                '                {{bbVerticalTabsetGroup.heading}}' +
+                '            </span>' +
+                '            <span class="bb-vertical-tabset-group-chevron"' +
+                '                ng-class="{\'bb-vertical-tabset-group-chevron-open\':bbVerticalTabsetGroup.isOpen}"></span>' +
+                '        </div>' +
+                '    </uib-accordion-heading>' +
+                '    <ul class="nav nav-tabs nav-stacked"' +
+                '        ng-transclude>' +
+                '    </ul>' +
+                '</li>');
+            buildVerticalTabsetElement(verticalTabsetTemplateOverrideHtml);
+            expect(el.html()).toContain('override');
+        });
+
+        it('closes other tab groups', function () {
+            $scope.closeOthers = true;
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(isolateScope.closeOthers).toBe(true);
+        });
+
+        it('does not close other tab groups', function () {
+            $scope.closeOthers = false;
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(isolateScope.closeOthers).toBe(false);
+        });
+
+        it('activates active tab and group', function () {
+            $scope.active = 1;
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(isolateScope.tabset.tabs[1].tab.active).toBe(true);
+            expect(el.find('[bb-vertical-tabset-group]').eq(0).isolateScope().bbVerticalTabsetGroup.active).toBe(true);
+        });
+
+        it('tracks when a tabset group is open', function () {
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(el.find('[bb-vertical-tabset-group]').eq(0).isolateScope().bbVerticalTabsetGroup.isOpen).toBe(true);
+        });
+
+        it('tracks when a tabset group is disabled', function () {
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(el.find('[bb-vertical-tabset-group]').eq(1).isolateScope().bbVerticalTabsetGroup.isDisabled).toBe(true);
+        });
+
+        it('inserts headings for tabset groups', function () {
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(el.find('[bb-vertical-tabset-group]').eq(0).isolateScope().bbVerticalTabsetGroup.heading).toBe('Group 1');
+            expect(el.find('[bb-vertical-tabset-group]').eq(1).isolateScope().bbVerticalTabsetGroup.heading).toBe('Group 2');
+        });
+
+        it('activates active tab when tabs are not grouped', function () {
+            $scope.active = 1;
+            buildVerticalTabsetElement(ungroupedTabsHtml);
+            expect(isolateScope.tabset.tabs[1].tab.active).toBe(true);
+        });
+
+        it('uses vertical tabset template when bb-vertical-tabset is present', function () {
+            buildVerticalTabsetElement(groupedTabsHtml);
+            expect(el.html()).toContain('uib-accordion');
+        });
+
+        it('does not deactivate all tabs when reinitialized on non-mobile device', function () {
+            $scope.active = 1;
+            setUpBreakpointTest(false);
+            buildVerticalTabsetElement(groupedTabsHtml);
+            $scope.$broadcast('reinitializeVerticalTabsetDisplay');
+            $scope.$apply();
+            expect(isolateScope.tabset.active).toBe(1);
+            expect(isolateScope.isMobile).toBe(false);
+            expect(isolateScope.showTabs).toBe(false);
+        });
+
+        it('deactivates all tabs when reinitialized on mobile device', function () {
+            $scope.active = 1;
+            setUpBreakpointTest(true);
+            buildVerticalTabsetElement(groupedTabsHtml);
+            $scope.$broadcast('reinitializeVerticalTabsetDisplay');
+            $scope.$apply();
+            expect(isolateScope.tabset.active).not.toBe(1);
+            expect(isolateScope.isMobile).toBe(true);
+            expect(isolateScope.showTabs).toBe(true);
+        });
+
+        it('allows overriding uibTabset template url', function () {
+            $templateCache.put('sky/templates/tabset/verticaltabsetoverride.html',
+                '<div class="bb-vertical-tabset">' +
+                '  <uib-accordion class="bb-vertical-tabset-tabs override" ' +
+                '      close-others="closeOthers" ' +
+                '      ng-hide="isMobile && !showTabs">' +
+                '    <ul class="nav nav-tabs nav-stacked" ' +
+                '        ng-transclude></ul>' +
+                '  </uib-accordion>' +
+                '  <div class="tab-content"' +
+                '      ng-hide="isMobile && showTabs">' +
+                '    <div class="tab-pane"' +
+                '         ng-repeat="tab in tabset.tabs"' +
+                '         ng-class="{active: tabset.active === tab.index}"' +
+                '         uib-tab-content-transclude="tab">' +
+                '    </div>' +
+                '  </div>' +
+                '</div>'
+            );
+            buildVerticalTabsetElement(tabsetTemplateOverrideHtml);
+            expect(el.html()).toContain('override');
         });
     });
 });

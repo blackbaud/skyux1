@@ -5,6 +5,7 @@
     'use strict';
 
     var modules = [
+        'sky.accordion',
         'sky.actionbar',
         'sky.alert',
         'sky.autonumeric',
