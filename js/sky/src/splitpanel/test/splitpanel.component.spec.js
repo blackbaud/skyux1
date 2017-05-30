@@ -11,20 +11,9 @@
         $window;
 
         beforeEach(module(
-            //'ngMock',
             'sky.splitpanel',
             'sky.templates'
         ));
-
-        //beforeEach(module(function ($provide) {
-        //    $window = {
-        //        navigator: {
-        //            userAgent: window.navigator.userAgent
-        //        }
-        //    };
-
-        //    $provide.value('$window', $window);
-        //}));
 
         beforeEach(inject(function (_$rootScope_, _$compile_, _bbCheckDirtyForm_) {
             $scope = _$rootScope_.$new();
@@ -33,8 +22,6 @@
         }));
 
         splitpanelContent = "<bb-listbuilder-content>" +
-                            //"<div class='split-pattern-container'>" +
-                            //"<div class='bb-custom-content'>" +
                             "<bb-splitpanel-container>"+
                             "<bb-splitpanel-list-panel max-width-in-percentage='70' min-width-in-percentage='20'>"+
                             "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +

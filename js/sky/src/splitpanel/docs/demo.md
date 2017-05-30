@@ -45,6 +45,14 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 
 `bb-splitpanel-mobile-selected-item ` &mdash; Placeholder to show selected item in detail page of mobile version.
 
+`bb-splitpanel-mobile-list-back ` &mdash; Component to navigate back on list screen in mobile version.
+	- `bb-splitpanel-list-back-click ` &mdash; Event handler for back event.
+
+`bb-splitpanel-mobile-list-next ` &mdash; Component to navigate to next item on detail screen in mobile version.
+	- `bb-splitpanel-list-next-click ` &mdash; Event handler for next event.
+
+`bb-splitpanel-mobile-list-previous ` &mdash; Component to navigate to previous item on detail screen in mobile version.
+	- `bb-splitpanel-list-previous-click ` &mdash; Event handler for previous event.
 
 
 ###CheckDirtyForm service###
