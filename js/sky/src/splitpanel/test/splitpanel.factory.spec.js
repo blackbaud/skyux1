@@ -23,8 +23,6 @@
 
             backend.when('GET', "/.*/").respond({});
 
-            //$scope.$digest();
-            //backend.flush();
         }));
 
 
@@ -275,85 +273,12 @@
 
         });
 
-        it('doNotSaveCallback should be called in case of save in dirty check1', function () {
-
-            var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
-                    getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
-
-            $scope.forms = {};
-
-            //bbmodal = jasmine.createSpyObj('modal', ['open']);
-
-
-            //bbmodal.open.and.returnValue({ result: deffered.promise });
-
-
-            $scope.listCtrl = {
-
-                getPaneldata: function () {
-                    getPaneldataCalled = true;
-                },
-                data: [{}, {}, {}],
-
-                splitpanelNavigator: bbCheckDirtyForm.init({
-                    enableFormDirtyCheck: true,
-                    forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
-                        $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
-                    },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
-                        $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
-                        doNotSaveCalled = true;
-                    },
-                    modalController: 'ListbuilderModalController as ctrl',
-                    modalTemplate: 'demo/splitpanel/confirmpopup.html',
-                    scope: $scope,
-                    bbModal: bbmodal
-                }),
-                selectedItem: { $index: 0 }
-            };
-
-
-            el = $compile(filterBtnHtml)($scope);
-            $scope.$digest();
-            $scope.forms.workspaceContainerForm.$setDirty();
-            //el.find('.split-panel-list-container div')[0].click();
-
-            spyOn(bbmodal, 'open').and.callThrough();
-
-            $scope.$broadcast(
-                '$stateChangeStart',
-                { name: 'auth.profile', authenticate: true }, // toState
-                {}, // toParams                   
-                {}, // fromState
-                {}  // fromParams
-            );
-            backend.expectGET('demo/splitpanel/confirmpopup.html').respond({});
-
-            deffered.resolve();
-            $scope.$digest();
-
-            expect(bbmodal.open).toHaveBeenCalled();
-            expect(doNotSaveCalled).toBe(false);
-
-        });
-
-        //it('new test case', function () {
+        //it('doNotSaveCallback should be called in case of Donotsavecall option select in dirty check', function () {
 
         //    var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
         //            getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
 
         //    $scope.forms = {};
-
-        //    bbmodal = jasmine.createSpyObj('modal', ['open']);
-
-        //    deffered.resolve({ result: true });
-
-        //    bbmodal.open.and.returnValue({ result: deffered.promise });
 
         //    $scope.listCtrl = {
 
@@ -388,18 +313,20 @@
         //    el = $compile(filterBtnHtml)($scope);
         //    $scope.$digest();
         //    $scope.forms.workspaceContainerForm.$setDirty();
-        //    //el.find('.split-panel-list-container div')[0].click();
+
+        //    spyOn(bbmodal, 'open').and.callThrough();
+
         //    $scope.$broadcast(
         //        '$stateChangeStart',
-        //        { name: 'auth.profile', authenticate: true }, // toState
+        //        { name: 'test data', authenticate: true }, // toState
         //        {}, // toParams                   
         //        {}, // fromState
         //        {}  // fromParams
         //    );
-        //    expect(doNotSaveCalled).toBe(true);
+        //    backend.expectGET('demo/splitpanel/confirmpopup.html').respond({});
+
+        //    expect(doNotSaveCalled).toBe(false);
 
         //});
-
-
     });
 })();
