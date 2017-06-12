@@ -1,0 +1,63 @@
+<div class="bb-reorder-table">
+    <div class="bb-reorder-table-header-container table-responsive">
+        <table class="bb-reorder-table-header">
+            <thead>
+                <tr class="bb-reorder-table-labels" role="row">
+                    <th ng-if="$ctrl.sortable" class="bb-reorder-table-label-cell bb-reorder-table-label-icon"></th>
+                    <th ng-if="$ctrl.contextMenuItems" class="bb-reorder-table-label-cell bb-reorder-table-label-context"></th>
+                    <th ng-if="column.show" ng-repeat="column in $ctrl.options.columns" class="bb-reorder-table-label-cell" ng-style="{ 'width': column.width }">
+                        <div ng-if="column.title || column.title === ''">
+                            {{column.title}}
+                        </div>
+                        <div ng-if="!column.title && column.title !== ''">
+                            {{column.name}}
+                        </div>
+                    </th>
+                    <th ng-if="$ctrl.sortable" class="bb-reorder-table-label-cell bb-reorder-table-label-top"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="bb-reorder-table-container">
+        <div ng-repeat="item in $ctrl.options.data" ng-class="$ctrl.setFixed($index, $ctrl.options.fixed)">
+            <div class="bb-reorder-table-row-container">
+                <div ng-if="$ctrl.sortable" class="bb-reorder-table-col-icon">
+                    <i class="fa fa-arrows"></i>
+                </div>
+                <div ng-if="$ctrl.contextMenuItems" class="bb-reorder-table-col-context">
+                    <div class="bb-reorder-table-cell">
+                        <bb-context-menu ng-if="$ctrl.contextMenuItems[item[$ctrl.options.index]].length > 0" bb-context-menu-label="Reorder Table Context">
+                            <bb-context-menu-item ng-repeat="action in $ctrl.contextMenuItems[item[$ctrl.options.index]]" bb-context-menu-action="action.cmd()">{{action.title}}</bb-context-menu-item>
+                        </bb-context-menu>
+                    </div>
+                </div>
+                <div ng-if="column.show" ng-repeat="column in $ctrl.options.columns" class="bb-reorder-table-col" ng-style="{ 'width': column.width }">
+                    <div ng-if="!column.isBool && !column.templateFn" class="bb-reorder-table-cell">{{item[column.jsonMap]}}</div>
+                    <div ng-if="!column.isBool && column.templateFn" class="bb-reorder-table-cell">
+                        <div class="{{$ctrl.templates[column.name][item[$ctrl.options.index]]['elClass']}}">{{$ctrl.templates[column.name][item[$ctrl.options.index]]['text']}}</div>
+                    </div>
+                    <div ng-if="column.isBool" class="bb-reorder-table-cell bb-reorder-table-cell-check">
+                        <input ng-if="column.isBool.isInverted" bb-check type="checkbox" ng-false-value="true" ng-true-value="false" ng-model="item[column.jsonMap]"
+                            ng-disabled="column.isBool.disableCol || column.isBool.disableRow(item)">
+                        <input ng-if="!column.isBool.isInverted" bb-check type="checkbox" ng-false-value="false" ng-true-value="true" ng-model="item[column.jsonMap]"
+                            ng-disabled="column.isBool.disableCol || column.isBool.disableRow(item)">
+                    </div>
+                </div>
+                <div ng-if="$ctrl.sortable" class="bb-reorder-table-col-top">
+                    <div class="bb-reorder-table-cell">
+                        <button type="button" ng-if="!$ctrl.sorting && $ctrl.options.fixed < $index" ng-click="$ctrl.pushToTop(item)" class="btn btn-link"> 
+                              <i class="fa fa-arrow-circle-up"></i>
+                              <span>Top</span>
+                           </button>
+                    </div>
+                    <div ng-if="$ctrl.sorting && !$ctrl.isFixed($index)" class="bb-reorder-table-cell">
+                        <span class="bb-reorder-table-sorting-number"></span>
+                    </div>
+                    <div ng-if="$ctrl.isFixed($index)" class="bb-reorder-table-cell bb-reorder-table-lock">
+                        <span class="fa fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
