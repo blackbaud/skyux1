@@ -13,21 +13,30 @@
         border: 1px;
         table-layout: fixed;
         width: 100%;
+        display: table;
+        background-color: white;
 
         .bb-reorder-table-labels {
 
             width: 100%;
+            display: table-row;
 
             .bb-reorder-table-label-icon {
                 width: 44px;
+                display: table-cell;
+                padding: 8px;
             }
 
             .bb-reorder-table-label-context {
                 width: 44px;
+                display: table-cell;
+                padding: 8px;
             }
 
             .bb-reorder-table-label-top {
                 width: 60px;
+                display: table-cell;
+                padding: 8px;
             }
 
             .bb-reorder-table-label-cell {
@@ -38,6 +47,7 @@
                 font-weight: normal;
                 text-overflow: ellipsis;
                 overflow-x: hidden;
+                display: table-cell;
             }
 
             .bb-reorder-table-label-cell:first-of-type {
