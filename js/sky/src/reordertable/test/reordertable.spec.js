@@ -263,17 +263,17 @@ describe('Reorder Table', function () {
 
             cells = compiledElement.find('.bb-reorder-table-col');
 
-            expect($(cells[0]).width()).toEqual(60);
-            expect($(cells[1]).width()).toEqual(90);
-            expect($(cells[2]).width()).toEqual(120);
+            expect($(cells[0]).css('width')).toEqual('60px');
+            expect($(cells[1]).css('width')).toEqual('90px');
+            expect($(cells[2]).css('width')).toEqual('120px');
 
-            expect($(cells[3]).width()).toEqual(60);
-            expect($(cells[4]).width()).toEqual(90);
-            expect($(cells[5]).width()).toEqual(120);
+            expect($(cells[3]).css('width')).toEqual('60px');
+            expect($(cells[4]).css('width')).toEqual('90px');
+            expect($(cells[5]).css('width')).toEqual('120px');
 
-            expect($(cells[6]).width()).toEqual(60);
-            expect($(cells[7]).width()).toEqual(90);
-            expect($(cells[8]).width()).toEqual(120);
+            expect($(cells[6]).css('width')).toEqual('60px');
+            expect($(cells[7]).css('width')).toEqual('90px');
+            expect($(cells[8]).css('width')).toEqual('120px');
         });
 
         it('should display normal booleans as checkboxes', function () {

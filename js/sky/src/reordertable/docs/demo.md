@@ -14,7 +14,7 @@ than the reorder directive and requires an integer indexing property
             - `name` &mdash; Specifies a unique name for the column.
             - `jsonMap` &mdash; Specifies the name of the property within the `data` property that maps to the data in the column. This property is not needed only if using the `templateFn` property.
             - `title` &mdash; *(Optional.)* Specifies the text to use in the column header in place of the column name. *(Default: `name`)*
-            - `width` &mdash; *(Optional.)* Specifies the desired width attribute of the column elements. *(Default: `auto`)*
+            - `width` &mdash; *(Optional.)* Specifies the desired width attribute of the column elements. The width of the columns will not be respected if they are smaller than the table together. *(Default: `auto`)*
             - `isBool` &mdash; *(Optional.)* Specifies an object that makes the column elements display as checkboxes.
                 - `disableCol` &mdash; *(Optional.)* Specifies if the column checkboxes are always disabled. *(Default: `false`)*
                 - `disableRow` &mdash; *(Optional.)* Specifies a function that determines if the checkbox is disabled for a given item from. `data`
