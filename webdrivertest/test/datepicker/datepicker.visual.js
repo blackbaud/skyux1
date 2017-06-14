@@ -38,7 +38,11 @@ describe('datepicker', function () {
     it('should match the baseline screenshot when the is opened from a nested modal', function () {
         return browser
             .setupTest('/datepicker/fixtures/test.full.html')
-            .click('#screenshot-datepicker-nested-modal .bb-date-field-calendar-button')
+            .click('.open-first-modal')
+            .waitForVisible('.open-second-modal')
+            .click('.open-second-modal')
+            .waitForVisible('.second-modal-ready')
+            .click('.second-modal-ready .bb-date-field-calendar-button')
             .waitForVisible('ul.uib-datepicker-popup')
             .compareScreenshot({
                 screenshotName: 'datepicker_nested_modal',
