@@ -239,7 +239,10 @@ $z-index-control: 10000;
 $zindex-modal-background: 1040;
 $help-widget-zindex: $zindex-modal-background + 1000 !default;
 $omnibar-zindex: $zindex-modal-background - 1 !default;
-$bb-zindex-dropdown-append-to-body: 1051;
+
+// uib-modal starts at $zindex-modal-background and increments each modal by 10.
+// This allows for at least 10 nested modals.
+$bb-zindex-dropdown-append-to-body: 1151;
 
 $bb-zindex-viewkeeper: 100 !default;
 $bb-zindex-popover-list: $bb-zindex-viewkeeper - 1 !default;

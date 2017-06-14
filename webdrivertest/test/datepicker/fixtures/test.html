@@ -8,7 +8,28 @@
             <div id="screenshot-datepicker-append-to-body" style="height: 300px;">
                 <bb-datepicker ng-model="dateCtrl.date2" datepicker-append-to-body="true"></bb-datepicker>
             </div>
+            <div id="screenshot-datepicker-nested-modal">
+                <button type="button" class="btn btn-primary" ng-click="dateCtrl.open()">Open standard modal</button>
+            </div>
         </div>
       </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="demo/datepicker/firstmodal.html">
+    <bb-modal>
+        <div bb-modal-body>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" ng-click="firstModalCtrl.open()">Open nested modal</button>
+            </div>
+        </div>
+    </bb-modal>
+</script>
+
+<script type="text/ng-template" id="demo/datepicker/secondmodal.html">
+    <bb-modal>
+        <div bb-modal-body>
+            <bb-datepicker ng-model="secondModalCtrl.date" datepicker-append-to-body="true"></bb-datepicker>
+        </div>
+    </bb-modal>
+</script>
