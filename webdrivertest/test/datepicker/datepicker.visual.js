@@ -46,7 +46,7 @@ describe('datepicker', function () {
             .waitForVisible('ul.uib-datepicker-popup')
             .compareScreenshot({
                 screenshotName: 'datepicker_nested_modal',
-                selector: '#screenshot-datepicker-nested-modal'
+                selector: 'body'
             });
     });
 
