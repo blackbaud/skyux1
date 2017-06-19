@@ -20,7 +20,7 @@ describe('datepicker', function () {
             .waitForVisible('ul.uib-datepicker-popup')
             .compareScreenshot({
                 screenshotName: 'datepicker_open',
-                selector: '#screenshot-datepicker',
+                selector: '#screenshot-datepicker'
             });
     });
 
@@ -31,7 +31,7 @@ describe('datepicker', function () {
             .waitForVisible('ul.uib-datepicker-popup')
             .compareScreenshot({
                 screenshotName: 'datepicker_open_append',
-                selector: '#screenshot-datepicker-append-to-body',
+                selector: '#screenshot-datepicker-append-to-body'
             });
     });
 
