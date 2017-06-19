@@ -1504,6 +1504,8 @@
                                     column,
                                     rowData = [];
 
+                                /* istanbul ignore else */
+                                /* sanity check */
                                 if ($scope.options.columns) {
                                     for (i = 0; i < moreRows.length; i++) {
                                         rowData.push(moreRows[i]);
