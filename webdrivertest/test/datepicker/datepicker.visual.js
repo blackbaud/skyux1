@@ -47,9 +47,7 @@ describe('datepicker', function () {
             .compareScreenshot({
                 screenshotName: 'datepicker_nested_modal',
                 selector: 'body'
-            })
-            .click('.bb-modal .modal-dialog .close')
-            .click('.bb-modal .modal-dialog .close');
+            });
     });
 
 });
