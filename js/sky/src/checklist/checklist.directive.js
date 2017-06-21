@@ -33,8 +33,8 @@
             link: function (scope, el, attrs, vm) {
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
                 vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
-                vm.focusSearch = angular.isDefined(attrs.bbChecklistFocusSearch);
-                if (vm.focusSearch) {
+                vm.focusSearch = attrs.bbChecklistFocusSearch;
+                if (angular.isDefined(attrs.bbChecklistFocusSearch)) {
                     $timeout(function () {
                         el.find('.bb-checklist-search-box').focus();
                     }, 500);
