@@ -34,15 +34,14 @@ $bb-focus-border-color: #1f90d8 !default;
 $bb-focus-shadow-color: rgba(28, 132, 198, 0.6) !default;
 
 
-$font-family-sans-serif: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif: "Blackbaud Sans", Helvetica, Arial, sans-serif !default;
 
-$font-family-serif: BenchNine, Trebuchet, serif !default;
-$font-family-base: $font-family-sans-serif !default;
+$font-family-base: "Blackbaud Sans", Helvetica, Arial, sans-serif !default;
 
-$bb-font-family-narrow: 'Oswald', sans-serif !default;
+$bb-font-family-narrow: "Blackbaud Sans", Helvetica, Arial, sans-serif !default;
 $bb-font-family-alternate: $font-family-sans-serif !default;
 
-$font-size-base: 13px;
+$font-size-base: 14px;
 
 $bb-font-size-xxxl: floor(($font-size-base * 3.5)) !default; // ~42px
 $bb-font-size-xxl: floor(($font-size-base * 2.5)) !default; // ~30px

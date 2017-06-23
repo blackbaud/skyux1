@@ -80,8 +80,9 @@
 }
 
 @mixin bb-headline {
-    font: 400 $bb-alternate-font-size-sm $bb-font-family-narrow;
+    font: 400 22px $bb-font-family-narrow;
     color: $text-color;
+    font-stretch: condensed;
 }
 
 @mixin bb-field-label {
@@ -92,6 +93,7 @@
 @mixin bb-section-heading {
     font: 300 22px $bb-font-family-narrow;
     color: $text-color;
+    font-stretch: condensed;
 }
 
 @mixin bb-focus-indication {
