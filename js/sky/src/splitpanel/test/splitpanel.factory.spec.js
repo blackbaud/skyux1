@@ -69,15 +69,9 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
-                        $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
+                    action1Callback: function (func, param) {
                     },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
-                        $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
+                    action2Callback: function (func, param) {
                     },
                     modalController: 'ListbuilderModalController as ctrl',
                     modalTemplate: 'demo/splitpanel/confirmpopup.html',
@@ -119,13 +113,11 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
+                    action1Callback: function (func, param) {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                         saveCalled = true;
                     },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
+                    action2Callback: function (func, param) {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     modalController: 'ListbuilderModalController as ctrl',
@@ -170,14 +162,11 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
+                    action1Callback: function (func, param) {
 
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
+                    action2Callback: function (func, param) {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                         doNotSaveCalled = true;
                     },
@@ -195,7 +184,6 @@
             $scope.forms.workspaceContainerForm.$setDirty();
             el.find('.split-panel-list-container div')[0].click();
 
-            expect(getPaneldataCalled).toBe(true);
             expect(doNotSaveCalled).toBe(true);
 
         });
@@ -210,14 +198,10 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
+                    action1Callback: function (func, param) {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
+                    action2Callback: function (func, param) {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     modalController: 'ListbuilderModalController as ctrl',
@@ -247,14 +231,11 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    saveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
+                    action1Callback: function (func, param) {
 
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
-                    doNotSaveCallback: function (func, param) {
-                        $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
+                    action2Callback: function (func, param) {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     modalController: 'ListbuilderModalController as ctrl',
@@ -274,7 +255,6 @@
         });
 
         //it('doNotSaveCallback should be called in case of Donotsavecall option select in dirty check', function () {
-
         //    var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
         //            getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
 
@@ -290,13 +270,11 @@
         //        splitpanelNavigator: bbCheckDirtyForm.init({
         //            enableFormDirtyCheck: true,
         //            forms: $scope.forms,
-        //            saveCallback: function (func, param) {
-        //                $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
+        //            action1Callback: function (func, param) {
 
         //                $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
         //            },
-        //            doNotSaveCallback: function (func, param) {
-        //                $scope.listCtrl.splitpanelNavigator.invokeMethodWithParameters(func, param);
+        //            action2Callback: function (func, param) {
 
         //                $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
         //                doNotSaveCalled = true;
@@ -323,6 +301,7 @@
         //        {}, // fromState
         //        {}  // fromParams
         //    );
+        //    var p = bbmodal.open.calls.mostRecent().args[0].resolve.params();
         //    backend.expectGET('demo/splitpanel/confirmpopup.html').respond({});
 
         //    expect(doNotSaveCalled).toBe(false);

@@ -400,21 +400,12 @@
         function save(func, param) {
 
             alert("data saved");
-            //TODO : will save here
-
-            //call it in then block of save 
-            self.splitpanelNavigator.invokeMethodWithParameters(func, param);
 
             self.splitpanelNavigator.setDirtyFormDefault();
         }
 
         function doNotSave(func, param) {
             alert("data not saved");
-            //loadData(); // it will refersh the data, then no need revert unsaved data
-
-            //call it after load data 
-            self.splitpanelNavigator.invokeMethodWithParameters(func, param);
-
             self.splitpanelNavigator.setDirtyFormDefault();
         }
 
@@ -557,8 +548,8 @@
         self.splitpanelNavigator = bbCheckDirtyForm.init({
             enableFormDirtyCheck: true,
             forms: $scope.forms,
-            saveCallback: save,
-            doNotSaveCallback: doNotSave,
+            action1Callback: save,
+            action2Callback: doNotSave,
             modalController: 'ListbuilderModalController as ctrl',
             modalTemplate: 'demo/splitpanel/confirmpopup.html',
             scope: $scope,

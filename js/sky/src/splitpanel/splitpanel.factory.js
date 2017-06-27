@@ -2,11 +2,11 @@
 (function () {
     'use strict';
 
-    function bbCheckDirtyForm($state) {
+    function bbCheckDirtyForm($state, $q) {
         return {
             init: function (options) {
-                var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, saveCallback = options.saveCallback,
-                    doNotSaveCallback = options.doNotSaveCallback, bbModal = options.bbModal;
+                var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, action1Callback = options.action1Callback,
+                    action2Callback = options.action2Callback, bbModal = options.bbModal;
                 //check dirty and open modal
                 function checkDirtyForm(func, param) {
                     //check for dirty form
@@ -22,12 +22,15 @@
                         })
                         .result.then(function (modalResult) {
                             if (modalResult.result) {
-                                if (saveCallback) {
-                                    saveCallback(func, param);
+                                if (action1Callback) {
+                                    $q.when(action1Callback(), function () {
+                                        invokeMethodWithParameters(func, param);
+                                    });
                                 }
                             } else {
-                                if (doNotSaveCallback) {
-                                    doNotSaveCallback(func, param);
+                                if (action2Callback) {
+                                    $q.when(action2Callback(), function () {
+                                    });
                                 }
                             }
                         });
@@ -74,12 +77,15 @@
                             }
                         }).result.then(function (modalResult) {
                             if (modalResult.result) {
-                                if (saveCallback) {
-                                    saveCallback(navigatetoState, modalResult.params);
+                                if (action1Callback) {
+                                    $q.when(action1Callback(), function () {
+                                        invokeMethodWithParameters(navigatetoState, modalResult.params)
+                                    });
                                 }
                             } else {
-                                if (doNotSaveCallback) {
-                                    doNotSaveCallback();
+                                if (action2Callback) {
+                                    $q.when(action2Callback(), function () {
+                                    });
                                 }
                             }
                         }
@@ -98,14 +104,13 @@
                 return {
                     checkDirtyForm: checkDirtyForm,
                     setDirtyFormDefault: setDirtyFormDefault,
-                    invokeMethodWithParameters: invokeMethodWithParameters
                 };
             }
         };
 
     }
 
-    bbCheckDirtyForm.$inject = ['$state'];
+    bbCheckDirtyForm.$inject = ['$state', '$q'];
 
     angular.module('sky.splitpanel.bbCheckDirtyForm.factory', ['sky.modal'])
         .factory('bbCheckDirtyForm', bbCheckDirtyForm);

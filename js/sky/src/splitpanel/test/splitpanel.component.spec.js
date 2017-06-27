@@ -7,8 +7,7 @@
         $scope,
         bbCheckDirtyForm,
         splitpanelContent,
-        workspaceContent,
-        $window;
+        workspaceContent;
 
         beforeEach(module(
             'sky.splitpanel',
