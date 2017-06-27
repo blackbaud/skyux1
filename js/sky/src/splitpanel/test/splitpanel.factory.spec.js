@@ -52,7 +52,7 @@
                             "</bb-splitpanel-workspace-container>" +
                             "</bb-splitpanel-workspace>";
 
-        it('SaveCallback should be called when form is not dirty', function () {
+        it('action1Callback should be called when form is not dirty', function () {
 
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     getPaneldataCalled = false, el;
@@ -69,9 +69,9 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    action1Callback: function (func, param) {
+                    action1Callback: function () {
                     },
-                    action2Callback: function (func, param) {
+                    action2Callback: function () {
                     },
                     modalController: 'ListbuilderModalController as ctrl',
                     modalTemplate: 'demo/splitpanel/confirmpopup.html',
@@ -90,7 +90,7 @@
 
         });
 
-        it('saveCallback should be called in case of save in dirty check', function () {
+        it('action1Callback should be called in case of save in dirty check', function () {
 
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     getPaneldataCalled = false, el, deffered = $q.defer(), saveCalled = false;
@@ -113,11 +113,11 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    action1Callback: function (func, param) {
+                    action1Callback: function () {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                         saveCalled = true;
                     },
-                    action2Callback: function (func, param) {
+                    action2Callback: function () {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     modalController: 'ListbuilderModalController as ctrl',
@@ -139,7 +139,7 @@
 
         });
 
-        it('doNotSaveCallback should be called in case of save in dirty check', function () {
+        it('action2Callback should be called in case of save in dirty check', function () {
 
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
@@ -162,11 +162,11 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    action1Callback: function (func, param) {
+                    action1Callback: function () {
 
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
-                    action2Callback: function (func, param) {
+                    action2Callback: function () {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                         doNotSaveCalled = true;
                     },
@@ -198,10 +198,10 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    action1Callback: function (func, param) {
+                    action1Callback: function () {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
-                    action2Callback: function (func, param) {
+                    action2Callback: function () {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     modalController: 'ListbuilderModalController as ctrl',
@@ -231,11 +231,11 @@
                 splitpanelNavigator: bbCheckDirtyForm.init({
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
-                    action1Callback: function (func, param) {
+                    action1Callback: function () {
 
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
-                    action2Callback: function (func, param) {
+                    action2Callback: function () {
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     modalController: 'ListbuilderModalController as ctrl',
@@ -254,11 +254,17 @@
 
         });
 
-        //it('doNotSaveCallback should be called in case of Donotsavecall option select in dirty check', function () {
+        //it('action1Callback should be called in case of Donotsavecall option select in dirty check', function () {
         //    var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
-        //            getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
+        //           getPaneldataCalled = false, el, deffered = $q.defer(), saveCalled = false;
 
         //    $scope.forms = {};
+
+        //    bbmodal = jasmine.createSpyObj('modal', ['open']);
+
+        //    deffered.resolve({ result: true });
+
+        //    bbmodal.open.and.returnValue({ result: deffered.promise });
 
         //    $scope.listCtrl = {
 
@@ -270,14 +276,12 @@
         //        splitpanelNavigator: bbCheckDirtyForm.init({
         //            enableFormDirtyCheck: true,
         //            forms: $scope.forms,
-        //            action1Callback: function (func, param) {
-
+        //            action1Callback: function () {
         //                $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
+        //                saveCalled = true;
         //            },
-        //            action2Callback: function (func, param) {
-
+        //            action2Callback: function () {
         //                $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
-        //                doNotSaveCalled = true;
         //            },
         //            modalController: 'ListbuilderModalController as ctrl',
         //            modalTemplate: 'demo/splitpanel/confirmpopup.html',
@@ -292,20 +296,16 @@
         //    $scope.$digest();
         //    $scope.forms.workspaceContainerForm.$setDirty();
 
-        //    spyOn(bbmodal, 'open').and.callThrough();
-
         //    $scope.$broadcast(
         //        '$stateChangeStart',
-        //        { name: 'test data', authenticate: true }, // toState
+        //        { name: 'test data'}, // toState
         //        {}, // toParams                   
         //        {}, // fromState
         //        {}  // fromParams
         //    );
-        //    var p = bbmodal.open.calls.mostRecent().args[0].resolve.params();
-        //    backend.expectGET('demo/splitpanel/confirmpopup.html').respond({});
 
-        //    expect(doNotSaveCalled).toBe(false);
-
+        //    expect(getPaneldataCalled).toBe(true);
+        //    expect(saveCalled).toBe(true);
         //});
     });
 })();

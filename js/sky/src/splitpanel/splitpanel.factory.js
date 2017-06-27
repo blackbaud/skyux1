@@ -79,7 +79,7 @@
                             if (modalResult.result) {
                                 if (action1Callback) {
                                     $q.when(action1Callback(), function () {
-                                        invokeMethodWithParameters(navigatetoState, modalResult.params)
+                                        invokeMethodWithParameters(navigatetoState, modalResult.params);
                                     });
                                 }
                             } else {

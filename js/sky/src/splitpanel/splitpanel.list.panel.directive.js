@@ -18,6 +18,6 @@
                     maxWidthInPercentage: '=?',
                     minWidthInPercentage: '=?'
                 }
-            }
+            };
         });
 }());
