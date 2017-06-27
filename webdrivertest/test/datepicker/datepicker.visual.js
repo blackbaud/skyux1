@@ -20,7 +20,7 @@ describe('datepicker', function () {
             .waitForVisible('ul.uib-datepicker-popup')
             .compareScreenshot({
                 screenshotName: 'datepicker_open',
-                selector: '#screenshot-datepicker',
+                selector: '#screenshot-datepicker'
             });
     });
 
@@ -31,7 +31,22 @@ describe('datepicker', function () {
             .waitForVisible('ul.uib-datepicker-popup')
             .compareScreenshot({
                 screenshotName: 'datepicker_open_append',
-                selector: '#screenshot-datepicker-append-to-body',
+                selector: '#screenshot-datepicker-append-to-body'
+            });
+    });
+
+    it('should match the baseline screenshot when the is opened from a nested modal', function () {
+        return browser
+            .setupTest('/datepicker/fixtures/test.full.html')
+            .click('.open-first-modal')
+            .waitForVisible('.open-second-modal')
+            .click('.open-second-modal')
+            .waitForVisible('.second-modal-ready')
+            .click('.second-modal-ready .bb-date-field-calendar-button')
+            .waitForVisible('ul.uib-datepicker-popup')
+            .compareScreenshot({
+                screenshotName: 'datepicker_nested_modal',
+                selector: 'body'
             });
     });
 

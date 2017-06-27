@@ -1,14 +1,37 @@
-<div class="container" ng-controller="DatepickerTestController as dateCtrl">
+
+<div class="container bb-screenshot-noanim" ng-controller="DatepickerTestController as dateCtrl">
     <div class="row">
-      <div class="col-xs-12 col-lg-4">
-        <div id="screenshot-datepickers">
-            <div id="screenshot-datepicker" style="height: 300px;">
-                <bb-datepicker ng-model="dateCtrl.date1"></bb-datepicker>
-            </div>
-            <div id="screenshot-datepicker-append-to-body" style="height: 300px;">
-                <bb-datepicker ng-model="dateCtrl.date2" datepicker-append-to-body="true"></bb-datepicker>
+        <div class="col-xs-12 col-lg-4">
+            <div id="screenshot-datepickers">
+                <div id="screenshot-datepicker" style="height: 300px;">
+                    <bb-datepicker ng-model="dateCtrl.date1"></bb-datepicker>
+                </div>
+                <div id="screenshot-datepicker-append-to-body" style="height: 300px;">
+                    <bb-datepicker ng-model="dateCtrl.date2" datepicker-append-to-body="true"></bb-datepicker>
+                </div>
+                <div id="screenshot-datepicker-nested-modal">
+                    <button type="button" class="btn btn-primary open-first-modal" ng-click="dateCtrl.open()">Open standard modal</button>
+                </div>
             </div>
         </div>
-      </div>
+        </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="demo/datepicker/firstmodal.html">
+    <bb-modal>
+        <div bb-modal-body>
+            <button type="button" class="btn btn-primary open-second-modal" ng-click="firstModalCtrl.open()">Open nested modal</button>
+        </div>
+    </bb-modal>
+</script>
+
+<script type="text/ng-template" id="demo/datepicker/secondmodal.html">
+    <bb-modal>
+        <div bb-modal-body>
+            <div class="second-modal-ready">
+                <bb-datepicker ng-model="secondModalCtrl.date" datepicker-append-to-body="true"></bb-datepicker>
+            </div>
+        </div>
+    </bb-modal>
+</script>
