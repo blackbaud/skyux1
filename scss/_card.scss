@@ -63,6 +63,7 @@
 }
 
 .bb-card-title {
+    @include bb-section-heading();
     margin: 0;
 }
 

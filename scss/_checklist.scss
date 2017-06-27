@@ -154,7 +154,7 @@
 }
 
 .bb-checklist-list-title {
-    
+    @include bb-emphasized();
 }
 
 .bb-checklist-single {

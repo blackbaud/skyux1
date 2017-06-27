@@ -7,11 +7,13 @@
 }
 
 .bb-page-summary-title {
+    @include bb-page-heading();
     margin-top: 0;
     margin-bottom: $margin-half;
 }
 
 .bb-page-summary-subtitle {
+    @include bb-emphasized();
     margin-top: 0;
     margin-bottom: $margin;
     line-height: $headings-line-height;

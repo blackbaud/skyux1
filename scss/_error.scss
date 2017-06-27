@@ -3,7 +3,7 @@
 }
 
 .bb-error-title-container {
-  font-weight: bold;
+  @include bb-emphasized();
 }
 
 .bb-error-image-container {
