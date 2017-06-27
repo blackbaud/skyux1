@@ -1687,7 +1687,7 @@
 (function () {
     'use strict';
 
-    function bbChecklist() {
+    function bbChecklist($timeout) {
         return {
             replace: true,
             restrict: 'E',
@@ -1717,10 +1717,17 @@
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
                 vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
                 vm.focusSearch = attrs.bbChecklistFocusSearch;
+                if (angular.isDefined(attrs.bbChecklistFocusSearch)) {
+                    $timeout(function () {
+                        el.find('.bb-checklist-search-box').focus();
+                    }, 500);
+                }
                 vm.onlySelectedAvailable = angular.isDefined(attrs.bbChecklistOnlySelected);
             }
         };
     }
+
+    bbChecklist.$inject = ['$timeout'];
 
     angular.module(
         'sky.checklist.directive',
@@ -5552,6 +5559,7 @@
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
+                                columnHasJsonMap,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -5721,6 +5729,11 @@
 
                                             colWidth = tableWrapper.width() - totalColumnWidth;
                                             currentExtendedColumnWidth = colWidth;
+                                        }
+
+                                        // 
+                                        if (column.jsonmap !== column.name) {
+                                            columnHasJsonMap = true;
                                         }
 
                                         gridColumn = {
@@ -6719,9 +6732,15 @@
                             }
 
                             function setRows(rows, oldRows) {
-
+                                var rowData;
                                 if (newRowsAreConcatenated(rows, oldRows)) {
-                                    tableEl.addRowData('', rows.slice(oldRows.length, rows.length));
+                                    if (columnHasJsonMap) {
+                                        rowData = convertDataJsonmap(rows.slice(oldRows.length, rows.length));
+                                    } else {
+                                        rowData = rows.slice(oldRows.length, rows.length);
+                                    }
+                                    
+                                    tableEl.addRowData('', rowData);
                                     gridRowsUpdated(rows);
                                 } else if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
@@ -6796,9 +6815,41 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function convertDataJsonmap(moreRows) {
+                                var i,
+                                    j,
+                                    column,
+                                    rowData = [];
+
+                                /* istanbul ignore else */
+                                /* sanity check */
+                                if ($scope.options.columns) {
+                                    for (i = 0; i < moreRows.length; i++) {
+                                        rowData.push(moreRows[i]);
+                                        for (j = 0; j < $scope.options.columns.length; j++) {
+                                            column = $scope.options.columns[j];
+                                            if (column.jsonmap !== column.name) {
+                                                rowData[i][column.name] = moreRows[i][column.jsonmap];
+                                            }
+                                        }
+                                    }
+                                }
+
+                                return rowData;
+                                
+                            }
+
                             function addMoreRowsToGrid(moreRows) {
+                                var rowData;
+                                
                                 if (moreRows && moreRows.length > 0) {
-                                    tableEl.addRowData('', moreRows);
+                                    if (columnHasJsonMap) {
+                                        rowData = convertDataJsonmap(moreRows);
+                                    } else {
+                                        rowData = moreRows;
+                                    }
+                                            
+                                    tableEl.addRowData('', rowData);
                                     $scope.options.data = $scope.options.data.concat(moreRows);
                                     setUpFancyCheckCell();
                                     doNotResetRows = true;
