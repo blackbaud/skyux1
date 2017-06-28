@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    function ListbuilderFilterController($uibModalInstance, existingFilters, bbCheckDirtyForm) {
+    function SplitPanelFilterController($uibModalInstance, existingFilters, bbCheckDirtyForm) {
         var self = this;
 
         function clearAllFilters() {
@@ -55,10 +55,10 @@
 
     }
 
-    ListbuilderFilterController.$inject = ['$uibModalInstance', 'existingFilters', 'bbCheckDirtyForm'];
+    SplitPanelFilterController.$inject = ['$uibModalInstance', 'existingFilters', 'bbCheckDirtyForm'];
 
 
-    function ListbuilderModalController($uibModalInstance, params) {
+    function SplitPanelModalController($uibModalInstance, params) {
         var self = this;
         function save() {
             $uibModalInstance.close({ result: true, params: params });
@@ -72,7 +72,7 @@
 
     }
 
-    ListbuilderModalController.$inject = ['$uibModalInstance', 'params'];
+    SplitPanelModalController.$inject = ['$uibModalInstance', 'params'];
 
     function SplitPanelTestController($scope, $timeout, bbModal, $window, bbWait, bbCheckDirtyForm) {
         var self = this,
@@ -279,7 +279,7 @@
 
         function onFilterClick() {
             bbModal.open({
-                controller: 'ListbuilderFilterController as filterCtrl',
+                controller: 'SplitPanelFilterController as filterCtrl',
                 templateUrl: 'demo/listbuilder/filters.html',
                 resolve: {
                     existingFilters: function () {
@@ -500,7 +500,7 @@
         self.record = record;
         self.bbmodal = bbModal;
         self.isDetailScreen = false;
-        
+
         loadData();
 
         self.sortOptions = [
@@ -550,7 +550,7 @@
             forms: $scope.forms,
             action1Callback: save,
             action2Callback: doNotSave,
-            modalController: 'ListbuilderModalController as ctrl',
+            modalController: 'SplitPanelModalController as ctrl',
             modalTemplate: 'demo/splitpanel/confirmpopup.html',
             scope: $scope,
             bbModal: self.bbmodal
@@ -564,6 +564,6 @@
     angular
         .module('stache')
         .controller('SplitPanelTestController', SplitPanelTestController)
-        .controller('ListbuilderFilterController', ListbuilderFilterController)
-        .controller('ListbuilderModalController', ListbuilderModalController);
+        .controller('SplitPanelFilterController', SplitPanelFilterController)
+        .controller('SplitPanelModalController', SplitPanelModalController);
 }());
