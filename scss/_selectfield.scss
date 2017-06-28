@@ -24,8 +24,7 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
 }
 
 .bb-select-field-single-title-placeholder {
-  font-style: italic;
-  color: $gray-light;
+  @include bb-deemphasized();
 }
 
 .bb-select-field-single-icon {
