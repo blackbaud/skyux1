@@ -1687,7 +1687,7 @@
 (function () {
     'use strict';
 
-    function bbChecklist() {
+    function bbChecklist($timeout) {
         return {
             replace: true,
             restrict: 'E',
@@ -1717,10 +1717,17 @@
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
                 vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
                 vm.focusSearch = attrs.bbChecklistFocusSearch;
+                if (angular.isDefined(attrs.bbChecklistFocusSearch)) {
+                    $timeout(function () {
+                        el.find('.bb-checklist-search-box').focus();
+                    }, 500);
+                }
                 vm.onlySelectedAvailable = angular.isDefined(attrs.bbChecklistOnlySelected);
             }
         };
     }
+
+    bbChecklist.$inject = ['$timeout'];
 
     angular.module(
         'sky.checklist.directive',
