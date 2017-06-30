@@ -66,17 +66,6 @@
 
                 col.show = col.show === false ? false : true;
 
-                if (col.isBool) {
-                    if (!col.isBool.disableRow) {
-                        col.isBool.disableRow = function () {
-                            return false;
-                        };
-                    }
-
-                    // Ensures isInverted is 'true' or 'false'
-                    col.isBool.isInverted = !!col.isBool.isInverted;
-                }
-
                 if (col.template_url && !compiledTemplates[col.name]) {
                     compiledTemplates[col.name] = $compile($templateCache.get(col.template_url));
                     /*angular.forEach(vm.options.data, function (item) {
@@ -95,17 +84,11 @@
         vm.firstSort = true;
 
         vm.isFixed = function (index) {
-            if (typeof index === "number") {
-                return index < vm.options.fixed;
-            }
-            return true;
+            return index < vm.options.fixed;
         };
 
         vm.setFixed = function (index) {
-            if (typeof index === "number") {
-                return vm.isFixed(index) ? 'bb-reorder-table-row-fixed' : 'bb-reorder-table-row';
-            }
-            return 'bb-reorder-table-row-fixed';
+            return vm.isFixed(index) ? 'bb-reorder-table-row-fixed' : 'bb-reorder-table-row';
         };
 
         // sends an item to the top of the list with a rising animation
@@ -122,42 +105,41 @@
 
             index = vm.options.oneIndexed ? item[vm.options.index] - 1 : item[vm.options.index];
 
-            if (index <= vm.options.fixed) {
-                return;
+            if (index > vm.options.fixed) {
+
+                topIndex = vm.options.fixed;
+
+                containerEl.sortable("disable"); // don't allow sorting during animation
+
+                toTheTopEl = $(containerEl.children()[index]);
+                toTheTopElOffset = toTheTopEl.position();
+
+                // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
+                animateCloneEl = toTheTopEl.clone();
+                animateCloneEl.addClass('bb-reorder-table-animate-element');
+                animateCloneEl.css({ top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px" });
+
+                containerEl.append(animateCloneEl);
+
+                toTheTopEl.addClass('bb-reorder-table-row-placeholder');
+
+                // animate that we are moving the item to the top of the list
+                $(animateCloneEl).fadeOut({
+                    duration: 500, queue: false, always: function () {
+                        toTheTopEl.removeClass('bb-reorder-table-row-placeholder');
+
+                        animateCloneEl.remove();
+                        containerEl.sortable("enable");
+
+                        $scope.$apply(function () {
+                            // perform the swap moving the item to the top of the list
+                            vm.options.data.splice(
+                                topIndex, 0,
+                                vm.options.data.splice(index, 1)[0]);
+                        });
+                    }
+                });
             }
-
-            topIndex = vm.options.fixed;
-
-            containerEl.sortable("disable"); // don't allow sorting during animation
-
-            toTheTopEl = $(containerEl.children()[index]);
-            toTheTopElOffset = toTheTopEl.position();
-
-            // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
-            animateCloneEl = toTheTopEl.clone();
-            animateCloneEl.addClass('bb-reorder-table-animate-element');
-            animateCloneEl.css({ top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px" });
-
-            containerEl.append(animateCloneEl);
-
-            toTheTopEl.addClass('bb-reorder-table-row-placeholder');
-
-            // animate that we are moving the item to the top of the list
-            $(animateCloneEl).fadeOut({
-                duration: 500, queue: false, always: function () {
-                    toTheTopEl.removeClass('bb-reorder-table-row-placeholder');
-
-                    animateCloneEl.remove();
-                    containerEl.sortable("enable");
-
-                    $scope.$apply(function () {
-                        // perform the swap moving the item to the top of the list
-                        vm.options.data.splice(
-                            topIndex, 0,
-                            vm.options.data.splice(index, 1)[0]);
-                    });
-                }
-            });
         };
 
         vm.cellLink = function (row, index, column) {
@@ -168,10 +150,6 @@
 
             rowElem = $element.find('#bb-reorder-table-cell-' + index + '-' + column.name);
             cell = rowElem.children();
-
-            if (cell.length !== 1) {
-                return;
-            }
 
             itemScope = $scope.$new(true);
             itemScope.data = row[column.jsonMap];
