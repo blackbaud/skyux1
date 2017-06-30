@@ -7,7 +7,8 @@ describe('Reorder Table', function () {
     var $compile,
         bbResources,
         $timeout,
-        $rootScope;
+        $rootScope,
+        $templateCache;
 
     beforeEach(module(
         'ngMock',
@@ -15,11 +16,12 @@ describe('Reorder Table', function () {
         'sky.templates'
     ));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _bbResources_) {
+    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _bbResources_, _$templateCache_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         $timeout = _$timeout_;
         bbResources = _bbResources_;
+        $templateCache = _$templateCache_;
     }));
 
     describe('directive', function () {
@@ -274,172 +276,6 @@ describe('Reorder Table', function () {
             expect($(cells[6]).css('width')).toEqual('60px');
             expect($(cells[7]).css('width')).toEqual('90px');
             expect($(cells[8]).css('width')).toEqual('120px');
-        });
-
-        it('should display normal booleans as checkboxes', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                elScope,
-                boxes;
-
-            $scope.options = {
-                columns: [
-                    {
-                        name: "bool",
-                        jsonMap: "testProperty",
-                        isBool: {}
-                    }
-                ],
-                data: [
-                    { id: 0, testProperty: true },
-                    { id: 1, testProperty: false }
-                ],
-                index: "id"
-            };
-
-            $scope.unsortable = true;
-
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
-
-            boxes = compiledElement.find('.bb-reorder-table-cell-check input');
-
-            expect($(boxes[0]).prop('checked')).toEqual($scope.options.data[0].testProperty);
-            expect($(boxes[1]).prop('checked')).toEqual($scope.options.data[1].testProperty);
-
-            expect($(boxes[0]).prop('disabled')).toEqual(false);
-            expect($(boxes[1]).prop('disabled')).toEqual(false);
-        });
-
-        it('should display inverted booleans as inverted checkboxes', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                elScope,
-                boxes;
-
-            $scope.options = {
-                columns: [
-                    {
-                        name: "bool",
-                        jsonMap: "testProperty",
-                        isBool: { isInverted: true }
-                    }
-                ],
-                data: [
-                    { id: 0, testProperty: true },
-                    { id: 1, testProperty: false }
-                ],
-                index: "id"
-            };
-
-            $scope.unsortable = true;
-
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
-
-            boxes = compiledElement.find('.bb-reorder-table-cell-check input');
-
-            expect($(boxes[0]).prop('checked')).not.toEqual($scope.options.data[0].testProperty);
-            expect($(boxes[1]).prop('checked')).not.toEqual($scope.options.data[1].testProperty);
-
-            expect($(boxes[0]).prop('disabled')).toEqual(false);
-            expect($(boxes[1]).prop('disabled')).toEqual(false);
-        });
-
-        it('should display booleans on disabled rows as disabled checkboxes', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                elScope,
-                boxes;
-
-            $scope.options = {
-                columns: [
-                    {
-                        name: "bool",
-                        jsonMap: "testProperty",
-                        isBool: {
-                            disableRow: function (b) {
-                                return b.id === 1;
-                            }
-                        }
-                    }
-                ],
-                data: [
-                    { id: 0, testProperty: true },
-                    { id: 1, testProperty: false },
-                    { id: 2, testProperty: true }
-                ],
-                index: "id"
-            };
-
-            $scope.unsortable = true;
-
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
-
-            boxes = compiledElement.find('.bb-reorder-table-cell-check input');
-
-            expect($(boxes[0]).prop('checked')).toEqual($scope.options.data[0].testProperty);
-            expect($(boxes[1]).prop('checked')).toEqual($scope.options.data[1].testProperty);
-            expect($(boxes[1]).prop('checked')).toEqual($scope.options.data[1].testProperty);
-
-            expect($(boxes[0]).prop('disabled')).toEqual(false);
-            expect($(boxes[1]).prop('disabled')).toEqual(true);
-            expect($(boxes[2]).prop('disabled')).toEqual(false);
-        });
-
-        it('should display booleans on disabled columns as disabled checkboxes', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                elScope,
-                boxes;
-
-            $scope.options = {
-                columns: [
-                    {
-                        name: "bool1",
-                        jsonMap: "testProperty1",
-                        isBool: {}
-                    },
-                    {
-                        name: "bool2",
-                        jsonMap: "testProperty2",
-                        isBool: { disableCol: true }
-                    }
-                ],
-                data: [
-                    { id: 0, testProperty1: true, testProperty2: false },
-                    { id: 1, testProperty1: false, testProperty2: true },
-                    { id: 2, testProperty1: true, testProperty2: false }
-                ],
-                index: "id"
-            };
-
-            $scope.unsortable = true;
-
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
-
-            boxes = compiledElement.find('.bb-reorder-table-cell-check input');
-
-            expect($(boxes[0]).prop('checked')).toEqual($scope.options.data[0].testProperty1);
-            expect($(boxes[1]).prop('checked')).toEqual($scope.options.data[0].testProperty2);
-
-            expect($(boxes[2]).prop('checked')).toEqual($scope.options.data[1].testProperty1);
-            expect($(boxes[3]).prop('checked')).toEqual($scope.options.data[1].testProperty2);
-
-            expect($(boxes[4]).prop('checked')).toEqual($scope.options.data[2].testProperty1);
-            expect($(boxes[5]).prop('checked')).toEqual($scope.options.data[2].testProperty2);
-
-
-            expect($(boxes[0]).prop('disabled')).toEqual(false);
-            expect($(boxes[1]).prop('disabled')).toEqual(true);
-
-            expect($(boxes[2]).prop('disabled')).toEqual(false);
-            expect($(boxes[3]).prop('disabled')).toEqual(true);
-
-            expect($(boxes[4]).prop('disabled')).toEqual(false);
-            expect($(boxes[5]).prop('disabled')).toEqual(true);
         });
 
         it('should display lock on fixed rows', function () {
@@ -1140,45 +976,166 @@ describe('Reorder Table', function () {
             expect($(secondRow).hasClass('bb-reorder-table-row')).toBeFalsy();
         });
 
-        it('should display templated items with appropriate text and class', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                elScope,
-                firstRow,
-                secondRow;
+        describe('should display column templating that', function () {
+            it('can have a template url that displays a formatted object in a cell', function () {
+                var $scope = $rootScope.$new(),
+                    cells,
+                    compiledElement,
+                    elScope;
 
-            $scope.options = {
-                columns: [
-                    {
-                        name: "testText",
-                        jsonMap: "testText",
-                        templateFn: function (item) {
-                            if (item.id === 1) {
-                                return { text: item.testText, elClass: item.testClass };
-                            } else {
-                                return { text: 'Fail' };
-                            }
+                $templateCache.put('bbReorderTable/samples/mycolumn.html',
+                    '<div>' +
+                    '<div class="bb-test-title">Title: {{data.title}}</div>' +
+                    '<div class="bb-test-info">Info: {{data.info}}</div>' +
+                    '</div>');
+
+                $scope.options = {
+                    columns: [
+                        {
+                            title: 'Templated',
+                            jsonMap: 'templated',
+                            name: 'templated',
+                            width: 300,
+                            template_url: 'bbReorderTable/samples/mycolumn.html'
                         }
-                    }
-                ],
-                data: [
-                    { id: 0, testText: 123, testClass: 'itemOne' },
-                    { id: 1, testText: 456, testClass: 'itemTwo' }
-                ],
-                index: "id"
-            };
+                    ],
+                    data: [
+                        { id: 0, templated: {title: 'Title 1', info: 'info 1'} },
+                        { id: 1, templated: {title: 'Title 2', info: 'info 2'} },
+                        { id: 2, templated: {title: 'Title 3', info: 'info 3'} },
+                        { id: 3, templated: {title: 'Title 4', info: 'info 4'} }
+                    ],
+                    index: "id"
+                };
 
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
+                compiledElement = getCompiledElement($scope);
+                elScope = compiledElement.isolateScope();
 
-            firstRow = compiledElement.find('.bb-reorder-table-col div div')[0];
-            secondRow = compiledElement.find('.bb-reorder-table-col div div')[1];
+                cells = compiledElement.find('.bb-reorder-table-col');
 
-            expect($(firstRow).hasClass('itemOne')).toBeFalsy();
-            expect($(secondRow).hasClass('itemTwo')).toBeTruthy();
+                expect($(cells[0]).find('.bb-test-title').html()).toContain('Title: Title 1');
+                expect($(cells[0]).find('.bb-test-info').html()).toContain('Info: info 1');
 
-            expect($(firstRow).html()).toContain('Fail');
-            expect($(secondRow).html()).toContain(456);
+                expect($(cells[1]).find('.bb-test-title').html()).toContain('Title: Title 2');
+                expect($(cells[1]).find('.bb-test-info').html()).toContain('Info: info 2');
+
+                expect($(cells[2]).find('.bb-test-title').html()).toContain('Title: Title 3');
+                expect($(cells[2]).find('.bb-test-info').html()).toContain('Info: info 3');
+
+                expect($(cells[3]).find('.bb-test-title').html()).toContain('Title: Title 4');
+                expect($(cells[3]).find('.bb-test-info').html()).toContain('Info: info 4');
+            });
+
+            it('can have a controller and resources passed to the template', function () {
+                var $scope = $rootScope.$new(),
+                    cells,
+                    compiledElement,
+                    elScope,
+                    columnButtonClicked = false;
+
+
+                $templateCache.put('bbReorderTable/samples/mycolumn.html',
+                    '<div>' +
+                    '<div class="bb-test-title">{{resources.title}}: {{data.title}}</div>' +
+                    '<div class="bb-test-info">Info: {{data.info}}</div>' +
+                    '<button ng-click="locals.clickIt()">My Button</button>' +
+                    '</div>');
+
+                function columnController($scope) {
+                    $scope.locals = {
+                        clickIt: function () {
+                            columnButtonClicked = true;
+                        }
+                    };
+                }
+
+                columnController.$inject = ['$scope'];
+
+                $scope.options = {
+                    columns: [
+                        {
+                            title: 'Templated',
+                            controller: columnController,
+                            jsonMap: 'templated',
+                            name: 'templated',
+                            width: 300,
+                            template_url: 'bbReorderTable/samples/mycolumn.html'
+                        }
+                    ],
+                    data: [
+                        { id: 0, templated: {title: 'Title 1', info: 'info 1'} },
+                        { id: 1, templated: {title: 'Title 2', info: 'info 2'} },
+                        { id: 2, templated: {title: 'Title 3', info: 'info 3'} },
+                        { id: 3, templated: {title: 'Title 4', info: 'info 4'} }
+                    ],
+                    index: "id",
+                    resources: { title: 'Title'}
+                };
+
+                compiledElement = getCompiledElement($scope);
+                elScope = compiledElement.isolateScope();
+
+                cells = compiledElement.find('.bb-reorder-table-col');
+
+                expect($(cells[0]).find('.bb-test-title').html()).toContain('Title: Title 1');
+                expect($(cells[0]).find('.bb-test-info').html()).toContain('Info: info 1');
+
+                expect($(cells[1]).find('.bb-test-title').html()).toContain('Title: Title 2');
+                expect($(cells[1]).find('.bb-test-info').html()).toContain('Info: info 2');
+
+                expect($(cells[2]).find('.bb-test-title').html()).toContain('Title: Title 3');
+                expect($(cells[2]).find('.bb-test-info').html()).toContain('Info: info 3');
+
+                expect($(cells[3]).find('.bb-test-title').html()).toContain('Title: Title 4');
+                expect($(cells[3]).find('.bb-test-info').html()).toContain('Info: info 4');
+
+                $(cells[0]).find('button').click();
+
+                expect(columnButtonClicked).toBe(true);
+
+                $scope.$digest();
+            });
+
+            it('can access row data from the column template', function () {
+                var $scope = $rootScope.$new(),
+                    cells,
+                    compiledElement,
+                    elScope;
+
+                $templateCache.put('bbReorderTable/samples/mycolumn.html',
+                    '<div>' +
+                    '<div class="bb-test-rowDataName">{{rowData.hit}}</div>' +
+                    '</div>');
+
+                $scope.options = {
+                    columns: [
+                        {
+                            title: 'Templated',
+                            jsonMap: 'templated',
+                            name: 'templated',
+                            width: 300,
+                            template_url: 'bbReorderTable/samples/mycolumn.html'
+                        }
+                    ],
+                    data: [
+                        { id: 0, hit: 'Pea', templated: {title: 'Title 1', info: 'info 1'} },
+                        { id: 1, hit: 'Eye', templated: {title: 'Title 2', info: 'info 2'} },
+                        { id: 2, hit: 'Inn', templated: {title: 'Title 3', info: 'info 3'} },
+                        { id: 3, hit: 'Gee', templated: {title: 'Title 4', info: 'info 4'} }
+                    ],
+                    index: "id"
+                };
+
+                compiledElement = getCompiledElement($scope);
+                elScope = compiledElement.isolateScope();
+
+                cells = compiledElement.find('.bb-reorder-table-col');
+
+                expect($(cells[0]).find('.bb-test-rowDataName').html()).toContain('Pea');
+                expect($(cells[1]).find('.bb-test-rowDataName').html()).toContain('Eye');
+                expect($(cells[2]).find('.bb-test-rowDataName').html()).toContain('Inn');
+                expect($(cells[3]).find('.bb-test-rowDataName').html()).toContain('Gee');
+            });
         });
 
         it('should hide hidden columns', function () {
@@ -1687,462 +1644,6 @@ describe('Reorder Table', function () {
             expect($(rows[1]).html()).toContain(789);
             expect($(rows[2]).html()).toContain(456);
             expect($(rows[3]).html()).toContain(1000);
-        });
-
-
-        describe('isFixed', function () {
-
-            it('returns true for index less than set', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    ret;
-
-                $scope.options = { fixed: 1 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                ret = elScope.$ctrl.isFixed(0);
-
-                expect(ret).toBeTruthy();
-            });
-
-            it('returns false for index equal to set', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    ret;
-
-                $scope.options = { fixed: 1 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                ret = elScope.$ctrl.isFixed(1);
-
-                expect(ret).toBeFalsy();
-            });
-
-            it('returns false for index greater than set', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    ret;
-
-                $scope.options = { fixed: 1 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                ret = elScope.$ctrl.isFixed(2);
-
-                expect(ret).toBeFalsy();
-            });
-
-            it('returns true for non-number index', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    ret;
-
-                $scope.options = { fixed: 0 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                ret = elScope.$ctrl.isFixed("number");
-                expect(ret).toBeTruthy();
-                ret = elScope.$ctrl.isFixed(null);
-                expect(ret).toBeTruthy();
-                ret = elScope.$ctrl.isFixed(undefined);
-                expect(ret).toBeTruthy();
-                ret = elScope.$ctrl.isFixed({});
-                expect(ret).toBeTruthy();
-                ret = elScope.$ctrl.isFixed([]);
-                expect(ret).toBeTruthy();
-            });
-
-        });
-
-        describe('setFixed', function () {
-
-            it('returns fixed for index less than set', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    expected,
-                    ret;
-
-                $scope.options = { fixed: 1 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                expected = 'bb-reorder-table-row-fixed';
-                ret = elScope.$ctrl.setFixed(0);
-
-                expect(ret).toEqual(expected);
-            });
-
-            it('returns not fixed for index equal to set', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    expected,
-                    ret;
-
-                $scope.options = { fixed: 1 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                expected = 'bb-reorder-table-row';
-                ret = elScope.$ctrl.setFixed(1);
-
-                expect(ret).toEqual(expected);
-            });
-
-            it('returns not fixed for index greater than set', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    expected,
-                    ret;
-
-                $scope.options = { fixed: 1 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                expected = 'bb-reorder-table-row';
-                ret = elScope.$ctrl.setFixed(2);
-
-                expect(ret).toEqual(expected);
-            });
-
-            it('returns fixed for non-number index', function () {
-                var $scope = $rootScope.$new(),
-                    compiledElement,
-                    elScope,
-                    expected,
-                    ret;
-
-                $scope.options = { fixed: 0 };
-
-                compiledElement = getCompiledElement($scope);
-                elScope = compiledElement.isolateScope();
-
-                expected = 'bb-reorder-table-row-fixed';
-
-                ret = elScope.$ctrl.setFixed("number");
-                expect(ret).toEqual(expected);
-                ret = elScope.$ctrl.setFixed(null);
-                expect(ret).toEqual(expected);
-                ret = elScope.$ctrl.setFixed(undefined);
-                expect(ret).toEqual(expected);
-                ret = elScope.$ctrl.setFixed({});
-                expect(ret).toEqual(expected);
-                ret = elScope.$ctrl.setFixed([]);
-                expect(ret).toEqual(expected);
-            });
-
-        });
-
-        describe('pushToTop', function () {
-
-            describe('moves to top of non-fixed list', function () {
-
-                it('when zero indexed', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 0, testProperty: 123 },
-                            { id: 1, testProperty: 456 },
-                            { id: 2, testProperty: 789 },
-                            { id: 3, testProperty: -999 }
-                        ],
-                        index: "id",
-                        oneIndexed: false
-                    };
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[2];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(789);
-                    expect($scope.options.data[0].id).toEqual(0);
-                    expect($scope.options.data[1].testProperty).toEqual(123);
-                    expect($scope.options.data[1].id).toEqual(1);
-                    expect($scope.options.data[2].testProperty).toEqual(456);
-                    expect($scope.options.data[2].id).toEqual(2);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(3);
-                });
-
-                it('when one indexed', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 1, testProperty: 123 },
-                            { id: 2, testProperty: 456 },
-                            { id: 3, testProperty: 789 },
-                            { id: 4, testProperty: -999 }
-                        ],
-                        index: "id",
-                        oneIndexed: true
-                    };
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[2];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(789);
-                    expect($scope.options.data[0].id).toEqual(1);
-                    expect($scope.options.data[1].testProperty).toEqual(123);
-                    expect($scope.options.data[1].id).toEqual(2);
-                    expect($scope.options.data[2].testProperty).toEqual(456);
-                    expect($scope.options.data[2].id).toEqual(3);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(4);
-                });
-            });
-
-            describe('moves to top for index greater than fixed', function () {
-
-                it('when zero indexed', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 0, testProperty: 123 },
-                            { id: 1, testProperty: 456 },
-                            { id: 2, testProperty: 789 },
-                            { id: 3, testProperty: -999 }
-                        ],
-                        index: "id",
-                        oneIndexed: false,
-                        fixed: 1
-                    };
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[2];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(123);
-                    expect($scope.options.data[0].id).toEqual(0);
-                    expect($scope.options.data[1].testProperty).toEqual(789);
-                    expect($scope.options.data[1].id).toEqual(1);
-                    expect($scope.options.data[2].testProperty).toEqual(456);
-                    expect($scope.options.data[2].id).toEqual(2);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(3);
-                });
-
-                it('when one indexed', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 1, testProperty: 123 },
-                            { id: 2, testProperty: 456 },
-                            { id: 3, testProperty: 789 },
-                            { id: 4, testProperty: -999 }
-                        ],
-                        index: "id",
-                        oneIndexed: true,
-                        fixed: 1
-                    };
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[2];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(123);
-                    expect($scope.options.data[0].id).toEqual(1);
-                    expect($scope.options.data[1].testProperty).toEqual(789);
-                    expect($scope.options.data[1].id).toEqual(2);
-                    expect($scope.options.data[2].testProperty).toEqual(456);
-                    expect($scope.options.data[2].id).toEqual(3);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(4);
-                });
-            });
-
-            describe('does not moves to top', function () {
-
-                it('for index less than fixed', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 0, testProperty: 123 },
-                            { id: 1, testProperty: 456 },
-                            { id: 2, testProperty: 789 },
-                            { id: 3, testProperty: -999 }
-                        ],
-                        index: "id",
-                        oneIndexed: false,
-                        fixed: 2
-                    };
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[1];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(123);
-                    expect($scope.options.data[0].id).toEqual(0);
-                    expect($scope.options.data[1].testProperty).toEqual(456);
-                    expect($scope.options.data[1].id).toEqual(1);
-                    expect($scope.options.data[2].testProperty).toEqual(789);
-                    expect($scope.options.data[2].id).toEqual(2);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(3);
-                });
-
-                it('for index equal to fixed', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 1, testProperty: 123 },
-                            { id: 2, testProperty: 456 },
-                            { id: 3, testProperty: 789 },
-                            { id: 4, testProperty: -999 }
-                        ],
-                        index: "id",
-                        oneIndexed: true,
-                        fixed: 2
-                    };
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[2];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(123);
-                    expect($scope.options.data[0].id).toEqual(1);
-                    expect($scope.options.data[1].testProperty).toEqual(456);
-                    expect($scope.options.data[1].id).toEqual(2);
-                    expect($scope.options.data[2].testProperty).toEqual(789);
-                    expect($scope.options.data[2].id).toEqual(3);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(4);
-                });
-
-                it('when not sortable', function () {
-                    var $scope = $rootScope.$new(),
-                        compiledElement,
-                        elScope,
-                        item;
-
-                    $scope.options = {
-                        columns: [
-                            {
-                                name: "test",
-                                jsonMap: "testProperty"
-                            }
-                        ],
-                        data: [
-                            { id: 1, testProperty: 123 },
-                            { id: 2, testProperty: 456 },
-                            { id: 3, testProperty: 789 },
-                            { id: 4, testProperty: -999 }
-                        ],
-                        index: "id"
-                    };
-                    $scope.unsortable = true;
-
-                    compiledElement = getCompiledElement($scope);
-                    elScope = compiledElement.isolateScope();
-
-                    item = elScope.$ctrl.options.data[2];
-
-                    elScope.$ctrl.pushToTop(item);
-
-                    expect($scope.options.data[0].testProperty).toEqual(123);
-                    expect($scope.options.data[0].id).toEqual(1);
-                    expect($scope.options.data[1].testProperty).toEqual(456);
-                    expect($scope.options.data[1].id).toEqual(2);
-                    expect($scope.options.data[2].testProperty).toEqual(789);
-                    expect($scope.options.data[2].id).toEqual(3);
-                    expect($scope.options.data[3].testProperty).toEqual(-999);
-                    expect($scope.options.data[3].id).toEqual(4);
-                });
-            });
         });
     });
 }); // End of function

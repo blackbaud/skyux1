@@ -1,8 +1,31 @@
-
 /* global angular*/
 
 (function () {
     'use strict';
+
+    function RunTemplateCache($templateCache) {
+        $templateCache.put('reordertable/samples/templated.html', '<span>{{data}}</span>')
+
+        $templateCache.put('bbReorderTable/samples/mycolumn.html',
+                    '<div>' +
+                    '<div class="bb-headline">{{resources.title}}: {{data.title}}</div>' +
+                    '<div class="bb-test-info">Info: {{data.info}}</div>' +
+                    '<button ng-click="locals.clickIt()">My Button</button>' +
+                    '</div>');
+
+        $templateCache.put('bbReorderTable/samples/rowData.html',
+                    '<div>' +
+                    '<div class="bb-test-rowDataName">{{rowData.hit}}</div>' +
+                    '</div>');
+    }
+
+    function ColumnController($scope) {
+        $scope.locals = {
+            clickIt: function () {
+                alert("Testing button!");
+            }
+        };
+    }
 
     function ReorderTableContextTestController() {
         var vm = this;
@@ -29,25 +52,14 @@
                 },
                 {
                     name: 'templated',
-                    templateFn: function (item) {
-                        if (item.text === 'Hello') {
-                            return {
-                                text: item.text,
-                                elClass: 'bb-emphasized'
-                            };
-                        } else {
-                            return {
-                                text: item.text,
-                                elClass: 'bb-deemphasized'
-                            };
-                        }
-                    }
+                    jsonMap: 'templated',
+                    template_url: 'reordertable/samples/templated.html'
                 }
             ],
             data: [
-                { id: 0, num: 123, text: 'Hello', char: '#' },
-                { id: 1, num: 456, text: 'Bye', char: '<>' },
-                { id: 2, num: 789, text: 'Hello', char: '???' }
+                { id: 0, num: 123, text: 'Hello', char: '#', templated: "temp1" },
+                { id: 1, num: 456, text: 'Bye', char: '<>', templated: "temp2" },
+                { id: 2, num: 789, text: 'Hello', char: '???', templated: 'temp3' }
             ],
             index: 'id',
             getContextMenuItems: function (item) {
@@ -78,62 +90,33 @@
         vm.tableOptions = {
             columns: [
                 {
-                    name: 'index',
-                    jsonMap: 'id',
-                    width: '200px',
-                    title: 'Index with 200px column'
+                    title: 'Templated with Row Data',
+                    name: 'templated',
+                    template_url: 'bbReorderTable/samples/rowData.html'
                 },
                 {
-                    name: 'first',
-                    jsonMap: 'bool1',
-                    isBool: {},
-                    title: 'Normal'
-                },
-                {
-                    name: 'second',
-                    jsonMap: 'bool2',
-                    isBool: {
-                        isInverted: true
-                    },
-                    title: 'Inverted'
-                },
-                {
-                    name: 'secondValue',
-                    jsonMap: 'bool2',
-                    title: 'Inverted Actual Value'
-                },
-                {
-                    name: 'third',
-                    jsonMap: 'bool3',
-                    isBool: {
-                        disableCol: true
-                    },
-                    title: 'All Disabled'
-                },
-                {
-                    name: 'fourth',
-                    jsonMap: 'bool4',
-                    isBool: {
-                        disableRow: function (item) {
-                            return item.id % 2 === 0;
-                        }
-                    },
-                    title: 'Odd Rows Disabled'
+                    title: 'Controller',
+                    name: 'Controller',
+                    controller: ColumnController,
+                    template_url: 'bbReorderTable/samples/mycolumn.html'
                 }
             ],
             data: [
-                { id: 1, bool1: false, bool2: true, bool3: false, bool4: true },
-                { id: 2, bool1: false, bool2: true, bool3: true, bool4: false },
-                { id: 3, bool1: true, bool2: true, bool3: false, bool4: true },
-                { id: 4, bool1: false, bool2: true, bool3: true, bool4: true }
+                { id: 0, hit: 'Pea', templated: {title: 'Title 1', info: 'info 1'} },
+                { id: 1, hit: 'Eye', templated: {title: 'Title 2', info: 'info 2'} },
+                { id: 2, hit: 'Inn', templated: {title: 'Title 3', info: 'info 3'} },
+                { id: 3, hit: 'Gee', templated: {title: 'Title 4', info: 'info 4'} }
             ],
             index: 'id',
             oneIndexed: true,
-            fixed: 1
+            fixed: 1,
+            resources: { title: 'Title'}
         };
     }
 
     angular.module('screenshots', ['sky'])
         .controller('ReorderTableContextTestController', ReorderTableContextTestController)
-        .controller('ReorderTableFixedTestController', ReorderTableFixedTestController);
+        .controller('ReorderTableFixedTestController', ReorderTableFixedTestController)
+        .controller('ColumnController', ColumnController)
+        .run(['$templateCache', RunTemplateCache]);
 }());

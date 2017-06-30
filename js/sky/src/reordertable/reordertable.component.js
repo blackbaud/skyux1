@@ -5,8 +5,9 @@
 
     var bbReorderTable;
 
-    function Controller($element, $filter, $scope, $timeout) {
+    function Controller($element, $filter, $scope, $timeout, $compile, $templateCache, $controller) {
         var bbAutonumericConfig,
+            compiledTemplates = {}, // compiled cell templates
             containerEl = $element.find('.bb-reorder-table-container'),
             currentRepeaterItems, // the set of items from ng-repeat before sorting starts
             currentSortItemIndex, // the index where the sorting item is currently being placed
@@ -38,11 +39,9 @@
         }
 
         function reinitTable(vm) {
-            vm.options = vm.options ? vm.options : {};
-            vm.options.fixed = !vm.options.fixed ? 0 : vm.options.fixed;
+            vm.options = vm.options || {};
             vm.sortable = !vm.unsortable && vm.options.data && vm.options.data.length > 1 && vm.options.fixed < vm.options.data.length;
             vm.options.fixed = vm.options.fixed || 0;
-            vm.templates = {};
 
             if (vm.options.getContextMenuItems) {
                 vm.contextMenuItems = {};
@@ -78,11 +77,11 @@
                     col.isBool.isInverted = !!col.isBool.isInverted;
                 }
 
-                if (col.templateFn) {
-                    vm.templates[col.name] = {};
-                    angular.forEach(vm.options.data, function (item) {
+                if (col.template_url && !compiledTemplates[col.name]) {
+                    compiledTemplates[col.name] = $compile($templateCache.get(col.template_url));
+                    /*angular.forEach(vm.options.data, function (item) {
                         vm.templates[col.name][item[vm.options.index]] = col.templateFn(item);
-                    });
+                    });*/
                 }
 
             });
@@ -158,6 +157,37 @@
                             vm.options.data.splice(index, 1)[0]);
                     });
                 }
+            });
+        };
+
+        vm.cellLink = function (row, index, column) {
+            var itemScope,
+                rowElem,
+                cell,
+                templateFunction;
+
+            rowElem = $element.find('#bb-reorder-table-cell-' + index + '-' + column.name);
+            cell = rowElem.children();
+
+            if (cell.length !== 1) {
+                return;
+            }
+
+            itemScope = $scope.$new(true);
+            itemScope.data = row[column.jsonMap];
+            itemScope.rowData = row;
+            itemScope.resources = vm.options.resources;
+
+            if (column.controller) {
+                $controller(column.controller, {
+                    $scope: itemScope
+                });
+            }
+
+            templateFunction = compiledTemplates[column.name];
+
+            templateFunction(itemScope, function (cloned) {
+                cell.append(cloned);
             });
         };
 
@@ -287,7 +317,7 @@
         templateUrl: 'sky/templates/reordertable/reordertable.component.html'
     };
 
-    Controller.$inject = ['$element', '$filter', '$scope', '$timeout'];
+    Controller.$inject = ['$element', '$filter', '$scope', '$timeout', '$compile', '$templateCache', '$controller'];
 
     angular.module('sky.reordertable.component', ['sky.resources', 'sky.autonumeric', 'ngAnimate'])
         .component('bbReorderTable', bbReorderTable);
