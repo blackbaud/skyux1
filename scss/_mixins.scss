@@ -52,27 +52,27 @@
 
     @each $side in $sides {
       @if($type == "light") {
-          border-#{$side}: 1px solid $border-color;
+          border-#{$side}: 1px solid $sky-border-color-neutral-light;
       }
 
       @if($type == "dark") {
-          border-#{$side}: 1px solid $gray-lighter;
+          border-#{$side}: 1px solid $sky-border-color-neutral-medium;
       }
 
       @if($type == "nav") {
-          border-#{$side}: $bb-nav-selected-border-width solid $bb-color-blue;
+          border-#{$side}: $bb-nav-selected-border-width solid $sky-highlight-color-info;
       }
 
       @if($type == "tab") {
-          border-#{$side}: 2px solid $bb-color-blue;
+          border-#{$side}: 2px solid $sky-background-color-primary-dark;
       }
 
       @if($type == "tile") {
-          border-top: 4px solid $border-color;
+          border-top: 4px solid $sky-border-color-neutral-light;
       }
 
       @if($type == "row") {
-          border-#{$side}: 1px dotted $gray-lighter;
+          border-#{$side}: 1px dotted $sky-border-color-neutral-light;
       }
     }
 

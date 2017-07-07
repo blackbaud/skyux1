@@ -48,8 +48,8 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
 }
 
 .bb-select-field-multiple-item {
-    background-color: #ffecd9;
-    border: solid 1px #fc6;
+    background-color: $sky-background-color-info;
+    border: solid 1px $sky-background-color-info;
     border-radius: 4px;
     padding: 0 0 0 $padding;
     margin-top: $margin;
@@ -63,7 +63,8 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
 }
 
 .bb-select-field-multiple-item-delete {
-    color: $bb-color-red;
+    color: change-color($sky-text-color-default, $alpha: 0.8);
+    text-shadow: none;
     height: 34px;
     width: 34px;
     flex: 0 0 34px;
@@ -72,7 +73,7 @@ bb-select-field.ng-invalid.ng-touched .bb-select-field-single {
 
 .bb-select-field-multiple-item-delete:hover {
     opacity: 1;
-    color: darken($bb-color-red, 10%);
+    color: $sky-text-color-default;
 }
 
 .bb-select-field-multiple-summary {
