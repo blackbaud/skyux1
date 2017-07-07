@@ -6,18 +6,18 @@ $bb-nav-bg-color: #2f4050 !default;
 $bb-btn-border-radius: 3px !default;
 $bb-label-badge-color: #5e5e5e !default;
 
-$bb-color-green: #1ab394 !default;
-$bb-color-blue: #1c84c6 !default;
-$bb-color-aqua: #23c6c8 !default;
-$bb-color-yellow: #f8ac59 !default;
-$bb-color-red: #ed5565 !default;
-$bb-color-white: #fff !default;
-$bb-color-purple: #6533c5 !default;
-$bb-text-deemphasized-color: #707374 !default;
+$bb-color-green: $sky-color-green-50 !default;
+$bb-color-blue: $sky-color-blue-70 !default;
+$bb-color-aqua: $sky-color-teal-50 !default;
+$bb-color-yellow: $sky-color-yellow-50 !default;
+$bb-color-red: $sky-color-red-50 !default;
+$bb-color-white: $sky-color-white !default;
+$bb-color-purple: $sky-color-purple-50 !default;
+$bb-text-deemphasized-color: $sky-text-color-deemphasized !default;
 
-$bb-brand-alternate: $bb-color-blue !default;
-$bb-brand-alternate-light: lighten($bb-brand-alternate, 10%) !default; //#1a80b3
-$bb-brand-alternate-lighter: lighten($bb-brand-alternate, 20%) !default; //#3399cc
+$bb-brand-alternate: $sky-background-color-primary-dark !default;
+$bb-brand-alternate-light: lighten($bb-brand-alternate, 10%) !default; 
+$bb-brand-alternate-lighter: lighten($bb-brand-alternate, 20%) !default;
 
 $bb-inline-filter-color: #e9f4fc !default;
 
@@ -28,7 +28,7 @@ $bb-nav-item-padding: 16px !default;
 $bb-nav-selected-border-width: 4px !default;
 
 $bb-error-color: #ca2a2a !default;
-$bb-selected-color: #eeeffb !default;
+$bb-selected-color: $sky-background-color-selected !default;
 
 $bb-focus-border-color: #1f90d8 !default;
 $bb-focus-shadow-color: rgba(28, 132, 198, 0.6) !default;
@@ -69,13 +69,13 @@ $bb-text-color-danger: $bb-color-red !default;
 
 $navbar-default-link-active-bg: $bb-nav-selected-bg-color;
 
-$body-bg: #f3f3f4;
+$body-bg: $sky-background-color-neutral-light;
 
-$gray-darker: lighten(#000, 13.5%); // #222
-$gray-dark: lighten(#000, 20%); // #333
-$gray: lighten(#000, 40%); // #666
-$gray-light: lighten(#000, 60%); // #999
-$gray-lighter: lighten(#000, 80%); // #ccc
+$gray-darker: $sky-color-gray-100;
+$gray-dark: $sky-color-gray-100;
+$gray: $sky-color-gray-70;
+$gray-light: $sky-color-gray-70;
+$gray-lighter: $sky-color-gray-20;
 
 $brand-primary: $bb-color-green;
 
@@ -83,8 +83,8 @@ $thumbnail-bg: $bb-color-white;
 $nav-tabs-active-link-hover-bg: $bb-color-white;
 $nav-tabs-justified-active-link-border-color: $bb-color-white;
 
-$pagination-active-bg: #f4f4f4;
-$pagination-active-border: #ddd;
+$pagination-active-bg: $sky-background-color-neutral-light;
+$pagination-active-border: $sky-border-color-neutral-medium;
 
 $nav-pills-active-link-hover-bg: $bb-brand-alternate;
 
@@ -99,9 +99,9 @@ $btn-primary-border: $bb-brand-alternate;
 $state-danger-text: $bb-error-color;
 
 //other colors
-$gray-lightest: lighten(#000, 93.5%); // #eee //used lots of places
+$gray-lightest: $sky-color-gray-05;
 
-$gray-dark-text: #ddd;
+$gray-dark-text: $sky-color-gray-20;
 
 // end colors
 
@@ -254,7 +254,7 @@ $tile-form-background: #F2F2F2;
 //end tile
 
 // begin text color
-$text-color: #292a2b !default;
+$text-color: $sky-text-color-default !default;
 // end text color
 
 // begin omnibar/help widget
