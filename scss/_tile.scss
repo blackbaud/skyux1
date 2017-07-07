@@ -20,9 +20,7 @@
         padding: 0;
 
         .bb-tile-header {
-            font-family: $bb-font-family-narrow;
-            font-size: 22px;
-            font-weight: 100;
+            @include bb-section-heading();
             margin: 0;
             padding: 9px $tile-header-tool-padding;
             text-overflow: ellipsis;
@@ -93,9 +91,7 @@
 .bb-tile-header-content {
     color: $sky-text-color-action-primary;
     display: inline-block;
-    font-family: $bb-font-family-narrow;
-    font-size: 18px;
-    font-weight: 400;
+    @include bb-headline();
     opacity: 0;
     overflow: hidden;
     text-overflow: ellipsis;

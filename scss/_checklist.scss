@@ -154,7 +154,7 @@
 }
 
 .bb-checklist-list-title {
-    font-weight: 700;
+    @include bb-emphasized();
 }
 
 .bb-checklist-single {

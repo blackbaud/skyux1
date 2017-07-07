@@ -17,9 +17,7 @@
         width: 80%;
         float: left;
         line-height: 1.4; /* Keeps font descenders from being cut off */
-        font-family: $font-family-base;
-        font-weight: 600;
-        font-size: 14px;
+        @include bb-emphasized();
         margin: 0;
     }
 
