@@ -89,6 +89,7 @@
 }
 
 .bb-tile-header-content {
+    color: $sky-text-color-action-primary;
     display: inline-block;
     @include bb-headline();
     opacity: 0;

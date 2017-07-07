@@ -9,27 +9,27 @@ var bbPaletteConfig;
 /* LINES BELOW ARE AUTO GENERATED */
 bbPaletteConfig = {
     "multi": [
-        "#1f91da",
-        "#f9b66d",
-        "#1dc8a6",
-        "#9176c6",
-        "#28d7d9",
-        "#ef6977",
-        "#919191",
-        "#7ec2ed",
-        "#fbcf9f",
-        "#75ebd3",
-        "#beaedd",
-        "#85e8ea",
-        "#f59ca6",
-        "#afafaf"
+        "#0091c2",
+        "#fbb94c",
+        "#7cc452",
+        "#ae9abc",
+        "#00d1aa",
+        "#f1575a",
+        "#979aa0",
+        "#4cd2ff",
+        "#fdd189",
+        "#b5de9d",
+        "#cfc3d7",
+        "#55ffdf",
+        "#f69093",
+        "#b4b6ba"
     ],
     "mono": [
-        "#156395",
-        "#1c84c6",
-        "#44a6e5",
-        "#83c4ed",
-        "#c1e1f6"
+        "#005d7d",
+        "#007ca6",
+        "#00bcfc",
+        "#53d3ff",
+        "#a9e9ff"
     ]
 };
 

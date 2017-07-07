@@ -1,0 +1,19 @@
+<li>
+    <div uib-accordion-group
+        class="bb-vertical-tabset-group"
+        is-open="bbVerticalTabsetGroup.isOpen"
+        is-disabled="bbVerticalTabsetGroup.isDisabled">
+        <uib-accordion-heading>
+            <div class="bb-vertical-tabset-group-heading">
+                <span ng-class="{'bb-vertical-tabset-group-active':bbVerticalTabsetGroup.active}">
+                    {{bbVerticalTabsetGroup.heading}}
+                </span>
+                <span class="bb-vertical-tabset-group-chevron"
+                    ng-class="{'bb-vertical-tabset-group-chevron-open':bbVerticalTabsetGroup.isOpen}"></span>
+            </div>
+        </uib-accordion-heading>
+        <ul class="nav nav-tabs nav-stacked"
+            ng-transclude>
+        </ul>
+    </div>
+</li>

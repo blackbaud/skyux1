@@ -538,6 +538,7 @@ describe('Checklist directive', function () {
         el.appendTo(document.body);
 
         $scope.$digest();
+        $timeout.flush();
 
         expect(el.find('.bb-checklist-search input')).toHaveAttr('autofocus');
         el.remove();

@@ -7,6 +7,7 @@
     <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">
       <button 
         class="btn bb-btn-secondary" 
+        type="button"
         ng-click="$ctrl.hideSummarySection()"
         ng-attr-title="{{'summary_actionbar_hide_summary' | bbResources}}">
         <i class="fa fa-chevron-down"></i>
@@ -16,6 +17,7 @@
   <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">
     <button 
       class="btn bb-btn-secondary" 
+      type="button"
       ng-click="$ctrl.showSummarySection()"
       ng-attr-title="{{'summary_actionbar_show_summary' | bbResources}}">
       <i class="fa fa-chevron-up"></i>

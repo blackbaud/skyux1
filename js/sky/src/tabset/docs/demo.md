@@ -4,14 +4,24 @@ icon: folder-open-o
 summary: The tabset module contains directives to enhance UI Bootstrap tabs.
 ---
 
-The tabset module contains directives to enhance the [Angular UI Bootstrap tabs directive](https://angular-ui.github.io/bootstrap/#/tabs). These enhancements include options to display buttons in the tab area, to make tabs collapsible, and to make tabs closeable. 
+The tabset module contains directives to enhance the [Angular UI Bootstrap tabs directive](https://angular-ui.github.io/bootstrap/#/tabs). These enhancements include options to display buttons in the tab area, to make tabs collapsible, and to make tabs closeable.
 
 ### Tabset settings ###
 The tabset module includes the following attributes to enhance `uib-tabset`.
 
 - `bb-tabset-add` &mdash; *(Optional.)* Creates an add button in the tab area and takes a callback that will be executed when users click the button.
 - `bb-tabset-open` &mdash; *(Optional.)* Creates an open button in the tab area and takes a callback that will be executed when users click the button.
-- `bb-tabset-collapsible` &mdash; *(Optional.)* Collapses tabs into a dropdown on small screens such as mobile devices. You include this attribute with no value in the `uib-tabset` element, and then you apply the `bb-tab-collapse-header` attribute to the `uib-tab` element to specify a title for the dropdown to display when that tab is active.
+- `bb-tabset-collapsible` &mdash; *(Optional.)* Collapses tabs into a dropdown on small screens such as mobile devices. You include this attribute with no value in the `uib-tabset` element, and then you apply the `bb-tab-collapse-header` attribute to the `uib-tab` element to specify a title for the dropdown to display when that tab is active. *NOTE: Not compatible with `bb-vertical-tabset`.*
+- `bb-vertical-tabset` &mdash; *(Optional.)* Converts the tabset into stacked vertical tabs on the left-hand side of a container. *NOTE: Not compatible with `bb-tab-collapsible`.*
+- `bb-vertical-tabset-close-others` &mdash; *(Optional.)* If `bb-vertical-tabset` is used with `bb-vertical-tabset-group`, this takes a boolean value indicating whether to close other collapsible groups when one is expanded.
+
+### Vertical tabset group settings ###
+The tabset module includes the following attributes to enhance direct children of the `bb-vertical-tabset` directive.
+
+- `bb-vertical-tabset-group` &mdash; *(Optional.)* Creates a collpsible group of child `uib-tab` elements.
+- `bb-vertical-tabset-group-heading` &mdash; *(Optional.)* Specifies the text to use in the heading of the collapsible group of tabs.
+- `bb-vertical-tabset-group-is-disabled` &mdash; *(Optional.)* Boolean value that can be set to disabled expanding and collapsing a collapsible group.
+- `bb-vertical-tabset-group-is-open` &mdash; *(Optional.)* Boolean value indicating if the collapsible group is open.
 
 ### Tab settings ###
 The tabset module includes the following attributes to enhance `uib-tab`.
@@ -25,6 +35,11 @@ The tabset module includes the following classes to enhance `uib-tab-heading`.
 
 - `bb-tab-close-icon` &mdash; When `bb-tab-close` makes a tab closeable, displays a close icon on the tab.
 - `bb-tab-header-count` &mdash; *(Optional.)* Displays a counter alongside the tab header.
+
+### Vertical tabset events ###
+Vertical tabsets will listen for the following events.
+
+- `reinitializeVerticalTabsetDisplay` &mdash; Causes the vertical tabset to revert to its initial display state.
 
 
 <!--

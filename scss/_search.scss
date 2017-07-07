@@ -179,3 +179,13 @@
     vertical-align: middle;
     margin-bottom: 0;
 }
+
+.bb-search-full-width {
+    .bb-search-input-container {
+        max-width: initial;
+    }
+
+    .bb-search-item-input {
+        flex-shrink: initial;
+    }
+}

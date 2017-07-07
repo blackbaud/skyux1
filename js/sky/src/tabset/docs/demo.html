@@ -41,3 +41,50 @@
         </bb-modal-footer>
     </bb-modal>
 </script>
+
+<div ng-controller="VerticalTabsetDemoController as verticalTabsetDemoCtrl">
+  <h3>Vertical tabset</h3>
+    <uib-tabset bb-vertical-tabset>
+      <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1" bb-vertical-tabset-group-is-open="verticalTabsetDemoCtrl.isOpen">
+        <uib-tab heading="Group 1 - Tab 1">
+          <p>Group 1, tab 1 content</p>
+          <p>Group 1 is open: {{!!verticalTabsetDemoCtrl.isOpen}}</p>
+          <button class="btn btn-primary visible-xs-block" ng-click="verticalTabsetDemoCtrl.showTabs()">
+            <i class="fa fa-chevron-left"></i>&nbsp;Tab list
+          </button>
+        </uib-tab>
+        <uib-tab heading="Group 1 - Tab 2">
+          <p>Group 1, tab 2 content</p>
+          <p>Group 1 is open: {{!!verticalTabsetDemoCtrl.isOpen}}</p>
+          <button class="btn btn-primary visible-xs-block" ng-click="verticalTabsetDemoCtrl.showTabs()">
+            <i class="fa fa-chevron-left"></i>&nbsp;Tab list
+          </button>
+        </uib-tab>
+      </div>
+      <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 2">
+        <uib-tab heading="Group 2 - Tab 1">
+          <p>Group 2, tab 1 content</p>
+          <p>Group 1 is open: {{!!verticalTabsetDemoCtrl.isOpen}}</p>
+          <button class="btn btn-primary visible-xs-block" ng-click="verticalTabsetDemoCtrl.showTabs()">
+            <i class="fa fa-chevron-left"></i>&nbsp;Tab list
+          </button>
+        </uib-tab>
+        <uib-tab heading="Group 2 - Tab 2">
+          <p>Group 2, tab 2 content</p>
+          <p>Group 1 is open: {{!!verticalTabsetDemoCtrl.isOpen}}</p>
+          <button class="btn btn-primary visible-xs-block" ng-click="verticalTabsetDemoCtrl.showTabs()">
+            <i class="fa fa-chevron-left"></i>&nbsp;Tab list
+          </button>
+        </uib-tab>
+      </div>
+      <div bb-vertical-tabset-group bb-vertical-tabset-group-is-disabled="true" bb-vertical-tabset-group-heading="Disabled group">
+        <uib-tab heading="Group 3 - Tab 1">
+          <p>Group 3, tab 1 contents</p>
+          <p>Group 1 is open: {{!!verticalTabsetDemoCtrl.isOpen}}</p>
+          <button class="btn btn-primary visible-xs-block" ng-click="verticalTabsetDemoCtrl.showTabs()">
+            <i class="fa fa-chevron-left"></i>&nbsp;Tab list
+          </button>
+        </uib-tab>
+      </div>
+    </uib-tabset>
+</div>

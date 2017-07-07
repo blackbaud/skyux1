@@ -463,6 +463,64 @@
 
         });
 
+        describe('id', function () {
+            it('should have no id when not specified', function () {
+                var searchEl,
+                    inputEl;
+
+                searchEl = initSearch(searchHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).not.toHaveAttr('id');
+
+                searchEl.remove();
+            });
+
+            it('should have an id when specified', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-input-id="\'myid\'" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('id', 'myid');
+
+                searchEl.remove();
+            });
+        });
+
+        describe('full width', function () {
+            it('should not have the full width class when not specified', function () {
+                var searchEl;
+
+                searchEl = initSearch(searchHtml);
+
+                expect(searchEl.find('.bb-search-input-inline')).not.toHaveClass('bb-search-full-width');
+
+                searchEl.remove();
+            });
+
+            it('should have the full width class when specified', function () {
+                var searchEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-full-width="true" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                searchEl = initSearch(placeholderHtml);
+
+                expect(searchEl.find('.bb-search-input-inline')).toHaveClass('bb-search-full-width');
+
+                searchEl.remove();
+            });
+        });
+
         describe('placeholder text', function () {
             it('has no placeholder text when bbSearchPlaceholder is undefined', function () {
                 var searchEl,

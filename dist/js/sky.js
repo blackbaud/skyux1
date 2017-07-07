@@ -1687,7 +1687,7 @@
 (function () {
     'use strict';
 
-    function bbChecklist() {
+    function bbChecklist($timeout) {
         return {
             replace: true,
             restrict: 'E',
@@ -1717,10 +1717,17 @@
                 vm.filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal);
                 vm.subsetExclude = angular.isDefined(attrs.bbChecklistSubsetExclude);
                 vm.focusSearch = attrs.bbChecklistFocusSearch;
+                if (angular.isDefined(attrs.bbChecklistFocusSearch)) {
+                    $timeout(function () {
+                        el.find('.bb-checklist-search-box').focus();
+                    }, 500);
+                }
                 vm.onlySelectedAvailable = angular.isDefined(attrs.bbChecklistOnlySelected);
             }
         };
     }
+
+    bbChecklist.$inject = ['$timeout'];
 
     angular.module(
         'sky.checklist.directive',
@@ -5552,6 +5559,7 @@
                                 windowEventId,
                                 resizeStartColWidth,
                                 hasPristineColumns = true,
+                                columnHasJsonMap,
                                 doNotResetRows = false;
 
                             function getTopScrollbar() {
@@ -5721,6 +5729,11 @@
 
                                             colWidth = tableWrapper.width() - totalColumnWidth;
                                             currentExtendedColumnWidth = colWidth;
+                                        }
+
+                                        // 
+                                        if (column.jsonmap !== column.name) {
+                                            columnHasJsonMap = true;
                                         }
 
                                         gridColumn = {
@@ -6719,9 +6732,15 @@
                             }
 
                             function setRows(rows, oldRows) {
-
+                                var rowData;
                                 if (newRowsAreConcatenated(rows, oldRows)) {
-                                    tableEl.addRowData('', rows.slice(oldRows.length, rows.length));
+                                    if (columnHasJsonMap) {
+                                        rowData = convertDataJsonmap(rows.slice(oldRows.length, rows.length));
+                                    } else {
+                                        rowData = rows.slice(oldRows.length, rows.length);
+                                    }
+                                    
+                                    tableEl.addRowData('', rowData);
                                     gridRowsUpdated(rows);
                                 } else if (tableDomEl.addJSONData) {
                                     loadColumnTemplates(function () {
@@ -6796,9 +6815,41 @@
                                 $scope.locals.applySearchText();
                             };
 
+                            function convertDataJsonmap(moreRows) {
+                                var i,
+                                    j,
+                                    column,
+                                    rowData = [];
+
+                                /* istanbul ignore else */
+                                /* sanity check */
+                                if ($scope.options.columns) {
+                                    for (i = 0; i < moreRows.length; i++) {
+                                        rowData.push(moreRows[i]);
+                                        for (j = 0; j < $scope.options.columns.length; j++) {
+                                            column = $scope.options.columns[j];
+                                            if (column.jsonmap !== column.name) {
+                                                rowData[i][column.name] = moreRows[i][column.jsonmap];
+                                            }
+                                        }
+                                    }
+                                }
+
+                                return rowData;
+                                
+                            }
+
                             function addMoreRowsToGrid(moreRows) {
+                                var rowData;
+                                
                                 if (moreRows && moreRows.length > 0) {
-                                    tableEl.addRowData('', moreRows);
+                                    if (columnHasJsonMap) {
+                                        rowData = convertDataJsonmap(moreRows);
+                                    } else {
+                                        rowData = moreRows;
+                                    }
+                                            
+                                    tableEl.addRowData('', rowData);
                                     $scope.options.data = $scope.options.data.concat(moreRows);
                                     setUpFancyCheckCell();
                                     doNotResetRows = true;
@@ -11720,7 +11771,9 @@ angular.module('sky.palette.config', [])
                 bbOnSearchTextChanged: '&?',
                 bbSearchText: '<?',
                 bbSearchPlaceholder: '<?',
-                bbSearchMobileResponseEnabled: '<?'
+                bbSearchMobileResponseEnabled: '<?',
+                bbSearchInputId: '<?',
+                bbSearchFullWidth: '<?'
             }
         });
 })();
@@ -13024,11 +13077,11 @@ angular.module('sky.palette.config', [])
                     if (dropdownTextMaxWidth > 0) {
                         el.find('> .bb-tabset-dropdown > .bb-tab-dropdown-button > .bb-tab-header-text').css('max-width', (dropdownTextMaxWidth.toString() + 'px'));
                     }
-                    
+
                     if (availableWidth > 0) {
                         el.find('> .bb-tabset-dropdown > ul.dropdown-menu > li >  a').css('max-width', (availableWidth.toString() + 'px'));
-                    } 
-                    
+                    }
+
                 }
 
                 function setupCollapsibleTabs(isCollapsed) {
@@ -13220,12 +13273,256 @@ angular.module('sky.palette.config', [])
 
     bbTabHeadingXs.$inject = ['$compile', '$templateCache'];
 
+    function BBVerticalTabsetController() {
+        var self = this;
+
+        self.addTabGroup = addTabGroup;
+        self.tabGroups = [];
+
+        function addTabGroup(tabGroup) {
+            // Property is used in ARIA attributes. Ensure that it is defined
+            // so that ARIA attributes are properly initialized.
+            tabGroup.isOpen = tabGroup.isOpen || false;
+            self.tabGroups.push(tabGroup);
+        }
+    }
+
+    function bbVerticalTabset($log, $parse, bbMediaBreakpoints) {
+        return {
+            controller: BBVerticalTabsetController,
+            link: link,
+            require: ['uibTabset', 'bbVerticalTabset'],
+            restrict: 'A'
+        };
+
+        function link($scope, el, attr, ctrls) {
+            var uibTabsetCtrl = ctrls[0],
+                bbVerticalTabsetCtrl = ctrls[1],
+                scope = el.isolateScope(),
+                unbindWatch;
+
+            if (angular.isDefined(attr.bbTabsetAdd)) {
+                $log.warn('uibTabset bbTabsetAdd attribute is incompatible with bbVerticalTabset, it will be ignored');
+            }
+            if (angular.isDefined(attr.bbTabsetOpen)) {
+                $log.warn('uibTabset bbTabsetOpen attribute is incompatible with bbVerticalTabset, it will be ignored');
+            }
+            if (angular.isDefined(attr.bbTabsetCollapsible)) {
+                $log.warn('using the uibTabset bbTabsetCollapsible attribute with bbVerticalTabset is not supported, it may yield undesirable results');
+            }
+            if (angular.isDefined(attr.justified)) {
+                $log.warn('uibTabset justified attribute is incompatible with bbVerticalTabset, it will be ignored');
+            }
+            if (angular.isDefined(attr.type) && $parse(attr.type)($scope) !== 'tabs') {
+                $log.warn('uibTabset type attribute values other than \'tabs\' are incompatible with bbVerticalTabset and will be ignored');
+            }
+            if (angular.isDefined(attr.vertical) && !$parse(attr.vertical)($scope)) {
+                $log.warn('uibTabset vertical attribute values other than true are incompatible with bbVerticalTabset and will be ignored');
+            }
+
+            scope.closeOthers = angular.isDefined(attr.bbVerticalTabsetCloseOthers) ?
+                $parse(attr.bbVerticalTabsetCloseOthers)($scope) :
+                false;
+            scope.showTabs = true;
+
+            bbMediaBreakpoints.register(mobileBreakpointHandler);
+            $scope.$on('$destroy', function () {
+                bbMediaBreakpoints.unregister(mobileBreakpointHandler);
+            });
+            $scope.$on('reinitializeVerticalTabsetDisplay', function () {
+                scope.showTabs = scope.isMobile;
+                if (scope.isMobile) {
+                    uibTabsetCtrl.active = -1;
+                }
+            });
+
+            unbindWatch = $scope.$watch(
+                function () {
+                    return bbVerticalTabsetCtrl.tabGroups.length > 0;
+                },
+                function (val) {
+                    var group;
+                    if (!val) {
+                        // Remove tablist role for accessibility.
+                        group = el.find('.panel-group');
+                        group.removeAttr('role');
+                    }
+                    unbindWatch();
+                }
+            );
+            $scope.$watch(
+                function () {
+                    return $parse(attr.bbVerticalTabsetCloseOthers)($scope);
+                },
+                function (val) {
+                    scope.closeOthers = val;
+                }
+            );
+            $scope.$watch(
+                function () {
+                    return uibTabsetCtrl.active;
+                },
+                function (value) {
+                    scope.showTabs = angular.isUndefined(value) || value === null || value < 0;
+                    activateTabGroup(value);
+                }
+            );
+
+            if (angular.isDefined(uibTabsetCtrl.active)) {
+                activateTabGroup(uibTabsetCtrl.active);
+            }
+
+            function mobileBreakpointHandler(breakpoints) {
+                scope.isMobile = breakpoints.xs;
+            }
+
+            function activateTabGroup(newIndex) {
+                var activeGroup = bbVerticalTabsetCtrl.tabGroups
+                    .filter(function (tabGroup) {
+                        return tabGroup.tabs.filter(function (tab) {
+                            return tab.index === newIndex || tab.active;
+                        }).length > 0;
+                    });
+
+                bbVerticalTabsetCtrl.tabGroups
+                    .forEach(function (tabGroup) {
+                        tabGroup.active = false;
+                    });
+
+                if (activeGroup.length > 0) {
+                    activeGroup[0].activateTabGroup();
+                }
+            }
+        }
+    }
+
+    bbVerticalTabset.$inject = ['$log', '$parse', 'bbMediaBreakpoints'];
+
+    function BBVerticalTabsetGroupController() {
+        var self = this;
+
+        self.addTab = addTab;
+        self.activateTabGroup = activateTabGroup;
+        self.tabs = [];
+
+        function addTab(tab) {
+            self.tabs.push(tab);
+        }
+        function activateTabGroup() {
+            self.active = true;
+            self.isOpen = true;
+        }
+    }
+
+    function bbVerticalTabsetGroup() {
+        return {
+            bindToController: true,
+            controller: BBVerticalTabsetGroupController,
+            controllerAs: 'bbVerticalTabsetGroup',
+            link: link,
+            replace: true,
+            require: ['^bbVerticalTabset', 'bbVerticalTabsetGroup'],
+            restrict: 'A',
+            scope: {
+                heading: '@bbVerticalTabsetGroupHeading',
+                isDisabled: '=?bbVerticalTabsetGroupIsDisabled',
+                isOpen: '=?bbVerticalTabsetGroupIsOpen'
+            },
+            templateUrl: function (el, attr) {
+                return angular.isDefined(attr.bbVerticalTabsetGroupTemplateUrl) ?
+                    attr.bbVerticalTabsetGroupTemplateUrl :
+                    'sky/templates/tabset/verticaltabsetgroup.html';
+            },
+            transclude: true
+        };
+
+        function link($scope, el, attr, ctrls) {
+            var bbVerticalTabsetCtrl = ctrls[0],
+                bbVerticalTabsetGroupCtrl = ctrls[1];
+
+            bbVerticalTabsetCtrl.addTabGroup(bbVerticalTabsetGroupCtrl);
+        }
+    }
+
+    function uibTabsetDirectiveDecorator($delegate) {
+        decorateTemplateUrl(
+             $delegate[0],
+            'sky/templates/tabset/verticaltabset.html',
+            function (el, attr) {
+                return angular.isDefined(attr.bbVerticalTabset);
+            }
+        );
+        return $delegate;
+    }
+
+    uibTabsetDirectiveDecorator.$inject = ['$delegate'];
+
+    function uibTabDirectiveDecorator($delegate) {
+        decorateLink(
+            $delegate[0],
+            '^bbVerticalTabsetGroup',
+            function ($scope, el, attr, ctrl) {
+                ctrl.addTab($scope);
+            }
+        );
+        return $delegate;
+    }
+
+    uibTabDirectiveDecorator.$inject = ['$delegate'];
+
+    function decorateTemplateUrl(delegate, newTemplateUrl, conditionFn) {
+        var originalTemplateUrl = delegate.templateUrl;
+        delegate.templateUrl = function (el, attr) {
+            if (conditionFn(el, attr)) {
+                return angular.isDefined(attr.templateUrl) ?
+                    attr.templateUrl :
+                    newTemplateUrl;
+            }
+            return angular.isFunction(originalTemplateUrl) ?
+                originalTemplateUrl.apply(this, arguments) :
+                /* istanbul ignore next: sanity check */
+                originalTemplateUrl;
+        };
+    }
+
+    function decorateLink(delegate, requiredDirective, linkFn) {
+        var originalRequireIsArray = angular.isArray(delegate.require),
+            originalLink = delegate.link,
+            newDir = '?'.concat(requiredDirective);
+        delegate.require = originalRequireIsArray ?
+            /* istanbul ignore next: sanity check */
+            [newDir].concat(delegate.require) :
+            [newDir, delegate.require];
+        delegate.compile = function () {
+            return function ($scope, el, attr, ctrls, transclude) {
+                if (ctrls[0] !== null) {
+                    linkFn.call(this, $scope, el, attr, ctrls[0], transclude);
+                }
+                return originalLink.call(
+                    this,
+                    $scope,
+                    el,
+                    attr,
+                    originalRequireIsArray ?
+                        /* istanbul ignore next: sanity check */
+                        ctrls.slice(1) :
+                        ctrls[1],
+                    transclude
+                );
+            };
+        };
+    }
+
     angular.module('sky.tabset', ['ui.bootstrap.tabs', 'sky.mediabreakpoints', 'sky.resources'])
         .directive('uibTabset', tabset)
         .directive('bbTabsetCollapsible', bbTabsetCollapsible)
         .directive('bbTabCollapseHeader', bbTabCollapseHeader)
         .directive('uibTab', tab)
-        .directive('bbTabHeadingXs', bbTabHeadingXs);
+        .directive('bbTabHeadingXs', bbTabHeadingXs)
+        .directive('bbVerticalTabset', bbVerticalTabset)
+        .directive('bbVerticalTabsetGroup', bbVerticalTabsetGroup)
+        .decorator('uibTabsetDirective', uibTabsetDirectiveDecorator)
+        .decorator('uibTabDirective', uibTabDirectiveDecorator);
 
 }(jQuery));
 
@@ -13689,15 +13986,64 @@ angular.module('sky.palette.config', [])
         var vm = this,
             displayModeChanging = false;
 
-        vm.setHeaderContentEl = function (el) {
-            vm.headerContentEl = el;
+        function onInit() {
+            vm.setHeaderContentEl = function (el) {
+                vm.headerContentEl = el;
 
-            /* istanbul ignore else */
-            /* sanity check */
-            if (angular.isFunction(vm.updateHeaderContent)) {
-                vm.updateHeaderContent();
-            }
-        };
+                /* istanbul ignore else */
+                /* sanity check */
+                if (angular.isFunction(vm.updateHeaderContent)) {
+                    vm.updateHeaderContent();
+                }
+            };
+
+            vm.updateTileState = updateTileState;
+
+            vm.isCollapsed = vm.bbTileCollapsed || false;
+            vm.smallTileDisplayMode = false;
+            vm.tileId = '';
+            vm.resources = bbResources;
+
+            vm.titleClick = function () {
+                vm.isCollapsed = !vm.isCollapsed;
+                vm.scrollIntoView = !vm.isCollapsed;
+            };
+
+            //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
+            $scope.$on('tileDisplayModeChanged', function (event, data) {
+                /*jslint unparam: true */
+                vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
+
+                if (vm.tileInitialized) {
+                    displayModeChanging = true;
+                    vm.updateTileState(data.tiles);
+                }
+            });
+
+            //if the collapsed state changes, notify the tileDashboard
+            $scope.$watch(function () {
+                return vm.isCollapsed;
+            }, function () {
+                if (vm.tileInitialized && !displayModeChanging) {
+                    $timeout(function () {
+                        $scope.$emit('tileStateChanged', {
+                            tileId: vm.tileId,
+                            collapsed: vm.isCollapsed
+                        });
+                    });
+                }
+                displayModeChanging = false;
+
+                if (!vm.isCollapsed) {
+                    $timeout(function () {
+                        $scope.$broadcast('tileRepaint');
+                    });
+                }
+
+                vm.bbTileCollapsed = vm.isCollapsed;
+
+            });
+        }
 
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
@@ -13735,52 +14081,8 @@ angular.module('sky.palette.config', [])
 
         }
 
-        vm.updateTileState = updateTileState;
-
-        vm.isCollapsed = vm.bbTileCollapsed || false;
-        vm.smallTileDisplayMode = false;
-        vm.tileId = '';
-        vm.resources = bbResources;
-
-        vm.titleClick = function () {
-            vm.isCollapsed = !vm.isCollapsed;
-            vm.scrollIntoView = !vm.isCollapsed;
-        };
-
-        //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
-        $scope.$on('tileDisplayModeChanged', function (event, data) {
-            /*jslint unparam: true */
-            vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
-
-            if (vm.tileInitialized) {
-                displayModeChanging = true;
-                vm.updateTileState(data.tiles);
-            }
-        });
-
-        //if the collapsed state changes, notify the tileDashboard
-        $scope.$watch(function () {
-            return vm.isCollapsed;
-        }, function () {
-            if (vm.tileInitialized && !displayModeChanging) {
-                $timeout(function () {
-                    $scope.$emit('tileStateChanged', {
-                        tileId: vm.tileId,
-                        collapsed: vm.isCollapsed
-                    });
-                });
-            }
-            displayModeChanging = false;
-
-            if (!vm.isCollapsed) {
-                $timeout(function () {
-                    $scope.$broadcast('tileRepaint');
-                });
-            }
-
-            vm.bbTileCollapsed = vm.isCollapsed;
-
-        });
+        vm.$onInit = onInit;
+       
     }
 
     BBTileController.$inject = ['$scope', '$timeout', 'bbResources'];
@@ -16776,7 +17078,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<h1 class="bb-repeater-item-title" ng-transclude>\n' +
         '</h1>');
     $templateCache.put('sky/templates/search/search.input.component.html',
-        '<div class="bb-search-input-inline">\n' +
+        '<div class="bb-search-input-inline" ng-class="{\'bb-search-full-width\': $ctrl.bbSearchFullWidth}">\n' +
         '    <div \n' +
         '        class="bb-search-open-wrapper"\n' +
         '        ng-show="$ctrl.currentBreakpoint.xs"\n' +
@@ -16805,6 +17107,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    data-bbauto-field="SearchBox"\n' +
         '                    ng-attr-aria-label="{{::\'search_label\' | bbResources}}" \n' +
         '                    ng-attr-placeholder="{{$ctrl.placeholderText}}"\n' +
+        '                    ng-attr-id="{{$ctrl.bbSearchInputId}}"\n' +
         '                    />    \n' +
         '\n' +
         '                <span class="input-group-btn">\n' +
@@ -16992,6 +17295,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
         '      <button \n' +
         '        class="btn bb-btn-secondary" \n' +
+        '        type="button"\n' +
         '        ng-click="$ctrl.hideSummarySection()"\n' +
         '        ng-attr-title="{{\'summary_actionbar_hide_summary\' | bbResources}}">\n' +
         '        <i class="fa fa-chevron-down"></i>\n' +
@@ -17001,6 +17305,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
         '    <button \n' +
         '      class="btn bb-btn-secondary" \n' +
+        '      type="button"\n' +
         '      ng-click="$ctrl.showSummarySection()"\n' +
         '      ng-attr-title="{{\'summary_actionbar_show_summary\' | bbResources}}">\n' +
         '      <i class="fa fa-chevron-up"></i>\n' +
@@ -17061,6 +17366,45 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/tabset/tabbutton.html',
         '<li class="bb-tab-button"></li>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/verticaltabset.html',
+        '<div class="bb-vertical-tabset">\n' +
+        '  <uib-accordion class="bb-vertical-tabset-tabs"\n' +
+        '      close-others="closeOthers"\n' +
+        '      ng-hide="isMobile && !showTabs">\n' +
+        '    <ul class="nav nav-tabs nav-stacked"\n' +
+        '        ng-transclude></ul>\n' +
+        '  </uib-accordion>\n' +
+        '  <div class="tab-content"\n' +
+        '      ng-hide="isMobile && showTabs">\n' +
+        '    <div class="tab-pane"\n' +
+        '         ng-repeat="tab in tabset.tabs"\n' +
+        '         ng-class="{active: tabset.active === tab.index}"\n' +
+        '         uib-tab-content-transclude="tab">\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>\n' +
+        '');
+    $templateCache.put('sky/templates/tabset/verticaltabsetgroup.html',
+        '<li>\n' +
+        '    <div uib-accordion-group\n' +
+        '        class="bb-vertical-tabset-group"\n' +
+        '        is-open="bbVerticalTabsetGroup.isOpen"\n' +
+        '        is-disabled="bbVerticalTabsetGroup.isDisabled">\n' +
+        '        <uib-accordion-heading>\n' +
+        '            <div class="bb-vertical-tabset-group-heading">\n' +
+        '                <span ng-class="{\'bb-vertical-tabset-group-active\':bbVerticalTabsetGroup.active}">\n' +
+        '                    {{bbVerticalTabsetGroup.heading}}\n' +
+        '                </span>\n' +
+        '                <span class="bb-vertical-tabset-group-chevron"\n' +
+        '                    ng-class="{\'bb-vertical-tabset-group-chevron-open\':bbVerticalTabsetGroup.isOpen}"></span>\n' +
+        '            </div>\n' +
+        '        </uib-accordion-heading>\n' +
+        '        <ul class="nav nav-tabs nav-stacked"\n' +
+        '            ng-transclude>\n' +
+        '        </ul>\n' +
+        '    </div>\n' +
+        '</li>\n' +
         '');
     $templateCache.put('sky/templates/textexpand/container.html',
         '<div class="bb-text-expand-container"></div>\n' +
