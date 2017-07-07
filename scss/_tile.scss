@@ -91,7 +91,6 @@
 .bb-tile-header-content {
     display: inline-block;
     @include bb-headline();
-    color: $bb-color-green;
     opacity: 0;
     overflow: hidden;
     text-overflow: ellipsis;
