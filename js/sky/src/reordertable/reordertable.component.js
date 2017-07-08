@@ -7,6 +7,7 @@
 
     function Controller($element, $filter, $scope, $timeout, $compile, $templateCache, $controller) {
         var bbAutonumericConfig,
+            cellScopes = [],
             compiledTemplates = {}, // compiled cell templates
             containerEl = $element.find('.bb-reorder-table-container'),
             currentRepeaterItems, // the set of items from ng-repeat before sorting starts
@@ -38,10 +39,22 @@
             }
         }
 
+        function destroyCellScopes() {
+            var i;
+            if (cellScopes) {
+                for (i = 0; i < cellScopes.length; i++) {
+                    cellScopes[i].$destroy();
+                }
+            }
+            cellScopes = [];
+        }
+
         function reinitTable(vm) {
             vm.options = vm.options || {};
             vm.sortable = !vm.unsortable && vm.options.data && vm.options.data.length > 1 && vm.options.fixed < vm.options.data.length;
             vm.options.fixed = vm.options.fixed || 0;
+
+            destroyCellScopes();
 
             if (vm.options.getContextMenuItems) {
                 vm.contextMenuItems = {};
@@ -153,6 +166,8 @@
             }
 
             templateFunction = compiledTemplates[column.name];
+
+            cellScopes.push(itemScope);
 
             templateFunction(itemScope, function (cloned) {
                 cell.append(cloned);

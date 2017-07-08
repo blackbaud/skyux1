@@ -12,7 +12,7 @@
         table-layout: fixed;
         width: 100%;
         display: table;
-        background-color: white;
+        background-color: $bb-color-white;
 
         .bb-reorder-table-labels {
 
@@ -69,7 +69,7 @@
     .bb-reorder-table-row,  .bb-reorder-table-row-fixed {
         border: none;
         @include bb-border(row, top);
-        background-color: white;
+        background-color: $bb-color-white;
         outline-offset: -5px;
         width: 100%;
         min-height: 41px;
@@ -130,7 +130,7 @@
                 display: table-cell;
             
                 .btn.btn-link {
-                    color: #1c84c6;
+                    color: $bb-color-blue;
                     cursor:pointer;
                     white-space: normal;
                     word-wrap: break-word;
@@ -189,7 +189,7 @@
 }
 
 .bb-reorder-table-animate-element {
-  background-color: white;
+  background-color: $bb-color-white;
   position: absolute;
 }
 
@@ -207,5 +207,5 @@
 }
 
 .bb-reorder-table-no-animate {
-   transition: none;
+   transition: none !important;
 }
