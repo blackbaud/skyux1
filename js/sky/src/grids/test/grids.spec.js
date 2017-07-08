@@ -485,7 +485,6 @@ describe('Grid directive', function () {
                     },
                     {
                         caption: 'Instrument',
-                        jsonmap: 'instrument',
                         id: 2,
                         name: 'instrument'
                     },
@@ -536,7 +535,6 @@ describe('Grid directive', function () {
         rowEl = getGridRows(el);
 
         expect(rowEl.length).toBe(8);
-
         verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
         verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
         verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
