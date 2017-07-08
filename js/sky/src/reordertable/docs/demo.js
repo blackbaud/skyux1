@@ -37,8 +37,8 @@
                     jsonMap: 'id'
                 },
                 {
-                    name: 'number',
-                    jsonMap: 'num'
+                    name: 'order',
+                    jsonMap: 'order'
                 },
                 {
                     name: 'text',
@@ -57,9 +57,9 @@
                 }
             ],
             data: [
-                { id: 0, num: 123, text: 'Hello', char: '#', templated: "temp1" },
-                { id: 1, num: 456, text: 'Bye', char: '<>', templated: "temp2" },
-                { id: 2, num: 789, text: 'Hello', char: '???', templated: 'temp3' }
+                { id: 0, order: '1st', text: 'Hello', char: '#', templated: "temp1" },
+                { id: 1, order: '2nd', text: 'Bye', char: '<>', templated: "temp2" },
+                { id: 2, order: '3rd', text: 'Hello', char: '???', templated: 'temp3' }
             ],
             index: 'id',
             getContextMenuItems: function (item) {
@@ -98,14 +98,15 @@
                     title: 'Controller',
                     name: 'Controller',
                     controller: ColumnController,
+                    jsonMap: 'templated',
                     template_url: 'bbReorderTable/samples/mycolumn.html'
                 }
             ],
             data: [
-                { id: 0, hit: 'Pea', templated: {title: 'Title 1', info: 'info 1'} },
-                { id: 1, hit: 'Eye', templated: {title: 'Title 2', info: 'info 2'} },
-                { id: 2, hit: 'Inn', templated: {title: 'Title 3', info: 'info 3'} },
-                { id: 3, hit: 'Gee', templated: {title: 'Title 4', info: 'info 4'} }
+                { id: 0, hit: 'Pea', templated: { title: 'Title 1', info: 'info 1' } },
+                { id: 1, hit: 'Eye', templated: { title: 'Title 2', info: 'info 2' } },
+                { id: 2, hit: 'Inn', templated: { title: 'Title 3', info: 'info 3' } },
+                { id: 3, hit: 'Gee', templated: { title: 'Title 4', info: 'info 4' } }
             ],
             index: 'id',
             oneIndexed: true,

@@ -1000,10 +1000,10 @@ describe('Reorder Table', function () {
                         }
                     ],
                     data: [
-                        { id: 0, templated: {title: 'Title 1', info: 'info 1'} },
-                        { id: 1, templated: {title: 'Title 2', info: 'info 2'} },
-                        { id: 2, templated: {title: 'Title 3', info: 'info 3'} },
-                        { id: 3, templated: {title: 'Title 4', info: 'info 4'} }
+                        { id: 0, templated: { title: 'Title 1', info: 'info 1' } },
+                        { id: 1, templated: { title: 'Title 2', info: 'info 2' } },
+                        { id: 2, templated: { title: 'Title 3', info: 'info 3' } },
+                        { id: 3, templated: { title: 'Title 4', info: 'info 4' } }
                     ],
                     index: "id"
                 };

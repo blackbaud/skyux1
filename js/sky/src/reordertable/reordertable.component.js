@@ -68,31 +68,20 @@
 
                 if (col.template_url && !compiledTemplates[col.name]) {
                     compiledTemplates[col.name] = $compile($templateCache.get(col.template_url));
-                    /*angular.forEach(vm.options.data, function (item) {
-                        vm.templates[col.name][item[vm.options.index]] = col.templateFn(item);
-                    });*/
                 }
 
             });
         }
 
-        bbAutonumericConfig = {
-            mDec: 0 // no decimals
-        };
-
-        vm.sorting = false;
-        vm.firstSort = true;
-
-        vm.isFixed = function (index) {
+        function isFixed(index) {
             return index < vm.options.fixed;
-        };
+        }
 
-        vm.setFixed = function (index) {
-            return vm.isFixed(index) ? 'bb-reorder-table-row-fixed' : 'bb-reorder-table-row';
-        };
+        function setFixed(index) {
+            return isFixed(index) ? 'bb-reorder-table-row-fixed' : 'bb-reorder-table-row';
+        }
 
-        // sends an item to the top of the list with a rising animation
-        vm.pushToTop = function (item) {
+        function pushToTop(item) {
             var toTheTopEl,
                 index,
                 toTheTopElOffset,
@@ -140,15 +129,16 @@
                     }
                 });
             }
-        };
+        }
 
-        vm.cellLink = function (row, index, column) {
+        // sends an item to the top of the list with a rising animation
+        function cellLink(row, index, column) {
             var itemScope,
                 rowElem,
                 cell,
                 templateFunction;
 
-            rowElem = $element.find('#bb-reorder-table-cell-' + index + '-' + column.name);
+            rowElem = $element.find('#bb-reorder-table-' + vm.tableId + '-cell-' + index + '-' + column.name);
             cell = rowElem.children();
 
             itemScope = $scope.$new(true);
@@ -167,7 +157,20 @@
             templateFunction(itemScope, function (cloned) {
                 cell.append(cloned);
             });
+        }
+
+        bbAutonumericConfig = {
+            mDec: 0 // no decimals
         };
+
+        vm.sorting = false;
+        vm.firstSort = true;
+
+        vm.isFixed = isFixed;
+        vm.setFixed = setFixed;
+        vm.pushToTop = pushToTop;
+        vm.cellLink = cellLink;
+        vm.tableId = $scope.$id;
 
         if (!vm.unsortable) {
             //Setup jQuery sortable options for the items being sorted
@@ -181,7 +184,7 @@
                     });
 
                     if (vm.firstSort) {
-                        containerEl.sortable("refreshPositions");
+                        containerEl.sortable('refreshPositions');
                         vm.firstSort = false;
                     }
 

@@ -2,6 +2,14 @@
   <div style="width: 600px">
     <bb-reorder-table bb-reorder-table-options="reorderTableCtrl.tableOptions"></bb-reorder-table>
   </div>
+  
+  <div style="margin-top: 10px;">
+      <h4>Current order:</h4>
+
+      <ul ng-repeat="item in reorderTableCtrl.tableOptions.data">
+        <li>{{ item.order }}</li>
+      </ul>
+  </div>
 </div>
 
 <hr />

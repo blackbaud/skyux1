@@ -12,10 +12,10 @@ than the reorder directive and requires an integer indexing property.
     - `bb-reorder-table-options` &mdash; Specifies an object with the following properties for the `bb-reorder-table` directive.
         - `columns` &mdash; An array of available columns. Each column can have the following properties:
             - `controller` &mdash; *(Optional.)* Specifies the controller function for a templated column to allow cells to perform logic while displaying formatted or complex data. You can use `$scope.rowData` to access row data from the grid in the column template controller.
-            - `jsonMap` &mdash; Specifies the name of the property within the `data` property that maps to the data in the column. This property is not needed only if using the `templateFn` property.
+            - `jsonMap` &mdash; Specifies the name of the property within the `data` property that maps to the data in the column. This property is not required when `template_url`, but is required for the `data.property_name` syntax.
             - `name` &mdash; Specifies a unique name for the column.
             - `show` &mdash; *(Optional.)* Specifies whether or not the given column is visible. *(Default: `true`)*
-            - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data 
+            - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data object, use the format `data.property_name`. 
             - `title` &mdash; *(Optional.)* Specifies the text to use in the column header in place of the column name. *(Default: `name`)*
             - `width` &mdash; *(Optional.)* Specifies the desired width attribute of the column elements. The width of the columns will not be respected if they are smaller than the table together. *(Default: `auto`)*object, use the format `data.property_name`.
         - `fixed` &mdash; *(Optional.)* Specifies a number of rows at the top of the table which can no be reordered. *(Default: `0`)*

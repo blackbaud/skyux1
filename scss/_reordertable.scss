@@ -1,11 +1,9 @@
-.bb-reorder-table {
-    //overflow-y: visible !important;
-    //overflow-x: auto;
-}
+@import "mixins";
 
 .bb-reorder-table-header-container {
     
-    overflow-x: visible !important;
+    overflow-x: visible;
+    margin: 0;
 
     .bb-reorder-table-header {
 
@@ -40,14 +38,17 @@
             }
 
             .bb-reorder-table-label-cell {
+                @include bb-border(dark, top, bottom, left, right);
                 padding: 8px;
-                border: 1px solid #CCC;
                 border-collapse: collapse;
-                color: #707374;
+                color: $bb-text-deemphasized-color;
                 font-weight: normal;
-                text-overflow: ellipsis;
-                overflow-x: hidden;
                 display: table-cell;
+
+                div {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
             }
 
             .bb-reorder-table-label-cell:first-of-type {
@@ -66,26 +67,25 @@
     overflow-y: visible;
 
     .bb-reorder-table-row,  .bb-reorder-table-row-fixed {
+        border: none;
+        @include bb-border(row, top);
+        background-color: white;
+        outline-offset: -5px;
+        width: 100%;
+        min-height: 41px;
+        table-layout: fixed;
+        outline-offset: -5px;
+        display: table;
 
-            background-color: white;
+        // we always want the sorting item to keep its border
+        &:not(.bb-reorder-list-sorting-item):first-child {
             border: none;
-            border-top: dotted 1px $gray-lighter;
-            outline-offset: -5px;
-            width: 100%;
-            min-height: 41px;
-            table-layout: fixed;
-            outline-offset: -5px;
-            display: table;
+        }
 
-            // we always want the sorting item to keep its border
-            &:not(.bb-reorder-list-sorting-item):first-child {
-              border: none;
-            }
-
-            // if we are sorting the first item, make sure the next sibling does not have a visible top border when it gets pushed up.
-            &:first-child.bb-reorder-list-sorting-item + .bb-reorder-table-row {
-              border-top:1px solid transparent; // need it to keep its height otherwise we are 1px smaller and the list shifts.
-            }
+        // if we are sorting the first item, make sure the next sibling does not have a visible top border when it gets pushed up.
+        &:first-child.bb-reorder-list-sorting-item + .bb-reorder-table-row {
+            border-top:1px solid transparent; // need it to keep its height otherwise we are 1px smaller and the list shifts.
+        }
 
         .bb-reorder-table-row-container {
         
@@ -108,9 +108,7 @@
 
             .bb-reorder-table-col-context {
                 width: 44px;
-                vertical-align: top;
                 text-align: center;
-
                 display: table-cell;
                 padding: 8px;
                 margin: 0;
@@ -164,19 +162,14 @@
         }
     }
 
-    /*>:not(.bb-reorder-table-row-placeholder):not(.bb-reorder-list-sorting-item):nth-of-type(even) {
-        
-        background-color: #f8f8f9;
-    }*/
-
     .bb-reorder-table-row-fixed .bb-reorder-table-row-container .bb-reorder-table-col-icon {
-              color: #CCC;
+              color: $gray-lighter;
               cursor: default;
     }
 }
 
 .bb-reorder-table-row-placeholder {
-  background-color: #f3f3f4;
+  background-color: $body-bg;
 
   // when we are sorting the placeholder height is set directly on the element.
   // if the item being sorted had a border, the placeholder is going to be 1 px larger than it should
@@ -214,5 +207,5 @@
 }
 
 .bb-reorder-table-no-animate {
-   transition: none !important;
+   transition: none;
 }
