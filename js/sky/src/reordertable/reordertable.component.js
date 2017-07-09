@@ -155,7 +155,7 @@
             cell = rowElem.children();
 
             itemScope = $scope.$new(true);
-            itemScope.data = row[column.jsonMap];
+            itemScope.data = row[column.jsonmap];
             itemScope.rowData = row;
             itemScope.resources = vm.options.resources;
 

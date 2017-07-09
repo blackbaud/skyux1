@@ -34,25 +34,25 @@
             columns: [
                 {
                     name: 'index',
-                    jsonMap: 'id'
+                    jsonmap: 'id'
                 },
                 {
                     name: 'order',
-                    jsonMap: 'order'
+                    jsonmap: 'order'
                 },
                 {
                     name: 'text',
-                    jsonMap: 'text',
+                    jsonmap: 'text',
                     show: false
                 },
                 {
                     name: 'characters',
-                    jsonMap: 'char',
+                    jsonmap: 'char',
                     title: 'Column with Title'
                 },
                 {
                     name: 'templated',
-                    jsonMap: 'templated',
+                    jsonmap: 'templated',
                     template_url: 'reordertable/samples/templated.html'
                 }
             ],
@@ -98,7 +98,7 @@
                     title: 'Controller',
                     name: 'Controller',
                     controller: ColumnController,
-                    jsonMap: 'templated',
+                    jsonmap: 'templated',
                     template_url: 'bbReorderTable/samples/mycolumn.html'
                 }
             ],

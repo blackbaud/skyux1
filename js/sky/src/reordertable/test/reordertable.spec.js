@@ -83,7 +83,7 @@ describe('Reorder Table', function () {
                         columns: [
                             {
                                 name: "test",
-                                jsonMap: "testProperty"
+                                jsonmap: "testProperty"
                             }
                         ],
                         data: [
@@ -115,7 +115,7 @@ describe('Reorder Table', function () {
                         columns: [
                             {
                                 name: "test",
-                                jsonMap: "testProperty"
+                                jsonmap: "testProperty"
                             }
                         ],
                         data: [
@@ -153,7 +153,7 @@ describe('Reorder Table', function () {
                     columns: [
                         {
                             name: "test",
-                            jsonMap: "testProperty"
+                            jsonmap: "testProperty"
                         }
                     ],
                     data: [
@@ -191,20 +191,20 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test1",
-                        jsonMap: "testProperty1"
+                        jsonmap: "testProperty1"
                     },
                     {
                         name: "test2",
-                        jsonMap: "testProperty2",
+                        jsonmap: "testProperty2",
                         title: "title2"
                     },
                     {
                         name: "test3",
-                        jsonMap: "testProperty3"
+                        jsonmap: "testProperty3"
                     },
                     {
                         name: "test4",
-                        jsonMap: "testProperty4",
+                        jsonmap: "testProperty4",
                         title: "title4"
                     }
                 ],
@@ -238,17 +238,17 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test1",
-                        jsonMap: "testProperty1",
+                        jsonmap: "testProperty1",
                         width: "60px"
                     },
                     {
                         name: "test2",
-                        jsonMap: "testProperty2",
+                        jsonmap: "testProperty2",
                         width: "90px"
                     },
                     {
                         name: "test3",
-                        jsonMap: "testProperty3",
+                        jsonmap: "testProperty3",
                         width: "120px"
                     }
                 ],
@@ -289,7 +289,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -324,7 +324,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -362,7 +362,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -398,7 +398,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -436,7 +436,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -474,7 +474,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -513,7 +513,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -547,7 +547,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -576,7 +576,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -608,7 +608,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -642,7 +642,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -677,7 +677,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -713,7 +713,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -758,7 +758,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -794,7 +794,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -838,7 +838,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -882,7 +882,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -915,7 +915,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -951,7 +951,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -993,7 +993,7 @@ describe('Reorder Table', function () {
                     columns: [
                         {
                             title: 'Templated',
-                            jsonMap: 'templated',
+                            jsonmap: 'templated',
                             name: 'templated',
                             width: 300,
                             template_url: 'bbReorderTable/samples/mycolumn.html'
@@ -1056,7 +1056,7 @@ describe('Reorder Table', function () {
                         {
                             title: 'Templated',
                             controller: columnController,
-                            jsonMap: 'templated',
+                            jsonmap: 'templated',
                             name: 'templated',
                             width: 300,
                             template_url: 'bbReorderTable/samples/mycolumn.html'
@@ -1111,7 +1111,7 @@ describe('Reorder Table', function () {
                     columns: [
                         {
                             title: 'Templated',
-                            jsonMap: 'templated',
+                            jsonmap: 'templated',
                             name: 'templated',
                             width: 300,
                             template_url: 'bbReorderTable/samples/mycolumn.html'
@@ -1149,16 +1149,16 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test1",
-                        jsonMap: "testProperty1"
+                        jsonmap: "testProperty1"
                     },
                     {
                         name: "test2",
-                        jsonMap: "testProperty2",
+                        jsonmap: "testProperty2",
                         show: false
                     },
                     {
                         name: "test3",
-                        jsonMap: "testProperty3"
+                        jsonmap: "testProperty3"
                     }
                 ],
                 data: [
@@ -1199,7 +1199,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1246,7 +1246,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1293,7 +1293,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1343,7 +1343,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1391,7 +1391,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1463,7 +1463,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1533,7 +1533,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [
@@ -1591,7 +1591,7 @@ describe('Reorder Table', function () {
                 columns: [
                     {
                         name: "test",
-                        jsonMap: "testProperty"
+                        jsonmap: "testProperty"
                     }
                 ],
                 data: [

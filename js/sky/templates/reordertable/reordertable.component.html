@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div ng-if="column.show" ng-repeat="column in $ctrl.options.columns" class="bb-reorder-table-col" ng-style="{ 'width': column.width }" id="{{'bb-reorder-table-' + $ctrl.tableId + '-cell-' + rowIndex + '-' + column.name}}">
-                    <div ng-if="!column.template_url" class="bb-reorder-table-cell">{{item[column.jsonMap]}}</div>
+                    <div ng-if="!column.template_url" class="bb-reorder-table-cell">{{item[column.jsonmap]}}</div>
                     <div ng-if="column.template_url" class="bb-reorder-table-cell" ng-init="$ctrl.cellLink(item, rowIndex, column)"></div>
                 </div>
                 <div ng-if="$ctrl.sortable" class="bb-reorder-table-col-top">
