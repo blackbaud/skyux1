@@ -414,8 +414,7 @@
                                             currentExtendedColumnWidth = colWidth;
                                         }
 
-                                        // 
-                                        if (column.jsonmap !== column.name) {
+                                        if (column.jsonmap && column.jsonmap !== column.name) {
                                             columnHasJsonMap = true;
                                         }
 
@@ -1511,7 +1510,7 @@
                                         rowData.push(moreRows[i]);
                                         for (j = 0; j < $scope.options.columns.length; j++) {
                                             column = $scope.options.columns[j];
-                                            if (column.jsonmap !== column.name) {
+                                            if (column.jsonmap && column.jsonmap !== column.name) {
                                                 rowData[i][column.name] = moreRows[i][column.jsonmap];
                                             }
                                         }
