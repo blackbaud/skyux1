@@ -137,6 +137,40 @@ describe('Reorder Table', function () {
                     expect($scope.options.data[2].testProperty).toEqual(789);
                     expect($scope.options.data[2].id).toEqual(3);
                 });
+
+                it('when not sorting', function () {
+                    var $scope = $rootScope.$new(),
+                        compiledElement,
+                        elScope;
+
+                    $scope.options = {
+                        columns: [
+                            {
+                                name: "test",
+                                jsonmap: "testProperty"
+                            }
+                        ],
+                        data: [
+                            { id: -1, testProperty: 123 },
+                            { id: -1, testProperty: 456 },
+                            { id: -1, testProperty: 789 }
+                        ],
+                        index: "id",
+                        oneIndexed: false,
+                        getContextMenuItems: function () {}
+                    };
+                    $scope.unsortable = true;
+
+                    compiledElement = getCompiledElement($scope);
+                    elScope = compiledElement.isolateScope();
+
+                    expect($scope.options.data[0].testProperty).toEqual(123);
+                    expect($scope.options.data[0].id).toEqual(-1);
+                    expect($scope.options.data[1].testProperty).toEqual(456);
+                    expect($scope.options.data[1].id).toEqual(-1);
+                    expect($scope.options.data[2].testProperty).toEqual(789);
+                    expect($scope.options.data[2].id).toEqual(-1);
+                });
             });
 
             it('with correct context menu items', function () {
@@ -177,6 +211,19 @@ describe('Reorder Table', function () {
                 expect(elScope.$ctrl.contextMenuItems[0]).toEqual([action]);
                 expect(elScope.$ctrl.contextMenuItems[1]).toEqual([]);
                 expect(elScope.$ctrl.contextMenuItems[2]).toEqual([action]);
+            });
+
+            it('with options', function () {
+                var $scope = $rootScope.$new(),
+                    compiledElement,
+                    elScope;
+
+                $scope.options = null;
+
+                compiledElement = getCompiledElement($scope);
+                elScope = compiledElement.isolateScope();
+
+                expect(elScope.$ctrl.options).toBeTruthy();
             });
         });
 
@@ -783,7 +830,7 @@ describe('Reorder Table', function () {
             expect($(thirdRow).find('.bb-reorder-table-col-top button').hasClass('ng-hide')).toBeFalsy();
         });
 
-        it('should display context menu on rows with menu items when available', function () {
+        it('should display context menu on rows with menu items when available and zero-indexed', function () {
             var $scope = $rootScope.$new(),
                 compiledElement,
                 elScope,
@@ -822,6 +869,51 @@ describe('Reorder Table', function () {
 
             secondRow = compiledElement.find('.bb-reorder-table-row-container')[1];
             fourthRow = compiledElement.find('.bb-reorder-table-row-container')[3];
+
+            expect($(secondRow).find('.bb-reorder-table-context bb-context-menu').hasClass('ng-hide')).toBeFalsy();
+            expect($(fourthRow).find('.bb-reorder-table-context bb-context-menu').hasClass('ng-hide')).toBeFalsy();
+        });
+
+        it('should display context menu on rows with menu items when available and one-indexed', function () {
+            var $scope = $rootScope.$new(),
+                compiledElement,
+                elScope,
+                secondRow,
+                fourthRow;
+
+            $scope.options = {
+                columns: [
+                    {
+                        name: "test",
+                        jsonmap: "testProperty"
+                    }
+                ],
+                data: [
+                    { id: 1, testProperty: 123 },
+                    { id: 2, testProperty: 456 },
+                    { id: 3, testProperty: 789 },
+                    { id: 4, testProperty: 1000 }
+                ],
+                index: "id",
+                oneIndexed: true,
+                getContextMenuItems: function (obj) {
+                    if (obj.id === 1 || obj.id === 3) {
+                        return [
+                            {
+                                id: 0,
+                                title: "Action 1",
+                                cmd: function () { }
+                            }
+                        ];
+                    }
+                }
+            };
+
+            compiledElement = getCompiledElement($scope);
+            elScope = compiledElement.isolateScope();
+
+            secondRow = compiledElement.find('.bb-reorder-table-row-container')[0];
+            fourthRow = compiledElement.find('.bb-reorder-table-row-container')[2];
 
             expect($(secondRow).find('.bb-reorder-table-context bb-context-menu').hasClass('ng-hide')).toBeFalsy();
             expect($(fourthRow).find('.bb-reorder-table-context bb-context-menu').hasClass('ng-hide')).toBeFalsy();
@@ -1136,6 +1228,46 @@ describe('Reorder Table', function () {
                 expect($(cells[2]).find('.bb-test-rowDataName').html()).toContain('Inn');
                 expect($(cells[3]).find('.bb-test-rowDataName').html()).toContain('Gee');
             });
+
+            it('removes the scope when element is destroyed', function () {
+                var $scope = $rootScope.$new(),
+                    cellScope,
+                    compiledElement,
+                    elScope;
+
+                $templateCache.put('bbReorderTable/samples/mycolumn.html',
+                    '<div>' +
+                    '<div class="bb-test-rowDataName">{{rowData.hit}}</div>' +
+                    '</div>');
+
+                $scope.options = {
+                    columns: [
+                        {
+                            title: 'Templated',
+                            jsonmap: 'templated',
+                            name: 'templated',
+                            width: 300,
+                            template_url: 'bbReorderTable/samples/mycolumn.html'
+                        }
+                    ],
+                    data: [
+                        { id: 0, hit: 'Pea', templated: {title: 'Title 1', info: 'info 1'} }
+                    ],
+                    index: "id"
+                };
+
+                compiledElement = getCompiledElement($scope);
+                elScope = compiledElement.isolateScope();
+
+                cellScope = compiledElement.find('.bb-reorder-table-col .bb-reorder-table-cell div').scope();
+
+                expect(cellScope.$$destroyed).toBeFalsy();
+
+                $scope.options.data = [];
+                $scope.$digest();
+
+                expect(cellScope.$$destroyed).toBeTruthy();
+            });
         });
 
         it('should hide hidden columns', function () {
@@ -1221,7 +1353,6 @@ describe('Reorder Table', function () {
             fourthRow.find('.bb-reorder-table-col-top button').trigger('click');
 
             expect($(fourthRow).hasClass('bb-reorder-table-row-placeholder')).toBeTruthy();
-            expect($(fourthRow).find('.bb-reorder-table-context bb-context-menu').length).toBeFalsy();
             expect(compiledElement.find('.bb-reorder-table-animate-element').length).toBeTruthy();
 
             animateCallback = $.fn.fadeOut.calls.argsFor(0)[0].always;
@@ -1232,6 +1363,59 @@ describe('Reorder Table', function () {
 
             expect($(fourthRow).hasClass('.bb-reorder-table-row-placeholder')).toBeFalsy();
             expect(compiledElement.find('.bb-reorder-table-animate-element').length).toBeFalsy();
+        });
+
+        it('should not send fixed to top', function () {
+            var $scope = $rootScope.$new(),
+                compiledElement,
+                elScope,
+                secondRow,
+                secondRowButton;
+
+            $scope.options = {
+                columns: [
+                    {
+                        name: "test",
+                        jsonmap: "testProperty"
+                    }
+                ],
+                data: [
+                    { id: 0, testProperty: 123 },
+                    { id: 1, testProperty: 456 },
+                    { id: 2, testProperty: 789 },
+                    { id: 3, testProperty: 1000 }
+                ],
+                index: "id"
+            };
+
+            spyOn($.fn, 'fadeOut');
+
+            compiledElement = getCompiledElement($scope);
+            elScope = compiledElement.isolateScope();
+
+            secondRow = $(compiledElement.find('.bb-reorder-table-row')[1]);
+            secondRowButton = secondRow.find('.bb-reorder-table-col-top button');
+
+            elScope.$ctrl.options.fixed = 2;
+
+            secondRowButton.trigger('click');
+
+            expect($(secondRow).hasClass('bb-reorder-table-row-placeholder')).toBeFalsy();
+            expect(compiledElement.find('.bb-reorder-table-animate-element').length).toBeFalsy();
+
+            expect($.fn.fadeOut.calls.argsFor(0)[0]).toBe(undefined);
+
+            expect($($(compiledElement.find('.bb-reorder-table-row-fixed')[0]).find('.bb-reorder-table-col')[0]).html()).toContain('123');
+            expect(elScope.$ctrl.options.data[0].testProperty).toBe(123);
+
+            expect($($(compiledElement.find('.bb-reorder-table-row-fixed')[1]).find('.bb-reorder-table-col')[0]).html()).toContain('456');
+            expect(elScope.$ctrl.options.data[1].testProperty).toBe(456);
+
+            expect($($(compiledElement.find('.bb-reorder-table-row')[0]).find('.bb-reorder-table-col')[0]).html()).toContain('789');
+            expect(elScope.$ctrl.options.data[2].testProperty).toBe(789);
+
+            expect($($(compiledElement.find('.bb-reorder-table-row')[1]).find('.bb-reorder-table-col')[0]).html()).toContain('1000');
+            expect(elScope.$ctrl.options.data[3].testProperty).toBe(1000);
         });
 
         it('should handle the sortable start event', function () {
@@ -1575,7 +1759,7 @@ describe('Reorder Table', function () {
             expect($(rows[3]).find('.bb-reorder-table-sorting-number').html()).toContain(4);
         });
 
-        it('should handle the sortable change event libbcyle from start to finish', function () {
+        it('should handle the sortable change event lifecyle from start to finish', function () {
             var $scope = $rootScope.$new(),
                 compiledElement,
                 elScope,

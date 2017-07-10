@@ -7,7 +7,7 @@
 
     function Controller($element, $filter, $scope, $timeout, $compile, $templateCache, $controller) {
         var bbAutonumericConfig,
-            cellScopes = [],
+            cellScopes = {},
             compiledTemplates = {}, // compiled cell templates
             containerEl = $element.find('.bb-reorder-table-container'),
             currentRepeaterItems, // the set of items from ng-repeat before sorting starts
@@ -39,22 +39,10 @@
             }
         }
 
-        function destroyCellScopes() {
-            var i;
-            if (cellScopes) {
-                for (i = 0; i < cellScopes.length; i++) {
-                    cellScopes[i].$destroy();
-                }
-            }
-            cellScopes = [];
-        }
-
         function reinitTable(vm) {
             vm.options = vm.options || {};
             vm.sortable = !vm.unsortable && vm.options.data && vm.options.data.length > 1 && vm.options.fixed < vm.options.data.length;
             vm.options.fixed = vm.options.fixed || 0;
-
-            destroyCellScopes();
 
             if (vm.options.getContextMenuItems) {
                 vm.contextMenuItems = {};
@@ -62,10 +50,7 @@
                     if (!vm.unsortable) {
                         item[vm.options.index] = vm.options.oneIndexed ? i + 1 : i;
                     }
-
-                    if (vm.options.getContextMenuItems) {
-                        vm.contextMenuItems[item[vm.options.index]] = vm.options.getContextMenuItems(item);
-                    }
+                    vm.contextMenuItems[item[vm.options.index]] = vm.options.getContextMenuItems(item);
                 });
             } else {
                 if (!vm.unsortable) {
@@ -94,6 +79,7 @@
             return isFixed(index) ? 'bb-reorder-table-row-fixed' : 'bb-reorder-table-row';
         }
 
+        // sends an item to the top of the list with a rising animation
         function pushToTop(item) {
             var toTheTopEl,
                 index,
@@ -101,13 +87,9 @@
                 animateCloneEl,
                 topIndex;
 
-            if (!item || !vm.sortable) {
-                return;
-            }
+            index = vm.options.data.indexOf(item);
 
-            index = vm.options.oneIndexed ? item[vm.options.index] - 1 : item[vm.options.index];
-
-            if (index > vm.options.fixed) {
+            if (vm.sortable && index > vm.options.fixed) {
 
                 topIndex = vm.options.fixed;
 
@@ -144,11 +126,10 @@
             }
         }
 
-        // sends an item to the top of the list with a rising animation
         function cellLink(row, index, column) {
-            var itemScope,
+            var cell,
+                itemScope,
                 rowElem,
-                cell,
                 templateFunction;
 
             rowElem = $element.find('#bb-reorder-table-' + vm.tableId + '-cell-' + index + '-' + column.name);
@@ -167,11 +148,20 @@
 
             templateFunction = compiledTemplates[column.name];
 
-            cellScopes.push(itemScope);
+            cellScopes[itemScope.$id] = itemScope;
 
             templateFunction(itemScope, function (cloned) {
                 cell.append(cloned);
             });
+
+            // Destroys the itemScope and removes it from the
+            // scopes when the cell is removed from the page
+            cell.on('$destroy', function () {
+                itemScope.$destroy();
+                cellScopes[itemScope.$id] = null;
+                delete cellScopes[itemScope.$id];
+            });
+            
         }
 
         bbAutonumericConfig = {
@@ -179,125 +169,117 @@
         };
 
         vm.sorting = false;
-        vm.firstSort = true;
+        vm.tableId = $scope.$id;
 
         vm.isFixed = isFixed;
         vm.setFixed = setFixed;
         vm.pushToTop = pushToTop;
         vm.cellLink = cellLink;
-        vm.tableId = $scope.$id;
 
-        if (!vm.unsortable) {
-            //Setup jQuery sortable options for the items being sorted
-            sortableOptions = {
-                placeholder: 'bb-reorder-table-row-placeholder', // class to put on placeholder element
-                axis: 'y', // constrain movement to the Y axis,
-                handle: '.bb-reorder-table-col-icon',
-                start: function (e, ui) {
+        //Setup jQuery sortable options for the items being sorted
+        sortableOptions = {
+            placeholder: 'bb-reorder-table-row-placeholder', // class to put on placeholder element
+            axis: 'y', // constrain movement to the Y axis,
+            handle: '.bb-reorder-table-col-icon',
+            start: function (e, ui) {
+                $scope.$apply(function () {
+                    vm.sorting = true;
+                });
+
+                // need to keep track of the how the items were placed in the DOM since
+                // the sortable is going to mess them up which breaks ng-repeat
+                currentRepeaterItems = containerEl.contents().not(ui.placeholder);
+
+                ui.item.addClass('bb-reorder-table-sorting-item');
+
+                originalSortItemIndex = ui.item.index();
+                currentSortItemIndex = originalSortItemIndex;
+
+                // need to set the height of the placeholder since we need to account for the padding on the row items
+                ui.placeholder.height(ui.item.outerHeight());
+
+                // set the current index of all rows for display purposes
+                $.each(containerEl.children('.bb-reorder-table-row, .bb-reorder-table-row-fixed'), function (i, item) {
+                    setPositionNumberText(item, i + 1);
+                });
+            },
+            stop: function (e, ui) {
+                // replace the repeater elements and comments so ng-repeat does not break
+                currentRepeaterItems.appendTo(containerEl);
+
+                ui.item.removeClass('bb-reorder-table-sorting-item');
+
+                if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
                     $scope.$apply(function () {
-                        vm.sorting = true;
+                        // perform the swap that the user just performed
+                        vm.options.data.splice(
+                            finalIndex, 0,
+                            vm.options.data.splice(originalSortItemIndex, 1)[0]);
                     });
+                }
 
-                    if (vm.firstSort) {
-                        containerEl.sortable('refreshPositions');
-                        vm.firstSort = false;
-                    }
+                $scope.$apply(function () {
+                    vm.sorting = false;
+                });
 
-                    // need to keep track of the how the items were placed in the DOM since
-                    // the sortable is going to mess them up which breaks ng-repeat
-                    currentRepeaterItems = containerEl.contents().not(ui.placeholder);
+                originalSortItemIndex = null;
+                currentSortItemIndex = null;
+                finalIndex = -1;
+                currentRepeaterItems = null;
 
-                    ui.item.addClass('bb-reorder-table-sorting-item');
+                // once the ng-repeat has finished rendering the move, re-enable animations
+                $timeout(function () {
+                    containerEl.children().removeClass('bb-reorder-table-no-animate');
+                });
 
-                    originalSortItemIndex = ui.item.index();
-                    currentSortItemIndex = originalSortItemIndex;
+                $scope.$emit("tableReordered");
+            },
+            update: function (e, ui) {
+                // grab the final index of the item being sorted before we cancel
+                // the sort and its position gets reset.
+                finalIndex = ui.item.index();
 
-                    // need to set the height of the placeholder since we need to account for the padding on the row items
-                    ui.placeholder.height(ui.item.outerHeight());
+                // don't animate the move when sorting
+                containerEl.children().addClass('bb-reorder-table-no-animate');
 
-                    // set the current index of all rows for display purposes
-                    $.each(containerEl.children('.bb-reorder-table-row, .bb-reorder-table-row-fixed'), function (i, item) {
-                        setPositionNumberText(item, i + 1);
-                    });
-                },
-                stop: function (e, ui) {
-                    // replace the repeater elements and comments so ng-repeat does not break
-                    currentRepeaterItems.appendTo(containerEl);
+                // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
+                containerEl.sortable('cancel');
+            },
+            change: function (e, ui) {
+                var displayIndex,
+                    newIndex;
 
-                    ui.item.removeClass('bb-reorder-table-sorting-item');
+                // Since the element being sorted is positioned absolute it remains in the
+                // same position so we can't use its index. Instead use the placeholder since
+                // that will be in the right position in the list.
+                newIndex = ui.item.siblings().index(ui.placeholder);
 
-                    if (finalIndex >= 0 && finalIndex !== originalSortItemIndex) {
-                        $scope.$apply(function () {
-                            // perform the swap that the user just performed
-                            vm.options.data.splice(
-                                finalIndex, 0,
-                                vm.options.data.splice(originalSortItemIndex, 1)[0]);
-                        });
-                    }
+                if (newIndex === currentSortItemIndex) {
+                    return;
+                }
 
-                    $scope.$apply(function () {
-                        vm.sorting = false;
-                    });
+                // the display position shown to the user should start at 1, not 0
+                displayIndex = newIndex + 1;
 
-                    originalSortItemIndex = null;
-                    currentSortItemIndex = null;
-                    finalIndex = -1;
-                    currentRepeaterItems = null;
+                // when we are sorting, change the position numbers on the rows
+                if (newIndex > currentSortItemIndex) {
+                    // set the text of all previous siblings to account for change
+                    setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
+                } else {
+                    // set the text of all next siblings to account for change
+                    setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
+                }
 
-                    // once the ng-repeat has finished rendering the move, re-enable animations
-                    $timeout(function () {
-                        containerEl.children().removeClass('bb-reorder-table-no-animate');
-                    });
+                currentSortItemIndex = newIndex;
+            },
+            items: ">.bb-reorder-table-row"
+        };
 
-                    $scope.$emit("tableReordered");
-                },
-                update: function (e, ui) {
-                    // grab the final index of the item being sorted before we cancel
-                    // the sort and its position gets reset.
-                    finalIndex = ui.item.index();
-
-                    // don't animate the move when sorting
-                    containerEl.children().addClass('bb-reorder-table-no-animate');
-
-                    // stop the sortable from moving the element as we want the ng-repeat directive to do the actual reorder
-                    containerEl.sortable('cancel');
-                },
-                change: function (e, ui) {
-                    var displayIndex,
-                        newIndex;
-
-                    // Since the element being sorted is positioned absolute it remains in the
-                    // same position so we can't use its index. Instead use the placeholder since
-                    // that will be in the right position in the list.
-                    newIndex = ui.item.siblings().index(ui.placeholder);
-
-                    if (newIndex === currentSortItemIndex) {
-                        return;
-                    }
-
-                    // the display position shown to the user should start at 1, not 0
-                    displayIndex = newIndex + 1;
-
-                    // when we are sorting, change the position numbers on the rows
-                    if (newIndex > currentSortItemIndex) {
-                        // set the text of all previous siblings to account for change
-                        setPositionNumbers(-1, $.fn.prev, displayIndex, ui.placeholder, ui.item);
-                    } else {
-                        // set the text of all next siblings to account for change
-                        setPositionNumbers(1, $.fn.next, displayIndex, ui.placeholder, ui.item);
-                    }
-
-                    currentSortItemIndex = newIndex;
-                },
-                items: ">.bb-reorder-table-row"
-            };
-
-            containerEl.sortable(sortableOptions);
-        }
+        containerEl.sortable(sortableOptions);
 
         $scope.$watchCollection('$ctrl.options.data', function () {
             reinitTable(vm);
-        }, true);
+        });
 
         $scope.$watch('$ctrl.unsortable', function () {
             vm.sortable = !vm.unsortable && vm.options.data && vm.options.data.length > 1 && vm.options.fixed < vm.options.data.length;
