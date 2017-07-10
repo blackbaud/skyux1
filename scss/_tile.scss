@@ -89,9 +89,9 @@
 }
 
 .bb-tile-header-content {
-    color: $sky-text-color-action-primary;
     display: inline-block;
     @include bb-headline();
+    color: $sky-text-color-action-primary;
     opacity: 0;
     overflow: hidden;
     text-overflow: ellipsis;
