@@ -1,5 +1,15 @@
 @import "mixins";
 
+.bb-reorder-table {
+    overflow-x: auto;
+    width: 100%;
+
+    .bb-reorder-table-container {
+        overflow: visible;
+        min-width: 600px;
+    }
+}
+
 .bb-reorder-table-header-container {
     
     overflow-x: visible;
@@ -62,7 +72,7 @@
     }
 }
 
-.bb-reorder-table-container {
+.bb-reorder-table-body-container {
 
     overflow-y: visible;
 

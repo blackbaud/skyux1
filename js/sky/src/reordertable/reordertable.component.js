@@ -9,7 +9,7 @@
         var bbAutonumericConfig,
             cellScopes = {},
             compiledTemplates = {}, // compiled cell templates
-            containerEl = $element.find('.bb-reorder-table-container'),
+            containerEl = $element.find('.bb-reorder-table-body-container'),
             currentRepeaterItems, // the set of items from ng-repeat before sorting starts
             currentSortItemIndex, // the index where the sorting item is currently being placed
             finalIndex = -1, // the final index of the element being sorting after sorting has ended

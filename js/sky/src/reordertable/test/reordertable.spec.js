@@ -1059,8 +1059,8 @@ describe('Reorder Table', function () {
             compiledElement = getCompiledElement($scope);
             elScope = compiledElement.isolateScope();
 
-            firstRow = compiledElement.find('.bb-reorder-table-container').children()[0];
-            secondRow = compiledElement.find('.bb-reorder-table-container').children()[1];
+            firstRow = compiledElement.find('.bb-reorder-table-body-container').children()[0];
+            secondRow = compiledElement.find('.bb-reorder-table-body-container').children()[1];
 
             expect($(firstRow).hasClass('bb-reorder-table-row-fixed')).toBeTruthy();
             expect($(secondRow).hasClass('bb-reorder-table-row-fixed')).toBeTruthy();
@@ -1592,7 +1592,7 @@ describe('Reorder Table', function () {
             compiledElement = getCompiledElement($scope);
             elScope = compiledElement.isolateScope();
 
-            containerEl = compiledElement.find('.bb-reorder-table-container');
+            containerEl = compiledElement.find('.bb-reorder-table-body-container');
 
             rowBeingMoved = $(compiledElement.find('.bb-reorder-table-row')[3]);
 
@@ -1664,7 +1664,7 @@ describe('Reorder Table', function () {
             compiledElement = getCompiledElement($scope);
             elScope = compiledElement.isolateScope();
 
-            containerEl = compiledElement.find('.bb-reorder-table-container');
+            containerEl = compiledElement.find('.bb-reorder-table-body-container');
 
             rowBeingMoved = $(compiledElement.find('.bb-reorder-table-row')[0]);
 
