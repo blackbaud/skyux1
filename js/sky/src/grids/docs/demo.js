@@ -282,7 +282,6 @@
                 columns: [
                     {
                         caption: 'Name',
-                        jsonmap: 'name',
                         id: 1,
                         name: 'name',
                         right_align: true,
