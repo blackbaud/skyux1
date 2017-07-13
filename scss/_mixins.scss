@@ -60,7 +60,7 @@
       }
 
       @if($type == "nav") {
-          border-#{$side}: $bb-nav-selected-border-width solid $sky-highlight-color-info;
+          border-#{$side}: $bb-nav-selected-border-width solid #1c84c6;
       }
 
       @if($type == "tab") {

@@ -38,6 +38,7 @@
             &.bb-wizard-step-complete {
                 a {
                     background-color: change-color($sky-background-color-info, $alpha: 0.33);
+                    border-color: change-color($sky-background-color-info, $alpha: 0.33);
                 }
             }
 

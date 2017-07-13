@@ -70,6 +70,7 @@
 .alert-dismissible .close {
     color: $sky-text-color-default;
     opacity: 0.8;
+    text-shadow: none;
   
     &:hover {
         opacity: 1.0;
