@@ -55,6 +55,7 @@
     margin: 0;
     text-align: left;
     background: $form-background;
+    @include bb-border(light, top);
     
     .btn+.btn {
         margin-left: 10px;

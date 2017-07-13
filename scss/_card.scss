@@ -85,7 +85,7 @@
 }
 
 .bb-card-actions {
-    @include bb-border(dark, top);
+    @include bb-border(light, top);
     bottom: 0;
     flex-shrink: 0;
     padding: $padding-3_4 0;

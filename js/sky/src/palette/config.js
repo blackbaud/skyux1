@@ -15,14 +15,14 @@ bbPaletteConfig = {
         "#ae9abc",
         "#00d1aa",
         "#f1575a",
-        "#979aa0",
+        "#91959c",
         "#4cd2ff",
         "#fdd189",
         "#b5de9d",
         "#cfc3d7",
         "#55ffdf",
         "#f69093",
-        "#b4b6ba"
+        "#b0b2b7"
     ],
     "mono": [
         "#005d7d",
