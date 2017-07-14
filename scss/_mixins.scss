@@ -68,7 +68,7 @@
       }
 
       @if($type == "tile") {
-          border-top: 4px solid $sky-border-color-neutral-light;
+          border-top: 4px solid $sky-border-color-neutral-medium;
       }
 
       @if($type == "row") {
