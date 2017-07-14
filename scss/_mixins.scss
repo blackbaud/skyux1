@@ -72,7 +72,7 @@
       }
 
       @if($type == "row") {
-          border-#{$side}: 1px dotted $sky-border-color-neutral-light;
+          border-#{$side}: 1px dotted $sky-border-color-neutral-medium;
       }
     }
 
