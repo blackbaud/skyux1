@@ -12,6 +12,16 @@
         padding: 0;
         background-color: $sky-background-color-info;
         border: none;
+      
+        a {
+          color: change-color($sky-text-color-default, $alpha: 0.8);
+          text-decoration: underline;
+
+          &:hover {
+            color: $sky-text-color-default;
+            text-decoration: underline;
+          }
+        }
         
         .toast-message {
             border-left: 30px solid $sky-highlight-color-info;
