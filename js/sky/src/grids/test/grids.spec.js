@@ -363,6 +363,79 @@ describe('Grid directive', function () {
         verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
     });
 
+    it('can load more data when using infinite scroll through a promise with jsonmap', function () {
+
+        var rowEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        locals.gridOptions.columns = [
+                    {
+                        caption: 'Name',
+                        jsonmap: 'myname',
+                        id: 1,
+                        name: 'name',
+                        title: false
+                    },
+                    {
+                        caption: 'Instrument',
+                        jsonmap: 'instrument',
+                        id: 2,
+                        name: 'instrument'
+                    },
+                    {
+                        caption: 'Biography',
+                        jsonmap: 'bio',
+                        id: 3,
+                        name: 'bio'
+                    }
+                ];
+
+        dataSet1 = [
+            {
+                id: 'blarrrg',
+                myname: 'John',
+                instrument: 'Rhythm guitar'
+            },
+            {
+                myname: 'Paul',
+                instrument: 'Bass',
+                bio: 'Lorem'
+            },
+            {
+                myname: 'George',
+                instrument: 'Lead guitar'
+            },
+            {
+                myname: 'Ringo',
+                instrument: 'Drums'
+            }
+        ];
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            data.promise.resolve(angular.copy(dataSet1));
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
+
     it('can load more data when using infinite scroll through concatenation and resolving a promise', function () {
 
         var rowEl,
@@ -389,6 +462,79 @@ describe('Grid directive', function () {
 
         expect(rowEl.length).toBe(8);
 
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
+
+    it('can load more data when using infinite scroll through concatenation and resolving a promise with jsonmap', function () {
+
+        var rowEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        locals.gridOptions.columns = [
+                    {
+                        caption: 'Name',
+                        jsonmap: 'myname',
+                        id: 1,
+                        name: 'name',
+                        title: false
+                    },
+                    {
+                        caption: 'Instrument',
+                        id: 2,
+                        name: 'instrument'
+                    },
+                    {
+                        caption: 'Biography',
+                        jsonmap: 'bio',
+                        id: 3,
+                        name: 'bio'
+                    }
+                ];
+
+        dataSet1 = [
+            {
+                id: 'blarrrg',
+                myname: 'John',
+                instrument: 'Rhythm guitar'
+            },
+            {
+                myname: 'Paul',
+                instrument: 'Bass',
+                bio: 'Lorem'
+            },
+            {
+                myname: 'George',
+                instrument: 'Lead guitar'
+            },
+            {
+                myname: 'Ringo',
+                instrument: 'Drums'
+            }
+        ];
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            locals.gridOptions.data = locals.gridOptions.data.concat(angular.copy(dataSet1));
+            data.promise.resolve();
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
         verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
         verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
         verifyRow(rowEl, 6, 'George', 'Lead guitar', '');

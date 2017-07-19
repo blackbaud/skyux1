@@ -31,7 +31,7 @@ if [[ "$IS_RELEASE" == "true" ]]; then
 
     # Publish to NPM
     cd ../
-    echo -e "blackbaud-skyux\n$NPM_PASSWORD\nsky-build-user@blackbaud.com" | npm login
+    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
     npm whoami
     npm publish
     echo -e "skyux successfully deployed to NPM.\n"
