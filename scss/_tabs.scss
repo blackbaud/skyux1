@@ -158,7 +158,8 @@
         }
 
         .bb-tab-header-count {
-            font-weight: normal;
+            @include bb-emphasized();
+            color: $bb-color-blue;
         }
     }
 

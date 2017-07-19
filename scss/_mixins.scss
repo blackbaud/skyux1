@@ -80,18 +80,18 @@
 }
 
 @mixin bb-page-heading {
-    font: 300 32px $bb-font-family-narrow;
+    font: 300 34px $bb-font-family-narrow;
     color: $text-color;
     font-stretch: condensed;
 }
 
 @mixin bb-subsection-heading {
-    font: 400 17px $font-family-sans-serif;
+    font: 300 19px $font-family-sans-serif;
     color: $bb-text-deemphasized-color;
 }
 
 @mixin bb-section-heading {
-    font: 300 22px $bb-font-family-narrow;
+    font: 300 26px $bb-font-family-narrow;
     color: $text-color;
     font-stretch: condensed;
 }
@@ -103,7 +103,7 @@
 }
 
 @mixin bb-emphasized {
-    font: 600 15px $font-family-sans-serif;
+    font: 600 16px $font-family-sans-serif;
     color: $text-color;
 }
 
@@ -113,7 +113,7 @@
 }
 
 @mixin bb-deemphasized {
-    font: 400 italic 14px $font-family-sans-serif;
+    font: 400 italic $font-size-base $font-family-sans-serif;
     color: $bb-text-deemphasized-color;
 }
 
