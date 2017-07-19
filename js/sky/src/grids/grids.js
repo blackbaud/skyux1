@@ -385,7 +385,6 @@
                                     totalColumnWidth = totalColumnWidth + DROPDOWN_TOGGLE_COLUMN_SIZE;
                                 }
 
-
                                 resetExtendedColumn();
 
                                 for (index = 0; index < selectedColumnIds.length; index++) {
