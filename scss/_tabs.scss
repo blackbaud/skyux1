@@ -158,7 +158,8 @@
         }
 
         .bb-tab-header-count {
-            font-weight: normal;
+            @include bb-emphasized();
+            color: $bb-color-blue;
         }
     }
 
@@ -203,9 +204,8 @@
 }
 
 .bb-tab-header-count {
+    @include bb-emphasized();
     color: $bb-color-blue;
-    font-size: 13px;
-    font-family: $bb-font-family-narrow;
     margin-left: 5px;
 }
 
@@ -294,8 +294,9 @@
         }
 
         > .panel-heading {
-            @extend .bb-subsection-heading;
+            @include bb-subsection-heading();
             @include bb-border('light', 'bottom');
+            color: $sky-text-color-default;
             background-color: $bb-color-white;
             padding: 0;
         }

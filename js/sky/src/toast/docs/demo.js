@@ -11,7 +11,7 @@
             'Open for <span>{{templateToastCtrl.timeOpen}}</span> seconds' +
             '</div>' +
             '<br />' +
-            '<div>{{templateToastCtrl.message}} <button type="button" class="btn btn-link">Link</button></div>');
+            '<div>{{templateToastCtrl.message}} <a href="#">Link</a></div>');
 
         self.openMessage = function () {
             bbToast.open({ message: "A simple message in which <html> is ignored." });

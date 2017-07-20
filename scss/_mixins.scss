@@ -52,35 +52,58 @@
 
     @each $side in $sides {
       @if($type == "light") {
-          border-#{$side}: 1px solid $border-color;
+          border-#{$side}: 1px solid $sky-border-color-neutral-light;
       }
 
       @if($type == "dark") {
-          border-#{$side}: 1px solid $gray-lighter;
+          border-#{$side}: 1px solid $sky-border-color-neutral-medium;
       }
 
       @if($type == "nav") {
-          border-#{$side}: $bb-nav-selected-border-width solid $bb-color-blue;
+          border-#{$side}: $bb-nav-selected-border-width solid #1c84c6;
       }
 
       @if($type == "tab") {
-          border-#{$side}: 2px solid $bb-color-blue;
+          border-#{$side}: 2px solid $sky-background-color-primary-dark;
       }
 
       @if($type == "tile") {
-          border-top: 4px solid $border-color;
+          border-top: 4px solid $sky-border-color-neutral-medium;
       }
 
       @if($type == "row") {
-          border-#{$side}: 1px dotted $gray-lighter;
+          border-#{$side}: 1px dotted $sky-border-color-neutral-medium;
       }
     }
 
 
 }
 
+@mixin bb-page-heading {
+    font: 300 34px $bb-font-family-narrow;
+    color: $text-color;
+    font-stretch: condensed;
+}
+
+@mixin bb-subsection-heading {
+    font: 300 19px $font-family-sans-serif;
+    color: $bb-text-deemphasized-color;
+}
+
+@mixin bb-section-heading {
+    font: 300 26px $bb-font-family-narrow;
+    color: $text-color;
+    font-stretch: condensed;
+}
+
 @mixin bb-headline {
-    font: 400 $bb-alternate-font-size-sm $bb-font-family-narrow;
+    font: 400 22px $bb-font-family-narrow;
+    color: $text-color;
+    font-stretch: condensed;
+}
+
+@mixin bb-emphasized {
+    font: 600 16px $font-family-sans-serif;
     color: $text-color;
 }
 
@@ -89,9 +112,9 @@
     color: $bb-text-deemphasized-color;
 }
 
-@mixin bb-section-heading {
-    font: 300 22px $bb-font-family-narrow;
-    color: $text-color;
+@mixin bb-deemphasized {
+    font: 400 italic $font-size-base $font-family-sans-serif;
+    color: $bb-text-deemphasized-color;
 }
 
 @mixin bb-focus-indication {

@@ -30,12 +30,12 @@ h6,
 
 h2,
 .h2 {
-    font-size: 24px;
+    font-size: 26px;
 }
 
 h3,
 .h3 {
-    font-size: 16px;
+    font-size: 19px;
 }
 
 h4,
@@ -67,7 +67,7 @@ h6,
 h1,
 .h1 {
     font-family: $bb-font-family-narrow;
-    font-size: 32px;
+    font-size: 34px;
 }
 
 h6,
@@ -172,7 +172,7 @@ input:-moz-placeholder { /* Firefox 18- */
 }
 
 .highlight {
-    background-color: #ffe96d;
+    background-color: $sky-highlight-color-warning;
 }
 
 .grid-no-search .highlight {

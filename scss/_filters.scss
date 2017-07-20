@@ -32,17 +32,24 @@
 
 .bb-filter-summary-item {
     display: inline-block;
-    background-color: $alert-warning-bg;
-    border: 1px solid $alert-warning-border;
+    background-color: $sky-background-color-info;
+    border: 1px solid $sky-highlight-color-info;
     border-radius: 4px;
     padding: 3px;
-    color: $alert-warning-text;
+    color: $sky-text-color-default;
     margin-right: $margin-half;
 
     .close {
-        color: $alert-warning-text;
+        color: $sky-text-color-default;
         padding-left: $padding-half;
         float: none;
+        opacity: 0.8;
+        text-shadow: none;
+      
+      &:hover, &:focus {
+        opacity: 1.0;
+      }
+      
     }
 }
 
