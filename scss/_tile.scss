@@ -142,14 +142,7 @@ tiles behave on a modal form.*/
 .modal-body {
     .bb-tile {
         .bb-tile-title {
-            &::after {
-            display: block;
-            font-size: 0;
-            content: " ";
-            clear: both;
-            height: 0;
-          }
-
+            
             .bb-tile-header {
                 @include bb-subsection-heading();
                 margin: 0;
