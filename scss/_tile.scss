@@ -15,9 +15,16 @@
         @include bb-border(tile);
         color: inherit;
         margin-bottom: 0;
-        height: 48px;
         cursor: pointer;
         padding: 0;
+      
+        &::after {
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
 
         .bb-tile-header {
             @include bb-section-heading();
