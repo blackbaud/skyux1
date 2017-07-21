@@ -151,7 +151,7 @@ tiles behave on a modal form.*/
           }
 
             .bb-tile-header {
-                @include bb-emphasized();
+                @include bb-subsection-heading();
                 margin: 0;
                 padding: 7px $tile-header-tool-padding;
             }
