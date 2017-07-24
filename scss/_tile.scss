@@ -142,12 +142,9 @@ tiles behave on a modal form.*/
 .modal-body {
     .bb-tile {
         .bb-tile-title {
-            height: 32px;
-
+            
             .bb-tile-header {
-                font-family: $font-family-base;
-                font-size: 13px;
-                font-weight: 600;
+                @include bb-subsection-heading();
                 margin: 0;
                 padding: 7px $tile-header-tool-padding;
             }
