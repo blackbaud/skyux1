@@ -27,7 +27,7 @@ $bb-nav-selected-bg-color: #293846 !default;
 $bb-nav-item-padding: 16px !default;
 $bb-nav-selected-border-width: 4px !default;
 
-$bb-error-color: #ca2a2a !default;
+$bb-error-color: $sky-highlight-color-danger !default;
 $bb-selected-color: $sky-background-color-selected !default;
 
 $bb-focus-border-color: #1f90d8 !default;
@@ -95,7 +95,7 @@ $btn-primary-color: $bb-color-white;
 $btn-primary-bg: $bb-brand-alternate;
 $btn-primary-border: $bb-brand-alternate;
 
-$state-danger-text: $bb-error-color;
+$state-danger-text: $sky-color-red-70;
 
 //other colors
 $gray-lightest: $sky-color-gray-05;

@@ -5,6 +5,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    
+    .alert-content {
+      padding-top: $padding;
+      padding-bottom: $padding;
+    }
+    
   
     a {
       color: change-color($sky-text-color-default, $alpha: 0.8);
@@ -20,7 +28,7 @@
 .alert button {
     float: none;
     margin-left: auto;
-    margin-right: $margin;
+    margin-right: 0;
     width: 32px;
     height: 32px;
 }
