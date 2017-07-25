@@ -5674,7 +5674,7 @@
 
                                 if (getContextMenuItems) {
                                     colModel.push({
-                                        classes: 'bb-grid-dropdown-cell',
+                                        classes: 'bb-grid-dropdown-cell bb-grid-no-search',
                                         fixed: true,
                                         sortable: false,
                                         name: DROPDOWN_TOGGLE_COLUMN_NAME,
@@ -5701,7 +5701,6 @@
 
                                     totalColumnWidth = totalColumnWidth + DROPDOWN_TOGGLE_COLUMN_SIZE;
                                 }
-
 
                                 resetExtendedColumn();
 
