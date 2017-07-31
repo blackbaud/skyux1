@@ -1,0 +1,23 @@
+<div ng-controller="ReorderTableContextTestController as reorderTableCtrl">
+  <div style="max-width: 600px">
+    <bb-reorder-table bb-reorder-table-options="reorderTableCtrl.tableOptions"></bb-reorder-table>
+  </div>
+  
+  <div style="margin-top: 10px;">
+      <h4>Current order:</h4>
+
+      <ul ng-repeat="item in reorderTableCtrl.tableOptions.data">
+        <li>{{ item.order }}</li>
+      </ul>
+  </div>
+</div>
+
+<hr />
+
+<div ng-controller="ReorderTableFixedTestController as reorderTableCtrl">
+  <div style="max-width: 600px;">
+    <bb-reorder-table bb-reorder-table-options="reorderTableCtrl.tableOptions" bb-reorder-table-unsortable="reorderTableCtrl.tableUnsortable"></bb-reorder-table>
+  </div>
+  <br />
+  <span>Toggle Unsortable</span> &nbsp; <input type="checkbox" bb-check ng-model="reorderTableCtrl.tableUnsortable">
+</div>
