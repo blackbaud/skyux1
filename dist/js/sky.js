@@ -3299,7 +3299,6 @@
                     date = momentDate.toDate();
                 }
             }
-            
             return date;
         }
 
