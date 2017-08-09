@@ -43,6 +43,7 @@
             vm.options = vm.options || {};
             vm.sortable = !vm.unsortable && vm.options.data && vm.options.data.length > 1 && vm.options.fixed < vm.options.data.length;
             vm.options.fixed = vm.options.fixed || 0;
+            vm.menuStates = {};
 
             if (vm.options.getContextMenuItems) {
                 vm.contextMenuItems = {};
@@ -93,7 +94,7 @@
 
                 topIndex = vm.options.fixed;
 
-                containerEl.sortable("disable"); // don't allow sorting during animation
+                containerEl.sortable('disable'); // don't allow sorting during animation
 
                 toTheTopEl = $(containerEl.children()[index]);
                 toTheTopElOffset = toTheTopEl.position();
@@ -101,7 +102,7 @@
                 // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
                 animateCloneEl = toTheTopEl.clone();
                 animateCloneEl.addClass('bb-reorder-table-animate-element');
-                animateCloneEl.css({ top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px" });
+                animateCloneEl.css({ top: toTheTopElOffset.top + 'px', left: toTheTopElOffset.left + 'px', width: toTheTopEl.outerWidth() + 'px' });
 
                 containerEl.append(animateCloneEl);
 
@@ -113,7 +114,7 @@
                         toTheTopEl.removeClass('bb-reorder-table-row-placeholder');
 
                         animateCloneEl.remove();
-                        containerEl.sortable("enable");
+                        containerEl.sortable('enable');
 
                         $scope.$apply(function () {
                             // perform the swap moving the item to the top of the list
@@ -161,7 +162,13 @@
                 cellScopes[itemScope.$id] = null;
                 delete cellScopes[itemScope.$id];
             });
-            
+
+        }
+
+        function toggleDropdown($event, rowIndex) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            vm.menuStates[rowIndex] = !vm.menuStates[rowIndex];
         }
 
         bbAutonumericConfig = {
@@ -170,11 +177,13 @@
 
         vm.sorting = false;
         vm.tableId = $scope.$id;
+        vm.menuStates = {};
 
         vm.isFixed = isFixed;
         vm.setFixed = setFixed;
         vm.pushToTop = pushToTop;
         vm.cellLink = cellLink;
+        vm.toggleDropdown = toggleDropdown;
 
         //Setup jQuery sortable options for the items being sorted
         sortableOptions = {
@@ -220,6 +229,7 @@
 
                 $scope.$apply(function () {
                     vm.sorting = false;
+                    $scope.$emit('tableReordered');
                 });
 
                 originalSortItemIndex = null;
@@ -231,8 +241,6 @@
                 $timeout(function () {
                     containerEl.children().removeClass('bb-reorder-table-no-animate');
                 });
-
-                $scope.$emit("tableReordered");
             },
             update: function (e, ui) {
                 // grab the final index of the item being sorted before we cancel
@@ -272,7 +280,7 @@
 
                 currentSortItemIndex = newIndex;
             },
-            items: ">.bb-reorder-table-row"
+            items: '>.bb-reorder-table-row'
         };
 
         containerEl.sortable(sortableOptions);

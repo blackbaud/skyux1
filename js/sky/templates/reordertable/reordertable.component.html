@@ -25,9 +25,13 @@
                     </div>
                     <div ng-if="$ctrl.contextMenuItems" class="bb-reorder-table-col-context">
                         <div class="bb-reorder-table-cell">
-                            <bb-context-menu ng-if="$ctrl.contextMenuItems[item[$ctrl.options.index]].length > 0" bb-context-menu-label="Reorder Table Context">
-                                <bb-context-menu-item ng-repeat="action in $ctrl.contextMenuItems[item[$ctrl.options.index]]" bb-context-menu-action="action.cmd()">{{action.title}}</bb-context-menu-item>
-                            </bb-context-menu>
+                            <div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="$ctrl.contextMenuItems[item[$ctrl.options.index]].length > 0"
+                                is-open="$ctrl.menuStates[rowIndex]">
+                                <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="$ctrl.toggleDropdown($event, rowIndex)"></bb-context-menu-button>
+                                <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">
+                                    <bb-context-menu-item ng-repeat="action in $ctrl.contextMenuItems[item[$ctrl.options.index]]" bb-context-menu-action="action.cmd()">{{action.title}}</bb-context-menu-item>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div ng-if="column.show" ng-repeat="column in $ctrl.options.columns" class="bb-reorder-table-col" ng-style="{ 'width': column.width }"
