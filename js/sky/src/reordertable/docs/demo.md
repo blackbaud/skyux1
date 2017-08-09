@@ -18,6 +18,7 @@ than the reorder directive and requires an integer indexing property.
             - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data object, use the format `data.property_name`. 
             - `title` &mdash; *(Optional.)* Specifies the text to use in the column header in place of the column name. *(Default: `name`)*
             - `width` &mdash; *(Optional.)* Specifies the desired width of the column. The column width is not respected if the combined column widths are smaller than the table. *(Default: `auto`)*
+        - `data` &mdash; An array of objects that represents the rows in the table. Each row should have properties that correspond to the `jsonmap` properties within the `columns` property.
         - `fixed` &mdash; *(Optional.)* Specifies a number of rows at the top of the table which cannot be reordered. *(Default: `0`)*
         - `getContextMenuItems` &mdash; *(Optional.)* Specifies a function that allows table rows to create a context menu based on the function's return value. The function returns an array of objects that represents the items in the dropdown. The objects contain the following properties:
             - `id` &mdash; Specifies a unique string identifier for the dropdown item.
