@@ -49,6 +49,16 @@
                 'My Content' +
                 '</div>' +
                 '</bb-summary-actionbar-summary>' +
+                '</bb-summary-actionbar>',
+            actionbar4SecondaryHtml = '<bb-summary-actionbar>' +
+                '<bb-summary-actionbar-actions>' +
+                '</bb-summary-actionbar-actions>' +
+                '<bb-summary-actionbar-summary>' +
+                '</bb-summary-actionbar-summary>' +
+                '</bb-summary-actionbar>',
+            actionbar5SecondaryHtml = '<bb-summary-actionbar>' +
+                '<bb-summary-actionbar-actions>' +
+                '</bb-summary-actionbar-actions>' +
                 '</bb-summary-actionbar>';
 
         beforeEach(module(
@@ -209,6 +219,32 @@
             summaryEl = getSummary(actionbarEl);
             expect(summaryEl.find('.bb-test-summary')).toHaveText('My Content');
             expect(summaryEl.find('.bb-test-summary')).toBeVisible();
+
+            actionbarEl.remove();
+
+        });
+
+        it('should not show the summary section if there is no content', function () {
+            var summaryEl,
+                actionbarEl;
+
+            actionbarEl = initActionbar(actionbar4SecondaryHtml);
+
+            summaryEl = getSummary(actionbarEl);
+            expect(summaryEl).not.toBeVisible();
+
+            actionbarEl.remove();
+
+        });
+
+        it('should not show the summary section if it is not provided', function () {
+            var summaryEl,
+                actionbarEl;
+
+            actionbarEl = initActionbar(actionbar5SecondaryHtml);
+
+            summaryEl = getSummary(actionbarEl);
+            expect(summaryEl).not.toBeVisible();
 
             actionbarEl.remove();
 
