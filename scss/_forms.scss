@@ -41,7 +41,7 @@
     textarea {
         width: 100%;
         resize: none;
-        border: 1px solid $form-textarea-color;
+        @include bb-border(dark, top, right, bottom, left);
         font-size: $font-size-base;
         height: 10em;
         padding: 5px;
@@ -89,7 +89,7 @@ input.error {
 
 /* styles for validation helpers */
 .field-validation-error {
-    color: $invalid-field-color;
+    @include bb-text-error;
 }
 
 .field-validation-valid {
@@ -144,7 +144,7 @@ select.ng-invalid.submitted,
 .form-control {
   background-color: white;
   background-image: none;
-  border: 1px solid #e5e6e7;
+  @include bb-border(dark, top, right, bottom, left);
   border-radius: 1px;
   color: inherit;
   display: block;

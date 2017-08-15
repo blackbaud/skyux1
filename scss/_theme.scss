@@ -184,8 +184,8 @@ input:-moz-placeholder { /* Firefox 18- */
 label.error {
     margin-top: 0;
     margin-bottom: 2px;
-    color: $sky-color-red-70;
-    font-weight: normal;
+    @include bb-text-error;
+    font-weight: 400;
 }
 
 /* End Labels*/

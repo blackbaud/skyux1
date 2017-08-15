@@ -414,6 +414,13 @@
         .bb-vertical-tabset-group-active {
             font-weight: 600;
         }
+        a[disabled] {
+            cursor: not-allowed;
+
+        .vertical-tabset-group-heading {
+            color: $sky-color-gray-20;
+        }
+      }
     }
 
     .bb-vertical-tabset-group-chevron {
@@ -423,6 +430,8 @@
         position: absolute;
         right: 15px;
         transition: all 0.3s linear;
+      
+        @include bb-icon-button-borderless;
 
         &.bb-vertical-tabset-group-chevron-open {
             transform:rotate(180deg);

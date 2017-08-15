@@ -114,6 +114,25 @@
     color: $bb-text-deemphasized-color;
 }
 
+@mixin bb-text-error {
+    color: $sky-text-color-default;
+
+    &::before {
+    content: "\f071";
+	font-family: FontAwesome;
+	margin-right: 5px;
+	color: $sky-highlight-color-danger;
+    }
+}
+
+@mixin bb-icon-button-borderless {
+    color: $sky-color-gray-20;
+    
+    &:hover, &:focus {
+        color: darken($sky-color-gray-20, 10%);
+    }
+}
+
 @mixin bb-focus-indication {
     outline: thin dotted;
 
