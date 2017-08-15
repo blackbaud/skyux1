@@ -117,7 +117,7 @@ select, select.form-control {
 }
 
 .validation-summary-errors {
-    color: $invalid-field-color;
+    @include bb-text-error;
 }
 
 .validation-summary-valid {
