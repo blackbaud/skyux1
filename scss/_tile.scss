@@ -213,13 +213,13 @@ tiles behave within a column of tiles.*/
 }
 
 .bb-tile-grab-handle {
+    @include bb-icon-button-borderless;  
     cursor: move;
     cursor: -webkit-grab;
     cursor: -moz-grab;
     display: none;
     font-size: 15px;
     padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
-    @include bb-icon-button-borderless;
 }
 
 // Hide the grab handle unless the tile's in a sortable column.
