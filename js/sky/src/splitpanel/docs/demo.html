@@ -36,7 +36,7 @@
             </bb-listbuilder-toolbar>
             <bb-listbuilder-content>
                 <bb-splitpanel-container>
-                    <bb-splitpanel-list-panel max-width-in-percentage="70" min-width-in-percentage="20">
+                    <bb-splitpanel-list-panel max-width-in-percentage="70" min-width-in-percentage="20" default-width-in-percentage="30">
                         <bb-splitpanel-list-fixed-header>
                             <bb-splitpanel-list-fixed-header-item>
                                 <span>{{listCtrl.data.length}}</span> Transactions
@@ -47,17 +47,17 @@
                         </bb-splitpanel-list-fixed-header>
 
                         <bb-splitpanel-list ng-if="listCtrl.data.length > 0">
-                            <div class="bb-custom-content-item" bb-splitpanel-list-item ng-repeat="item in listCtrl.data" bb-listbuilder-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown()">
+                            <div class="bb-custom-content-item" bb-splitpanel-list-item ng-repeat="item in listCtrl.data" bb-splitpanel-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown()">
                                 <div style="margin-bottom: 10px">
                                     {{item.amount}}
                                     <span style="float: right" ng-if="item.status=='Recorded'"><i class="fa fa-check-circle fa-2x bb-SplitPanel-icon-sucess " aria-hidden="true"></i></span>
                                     <span style="float: right" ng-if="item.status=='Ignored'"><i class="fa fa-ban fa-2x" aria-hidden="true"></i></span>
                                 </div>
                                 <div style="margin-bottom: 10px">
-                                    {{item.joinDate | date}}
+                                    {{item.transDate | date}}
                                 </div>
                                 <div style="margin-bottom: 10px">
-                                    {{item.occupation}}
+                                    {{item.description}}
                                 </div>
                                 <div style="margin-bottom: 10px">
                                     {{item.merchant}}
@@ -82,10 +82,10 @@
                                 {{listCtrl.selectedItem.amount}}
                             </div>
                             <div>
-                                {{listCtrl.selectedItem.joinDate | date}}
+                                {{listCtrl.selectedItem.transDate | date}}
                             </div>
                             <div>
-                                {{listCtrl.selectedItem.occupation}}
+                                {{listCtrl.selectedItem.description}}
                             </div>
                             <div>
                                 {{listCtrl.selectedItem.merchant}}
@@ -123,7 +123,7 @@
                                 <div class="col-lg-12 col-xs-11">
                                     <div class="col-lg-6">
                                         <label class="control-label" for="id">Description</label>
-                                        <input class="form-control" name="Description" ng-model="listCtrl.selectedItem.occupation" type="text" />
+                                        <input class="form-control" name="Description" ng-model="listCtrl.selectedItem.description" type="text" />
                                     </div>
                                 </div>
                             </form>

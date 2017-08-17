@@ -15,7 +15,7 @@
         display:inline-block;
     }
 
-    .bb-custom-content {
+    .bb-splitpanel-custom-content {
         background-color: $form-background;
         border-right: 1px solid #f3f3f4;
         position: relative;
@@ -26,7 +26,7 @@
         max-width: 75%;
     }
 
-    .bb-custom-content-selectable-item {
+    .bb-splitpanel-content-selectable-item {
         cursor: pointer;
     }
 
@@ -118,7 +118,7 @@
             display: block;
         }
 
-        .bb-custom-content {
+        .bb-splitpanel-custom-content {
             width: 100% !important;
             max-width: 100% !important;
             background-color: $form-background;

@@ -11,9 +11,9 @@
                 restrict: 'A',
                 controller: ['$scope', function ($scope) {
                     $scope.selectItem = function () {
-                        var elem = angular.element('.bb-custom-content');
+                        var elem = angular.element('.bb-splitpanel-custom-content');
                         $scope.$parent.item.$index = $scope.$parent.$index;
-                        $scope.bbListbuilderContentGetPanelData({ arg: $scope.$parent.item });
+                        $scope.bbSplitpanelContentGetPanelData({ arg: $scope.$parent.item });
                         if (elem) {
                             elem.addClass('bb-splitpanel-hidden');
                         }
@@ -33,7 +33,7 @@
                 }],
                 scope: {
                     bbSplitpanelItemIsActive: '=?',
-                    bbListbuilderContentGetPanelData: '&?'
+                    bbSplitpanelContentGetPanelData: '&?'
                 }
             };
         });

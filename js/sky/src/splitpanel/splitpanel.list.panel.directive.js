@@ -10,13 +10,14 @@
                 transclude: true,
                 controller: ['$window', function ($window) {
                     $($window).resize(function () {
-                        $('#workspace').width(($(".split-pattern-container").width() - 20) - $("#splitpanel_list").width());
+                        $('.bb-splitpanel-workspace').width(($(".split-pattern-container").width() - 20) - $(".bb-splitpanel-list").width());
                     });
-                    $("#splitpanel_list").resizable();
+                    $(".bb-splitpanel-list").resizable();
                 }],
                 scope: {
                     maxWidthInPercentage: '=?',
-                    minWidthInPercentage: '=?'
+                    minWidthInPercentage: '=?',
+                    defaultWidthInPercentage: '=?'
                 }
             };
         });

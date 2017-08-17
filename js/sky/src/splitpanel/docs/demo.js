@@ -1,4 +1,3 @@
-/*global angular */
 (function () {
     'use strict';
 
@@ -88,49 +87,49 @@
             dataSet = [
             {
                 amount: '$25.00',
-                occupation: 'Amazon market palce amz.com',
-                joinDate: new Date('09/14/2016'),
+                description: 'Amazon market palce amz.com',
+                transDate: new Date('09/14/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
                 recorded: false
             },
             {
                 amount: '$250.00',
-                occupation: 'Walt Disney world 0914',
-                joinDate: new Date('2/23/2016'),
+                description: 'Walt Disney world 0914',
+                transDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
                 recorded: false
             },
             {
                 amount: '- $25.00',
-                occupation: 'Amazon',
-                joinDate: new Date('2/23/2016'),
+                description: 'Amazon',
+                transDate: new Date('2/23/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: true,
                 recorded: false
             },
             {
                 amount: '$15.00',
-                occupation: 'Wallmart',
-                joinDate: new Date('2/23/2016'),
+                description: 'Walmart',
+                transDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: false,
                 recorded: false
             },
             {
                 amount: '$100.00',
-                occupation: 'Walt Disney world 0914',
+                description: 'Walt Disney world 0914',
                 merchant: 'Nicole Guersey (Visa1234)',
-                joinDate: new Date('11/7/1999'),
+                transDate: new Date('11/7/1999'),
                 isPersonal: false,
                 status: "Recorded",
                 recorded: true
             },
             {
                 amount: '$25.00',
-                occupation: 'Amazon market palce amz.com',
-                joinDate: new Date('09/14/2016'),
+                description: 'Amazon market palce amz.com',
+                transDate: new Date('09/14/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
                 status: "Recorded",
@@ -138,8 +137,8 @@
             },
             {
                 amount: '$250.00',
-                occupation: 'Walt Disney world 0914',
-                joinDate: new Date('2/23/2016'),
+                description: 'Walt Disney world 0914',
+                transDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
                 status: "Recorded",
@@ -147,25 +146,25 @@
             },
             {
                 amount: '- $25.00',
-                occupation: 'Amazon',
-                joinDate: new Date('2/23/2016'),
+                description: 'Amazon',
+                transDate: new Date('2/23/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
                 recorded: false
             },
             {
                 amount: '$15.00',
-                occupation: 'Wallmart',
-                joinDate: new Date('2/23/2016'),
+                description: 'Wallmart',
+                transDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: false,
                 recorded: false
             },
             {
                 amount: '$100.00',
-                occupation: 'Walt Disney world 0914',
+                description: 'Walt Disney world 0914',
                 merchant: 'Nicole Guersey (Visa1234)',
-                joinDate: new Date('11/7/1999'),
+                transDate: new Date('11/7/1999'),
                 isPersonal: true,
                 recorded: false
             }
@@ -188,7 +187,7 @@
                 filteredData = array.filter(function (item) {
                     var property;
                     for (property in item) {
-                        if (item.hasOwnProperty(property) && (property === 'amount' || property === 'occupation')) {
+                        if (item.hasOwnProperty(property) && (property === 'amount' || property === 'description')) {
                             if (item[property].indexOf(searchText) > -1) {
                                 return true;
                             }
@@ -211,7 +210,7 @@
                     item = filters[i];
                     if (item.name === 'tenYears') {
                         newData = newData.filter(function (filterObj) {
-                            return new Date().getFullYear() - filterObj.joinDate.getFullYear() >= 10;
+                            return new Date().getFullYear() - filterObj.transDate.getFullYear() >= 10;
                         });
                     }
                     if (item.name === 'showUnrecorded') {
@@ -308,7 +307,6 @@
             applySearchFilterSort(self.searchText, self.recordedFilters, sortProperty, sortDescending, maxRecordsShown);
 
 
-            //displaying panel data for first item
             selectFirstItem();
 
             self.updatedDate = getFormattedDate(new Date());
@@ -330,7 +328,6 @@
                     });
                 }
             } else {
-                //move the selectedItem to next in the list
                 if (!self.showUnrecord) {
                     if (self.data.length !== (self.selectedItem.$index + 1)) {
                         newIndex = self.selectedItem.$index + 1;
@@ -371,9 +368,7 @@
 
         //this is used to get panel data on selection of item
         function getPaneldata(p) {
-            //get data from database for particualar item
 
-            //hiding page header in case of mobile 
             self.isDetailScreen = true;
 
             self.selectedItem = p;
@@ -409,8 +404,8 @@
             self.splitpanelNavigator.setDirtyFormDefault();
         }
 
+        //This method is used to download transaction and update refresh date
         function downloadTransactions() {
-            //download transaction and update date
             self.updatedDate = getFormattedDate(new Date());
             alert('Transactions are downloaded')
 
@@ -419,7 +414,6 @@
         function onlyShowRecorded() {
 
             selectFirstItem();
-            //TODO: loadData with filter of unrecorded transcation
 
             self.recordedFilters = [];
             if (self.allAppliedFilters) {
@@ -519,25 +513,25 @@
             {
                 id: 3,
                 label: 'Date joined (newest first)',
-                name: 'joinDate',
+                name: 'transDate',
                 descending: true
             },
             {
                 id: 4,
                 label: 'Date joined (oldest first)',
-                name: 'joinDate',
+                name: 'transDate',
                 descending: false
             },
             {
                 id: 5,
-                label: 'Occupation (A - Z)',
-                name: 'occupation',
+                label: 'description (A - Z)',
+                name: 'description',
                 descending: false
             },
             {
                 id: 6,
-                label: 'Occupation (Z - A)',
-                name: 'occupation',
+                label: 'description (Z - A)',
+                name: 'description',
                 descending: true
             }
         ];

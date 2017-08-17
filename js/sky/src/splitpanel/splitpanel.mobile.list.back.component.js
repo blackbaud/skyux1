@@ -10,7 +10,7 @@
                 restrict: 'E',
                 controller: ['$scope', function ($scope) {
                     $scope.back = function () {
-                        var elem = angular.element('.bb-custom-content');
+                        var elem = angular.element('.bb-splitpanel-custom-content');
                         if (elem) {
                             elem.removeClass('bb-splitpanel-hidden');
                         }

@@ -19,7 +19,7 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 
 	- `bb-splitpanel-container ` &mdash; Container for splitpanel  
 
-		- `bb-splitpanel-list-panel ` &mdash; Draggable container for splitpanel list section having `max-width-in-percentage ` and `min-width-in-percentage ` to set maximum and minimum width of this panel.
+		- `bb-splitpanel-list-panel ` &mdash; Draggable container for splitpanel list section having `default-width-in-percentage `, `max-width-in-percentage ` and `min-width-in-percentage ` to set maximum and minimum width of this panel.
 		
 			- `bb-splitpanel-list-fixed-header ` &mdash; Placeholder for fixed header in left Panel.
 				
@@ -29,6 +29,12 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 	 
 			- `bb-splitpanel-list ` &mdash; Placeholder for list. 
 			
+			- `bb-splitpanel-list-item ` &mdash; Placeholder for list item. 
+			
+				- `bb-splitpanel-content-get-panel-data ` &mdash; Callback to get data to bind the list. 
+				
+				- `bb-splitpanel-item-is-active ` &mdash; pass your selected item object. 
+				
 			- `bb-splitpanel-empty-list ` &mdash; Tempalate for message when list is empty. 
 			
 `bb-splitpanel-workspace  ` &mdash; Container for workspace panel.  
@@ -72,8 +78,6 @@ Existing sky component [Listbuilder](../listbuilder) is used to show list in the
 `bbCheckDirtyForm.checkDirtyForm` &mdash; Check the form and prompt with confirm dialog with options save, doNotSave and cancel.
 
 `bbCheckDirtyForm.setDirtyFormDefault` &mdash; Set form as pristine.
-
-`bbCheckDirtyForm.invokeMethodWithParameters` &mdash; Invoke the passed method with parameter.
 
 
 
