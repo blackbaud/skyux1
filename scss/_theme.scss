@@ -103,20 +103,23 @@ a.alert-link:hover, a.alert-link:focus {
 
 /* Placeholder Text */
 ::-webkit-input-placeholder {
-    @include bb-deemphasized();
+    @include bb-deemphasized;
+    opacity: 1;
 }
 
 ::-moz-placeholder { /* Firefox 19+ */
-    @include bb-deemphasized();
-    opacity: 1; // See https://github.com/twbs/bootstrap/pull/11526
+    @include bb-deemphasized;
+    opacity: 1;
 }
 
 input:-moz-placeholder { /* Firefox 18- */
-    @include bb-deemphasized();
+    @include bb-deemphasized;
+    opacity: 1;
 }
 
 :-ms-input-placeholder { /* IE */
-    @include bb-deemphasized();
+    @include bb-deemphasized;
+    opacity: 1;
 }
 /* End Placeholder Text */
 
