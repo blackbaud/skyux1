@@ -127,6 +127,7 @@
 
 @mixin bb-icon-button-borderless {
     color: $sky-text-color-icon-borderless;
+    cursor: pointer;
     
     &:hover, &:focus {
         color: darken($sky-text-color-icon-borderless, 20%);
