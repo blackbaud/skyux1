@@ -296,7 +296,8 @@
         }
 
         > .panel-heading {
-            @include bb-subsection-heading();
+            @include bb-emphasized;
+            font-weight: 400;
             @include bb-border('light', 'bottom');
             color: $sky-text-color-default;
             background-color: $bb-color-white;
@@ -399,6 +400,21 @@
     .bb-vertical-tabset-group-heading {
         padding: 10px 15px;
     }
+  
+    .bb-vertical-tabset-group-chevron {
+        @extend .fa;
+        @extend .fa-chevron-down;
+
+        position: absolute;
+        right: 15px;
+        transition: all 0.3s linear;
+      
+        @include bb-icon-button-borderless;
+
+        &.bb-vertical-tabset-group-chevron-open {
+            transform:rotate(180deg);
+        }
+    }
 
     .bb-vertical-tabset-group {
         border-width: 0;
@@ -421,20 +437,5 @@
             color: $sky-color-gray-20;
         }
       }
-    }
-
-    .bb-vertical-tabset-group-chevron {
-        @extend .fa;
-        @extend .fa-chevron-down;
-
-        position: absolute;
-        right: 15px;
-        transition: all 0.3s linear;
-      
-        @include bb-icon-button-borderless;
-
-        &.bb-vertical-tabset-group-chevron-open {
-            transform:rotate(180deg);
-        }
     }
 }
