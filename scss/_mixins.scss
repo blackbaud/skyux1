@@ -126,10 +126,10 @@
 }
 
 @mixin bb-icon-button-borderless {
-    color: $sky-color-gray-20;
+    color: $sky-text-color-icon-borderless;
     
     &:hover, &:focus {
-        color: darken($sky-color-gray-20, 10%);
+        color: darken($sky-text-color-icon-borderless, 20%);
     }
 }
 
