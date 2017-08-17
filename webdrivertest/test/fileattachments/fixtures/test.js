@@ -23,6 +23,12 @@
             size: 50,
             type: 'pdf'
         };
+
+        self.itemLong = {
+            name: 'rrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaalllllllllllllllllllyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyylllllllllllllong.jpg',
+            size: 50,
+            type: 'pdf'
+        };
     }
     
     angular.module('screenshots', ['sky'])

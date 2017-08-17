@@ -9,6 +9,7 @@
         [
             'sky.fileattachments.filedrop',
             'sky.fileattachments.fileitem',
+            'sky.fileattachments.filesingle',
             'sky.fileattachments.filesize'
         ]
     );

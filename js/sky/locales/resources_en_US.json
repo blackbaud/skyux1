@@ -487,6 +487,10 @@
         "_description": "",
         "message": "{0} GB"
     },
+    "file_upload_choose" : {
+        "_description": "Text for choosing a file",
+        "message": "Choose file"
+    },
     "file_upload_drag_or_click" : {
         "_description": "Label for file drop",
         "message": "Drag a file here or click to browse"
@@ -522,6 +526,18 @@
     "file_upload_link_input": {
         "_description": "Label for input to upload file",
         "message": "Add a link to a file"
+    },
+    "file_upload_no_file": {
+        "_description": "Text indicating there is no file",
+        "message": "No file chosen"
+    },
+    "file_upload_remove": {
+        "_description": "Label for removing the file",
+        "message": "Remove"
+    },
+    "file_upload_replace": {
+        "_description": "Text for replacing the file",
+        "message": "Replace file"
     },
     "file_item_delete": {
         "_description": "Label for button that deletes a file",

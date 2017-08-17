@@ -25,6 +25,21 @@
                     <input id="filetag-{{$index}}" type="text" class="form-control" />
                 </div>
             </div>
+            <form name="singleFileForm">
+                <label for="singleFileId" class="required">Single File Label</label>
+                <div 
+                    bb-file-single
+                    bb-file-single-max-size="5000000"
+                    bb-file-single-required="true"
+                    bb-file-single-accept="'image/png'"
+                    bb-file-single-change="fileAttachmentDemo.fileChange(file, rejectedFiles)"
+                    bb-file-single-validate-fn="fileAttachmentDemo.fileValidate(file)" 
+                    bb-file-single-link-action="fileAttachmentDemo.fileLinkAction()"
+                    bb-file-single-item="fileAttachmentDemo.singleFile"
+                    bb-file-single-error="singleFileForm.$submitted && singleFileForm.$error.required">
+                </div>
+                <button class="btn btn-primary" type="submit">Single Submit</button>
+            </form>
         </div>
     </div>
 </div>
