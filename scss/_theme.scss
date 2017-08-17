@@ -103,20 +103,20 @@ a.alert-link:hover, a.alert-link:focus {
 
 /* Placeholder Text */
 ::-webkit-input-placeholder {
-    font-style: italic;
+    @include bb-deemphasized();
 }
 
 ::-moz-placeholder { /* Firefox 19+ */
-    font-style: italic;
+    @include bb-deemphasized();
     opacity: 1; // See https://github.com/twbs/bootstrap/pull/11526
 }
 
 input:-moz-placeholder { /* Firefox 18- */
-    font-style: italic;
+    @include bb-deemphasized();
 }
 
 :-ms-input-placeholder { /* IE */
-    font-style: italic;
+    @include bb-deemphasized();
 }
 /* End Placeholder Text */
 
