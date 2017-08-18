@@ -21,7 +21,7 @@ The `bb-file-item` directive displays summary information about files that users
     - `bb-file-drop-allow-dir` &mdash; *(Optional.)* Indicates whether users can select a directory when they attach files. *(Default: `true`)*
     - `bb-file-drop-min-size` &mdash; *(Optional.)* Specifies the minimum size in bytes for valid files.
     - `bb-file-drop-max-size` &mdash; *(Optional.)* Specifies the maximum size in bytes for valid files.
-    - `bb-file-drop-change` &mdash; Specifies a function to be be called when users attach files. The function accepts two parameters:
+    - `bb-file-drop-change` &mdash; Specifies a function to be called when users attach files. The function accepts two parameters:
         - `files` &mdash; An array of valid files that a user attaches. Each item is a [JavaScript File object](https://developer.mozilla.org/en-US/docs/Web/API/File).
         - `rejectedFiles` &mdash; An array of invalid files that do not meet file type or size requirements.
     - `bb-file-drop-link` &mdash; *(Optional.)* Indicates whether to display an option for users to provide hyperlinks to files on the web. To display this hyperlink option, you include this attribute with no value. 
