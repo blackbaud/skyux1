@@ -199,7 +199,9 @@
                     $scope.fitToWindow();
                 };
 
-                ctrl.dismiss = $scope.$dismiss;
+                ctrl.dismiss = function(arg) {
+                    $scope.$dismiss(arg);
+                };
             }
 
             ctrl.$onInit = onInit;
