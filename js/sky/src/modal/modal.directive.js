@@ -199,7 +199,7 @@
                     $scope.fitToWindow();
                 };
 
-                ctrl.dismiss = function(arg) {
+                ctrl.dismiss = function (arg) {
                     $scope.$dismiss(arg);
                 };
             }
