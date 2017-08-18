@@ -198,6 +198,8 @@
                 ctrl.fitToWindow = function () {
                     $scope.fitToWindow();
                 };
+
+                ctrl.dismiss = $scope.$dismiss;
             }
 
             ctrl.$onInit = onInit;
