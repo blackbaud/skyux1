@@ -35,7 +35,7 @@ The `bb-file-item` directive displays summary information about files that users
 
 ### File single settings ###
 - `bb-file-single` &mdash; Provides an element for users to click to select a single file from local drives or to use as a drop zone to drag and drop a file.
-    - `bb-file-single-item` &mdash; Specifies a [JavaScript File object](https://developer.mozilla.org/en-US/docs/Web/API/File) that will be bond as the single item. 
+    - `bb-file-single-item` &mdash; Specifies a [JavaScript File object](https://developer.mozilla.org/en-US/docs/Web/API/File) that will be bound as the single item. 
     - `bb-file-single-accept` &mdash; *(Optional.)* Provides a comma-delimited string literal of MIME types that users can drop or select (`bb-file-single-accept="fileAttachmentDemo.validFileTypes"` or `bb-file-single-accept="'image/png'"`). By default, any type of file is allowed.
     - `bb-file-single-min-size` &mdash; *(Optional.)* Specifies the minimum size in bytes for valid files.
     - `bb-file-single-max-size` &mdash; *(Optional.)* Specifies the maximum size in bytes for valid files.
