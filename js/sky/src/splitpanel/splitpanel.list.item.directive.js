@@ -11,9 +11,12 @@
                 restrict: 'A',
                 controller: ['$scope', function ($scope) {
                     $scope.selectItem = function () {
+                        if (!$scope.bbSplitpanelItemIsActive) {
+                            $scope.$parent.item.$index = $scope.$parent.$index;
+                            $scope.bbSplitpanelContentGetPanelData({ arg: $scope.$parent.item });
+                        }
+
                         var elem = angular.element('.bb-splitpanel-custom-content');
-                        $scope.$parent.item.$index = $scope.$parent.$index;
-                        $scope.bbSplitpanelContentGetPanelData({ arg: $scope.$parent.item });
                         if (elem) {
                             elem.addClass('bb-splitpanel-hidden');
                         }
@@ -25,7 +28,7 @@
                         if (elem) {
                             elem.addClass('bb-splitpanel-hidden');
                         }
-                        elem = angular.element('.split-panel-workspace');
+                        elem = angular.element('.bb-splitpanel-workspace');
                         if (elem) {
                             elem.removeClass('bb-splitpanel-hidden');
                         }

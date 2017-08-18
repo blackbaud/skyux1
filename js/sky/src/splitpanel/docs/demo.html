@@ -54,7 +54,7 @@
                                     <span style="float: right" ng-if="item.status=='Ignored'"><i class="fa fa-ban fa-2x" aria-hidden="true"></i></span>
                                 </div>
                                 <div style="margin-bottom: 10px">
-                                    {{item.transDate | date}}
+                                    {{item.transactionDate | date}}
                                 </div>
                                 <div style="margin-bottom: 10px">
                                     {{item.description}}
@@ -82,7 +82,7 @@
                                 {{listCtrl.selectedItem.amount}}
                             </div>
                             <div>
-                                {{listCtrl.selectedItem.transDate | date}}
+                                {{listCtrl.selectedItem.transactionDate | date}}
                             </div>
                             <div>
                                 {{listCtrl.selectedItem.description}}
@@ -150,7 +150,7 @@
                 <form>
                     <label style="margin-top: 15px;">
                         <input type="checkbox" bb-check ng-model="filterCtrl.filters.tenYears" />
-                        Show only members with 10 years experience
+                        Show only transactions older than 10 years experience
                     </label>
                 </form>
             </div>
@@ -166,14 +166,12 @@
             <bb-modal-header>Save changes?</bb-modal-header>
             <div bb-modal-body>
                 <form>
-                    Do you want to save changes to this transaction? Your  changes will be lost if  you  don't save them.
-
+                    Are you sure you want to leave? Any information entered won't be saved.
                 </form>
             </div>
             <bb-modal-footer>
-                <bb-modal-footer-button-primary ng-click="ctrl.save()">Save</bb-modal-footer-button-primary>
-                <bb-modal-footer-button ng-click="ctrl.doNotSave()">Don't save</bb-modal-footer-button>
-                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+                <bb-modal-footer-button-primary ng-click="ctrl.save()">Yes</bb-modal-footer-button-primary>
+                <bb-modal-footer-button ng-click="ctrl.doNotSave()">No</bb-modal-footer-button>
             </bb-modal-footer>
         </div>
     </bb-modal>

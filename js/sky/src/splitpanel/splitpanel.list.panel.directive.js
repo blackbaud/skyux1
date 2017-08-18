@@ -10,7 +10,7 @@
                 transclude: true,
                 controller: ['$window', function ($window) {
                     $($window).resize(function () {
-                        $('.bb-splitpanel-workspace').width(($(".split-pattern-container").width() - 20) - $(".bb-splitpanel-list").width());
+                        $('.bb-splitpanel-workspace').width(($(".bb-splitpanel-container").width() - 20) - $(".bb-splitpanel-list").width());
                     });
                     $(".bb-splitpanel-list").resizable();
                 }],

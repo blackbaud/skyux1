@@ -15,7 +15,7 @@
             var result = [];
 
             if (filters.tenYears) {
-                result.push({ name: 'tenYears', value: true, label: 'members with ten years' });
+                result.push({ name: 'tenYears', value: true, label: 'transaction older than ten years' });
             }
 
             if (filters.showUnrecorded) {
@@ -88,7 +88,7 @@
             {
                 amount: '$25.00',
                 description: 'Amazon market palce amz.com',
-                transDate: new Date('09/14/2016'),
+                transactionDate: new Date('09/14/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
                 recorded: false
@@ -96,7 +96,7 @@
             {
                 amount: '$250.00',
                 description: 'Walt Disney world 0914',
-                transDate: new Date('2/23/2016'),
+                transactionDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
                 recorded: false
@@ -104,7 +104,7 @@
             {
                 amount: '- $25.00',
                 description: 'Amazon',
-                transDate: new Date('2/23/2016'),
+                transactionDate: new Date('2/23/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: true,
                 recorded: false
@@ -112,7 +112,7 @@
             {
                 amount: '$15.00',
                 description: 'Walmart',
-                transDate: new Date('2/23/2016'),
+                transactionDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: false,
                 recorded: false
@@ -121,7 +121,7 @@
                 amount: '$100.00',
                 description: 'Walt Disney world 0914',
                 merchant: 'Nicole Guersey (Visa1234)',
-                transDate: new Date('11/7/1999'),
+                transactionDate: new Date('11/7/1999'),
                 isPersonal: false,
                 status: "Recorded",
                 recorded: true
@@ -129,7 +129,7 @@
             {
                 amount: '$25.00',
                 description: 'Amazon market palce amz.com',
-                transDate: new Date('09/14/2016'),
+                transactionDate: new Date('09/14/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
                 status: "Recorded",
@@ -138,7 +138,7 @@
             {
                 amount: '$250.00',
                 description: 'Walt Disney world 0914',
-                transDate: new Date('2/23/2016'),
+                transactionDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: true,
                 status: "Recorded",
@@ -147,7 +147,7 @@
             {
                 amount: '- $25.00',
                 description: 'Amazon',
-                transDate: new Date('2/23/2016'),
+                transactionDate: new Date('2/23/2016'),
                 merchant: 'Nicole Guersey (Visa1234)',
                 isPersonal: false,
                 recorded: false
@@ -155,7 +155,7 @@
             {
                 amount: '$15.00',
                 description: 'Wallmart',
-                transDate: new Date('2/23/2016'),
+                transactionDate: new Date('2/23/2016'),
                 merchant: 'David johnson (Visa3333)',
                 isPersonal: false,
                 recorded: false
@@ -164,7 +164,7 @@
                 amount: '$100.00',
                 description: 'Walt Disney world 0914',
                 merchant: 'Nicole Guersey (Visa1234)',
-                transDate: new Date('11/7/1999'),
+                transactionDate: new Date('11/7/1999'),
                 isPersonal: true,
                 recorded: false
             }
@@ -210,7 +210,7 @@
                     item = filters[i];
                     if (item.name === 'tenYears') {
                         newData = newData.filter(function (filterObj) {
-                            return new Date().getFullYear() - filterObj.transDate.getFullYear() >= 10;
+                            return new Date().getFullYear() - filterObj.transactionDate.getFullYear() >= 10;
                         });
                     }
                     if (item.name === 'showUnrecorded') {
@@ -322,8 +322,8 @@
 
                     //Whenever first item is selected its imperative that we make the item visible in the viewport
                     $timeout(function () {
-                        if ($(".split-panel-list-container").length > 0) {
-                            $(".split-panel-list-container")[0].scrollTop = 0;
+                        if ($(".bb-splitpanel-list-container").length > 0) {
+                            $(".bb-splitpanel-list-container")[0].scrollTop = 0;
                         }
                     });
                 }
@@ -343,7 +343,7 @@
                 }
                 if (newIndex === 0) {
                     $timeout(function () {
-                        $(".split-panel-list-container")[0].scrollTop = 0;
+                        $(".bb-splitpanel-list-container")[0].scrollTop = 0;
                     }, 4000);
                 }
                 self.selectedItem = self.data[newIndex];
@@ -394,13 +394,10 @@
 
         function save(func, param) {
 
-            alert("data saved");
-
             self.splitpanelNavigator.setDirtyFormDefault();
         }
 
         function doNotSave(func, param) {
-            alert("data not saved");
             self.splitpanelNavigator.setDirtyFormDefault();
         }
 
@@ -512,14 +509,14 @@
             },
             {
                 id: 3,
-                label: 'Date joined (newest first)',
-                name: 'transDate',
+                label: 'Transaction date  (newest first)',
+                name: 'transactionDate',
                 descending: true
             },
             {
                 id: 4,
-                label: 'Date joined (oldest first)',
-                name: 'transDate',
+                label: 'Transaction date (oldest first)',
+                name: 'transactionDate',
                 descending: false
             },
             {

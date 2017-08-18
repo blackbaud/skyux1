@@ -8,11 +8,11 @@
         padding: $padding-double;
     }
 
-    .split-pattern-container {
+    .bb-splitpanel-container {
         -ms-box-orient: horizontal;
         height: 100%;
         width: 100%;
-        display:inline-block;
+        display: inline-block;
     }
 
     .bb-splitpanel-custom-content {
@@ -30,7 +30,7 @@
         cursor: pointer;
     }
 
-    .split-panel-workspace {
+    .bb-splitpanel-workspace {
         border-left: 9px solid #f3f3f4;
         border-right: 9px solid #f3f3f4;
         background-color: $form-background;
@@ -40,13 +40,13 @@
         width: 70%;
     }
 
-    .split-panel-workspace-container {
+    .bb-splitpanel-workspace-container {
         height: calc(100vh - 180px);
         overflow-y: auto;
         padding: $base-padding 0px $base-padding $padding-double;
     }
 
-    .selectedItem {
+    .bb-splitpanel-selectedItem {
         border-left: $bb-color-blue 7px solid;
         padding-left: 13px;
         background-color: #f3f3f4;
@@ -60,22 +60,22 @@
         bottom: 0;
     }
 
-    .fixedHeader {
+    .bb-splitpanel-fixed-header {
         border-bottom: 1px solid $form-border-color;
         padding-bottom: 6px;
         padding-left: 17px;
     }
 
-    .split-panel-list-container {
+    .bb-splitpanel-list-container {
         height: calc(100vh - 191px);
         overflow-y: auto;
     }
 
-    .bb-split-panel-width-100 {
+    .bb-splitpanel-width-100 {
         width: 100%;
     }
 
-    .align-center {
+    .bb-splitpanel-align-center {
         vertical-align: middle;
         text-align: center;
         line-height: 73vh;
@@ -104,7 +104,7 @@
     }
 
     @media (max-width: $screen-xs-max) {
-        .selectedItem {
+        .bb-splitpanel-selectedItem {
             border-left: 0px;
             padding-left: $padding-double;
             background-color: $form-background;
@@ -131,19 +131,19 @@
         }
 
 
-        .split-panel-workspace {
+        .bb-splitpanel-workspace {
             background-color: $form-background;
             border: none;
             width: 100% !important;
         }
 
-        .selected-item-xs {
+        .bb-splitpanel-selected-item-xs {
             border-left: $bb-color-blue 7px solid;
             padding-left: 13px;
             background-color: #f3f3f4;
         }
 
-        .navigation-panel {
+        .bb-splitpanel-navigation-panel {
             float: left;
             font: larger bold;
         }
@@ -151,13 +151,22 @@
         .bb-custom-content-item-xs {
             padding: 7px 13px;
         }
-        .bb-splitpanel-next-navigation{
-            float:right;
-            margin-left:3px;
+
+        .bb-splitpanel-next-navigation {
+            float: right;
+            margin-left: 3px;
         }
-        .bb-splitpanel-previous-navigation{
-            float:right;
-            margin-right:3px;
+
+        .bb-splitpanel-previous-navigation {
+            float: right;
+            margin-right: 3px;
+        }
+
+        .bb-splitpanel-workspace-header {
+            min-height: 45px;
+            background: #fff;
+            display: flex;
+            align-items: center;
         }
     }
 }

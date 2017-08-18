@@ -23,7 +23,7 @@
                         if (elem) {
                             elem.removeClass('bb-splitpanel-hidden');
                         }
-                        elem = angular.element('.split-panel-workspace');
+                        elem = angular.element('.bb-splitpanel-workspace');
                         if (elem) {
                             elem.addClass('bb-splitpanel-hidden');
                         }

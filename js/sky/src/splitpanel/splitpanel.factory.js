@@ -13,7 +13,12 @@
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
                         bbModal.open({
                             controller: options.modalController,
-                            templateUrl: options.modalTemplate
+                            templateUrl: options.modalTemplate,
+                            resolve: {
+                                params: function () {
+                                    return null;
+                                }
+                            }
                         })
                         .result.then(function (modalResult) {
                             if (modalResult.result) {
