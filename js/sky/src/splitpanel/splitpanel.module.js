@@ -21,7 +21,6 @@
             'sky.splitpanel.mobile.list.back.directive',
             'sky.splitpanel.mobile.workspace.header.component',
             'sky.splitpanel.list.panel.directive',
-            'sky.splitpanel.workspace.footer.component',
-            'sky.splitpanel.bbCheckDirtyForm.factory'
+            'sky.splitpanel.workspace.footer.component'
         ]);
 }());

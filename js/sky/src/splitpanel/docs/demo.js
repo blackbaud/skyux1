@@ -398,7 +398,6 @@
         }
 
         function doNotSave(func, param) {
-            self.splitpanelNavigator.setDirtyFormDefault();
         }
 
         //This method is used to download transaction and update refresh date

@@ -112,7 +112,7 @@
 
     bbCheckDirtyForm.$inject = ['$state', '$q'];
 
-    angular.module('sky.splitpanel.bbCheckDirtyForm.factory', ['sky.modal'])
+    angular.module('sky.bbcheckdirtyform', ['sky.modal'])
         .factory('bbCheckDirtyForm', bbCheckDirtyForm);
 
 }());

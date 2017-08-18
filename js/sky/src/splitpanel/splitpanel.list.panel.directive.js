@@ -9,10 +9,17 @@
                 replace: true,
                 transclude: true,
                 controller: ['$window', function ($window) {
-                    $($window).resize(function () {
+                    $($window).on('resize.splitPanelListPanel', function () {
                         $('.bb-splitpanel-workspace').width(($(".bb-splitpanel-container").width() - 20) - $(".bb-splitpanel-list").width());
                     });
+
                     $(".bb-splitpanel-list").resizable();
+
+                    this.$onDestroy = function () {
+                        $($window).off('resize.splitPanelListPanel', function () {
+                        });
+                    };
+
                 }],
                 scope: {
                     maxWidthInPercentage: '=?',

@@ -14,6 +14,7 @@
         'sky.carousel',
         'sky.check',
         'sky.checklist',
+        'sky.bbcheckdirtyform',
         'sky.chevron',
         'sky.contextmenu',
         'sky.data',
