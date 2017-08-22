@@ -43,6 +43,7 @@
         'sky.phonefield',
         'sky.popover',
         'sky.reorder',
+        'sky.reordertable',
         'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',

@@ -51,5 +51,4 @@
                                                                                                 'webdriver-screenshots-screen', 
                                                                                                 'webdriver-screenshots-diffs');
     exports.config = shared;
-
 }());
