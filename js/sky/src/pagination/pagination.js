@@ -5,7 +5,7 @@
 
     var evtNsPos = 0;
 
-    angular.module('sky.pagination', ['ui.bootstrap.pagination', 'sky.pagination.label'])
+    angular.module('sky.pagination', ['ui.bootstrap.pagination', 'sky.pagination.label', 'sky.pagination.uibpagination'])
         .config(['uibPaginationConfig', function (paginationConfig) {
             paginationConfig.maxSize = 4;
             paginationConfig.itemsPerPage = 5;
@@ -53,10 +53,10 @@
                 },
                 compile: function (el, attrs) {
                     var pagedData = attrs.bbPagination;
-
+                    
                     /*jslint white: true */
                     el.html(
-                        '<uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></uib-pagination>' +
+                        '<ul uib-pagination ng-show="' + pagedData + '.totalItems > ' + pagedData + '.itemsPerPage" total-items="' + pagedData + '.totalItems" ng-model="' + pagedData + '.currentPage" ng-change="' + pagedData + '.pageChanged()" items-per-page="' + pagedData + '.itemsPerPage"></ul>' +
                         '<div class="clearfix"></div>'
                     );
                     /*jslint white: false */

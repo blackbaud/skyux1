@@ -8,7 +8,40 @@ describe('SectionedForm', function () {
         $document,
         $scope,
         $templateCache,
-        bbMediaBreakpoints;
+        $timeout,
+        bbMediaBreakpoints,
+        element,
+        multipleSections;
+
+    function registerSectionTemplates() {
+
+        $templateCache.put(
+            'test/sectionedform/form.html',
+            '<ng-form name="formName">' +
+                '<input name="reqField" ng-model="reqField" required />' +
+            '</ng-form>');
+
+        $templateCache.put(
+            'test/sectionedform/form1.html',
+            '<ng-form>' +
+                '<div class="section1"></div>' +
+            '</ng-form>');
+
+        $templateCache.put(
+            'test/sectionedform/form2.html',
+            '<ng-form>' +
+                '<div class="section2"></div>' +
+            '</ng-form>');
+    }
+
+    multipleSections = [
+                {
+                    templateUrl: 'test/sectionedform/form1.html'
+                },
+                {
+                    templateUrl: 'test/sectionedform/form2.html'
+                }
+            ];
 
     beforeEach(function () {
         angular.mock.module(
@@ -18,22 +51,38 @@ describe('SectionedForm', function () {
             'uib/template/tabs/tab.html'
         );
 
-        angular.mock.inject(function (_$rootScope_, _$compile_, _$document_, _$templateCache_, _bbMediaBreakpoints_) {
+        element = null;
+
+        angular.mock.inject(function (_$rootScope_, _$compile_, _$document_, _$templateCache_, _bbMediaBreakpoints_, _$timeout_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             $document = _$document_;
             $templateCache = _$templateCache_;
             bbMediaBreakpoints = _bbMediaBreakpoints_;
+            $timeout = _$timeout_;
         });
+
+        registerSectionTemplates();
+    });
+
+    afterEach(function () {
+        if (element) {
+            element.remove();
+        }
     });
 
     function compileSectionedForm() {
         var el = $compile(
             '<form>' +
-                '<bb-sectioned-form bb-sectioned-form-sections="sections"></bb-sectioned-form>' +
+                '<bb-sectioned-form bb-sectioned-form-sections="sections" bb-sectioned-form-active-section-index="activeSectionIndex" bb-sectioned-form-on-active-section-index-change="activeSectionIndex = index"></bb-sectioned-form>' +
             '</form>')($scope);
 
+        element = el;
+        $document.find('body').append(element);
+
         $scope.$digest();
+
+        $timeout.flush();
 
         return el.children();
     }
@@ -60,7 +109,104 @@ describe('SectionedForm', function () {
         expect(getContentElement(el)).toBeHidden();
     }
 
+    function setAsMobile() {
+        spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
+            callback({xs: true});
+        });
+    }
+
+    function clickSectionLink(sutView, sectionIndex) {
+        angular.element(sutView.find('.nav-link')[sectionIndex]).click();
+    }
+
     describe('component', function () {
+        it('should show the first section by default on initial load', function () {
+            var sutView;
+            
+            $scope.sections = multipleSections;
+
+            sutView = compileSectionedForm();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);
+            expect($scope.activeSectionIndex).toBe(0);
+        });
+
+        it('should show the first section when invalid number passed', function () {
+            var sutView;
+            
+            $scope.sections = [
+                {
+                    templateUrl: 'test/sectionedform/form1.html'
+                },
+                {
+                    templateUrl: 'test/sectionedform/form2.html'
+                }
+            ];
+
+            $scope.activeSectionIndex = -1;
+            $templateCache.put(
+                'test/sectionedform/form1.html',
+                '<ng-form>' +
+                    '<div class="section1"></div>' +
+                '</ng-form>');
+
+            $templateCache.put(
+                'test/sectionedform/form2.html',
+                '<ng-form>' +
+                    '<div class="section2"></div>' +
+                '</ng-form>');
+
+            sutView = compileSectionedForm();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);
+        });
+
+        it('should show the specified section on initial load', function () {
+            var sutView;
+            
+            $scope.sections = multipleSections;
+            
+            $scope.activeSectionIndex = 1;
+
+            sutView = compileSectionedForm();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(0);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(1);
+        });
+
+        it('should change the displayed section when index input is changed', function () {
+            var sutView;
+            
+            $scope.sections = multipleSections;
+
+            sutView = compileSectionedForm();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);
+
+            $scope.activeSectionIndex = 1;
+            $scope.$digest();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(0);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(1);
+        });
+
+        it('should trigger index changed callback when use changes the visible section', function () {
+            var sutView;
+            
+            $scope.sections = multipleSections;
+
+            sutView = compileSectionedForm();
+
+            expect($scope.activeSectionIndex).toBe(0);
+
+            clickSectionLink(sutView, 1);
+
+            expect($scope.activeSectionIndex).toBe(1);
+        });
+
         it('should change the style of a section if a required field exists in the content', function () {
             var sutView;
             
@@ -70,12 +216,6 @@ describe('SectionedForm', function () {
                     templateUrl: 'test/sectionedform/form.html'
                 }
             ];
-
-            $templateCache.put(
-                'test/sectionedform/form.html',
-                '<ng-form name="formName">' +
-                    '<input name="reqField" ng-model="reqField" required />' +
-                '</ng-form>');
 
             sutView = compileSectionedForm();
 
@@ -92,12 +232,6 @@ describe('SectionedForm', function () {
                     templateUrl: 'test/sectionedform/form.html'
                 }
             ];
-
-            $templateCache.put(
-                'test/sectionedform/form.html',
-                '<ng-form name="formName">' +
-                    '<input name="reqField" ng-model="reqField" required />' +
-                '</ng-form>');
 
             sutView = compileSectionedForm();
 
@@ -125,49 +259,91 @@ describe('SectionedForm', function () {
         });
         
         it('should transition from sections to content when a section is selected on mobile', function () {
-            var bbMediaBreakpointsCallback,
-                sutController,
-                sutView;
+            var sutView;
 
-            $scope.sections = [{}];
-            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
-                bbMediaBreakpointsCallback = callback;
-            });
-
-            sutView = compileSectionedForm();
-            $document.find('body:first').append(sutView);
-
-            sutController = sutView.controller('bbSectionedForm');
-            bbMediaBreakpointsCallback({xs: true});
-            $scope.$digest();
+            setAsMobile();            
+            $scope.sections = [{}];            
+            sutView = compileSectionedForm();            
 
             expectSectionsVisibleContentHidden(sutView);
 
-            sutController.activeSection = 0;
-            $scope.$digest();
+            clickSectionLink(sutView, 0);
 
             expectSectionsHiddenContentVisible(sutView); 
         });
-        
-        it('should transition from content to sections when event is triggered on mobile', function () {
-            var bbMediaBreakpointsCallback,
-                sutController,
-                sutView;
 
-            $scope.sections = [{}];
-            spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
-                bbMediaBreakpointsCallback = callback;
-            });
-
+        it('should trigger index changed callback when a section is selected on mobile', function () {
+            var sutView;
+            
+            setAsMobile();
+            $scope.sections = multipleSections;
             sutView = compileSectionedForm();
-            $document.find('body:first').append(sutView);
 
-            sutController = sutView.controller('bbSectionedForm');
-            bbMediaBreakpointsCallback({xs: true});
+            expect($scope.activeSectionIndex).toBeUndefined();
+
+            clickSectionLink(sutView, 1);
+
+            expect($scope.activeSectionIndex).toBe(1);
+        });
+
+        it('should show the specified section on initial load on mobile', function () {
+            var sutView;
+
+            setAsMobile();
+            $scope.sections = multipleSections;            
+            $scope.activeSectionIndex = 1;
+            sutView = compileSectionedForm();
+
+            expectSectionsHiddenContentVisible(sutView); 
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(0);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(1);
+        });
+        
+        it('should change the displayed section when index input is changed on mobile', function () {
+            var sutView;
+            
+            setAsMobile();
+            $scope.sections = multipleSections;
+            sutView = compileSectionedForm();
+
+            clickSectionLink(sutView, 0);
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(1);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(0);
+
+            $scope.activeSectionIndex = 1;
             $scope.$digest();
 
-            sutController.activeSection = 0;
+            expectSectionsHiddenContentVisible(sutView);
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(0);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(1);
+        });
+
+        it('should change from section view to the specified section when index input is set on mobile', function () {
+            var sutView;
+            
+            setAsMobile();
+            $scope.sections = multipleSections;
+            sutView = compileSectionedForm();
+
+            expectSectionsVisibleContentHidden(sutView);
+
+            $scope.activeSectionIndex = 1;
             $scope.$digest();
+
+            expect(getContentElement(sutView).find('.section1:visible').length).toBe(0);
+            expect(getContentElement(sutView).find('.section2:visible').length).toBe(1);
+        });        
+
+        it('should transition from content to sections when event is triggered on mobile', function () {
+            var sutView;
+
+            setAsMobile();
+            $scope.sections = [{}];
+            
+            sutView = compileSectionedForm();
+
+            clickSectionLink(sutView, 0);
 
             expectSectionsHiddenContentVisible(sutView);
 

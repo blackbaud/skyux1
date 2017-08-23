@@ -2,7 +2,7 @@
 
 (function () {
     'use strict';
-
+    
     angular.module('sky.repeater.component', ['sky.repeater.controller'])
         .component('bbRepeater', {
             bindings: {
@@ -12,4 +12,4 @@
             templateUrl: 'sky/templates/repeater/repeater.component.html',
             transclude: true
         });
-}());
+})();

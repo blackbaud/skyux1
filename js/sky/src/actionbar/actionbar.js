@@ -21,9 +21,14 @@
             controller: function () {
                 var vm = this;
 
-                if (vm.title === null || angular.isUndefined(vm.title)) {
-                    vm.title = bbResources.action_bar_actions;
+                function onInit() {
+                    if (vm.title === null || angular.isUndefined(vm.title)) {
+                        vm.title = bbResources.action_bar_actions;
+                    }
                 }
+
+                vm.$onInit = onInit;
+
             },
             controllerAs: 'bbActionBarItemGroup',
             bindToController: {

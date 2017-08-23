@@ -69,7 +69,7 @@
         }
 
         function findOpenButtonWrapper(el) {
-            return el.find('.bb-search-open-wrapper'); 
+            return el.find('.bb-search-open-wrapper');
         }
 
         function findInputContainerEl(el) {
@@ -85,7 +85,7 @@
             e.keyCode = 13;
             inputEl.trigger(e);
             $scope.$digest();
-                
+
         }
 
         function changeInput(el, val) {
@@ -108,7 +108,7 @@
                 expect(inputContainerEl).toHaveClass('bb-search-input-container-hidden');
                 expect(dismissEl).not.toBeVisible();
             }
-            
+
         }
 
         function verifyLargeScreenDismissable(openButtonEl, inputContainerEl, dismissEl, componentContainerEl) {
@@ -122,7 +122,7 @@
             var actualSearchText,
                 searchEl,
                 searchButtonEl;
-            
+
             $scope.searchCtrl = {
                 applySearchText: function (searchText) {
                     actualSearchText = searchText;
@@ -151,7 +151,7 @@
         it('can change the search text in the input using bb-search-text binding', function () {
             var inputEl,
                 searchEl;
-            
+
             $scope.searchCtrl = {
                 searchText: 'myText'
             };
@@ -177,7 +177,7 @@
         it('can call a change function when the user types in the input', function () {
             var newText,
                 searchEl;
-            
+
             $scope.searchCtrl = {
                 searchChanged: function (searchText) {
                     newText = searchText;
@@ -209,7 +209,7 @@
                 openButtonWrapperEl,
                 dismissEl,
                 containerEl;
-            
+
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
                 searchCallback = callback;
             });
@@ -230,7 +230,7 @@
 
             openButtonEl.click();
             $scope.$digest();
-            
+
             verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, true);
             expect(inputEl).toBeFocused();
 
@@ -248,10 +248,10 @@
 
             searchCallback({xs: true});
             $scope.$digest();
-            
+
 
             verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, false);
-            
+
             searchEl.remove();
 
         });
@@ -284,13 +284,46 @@
 
         });
 
+        it('does not register the mobile-dismiss-input callback is bb-search-mobile-response-enabled is false', function () {
+            var searchEl,
+                inputEl,
+                inputContainerEl,
+                openButtonWrapperEl,
+                dismissEl,
+                containerEl,
+                nonDismissableHtml = '<bb-search-input bb-search-mobile-response-enabled="false"></bb-search-input>';
+
+            spyOn(bbMediaBreakpoints, 'register');
+
+            searchEl = initSearch(nonDismissableHtml);
+            $scope.$digest();
+
+            inputEl = findSearchInput(searchEl);
+            dismissEl = findDismissButton(searchEl);
+            containerEl = findContainerEl(searchEl);
+            inputContainerEl = findInputContainerEl(searchEl);
+            openButtonWrapperEl = findOpenButtonWrapper(searchEl);
+
+            expect(bbMediaBreakpoints.register).not.toHaveBeenCalled();
+
+            $scope.currentBreakpoint = { xs: true };
+            $scope.$digest();
+
+            verifyLargeScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl);
+
+            $scope.currentBreakpoint = { xs: false };
+            $scope.$digest();
+
+            verifyLargeScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl);
+        });
+
         it('can clear search text after it is applied using the clear search button', function () {
             var actualSearchText,
                 searchEl,
                 searchButtonEl,
                 inputEl,
                 clearButtonEl;
-            
+
             $scope.searchCtrl = {
                 applySearchText: function (searchText) {
                     actualSearchText = searchText;
@@ -308,7 +341,7 @@
 
             searchButtonEl.click();
             $scope.$digest();
-            
+
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
@@ -340,7 +373,7 @@
                 clearButtonEl,
                 inputContainerEl,
                 searchCallback;
-            
+
             $scope.searchCtrl = {
                 searchText: 'myText'
             };
@@ -380,7 +413,7 @@
 
             $scope.searchCtrl.searchText = '';
             $scope.$digest();
-            
+
             verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
             expect(clearButtonEl).not.toBeVisible();
             expect(searchButtonEl).toBeVisible();
@@ -430,11 +463,69 @@
 
         });
 
+        describe('id', function () {
+            it('should have no id when not specified', function () {
+                var searchEl,
+                    inputEl;
+
+                searchEl = initSearch(searchHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).not.toHaveAttr('id');
+
+                searchEl.remove();
+            });
+
+            it('should have an id when specified', function () {
+                var searchEl,
+                    inputEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-input-id="\'myid\'" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                searchEl = initSearch(placeholderHtml);
+
+                inputEl = findSearchInput(searchEl);
+
+                expect(inputEl).toHaveAttr('id', 'myid');
+
+                searchEl.remove();
+            });
+        });
+
+        describe('full width', function () {
+            it('should not have the full width class when not specified', function () {
+                var searchEl;
+
+                searchEl = initSearch(searchHtml);
+
+                expect(searchEl.find('.bb-search-input-inline')).not.toHaveClass('bb-search-full-width');
+
+                searchEl.remove();
+            });
+
+            it('should have the full width class when specified', function () {
+                var searchEl,
+                    placeholderHtml = '<bb-search-input ' +
+                    'bb-search-full-width="true" ' +
+                    'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
+                '</bb-search-input>';
+
+                searchEl = initSearch(placeholderHtml);
+
+                expect(searchEl.find('.bb-search-input-inline')).toHaveClass('bb-search-full-width');
+
+                searchEl.remove();
+            });
+        });
+
         describe('placeholder text', function () {
             it('has no placeholder text when bbSearchPlaceholder is undefined', function () {
                 var searchEl,
                     inputEl;
-                
+
                 searchEl = initSearch(searchHtml);
 
                 inputEl = findSearchInput(searchEl);
@@ -451,7 +542,7 @@
                     'bb-search-placeholder ' +
                     'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
                 '</bb-search-input>';
-                
+
                 searchEl = initSearch(placeholderHtml);
 
                 inputEl = findSearchInput(searchEl);
@@ -468,7 +559,7 @@
                     'bb-search-placeholder="searchCtrl.placeholder" ' +
                     'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
                 '</bb-search-input>';
-                
+
                 searchEl = initSearch(placeholderHtml);
 
                 inputEl = findSearchInput(searchEl);
@@ -489,7 +580,7 @@
                 $scope.searchCtrl = {
 
                 };
-                
+
                 searchEl = initSearch(placeholderHtml);
 
                 inputEl = findSearchInput(searchEl);
@@ -518,7 +609,7 @@
                 $scope.searchCtrl = {
                     placeholder: 'Search'
                 };
-                
+
                 searchEl = initSearch(placeholderHtml);
 
                 inputEl = findSearchInput(searchEl);
@@ -533,7 +624,7 @@
                 var actualSearchText,
                 searchEl,
                 clearButtonEl;
-            
+
                 $scope.searchCtrl = {
                     applySearchText: function (searchText) {
                         actualSearchText = searchText;
@@ -561,7 +652,7 @@
                 var actualSearchText,
                 searchEl,
                 clearButtonEl;
-            
+
                 $scope.searchCtrl = {
                     applySearchText: function (searchText) {
                         actualSearchText = searchText;

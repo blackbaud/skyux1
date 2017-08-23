@@ -30,7 +30,7 @@ describe('Popover', function () {
             '<div>' +
             '<div id="messageWrapper">{{message}}</div>' +
             '<a id="hidelink" ng-click="hide()">Close me</a>' +
-            '/<div>');
+            '</div>');
     }));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
@@ -81,19 +81,18 @@ describe('Popover', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
         });
 
-
         it('should close when calling close function on scope', function () {
             expect(el.find('#messageWrapper').length).toBe(0);
 
             trigger(popoverLink, 'click');
             $scope.$digest();
-
+            
             expect(el.find('#messageWrapper').length).toBe(1);
 
             el.find('#hidelink').click();
             $scope.$digest();
+            $rootScope.$digest();
             $timeout.flush();
-
             expect(el.find('#messageWrapper').length).toBe(0);
         });
 
