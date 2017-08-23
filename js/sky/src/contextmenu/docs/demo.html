@@ -3,7 +3,7 @@
     <p>
       For simple dropdowns, you can use <code>bb-context-menu-item</code> with <code>bb-context-menu</code>.
     </p>
-    <bb-context-menu bb-context-menu-label="Some label">
+    <bb-context-menu bb-context-menu-label="Some label" bb-context-menu-append-to-body="true">
       <bb-context-menu-item ng-repeat="item in contextMenuCtrl.items" bb-context-menu-action="item.onClick()">{{item.text}}</bb-context-menu-item>
     </bb-context-menu>
   </div>

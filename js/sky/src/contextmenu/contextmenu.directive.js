@@ -6,7 +6,8 @@
     function bbContextMenu() {
         return {
             bindToController: {
-                bbContextMenuLabel: '@'
+                bbContextMenuLabel: '@',
+                appendToBody: '<?bbContextMenuAppendToBody'
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',

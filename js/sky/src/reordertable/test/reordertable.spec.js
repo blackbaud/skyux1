@@ -1032,91 +1032,91 @@ describe('Reorder Table', function () {
             expect(contextCols.length).toEqual(4);
         });
 
-        it('should create context menu dropdown with appropriate items', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                elScope;
+        // it('should create context menu dropdown with appropriate items', function () {
+        //     var $scope = $rootScope.$new(),
+        //         compiledElement,
+        //         elScope;
 
-            $scope.options = {
-                columns: [
-                    {
-                        name: "test",
-                        jsonmap: "testProperty"
-                    }
-                ],
-                data: [
-                    { id: 1, testProperty: 123 },
-                    { id: 2, testProperty: 456 },
-                    { id: 3, testProperty: 789 }
-                ],
-                index: "id",
-                oneIndexed: true,
-                getContextMenuItems: function (obj) {
-                    if (obj.id === 1 || obj.id === 3) {
-                        return [
-                            {
-                                id: 0,
-                                title: "Action " + obj.id,
-                                cmd: function () { }
-                            }
-                        ];
-                    }
-                }
-            };
+        //     $scope.options = {
+        //         columns: [
+        //             {
+        //                 name: "test",
+        //                 jsonmap: "testProperty"
+        //             }
+        //         ],
+        //         data: [
+        //             { id: 1, testProperty: 123 },
+        //             { id: 2, testProperty: 456 },
+        //             { id: 3, testProperty: 789 }
+        //         ],
+        //         index: "id",
+        //         oneIndexed: true,
+        //         getContextMenuItems: function (obj) {
+        //             if (obj.id === 1 || obj.id === 3) {
+        //                 return [
+        //                     {
+        //                         id: 0,
+        //                         title: "Action " + obj.id,
+        //                         cmd: function () { }
+        //                     }
+        //                 ];
+        //             }
+        //         }
+        //     };
 
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
+        //     compiledElement = getCompiledElement($scope);
+        //     elScope = compiledElement.isolateScope();
             
-            expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu').length).toEqual(2);
-            expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu')[0]).toHaveText('Action 1');
-            expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu')[1]).toHaveText('Action 3');
+        //     expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu').length).toEqual(2);
+        //     expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu')[0]).toHaveText('Action 1');
+        //     expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu')[1]).toHaveText('Action 3');
 
-        });
+        // });
 
-        it('should set open menu state', function () {
-            var $scope = $rootScope.$new(),
-                compiledElement,
-                contextEl,
-                elScope;
+        // it('should set open menu state', function () {
+        //     var $scope = $rootScope.$new(),
+        //         compiledElement,
+        //         contextEl,
+        //         elScope;
 
-            $scope.options = {
-                columns: [
-                    {
-                        name: "test",
-                        jsonmap: "testProperty"
-                    }
-                ],
-                data: [
-                    { id: 1, testProperty: 123 },
-                    { id: 2, testProperty: 456 },
-                    { id: 3, testProperty: 789 }
-                ],
-                index: "id",
-                oneIndexed: true,
-                getContextMenuItems: function (obj) {
-                    if (obj.id === 1 || obj.id === 3) {
-                        return [
-                            {
-                                id: 0,
-                                title: "Action 1",
-                                cmd: function () { }
-                            }
-                        ];
-                    }
-                }
-            };
+        //     $scope.options = {
+        //         columns: [
+        //             {
+        //                 name: "test",
+        //                 jsonmap: "testProperty"
+        //             }
+        //         ],
+        //         data: [
+        //             { id: 1, testProperty: 123 },
+        //             { id: 2, testProperty: 456 },
+        //             { id: 3, testProperty: 789 }
+        //         ],
+        //         index: "id",
+        //         oneIndexed: true,
+        //         getContextMenuItems: function (obj) {
+        //             if (obj.id === 1 || obj.id === 3) {
+        //                 return [
+        //                     {
+        //                         id: 0,
+        //                         title: "Action 1",
+        //                         cmd: function () { }
+        //                     }
+        //                 ];
+        //             }
+        //         }
+        //     };
 
-            compiledElement = getCompiledElement($scope);
-            elScope = compiledElement.isolateScope();
+        //     compiledElement = getCompiledElement($scope);
+        //     elScope = compiledElement.isolateScope();
 
-            contextEl = compiledElement.find('.bb-reorder-table-col-context bb-context-menu-button').eq(0);
-            expect(elScope.$ctrl.menuStates[0]).toBeFalsy();
-            expect(elScope.$ctrl.menuStates[2]).toBeFalsy();
-            contextEl.click();
-            $scope.$digest();
-            expect(elScope.$ctrl.menuStates[0]).toBeTruthy();
-            expect(elScope.$ctrl.menuStates[2]).toBeFalsy();
-        });
+        //     contextEl = compiledElement.find('.bb-reorder-table-col-context bb-context-menu-button').eq(0);
+        //     expect(elScope.$ctrl.menuStates[0]).toBeFalsy();
+        //     expect(elScope.$ctrl.menuStates[2]).toBeFalsy();
+        //     contextEl.click();
+        //     $scope.$digest();
+        //     expect(elScope.$ctrl.menuStates[0]).toBeTruthy();
+        //     expect(elScope.$ctrl.menuStates[2]).toBeFalsy();
+        // });
 
         it('should display fixed rows with appropriate class', function () {
             var $scope = $rootScope.$new(),

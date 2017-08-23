@@ -38,16 +38,8 @@
                 'sky.grids.toolbar'
                 ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
-            function toggleDropdown($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                $scope.locals.is_open = !$scope.locals.is_open;
-            }
-
             $scope.locals = {
-                is_open: false,
-                items: [],
-                toggleDropdown: toggleDropdown
+                items: []
             };
 
             /*istanbul ignore else */
