@@ -43,7 +43,6 @@
             vm.options = vm.options || {};
             vm.sortable = !vm.unsortable && vm.options.data && vm.options.data.length > 1 && vm.options.fixed < vm.options.data.length;
             vm.options.fixed = vm.options.fixed || 0;
-            vm.menuStates = {};
 
             if (vm.options.getContextMenuItems) {
                 vm.contextMenuItems = {};
@@ -165,25 +164,17 @@
 
         }
 
-        function toggleDropdown($event, rowIndex) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            vm.menuStates[rowIndex] = !vm.menuStates[rowIndex];
-        }
-
         bbAutonumericConfig = {
             mDec: 0 // no decimals
         };
 
         vm.sorting = false;
         vm.tableId = $scope.$id;
-        vm.menuStates = {};
 
         vm.isFixed = isFixed;
         vm.setFixed = setFixed;
         vm.pushToTop = pushToTop;
         vm.cellLink = cellLink;
-        vm.toggleDropdown = toggleDropdown;
 
         //Setup jQuery sortable options for the items being sorted
         sortableOptions = {
@@ -229,7 +220,7 @@
 
                 $scope.$apply(function () {
                     vm.sorting = false;
-                    $scope.$emit('tableReordered');
+                    $scope.$emit('bbTableReordered');
                 });
 
                 originalSortItemIndex = null;
