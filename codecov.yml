@@ -1,3 +1,6 @@
+codecov:
+  slug: "blackbaud/skyux"
+
 coverage:
   round: down
   status:
