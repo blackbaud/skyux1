@@ -39,7 +39,7 @@
                         <div class="bb-reorder-table-cell">
                             <button type="button" ng-if="!$ctrl.sorting && $ctrl.options.fixed < $index" ng-click="$ctrl.pushToTop(item)" class="btn btn-link"> 
                               <i class="fa fa-arrow-circle-up"></i>
-                              <span>Top</span>
+                              <span>{{'reorder_table_top' | bbResources}}</span>
                            </button>
                         </div>
                         <div ng-if="$ctrl.sorting && !$ctrl.isFixed($index)" class="bb-reorder-table-cell">
