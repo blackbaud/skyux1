@@ -50,6 +50,12 @@ $filterWidth: 240px;
     }
 }
 
+.ui-jqgrid {
+    .dropdown-toggle {
+        color: $text-color;
+    }
+}
+
 .bb-grid-table .blockUI {
     z-index: auto !important;
 }
