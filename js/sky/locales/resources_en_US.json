@@ -575,10 +575,6 @@
         "_description": "Text for modal close button",
         "message": "Close modal"
     },
-    "reorder_table_top": {
-        "_description": "Text for moving row to the top of the table",
-        "message": "Top"
-    },
     "search_label": {
         "_description": "Label for search component functionality",
         "message": "Search items"
