@@ -34,9 +34,9 @@ $bb-focus-border-color: #1f90d8 !default;
 $bb-focus-shadow-color: rgba(28, 132, 198, 0.6) !default;
 
 
-$font-family-sans-serif: "Blackbaud Sans", Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif: "Blackbaud Sans", "Helvetica Neue", Arial, sans-serif !default;
 
-$font-family-base: "Blackbaud Sans", Helvetica, Arial, sans-serif !default;
+$font-family-base: "Blackbaud Sans", "Helvetica Neue", Arial, sans-serif !default;
 
 $bb-font-family-narrow: "Blackbaud Sans Condensed", "Helvetica Neue Condensed", "Arial Narrow" !default;
 $bb-font-family-alternate: $font-family-sans-serif !default;
@@ -225,7 +225,7 @@ $form-button-color: $bb-color-white;
 $form-button-border: #CCCCCC;
 $form-button-gradient-light: #666666;
 $form-button-gradient-dark: #444444;
-$invalid-field-color: #b94a48;
+$invalid-field-color: $bb-color-red;
 // end form
 
 //begin dialog
@@ -311,5 +311,12 @@ $bb-card-width: 350px !default;
 $bb-card-height-small: 250px !default;
 $bb-card-width-small: 225px !default;
 // end card
+
+// begin popover border color
+
+$popover-arrow-color: $sky-highlight-color-info;
+$popover-higlight-border-width: 10px;
+
+// end popover border color
 
 // end _variables

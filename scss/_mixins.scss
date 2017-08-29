@@ -18,8 +18,8 @@
 }
 
 @mixin field-invalid {
-    box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
-    border: 1px solid #ed5565;
+    box-shadow: 0 0 8px rgba($sky-highlight-color-danger, 0.6);
+    border: 1px solid $sky-highlight-color-danger;
     outline: none;
 }
 
@@ -95,7 +95,7 @@
 }
 
 @mixin bb-headline {
-    font: 400 22px $bb-font-family-narrow;
+    font: 500 22px $bb-font-family-narrow;
     color: $text-color;
 }
 
@@ -112,6 +112,26 @@
 @mixin bb-deemphasized {
     font: 400 italic $font-size-base $font-family-base;
     color: $bb-text-deemphasized-color;
+}
+
+@mixin bb-text-error {
+    color: $sky-text-color-default;
+
+    &::before {
+    content: "\f071";
+	font-family: FontAwesome;
+	margin-right: 5px;
+	color: $sky-highlight-color-danger;
+    }
+}
+
+@mixin bb-icon-button-borderless {
+    color: $sky-text-color-icon-borderless;
+    cursor: pointer;
+    
+    &:hover, &:focus {
+        color: darken($sky-text-color-icon-borderless, 20%);
+    }
 }
 
 @mixin bb-focus-indication {

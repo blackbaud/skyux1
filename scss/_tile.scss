@@ -116,7 +116,7 @@
 }
 
 .bb-tile-header-check {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .bb-tile-content {
@@ -187,12 +187,12 @@ tiles behave within a column of tiles.*/
 
 .bb-tile-chevron,
 .bb-tile-settings {
-    color: #D1DADE;
     float: left;
     margin: 16px $tile-header-tool-padding 16px 0;
     padding: 0;
     background-color: transparent;
     border: none;
+    @include bb-icon-button-borderless;
 }
 
 .modal-body {
@@ -213,7 +213,7 @@ tiles behave within a column of tiles.*/
 }
 
 .bb-tile-grab-handle {
-    color: #E7EAEC;
+    @include bb-icon-button-borderless;  
     cursor: move;
     cursor: -webkit-grab;
     cursor: -moz-grab;
