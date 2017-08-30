@@ -800,7 +800,7 @@
             context.fillRect(0, 0, canvas.width, canvas.height);
 
             if (initials) {
-                context.font = fontSize + ' Blackbaud Sans';
+                context.font = fontSize + ' Arial';
                 context.textAlign = 'center';
                 context.fillStyle = '#FFF';
                 context.fillText(initials, size * 0.5, size * (2 / 3));
