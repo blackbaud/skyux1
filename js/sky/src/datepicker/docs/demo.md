@@ -23,6 +23,7 @@ The datepicker directive wraps the [Angular UI Bootstrap datepicker directive](h
         - `bb-datepicker-placeholder` &mdash; *(Optional.)* Overrides the default placeholder text that appears in the datepicker input.
         - `bb-datepicker-show-button-bar` &mdash; *(Optional.)* Indicates whether to display a button bar under the datepicker. *(Default: `false`)*
         - `bb-datepicker-alt-input-formats` &mdash; *(Optional.)* Specifies an array of alternate formats acceptable for manual entry. For example, if the `bb-date-format` is set to 'MM/dd/yyyy', you could specify 'M/d/yyyy' as an alternate format for the user. This extends the `bbAltInputFormats` array set in `bbDatepickerConfig`. If no alternate inputs are set in `bb-datepicker` or `bbDatepickerConfig`, then `bb-datepicker` will accept either padded or unpadded days and months for manual entry.
+		- `bb-datepicker-skip-button-while-tabbing` &mdash; *(Optional.)* Indicates whether to skip over the calendar button when a user tabs through the datepicker input. *(Default: `false`)*
     - `bbDatepickerConfig` &mdash; A global configuration object that applies options to datepickers throughout an application.
 
 ### Validation
