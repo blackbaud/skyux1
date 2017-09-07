@@ -1041,30 +1041,6 @@ describe('Datepicker directive', function () {
         openCalendar(el);
     });
 
-    it('removes the calendar button from tab ordering when specified', function () {
-        var el,
-            calendarButtonEl,
-            removeFromTabOrderHtml = '<div><form><bb-datepicker bb-datepicker-name="testDate1" ng-model="testdate1" bb-datepicker-skip-button-while-tabbing="true"></bb-datepicker></form></div>';
-
-        el = setupDatepicker(removeFromTabOrderHtml, '5/17/1985', true);
-        calendarButtonEl = getCalendarButton(el);
-
-        expect(calendarButtonEl).toHaveAttr('tabindex', '-1');
-        el.remove();
-    });
-
-    it('should not remove the calendar button from tab ordering when not specified', function () {
-        var el,
-            calendarButtonEl;
-
-        el = setupDatepicker(datepickerHtml, '5/17/1985', true);
-        calendarButtonEl = getCalendarButton(el);
-
-        expect(calendarButtonEl).not.toHaveAttr('tabindex');
-
-        el.remove();
-    });
-
     describe('custom validation', function () {
         it('accepts a custom validation formatter', function () {
             var el,
