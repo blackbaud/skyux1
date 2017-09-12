@@ -37,3 +37,4 @@ For information about how to contribute, see the [SKY UX contributing guidelines
 ## Filing Issues
 
 To file a bug, just go to the [issues](https://github.com/blackbaud/skyux/issues) page and create an issue. We operate under the expectation that we will close bugs within two weeks of filing. On the newly created issue, you can select an option to subscribe to email notifications about commits, comments, and releases related to the bug so that you can know exactly where the bug is within its lifecycle.
+

@@ -12,6 +12,7 @@
 .bb-check-wrapper {
   span.bb-check-label-text {
     vertical-align: middle;
+    font-weight: 400;
   }
 }
 
@@ -28,6 +29,7 @@
     text-align: center;
     font-size: 14px;
     background-color: $bb-color-white;
+    line-height: 23px;
 }
 
 .bb-check-radio {
