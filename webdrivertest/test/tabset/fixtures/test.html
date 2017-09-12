@@ -1,4 +1,20 @@
-<div class="container" ng-controller="TabsetVisualController as tabsetCtrl">
+<style>
+    #screenshot-vertical-tabset-no-groups,
+    #screenshot-vertical-tabset-no-groups-inactive,
+    #screenshot-vertical-tabset-groups,
+    #screenshot-vertical-tabset-groups-inactive {
+        min-height: 200px;
+    }
+    #screenshot-vertical-tabset-no-groups-inactive:after,
+    #screenshot-vertical-tabset-no-groups:after,
+    #screenshot-vertical-tabset-groups-inactive:after,
+    #screenshot-vertical-tabset-groups:after {
+        content: '';
+        display: table;
+        width: 100%;
+    }
+</style>
+<div class="container bb-screenshot-noanim" ng-controller="TabsetVisualController as tabsetCtrl">
 
     <div id="screenshot-tabset-all">
         <div id="screenshot-tabset-open-add">
