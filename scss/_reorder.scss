@@ -90,7 +90,7 @@
 }
 
 .bb-reorder-list-title {
-    font-weight: 700;
+    @include bb-emphasized();
     word-wrap: break-word;
 }
 

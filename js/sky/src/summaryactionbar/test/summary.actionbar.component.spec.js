@@ -304,7 +304,19 @@
             
         }
 
-        function toggleSummaryHide(show, el) {
+        function getModalBodyMaxHeight() {
+            return parseInt($('.modal-body').css('max-height'), 10);
+        }
+
+        function timeoutFlushIfAvailable() {
+            try {
+                $timeout.verifyNoPendingTasks();
+            } catch (aException) {
+                $timeout.flush();
+            }
+        }
+
+        function toggleSummaryHide(show, el, noTimeout) {
             var hideEl = getHideToggle(el),
                 showEl = getShowToggle(el);
 
@@ -315,7 +327,10 @@
             }
 
             $scope.$digest();
-            $timeout.flush();
+            if (!noTimeout) {
+                $timeout.flush();
+            }
+            
         }
 
         it('should show the expanded summary when on a small screen and allow toggle of hide and show', function () {
@@ -366,14 +381,6 @@
 
             actionbarEl.remove();
         });
-
-        function timeoutFlushIfAvailable() {
-            try {
-                $timeout.verifyNoPendingTasks();
-            } catch (aException) {
-                $timeout.flush();
-            }
-        }
 
         it('should adjust the margin on the document when window resizes', function () {
             var actionbarEl,
@@ -449,10 +456,6 @@
                 closeModalInstance(modalInstance);
             });
 
-            function getModalBodyMaxHeight() {
-                return parseInt($('.modal-body').css('max-height'), 10);
-            }
-
             function getModalBodyMinHeight() {
                 return parseInt($('.modal-body').css('min-height'), 10);
             }
@@ -463,8 +466,6 @@
                         bodyMaxHeight,
                         summaryHeight,
                         modalInstance;
-                        
-                    timeoutFlushIfAvailable(); 
                         
                     modalInstance = bbModal.open(
                         {
@@ -483,20 +484,18 @@
 
                     bodyMaxHeight = getModalBodyMaxHeight();
                     summaryHeight = actionbarEl.find('.bb-summary-actionbar-summary').outerHeight();
-
                     //hide actionbar
-                    toggleSummaryHide(false, actionbarEl);
-    
-                    verifySummaryStateHidden(true, actionbarEl, true);
+                    toggleSummaryHide(false, actionbarEl, true);
                     expect(getModalBodyMaxHeight()).toBe(bodyMaxHeight + summaryHeight);
+                    $timeout.flush();
+                    verifySummaryStateHidden(true, actionbarEl, true);
 
                     bodyMaxHeight = getModalBodyMaxHeight();
                     //show actionbar
-                    toggleSummaryHide(true, actionbarEl);
-                    verifySummaryStateHidden(false, actionbarEl, true);
+                    toggleSummaryHide(true, actionbarEl, true);
                     expect(getModalBodyMaxHeight()).toBe(bodyMaxHeight - summaryHeight);
-                    
-
+                    $timeout.flush();
+                    verifySummaryStateHidden(false, actionbarEl, true);
                     closeModalInstance(modalInstance);
                 }); 
             });

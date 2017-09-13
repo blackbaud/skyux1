@@ -29,7 +29,6 @@ describe('navbar', function () {
             .moveToObject('.nav li.dropdown a')
             .compareScreenshot({
                 screenshotName: 'navbar_dropdown',
-
                 selector: '#screenshot-navbar-dropdown',
                 checkAccessibility: true
             });

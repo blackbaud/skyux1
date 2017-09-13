@@ -31,6 +31,7 @@
         display: inline-block;
         margin-top: 1px;
         margin-bottom: 0;
+        font-weight: 400;
     }
 
     .date {
@@ -40,7 +41,7 @@
     textarea {
         width: 100%;
         resize: none;
-        border: 1px solid $form-textarea-color;
+        @include bb-border(dark, top, right, bottom, left);
         font-size: $font-size-base;
         height: 10em;
         padding: 5px;
@@ -88,7 +89,7 @@ input.error {
 
 /* styles for validation helpers */
 .field-validation-error {
-    color: $invalid-field-color;
+    @include bb-text-error;
 }
 
 .field-validation-valid {
@@ -104,7 +105,7 @@ input[type="checkbox"].input-validation-error {
 }
 
 input, select {
-    font-size: 12px;
+    font-size: $font-size-base;
 }
 
 input[type="text"] {
@@ -116,7 +117,7 @@ select, select.form-control {
 }
 
 .validation-summary-errors {
-    color: $invalid-field-color;
+    @include bb-text-error;
 }
 
 .validation-summary-valid {
@@ -143,7 +144,7 @@ select.ng-invalid.submitted,
 .form-control {
   background-color: white;
   background-image: none;
-  border: 1px solid #e5e6e7;
+  @include bb-border(dark, top, right, bottom, left);
   border-radius: 1px;
   color: inherit;
   display: block;

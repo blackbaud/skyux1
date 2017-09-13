@@ -1,7 +1,7 @@
 {
   "name": "blackbaud-skyux",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
-  "version": "1.15.6",
+  "version": "1.16.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/blackbaud/skyux"
@@ -77,6 +77,7 @@
     "webdriverio": "4.2.8"
   },
   "dependencies": {
+    "@blackbaud/skyux-design-tokens": "0.0.8",
     "angular": "1.6.1",
     "angular-animate": "1.6.1",
     "angular-messages": "1.6.1",
