@@ -95,7 +95,7 @@ fieldset[disabled] .btn-info.active {
 .open .dropdown-toggle.bb-btn-secondary {
     color: inherit;
     border: 1px solid #d2d2d2;
-    background-color: $bb-color-white;
+    background-color: $sky-background-color-neutral-light;
 }
 .bb-btn-secondary:active,
 .bb-btn-secondary.active {
@@ -207,7 +207,7 @@ fieldset[disabled] .btn-danger.active {
 }
 
 .btn-link {
-  color: inherit;
+  color: $sky-text-color-action-primary;
 }
 
 .btn-link:hover,
@@ -215,7 +215,7 @@ fieldset[disabled] .btn-danger.active {
 .btn-link:active,
 .btn-link.active,
 .open .dropdown-toggle.btn-link {
-  color: $bb-color-blue;
+  color: darken($sky-text-color-action-primary, 10%);
 }
 
 .btn-link:active,
