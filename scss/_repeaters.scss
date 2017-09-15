@@ -65,9 +65,7 @@
     }
 
     .bb-repeater-item-title {
-        font-family: $font-family-base;
-        font-size: $bb-font-size-lg;
-        font-weight: bold;
+        @include bb-emphasized();
         margin: $margin 0; 
         flex-grow: 1;
     }

@@ -7,3 +7,38 @@
 .bb-popover-list {
     z-index: $bb-zindex-popover-list;
 }
+
+.popover {
+  &.top {
+    border-bottom: $popover-higlight-border-width solid $popover-arrow-color;
+    
+    &> .arrow {
+      bottom: -($popover-arrow-outer-width + $popover-higlight-border-width);
+    }
+  }
+
+  &.right {
+    border-left: $popover-higlight-border-width solid $popover-arrow-color;
+    
+    &> .arrow {
+      left: -($popover-arrow-outer-width + $popover-higlight-border-width);
+    }
+  }
+
+  &.bottom {
+    border-top: $popover-higlight-border-width solid $popover-arrow-color;
+    
+    &> .arrow {
+      top: -($popover-arrow-outer-width + $popover-higlight-border-width);
+    }
+  }
+
+  &.left {
+    border-right: $popover-higlight-border-width solid $popover-arrow-color;
+    
+    &> .arrow {
+      right: -($popover-arrow-outer-width + $popover-higlight-border-width);
+    }
+  }
+
+}
