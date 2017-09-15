@@ -336,6 +336,31 @@ describe('Select field directive', function () {
             el.remove();
         });
 
+        it('should allow binding with ngRequired', function () {
+            var $scope = $rootScope.$new();
+
+            $compile('<form name="myForm"> <bb-select-field name="myField" bb-select-field-style="single" ng-model="selectedItems" ng-required="required">' +
+                '<bb-select-field-picker bb-select-field-picker-template="bbSelectField/single/test.html"></bb-select-field-picker>' +
+                '</bb-select-field>')($scope);
+
+            // Not required, no value
+            $scope.$apply('required = false');
+            expect($scope.myForm.myField.$error.required).toBeUndefined();
+
+            // Required, no value
+            $scope.$apply('required = true');
+            expect($scope.myForm.myField.$error.required).toBe(true);
+
+            // Required, with value
+            $scope.$apply(function () {
+                $scope.selectedItems = [
+                    {
+                        title: 'Selected item'
+                    }
+                ];
+            });
+            expect($scope.myForm.myField.$error.required).toBeUndefined();
+        });
     });
 
     describe('multi-select', function () {
