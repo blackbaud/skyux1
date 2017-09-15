@@ -12386,10 +12386,14 @@ angular.module('sky.palette.config', [])
     function bbSelectField() {
         function link($scope, el, attrs, ctrls) {
             var bbSelectField = ctrls[0];
-            if (bbSelectField && ctrls[1] && attrs.required) {
+            if (bbSelectField && ctrls[1]) {
                 ctrls[1].$validators.required = function () {
-                    return angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0;
+                    return !attrs.required || (angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0);
                 };
+
+                attrs.$observe('required', function () {
+                    ctrls[1].$validate();
+                });
 
                 $scope.$watchCollection(
                     function () {
