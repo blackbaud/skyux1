@@ -1032,92 +1032,6 @@ describe('Reorder Table', function () {
             expect(contextCols.length).toEqual(4);
         });
 
-        // it('should create context menu dropdown with appropriate items', function () {
-        //     var $scope = $rootScope.$new(),
-        //         compiledElement,
-        //         elScope;
-
-        //     $scope.options = {
-        //         columns: [
-        //             {
-        //                 name: "test",
-        //                 jsonmap: "testProperty"
-        //             }
-        //         ],
-        //         data: [
-        //             { id: 1, testProperty: 123 },
-        //             { id: 2, testProperty: 456 },
-        //             { id: 3, testProperty: 789 }
-        //         ],
-        //         index: "id",
-        //         oneIndexed: true,
-        //         getContextMenuItems: function (obj) {
-        //             if (obj.id === 1 || obj.id === 3) {
-        //                 return [
-        //                     {
-        //                         id: 0,
-        //                         title: "Action " + obj.id,
-        //                         cmd: function () { }
-        //                     }
-        //                 ];
-        //             }
-        //         }
-        //     };
-
-        //     compiledElement = getCompiledElement($scope);
-        //     elScope = compiledElement.isolateScope();
-            
-        //     expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu').length).toEqual(2);
-        //     expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu')[0]).toHaveText('Action 1');
-        //     expect(compiledElement.find('.bb-reorder-table-col-context .bb-context-menu')[1]).toHaveText('Action 3');
-
-        // });
-
-        // it('should set open menu state', function () {
-        //     var $scope = $rootScope.$new(),
-        //         compiledElement,
-        //         contextEl,
-        //         elScope;
-
-        //     $scope.options = {
-        //         columns: [
-        //             {
-        //                 name: "test",
-        //                 jsonmap: "testProperty"
-        //             }
-        //         ],
-        //         data: [
-        //             { id: 1, testProperty: 123 },
-        //             { id: 2, testProperty: 456 },
-        //             { id: 3, testProperty: 789 }
-        //         ],
-        //         index: "id",
-        //         oneIndexed: true,
-        //         getContextMenuItems: function (obj) {
-        //             if (obj.id === 1 || obj.id === 3) {
-        //                 return [
-        //                     {
-        //                         id: 0,
-        //                         title: "Action 1",
-        //                         cmd: function () { }
-        //                     }
-        //                 ];
-        //             }
-        //         }
-        //     };
-
-        //     compiledElement = getCompiledElement($scope);
-        //     elScope = compiledElement.isolateScope();
-
-        //     contextEl = compiledElement.find('.bb-reorder-table-col-context bb-context-menu-button').eq(0);
-        //     expect(elScope.$ctrl.menuStates[0]).toBeFalsy();
-        //     expect(elScope.$ctrl.menuStates[2]).toBeFalsy();
-        //     contextEl.click();
-        //     $scope.$digest();
-        //     expect(elScope.$ctrl.menuStates[0]).toBeTruthy();
-        //     expect(elScope.$ctrl.menuStates[2]).toBeFalsy();
-        // });
-
         it('should display fixed rows with appropriate class', function () {
             var $scope = $rootScope.$new(),
                 compiledElement,
@@ -1152,6 +1066,43 @@ describe('Reorder Table', function () {
             expect($(secondRow).hasClass('bb-reorder-table-row-fixed')).toBeTruthy();
             expect($(firstRow).hasClass('bb-reorder-table-row')).toBeFalsy();
             expect($(secondRow).hasClass('bb-reorder-table-row')).toBeFalsy();
+        });
+
+        it('should display return of formmater', function () {
+            var $scope = $rootScope.$new(),
+                cells,
+                compiledElement,
+                elScope;
+
+            $scope.options = {
+                columns: [
+                    {
+                        title: 'Formatted',
+                        name: 'formatted',
+                        width: 300,
+                        formatter: function (rowItem) {
+                            return "Hello " + rowItem.formatted;
+                        }
+                    }
+                ],
+                data: [
+                    { id: 0, formatted: "One" },
+                    { id: 1, formatted: "Two" },
+                    { id: 2, formatted: "Three" },
+                    { id: 3, formatted: "Four" }
+                ],
+                index: "id"
+            };
+
+            compiledElement = getCompiledElement($scope);
+            elScope = compiledElement.isolateScope();
+
+            cells = compiledElement.find('.bb-reorder-table-col .bb-reorder-table-cell');
+
+            expect($(cells[0]).html()).toContain('Hello One');
+            expect($(cells[1]).html()).toContain('Hello Two');
+            expect($(cells[2]).html()).toContain('Hello Three');
+            expect($(cells[3]).html()).toContain('Hello Four');
         });
 
         describe('should display column templating that', function () {
