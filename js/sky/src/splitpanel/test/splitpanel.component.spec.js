@@ -11,6 +11,7 @@
 
         beforeEach(module(
             'sky.splitpanel',
+            'sky.bbcheckdirtyform',
             'sky.templates'
         ));
 
@@ -21,10 +22,10 @@
         }));
 
         splitpanelContent = "<bb-listbuilder-content>" +
-                            "<bb-splitpanel-container>"+
-                            "<bb-splitpanel-list-panel max-width-in-percentage='70' min-width-in-percentage='20'>"+
+                            "<bb-splitpanel-container>" +
+                            "<bb-splitpanel-list-panel max-width-in-percentage='70' min-width-in-percentage='20'>" +
                             "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +
-                            "<div class='bb-custom-content-item' bb-splitpanel-list-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
+                            "<div class='bb-custom-content-item' bb-splitpanel-list-item ng-repeat='item in listCtrl.data' bb-splitpanel-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
                             "<div style='margin-bottom: 10px'>" +
                             "</div>" +
                             "</div>" +
@@ -64,7 +65,7 @@
                         return func(arg);
                     }
                 },
-                selectedItem: { $index: 0 }
+                selectedItem: { $index: 1 }
 
             };
             el = $compile(filterBtnHtml)($scope);
@@ -93,17 +94,17 @@
                         return func(arg);
                     }
                 },
-                selectedItem: { $index: 0 }
+                selectedItem: { $index: 1 }
 
             };
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
 
             //clicked first item
-            el.find('.split-panel-list-container div')[0].click();
+            //el.find('.split-panel-list-container div')[0].click();
 
             //click back button
-            el.find('.navigation-panel')[0].click();
+            el.find('.bb-splitpanel-navigation-panel')[0].click();
 
             expect(backCalled).toBe(true);
         });

@@ -15,6 +15,7 @@
 
         beforeEach(module(
             'sky.splitpanel',
+            'sky.bbcheckdirtyform',
             'sky.templates'
         ));
         beforeEach(inject(function (_$rootScope_, _$compile_, _bbModal_, _bbCheckDirtyForm_, _$q_, $httpBackend,_$state_) {
@@ -40,7 +41,7 @@
                             "<div class='split-pattern-container'>" +
                             "<div class='bb-custom-content'>" +
                             "<div ng-if='listCtrl.data.length > 0' class='split-panel-list-container'>" +
-                            "<div class='bb-custom-content-item' bb-splitpanel-list-item ng-repeat='item in listCtrl.data' bb-listbuilder-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
+                            "<div class='bb-custom-content-item' bb-splitpanel-list-item ng-repeat='item in listCtrl.data' bb-splitpanel-content-get-panel-data='listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata,arg)' bb-splitpanel-item-is-active='$index === listCtrl.selectedItem.$index' ng-keydown='listCtrl.navigateUpAndDown()'>" +
                             "<div style='margin-bottom: 10px'>" +
                             "</div>" +
                             "</div>" +
@@ -82,7 +83,7 @@
                     scope: $scope,
                     bbModal: bbmodal
                 }),
-                selectedItem: { $index: 0 }
+                selectedItem: { $index: 1 }
             };
 
 
@@ -126,7 +127,7 @@
                     scope: $scope,
                     bbModal: bbmodal
                 }),
-                selectedItem: { $index: 0 }
+                selectedItem: { $index: 1 }
             };
 
 
@@ -175,7 +176,7 @@
                     scope: $scope,
                     bbModal: bbmodal
                 }),
-                selectedItem: { $index: 0 }
+                selectedItem: { $index: 1 }
             };
 
 

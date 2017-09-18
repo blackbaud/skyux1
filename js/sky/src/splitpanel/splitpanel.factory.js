@@ -6,11 +6,21 @@
         return {
             init: function (options) {
                 var enableFormDirtyCheck = options.enableFormDirtyCheck, forms = options.forms, action1Callback = options.action1Callback,
-                    action2Callback = options.action2Callback, bbModal = options.bbModal;
+                    action2Callback = options.action2Callback, bbModal = options.bbModal, ele = null;
                 //check dirty and open modal
-                function checkDirtyForm(func, param) {
+                function checkDirtyForm(func, param, e) {
                     //check for dirty form
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
+
+                        if (e !== undefined) {
+                            var currentEvent = e ? e : event;
+                            if (currentEvent.target && currentEvent.target.checked !== undefined) {
+                                currentEvent.preventDefault();
+                                ele = currentEvent.target;
+                            }
+                        }
+
+
                         bbModal.open({
                             controller: options.modalController,
                             templateUrl: options.modalTemplate,
@@ -22,6 +32,11 @@
                         })
                         .result.then(function (modalResult) {
                             if (modalResult.result) {
+
+                                if (ele !== null && ele.checked !== undefined) {
+                                    ele.checked = !ele.checked;
+                                }
+
                                 if (action1Callback) {
                                     $q.when(action1Callback(), function () {
                                         invokeMethodWithParameters(func, param);
@@ -103,7 +118,7 @@
 
                 return {
                     checkDirtyForm: checkDirtyForm,
-                    setDirtyFormDefault: setDirtyFormDefault,
+                    setDirtyFormDefault: setDirtyFormDefault
                 };
             }
         };

@@ -445,8 +445,8 @@
 
 
         //this method is used to select item by up/down arrow keys in the list
-        function navigateUpAndDown() {
-            var code = event.keyCode;
+        function navigateUpAndDown(e) {
+            var code = (e && e.keyCode) ? e.keyCode : event.keyCode;
             if ((code == 38 && self.selectedItem.$index !== 0) || code == 40) {
                 self.splitpanelNavigator.checkDirtyForm(nextAndPreviousHandler, code);
                 //setting flag ot have focus on vendor control
