@@ -12,7 +12,8 @@ than the reorder directive and requires an integer indexing property.
     - `bb-reorder-table-options` &mdash; Specifies an object with the following properties for the `bb-reorder-table` directive.
         - `columns` &mdash; An array of available columns. Each column can have the following properties:
             - `controller` &mdash; *(Optional.)* Specifies the controller function for a templated column to allow cells to perform logic while displaying formatted or complex data. You can use `$scope.rowData` to access row data from the grid in the column template controller.
-            - `jsonmap` &mdash; Specifies the name of the property within the `data` property that maps to the data in the column. This property is not required when `template_url` is used, but is required for the `data.property_name` syntax.
+            - `formatter` &mdash; *(Optional)* Specifies a function which takes an object from the `data` property and returns a value to display in the table.
+            - `jsonmap` &mdash; Specifies the name of the property within the `data` property that maps to the data in the column. This property is not required when `template_url` or `formatter` is used, but is required for the `data.property_name` syntax.
             - `name` &mdash; Specifies a unique name for the column.
             - `show` &mdash; *(Optional.)* Indicates whether the given column is visible. *(Default: `true`)*
             - `template_url` &mdash; *(Optional.)* Specifies the URL for a column template to use when displaying formatted or complex data in a cell. To access the properties of the cell data object, use the format `data.property_name`. 
