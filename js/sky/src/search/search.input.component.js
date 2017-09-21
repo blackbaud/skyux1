@@ -286,7 +286,8 @@
                 bbSearchPlaceholder: '<?',
                 bbSearchMobileResponseEnabled: '<?',
                 bbSearchInputId: '<?',
-                bbSearchFullWidth: '<?'
+                bbSearchFullWidth: '<?',
+                bbSearchSkipButtonWhileTabbing: '<?'
             }
         });
 })();
