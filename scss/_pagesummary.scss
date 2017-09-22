@@ -7,16 +7,15 @@
 }
 
 .bb-page-summary-title {
+    @include bb-page-heading();
     margin-top: 0;
     margin-bottom: $margin-half;
 }
 
 .bb-page-summary-subtitle {
-    font-size: $bb-font-size-xl;
-    font-weight: 400;
+    @include bb-emphasized();
     margin-top: 0;
     margin-bottom: $margin;
-    font-family: $font-family-base;
     line-height: $headings-line-height;
 }
 

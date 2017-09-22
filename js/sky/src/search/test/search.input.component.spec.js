@@ -7,15 +7,15 @@
             $scope,
             $document,
             bbMediaBreakpoints,
-            noContainerHtml =  '<bb-search-input ' +
+            noContainerHtml = '<bb-search-input ' +
                 'bb-search-text="searchCtrl.searchText" ' +
                 'bb-on-search="searchCtrl.applySearchText(searchText)"> ' +
-            '</bb-search-input>',
+                '</bb-search-input>',
             searchHtml = '<div><div bb-search-container>' +
                 '<div class="bb-test-other-item">Another Item</div>' +
                 noContainerHtml +
-            '</bb-search-input>' +
-            '</div></div>',
+                '</bb-search-input>' +
+                '</div></div>',
             fxOff;
 
         beforeEach(module(
@@ -190,9 +190,9 @@
                 'bb-search-text="searchCtrl.searchText" ' +
                 'bb-on-search="searchCtrl.applySearchText(searchText)" ' +
                 'bb-on-search-text-changed="searchCtrl.searchChanged(searchText)"> ' +
-            '</bb-search-input>' +
-            '</bb-search-input>' +
-            '</div></div>');
+                '</bb-search-input>' +
+                '</bb-search-input>' +
+                '</div></div>');
 
             changeInput(searchEl, 'new value');
             expect(newText).toBe('new value');
@@ -216,7 +216,7 @@
 
             searchEl = initSearch(searchHtml);
 
-            searchCallback({xs: true});
+            searchCallback({ xs: true });
             $scope.$digest();
 
             openButtonEl = findSearchOpen(searchEl);
@@ -226,7 +226,7 @@
             inputContainerEl = findInputContainerEl(searchEl);
             openButtonWrapperEl = findOpenButtonWrapper(searchEl);
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  false);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, false);
 
             openButtonEl.click();
             $scope.$digest();
@@ -240,13 +240,13 @@
             verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, false);
 
             inputEl.blur();
-            searchCallback({xs: false});
+            searchCallback({ xs: false });
             $scope.$digest();
 
             verifyLargeScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl);
             expect(inputEl).not.toBeFocused();
 
-            searchCallback({xs: true});
+            searchCallback({ xs: true });
             $scope.$digest();
 
 
@@ -268,7 +268,7 @@
 
             searchEl = initSearch(noContainerHtml);
 
-            searchCallback({xs: true});
+            searchCallback({ xs: true });
             $scope.$digest();
 
             openButtonEl = findSearchOpen(searchEl);
@@ -380,7 +380,7 @@
 
             spyOn(bbMediaBreakpoints, 'register').and.callFake(function (callback) {
                 searchCallback = callback;
-                searchCallback({xs: true});
+                searchCallback({ xs: true });
             });
 
             searchEl = initSearch(searchHtml);
@@ -394,7 +394,7 @@
             inputContainerEl = findInputContainerEl(searchEl);
             openButtonWrapperEl = findOpenButtonWrapper(searchEl);
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, true);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
 
@@ -406,7 +406,7 @@
             $scope.searchCtrl.searchText = 'yourText';
             $scope.$digest();
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, true);
             expect(clearButtonEl).toBeVisible();
             expect(searchButtonEl).toBeVisible();
             expect(inputEl).toBeFocused();
@@ -414,12 +414,12 @@
             $scope.searchCtrl.searchText = '';
             $scope.$digest();
 
-            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl,  true);
+            verifySmallScreenDismissable(openButtonWrapperEl, inputContainerEl, dismissEl, containerEl, true);
             expect(clearButtonEl).not.toBeVisible();
             expect(searchButtonEl).toBeVisible();
             expect(inputEl).toBeFocused();
 
-            searchCallback({xs: false});
+            searchCallback({ xs: false });
             $scope.$digest();
             $scope.searchCtrl.searchText = 'aText';
             $scope.$digest();
@@ -461,6 +461,33 @@
 
             searchEl.remove();
 
+        });
+
+        describe('search button', function () {
+            it('removes the search button from tab ordering when specified', function () {
+                var searchEl,
+                    searchButtonEl,
+                    removeFromTabOrderHtml = '<bb-search-input bb-search-skip-button-while-tabbing="true"></bb-search-input>';
+
+                searchEl = initSearch(removeFromTabOrderHtml);
+                searchButtonEl = findSearchButton(searchEl);
+
+                expect(searchButtonEl).toHaveAttr('tabindex', '-1');
+
+                searchEl.remove();
+            });
+
+            it('should not remove the search button from tab ordering when not specified', function () {
+                var searchEl,
+                    searchButtonEl;
+
+                searchEl = initSearch(searchHtml);
+                searchButtonEl = findSearchButton(searchEl);
+
+                expect(searchButtonEl).not.toHaveAttr('tabindex');
+
+                searchEl.remove();
+            });
         });
 
         describe('id', function () {

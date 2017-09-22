@@ -20,22 +20,20 @@
     color: $gray;
     cursor: pointer;
     display: table;
-    height: 120px;
+    height: 140px;
     width: 100%;
     text-align: center;
 
-    h4,
-    h5 {
-        font-style: italic;
-    }
-
     h4 {
-        font-size: $bb-font-size-xl;
+        @include bb-headline();
         margin: 0;
     }
 
     h5 {
-        font-size: $bb-font-size-lg;
+        font-size: $font-size-base;
+        font-style: normal;
+        color: $sky-text-color-default;
+        font-weight: 400;
         margin-top: $margin-half;
     }
 
