@@ -3194,6 +3194,7 @@
                 bbMinDate: '=?bbDatepickerMin',
                 bbPlaceholder: '=?bbDatepickerPlaceholder',
                 bbDatepickerAltInputFormats: '=?',
+                bbDatepickerSkipButtonWhileTabbing: '<?',
 
                 bbAltInputFormats: '=?', //deprecated
                 maxDate: '=?maxDate', //deprecated
@@ -12079,7 +12080,8 @@ angular.module('sky.palette.config', [])
                 bbSearchPlaceholder: '<?',
                 bbSearchMobileResponseEnabled: '<?',
                 bbSearchInputId: '<?',
-                bbSearchFullWidth: '<?'
+                bbSearchFullWidth: '<?',
+                bbSearchSkipButtonWhileTabbing: '<?'
             }
         });
 })();
@@ -16494,7 +16496,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                type="button" \n' +
         '                class="btn btn-default bb-date-field-calendar-button" \n' +
         '                ng-click="bbDatepicker.open($event)" \n' +
-        '                ng-attr-aria-label="{{\'datepicker_open\' | bbResources}}">\n' +
+        '                ng-attr-aria-label="{{\'datepicker_open\' | bbResources}}"\n' +
+        '				ng-attr-tabindex="{{bbDatepicker.bbDatepickerSkipButtonWhileTabbing === true ? \'-1\' : undefined}}">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
         '            </button>\n' +
         '        </span>\n' +
@@ -17491,6 +17494,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    </button>\n' +
         '\n' +
         '                    <button\n' +
+        '			ng-attr-tabindex="{{$ctrl.bbSearchSkipButtonWhileTabbing === true ? \'-1\' : undefined}}"\n' +
         '                        data-bbauto-field="SearchButton"          \n' +
         '                        type="button"\n' +
         '                        class="btn bb-search-btn-input-group bb-search-btn-apply"\n' +
