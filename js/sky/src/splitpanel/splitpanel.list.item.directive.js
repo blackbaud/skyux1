@@ -11,12 +11,13 @@
                 restrict: 'A',
                 controller: ['$scope', function ($scope) {
                     $scope.selectItem = function () {
+                        var elem = null;
                         if (!$scope.bbSplitpanelItemIsActive) {
                             $scope.$parent.item.$index = $scope.$parent.$index;
                             $scope.bbSplitpanelContentGetPanelData({ arg: $scope.$parent.item });
                         }
 
-                        var elem = angular.element('.bb-splitpanel-custom-content');
+                        elem = angular.element('.bb-splitpanel-custom-content');
                         if (elem) {
                             elem.addClass('bb-splitpanel-hidden');
                         }

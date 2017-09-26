@@ -11,15 +11,12 @@
                 function checkDirtyForm(func, param, e) {
                     //check for dirty form
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
-
                         if (e !== undefined) {
-                            var currentEvent = e ? e : event;
-                            if (currentEvent.target && currentEvent.target.checked !== undefined) {
-                                currentEvent.preventDefault();
-                                ele = currentEvent.target;
+                            if (e.target && e.target.checked !== undefined) {
+                                e.preventDefault();
+                                ele = e.target;
                             }
                         }
-
 
                         bbModal.open({
                             controller: options.modalController,
@@ -32,7 +29,6 @@
                         })
                         .result.then(function (modalResult) {
                             if (modalResult.result) {
-
                                 if (ele !== null && ele.checked !== undefined) {
                                     ele.checked = !ele.checked;
                                 }
@@ -50,7 +46,6 @@
                             }
                         });
                     } else {
-
                         //calling invoked action without any pre-processing
                         invokeMethodWithParameters(func, param);
                     }
@@ -75,7 +70,6 @@
                     }
                     return false;
                 }
-
 
                 options.scope.$on('$stateChangeStart', function (event, toState, toParams) {
                     if (enableFormDirtyCheck && angular.isDefined(forms) && angular.isDefined(forms.workspaceContainerForm) && forms.workspaceContainerForm.$dirty) {
@@ -109,8 +103,7 @@
                     }
                 });
 
-
-                //this function used to navigate to passed url 
+                //this function used to navigate to passed url
                 function navigatetoState(nextState) {
                     options.scope.$$listeners.$stateChangeStart = [];
                     $state.go(nextState.toState, nextState.toParams);
@@ -122,12 +115,10 @@
                 };
             }
         };
-
     }
 
     bbCheckDirtyForm.$inject = ['$state', '$q'];
 
     angular.module('sky.bbcheckdirtyform', ['sky.modal'])
         .factory('bbCheckDirtyForm', bbCheckDirtyForm);
-
 }());
