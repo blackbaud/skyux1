@@ -18,7 +18,7 @@
             'sky.bbcheckdirtyform',
             'sky.templates'
         ));
-        beforeEach(inject(function (_$rootScope_, _$compile_, _bbModal_, _bbCheckDirtyForm_, _$q_, $httpBackend,_$state_) {
+        beforeEach(inject(function (_$rootScope_, _$compile_, _bbModal_, _bbCheckDirtyForm_, _$q_, $httpBackend, _$state_) {
             $scope = _$rootScope_.$new();
             $compile = _$compile_;
             bbmodal = _bbModal_;
@@ -27,10 +27,7 @@
             backend = $httpBackend;
             spyOn(_$state_, 'go');
             backend.when('GET', "/.*/").respond({});
-
         }));
-
-
 
         splitpanelContent = "<bb-listbuilder-content bb-listbuilder-content-active-view='custom-1'" +
                             "bb-listbuilder-content-view-changed='listCtrl.viewChanged(newView)' bb-listbuilder-content-selected-item='custom-1'>" +
@@ -58,14 +55,12 @@
                             "</bb-splitpanel-workspace>";
 
         it('action1Callback should be called when form is not dirty', function () {
-
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
                     getPaneldataCalled = false, el;
 
             $scope.forms = {};
 
             $scope.listCtrl = {
-
                 getPaneldata: function () {
                     getPaneldataCalled = true;
                 },
@@ -86,27 +81,23 @@
                 selectedItem: { $index: 1 }
             };
 
-
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
             el.find('.split-panel-list-container div')[0].click();
 
             expect(getPaneldataCalled).toBe(true);
-
         });
 
         it('action1Callback should be called in case of save in dirty check', function () {
-
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
-                    getPaneldataCalled = false, el, deffered = $q.defer(), saveCalled = false;
-            modalResult = { result: true }
+                    getPaneldataCalled = false, el, saveCalled = false;
+            modalResult = { result: true };
             $scope.forms = {};
 
             bbmodal = jasmine.createSpyObj('modal', ['open']);
             bbmodal.open.and.returnValue(fakeModal);
 
             $scope.listCtrl = {
-
                 getPaneldata: function () {
                     getPaneldataCalled = true;
                 },
@@ -130,7 +121,6 @@
                 selectedItem: { $index: 1 }
             };
 
-
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
             $scope.forms.workspaceContainerForm.$setDirty();
@@ -138,13 +128,11 @@
 
             expect(getPaneldataCalled).toBe(true);
             expect(saveCalled).toBe(true);
-
         });
 
         it('action2Callback should be called in case of save in dirty check', function () {
-
             var filterBtnHtml = "<bb-listbuilder>" + splitpanelContent + workspaceContent + "</bb-listbuilder>",
-                    getPaneldataCalled = false, el, deffered = $q.defer(), doNotSaveCalled = false;
+                    getPaneldataCalled = false, el, doNotSaveCalled = false;
 
             modalResult = { result: false };
 
@@ -154,7 +142,6 @@
             bbmodal.open.and.returnValue(fakeModal);
 
             $scope.listCtrl = {
-
                 getPaneldata: function () {
                     getPaneldataCalled = true;
                 },
@@ -164,7 +151,6 @@
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
                     action1Callback: function () {
-
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     action2Callback: function () {
@@ -179,14 +165,12 @@
                 selectedItem: { $index: 1 }
             };
 
-
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
             $scope.forms.workspaceContainerForm.$setDirty();
             el.find('.split-panel-list-container div')[0].click();
 
             expect(doNotSaveCalled).toBe(true);
-
         });
 
         it('setDirtyFormDefault should set the default state of workspaceContainerForm', function () {
@@ -211,7 +195,6 @@
                 })
             };
 
-
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
 
@@ -219,7 +202,6 @@
             $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
 
             expect($scope.forms.workspaceContainerForm.$dirty).toBe(false);
-
         });
 
         it('setDirtyFormDefault should return false when workspaceContainerForm is not dirty', function () {
@@ -233,7 +215,6 @@
                     enableFormDirtyCheck: true,
                     forms: $scope.forms,
                     action1Callback: function () {
-
                         $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
                     },
                     action2Callback: function () {
@@ -252,7 +233,6 @@
             result = $scope.listCtrl.splitpanelNavigator.setDirtyFormDefault();
 
             expect(result).toBe(false);
-
         });
 
         it('action1Callback should be called in case of savecall option select in dirty check on statechangeStart event', function () {
@@ -266,7 +246,6 @@
             bbmodal.open.and.returnValue(fakeModal);
 
             $scope.listCtrl = {
-
                 getPaneldata: function () {
                     getPaneldataCalled = true;
                 },
@@ -289,7 +268,6 @@
                 selectedItem: { $index: 0 }
             };
 
-
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
             $scope.forms.workspaceContainerForm.$setDirty();
@@ -297,14 +275,13 @@
             $scope.$broadcast(
                 '$stateChangeStart',
                 { name: 'test data' }, // toState
-                {}, // toParams                   
+                {}, // toParams
                 {}, // fromState
                 {}  // fromParams
             );
             $scope.$root.$apply();
 
             expect(saveCalled).toBe(true);
-
         });
 
         it('action2Callback should be called in case of Donotsavecall option select in dirty check on statechangeStart event', function () {
@@ -318,7 +295,6 @@
             bbmodal.open.and.returnValue(fakeModal);
 
             $scope.listCtrl = {
-
                 getPaneldata: function () {
                     getPaneldataCalled = true;
                 },
@@ -341,7 +317,6 @@
                 selectedItem: { $index: 0 }
             };
 
-
             el = $compile(filterBtnHtml)($scope);
             $scope.$digest();
             $scope.forms.workspaceContainerForm.$setDirty();
@@ -349,7 +324,7 @@
             $scope.$broadcast(
                 '$stateChangeStart',
                 { name: 'test data' }, // toState
-                {}, // toParams                   
+                {}, // toParams
                 {}, // fromState
                 {}  // fromParams
             );
