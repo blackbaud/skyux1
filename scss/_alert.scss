@@ -1,0 +1,96 @@
+.alert {
+    border: none;
+    border-left: solid 30px;
+    color: $sky-text-color-default;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    
+    .alert-content {
+      padding-top: $padding;
+      padding-bottom: $padding;
+    }
+    
+  
+    a {
+      color: change-color($sky-text-color-default, $alpha: 0.8);
+      text-decoration: underline;
+
+      &:hover {
+        color: $sky-text-color-default;
+        text-decoration: underline;
+      }
+    }
+}
+
+.alert button {
+    float: none;
+    margin-left: auto;
+    margin-right: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.alert-info {
+    background-color: $sky-background-color-info;
+    border-color: $sky-highlight-color-info;
+}
+
+.alert-info::before {
+    content: "\f05a";
+	font-family: FontAwesome;
+	margin-left: -30px;
+    margin-right: 19px;
+	color: $sky-color-white;
+}
+
+.alert-success {
+    background-color: $sky-background-color-success;
+    border-color: $sky-highlight-color-success;
+}
+
+.alert-success::before {
+    content: "\f00c";
+	font-family: FontAwesome;
+	margin-left: -31px;
+    margin-right: 18px;
+	color: $sky-color-white;
+}
+
+.alert-warning {
+    background-color: $sky-background-color-warning;
+    border-color: $sky-highlight-color-warning;
+}
+
+.alert-warning::before {
+    content: "\f071";
+	font-family: FontAwesome;
+	margin-left: -31px;
+    margin-right: 18px;
+	color: $sky-color-white;
+}
+
+.alert-danger {
+    background-color: $sky-background-color-danger;
+    border-color: $sky-highlight-color-danger;
+}
+
+.alert-danger::before {
+    content: "\f071";
+	font-family: FontAwesome;
+	margin-left: -31px;
+    margin-right: 18px;
+	color: $sky-color-white;
+}
+
+.alert-dismissible .close {
+    color: $sky-text-color-default;
+    opacity: 0.8;
+    text-shadow: none;
+  
+    &:hover {
+        opacity: 1.0;
+    }
+}

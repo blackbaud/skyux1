@@ -10,7 +10,7 @@
 @import "FontAwesome/font-awesome";
 
 // Google Fonts
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,400italic|Oswald:300,400,700");
+@import 'fonts';
 
 @import "animation/animate";
 
@@ -70,6 +70,9 @@
 @import "summaryactionbar";
 @import "sectionedform";
 @import "splitpanel";
+@import "label";
+@import "alert";
+
 // Default Sky Theme
 @import "theme";
 

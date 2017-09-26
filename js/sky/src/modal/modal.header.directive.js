@@ -6,6 +6,7 @@
 
     function bbModalHeader() {
         function link(scope, el, attrs, bbModal) {
+            scope.dismiss = bbModal.dismiss;
             bbModal.setHeaderEl(el);
         }
 

@@ -1,0 +1,26 @@
+.label {
+  color: $sky-text-color-default;
+  display: inline;
+  border-radius: 10rem;
+  font-weight: 400;
+  line-height: 2.2;
+  margin: 0 3px;
+  padding: .3em .6em .3em .6em;
+  white-space: nowrap;
+}
+
+.label-success {
+  background-color: $sky-background-color-success;
+}
+
+.label-info {
+  background-color: $sky-background-color-info;
+}
+
+.label-warning {
+  background-color: $sky-background-color-warning;
+}
+
+.label-danger {
+  background-color: $sky-background-color-danger;
+}
