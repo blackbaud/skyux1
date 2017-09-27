@@ -3194,6 +3194,7 @@
                 bbMinDate: '=?bbDatepickerMin',
                 bbPlaceholder: '=?bbDatepickerPlaceholder',
                 bbDatepickerAltInputFormats: '=?',
+                bbDatepickerSkipButtonWhileTabbing: '<?',
 
                 bbAltInputFormats: '=?', //deprecated
                 maxDate: '=?maxDate', //deprecated
@@ -9352,6 +9353,10 @@
                 ctrl.fitToWindow = function () {
                     $scope.fitToWindow();
                 };
+
+                ctrl.dismiss = function (arg) {
+                    $scope.$dismiss(arg);
+                };
             }
 
             ctrl.$onInit = onInit;
@@ -9494,10 +9499,11 @@
         return {
             replace: true,
             transclude: true,
-            require: '^bbModalFooter',
+            require: ['^bbModal', '^bbModalFooter'],
             restrict: 'E',
             templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
-            link: function ($scope, el) {
+            link: function ($scope, el, attrs, ctrls) {
+                $scope.dismiss = ctrls[0].dismiss;
                 if (el.contents().length === 0) {
                     el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
                 }
@@ -9604,6 +9610,7 @@
 
     function bbModalHeader() {
         function link(scope, el, attrs, bbModal) {
+            scope.dismiss = bbModal.dismiss;
             bbModal.setHeaderEl(el);
         }
 
@@ -12079,7 +12086,8 @@ angular.module('sky.palette.config', [])
                 bbSearchPlaceholder: '<?',
                 bbSearchMobileResponseEnabled: '<?',
                 bbSearchInputId: '<?',
-                bbSearchFullWidth: '<?'
+                bbSearchFullWidth: '<?',
+                bbSearchSkipButtonWhileTabbing: '<?'
             }
         });
 })();
@@ -16494,7 +16502,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                type="button" \n' +
         '                class="btn btn-default bb-date-field-calendar-button" \n' +
         '                ng-click="bbDatepicker.open($event)" \n' +
-        '                ng-attr-aria-label="{{\'datepicker_open\' | bbResources}}">\n' +
+        '                ng-attr-aria-label="{{\'datepicker_open\' | bbResources}}"\n' +
+        '				ng-attr-tabindex="{{bbDatepicker.bbDatepickerSkipButtonWhileTabbing === true ? \'-1\' : undefined}}">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
         '            </button>\n' +
         '        </span>\n' +
@@ -17242,7 +17251,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<button class="btn bb-btn-secondary" type="button" ng-transclude></button>\n' +
         '');
     $templateCache.put('sky/templates/modal/modalfooterbuttoncancel.html',
-        '<button class="btn btn-link" type="button" ng-click="$parent.$parent.$dismiss(\'cancel\');" ng-transclude></button>');
+        '<button class="btn btn-link" type="button" ng-click="dismiss(\'cancel\');" ng-transclude></button>');
     $templateCache.put('sky/templates/modal/modalfooterbuttonprimary.html',
         '<button class="btn btn-primary" type="submit" ng-transclude></button>');
     $templateCache.put('sky/templates/modal/modalheader.html',
@@ -17254,8 +17263,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        aria-label="{{\'modal_close\' | bbResources}}"\n' +
         '        tabindex="0" \n' +
         '        class="fa fa-times close" \n' +
-        '        ng-click="$parent.$parent.$dismiss(\'close\');"\n' +
-        '        ng-keyup="$event.which === 13 &amp;&amp; $parent.$parent.$dismiss(\'close\');">\n' +
+        '        ng-click="dismiss(\'close\');"\n' +
+        '        ng-keyup="$event.which === 13 &amp;&amp; dismiss(\'close\');">\n' +
         '    </div>\n' +
         '    \n' +
         '</div>\n' +
@@ -17491,6 +17500,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    </button>\n' +
         '\n' +
         '                    <button\n' +
+        '			ng-attr-tabindex="{{$ctrl.bbSearchSkipButtonWhileTabbing === true ? \'-1\' : undefined}}"\n' +
         '                        data-bbauto-field="SearchButton"          \n' +
         '                        type="button"\n' +
         '                        class="btn bb-search-btn-input-group bb-search-btn-apply"\n' +
