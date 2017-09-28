@@ -398,7 +398,9 @@
     }
 
     .bb-vertical-tabset-group-heading {
-        padding: 10px 15px;
+        align-items: center;
+	display: flex;
+	padding: 10px 30px 10px 15px;
     }
   
     .bb-vertical-tabset-group-chevron {
