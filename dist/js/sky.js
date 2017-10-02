@@ -10,7 +10,6 @@
 (function () {
     'use strict';
 
-
     angular.module('sky.alert', ['sky.alert.component']);
 }());
 /*global angular */
@@ -3195,6 +3194,7 @@
                 bbMinDate: '=?bbDatepickerMin',
                 bbPlaceholder: '=?bbDatepickerPlaceholder',
                 bbDatepickerAltInputFormats: '=?',
+                bbDatepickerSkipButtonWhileTabbing: '<?',
 
                 bbAltInputFormats: '=?', //deprecated
                 maxDate: '=?maxDate', //deprecated
@@ -3300,7 +3300,6 @@
                     date = momentDate.toDate();
                 }
             }
-            
             return date;
         }
 
@@ -9354,6 +9353,10 @@
                 ctrl.fitToWindow = function () {
                     $scope.fitToWindow();
                 };
+
+                ctrl.dismiss = function (arg) {
+                    $scope.$dismiss(arg);
+                };
             }
 
             ctrl.$onInit = onInit;
@@ -9496,10 +9499,11 @@
         return {
             replace: true,
             transclude: true,
-            require: '^bbModalFooter',
+            require: ['^bbModal', '^bbModalFooter'],
             restrict: 'E',
             templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
-            link: function ($scope, el) {
+            link: function ($scope, el, attrs, ctrls) {
+                $scope.dismiss = ctrls[0].dismiss;
                 if (el.contents().length === 0) {
                     el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
                 }
@@ -9606,6 +9610,7 @@
 
     function bbModalHeader() {
         function link(scope, el, attrs, bbModal) {
+            scope.dismiss = bbModal.dismiss;
             bbModal.setHeaderEl(el);
         }
 
@@ -10408,27 +10413,27 @@ var bbPaletteConfig;
 /* LINES BELOW ARE AUTO GENERATED */
 bbPaletteConfig = {
     "multi": [
-        "#1f91da",
-        "#f9b66d",
-        "#1dc8a6",
-        "#9176c6",
-        "#28d7d9",
-        "#ef6977",
-        "#919191",
-        "#7ec2ed",
-        "#fbcf9f",
-        "#75ebd3",
-        "#beaedd",
-        "#85e8ea",
-        "#f59ca6",
-        "#afafaf"
+        "#0091c2",
+        "#fbb94c",
+        "#7cc452",
+        "#ae9abc",
+        "#00d1aa",
+        "#f1575a",
+        "#91959c",
+        "#4cd2ff",
+        "#fdd189",
+        "#b5de9d",
+        "#cfc3d7",
+        "#55ffdf",
+        "#f69093",
+        "#b0b2b7"
     ],
     "mono": [
-        "#156395",
-        "#1c84c6",
-        "#44a6e5",
-        "#83c4ed",
-        "#c1e1f6"
+        "#005d7d",
+        "#007ca6",
+        "#00bcfc",
+        "#53d3ff",
+        "#a9e9ff"
     ]
 };
 
@@ -12081,7 +12086,8 @@ angular.module('sky.palette.config', [])
                 bbSearchPlaceholder: '<?',
                 bbSearchMobileResponseEnabled: '<?',
                 bbSearchInputId: '<?',
-                bbSearchFullWidth: '<?'
+                bbSearchFullWidth: '<?',
+                bbSearchSkipButtonWhileTabbing: '<?'
             }
         });
 })();
@@ -12388,10 +12394,14 @@ angular.module('sky.palette.config', [])
     function bbSelectField() {
         function link($scope, el, attrs, ctrls) {
             var bbSelectField = ctrls[0];
-            if (bbSelectField && ctrls[1] && attrs.required) {
+            if (bbSelectField && ctrls[1]) {
                 ctrls[1].$validators.required = function () {
-                    return angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0;
+                    return !attrs.required || (angular.isDefined(bbSelectField.bbSelectFieldSelectedItems) && bbSelectField.bbSelectFieldSelectedItems.length > 0);
                 };
+
+                attrs.$observe('required', function () {
+                    ctrls[1].$validate();
+                });
 
                 $scope.$watchCollection(
                     function () {
@@ -16171,11 +16181,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '');
     $templateCache.put('sky/templates/alert/alert.html',
         '<div class="alert" ng-class="[\'alert-\' + ($ctrl.bbAlertType || \'warning\'), $ctrl.bbAlertCloseable === \'true\' ? \'alert-dismissible\' : null]" ng-show="!$ctrl.bbAlertClosed" role="alert">\n' +
+        '    <div class="alert-content" ng-transclude></div>\n' +
         '    <button ng-show="$ctrl.bbAlertCloseable === \'true\'" type="button" class="close" ng-click="$ctrl.close({$event: $event})">\n' +
         '        <span aria-hidden="true">&times;</span>\n' +
         '        <span class="sr-only">{{\'alert_close\' | bbResources}}</span>\n' +
         '    </button>\n' +
-        '    <div ng-transclude></div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/avatar/avatar.component.html',
@@ -16492,7 +16502,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                type="button" \n' +
         '                class="btn btn-default bb-date-field-calendar-button" \n' +
         '                ng-click="bbDatepicker.open($event)" \n' +
-        '                ng-attr-aria-label="{{\'datepicker_open\' | bbResources}}">\n' +
+        '                ng-attr-aria-label="{{\'datepicker_open\' | bbResources}}"\n' +
+        '				ng-attr-tabindex="{{bbDatepicker.bbDatepickerSkipButtonWhileTabbing === true ? \'-1\' : undefined}}">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
         '            </button>\n' +
         '        </span>\n' +
@@ -17240,7 +17251,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<button class="btn bb-btn-secondary" type="button" ng-transclude></button>\n' +
         '');
     $templateCache.put('sky/templates/modal/modalfooterbuttoncancel.html',
-        '<button class="btn btn-link" type="button" ng-click="$parent.$parent.$dismiss(\'cancel\');" ng-transclude></button>');
+        '<button class="btn btn-link" type="button" ng-click="dismiss(\'cancel\');" ng-transclude></button>');
     $templateCache.put('sky/templates/modal/modalfooterbuttonprimary.html',
         '<button class="btn btn-primary" type="submit" ng-transclude></button>');
     $templateCache.put('sky/templates/modal/modalheader.html',
@@ -17252,8 +17263,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        aria-label="{{\'modal_close\' | bbResources}}"\n' +
         '        tabindex="0" \n' +
         '        class="fa fa-times close" \n' +
-        '        ng-click="$parent.$parent.$dismiss(\'close\');"\n' +
-        '        ng-keyup="$event.which === 13 &amp;&amp; $parent.$parent.$dismiss(\'close\');">\n' +
+        '        ng-click="dismiss(\'close\');"\n' +
+        '        ng-keyup="$event.which === 13 &amp;&amp; dismiss(\'close\');">\n' +
         '    </div>\n' +
         '    \n' +
         '</div>\n' +
@@ -17489,6 +17500,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    </button>\n' +
         '\n' +
         '                    <button\n' +
+        '			ng-attr-tabindex="{{$ctrl.bbSearchSkipButtonWhileTabbing === true ? \'-1\' : undefined}}"\n' +
         '                        data-bbauto-field="SearchButton"          \n' +
         '                        type="button"\n' +
         '                        class="btn bb-search-btn-input-group bb-search-btn-apply"\n' +

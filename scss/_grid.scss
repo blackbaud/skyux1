@@ -200,7 +200,7 @@ body:not(.bb-viewkeeper-ignore-fixed) {
 .bb-grid-action-bar-clear-selection {
     background: none repeat scroll 0 0 transparent;
     color: $bb-color-blue;
-    font-family: "open sans", "Helvetica Neue", Arial, Helvetica, sans-serif, Arial, sans-serif;
+    font-family: $font-family-base;
     font-size: 13px;
     line-height: 2;
 }

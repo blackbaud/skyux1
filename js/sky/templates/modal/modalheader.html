@@ -6,8 +6,8 @@
         aria-label="{{'modal_close' | bbResources}}"
         tabindex="0" 
         class="fa fa-times close" 
-        ng-click="$parent.$parent.$dismiss('close');"
-        ng-keyup="$event.which === 13 &amp;&amp; $parent.$parent.$dismiss('close');">
+        ng-click="dismiss('close');"
+        ng-keyup="$event.which === 13 &amp;&amp; dismiss('close');">
     </div>
     
 </div>
