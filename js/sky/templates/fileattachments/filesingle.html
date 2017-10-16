@@ -20,7 +20,7 @@
             <span ng-if="bbFileSingleItem" class="bb-file-single-replace">{{'file_upload_replace' | bbResources}}</span>
         </button>
         <span ng-if="!bbFileSingleItem" ng-class="{'bb-file-single-error': bbFileSingleError() }" class="bb-file-single-name-placeholder">{{'file_upload_no_file' | bbResources}}</span>
-        <span ng-if="bbFileSingleItem && !bbFileSingleLinkAction" class="bb-file-single-name">{{bbFileSingleItem.name}}</span>
+        <span ng-if="bbFileSingleItem && !bbFileSingleLinkAction" class="bb-file-single-name">{{ bbFileSingleItem.name }}</span>
         <a ng-if="bbFileSingleItem && bbFileSingleLinkAction" class="bb-file-single-name-link" ng-click="bbFileSingle.action()" tabindex="0">{{bbFileSingleItem.name || bbFileSingleItem.url}}</a>
         <span class="bb-file-single-remove" title="{{'file_upload_remove' | bbResources}}" ng-click="bbFileSingle.remove()" ng-if="bbFileSingleItem" tabindex="0">
             <i class="fa fa-trash"></i>
