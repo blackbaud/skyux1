@@ -8,10 +8,11 @@
         return {
             replace: true,
             transclude: true,
-            require: '^bbModalFooter',
+            require: ['^bbModal', '^bbModalFooter'],
             restrict: 'E',
             templateUrl: 'sky/templates/modal/modalfooterbuttoncancel.html',
-            link: function ($scope, el) {
+            link: function ($scope, el, attrs, ctrls) {
+                $scope.dismiss = ctrls[0].dismiss;
                 if (el.contents().length === 0) {
                     el.append("<span>" + bbResources.modal_footer_cancel_button + "</span>");
                 }
