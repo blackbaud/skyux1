@@ -21,10 +21,12 @@
         </button>
         <span ng-if="!bbFileSingleItem" ng-class="{'bb-file-single-error': bbFileSingleError() }" class="bb-file-single-name-placeholder">{{'file_upload_no_file' | bbResources}}</span>
         <span ng-if="bbFileSingleItem && !bbFileSingleLinkAction" class="bb-file-single-name">{{ bbFileSingleItem.name }}</span>
-        <a ng-if="bbFileSingleItem && bbFileSingleLinkAction" class="bb-file-single-name-link" ng-click="bbFileSingle.action()" tabindex="0">{{bbFileSingleItem.name || bbFileSingleItem.url}}</a>
-        <span class="bb-file-single-remove" title="{{'file_upload_remove' | bbResources}}" ng-click="bbFileSingle.remove()" ng-if="bbFileSingleItem" tabindex="0">
+        <button ng-if="bbFileSingleItem && bbFileSingleLinkAction" class="bb-file-single-name-link" ng-click="bbFileSingle.action()">
+            <span class="bb-file-single-name-link-text">{{ bbFileSingleItem.name || bbFileSingleItem.url }}</span>
+        </button>
+        <button class="bb-file-single-remove" title="{{'file_upload_remove' | bbResources}}" ng-click="bbFileSingle.remove()" ng-if="bbFileSingleItem">
             <i class="fa fa-trash"></i>
-        </span>
+        </button>
     </div>
     <div class="bb-file-single-preview" ng-if="bbFileSingle.isImg()">
         <div class="center-block">

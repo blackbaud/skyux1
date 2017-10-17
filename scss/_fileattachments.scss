@@ -184,10 +184,23 @@
 
 .bb-file-single-name-link {
     cursor: pointer;
+    border: none;
+    background-color: inherit;
+}
+
+.bb-file-single-name-link-text {
+    color: $link-color;
+    text-decoration: underline;
+
+    &:hover {
+        color: $link-hover-color;
+    }
 }
 
 .bb-file-single-remove {
     cursor: pointer;
+    border: none;
+    background-color: inherit;
     padding: 7px 5px 7px 5px;
 }
 
