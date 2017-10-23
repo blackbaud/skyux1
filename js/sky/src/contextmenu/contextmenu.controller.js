@@ -6,6 +6,8 @@
     function BBContextMenuController() {
         var vm = this;
 
+        vm.appendToBody = !!vm.appendToBody;
+
         vm.contextButtonStopPropagation = function ($event) {
             $event.stopPropagation();
         };
