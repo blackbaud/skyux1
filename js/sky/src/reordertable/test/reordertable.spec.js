@@ -157,7 +157,7 @@ describe('Reorder Table', function () {
                         ],
                         index: "id",
                         oneIndexed: false,
-                        getContextMenuItems: function () {}
+                        getContextMenuItems: function () { }
                     };
                     $scope.unsortable = true;
 
@@ -1068,6 +1068,43 @@ describe('Reorder Table', function () {
             expect($(secondRow).hasClass('bb-reorder-table-row')).toBeFalsy();
         });
 
+        it('should display return of formmater', function () {
+            var $scope = $rootScope.$new(),
+                cells,
+                compiledElement,
+                elScope;
+
+            $scope.options = {
+                columns: [
+                    {
+                        title: 'Formatted',
+                        name: 'formatted',
+                        width: 300,
+                        formatter: function (rowItem) {
+                            return "Hello " + rowItem.formatted;
+                        }
+                    }
+                ],
+                data: [
+                    { id: 0, formatted: "One" },
+                    { id: 1, formatted: "Two" },
+                    { id: 2, formatted: "Three" },
+                    { id: 3, formatted: "Four" }
+                ],
+                index: "id"
+            };
+
+            compiledElement = getCompiledElement($scope);
+            elScope = compiledElement.isolateScope();
+
+            cells = compiledElement.find('.bb-reorder-table-col .bb-reorder-table-cell');
+
+            expect($(cells[0]).html()).toContain('Hello One');
+            expect($(cells[1]).html()).toContain('Hello Two');
+            expect($(cells[2]).html()).toContain('Hello Three');
+            expect($(cells[3]).html()).toContain('Hello Four');
+        });
+
         describe('should display column templating that', function () {
             it('can have a template url that displays a formatted object in a cell', function () {
                 var $scope = $rootScope.$new(),
@@ -1155,13 +1192,13 @@ describe('Reorder Table', function () {
                         }
                     ],
                     data: [
-                        { id: 0, templated: {title: 'Title 1', info: 'info 1'} },
-                        { id: 1, templated: {title: 'Title 2', info: 'info 2'} },
-                        { id: 2, templated: {title: 'Title 3', info: 'info 3'} },
-                        { id: 3, templated: {title: 'Title 4', info: 'info 4'} }
+                        { id: 0, templated: { title: 'Title 1', info: 'info 1' } },
+                        { id: 1, templated: { title: 'Title 2', info: 'info 2' } },
+                        { id: 2, templated: { title: 'Title 3', info: 'info 3' } },
+                        { id: 3, templated: { title: 'Title 4', info: 'info 4' } }
                     ],
                     index: "id",
-                    resources: { title: 'Title'}
+                    resources: { title: 'Title' }
                 };
 
                 compiledElement = getCompiledElement($scope);
@@ -1210,10 +1247,10 @@ describe('Reorder Table', function () {
                         }
                     ],
                     data: [
-                        { id: 0, hit: 'Pea', templated: {title: 'Title 1', info: 'info 1'} },
-                        { id: 1, hit: 'Eye', templated: {title: 'Title 2', info: 'info 2'} },
-                        { id: 2, hit: 'Inn', templated: {title: 'Title 3', info: 'info 3'} },
-                        { id: 3, hit: 'Gee', templated: {title: 'Title 4', info: 'info 4'} }
+                        { id: 0, hit: 'Pea', templated: { title: 'Title 1', info: 'info 1' } },
+                        { id: 1, hit: 'Eye', templated: { title: 'Title 2', info: 'info 2' } },
+                        { id: 2, hit: 'Inn', templated: { title: 'Title 3', info: 'info 3' } },
+                        { id: 3, hit: 'Gee', templated: { title: 'Title 4', info: 'info 4' } }
                     ],
                     index: "id"
                 };
@@ -1251,7 +1288,7 @@ describe('Reorder Table', function () {
                         }
                     ],
                     data: [
-                        { id: 0, hit: 'Pea', templated: {title: 'Title 1', info: 'info 1'} }
+                        { id: 0, hit: 'Pea', templated: { title: 'Title 1', info: 'info 1' } }
                     ],
                     index: "id"
                 };
