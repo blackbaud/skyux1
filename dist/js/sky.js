@@ -2100,6 +2100,8 @@
     function BBContextMenuController() {
         var vm = this;
 
+        vm.appendToBody = !!vm.appendToBody;
+
         vm.contextButtonStopPropagation = function ($event) {
             $event.stopPropagation();
         };
@@ -2121,7 +2123,8 @@
     function bbContextMenu() {
         return {
             bindToController: {
-                bbContextMenuLabel: '@'
+                bbContextMenuLabel: '@',
+                appendToBody: '<?bbContextMenuAppendToBody'
             },
             controller: 'BBContextMenuController',
             controllerAs: 'bbContextMenu',
@@ -5362,16 +5365,8 @@
                 'sky.grids.toolbar'
                 ])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
-            function toggleDropdown($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                $scope.locals.is_open = !$scope.locals.is_open;
-            }
-
             $scope.locals = {
-                is_open: false,
-                items: [],
-                toggleDropdown: toggleDropdown
+                items: []
             };
 
             /*istanbul ignore else */
@@ -10986,7 +10981,7 @@ angular.module('sky.palette.config', [])
 
                 topIndex = vm.options.fixed;
 
-                containerEl.sortable("disable"); // don't allow sorting during animation
+                containerEl.sortable('disable'); // don't allow sorting during animation
 
                 toTheTopEl = $(containerEl.children()[index]);
                 toTheTopElOffset = toTheTopEl.position();
@@ -10994,7 +10989,7 @@ angular.module('sky.palette.config', [])
                 // create a clone of the element being moved to the top so we can animate it without messing with the ng-repeat
                 animateCloneEl = toTheTopEl.clone();
                 animateCloneEl.addClass('bb-reorder-table-animate-element');
-                animateCloneEl.css({ top: toTheTopElOffset.top + "px", left: toTheTopElOffset.left + "px", width: toTheTopEl.outerWidth() + "px" });
+                animateCloneEl.css({ top: toTheTopElOffset.top + 'px', left: toTheTopElOffset.left + 'px', width: toTheTopEl.outerWidth() + 'px' });
 
                 containerEl.append(animateCloneEl);
 
@@ -11006,7 +11001,7 @@ angular.module('sky.palette.config', [])
                         toTheTopEl.removeClass('bb-reorder-table-row-placeholder');
 
                         animateCloneEl.remove();
-                        containerEl.sortable("enable");
+                        containerEl.sortable('enable');
 
                         $scope.$apply(function () {
                             // perform the swap moving the item to the top of the list
@@ -11054,7 +11049,7 @@ angular.module('sky.palette.config', [])
                 cellScopes[itemScope.$id] = null;
                 delete cellScopes[itemScope.$id];
             });
-            
+
         }
 
         bbAutonumericConfig = {
@@ -11113,6 +11108,7 @@ angular.module('sky.palette.config', [])
 
                 $scope.$apply(function () {
                     vm.sorting = false;
+                    $scope.$emit('bbTableReordered');
                 });
 
                 originalSortItemIndex = null;
@@ -11124,8 +11120,6 @@ angular.module('sky.palette.config', [])
                 $timeout(function () {
                     containerEl.children().removeClass('bb-reorder-table-no-animate');
                 });
-
-                $scope.$emit("tableReordered");
             },
             update: function (e, ui) {
                 // grab the final index of the item being sorted before we cancel
@@ -11165,7 +11159,7 @@ angular.module('sky.palette.config', [])
 
                 currentSortItemIndex = newIndex;
             },
-            items: ">.bb-reorder-table-row"
+            items: '>.bb-reorder-table-row'
         };
 
         containerEl.sortable(sortableOptions);
@@ -12430,7 +12424,8 @@ angular.module('sky.palette.config', [])
                 bbSelectFieldSelectedItems: '=?ngModel',
                 bbSelectFieldStyle: '@?',
                 bbSelectFieldIcon: '@?',
-                bbSelectFieldText: '@?'
+                bbSelectFieldText: '@?',
+                bbSelectFieldSkipWhileTabbing: '<?'
             },
             controller: 'BBSelectFieldController',
             controllerAs: 'bbSelectField',
@@ -12759,7 +12754,8 @@ angular.module('sky.palette.config', [])
             animationSpeed = 150,
             marginTimeout,
             summaryEl,
-            actionbarEl;
+            actionbarEl,
+            summaryItemsEl;
 
         function summaryAnimationEnd(closed) {
             var displayType = closed ? 'none' : '';
@@ -12917,6 +12913,14 @@ angular.module('sky.palette.config', [])
             return $element.find('.bb-summary-actionbar-summary');
         }
 
+        function getSummaryItemsEl() {
+            var summaryItemsEl = $element.find('bb-summary-actionbar-summary');
+            if (summaryItemsEl.length > 0) {
+                return summaryItemsEl[0];
+            }
+            return undefined;
+        }
+
         function getActionbar() {
             return $element.find('.bb-summary-actionbar');
         }
@@ -12962,10 +12966,19 @@ angular.module('sky.palette.config', [])
             windowResize();
         }
 
+        function summaryContentExists() {
+            if ($transclude.isSlotFilled('bbSummaryActionbarSummary')) {
+                if (summaryItemsEl.children.length > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function onInit() {
             actionbarEl = getActionbar();
             summaryEl = getSummaryEl();
-            ctrl.summaryContentExists = $transclude.isSlotFilled('bbSummaryActionbarSummary');
+            summaryItemsEl = getSummaryItemsEl();
             
             if (!isInModalFooter()) {
                 initializeDocumentSummary();
@@ -12989,7 +13002,8 @@ angular.module('sky.palette.config', [])
 
         ctrl.$postLink = onInit;
         ctrl.$onDestroy = onDestroy;
-
+        
+        ctrl.summaryContentExists = summaryContentExists;
         ctrl.hideSummarySection = hideSummarySection;
         ctrl.showSummarySection = showSummarySection;
     }
@@ -16406,7 +16420,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</button>\n' +
         '');
     $templateCache.put('sky/templates/contextmenu/contextmenu.html',
-        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown>\n' +
+        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body="{{bbContextMenu.appendToBody}}">\n' +
         '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="bbContextMenu.contextButtonStopPropagation($event)" bb-context-menu-button-dropdown-toggle></bb-context-menu-button>\n' +
         '    <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">\n' +
         '        <ng-transclude></ng-transclude>\n' +
@@ -16803,14 +16817,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>\n' +
         '');
     $templateCache.put('sky/templates/grids/dropdown.html',
-        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" uib-dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
-        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">\n' +
-        '    </bb-context-menu-button>\n' +
-        '    <div class="bb-dropdown-menu" uib-dropdown-menu role="menu">\n' +
-        '        <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>\n' +
-        '    </div>\n' +
-        '</div>\n' +
-        '');
+        '<bb-context-menu ng-if="locals.items.length > 0" bb-context-menu-append-to-body="true">\n' +
+        '    <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>\n' +
+        '</bb-context-menu>');
     $templateCache.put('sky/templates/grids/filters.html',
         '<div style="display:none;">\n' +
         '    <div bb-scrolling-view-keeper="viewKeeperOptions" class="bb-grid-filters grid-filters">\n' +
@@ -17372,10 +17381,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    <div ng-if="$ctrl.contextMenuItems" class="bb-reorder-table-label-cell bb-reorder-table-label-context"></div>\n' +
         '                    <div ng-if="column.show" ng-repeat="column in $ctrl.options.columns" class="bb-reorder-table-label-cell" ng-style="{ \'width\': column.width }">\n' +
         '                        <div ng-if="column.title || column.title === \'\'">\n' +
-        '                            {{column.title}}\n' +
+        '                            {{ column.title }}\n' +
         '                        </div>\n' +
         '                        <div ng-if="!column.title && column.title !== \'\'">\n' +
-        '                            {{column.name}}\n' +
+        '                            {{ column.name }}\n' +
         '                        </div>\n' +
         '                    </div>\n' +
         '                    <div ng-if="$ctrl.sortable" class="bb-reorder-table-label-cell bb-reorder-table-label-top"></div>\n' +
@@ -17390,21 +17399,22 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    </div>\n' +
         '                    <div ng-if="$ctrl.contextMenuItems" class="bb-reorder-table-col-context">\n' +
         '                        <div class="bb-reorder-table-cell">\n' +
-        '                            <bb-context-menu ng-if="$ctrl.contextMenuItems[item[$ctrl.options.index]].length > 0" bb-context-menu-label="Reorder Table Context">\n' +
-        '                                <bb-context-menu-item ng-repeat="action in $ctrl.contextMenuItems[item[$ctrl.options.index]]" bb-context-menu-action="action.cmd()">{{action.title}}</bb-context-menu-item>\n' +
+        '                            <bb-context-menu ng-if="$ctrl.contextMenuItems[item[$ctrl.options.index]].length > 0" bb-context-menu-label="Reorder Table Context" bb-context-menu-append-to-body="true">\n' +
+        '                                <bb-context-menu-item ng-repeat="action in $ctrl.contextMenuItems[item[$ctrl.options.index]]" bb-context-menu-action="action.cmd()">{{ action.title }}</bb-context-menu-item>\n' +
         '                            </bb-context-menu>\n' +
         '                        </div>\n' +
         '                    </div>\n' +
         '                    <div ng-if="column.show" ng-repeat="column in $ctrl.options.columns" class="bb-reorder-table-col" ng-style="{ \'width\': column.width }"\n' +
-        '                        id="{{\'bb-reorder-table-\' + $ctrl.tableId + \'-cell-\' + rowIndex + \'-\' + column.name}}">\n' +
-        '                        <div ng-if="!column.template_url" class="bb-reorder-table-cell">{{item[column.jsonmap]}}</div>\n' +
+        '                        id="{{ \'bb-reorder-table-\' + $ctrl.tableId + \'-cell-\' + rowIndex + \'-\' + column.name }}">\n' +
         '                        <div ng-if="column.template_url" class="bb-reorder-table-cell" ng-init="$ctrl.cellLink(item, rowIndex, column)"></div>\n' +
+        '                        <div ng-if="!column.template_url && column.formatter" class="bb-reorder-table-cell">{{ column.formatter(item) }}</div>\n' +
+        '                        <div ng-if="!column.template_url && !column.formatter" class="bb-reorder-table-cell">{{ item[column.jsonmap] }}</div>\n' +
         '                    </div>\n' +
         '                    <div ng-if="$ctrl.sortable" class="bb-reorder-table-col-top">\n' +
         '                        <div class="bb-reorder-table-cell">\n' +
         '                            <button type="button" ng-if="!$ctrl.sorting && $ctrl.options.fixed < $index" ng-click="$ctrl.pushToTop(item)" class="btn btn-link"> \n' +
         '                              <i class="fa fa-arrow-circle-up"></i>\n' +
-        '                              <span>Top</span>\n' +
+        '                              <span>{{\'reorder_top\' | bbResources}}</span>\n' +
         '                           </button>\n' +
         '                        </div>\n' +
         '                        <div ng-if="$ctrl.sorting && !$ctrl.isFixed($index)" class="bb-reorder-table-cell">\n' +
@@ -17597,7 +17607,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/selectfield/selectfieldsingle.include.html',
         '<div \n' +
         '    role="button" \n' +
-        '    tabindex="0" \n' +
+        '    tabindex="{{bbSelectField.bbSelectFieldSkipWhileTabbing === true ? \'-1\' : 0}}"\n' +
         '    class="btn btn-default bb-select-field-single" \n' +
         '    ng-click="bbSelectField.selectFieldClick()"\n' +
         '    ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.selectFieldClick()">\n' +
@@ -17667,10 +17677,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div class="bb-summary-actionbar" ng-class="{\'bb-summary-actionbar-summary-collapsed\': $ctrl.summaryCollapseMode}">\n' +
         '  <div class="bb-summary-actionbar-actions" ng-transclude="bbSummaryActionbarActions">\n' +
         '  </div>\n' +
-        '  <div class="bb-summary-actionbar-summary" ng-hide="!$ctrl.summaryContentExists">\n' +
+        '  <div class="bb-summary-actionbar-summary" ng-hide="!$ctrl.summaryContentExists()">\n' +
         '    <div class="bb-summary-actionbar-summary-items" ng-transclude="bbSummaryActionbarSummary">\n' +
         '    </div>\n' +
-        '    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
+        '    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists()">\n' +
         '      <button \n' +
         '        class="btn bb-btn-secondary" \n' +
         '        type="button"\n' +
@@ -17680,7 +17690,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '      </button>\n' +
         '    </div>\n' +
         '  </div>\n' +
-        '  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">\n' +
+        '  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists()">\n' +
         '    <button \n' +
         '      class="btn bb-btn-secondary" \n' +
         '      type="button"\n' +
