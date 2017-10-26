@@ -42,7 +42,8 @@
                 bbSelectFieldSelectedItems: '=?ngModel',
                 bbSelectFieldStyle: '@?',
                 bbSelectFieldIcon: '@?',
-                bbSelectFieldText: '@?'
+                bbSelectFieldText: '@?',
+                bbSelectFieldSkipWhileTabbing: '<?'
             },
             controller: 'BBSelectFieldController',
             controllerAs: 'bbSelectField',

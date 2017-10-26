@@ -17,3 +17,4 @@ The select field directive launches a modal that displays items for users to sel
     - `bb-select-field-picker` &mdash; Defines the content to display in the select field modal.
       - `bb-select-field-picker-template` &mdash; Specifies a template for the content of the modal. The modal generally includes [a `bb-checklist` directive ](../checklist) to create a filterable checkbox list for users to select items.
       - `bb-select-field-picker-header` &mdash; *(Optional.)* Specifies a header for the select field modal. *(Default: `Select value`)*
+    - `bb-select-field-skip-while-tabbing` &mdash; *(Optional.)* Indicates whether to skip over the select field container when a user tabs through it. *(Default: `false`)*
