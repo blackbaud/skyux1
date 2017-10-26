@@ -1,10 +1,10 @@
 <div class="bb-summary-actionbar" ng-class="{'bb-summary-actionbar-summary-collapsed': $ctrl.summaryCollapseMode}">
   <div class="bb-summary-actionbar-actions" ng-transclude="bbSummaryActionbarActions">
   </div>
-  <div class="bb-summary-actionbar-summary" ng-hide="!$ctrl.summaryContentExists">
+  <div class="bb-summary-actionbar-summary" ng-hide="!$ctrl.summaryContentExists()">
     <div class="bb-summary-actionbar-summary-items" ng-transclude="bbSummaryActionbarSummary">
     </div>
-    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">
+    <div class="bb-summary-actionbar-details-collapse" ng-show="$ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists()">
       <button 
         class="btn bb-btn-secondary" 
         type="button"
@@ -14,7 +14,7 @@
       </button>
     </div>
   </div>
-  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists">
+  <div class="bb-summary-actionbar-details-expand" ng-show="$ctrl.showExpand &amp;&amp; $ctrl.summaryCollapseMode &amp;&amp; $ctrl.summaryContentExists()">
     <button 
       class="btn bb-btn-secondary" 
       type="button"
