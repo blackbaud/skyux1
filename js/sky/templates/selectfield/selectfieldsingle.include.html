@@ -1,6 +1,6 @@
 <div 
     role="button" 
-    tabindex="0" 
+    tabindex="{{bbSelectField.bbSelectFieldSkipWhileTabbing === true ? '-1' : 0}}"
     class="btn btn-default bb-select-field-single" 
     ng-click="bbSelectField.selectFieldClick()"
     ng-keypress="$event.keyCode === 13 &amp;&amp; bbSelectField.selectFieldClick()">

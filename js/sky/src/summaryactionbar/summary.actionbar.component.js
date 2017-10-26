@@ -7,7 +7,8 @@
             animationSpeed = 150,
             marginTimeout,
             summaryEl,
-            actionbarEl;
+            actionbarEl,
+            summaryItemsEl;
 
         function summaryAnimationEnd(closed) {
             var displayType = closed ? 'none' : '';
@@ -165,6 +166,14 @@
             return $element.find('.bb-summary-actionbar-summary');
         }
 
+        function getSummaryItemsEl() {
+            var summaryItemsEl = $element.find('bb-summary-actionbar-summary');
+            if (summaryItemsEl.length > 0) {
+                return summaryItemsEl[0];
+            }
+            return undefined;
+        }
+
         function getActionbar() {
             return $element.find('.bb-summary-actionbar');
         }
@@ -210,10 +219,19 @@
             windowResize();
         }
 
+        function summaryContentExists() {
+            if ($transclude.isSlotFilled('bbSummaryActionbarSummary')) {
+                if (summaryItemsEl.children.length > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function onInit() {
             actionbarEl = getActionbar();
             summaryEl = getSummaryEl();
-            ctrl.summaryContentExists = $transclude.isSlotFilled('bbSummaryActionbarSummary');
+            summaryItemsEl = getSummaryItemsEl();
             
             if (!isInModalFooter()) {
                 initializeDocumentSummary();
@@ -237,7 +255,8 @@
 
         ctrl.$postLink = onInit;
         ctrl.$onDestroy = onDestroy;
-
+        
+        ctrl.summaryContentExists = summaryContentExists;
         ctrl.hideSummarySection = hideSummarySection;
         ctrl.showSummarySection = showSummarySection;
     }
