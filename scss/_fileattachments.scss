@@ -1,3 +1,5 @@
+@import "mixins";
+
 .bb-file-drop-row {
     margin-left: -$margin-half;
     margin-right: -$margin-half;
@@ -163,38 +165,20 @@
 }
 
 .bb-file-single-name-placeholder {
+    @include bb-deemphasized;
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 7px 5px 7px 5px;
+    padding: 7px 10px 7px 10px;
     font-style: italic
 }
 
-.bb-file-single-error {
-    color: $bb-color-red;
-}
-
 .bb-file-single-name,
-.bb-file-single-name-link{
+.bb-file-single-name.btn.bb-btn-link-inline {
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 7px 5px 7px 5px;
-}
-
-.bb-file-single-name-link {
-    cursor: pointer;
-    border: none;
-    background-color: inherit;
-}
-
-.bb-file-single-name-link-text {
-    color: $link-color;
-    text-decoration: underline;
-
-    &:hover {
-        color: $link-hover-color;
-    }
+    padding: 7px 10px 7px 10px;
 }
 
 .bb-file-single-remove {

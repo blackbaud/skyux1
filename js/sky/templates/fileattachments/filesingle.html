@@ -19,10 +19,10 @@
             <span ng-if="!bbFileSingleItem" class="bb-file-single-choose">{{'file_upload_choose' | bbResources}}</span>
             <span ng-if="bbFileSingleItem" class="bb-file-single-replace">{{'file_upload_replace' | bbResources}}</span>
         </button>
-        <span ng-if="!bbFileSingleItem" ng-class="{'bb-file-single-error': bbFileSingleError() }" class="bb-file-single-name-placeholder">{{'file_upload_no_file' | bbResources}}</span>
+        <span ng-if="!bbFileSingleItem" class="bb-file-single-name-placeholder">{{'file_upload_no_file' | bbResources}}</span>
         <span ng-if="bbFileSingleItem && !bbFileSingleLinkAction" class="bb-file-single-name">{{ bbFileSingleItem.name }}</span>
-        <button ng-if="bbFileSingleItem && bbFileSingleLinkAction" class="bb-file-single-name-link" ng-click="bbFileSingle.action()">
-            <span class="bb-file-single-name-link-text">{{ bbFileSingleItem.name || bbFileSingleItem.url }}</span>
+        <button ng-if="bbFileSingleItem && bbFileSingleLinkAction" class="btn bb-btn-link-inline bb-file-single-name" ng-click="bbFileSingle.action()">
+            {{ bbFileSingleItem.name || bbFileSingleItem.url }}
         </button>
         <button class="bb-file-single-remove" title="{{'file_upload_remove' | bbResources}}" ng-click="bbFileSingle.remove()" ng-if="bbFileSingleItem">
             <i class="fa fa-trash"></i>

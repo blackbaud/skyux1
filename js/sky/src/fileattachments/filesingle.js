@@ -65,7 +65,6 @@
             },
             scope: {
                 bbFileSingleChange: '&',
-                bbFileSingleError: '&',
                 bbFileSingleItem: '=',
                 bbFileSingleLinkAction: '&?',
                 bbFileSingleRemove: '&',

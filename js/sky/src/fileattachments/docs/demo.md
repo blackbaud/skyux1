@@ -46,4 +46,3 @@ The `bb-file-item` directive displays summary information about files that users
     - `bb-file-single-validate-fn` &mdash; *(Optional.)* Provides a custom validation function (`bb-file-single-validate-fn="fileAttachmentDemo.validate($file)"`). By default, any type of file is allowed.
     - `bb-file-single-remove` &mdash; *(Optional.)* Specifies a function to be called when users click the remove button for the item. The removed item is passed to the function.
     - `bb-file-single-id` &mdash; *(Optional.)* Specifies the `id` attribute to place onto the internal input element. The `name` attribute is set to the same value.
-    - `bb-file-single-error` &mdash; *(Optional.)* Specifies an expression that makes the placeholder text red when the expression evaluates to `true`.

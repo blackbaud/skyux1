@@ -49,14 +49,6 @@ describe('File single directive', function () {
         return el;
     }
 
-    function getSingleWithErrorEl($scope) {
-        var el = $compile('<div bb-file-single bb-file-single-item="file" bb-file-single-error="true"></div>')($scope);
-
-        $scope.$digest();
-
-        return el;
-    }
-
     beforeEach(module(
         'ngMock',
         'sky.fileattachments.filesingle',
@@ -337,7 +329,7 @@ describe('File single directive', function () {
         $scope.fileLinkAction = angular.noop;
 
         el = getSingleWithLinkActionEl($scope);
-        linkEl = el.find('.bb-file-single-name-link');
+        linkEl = el.find('.bb-file-single-name');
 
         actionSpy = spyOn(el.isolateScope().bbFileSingle, 'action');
 
@@ -361,8 +353,8 @@ describe('File single directive', function () {
 
         $scope.$digest();
 
-        linkEl = el.find('.bb-file-single-name-link');
-        nameEl = el.find('.bb-file-single-name');
+        linkEl = el.find('.bb-file-single-name.btn.bb-btn-link-inline');
+        nameEl = el.find('.bb-file-single-name:not(.btn.bb-btn-link-inline)');
         placeholderEl = el.find('.bb-file-single-name-placeholder');
 
         expect(linkEl).not.toExist();
@@ -385,24 +377,13 @@ describe('File single directive', function () {
 
         el = getSingleWithLinkActionEl($scope);
 
-        linkEl = el.find('.bb-file-single-name-link');
-        nameEl = el.find('.bb-file-single-name');
+        linkEl = el.find('.bb-file-single-name.btn.bb-btn-link-inline');
+        nameEl = el.find('.bb-file-single-name:not(.btn.bb-btn-link-inline)');
         placeholderEl = el.find('.bb-file-single-name-placeholder');
 
         expect(linkEl).toHaveText($scope.file.name);
         expect(nameEl).not.toExist();
         expect(placeholderEl).not.toExist();
-    });
-
-    it('should display the placeholder as red error', function () {
-        var $scope = $rootScope.$new(),
-            el,
-            placeholderEl;
-
-        el = getSingleWithErrorEl($scope);
-        placeholderEl = el.find('.bb-file-single-name-placeholder');
-
-        expect(placeholderEl).toHaveClass('bb-file-single-error');
     });
 
     it('should display remove icon when file is added', function () {
