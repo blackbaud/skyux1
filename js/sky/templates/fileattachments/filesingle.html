@@ -1,0 +1,36 @@
+<div class="bb-file-single">
+    <div 
+      class="bb-file-single-drop bb-file-drop-target"
+      ngf-drop 
+      ngf-keep="false"
+      ngf-drag-over-class="{ accept: 'bb-file-single-drop-accept', reject: 'bb-file-single-drop-reject' }"
+      ngf-change="bbFileSingle.fileChange($files, $event, $invalidFiles)"
+      ngf-validate-fn="bbFileSingle.validate($file)">
+        <input class="bb-file-single-input" type="hidden" ng-required="bbFileSingleRequired" ng-model="bbFileSingleItem" />
+        <button 
+          type="button"
+          class="btn bb-btn-secondary bb-file-single-select"
+          title="{{'file_upload_drag_or_click' | bbResources}}"
+          ng-attr-aria-label="{{'file_upload_drag_or_click' | bbResources}}"
+          ngf-select
+          ngf-change="bbFileSingle.fileChange($files, $event, $invalidFiles)"
+          ngf-validate-fn="bbFileSingle.validate($file)">
+            <i class="fa fa-folder-open-o"></i>
+            <span ng-if="!bbFileSingleItem" class="bb-file-single-choose">{{'file_upload_choose' | bbResources}}</span>
+            <span ng-if="bbFileSingleItem" class="bb-file-single-replace">{{'file_upload_replace' | bbResources}}</span>
+        </button>
+        <span ng-if="!bbFileSingleItem" class="bb-file-single-name-placeholder">{{'file_upload_no_file' | bbResources}}</span>
+        <span ng-if="bbFileSingleItem && !bbFileSingleLinkAction" class="bb-file-single-name">{{ bbFileSingleItem.name }}</span>
+        <button ng-if="bbFileSingleItem && bbFileSingleLinkAction" class="btn bb-btn-link-inline bb-file-single-name" ng-click="bbFileSingle.action()">
+            {{ bbFileSingleItem.name || bbFileSingleItem.url }}
+        </button>
+        <button class="bb-file-single-remove" title="{{'file_upload_remove' | bbResources}}" ng-click="bbFileSingle.remove()" ng-if="bbFileSingleItem">
+            <i class="fa fa-trash"></i>
+        </button>
+    </div>
+    <div class="bb-file-single-preview" ng-if="bbFileSingle.isImg()">
+        <div class="center-block">
+            <img class="bb-file-item-preview-img" ngf-src="bbFileSingleItem" />
+        </div>
+    </div>
+</div>
