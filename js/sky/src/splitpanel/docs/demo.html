@@ -1,0 +1,179 @@
+<div ng-controller="SplitPanelTestController as listCtrl">
+    <bb-splitpanel>
+        <bb-page-summary ng-class="{'hidden-xs':listCtrl.isDetailScreen }">
+            <bb-page-summary-title>
+                Page Header
+            </bb-page-summary-title>
+            <bb-page-summary-key-info>
+                <div class="bb-key-info-item">$100.00</div>
+            </bb-page-summary-key-info>
+        </bb-page-summary>
+        <bb-listbuilder>
+            <bb-listbuilder-toolbar bb-listbuilder-on-search="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onSearch,searchText)"
+                                    bb-listbuilder-search-text="listCtrl.searchText">
+                <bb-listbuilder-filter>
+                    <bb-filter-button bb-filter-button-on-click="listCtrl.onFilterClick()">
+                    </bb-filter-button>
+                </bb-listbuilder-filter>
+                <bb-listbuilder-sort>
+                    <bb-sort bb-sort-append-to-body>
+                        <bb-sort-item ng-repeat="item in listCtrl.sortOptions"
+                                      bb-sort-item-active="listCtrl.initialState === item.id"
+                                      bb-sort-item-select="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.sortItems,item)">
+                            {{item.label}}
+                        </bb-sort-item>
+                    </bb-sort>
+                </bb-listbuilder-sort>
+                <bb-listbuilder-filter-summary>
+                    <bb-filter-summary ng-show="listCtrl.allAppliedFilters.length > 0">
+                        <bb-filter-summary-item ng-repeat="item in listCtrl.allAppliedFilters"
+                                                bb-filter-summary-item-on-click="listCtrl.openFilters()"
+                                                bb-filter-summary-item-on-dismiss="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onDismissFilter,$index)">
+                            {{item.label}}
+                        </bb-filter-summary-item>
+                    </bb-filter-summary>
+                </bb-listbuilder-filter-summary>
+            </bb-listbuilder-toolbar>
+            <bb-listbuilder-content>
+                <bb-splitpanel-container>
+                    <bb-splitpanel-list-panel max-width-in-percentage="70" min-width-in-percentage="20" default-width-in-percentage="30">
+                        <bb-splitpanel-list-fixed-header>
+                            <bb-splitpanel-list-fixed-header-item>
+                                <span>{{listCtrl.data.length}}</span> Transactions
+                            </bb-splitpanel-list-fixed-header-item>
+                            <bb-splitpanel-list-fixed-header-filter>
+                                <input bb-check type="checkbox" ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.onlyShowRecorded,undefined, $event)" value="false" ng-model="listCtrl.showUnrecord" /> only show unrecorded
+                            </bb-splitpanel-list-fixed-header-filter>
+                        </bb-splitpanel-list-fixed-header>
+
+                        <bb-splitpanel-list ng-if="listCtrl.data.length > 0">
+                            <div class="bb-custom-content-item" bb-splitpanel-list-item ng-repeat="item in listCtrl.data" bb-splitpanel-content-get-panel-data="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.getPaneldata, arg)" bb-splitpanel-item-is-active="$index === listCtrl.selectedItem.$index" ng-keydown="listCtrl.navigateUpAndDown($event)">
+                                <div style="margin-bottom: 10px">
+                                    {{item.amount}}
+                                    <span style="float: right" ng-if="item.status=='Recorded'"><i class="fa fa-check-circle fa-2x bb-SplitPanel-icon-sucess " aria-hidden="true"></i></span>
+                                    <span style="float: right" ng-if="item.status=='Ignored'"><i class="fa fa-ban fa-2x" aria-hidden="true"></i></span>
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    {{item.transactionDate | date}}
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    {{item.description}}
+                                </div>
+                                <div style="margin-bottom: 10px">
+                                    {{item.merchant}}
+                                </div>
+                            </div>
+                        </bb-splitpanel-list>
+                        <bb-splitpanel-empty-list ng-if="listCtrl.data.length == 0">
+                            <i> No Items found</i>
+                        </bb-splitpanel-empty-list>
+
+                    </bb-splitpanel-list-panel>
+
+                    <bb-splitpanel-workspace>
+                        <bb-splitpanel-mobile-workspace-header>
+                            <bb-splitpanel-mobile-list-back bb-splitpanel-list-back-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.back)"> Transaction {{listCtrl.selectedItem.$index + 1}} of {{listCtrl.data.length}}</bb-splitpanel-mobile-list-back>
+                            <bb-splitpanel-mobile-list-next bb-splitpanel-list-next-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.next)"></bb-splitpanel-mobile-list-next>
+                            <bb-splitpanel-mobile-list-previous bb-splitpanel-list-previous-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.previous)"></bb-splitpanel-mobile-list-previous>
+                        </bb-splitpanel-mobile-workspace-header>
+
+                        <bb-splitpanel-mobile-selected-item>
+                            <div>
+                                {{listCtrl.selectedItem.amount}}
+                            </div>
+                            <div>
+                                {{listCtrl.selectedItem.transactionDate | date}}
+                            </div>
+                            <div>
+                                {{listCtrl.selectedItem.description}}
+                            </div>
+                            <div>
+                                {{listCtrl.selectedItem.merchant}}
+                            </div>
+                        </bb-splitpanel-mobile-selected-item>
+
+                        <bb-splitpanel-workspace-container ng-if="listCtrl.data.length > 0">
+                            <form name="forms.workspaceContainerForm">
+
+                                <div class="col-xs-11" style="margin:20px 0px">
+
+                                </div>
+
+                                <div class="col-xs-11">
+                                    <input type="checkbox" bb-check ng-model="listCtrl.isPersonal" /> Personal expense
+                                </div>
+                                <div class="col-lg-12 col-xs-11">
+                                    <div class="col-lg-6">
+                                        <label class="control-label" for="name">Name</label>
+                                        <input class="form-control" name="name" ng-model="listCtrl.selectedItem.merchant" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-11">
+                                    <div class="col-lg-6">
+                                        <label class="control-label" for="id">Invoice Id</label>
+                                        <input class="form-control" name="id" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-11">
+                                    <div class="col-lg-6">
+                                        <label class="control-label" for="id">Amount</label>
+                                        <input class="form-control" name="Amount" ng-model="listCtrl.selectedItem.amount" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-11">
+                                    <div class="col-lg-6">
+                                        <label class="control-label" for="id">Description</label>
+                                        <input class="form-control" name="Description" ng-model="listCtrl.selectedItem.description" type="text" />
+                                    </div>
+                                </div>
+                            </form>
+                        </bb-splitpanel-workspace-container>
+                        <bb-splitpanel-workspace-container ng-if="listCtrl.data.length == 0">
+                        </bb-splitpanel-workspace-container>
+
+                        <bb-splitpanel-workspace-footer ng-if="listCtrl.data.length > 0">
+                            <bb-modal-footer-button-primary ng-click="listCtrl.splitpanelNavigator.checkDirtyForm(listCtrl.record)">Record transaction</bb-modal-footer-button-primary>
+                            <bb-modal-footer-button>Save</bb-modal-footer-button>
+                        </bb-splitpanel-workspace-footer>
+                    </bb-splitpanel-workspace>
+                </bb-splitpanel-container>
+            </bb-listbuilder-content>
+        </bb-listbuilder>
+    </bb-splitpanel>
+</div>
+
+<script type="text/ng-template" id="demo/listbuilder/filters.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Food preferences</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    <label style="margin-top: 15px;">
+                        <input type="checkbox" bb-check ng-model="filterCtrl.filters.tenYears" />
+                        Show only transactions older than 10 years experience
+                    </label>
+                </form>
+            </div>
+            <bb-filter-modal-footer bb-filter-modal-apply="filterCtrl.splitpanelNavigator.checkDirtyForm(filterCtrl.applyFilters)"
+                                    bb-filter-modal-clear="filterCtrl.clearAllFilters()">
+            </bb-filter-modal-footer>
+        </div>
+    </bb-modal>
+</script>
+<script type="text/ng-template" id="demo/splitpanel/confirmpopup.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header>Save changes?</bb-modal-header>
+            <div bb-modal-body>
+                <form>
+                    Are you sure you want to leave? Any information entered won't be saved.
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary ng-click="ctrl.save()">Yes</bb-modal-footer-button-primary>
+                <bb-modal-footer-button ng-click="ctrl.doNotSave()">No</bb-modal-footer-button>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
+

@@ -1,0 +1,176 @@
+@import "mixins";
+
+
+.bb-splitpanel {
+
+    .bb-custom-content-item {
+        border-bottom: 1px solid $gray;
+        padding: $padding-double;
+    }
+
+    .bb-splitpanel-container {
+        -ms-box-orient: horizontal;
+        height: 100%;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .bb-splitpanel-custom-content {
+        background-color: $form-background;
+        border-right: 1px solid $body-bg;
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 30%;
+        min-width: 15%;
+        max-width: 75%;
+    }
+
+    .bb-splitpanel-content-selectable-item {
+        cursor: pointer;
+    }
+
+    .bb-splitpanel-workspace {
+        border-left: 9px solid $body-bg;
+        border-right: 9px solid $body-bg;
+        background-color: $form-background;
+        position: relative;
+        float: left;
+        height: 100%;
+        width: 70%;
+    }
+
+    .bb-splitpanel-workspace-container {
+        height: calc(100vh - 180px);
+        overflow-y: auto;
+        padding: $base-padding 0px $base-padding $padding-double;
+    }
+
+    .bb-splitpanel-selected-item {
+        border-left: $bb-color-blue 7px solid;
+        padding-left: 13px;
+        background-color: $body-bg;
+    }
+
+    .split-panel .work-space-footer {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        z-index: $z-index-control;
+        bottom: 0;
+    }
+
+    .bb-splitpanel-fixed-header {
+        border-bottom: 1px solid $form-border-color;
+        padding-bottom: 6px;
+        padding-left: 17px;
+    }
+
+    .bb-splitpanel-list-container {
+        height: calc(100vh - 191px);
+        overflow-y: auto;
+    }
+
+    .bb-splitpanel-width-100 {
+        width: 100%;
+    }
+
+    .bb-splitpanel-align-center {
+        vertical-align: middle;
+        text-align: center;
+        line-height: 73vh;
+    }
+
+    .bb-splitpanel-show-xs {
+        display: none;
+    }
+
+    .bb-SplitPanel-icon-sucess {
+        color: $bb-color-green;
+    }
+
+    .ui-resizable-e {
+        cursor: e-resize;
+        width: 7px;
+        right: -5px;
+        top: 0;
+        height: 100%;
+    }
+
+    .ui-resizable-handle {
+        position: absolute;
+        font-size: 0.1px;
+        display: block;
+    }
+
+    .bb-splitpanel-padding-top-6 {
+        padding-top: 6px;
+    }
+
+    @media (max-width: $screen-xs-max) {
+        .bb-splitpanel-selected-item {
+            border-left: 0px;
+            padding-left: $padding-double;
+            background-color: $form-background;
+        }
+
+        .bb-splitpanel-hidden {
+            display: none;
+        }
+
+        .bb-splitpanel-show-xs {
+            display: block;
+        }
+
+        .bb-splitpanel-custom-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            background-color: $form-background;
+            border-right: 1px solid $body-bg;
+        }
+
+        .bb-splitPanel-pageHeader {
+            background-color: $form-background;
+            padding: 3px;
+        }
+
+
+        .bb-splitpanel-workspace {
+            background-color: $form-background;
+            border: none;
+            width: 100% !important;
+        }
+
+        .bb-splitpanel-selected-item-xs {
+            border-left: $bb-color-blue 7px solid;
+            padding-left: 13px;
+            background-color: $body-bg;
+        }
+
+        .bb-splitpanel-navigation-panel {
+            float: left;
+            font: larger bold;
+        }
+
+        .bb-custom-content-item-xs {
+            padding: 7px 13px;
+        }
+
+        .bb-splitpanel-next-navigation {
+            float: right;
+            margin-left: 3px;
+        }
+
+        .bb-splitpanel-previous-navigation {
+            float: right;
+            margin-right: 3px;
+        }
+
+        .bb-splitpanel-workspace-header {
+            min-height: 45px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
