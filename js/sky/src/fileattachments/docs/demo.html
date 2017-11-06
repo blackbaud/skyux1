@@ -8,8 +8,7 @@
                  bb-file-drop-max-size="5000000"
                  bb-file-drop-link
                  bb-file-drop-link-change="fileAttachmentDemo.fileLinked(link)"
-                 bb-file-drop-validate-fn="fileAttachmentDemo.fileValidate(file)"
-                 >
+                 bb-file-drop-validate-fn="fileAttachmentDemo.fileValidate(file)">
             </div>
             <bb-alert bb-alert-type="danger" bb-alert-closeable="true" bb-alert-closed="fileAttachmentDemo.alertClosed" ng-if="fileAttachmentDemo.rejected.length > 0">
               The file <strong>{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}</strong> is invalid.  
