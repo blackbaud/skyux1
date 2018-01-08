@@ -8,12 +8,12 @@
         ng-model="bbRepeaterItem.bbRepeaterItemSelected"
         ng-change="bbRepeaterItem.repeaterItemSelectionToggled(bbRepeaterItem.bbRepeaterItemSelected)" />
     </div>
-    <div class="bb-repeater-item-context-menu" ng-show="bbRepeaterItem.contextMenuElExists()" ng-transclude="bbRepeaterItemContextMenu">
+    <div class="bb-repeater-item-context-menu-container" ng-transclude="bbRepeaterItemContextMenu">
     </div>
   </div>
   <div class="bb-repeater-item-right" ng-click="bbRepeaterItem.selectItem()">
     <header class="bb-repeater-item-header" ng-click="bbRepeaterItem.headerClick($event)">
-      <h1 class="bb-repeater-item-title" ng-show="bbRepeaterItem.titleElExists()" ng-transclude="bbRepeaterItemTitle"></h1>
+      <div class="bb-repeater-item-title-container" ng-transclude="bbRepeaterItemTitle"></div>
       <bb-chevron bb-chevron-direction="bbRepeaterItem.chevronDirection"></bb-chevron>
     </header>
     <div class="bb-repeater-item-content" ng-transclude="bbRepeaterItemContent">

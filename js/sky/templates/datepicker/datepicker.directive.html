@@ -20,7 +20,6 @@
                 datepicker-append-to-body="{{bbDatepicker.appendToBody}}"
                 close-on-date-selection="{{bbDatepicker.closeOnSelection}}"
                 alt-input-formats="bbDatepicker.altInputFormats"
-                datepicker-template-url="sky/templates/datepicker/uibdatepicker.html"
 
                 bb-datepicker-custom-validate="{{bbDatepicker.hasCustomValidation}}"
                 bb-datepicker-min-date
@@ -32,7 +31,8 @@
                 type="button" 
                 class="btn btn-default bb-date-field-calendar-button" 
                 ng-click="bbDatepicker.open($event)" 
-                ng-attr-aria-label="{{'datepicker_open' | bbResources}}">
+                ng-attr-aria-label="{{'datepicker_open' | bbResources}}"
+				ng-attr-tabindex="{{bbDatepicker.bbDatepickerSkipButtonWhileTabbing === true ? '-1' : undefined}}">
                 <i class="fa fa-calendar"></i>
             </button>
         </span>

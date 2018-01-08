@@ -53,7 +53,7 @@
                       '    <div class="modal-form">' +
                       '        <bb-modal-header bb-modal-help-key="\'bb-security-users.html\'">Form Header</bb-modal-header>' +
                       '        <div class="bb-modal-body-tiled" bb-modal-body>' +
-                      '            <bb-tile bb-tile-header="\'Tile header\'">' +
+                      '            <bb-tile bb-tile-header="\'Tile header\'" bb-tile-collapsed="true">' +
                       '                <div bb-tile-section>' +
                       '                    Test.' +
                       '                </div>' +

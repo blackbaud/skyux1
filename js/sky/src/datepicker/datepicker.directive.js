@@ -150,13 +150,9 @@
                     vm.appendToBody = (appendToBodyAttr === 'true');
                 }
             }
-
+            
             function initializeDatepickerOptions() {
-
-                ngModel.$options = {
-                    allowInvalid: true
-                };
-
+                ngModel.$options = ngModel.$options.createChild({ allowInvalid: true });
                 vm.pickerDate = '';
                 vm.pickerOpened = false;
 
@@ -424,6 +420,7 @@
                 bbMinDate: '=?bbDatepickerMin',
                 bbPlaceholder: '=?bbDatepickerPlaceholder',
                 bbDatepickerAltInputFormats: '=?',
+                bbDatepickerSkipButtonWhileTabbing: '<?',
 
                 bbAltInputFormats: '=?', //deprecated
                 maxDate: '=?maxDate', //deprecated

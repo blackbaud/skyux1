@@ -23,6 +23,7 @@
         vm.links = [];
         vm.rejected = [];
         vm.allItems = [];
+        vm.singleFile = null;
 
         vm.fileDropped = function (files, rejectedFiles) {
             vm.attachments = vm.attachments.concat(files);
@@ -45,6 +46,18 @@
             if (file.name.indexOf('a') === 0) {
                 return 'You may not upload a file that begins with the letter "a."';
             }
+        };
+
+        vm.fileChange = function (file, rejectedFiles) {
+            if (file) {
+                vm.fileDropped([file], rejectedFiles);
+            } else {
+                vm.fileDropped([], rejectedFiles);
+            }
+        };
+
+        vm.fileLinkAction = function () {
+            alert(vm.singleFile.name);
         };
 
         $scope.$watch(function () {

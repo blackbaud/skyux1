@@ -36,7 +36,6 @@
     .btn.bb-search-btn-input-group {
         background-color: $bb-color-white;
         border: none;
-        height: 32px;
     }
     .btn.bb-search-btn-apply {
         border-top-right-radius: 6px;
@@ -179,4 +178,14 @@
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 0;
+}
+
+.bb-search-full-width {
+    .bb-search-input-container {
+        max-width: initial;
+    }
+
+    .bb-search-item-input {
+        flex-shrink: initial;
+    }
 }

@@ -336,6 +336,63 @@ describe('Select field directive', function () {
             el.remove();
         });
 
+        it('should allow binding with ngRequired', function () {
+            var $scope = $rootScope.$new();
+
+            $compile('<form name="myForm"> <bb-select-field name="myField" bb-select-field-style="single" ng-model="selectedItems" ng-required="required">' +
+                '<bb-select-field-picker bb-select-field-picker-template="bbSelectField/single/test.html"></bb-select-field-picker>' +
+                '</bb-select-field>')($scope);
+
+            // Not required, no value
+            $scope.$apply('required = false');
+            expect($scope.myForm.myField.$error.required).toBeUndefined();
+
+            // Required, no value
+            $scope.$apply('required = true');
+            expect($scope.myForm.myField.$error.required).toBe(true);
+
+            // Required, with value
+            $scope.$apply(function () {
+                $scope.selectedItems = [
+                    {
+                        title: 'Selected item'
+                    }
+                ];
+            });
+            expect($scope.myForm.myField.$error.required).toBeUndefined();
+        });
+
+
+        describe('select field container', function () {
+            it('removes the select field container from tab ordering when specified', function () {
+                var $scope = $rootScope.$new(),
+                    el,
+                    selectFieldEl;
+
+                el = $compile('<bb-select-field name="myField" bb-select-field-style="single" ng-model="selectedItems" bb-select-field-skip-while-tabbing="true"></bb-select-field>')($scope);
+
+                el.appendTo(document.body);
+
+                $scope.$digest();
+                selectFieldEl = el.find(".bb-select-field-single")[0];
+                expect(selectFieldEl).toHaveAttr('tabindex', '-1');
+                el.remove();
+            });
+
+            it('should not remove the select field container from tab ordering when not specified', function () {
+                var $scope = $rootScope.$new(),
+                    el,
+                    selectFieldEl;
+                
+                el = $compile('<bb-select-field bb-select-field-style="single" bb-select-field-clear ng-model="selectedItems"></bb-select-field>')($scope);
+                el.appendTo(document.body);
+
+                $scope.$digest();
+                selectFieldEl = el.find(".bb-select-field-single")[0];
+                expect(selectFieldEl).toHaveAttr('tabindex', '0');
+                el.remove();
+            });
+        });
     });
 
     describe('multi-select', function () {

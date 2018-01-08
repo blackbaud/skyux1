@@ -1,4 +1,20 @@
-<div class="container" ng-controller="TabsetVisualController as tabsetCtrl">
+<style>
+    #screenshot-vertical-tabset-no-groups,
+    #screenshot-vertical-tabset-no-groups-inactive,
+    #screenshot-vertical-tabset-groups,
+    #screenshot-vertical-tabset-groups-inactive {
+        min-height: 200px;
+    }
+    #screenshot-vertical-tabset-no-groups-inactive:after,
+    #screenshot-vertical-tabset-no-groups:after,
+    #screenshot-vertical-tabset-groups-inactive:after,
+    #screenshot-vertical-tabset-groups:after {
+        content: '';
+        display: table;
+        width: 100%;
+    }
+</style>
+<div class="container bb-screenshot-noanim" ng-controller="TabsetVisualController as tabsetCtrl">
 
     <div id="screenshot-tabset-all">
         <div id="screenshot-tabset-open-add">
@@ -57,7 +73,66 @@
                 </uib-tab>
             </uib-tabset>
         </div>
+    </div>
 
+    <div id="screenshot-tabset-vertical-all" style="height: 500px; width: 1000px; background-color: white">
+        <div id="screenshot-vertical-tabset-groups">
+            <uib-tabset bb-vertical-tabset active="1">
+                <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1">
+                    <uib-tab heading="Group 1 - Tab 1">
+                        <p>Group 1, tab 1 content</p>
+                    </uib-tab>
+                    <uib-tab heading="Group 1 - Tab 2">
+                        <p>Group 1, tab 2 content</p>
+                    </uib-tab>
+                </div>
+                <div bb-vertical-tabset-group bb-vertical-tabset-group-is-disabled="true" bb-vertical-tabset-group-heading="Disabled group">
+                    <uib-tab heading="Group 2 -Tab 1">
+                        <p>Group 2, tab 1 contents</p>
+                    </uib-tab>
+                </div>
+            </uib-tabset>
+        </div>
+
+        <div id="screenshot-vertical-tabset-no-groups">
+            <uib-tabset bb-vertical-tabset active="1">
+                <uib-tab heading="Tab 1">
+                    <p>Tab 1 content</p>
+                </uib-tab>
+                <uib-tab heading="Tab 2">
+                    <p>Tab 2 contents</p>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+        <div id="screenshot-vertical-tabset-groups-inactive">
+            <uib-tabset bb-vertical-tabset active="-1">
+                <div bb-vertical-tabset-group bb-vertical-tabset-group-heading="Group 1">
+                    <uib-tab heading="Group 1 - Tab 1">
+                        <p>Group 1, tab 1 content</p>
+                    </uib-tab>
+                    <uib-tab heading="Group 1 - Tab 2">
+                        <p>Group 1, tab 2 content</p>
+                    </uib-tab>
+                </div>
+                <div bb-vertical-tabset-group bb-vertical-tabset-group-is-disabled="true" bb-vertical-tabset-group-heading="Disabled group">
+                    <uib-tab heading="Group 2 -Tab 1">
+                        <p>Group 2, tab 1 contents</p>
+                    </uib-tab>
+                </div>
+            </uib-tabset>
+        </div>
+
+        <div id="screenshot-vertical-tabset-no-groups-inactive">
+            <uib-tabset bb-vertical-tabset active="-1">
+                <uib-tab heading="Tab 1">
+                    <p>Tab 1 content</p>
+                </uib-tab>
+                <uib-tab heading="Tab 2">
+                    <p>Tab 2 contents</p>
+                </uib-tab>
+            </uib-tabset>
+        </div>
     </div>
 
 </div>

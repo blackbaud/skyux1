@@ -185,7 +185,7 @@ describe('Card directive', function () {
         });
 
         el = $compile(
-            '<bb-card bb-card-selectable="true" bb-card-selected="cardSelected" bb-card-selection-toggled="onSelected(isSelected)">' +
+            '<bb-card bb-card-selectable="true" bb-card-selected="cardSelected">' +
             '</bb-card>'
         )($scope);
 
@@ -197,7 +197,9 @@ describe('Card directive', function () {
         checkEl = el.find('.bb-check-wrapper input');
 
         checkEl.click();
+        $scope.$digest();
         $timeout.flush();
+        $scope.$digest();
 
         expect(el.find('.bb-card')).toHaveClass('bb-card-selected');
         expect($scope.cardSelected).toBe(true);

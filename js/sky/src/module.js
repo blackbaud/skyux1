@@ -5,6 +5,7 @@
     'use strict';
 
     var modules = [
+        'sky.accordion',
         'sky.actionbar',
         'sky.alert',
         'sky.autonumeric',
@@ -41,6 +42,7 @@
         'sky.phonefield',
         'sky.popover',
         'sky.reorder',
+        'sky.reordertable',
         'sky.repeater',
         'sky.resources',
         'sky.scrollintoview',

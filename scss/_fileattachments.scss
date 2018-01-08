@@ -1,3 +1,5 @@
+@import "mixins";
+
 .bb-file-drop-row {
     margin-left: -$margin-half;
     margin-right: -$margin-half;
@@ -20,22 +22,20 @@
     color: $gray;
     cursor: pointer;
     display: table;
-    height: 120px;
+    height: 140px;
     width: 100%;
     text-align: center;
 
-    h4,
-    h5 {
-        font-style: italic;
-    }
-
     h4 {
-        font-size: $bb-font-size-xl;
+        @include bb-headline();
         margin: 0;
     }
 
     h5 {
-        font-size: $bb-font-size-lg;
+        font-size: $font-size-base;
+        font-style: normal;
+        color: $sky-text-color-default;
+        font-weight: 400;
         margin-top: $margin-half;
     }
 
@@ -144,4 +144,50 @@
     -webkit-appearance: none;
     width: 100%;
     padding: 0;
+}
+
+.bb-file-single-drop {
+    border: solid 1px transparent;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.bb-file-single-drop-accept {
+    border: dashed 1px $bb-color-green;
+}
+
+.bb-file-single-drop-reject {
+    border: dashed 1px $bb-color-red;
+}
+
+.bb-file-single-label {
+    margin-bottom: 5px;
+}
+
+.bb-file-single-name-placeholder {
+    @include bb-deemphasized;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 7px 10px 7px 10px;
+    font-style: italic
+}
+
+.bb-file-single-name,
+.bb-file-single-name.btn.bb-btn-link-inline {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 7px 10px 7px 10px;
+}
+
+.bb-file-single-remove {
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    padding: 7px 5px 7px 5px;
+}
+
+.bb-file-single-preview {
+    margin-bottom: 10px;
 }

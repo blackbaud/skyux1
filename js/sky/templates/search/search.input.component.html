@@ -1,4 +1,4 @@
-<div class="bb-search-input-inline">
+<div class="bb-search-input-inline" ng-class="{'bb-search-full-width': $ctrl.bbSearchFullWidth}">
     <div 
         class="bb-search-open-wrapper"
         ng-show="$ctrl.currentBreakpoint.xs"
@@ -27,6 +27,7 @@
                     data-bbauto-field="SearchBox"
                     ng-attr-aria-label="{{::'search_label' | bbResources}}" 
                     ng-attr-placeholder="{{$ctrl.placeholderText}}"
+                    ng-attr-id="{{$ctrl.bbSearchInputId}}"
                     />    
 
                 <span class="input-group-btn">
@@ -42,6 +43,7 @@
                     </button>
 
                     <button
+			ng-attr-tabindex="{{$ctrl.bbSearchSkipButtonWhileTabbing === true ? '-1' : undefined}}"
                         data-bbauto-field="SearchButton"          
                         type="button"
                         class="btn bb-search-btn-input-group bb-search-btn-apply"

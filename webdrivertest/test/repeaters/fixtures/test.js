@@ -52,4 +52,4 @@
 
     angular.module('screenshots', ['sky'])
         .controller('RepeaterTestController', RepeaterTestController);
-}());
+})();

@@ -31,7 +31,7 @@
     .bb-sectionedform {
         .nav-tabs {
             @include bb-border('light', 'right');
-            flex-basis: 25%;
+            flex-basis: 30%;
         }
 
         .tab-content {
@@ -42,13 +42,21 @@
 }
 
 .bb-sectionedform {
+    li:not(.active) {
+        .control-label {
+            color: $bb-text-deemphasized-color;
+        }
+    } 
+}
+
+.bb-sectionedform {
     display: flex;
     
     .nav-tabs {
         border-bottom-style: none;
         height: inherit;
         overflow: auto;
-        padding-left: 0;
+        padding-left: $padding;
         padding-right: 0;
 
         uib-tab-heading {
@@ -57,6 +65,7 @@
                 white-space: normal;
                 min-width: 0;
                 flex-grow: 1;
+                
                 &.invalid:after {
                     color: $bb-error-color;
                     content: " \f071";
@@ -92,6 +101,9 @@
                 background-color: $gray-lightest !important;
                 border-left: 4px solid $bb-color-blue !important;
                 color: inherit !important;
+                .control-label {
+                    font-weight: 600;
+                }
             }
         }
     }

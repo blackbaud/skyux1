@@ -27,15 +27,64 @@
         var vm = this,
             displayModeChanging = false;
 
-        vm.setHeaderContentEl = function (el) {
-            vm.headerContentEl = el;
+        function onInit() {
+            vm.setHeaderContentEl = function (el) {
+                vm.headerContentEl = el;
 
-            /* istanbul ignore else */
-            /* sanity check */
-            if (angular.isFunction(vm.updateHeaderContent)) {
-                vm.updateHeaderContent();
-            }
-        };
+                /* istanbul ignore else */
+                /* sanity check */
+                if (angular.isFunction(vm.updateHeaderContent)) {
+                    vm.updateHeaderContent();
+                }
+            };
+
+            vm.updateTileState = updateTileState;
+
+            vm.isCollapsed = vm.bbTileCollapsed || false;
+            vm.smallTileDisplayMode = false;
+            vm.tileId = '';
+            vm.resources = bbResources;
+
+            vm.titleClick = function () {
+                vm.isCollapsed = !vm.isCollapsed;
+                vm.scrollIntoView = !vm.isCollapsed;
+            };
+
+            //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
+            $scope.$on('tileDisplayModeChanged', function (event, data) {
+                /*jslint unparam: true */
+                vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
+
+                if (vm.tileInitialized) {
+                    displayModeChanging = true;
+                    vm.updateTileState(data.tiles);
+                }
+            });
+
+            //if the collapsed state changes, notify the tileDashboard
+            $scope.$watch(function () {
+                return vm.isCollapsed;
+            }, function () {
+                if (vm.tileInitialized && !displayModeChanging) {
+                    $timeout(function () {
+                        $scope.$emit('tileStateChanged', {
+                            tileId: vm.tileId,
+                            collapsed: vm.isCollapsed
+                        });
+                    });
+                }
+                displayModeChanging = false;
+
+                if (!vm.isCollapsed) {
+                    $timeout(function () {
+                        $scope.$broadcast('tileRepaint');
+                    });
+                }
+
+                vm.bbTileCollapsed = vm.isCollapsed;
+
+            });
+        }
 
         //determines whether or not a tile is collapsed
         function tileIsCollapsed(tileId, tiles) {
@@ -73,52 +122,8 @@
 
         }
 
-        vm.updateTileState = updateTileState;
-
-        vm.isCollapsed = vm.bbTileCollapsed || false;
-        vm.smallTileDisplayMode = false;
-        vm.tileId = '';
-        vm.resources = bbResources;
-
-        vm.titleClick = function () {
-            vm.isCollapsed = !vm.isCollapsed;
-            vm.scrollIntoView = !vm.isCollapsed;
-        };
-
-        //listens for the tileModeChanged event from the tileDashboard and updates the collapsed state of the tiles based on whether or not the tiles are in small display mode
-        $scope.$on('tileDisplayModeChanged', function (event, data) {
-            /*jslint unparam: true */
-            vm.smallTileDisplayMode = data.smallTileDisplayMode || false;
-
-            if (vm.tileInitialized) {
-                displayModeChanging = true;
-                vm.updateTileState(data.tiles);
-            }
-        });
-
-        //if the collapsed state changes, notify the tileDashboard
-        $scope.$watch(function () {
-            return vm.isCollapsed;
-        }, function () {
-            if (vm.tileInitialized && !displayModeChanging) {
-                $timeout(function () {
-                    $scope.$emit('tileStateChanged', {
-                        tileId: vm.tileId,
-                        collapsed: vm.isCollapsed
-                    });
-                });
-            }
-            displayModeChanging = false;
-
-            if (!vm.isCollapsed) {
-                $timeout(function () {
-                    $scope.$broadcast('tileRepaint');
-                });
-            }
-
-            vm.bbTileCollapsed = vm.isCollapsed;
-
-        });
+        vm.$onInit = onInit;
+       
     }
 
     BBTileController.$inject = ['$scope', '$timeout', 'bbResources'];

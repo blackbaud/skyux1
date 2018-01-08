@@ -1,0 +1,216 @@
+@import "mixins";
+
+.bb-reorder-table {
+    overflow-x: auto;
+    width: 100%;
+
+    .bb-reorder-table-container {
+        overflow: visible;
+    }
+}
+
+.bb-reorder-table-header-container {
+    
+    overflow-x: visible;
+    margin: 0;
+
+    .bb-reorder-table-header {
+
+        border-collapse: collapse;
+        border: 1px;
+        table-layout: fixed;
+        width: 100%;
+        display: table;
+        background-color: $bb-color-white;
+
+        .bb-reorder-table-labels {
+
+            width: 100%;
+            display: table-row;
+
+            .bb-reorder-table-label-icon {
+                width: 40px;
+                display: table-cell;
+                padding: 8px;
+            }
+
+            .bb-reorder-table-label-context {
+                width: 40px;
+                display: table-cell;
+                padding: 8px;
+            }
+
+            .bb-reorder-table-label-top {
+                width: 60px;
+                display: table-cell;
+                padding: 8px;
+            }
+
+            .bb-reorder-table-label-cell {
+                @include bb-border(dark, top, bottom, left, right);
+                padding: 8px;
+                border-collapse: collapse;
+                color: $bb-text-deemphasized-color;
+                font-weight: normal;
+                display: table-cell;
+
+                div {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            .bb-reorder-table-label-cell:first-of-type {
+                border-left-width: 0;
+            }
+
+            .bb-reorder-table-label-cell:last-of-type {
+                border-right-width: 0;
+            }
+        }
+    }
+}
+
+.bb-reorder-table-body-container {
+
+    overflow-y: visible;
+
+    .bb-reorder-table-row,  .bb-reorder-table-row-fixed {
+        border: none;
+        @include bb-border(row, top);
+        background-color: $bb-color-white;
+        outline-offset: -5px;
+        width: 100%;
+        min-height: 41px;
+        table-layout: fixed;
+        outline-offset: -5px;
+        display: table;
+
+        // we always want the sorting item to keep its border
+        &:not(.bb-reorder-list-sorting-item):first-child {
+            border: none;
+        }
+
+        // if we are sorting the first item, make sure the next sibling does not have a visible top border when it gets pushed up.
+        &:first-child.bb-reorder-list-sorting-item + .bb-reorder-table-row {
+            border-top:1px solid transparent; // need it to keep its height otherwise we are 1px smaller and the list shifts.
+        }
+
+        .bb-reorder-table-row-container {
+        
+            display: table-row;
+            width: 100%;
+            min-height: 38px;
+
+            .bb-reorder-table-col-icon {
+              display: table-cell;
+              font-size: 1em;
+              color: $gray;
+              cursor: move;
+              cursor: -webkit-grab;
+              cursor: -moz-grab;
+              padding: 16px;
+              width: 40px;
+              text-align: center;
+              vertical-align: middle;
+              margin: 0;
+            }
+
+            .bb-reorder-table-col-context {
+                width: 40px;
+                text-align: center;
+                vertical-align: middle;
+                display: table-cell;
+                padding: 8px;
+                margin: 0;
+
+                .bb-reorder-table-cell {
+                    overflow-x: visible;
+                }
+            }
+
+            .bb-reorder-table-col-top {
+                display: table-cell;
+                padding: 8px;
+                margin: 0;
+
+                text-align: center;
+                align-content: center;
+                min-height: 44px;
+                width: 60px;
+                display: table-cell;
+            
+                .btn.btn-link {
+                    color: $bb-color-blue;
+                    cursor:pointer;
+                    white-space: normal;
+                    word-wrap: break-word;
+                }
+            }
+    
+            .bb-reorder-table-col {
+
+                display: table-cell;
+                padding: 8px;
+                margin: 0;
+
+                .bb-reorder-table-cell {
+                    text-align: left;
+                    overflow-x: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .bb-reorder-table-lock {
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    .bb-reorder-table-row-fixed .bb-reorder-table-row-container .bb-reorder-table-col-icon {
+              color: $gray-lighter;
+              cursor: default;
+    }
+}
+
+.bb-reorder-table-row-placeholder {
+  background-color: $body-bg;
+
+  // when we are sorting the placeholder height is set directly on the element.
+  // if the item being sorted had a border, the placeholder is going to be 1 px larger than it should
+  // be when it is moved to the top since the top child in the reorder list should
+  // not have a border. Need to reduce size by 1 px so the list does not shift.
+  // Note: the placeholder can only ever be the first child if the first item in the list
+  // is not being sorted. The first item will not have a border so this rule is not
+  // necessary in that case as the placeholder will have the correct size.
+  &:first-child {
+    margin-bottom: -1px;
+  }
+}
+
+.bb-reorder-table-sorting-item {
+  @include shadow();
+  border: 1px solid $gray-light;
+}
+
+.bb-reorder-table-animate-element {
+  background-color: $bb-color-white;
+  position: absolute;
+}
+
+.bb-reorder-table-row-placeholder .bb-reorder-table-row-container {
+  visibility: hidden;
+}
+
+.bb-reorder-table-row.ng-move {
+    transition:0.5s linear all;
+    opacity:0;
+}
+
+.bb-reorder-table-row.ng-move.ng-move-active {
+    opacity:1;
+}
+
+.bb-reorder-table-no-animate {
+   transition: none !important;
+}

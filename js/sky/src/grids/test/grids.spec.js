@@ -63,8 +63,16 @@ describe('Grid directive', function () {
         $compile(el)($scope);
 
         $scope.$digest();
-
+        $timeout.flush();
         return el;
+    }
+
+    function timeoutFlushIfAvailable() {
+        try {
+            $timeout.verifyNoPendingTasks();
+        } catch (aException) {
+            $timeout.flush();
+        }
     }
 
     function setGridData(data) {
@@ -306,14 +314,6 @@ describe('Grid directive', function () {
 
     });
 
-    function timeoutFlushIfAvailable() {
-            try {
-                $timeout.verifyNoPendingTasks();
-            } catch (aException) {
-                $timeout.flush();
-            }
-        }
-
     function setupScrollInfinite(inView, parentScrollable) {
         var windowVal = 10,
             offsetVal;
@@ -339,6 +339,79 @@ describe('Grid directive', function () {
 
         locals.gridOptions.hasMoreRows = true;
 
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            data.promise.resolve(angular.copy(dataSet1));
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
+
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
+
+    it('can load more data when using infinite scroll through a promise with jsonmap', function () {
+
+        var rowEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        locals.gridOptions.columns = [
+                    {
+                        caption: 'Name',
+                        jsonmap: 'myname',
+                        id: 1,
+                        name: 'name',
+                        title: false
+                    },
+                    {
+                        caption: 'Instrument',
+                        jsonmap: 'instrument',
+                        id: 2,
+                        name: 'instrument'
+                    },
+                    {
+                        caption: 'Biography',
+                        jsonmap: 'bio',
+                        id: 3,
+                        name: 'bio'
+                    }
+                ];
+
+        dataSet1 = [
+            {
+                id: 'blarrrg',
+                myname: 'John',
+                instrument: 'Rhythm guitar'
+            },
+            {
+                myname: 'Paul',
+                instrument: 'Bass',
+                bio: 'Lorem'
+            },
+            {
+                myname: 'George',
+                instrument: 'Lead guitar'
+            },
+            {
+                myname: 'Ringo',
+                instrument: 'Drums'
+            }
+        ];
         $scope.$on('loadMoreRows', function (event, data) {
             locals.gridOptions.hasMoreRows = false;
             data.promise.resolve(angular.copy(dataSet1));
@@ -389,6 +462,79 @@ describe('Grid directive', function () {
 
         expect(rowEl.length).toBe(8);
 
+        verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
+        verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
+        verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
+        verifyRow(rowEl, 7, 'Ringo', 'Drums', '');
+    });
+
+    it('can load more data when using infinite scroll through concatenation and resolving a promise with jsonmap', function () {
+
+        var rowEl,
+            infiniteHtml = '<div><bb-grid bb-grid-options="locals.gridOptions" bb-grid-infinite-scroll></bb-grid></div>';
+
+        locals.gridOptions.hasMoreRows = true;
+
+        locals.gridOptions.columns = [
+                    {
+                        caption: 'Name',
+                        jsonmap: 'myname',
+                        id: 1,
+                        name: 'name',
+                        title: false
+                    },
+                    {
+                        caption: 'Instrument',
+                        id: 2,
+                        name: 'instrument'
+                    },
+                    {
+                        caption: 'Biography',
+                        jsonmap: 'bio',
+                        id: 3,
+                        name: 'bio'
+                    }
+                ];
+
+        dataSet1 = [
+            {
+                id: 'blarrrg',
+                myname: 'John',
+                instrument: 'Rhythm guitar'
+            },
+            {
+                myname: 'Paul',
+                instrument: 'Bass',
+                bio: 'Lorem'
+            },
+            {
+                myname: 'George',
+                instrument: 'Lead guitar'
+            },
+            {
+                myname: 'Ringo',
+                instrument: 'Drums'
+            }
+        ];
+
+        $scope.$on('loadMoreRows', function (event, data) {
+            locals.gridOptions.hasMoreRows = false;
+            locals.gridOptions.data = locals.gridOptions.data.concat(angular.copy(dataSet1));
+            data.promise.resolve();
+        });
+
+        el = setUpGrid(infiniteHtml, locals);
+
+        setGridData(dataSet1);
+
+        setupScrollInfinite(true);
+
+        $($window).scroll();
+        timeoutFlushIfAvailable();
+
+        rowEl = getGridRows(el);
+
+        expect(rowEl.length).toBe(8);
         verifyRow(rowEl, 4, 'John', 'Rhythm guitar', '');
         verifyRow(rowEl, 5, 'Paul', 'Bass', 'Lorem');
         verifyRow(rowEl, 6, 'George', 'Lead guitar', '');
@@ -896,7 +1042,7 @@ describe('Grid directive', function () {
 
             $scope.$digest();
 
-            $timeout.flush();
+            timeoutFlushIfAvailable();
 
             rowEl = getGridRows(el);
 
@@ -927,7 +1073,7 @@ describe('Grid directive', function () {
 
             $scope.$digest();
 
-            $timeout.flush();
+            timeoutFlushIfAvailable();
 
             searchEl.eq(0).val('Paul').trigger('change');
 
@@ -1091,11 +1237,12 @@ describe('Grid directive', function () {
             setGridData(dataSet1);
 
             rowEl = getGridRows(el);
-            expect($('body .bb-dropdown-menu').eq(0)).toHaveCss({"display": "none"});
+            expect($('body .bb-dropdown-menu').eq(1)).toHaveCss({"display": "none"});
 
             contextEl = rowEl.eq(0).find('td div button').eq(0);
             contextEl.click();
-            expect($('body .bb-dropdown-menu').eq(0)).not.toHaveCss({"display": "none"});
+            $scope.$digest();
+            expect($('body .bb-dropdown-menu').eq(1)).not.toHaveCss({"display": "none"});
 
             optionEl = $('body .bb-dropdown-menu .bb-dropdown-item a').eq(0);
             expect(contextMenuItemClicked).toBe(false);
@@ -1150,7 +1297,12 @@ describe('Grid directive', function () {
 
             expectedScrollbarWidth = bbWindow.getScrollbarWidth();
 
-            expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+            if (expectedScrollbarWidth === 0) {
+                expect(['0px', '']).toContain(topScrollbarEl[0].style.height);
+            } else {
+                expect(topScrollbarEl[0].style.height).toBe(expectedScrollbarWidth + 'px');
+            }
+
         });
 
         it('will not emit an includedColumnsChanged event on media breakpoint change', function () {
@@ -1224,7 +1376,7 @@ describe('Grid directive', function () {
 
             topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
 
-            expect(topScrollbarEl[0].style.height).toBe('0px');
+            expect(['0px', '']).toContain(topScrollbarEl[0].style.height);
         });
 
         it('will scroll properly on header viewkeeper state change when fixed', function () {
