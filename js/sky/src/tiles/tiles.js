@@ -10,6 +10,7 @@
         angular.forEach(tiles, function (tileId) {
             var tile = sourceContainer.find('[data-tile-id="' + tileId + '"]');
             targetContainer.append(tile);
+            tile.attr('data-tile-initial-layout-complete', 'true');
         });
     }
 
@@ -187,7 +188,7 @@
                 if (dashboardCtrl.dashboardInitialized && !vm.tileInitialized) {
                     dashboardState = dashboardCtrl.getDashboardState();
                     initializeTile(dashboardState);
-                    dashboardCtrl.layoutTiles();
+                    dashboardCtrl.layoutNewTiles();
                 }
             }
         }
@@ -254,15 +255,6 @@
 
         vm.getDashboardState = function () {
             return {tiles: vm.tiles, smallTileDisplayMode: vm.smallTileDisplayMode};
-        };
-
-        vm.layoutTiles = function () {
-            /* This timeout is in place to allow a state change to
-               complete before laying out tiles
-            */
-            $timeout(function () {
-                vm.layoutTileColumns();
-            });
         };
 
         vm.dashboardInitialized = false;
@@ -333,6 +325,19 @@
 
             vm.layoutTileColumns = layoutTileColumns;
 
+            function layoutNewTiles() {
+                /* This timeout is in place to allow a state change to
+                   complete before laying out tiles
+                */
+                $timeout(function () {
+                    //If there are any tile view's that have not been placed into containers, layout the tiles now.
+                    if (element.find('[data-tile-id]:not([data-tile-initial-layout-complete])').length) {
+                        vm.layoutTileColumns();
+                    }
+                });
+            }
+
+            vm.layoutNewTiles = layoutNewTiles;
 
             //Inspects the tiles in each column and updates model accordingly.
             function parseColumnTiles() {
