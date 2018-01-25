@@ -16,7 +16,7 @@ The summary action bar contains actions and a responsive summary section.
       - `bb-summary-actionbar-secondary` &mdash; Specifies a secondary action button.
         - `bb-summary-action-disabled` &mdash; *(Optional.)* Specifies whether the action should be disabled.
         - `bb-summary-action-click` &mdash; *(Optional.)* Specifies a callback that will be executed when the action is clicked.
-    - `bb-summary-actionbar-cancel` &mdash; Specifies a cancel action button.
+    - `bb-summary-actionbar-cancel` &mdash; Specifies a button with the styling of a cancel button. You need to provide your own click handler for the cancel action.
       - `bb-summary-action-disabled` &mdash; *(Optional.)* Specifies whether the action should be disabled.
       - `bb-summary-action-click` &mdash; *(Optional.)* Specifies a callback that will be executed when the action is clicked.
   - `bb-summary-actionbar-summary` &mdash; Specifies the container for the summary section.

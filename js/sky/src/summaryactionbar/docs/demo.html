@@ -9,7 +9,7 @@
                 <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action</bb-summary-actionbar-secondary>
                 <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action 2</bb-summary-actionbar-secondary>
             </bb-summary-actionbar-secondary-actions>
-            <bb-summary-actionbar-cancel>Cancel</bb-summary-actionbar-cancel>
+            <bb-summary-actionbar-cancel ng-click="summaryCtrl.close()">Cancel</bb-summary-actionbar-cancel>
         </bb-summary-actionbar-actions>
         <bb-summary-actionbar-summary>
             <div>
@@ -76,7 +76,7 @@
                             <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action 2</bb-summary-actionbar-secondary>
                             <bb-summary-actionbar-secondary ng-click="summaryCtrl.alertEmit('Secondary 1')">Secondary action 3</bb-summary-actionbar-secondary>
                         </bb-summary-actionbar-secondary-actions>
-                        <bb-summary-actionbar-cancel>Cancel</bb-summary-actionbar-cancel>
+                        <bb-summary-actionbar-cancel ng-click="summaryCtrl.close()">Cancel</bb-summary-actionbar-cancel>
                     </bb-summary-actionbar-actions>
                     <bb-summary-actionbar-summary>
                         <div>
