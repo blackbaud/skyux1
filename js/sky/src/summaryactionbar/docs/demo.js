@@ -11,6 +11,12 @@
         }
 
         ctrl.close = close;
+
+        function alertEmit(message) {
+            alert(message);
+        }
+
+        ctrl.alertEmit = alertEmit;
     }
 
     function SummaryModalButtonController(bbModal) {
