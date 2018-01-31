@@ -31,6 +31,6 @@
     "*.yml"
   ],
   "resolutions": {
-    "angular": "1.6.1"
+    "angular": "1.6.8"
   }
 }

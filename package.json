@@ -22,7 +22,7 @@
     "UX"
   ],
   "devDependencies": {
-    "angular-mocks": "1.6.1",
+    "angular-mocks": "1.6.8",
     "assemble-yaml": "0.2.1",
     "axe-core": "1.1.1",
     "blackbaud-stache": "0.7.25",
@@ -78,11 +78,11 @@
   },
   "dependencies": {
     "@blackbaud/skyux-design-tokens": "0.0.8",
-    "angular": "1.6.1",
-    "angular-animate": "1.6.1",
-    "angular-messages": "1.6.1",
+    "angular": "1.6.8",
+    "angular-animate": "1.6.8",
+    "angular-messages": "1.6.8",
     "angular-toastr": "1.6.0",
-    "angular-touch": "1.6.1",
+    "angular-touch": "1.6.8",
     "angular-ui-bootstrap": "2.5.0",
     "angular-ui-router": "0.4.2",
     "autonumeric": "1.9.39",
