@@ -35,7 +35,7 @@
                         style = document.createElement("style");
                         style.appendChild(document.createTextNode(""));
                         document.head.appendChild(style);
-                        style.sheet.insertRule(".bb-modal-open-mobile .bb-modal { margin-top: -" + bodyMargin + " }");
+                        style.sheet.insertRule(".bb-modal-open-mobile .bb-modal { margin-top: -" + bodyMargin + " }", 0);
                         positioningStyleSheet = style;
                     }
                 }
