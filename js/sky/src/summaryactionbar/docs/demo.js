@@ -3,8 +3,14 @@
 (function () {
     'use strict';
 
-    function SummaryActionbarTestController() {
+    function SummaryActionbarTestController($uibModalInstance) {
         var ctrl = this;
+
+        function close() {
+            $uibModalInstance.close();
+        }
+
+        ctrl.close = close;
 
         function alertEmit(message) {
             alert(message);
@@ -30,6 +36,7 @@
     }
 
     SummaryModalButtonController.$inject = ['bbModal'];
+    SummaryActionbarTestController.$inject = ['$uibModalInstance'];
 
     angular.module('stache')
         .controller('SummaryModalButtonController', SummaryModalButtonController)
