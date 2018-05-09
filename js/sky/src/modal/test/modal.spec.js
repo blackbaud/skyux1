@@ -651,9 +651,10 @@ describe('Modal service', function () {
     }));
 
     it('should add default options and call through to the UI Bootstrap modal service', function () {
-        var openSpy = spyOn($uibModal, 'open').and.callThrough();
+        var modalInstance,
+            openSpy = spyOn($uibModal, 'open').and.callThrough();
 
-        bbModal.open({
+        modalInstance = bbModal.open({
             template: 'a'
         });
 
@@ -667,12 +668,19 @@ describe('Modal service', function () {
         // The second-half of the windowClass value varies for each modal, so just check
         // that at least the bb-modal class is present.
         expect(openSpy.calls.argsFor(0)[0].windowClass.indexOf('bb-modal ')).toBe(0);
+
+        modalInstance.result.success();
     });
 
     describe('on mobile browsers', function () {
         it('should be styled differently to avoid some quirks with fixed position elements', function () {
             var bodyEl,
-                modalInstance;
+                modalInstance,
+                modalEl;
+
+            bodyEl = $(document.body);
+
+            bodyEl.css('margin-top', '135px');
 
             $window.navigator = {
                 userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/8.0 Mobile/11A465 Safari/9537.53'
@@ -691,13 +699,26 @@ describe('Modal service', function () {
 
             $rootScope.$digest();
 
-            bodyEl = $(document.body);
-
             expect(bodyEl).toHaveClass('bb-modal-open-mobile');
+
+            // Ensure bb-modal class has correct margin styles applied.  This group
+            // of tests currently mocks out the creation of the actual modal, as it
+            // has conflicts when $window is mocked for the purpose of faking the
+            // user agent.  So to validate the styling, just create an element
+            // with bb-modal class
+            modalEl = document.createElement('div');
+            modalEl.className = 'bb-modal';
+            document.body.appendChild(modalEl);
+
+            expect(window.getComputedStyle(modalEl).marginTop).toBe('-135px');
+
+            document.body.removeChild(modalEl);
 
             modalInstance.result.success();
 
             expect(bodyEl).not.toHaveClass('bb-modal-open-mobile');
+
+            bodyEl.css('margin-top', 'initial');
         });
     });
 });
