@@ -680,7 +680,7 @@ describe('Modal service', function () {
 
             bodyEl = $(document.body);
 
-            bodyEl.css('margin-top', '135px');
+            bodyEl.css('margin-top', '1px');
 
             $window.navigator = {
                 userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/8.0 Mobile/11A465 Safari/9537.53'
@@ -710,7 +710,7 @@ describe('Modal service', function () {
             modalEl.className = 'bb-modal';
             document.body.appendChild(modalEl);
 
-            expect(window.getComputedStyle(modalEl).marginTop).toBe('-135px');
+            expect(window.getComputedStyle(modalEl).marginTop).toBe('-1px');
 
             document.body.removeChild(modalEl);
 
