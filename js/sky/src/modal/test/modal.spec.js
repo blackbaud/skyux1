@@ -718,7 +718,7 @@ describe('Modal service', function () {
 
             expect(bodyEl).not.toHaveClass('bb-modal-open-mobile');
 
-            bodyEl.css('margin-top', 'initial');
+            bodyEl.css('margin-top', '');
         });
     });
 });
