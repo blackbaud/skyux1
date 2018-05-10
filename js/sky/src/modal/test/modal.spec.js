@@ -671,4 +671,54 @@ describe('Modal service', function () {
 
         modalInstance.result.success();
     });
+
+    describe('on mobile browsers', function () {
+        it('should be styled differently to avoid some quirks with fixed position elements', function () {
+            var bodyEl,
+                modalInstance,
+                modalEl;
+
+            bodyEl = $(document.body);
+
+            bodyEl.css('margin-top', '135px');
+
+            $window.navigator = {
+                userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/8.0 Mobile/11A465 Safari/9537.53'
+            };
+
+            /*jlint white: true */
+            modalInstance = bbModal.open({
+                template:
+                    '<bb-modal>' +
+                        '<div class="modal-form">' +
+                            '<div bb-modal-body></div>' +
+                        '</div>' +
+                    '</bb-modal>'
+            });
+            /*jlint white: false */
+
+            $rootScope.$digest();
+
+            expect(bodyEl).toHaveClass('bb-modal-open-mobile');
+
+            // Ensure bb-modal class has correct margin styles applied.  This group
+            // of tests currently mocks out the creation of the actual modal, as it
+            // has conflicts when $window is mocked for the purpose of faking the
+            // user agent.  So to validate the styling, just create an element
+            // with bb-modal class
+            modalEl = document.createElement('div');
+            modalEl.className = 'bb-modal';
+            document.body.appendChild(modalEl);
+
+            expect(window.getComputedStyle(modalEl).marginTop).toBe('-135px');
+
+            document.body.removeChild(modalEl);
+
+            modalInstance.result.success();
+
+            expect(bodyEl).not.toHaveClass('bb-modal-open-mobile');
+
+            bodyEl.css('margin-top', 'initial');
+        });
+    });
 });
