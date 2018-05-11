@@ -24,22 +24,22 @@
                     modalInstance,
                     windowClass = 'bb-modal';
 
-                function createModalPositioningStylesheet() {
+                function createModalPositioningStyleSheet() {
                     var style,
                         bodyMargin;
 
-                    bodyMargin = window.getComputedStyle(document.body).marginTop;
+                    bodyMargin = $window.getComputedStyle(document.body).marginTop;
 
                     if (bodyMargin !== '0px') {
-                        style = document.createElement("style");
-                        style.appendChild(document.createTextNode(""));
+                        style = document.createElement('style');
+                        style.appendChild(document.createTextNode(''));
                         document.head.appendChild(style);
-                        style.sheet.insertRule(".bb-modal-open-mobile .bb-modal { margin-top: -" + bodyMargin + " }", 0);
+                        style.sheet.insertRule('.bb-modal-open-mobile .bb-modal { margin-top: -' + bodyMargin + ' }', 0);
                         positioningStyleSheet = style;
                     }
                 }
 
-                function removeModalPositioningStylesheet() {
+                function removeModalPositioningStyleSheet() {
                     if (positioningStyleSheet) {
                         document.head.removeChild(positioningStyleSheet);
                     }
@@ -59,7 +59,7 @@
                     }
 
                     if (isIOS && openModalCount === 0) {
-                        removeModalPositioningStylesheet();
+                        removeModalPositioningStyleSheet();
                         bodyEl
                             .removeClass(CLS_BODY_MOBILE)
                             .scrollTop(scrollTop);
@@ -105,7 +105,7 @@
                     // closed.
                     scrollTop = bodyEl.scrollTop();
                     bodyEl.addClass(CLS_BODY_MOBILE);
-                    createModalPositioningStylesheet();
+                    createModalPositioningStyleSheet();
                 }
 
                 if (fullPage) {
