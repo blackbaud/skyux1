@@ -29,9 +29,8 @@
                         bodyMargin;
 
                     bodyMargin = window.getComputedStyle(document.body).marginTop;
-                    /* istanbul ignore else */
-                    /* sanity check */
-                    if (bodyMargin) {
+
+                    if (bodyMargin !== '0px') {
                         style = document.createElement("style");
                         style.appendChild(document.createTextNode(""));
                         document.head.appendChild(style);
@@ -41,8 +40,6 @@
                 }
 
                 function removeModalPositioningStylesheet() {
-                    /* istanbul ignore else */
-                    /* sanity check */
                     if (positioningStyleSheet) {
                         document.head.removeChild(positioningStyleSheet);
                     }

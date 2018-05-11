@@ -673,18 +673,17 @@ describe('Modal service', function () {
     });
 
     describe('on mobile browsers', function () {
-        it('should be styled differently to avoid some quirks with fixed position elements', function () {
-            var bodyEl,
-                modalInstance,
-                modalEl;
-
-            bodyEl = $(document.body);
-
-            bodyEl.css('margin-top', '135px');
-
+        beforeEach(inject(function ($window) {
             $window.navigator = {
                 userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/8.0 Mobile/11A465 Safari/9537.53'
             };
+        }));
+
+        it('should be styled differently to avoid some quirks with fixed position elements', function () {
+            var bodyEl,
+                modalInstance;
+
+            bodyEl = $(document.body);
 
             /*jlint white: true */
             modalInstance = bbModal.open({
@@ -701,6 +700,33 @@ describe('Modal service', function () {
 
             expect(bodyEl).toHaveClass('bb-modal-open-mobile');
 
+            modalInstance.result.success();
+
+            expect(bodyEl).not.toHaveClass('bb-modal-open-mobile');
+        });
+
+        it('should add style to correct positioning if body has a margin-top', function () {
+            var bodyEl,
+                modalInstance,
+                modalEl;
+
+            bodyEl = $(document.body);
+
+            bodyEl.css('margin-top', '135px');
+
+            /*jlint white: true */
+            modalInstance = bbModal.open({
+                template:
+                    '<bb-modal>' +
+                        '<div class="modal-form">' +
+                            '<div bb-modal-body></div>' +
+                        '</div>' +
+                    '</bb-modal>'
+            });
+            /*jlint white: false */
+
+            $rootScope.$digest();
+
             // Ensure bb-modal class has correct margin styles applied.  This group
             // of tests currently mocks out the creation of the actual modal, as it
             // has conflicts when $window is mocked for the purpose of faking the
@@ -715,8 +741,6 @@ describe('Modal service', function () {
             document.body.removeChild(modalEl);
 
             modalInstance.result.success();
-
-            expect(bodyEl).not.toHaveClass('bb-modal-open-mobile');
 
             bodyEl.css('margin-top', '');
         });
