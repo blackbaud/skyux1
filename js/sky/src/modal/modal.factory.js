@@ -8,7 +8,9 @@
         CLS_BODY_MOBILE = 'bb-modal-open-mobile',
         modalCount = 0,
         openFullPageModalCount = 0,
-        openModalCount = 0;
+        openModalCount = 0,
+        positioningStyleSheet,
+        scrollTop;
 
     function bbModal($uibModal, $window) {
         return {
@@ -20,8 +22,28 @@
                     idCls,
                     isIOS,
                     modalInstance,
-                    scrollTop,
                     windowClass = 'bb-modal';
+
+                function createModalPositioningStylesheet() {
+                    var style,
+                        bodyMargin;
+
+                    bodyMargin = window.getComputedStyle(document.body).marginTop;
+
+                    if (bodyMargin !== '0px') {
+                        style = document.createElement("style");
+                        style.appendChild(document.createTextNode(""));
+                        document.head.appendChild(style);
+                        style.sheet.insertRule(".bb-modal-open-mobile .bb-modal { margin-top: -" + bodyMargin + " }", 0);
+                        positioningStyleSheet = style;
+                    }
+                }
+
+                function removeModalPositioningStylesheet() {
+                    if (positioningStyleSheet) {
+                        document.head.removeChild(positioningStyleSheet);
+                    }
+                }
 
                 function modalClosed() {
                     $(window).off('resize.' + idCls);
@@ -36,7 +58,8 @@
                         }
                     }
 
-                    if (isIOS) {
+                    if (isIOS && openModalCount === 0) {
+                        removeModalPositioningStylesheet();
                         bodyEl
                             .removeClass(CLS_BODY_MOBILE)
                             .scrollTop(scrollTop);
@@ -76,12 +99,13 @@
                 // doesn't propery prohibit scrolling on the window.  Adding this CSS class
                 // will change the body position to fixed and the modal position to absolute
                 // to work around this behavior.
-                if (isIOS) {
+                if (isIOS && openModalCount === 0) {
                     // Setting the body position to be fixed causes it to be scrolled to the
                     // top.  Cache the current scrollTop and set it back when the modal is
                     // closed.
                     scrollTop = bodyEl.scrollTop();
                     bodyEl.addClass(CLS_BODY_MOBILE);
+                    createModalPositioningStylesheet();
                 }
 
                 if (fullPage) {
