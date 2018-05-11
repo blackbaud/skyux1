@@ -28,7 +28,7 @@
                     var style,
                         bodyMargin;
 
-                    bodyMargin = $window.getComputedStyle(document.body).marginTop;
+                    bodyMargin = window.getComputedStyle(document.body).marginTop;
 
                     if (bodyMargin !== '0px') {
                         style = document.createElement('style');
