@@ -72,7 +72,7 @@ describe('search', function () {
             .pause(1000)
             .click('.bb-search-btn-open')
             .pause(1000)
-            .setValue('.bb-search-input', 'Value')
+            .setValue('#screenshot-search-full .bb-search-input', 'Value')
             .click('.bb-search-btn-apply')
             .pause(1000)
             .compareScreenshot({
@@ -89,7 +89,7 @@ describe('search', function () {
             .pause(1000)
             .click('.bb-search-btn-open')
             .pause(1000)
-            .setValue('.bb-search-input', 'Value')
+            .setValue('#screenshot-search-full .bb-search-input', 'Value')
             .click('.bb-search-btn-apply')
             .pause(1000)
             .click('.bb-search-btn-dismiss')
