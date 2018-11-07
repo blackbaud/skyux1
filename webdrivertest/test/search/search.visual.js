@@ -15,6 +15,18 @@ describe('search', function () {
             });
     });
 
+    it('should match the baseline search screenshot when full-width is true', function () {
+
+        return browser
+            .setupTest('/search/fixtures/test.full.html')
+            .pause(1000)
+            .compareScreenshot({
+                screenshotName: 'search_fullwidth',
+                selector: '#screenshot-search-fullwidth',
+                checkAccessibility: true
+            });
+    });
+
     it('should match the baseline search screenshot when the input is focused', function () {
         return browser
             .setupTest('/search/fixtures/test.full.html')
@@ -60,7 +72,7 @@ describe('search', function () {
             .pause(1000)
             .click('.bb-search-btn-open')
             .pause(1000)
-            .setValue('.bb-search-input', 'Value')
+            .setValue('#screenshot-search-full .bb-search-input', 'Value')
             .click('.bb-search-btn-apply')
             .pause(1000)
             .compareScreenshot({
@@ -77,7 +89,7 @@ describe('search', function () {
             .pause(1000)
             .click('.bb-search-btn-open')
             .pause(1000)
-            .setValue('.bb-search-input', 'Value')
+            .setValue('#screenshot-search-full .bb-search-input', 'Value')
             .click('.bb-search-btn-apply')
             .pause(1000)
             .click('.bb-search-btn-dismiss')
