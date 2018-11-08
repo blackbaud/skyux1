@@ -1,5 +1,5 @@
 /*jshint jasmine: true */
-/* global module, axe, document, require, console, process */
+/* global module, axe, FontFaceObserver, document, require, console, process */
 
 (function () {
     'use strict';
@@ -93,6 +93,22 @@
                 } else {
                     return;
                 }
+            })
+            .executeAsync(function(done) {
+
+                // Duplicated from https://github.com/blackbaud/skyux-theme/blob/master/src/app/public/style-loader.ts
+                var fontAwesome = new FontFaceObserver('FontAwesome');
+                var blackbaudSans = new FontFaceObserver('Blackbaud Sans');
+                var timeout = 3000;
+
+                Promise
+                    .all([
+                        // Specify a character for FontAwesome since some browsers will fail to detect
+                        // when the font is loaded unless a known character with a different width
+                        // than the default is not specified.
+                        fontAwesome.load('\uf0fc', timeout),
+                        blackbaudSans.load(undefined, timeout)
+                    ]).then(done);    
             });
     }
 
