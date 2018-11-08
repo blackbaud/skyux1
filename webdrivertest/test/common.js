@@ -100,6 +100,7 @@
                 // Duplicated from https://github.com/blackbaud/skyux-theme/blob/master/src/app/public/style-loader.ts
                 var fontAwesome = new FontFaceObserver('FontAwesome');
                 var blackbaudSans = new FontFaceObserver('Blackbaud Sans');
+                var blackbaudSansCondensed = new FontFaceObserver('Blackbaud Sans Condensed');
                 var timeout = 3000;
 
                 Promise
@@ -108,7 +109,8 @@
                         // when the font is loaded unless a known character with a different width
                         // than the default is not specified.
                         fontAwesome.load('\uf0fc', timeout),
-                        blackbaudSans.load(undefined, timeout)
+                        blackbaudSans.load(undefined, timeout),
+                        blackbaudSansCondensed.load(undefined, timeout)
                     ]).then(done);    
             });
     }
