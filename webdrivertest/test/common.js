@@ -86,6 +86,7 @@
         if (!screenWidth) {
             screenWidth = 1280;
         }
+        browser.timeouts('script', 30000);
         return browser.url(url)
             .getViewportSize().then(function (size) {
                 if (size.width !== screenWidth) {
