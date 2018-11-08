@@ -43,7 +43,7 @@
         }
     ];
 
-    shared.maxInstances = 1;
+    shared.maxInstances = 4;
     shared.host = 'hub.browserstack.com';
     shared.port = 80;
     shared.bail = 1; // Fail after the first failed test
