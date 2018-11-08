@@ -19,7 +19,10 @@
     config.capabilities = [
         {
             browserName: 'chrome',
-            os: os
+            os: os,
+            chromeOptions: {
+                args: ['headless']
+            }
         }
     ];
 
