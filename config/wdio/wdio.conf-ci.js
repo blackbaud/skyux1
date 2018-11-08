@@ -45,10 +45,9 @@
         }
     ];
 
-    shared.maxInstances = 4;
+    shared.maxInstances = 6;
     shared.host = 'hub.browserstack.com';
     shared.port = 80;
-    shared.bail = 1; // Fail after the first failed test
 
     shared.visualRegression = require('../../webdrivertest/test/common.js').getVisualRegression('webdriver-screenshots', 
                                                                                                 'webdriver-screenshots-screen', 
