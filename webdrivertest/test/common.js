@@ -86,13 +86,20 @@
         if (!screenWidth) {
             screenWidth = 1280;
         }
+
+        console.log('Setting timeout and url');
         browser.timeouts('script', 30000);
+
         return browser.url(url)
-            .getViewportSize().then(function (size) {
+            .getViewportSize()
+            .then(function (size) {
+                console.log('Getting browser vieweport size', size);
                 if (size.width !== screenWidth) {
+                    console.log('Setting browserviewport size', screenWidth, size.height);
                     return browser.setViewportSize({width: screenWidth, height: size.height});
                 } else {
-                    return;
+                    console.log('Viewport size already matches width');
+                    return Promise.resolve();
                 }
             })
             .executeAsync(function(done) {
@@ -103,6 +110,7 @@
                 var blackbaudSansCondensed = new FontFaceObserver('Blackbaud Sans Condensed');
                 var timeout = 3000;
 
+                console.log('Loading fonts');
                 Promise
                     .all([
                         // Specify a character for FontAwesome since some browsers will fail to detect
@@ -111,7 +119,17 @@
                         fontAwesome.load('\uf0fc', timeout),
                         blackbaudSans.load(undefined, timeout),
                         blackbaudSansCondensed.load(undefined, timeout)
-                    ]).then(done);    
+                    ]).then(function() {
+                        console.log('Fonts successfully loaded');
+                        done();
+                    }).catch(function(err) {
+                        console.error('Error loading fonts');
+                        console.log(err);
+                        done();
+                    });
+            })
+            .then(function() {
+                console.log('Setup test completed for ', url);
             });
     }
 
