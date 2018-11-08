@@ -74,6 +74,7 @@
       "version": "0.2.9"
     },
     "wdio-jasmine-framework": "0.2.5",
+    "wdio-spec-reporter": "0.1.5",
     "wdio-visual-regression-service": "0.4.0",
     "webdriverio": "4.2.8"
   },

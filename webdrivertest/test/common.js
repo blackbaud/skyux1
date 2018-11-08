@@ -87,18 +87,18 @@
             screenWidth = 1280;
         }
 
-        console.log('Setting timeout and url');
+        console.log(url, 'Setting timeout and url');
         browser.timeouts('script', 30000);
 
         return browser.url(url)
             .getViewportSize()
             .then(function (size) {
-                console.log('Getting browser vieweport size', size);
+                console.log(url, 'Getting browser vieweport size', size);
                 if (size.width !== screenWidth) {
-                    console.log('Setting browserviewport size', screenWidth, size.height);
+                    console.log(url, 'Setting browserviewport size', screenWidth, size.height);
                     return browser.setViewportSize({width: screenWidth, height: size.height});
                 } else {
-                    console.log('Viewport size already matches width');
+                    console.log(url, 'Viewport size already matches width');
                     return Promise.resolve();
                 }
             })
@@ -129,7 +129,7 @@
                     });
             })
             .then(function() {
-                console.log('Setup test completed for ', url);
+                console.log(url, 'Setup test completed.');
             });
     }
 
