@@ -45,7 +45,7 @@
         }
     ];
 
-    shared.maxInstances = 6;
+    shared.maxInstances = 4;
     shared.host = 'hub.browserstack.com';
     shared.port = 80;
 
