@@ -1,5 +1,5 @@
 /*jshint jasmine: true */
-/* global module, axe, fontAwesome, fontBlackbaudSans, fontBlackbaudSansCondensed, document, require, console, process */
+/* global module, axe, fontAwesome, globalResolveFonts, document, require, console, process */
 
 (function () {
     'use strict';
@@ -103,28 +103,9 @@
                 }
             })
             .executeAsync(function(done) {
-
-                // Duplicated from https://github.com/blackbaud/skyux-theme/blob/master/src/app/public/style-loader.ts
-                // fontAwesome, fontBlackbaudSans, and fontBlackbaudSansCondensed are all globally available in the template.html file
-                var timeout = 3000;
-
-                console.log('Loading fonts');
-                Promise
-                    .all([
-                        // Specify a character for FontAwesome since some browsers will fail to detect
-                        // when the font is loaded unless a known character with a different width
-                        // than the default is not specified.
-                        fontAwesome.load('\uf0fc', timeout),
-                        fontBlackbaudSans.load(undefined, timeout),
-                        fontBlackbaudSansCondensed.load(undefined, timeout)
-                    ]).then(function() {
-                        console.log('Fonts successfully loaded');
-                        done();
-                    }).catch(function(err) {
-                        console.error('Error loading fonts');
-                        console.log(err);
-                        done();
-                    });
+                globalResolveFonts().then(function () {
+                    done();
+                });
             })
             .then(function() {
                 console.log(url, 'Setup test completed.');

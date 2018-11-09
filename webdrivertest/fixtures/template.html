@@ -42,10 +42,22 @@
 
         <script src="/node_modules/fontfaceobserver/fontfaceobserver.standalone.js"></script>
         <script>
-            /* Globally available but used in common.js to aleviate network problems */
-            var fontAwesome = new FontFaceObserver('FontAwesome');
-            var fontBlackbaudSans = new FontFaceObserver('Blackbaud Sans');
-            var fontBlackbaudSansCondensed = new FontFaceObserver('Blackbaud Sans Condensed');
+            // Called via executeAsync in common.js
+            // Duplicated from https://github.com/blackbaud/skyux-theme/blob/master/src/app/public/style-loader.ts
+            function globalResolveFonts() {
+                var fontAwesome = new FontFaceObserver('FontAwesome');
+                var fontBlackbaudSans = new FontFaceObserver('Blackbaud Sans');
+                var fontBlackbaudSansCondensed = new FontFaceObserver('Blackbaud Sans Condensed');
+
+                // Specify a character for FontAwesome since some browsers will fail to detect
+                // when the font is loaded unless a known character with a different width
+                // than the default is not specified.
+                return Promise.all([
+                    fontAwesome.load('\uf0fc'),
+                    fontBlackbaudSans.load(),
+                    fontBlackbaudSansCondensed.load()
+                ]);
+            }
         </script>
     </head>
     <body>
