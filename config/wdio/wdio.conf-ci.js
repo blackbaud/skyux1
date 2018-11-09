@@ -25,7 +25,7 @@
             name: 'SKYUXBROWSERSTACKCI',
             'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI',
             'browserstack.networkLogs': 'true',
-            'browserstack.console': 'errors'
+            'browserstack.console': 'info'
         },
         {
             browserName: 'firefox',
@@ -43,7 +43,7 @@
             name: 'SKYUXBROWSERSTACKCI',
             'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI',
             'browserstack.networkLogs': 'true',
-            'browserstack.console': 'errors'
+            'browserstack.console': 'info'
         }
     ];
 
