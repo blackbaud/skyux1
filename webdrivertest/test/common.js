@@ -103,8 +103,13 @@
                 }
             })
             .executeAsync(function(done) {
-                globalResolveFonts().then(function () {
-                    done();
+                console.log('resolve-fonts', 'A');
+                setTimeout(function () {
+                    console.log('resolve-fonts', 'B');
+                    globalResolveFonts().then(function () {
+                        console.log('resolve-fonts', 'C');
+                        done();
+                    });
                 });
             })
             .then(function() {
