@@ -24,7 +24,8 @@
             resolution: '1280x960',
             name: 'SKYUXBROWSERSTACKCI',
             'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI',
-            'browserstack.networkLogs': 'true'
+            'browserstack.networkLogs': 'true',
+            'browserstack.console': 'verbose'
         },
         {
             browserName: 'firefox',
@@ -41,7 +42,8 @@
             resolution: '1280x960',
             name: 'SKYUXBROWSERSTACKCI',
             'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI',
-            'browserstack.networkLogs': 'true'
+            'browserstack.networkLogs': 'true',
+            'browserstack.console': 'verbose'
         }
     ];
 
