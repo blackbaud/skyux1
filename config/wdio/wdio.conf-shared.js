@@ -18,6 +18,7 @@ module.exports = {
         expectationResultHandler: function () {
         }
     },
+    reporters: ['spec'],
     waitforTimeout: 3000,
     services: [
         'visual-regression'
