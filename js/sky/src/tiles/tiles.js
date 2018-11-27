@@ -179,6 +179,7 @@
             }
 
             vm.hasSettings = !!attrs.bbTileSettingsClick;
+            vm.hasHelp = !!attrs.bbTileHelpClick;
 
             updateHeaderContent();
 
@@ -202,6 +203,7 @@
             bindToController: {
                 bbTileCollapsed: '=?',
                 bbTileSettingsClick: '&?',
+                bbTileHelpClick: '&?',
                 tileHeader: '=bbTileHeader'
             },
             templateUrl: 'sky/templates/tiles/tile.html',
