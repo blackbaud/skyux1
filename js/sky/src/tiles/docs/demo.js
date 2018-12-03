@@ -29,6 +29,10 @@
         self.openSettings = function () {
             alert('Settings invoked!');
         };
+
+        self.openHelp = function () {
+            alert('Help invoked!');
+        };
     }
 
     function TileTestController(bbModal) {

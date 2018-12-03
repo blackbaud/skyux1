@@ -46,7 +46,7 @@
         display: flex;
         align-items: baseline;
         width: 100%;
-        max-width: calc(100% - 90px);
+        max-width: calc(100% - 120px);
 
         .bb-tile-header {
             float: none;
@@ -186,7 +186,8 @@ tiles behave within a column of tiles.*/
 }
 
 .bb-tile-chevron,
-.bb-tile-settings {
+.bb-tile-settings,
+.bb-tile-help {
     float: left;
     margin: 16px $tile-header-tool-padding 16px 0;
     padding: 0;

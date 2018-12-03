@@ -6,6 +6,11 @@
             </div>
             <div class="bb-tile-header-column-tools">
                 <div class="bb-tile-tools">
+                    <button ng-if="bbTile.hasHelp"
+                        class="bb-tile-help fa fa-question-circle"
+                        ng-click="$event.stopPropagation();bbTile.bbTileHelpClick();"
+                    >
+                    </button>
                     <button ng-attr-aria-label="{{bbTile.resources.tile_chevron_label}}" type="button" ng-class="'fa-chevron-' + (bbTile.isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></button>
                     <button type="button" ng-if="bbTile.hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTile.bbTileSettingsClick();"></button>
                     <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>
