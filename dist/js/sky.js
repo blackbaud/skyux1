@@ -14609,6 +14609,7 @@ angular.module('sky.palette.config', [])
             }
 
             vm.hasSettings = !!attrs.bbTileSettingsClick;
+            vm.hasHelp = !!attrs.bbTileHelpClick;
 
             updateHeaderContent();
 
@@ -14632,6 +14633,7 @@ angular.module('sky.palette.config', [])
             bindToController: {
                 bbTileCollapsed: '=?',
                 bbTileSettingsClick: '&?',
+                bbTileHelpClick: '&?',
                 tileHeader: '=bbTileHeader'
             },
             templateUrl: 'sky/templates/tiles/tile.html',
@@ -18010,6 +18012,11 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            </div>\n' +
         '            <div class="bb-tile-header-column-tools">\n' +
         '                <div class="bb-tile-tools">\n' +
+        '                    <button ng-if="bbTile.hasHelp"\n' +
+        '                        class="bb-tile-help fa fa-question-circle"\n' +
+        '                        ng-click="$event.stopPropagation();bbTile.bbTileHelpClick();"\n' +
+        '                    >\n' +
+        '                    </button>\n' +
         '                    <button ng-attr-aria-label="{{bbTile.resources.tile_chevron_label}}" type="button" ng-class="\'fa-chevron-\' + (bbTile.isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></button>\n' +
         '                    <button type="button" ng-if="bbTile.hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTile.bbTileSettingsClick();"></button>\n' +
         '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
