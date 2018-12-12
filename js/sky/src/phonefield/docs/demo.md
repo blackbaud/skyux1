@@ -8,7 +8,7 @@ summary: The phone field directive creates a text box to format and validate int
 The phone field directive creates a text box for users to enter phone numbers. It wraps up the [intl-tel-input jQuery plugin](http://jackocnr.com/intl-tel-input.html) to format and validate international phone numbers. This plugin adds a dropdown for users to select a country and specifies the desired format and dial code. Users can also enter a dial code to select a country. You use the `bb-phone-field` directive in conjunction with the `ng-model` directive and bind the phone number value to `ng-model`.
 
 ### Dependencies ###
-- **[intl-tel-input](http://jackocnr.com/intl-tel-input.html) (8.5.2 or higher)** Enhances a text box to format and validate international phone numbers.
+- **[intl-tel-input](http://jackocnr.com/intl-tel-input.html) (13.0.0 or higher)** Enhances a text box to format and validate international phone numbers.
 
 ---
 
