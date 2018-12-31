@@ -39,7 +39,7 @@ describe('Phone field directive', function () {
         iso2: 'us',
         dialCode: '1',
         unformattedTestNumber: '2015555555',
-        formattedTestNumber: '(201) 555-5555'
+        formattedTestNumber: '(201) 555-0123'
     };
 
     internationalCountryData = {
