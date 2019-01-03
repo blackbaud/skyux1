@@ -429,7 +429,7 @@ describe('Phone field directive', function () {
             $scope = $rootScope.$new();
 
         $scope.phoneFieldConfig = {
-            countryIso2: 'br'
+            countryIso2: nationalCountryData.iso2
         };
 
         el = compileDirective($scope);
@@ -437,6 +437,7 @@ describe('Phone field directive', function () {
         $scope.$digest();
 
         // ** act **
+        setCountry(el, 'br'); // 'br' is Brazil
         setNumber(el, '5548998386090');
 
         // ** assert **
