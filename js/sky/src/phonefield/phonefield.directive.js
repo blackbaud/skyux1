@@ -34,7 +34,7 @@
                         // So, its dial code should just be 1 because the area code includes the dial code.
                         // Example countries: Bahamas, Cayman Islands, Barbados.
                         if (selectedCountryData.dialCode.toString()[0] === '1') {
-                            selectedCountryData.dialCode = 1;
+                            selectedCountryData.dialCode = '1';
                         }
 
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
