@@ -353,6 +353,18 @@ describe('Tile', function () {
                 expect(settingsEl).toExist();
             });
 
+            it('should not be present if a callback is provided and show-settings is false', function () {
+                var $scope = $rootScope.$new(),
+                    templateString,
+                    el;
+
+                templateString = '<bb-tile bb-tile-settings-click="settingsClick()" bb-tile-show-settings="false"></bb-tile>';
+                el = $compile(templateString)($scope);
+                $scope.$digest();
+                expect(el.find('.bb-tile-settings')).not.toExist();
+            });
+
+
             it('should call the specified callback when clicked', function () {
                 var $scope = $rootScope.$new(),
                     clickSpy,
@@ -401,6 +413,17 @@ describe('Tile', function () {
                 el = createTileWithHelp($scope);
                 helpEl = el.find('.bb-tile-help');
                 expect(helpEl).toExist();
+            });
+
+            it('should not be present if a callback is provided and show-help is false', function () {
+                var $scope = $rootScope.$new(),
+                    templateString,
+                    el;
+
+                templateString = '<bb-tile bb-tile-help-click="helpClick()" bb-tile-show-help="false"></bb-tile>';
+                el = $compile(templateString)($scope);
+                $scope.$digest();
+                expect(el.find('.bb-tile-help')).not.toExist();
             });
 
             it('should call the specified callback when clicked', function () {

@@ -178,8 +178,25 @@
                 });
             }
 
-            vm.hasSettings = !!attrs.bbTileSettingsClick;
-            vm.hasHelp = !!attrs.bbTileHelpClick;
+            if (attrs.bbTileShowHelp) {
+                $scope.$watch(function () {
+                    return vm.bbTileShowHelp;
+                }, function (newValue) {
+                    vm.hasHelp = !!attrs.bbTileHelpClick && newValue !== false;
+                });
+            } else {
+                vm.hasHelp = !!attrs.bbTileHelpClick;
+            }
+
+            if (attrs.bbTileShowSettings) {
+                $scope.$watch(function () {
+                    return vm.bbTileShowSettings;
+                }, function (newValue) {
+                    vm.hasSettings = !!attrs.bbTileSettingsClick && newValue !== false;
+                });
+            } else {
+                vm.hasSettings = !!attrs.bbTileSettingsClick;
+            }
 
             updateHeaderContent();
 
@@ -203,7 +220,9 @@
             bindToController: {
                 bbTileCollapsed: '=?',
                 bbTileSettingsClick: '&?',
+                bbTileShowSettings: '=?',
                 bbTileHelpClick: '&?',
+                bbTileShowHelp: '=?',
                 tileHeader: '=bbTileHeader'
             },
             templateUrl: 'sky/templates/tiles/tile.html',
