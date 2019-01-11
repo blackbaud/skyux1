@@ -9,6 +9,7 @@
                     <button ng-if="bbTile.hasHelp"
                         class="bb-tile-help fa fa-question-circle"
                         ng-click="$event.stopPropagation();bbTile.bbTileHelpClick();"
+                        type="button"
                     >
                     </button>
                     <button ng-attr-aria-label="{{bbTile.resources.tile_chevron_label}}" type="button" ng-class="'fa-chevron-' + (bbTile.isCollapsed ? 'down' : 'up')" class="fa bb-tile-chevron"></button>
