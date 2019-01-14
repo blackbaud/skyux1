@@ -14608,8 +14608,25 @@ angular.module('sky.palette.config', [])
                 });
             }
 
-            vm.hasSettings = !!attrs.bbTileSettingsClick;
-            vm.hasHelp = !!attrs.bbTileHelpClick;
+            if (attrs.bbTileShowHelp) {
+                $scope.$watch(function () {
+                    return vm.bbTileShowHelp;
+                }, function (newValue) {
+                    vm.hasHelp = !!attrs.bbTileHelpClick && newValue !== false;
+                });
+            } else {
+                vm.hasHelp = !!attrs.bbTileHelpClick;
+            }
+
+            if (attrs.bbTileShowSettings) {
+                $scope.$watch(function () {
+                    return vm.bbTileShowSettings;
+                }, function (newValue) {
+                    vm.hasSettings = !!attrs.bbTileSettingsClick && newValue !== false;
+                });
+            } else {
+                vm.hasSettings = !!attrs.bbTileSettingsClick;
+            }
 
             updateHeaderContent();
 
@@ -14633,7 +14650,9 @@ angular.module('sky.palette.config', [])
             bindToController: {
                 bbTileCollapsed: '=?',
                 bbTileSettingsClick: '&?',
+                bbTileShowSettings: '=?',
                 bbTileHelpClick: '&?',
+                bbTileShowHelp: '=?',
                 tileHeader: '=bbTileHeader'
             },
             templateUrl: 'sky/templates/tiles/tile.html',
@@ -18015,6 +18034,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                    <button ng-if="bbTile.hasHelp"\n' +
         '                        class="bb-tile-help fa fa-question-circle"\n' +
         '                        ng-click="$event.stopPropagation();bbTile.bbTileHelpClick();"\n' +
+        '                        type="button"\n' +
         '                    >\n' +
         '                    </button>\n' +
         '                    <button ng-attr-aria-label="{{bbTile.resources.tile_chevron_label}}" type="button" ng-class="\'fa-chevron-\' + (bbTile.isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></button>\n' +
