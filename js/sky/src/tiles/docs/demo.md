@@ -11,8 +11,11 @@ When used on forms, it automatically adjusts the background color on the form an
 ### Tile settings ###
 
  - `bb-tile-header` &mdash; The header text for the tile.
- - `bb-tile-settings-click` &mdash; A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header.  If not specified, the settings button is not displayed.
+ - `bb-tile-help-click` &mdash; A function to call when the user clicks the help button (indicated by a question-circle icon) in the tile header. If not specified, the help button is not displayed.
+ - `bb-tile-settings-click` &mdash; A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header. If not specified, the settings button is not displayed.
  - `bb-tile-collapsed` &mdash; (optional) binds to the collapsed state of the tile so that the tile can respond to user setting collapsed state.
+ - `bb-tile-show-help` &mdash; (optional) Indicates whether to display a help button in the tile's header. To display the button, you must also supply a `bb-tile-help-click` function. *(Default: `true`)*
+ - `bb-tile-show-settings` &mdash; (optional) Indicates whether to display a settings button in the tile's header. To display the button, you must also supply a `bb-tile-settings-click` function. *(Default: `true`)*
 
 ### Tile dashboard directive ###
 

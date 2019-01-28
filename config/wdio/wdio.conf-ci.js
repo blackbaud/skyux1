@@ -23,7 +23,9 @@
             build: 'mac-chrome-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
             resolution: '1280x960',
             name: 'SKYUXBROWSERSTACKCI',
-            'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI'
+            'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI',
+            'browserstack.networkLogs': 'true',
+            'browserstack.console': 'info'
         },
         {
             browserName: 'firefox',
@@ -39,11 +41,13 @@
             build: 'mac-firefox-webdriver-' + process.env.TRAVIS_BUILD_NUMBER,
             resolution: '1280x960',
             name: 'SKYUXBROWSERSTACKCI',
-            'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI'
+            'browserstack.localIdentifier': 'SKYUXBROWSERSTACKCI',
+            'browserstack.networkLogs': 'true',
+            'browserstack.console': 'info'
         }
     ];
 
-    shared.maxInstances = 10;
+    shared.maxInstances = 4;
     shared.host = 'hub.browserstack.com';
     shared.port = 80;
 

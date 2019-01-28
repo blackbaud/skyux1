@@ -7,7 +7,7 @@ describe('Phone Field directive', function () {
         selectors = {
         flagContainer: '.flag-container',
         countryList: '.country-list',
-        localCountryTextbox: 'input[placeholder="(201) 555-5555"]',
+        localCountryTextbox: 'input[placeholder="(201) 555-0123"]',
         intlCountryTextbox: 'input[placeholder="01812-345678"]',
         intlCountrySelect: 'li[data-dial-code="880"]',
         wrapper: '#screenshot-phone-field'
