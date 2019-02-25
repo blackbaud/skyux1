@@ -10660,7 +10660,7 @@ angular.module('sky.palette.config', [])
                         // So, its dial code should just be 1 because the area code includes the dial code.
                         // Example countries: Bahamas, Cayman Islands, Barbados.
                         if (selectedCountryData.dialCode.toString()[0] === '1') {
-                            selectedCountryData.dialCode = 1;
+                            selectedCountryData.dialCode = '1';
                         }
 
                         return '+' + selectedCountryData.dialCode + ' ' + formattedNumber;
@@ -14608,7 +14608,25 @@ angular.module('sky.palette.config', [])
                 });
             }
 
-            vm.hasSettings = !!attrs.bbTileSettingsClick;
+            if (attrs.bbTileShowHelp) {
+                $scope.$watch(function () {
+                    return vm.bbTileShowHelp;
+                }, function (newValue) {
+                    vm.hasHelp = !!attrs.bbTileHelpClick && newValue !== false;
+                });
+            } else {
+                vm.hasHelp = !!attrs.bbTileHelpClick;
+            }
+
+            if (attrs.bbTileShowSettings) {
+                $scope.$watch(function () {
+                    return vm.bbTileShowSettings;
+                }, function (newValue) {
+                    vm.hasSettings = !!attrs.bbTileSettingsClick && newValue !== false;
+                });
+            } else {
+                vm.hasSettings = !!attrs.bbTileSettingsClick;
+            }
 
             updateHeaderContent();
 
@@ -14632,6 +14650,9 @@ angular.module('sky.palette.config', [])
             bindToController: {
                 bbTileCollapsed: '=?',
                 bbTileSettingsClick: '&?',
+                bbTileShowSettings: '=?',
+                bbTileHelpClick: '&?',
+                bbTileShowHelp: '=?',
                 tileHeader: '=bbTileHeader'
             },
             templateUrl: 'sky/templates/tiles/tile.html',
@@ -18010,6 +18031,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            </div>\n' +
         '            <div class="bb-tile-header-column-tools">\n' +
         '                <div class="bb-tile-tools">\n' +
+        '                    <button ng-if="bbTile.hasHelp"\n' +
+        '                        class="bb-tile-help fa fa-question-circle"\n' +
+        '                        ng-click="$event.stopPropagation();bbTile.bbTileHelpClick();"\n' +
+        '                        type="button"\n' +
+        '                    >\n' +
+        '                    </button>\n' +
         '                    <button ng-attr-aria-label="{{bbTile.resources.tile_chevron_label}}" type="button" ng-class="\'fa-chevron-\' + (bbTile.isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></button>\n' +
         '                    <button type="button" ng-if="bbTile.hasSettings" class="bb-tile-settings bb-icon bb-icon-config" ng-click="$event.stopPropagation();bbTile.bbTileSettingsClick();"></button>\n' +
         '                    <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +

@@ -16,7 +16,7 @@ The search component creates a mobile-responsive input control for users to ente
   - `bb-search-placeholder` &mdash; *(Optional.)* Specifies placeholder text to display in the search input. If you include this attribute but do not specify a value, then the search input displays the default placeholder text "Find in this list."
 
   - `bb-search-mobile-response-enabled` &mdash; *(Optional.)* Indicates whether to hide the text input and display a search button on mobile devices. *(Default: `true`)*
-  - `bb-search-input-full-width` &mdash; *(Optional.)* Indicates whether the search input should grow to its container's width. *(Default: `false`)*
+  - `bb-search-full-width` &mdash; *(Optional.)* Indicates whether the search input should grow to its container's width. *(Default: `false`)*
   - `bb-search-input-id` &mdash; *(Optional.)* Specifies an ID for the search input.
   - `bb-search-skip-button-while-tabbing` &mdash; *(Optional.)* Indicates whether to skip over the search button when a user tabs through the search input. *(Default: `false`)*
 

@@ -13,12 +13,31 @@
 </div>
 
 <script type="text/ng-template" id="demo/tile/tile1.html">
-    <bb-tile bb-tile-header="tile1Ctrl.resources.tile_header" bb-tile-collapsed="tile1Ctrl.is_collapsed" bb-tile-settings-click="tile1Ctrl.openSettings()">
+    <bb-tile
+        bb-tile-header="tile1Ctrl.resources.tile_header"
+        bb-tile-collapsed="tile1Ctrl.is_collapsed"
+        bb-tile-help-click="tile1Ctrl.openHelp()"
+        bb-tile-settings-click="tile1Ctrl.openSettings()"
+        bb-tile-show-settings="tile1Ctrl.showSettings"
+        bb-tile-show-help="tile1Ctrl.showHelp"
+    >
         <bb-tile-header-content>
             {{123456789 | bbAutonumeric:'money':true}}
         </bb-tile-header-content>
         <div bb-tile-section>
             Test.
+            <button
+              class="btn bb-btn-secondary"
+              ng-click="tile1Ctrl.showSettings = !tile1Ctrl.showSettings"
+            >
+              Toggle settings button
+            </button>
+            <button
+              class="btn bb-btn-secondary"
+              ng-click="tile1Ctrl.showHelp = !tile1Ctrl.showHelp"
+            >
+              Toggle help button
+            </button>
         </div>
     </bb-tile>
 </script>

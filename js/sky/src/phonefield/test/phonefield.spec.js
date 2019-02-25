@@ -423,4 +423,28 @@ describe('Phone field directive', function () {
         el.remove();
     });
 
+    it('should handle new Brazil phone number format', function () {
+        // ** arrange **
+        var el,
+            $scope = $rootScope.$new();
+
+        $scope.phoneFieldConfig = {
+            countryIso2: nationalCountryData.iso2
+        };
+
+        el = compileDirective($scope);
+        el.appendTo(document.body);
+        $scope.$digest();
+
+        // ** act **
+        setCountry(el, 'br'); // 'br' is Brazil
+        setNumber(el, '5548998386090');
+
+        // ** assert **
+        expect($scope.phoneNumber).toBe('+55 (48) 99838-6090');
+
+        // ** clean up **
+        el.remove();
+    });
+
 });

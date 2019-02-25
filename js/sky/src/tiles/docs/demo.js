@@ -26,8 +26,15 @@
             tile_header: 'Tile header'
         };
 
+        self.showHelp = false;
+        self.showSettings = false;
+
         self.openSettings = function () {
             alert('Settings invoked!');
+        };
+
+        self.openHelp = function () {
+            alert('Help invoked!');
         };
     }
 

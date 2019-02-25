@@ -1,5 +1,5 @@
 /*jshint jasmine: true */
-/* global module, axe, document, require, console, process */
+/* global module, axe, fontAwesome, globalResolveFonts, document, require, console, process */
 
 (function () {
     'use strict';
@@ -86,13 +86,34 @@
         if (!screenWidth) {
             screenWidth = 1280;
         }
+
+        console.log(url, 'Setting timeout and url');
+        browser.timeouts('script', 30000);
+
         return browser.url(url)
-            .getViewportSize().then(function (size) {
+            .getViewportSize()
+            .then(function (size) {
+                console.log(url, 'Getting browser vieweport size', size);
                 if (size.width !== screenWidth) {
+                    console.log(url, 'Setting browserviewport size', screenWidth, size.height);
                     return browser.setViewportSize({width: screenWidth, height: size.height});
                 } else {
-                    return;
+                    console.log(url, 'Viewport size already matches width');
+                    return Promise.resolve();
                 }
+            })
+            .executeAsync(function(done) {
+                console.log('resolve-fonts', 'A');
+                setTimeout(function () {
+                    console.log('resolve-fonts', 'B');
+                    globalResolveFonts().then(function () {
+                        console.log('resolve-fonts', 'C');
+                        done();
+                    });
+                });
+            })
+            .then(function() {
+                console.log(url, 'Setup test completed.');
             });
     }
 

@@ -353,6 +353,18 @@ describe('Tile', function () {
                 expect(settingsEl).toExist();
             });
 
+            it('should not be present if a callback is provided and show-settings is false', function () {
+                var $scope = $rootScope.$new(),
+                    templateString,
+                    el;
+
+                templateString = '<bb-tile bb-tile-settings-click="settingsClick()" bb-tile-show-settings="false"></bb-tile>';
+                el = $compile(templateString)($scope);
+                $scope.$digest();
+                expect(el.find('.bb-tile-settings')).not.toExist();
+            });
+
+
             it('should call the specified callback when clicked', function () {
                 var $scope = $rootScope.$new(),
                     clickSpy,
@@ -375,6 +387,62 @@ describe('Tile', function () {
 
                 el.find('.bb-tile-settings').click();
 
+                expect(el.isolateScope().isCollapsed).toBeFalsy();
+            });
+        });
+
+        describe('help button', function () {
+            function createTileWithHelp($scope) {
+                var el;
+                $scope.helpClick = angular.noop;
+                el = $compile('<bb-tile bb-tile-help-click="helpClick()"></bb-tile>')($scope);
+
+                $scope.$digest();
+                return el;
+            }
+
+            it('should be present only if a callback is provided', function () {
+                var $scope = $rootScope.$new(),
+                    el,
+                    helpEl;
+
+                el = $compile('<bb-tile></bb-tile>')($scope);
+                $scope.$digest();
+                expect(el.find('.bb-tile-help')).not.toExist();
+
+                el = createTileWithHelp($scope);
+                helpEl = el.find('.bb-tile-help');
+                expect(helpEl).toExist();
+            });
+
+            it('should not be present if a callback is provided and show-help is false', function () {
+                var $scope = $rootScope.$new(),
+                    templateString,
+                    el;
+
+                templateString = '<bb-tile bb-tile-help-click="helpClick()" bb-tile-show-help="false"></bb-tile>';
+                el = $compile(templateString)($scope);
+                $scope.$digest();
+                expect(el.find('.bb-tile-help')).not.toExist();
+            });
+
+            it('should call the specified callback when clicked', function () {
+                var $scope = $rootScope.$new(),
+                    clickSpy,
+                    el;
+                el = createTileWithHelp($scope);
+
+                clickSpy = spyOn($scope, 'helpClick');
+                el.find('.bb-tile-help').click();
+                expect(clickSpy).toHaveBeenCalled();
+            });
+
+            it('should not collapse the tile when clicked', function () {
+                var $scope = $rootScope.$new(),
+                    el;
+                el = createTileWithHelp($scope);
+
+                el.find('.bb-tile-help').click();
                 expect(el.isolateScope().isCollapsed).toBeFalsy();
             });
         });
