@@ -4,6 +4,9 @@ icon: text-height
 summary: The text expand component truncates long text with an ellipsis and a link that users can click to expand the text.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The text expand directive truncates long text with an ellipsis and a link that allows the user to fully expand the text. If the text length falls below the specified threshold, then no action is taken. The 'See more' link expands the text inline if it does not exceed the limits on text characters or newline characters for the inline expanded view. Otherwise, the link opens the text in a modal view.
 
 Note that collapsed text will have newlines removed. Also, if newlines are detected, the text is automatically collapsed regardless of the total length.
