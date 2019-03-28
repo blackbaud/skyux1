@@ -4,6 +4,9 @@ icon: list-alt
 summary: The modal component launches modals in a consistent way in SKY UX applications.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The modal directive and service allow you to launch modals in a consistent way in SKY UX applications. The `bbModal` service lauches the modals instead of [the UI Bootstrap `$uibModal.open`](https://angular-ui.github.io/bootstrap/1.2.5/#/modal), while the `bb-modal` directive provides a common look-and-feel for modal content. Within the `bb-modal` directive, you have options to display a common modal header, specify the body content, and display a common modal footer and buttons.
 
 ### Modal service settings ###
