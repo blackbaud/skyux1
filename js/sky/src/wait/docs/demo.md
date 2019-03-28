@@ -4,6 +4,9 @@ icon: spinner
 summary: The wait component disables an element in a waiting state and visually indicates that it is in a waiting state.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The wait component allows you to disable and visually indicate that an element is in a waiting state.
 When `bb-wait` is set to true, the element will initially be blocked with a clear mask, but after 300ms a visual indicator will cover the element as well.
 This will allow for the element to immediately be disabled but not cause visual disturbances for very brief waits.
