@@ -4,6 +4,9 @@ icon: cloud-upload
 summary: The file attachments module provides the ability to add multiple files to forms and then display information about the files.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The file attachments module contains two directives to add files to forms and display summary information about attachments.
 
 The `bb-file-drop` directive provides an element that users can click to select files from their local drives or use as a drop zone to drag and drop files. The directive can
