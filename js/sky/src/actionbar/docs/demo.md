@@ -4,6 +4,9 @@ icon: bolt
 summary: The action bar provides a SKY UX-themed container for buttons that can collapse when the screen is in extra-small mode.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The action bar creates a SKY UX-themed container for buttons. It includes an option to collapse groups of buttons into dropdowns when the screen is in extra-small mode.
 
 To apply action bar styling to more complicated scenarios, you can place content in a `div` with the `bb-action-bar` class. For example, this technique allows you to hide and show buttons at breakpoints other than xs and to collapse dropdowns into submenus. Bootstrap convenience classes to show or hide content include `hidden-xs`, `hidden-sm`, `hidden-md`, and `hidden-lg`. For information about these classes, see the [Bootstrap documentation](http://getbootstrap.com/css/#responsive-utilities-classes).
