@@ -4,6 +4,9 @@ icon: user
 summary: The avatar component displays an image with an option to let users change the image.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The avatar component displays an image to identify a record.
 
  The component also includes an option to let users change the image. To select a different image, users can click the image or drag another image on top of it. In addition, when images are missing, the avatar component can display the initials of a name that you provide.
