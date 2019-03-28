@@ -4,6 +4,9 @@ icon: calendar
 summary: The date-range picker creates a box with a dropdown to select date ranges from a set of well-known options.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The date-range picker directive creates a text box where users can select date ranges from a set of well-known options. You can also allow users to select dates to create specific date ranges. The directive works hand-in-hand with a date-range picker service to provide service-oriented functionality.
 
 ### Date-range picker settings ###
