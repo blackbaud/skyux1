@@ -4,6 +4,9 @@ icon: filter
 summary: The filter module provides components that allow users to select filter criteria.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The filter module provides components that allow users to select filter criteria. These components create a button to expose filtering options, a modal footer to display buttons that apply and clear filters, and a summary to indicate which filters have been applied.
 
 ## Filter modal footer
