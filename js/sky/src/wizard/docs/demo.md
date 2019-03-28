@@ -4,6 +4,9 @@ icon: magic
 summary: The wizard adjusts a modal form to guide users through a set of pre-defined steps in a particular order.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 Wizards are used on a modal form when the user needs to perform a set of pre-defined steps in a particular order. The Sky UX wizard works in conjunction with the [Angular UI Bootstrap tabs component](http://angular-ui.github.io/bootstrap/#/tabs).  Placing the `bb-wizard` directive on a UI Bootstrap `uib-tabset` element will cause the tabs to look and behave like a Sky wizard.
 
 Sky wizards also have the concept of a completed step which is denoted by the `bb-wizard-step-complete` directive. When present on a `uib-tab` and bound to a truthy value, the step's tab will be displayed as completed.
