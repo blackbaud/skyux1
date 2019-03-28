@@ -4,6 +4,9 @@ icon: th-large
 summary: The tile provides a collapsible container that is the building block for pages and forms in Sky UX applications.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The `bb-tile` directive creates a collapsible container and is the bulding block for pages and forms in a Sky UX application. The `bb-tile-section` directive is used to create padded sections inside a `bb-tile` element. Additionally, the `bb-tile-header-content` directive may be placed inside the `bb-tile` directive to add summary information to the tile. If you simply need to show a check mark indicating the tile has data, you can add a `bb-tile-header-check` element to the `bb-tile-header-content` element.
 
 When used on forms, it automatically adjusts the background color on the form and shrinks the tile header.
