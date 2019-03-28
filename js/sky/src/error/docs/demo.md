@@ -4,6 +4,9 @@ icon: exclamation-circle
 summary: The error component provides a template that allows other components to display error messages when errors occur.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The error directive provides a template that allows other components to display error messages when errors occur. The parent `bb-error` directive can contain multiple directives, and each one is optional.
 
 ### Error settings
