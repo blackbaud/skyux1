@@ -4,6 +4,9 @@ icon: check-square
 summary: The repeater component creates a container to display formatted information for a list of objects.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The repeater component creates a container to display formatted information for a list of objects. As an alternative to [the grid layout](../grids), repeaters are particularly effective for mobile-intensive contexts and other scenarios where you need to display information compactly.
 
 When you create a repeater, you can specify whether to let users collapse and expand list items to hide and view their content. The default standard layout does not allow users to collapse items. The multiple-expand layout allows users to collapse and expand items as necessary. And the single-expand layout allows users to collapse and expand one item at a time.
