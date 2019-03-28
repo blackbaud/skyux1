@@ -4,6 +4,9 @@ icon: paint-brush
 summary: The highlight component highlights text within DOM elements.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The highlight directive allows you to highlight text within DOM elements. When you set the `bb-highlight` attribute to the text you want to highlight, it highlights all matching text within the element.
 
 ### Highlight settings ###
