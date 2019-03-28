@@ -4,6 +4,9 @@ icon: newspaper-o
 summary: The page summary displays critical information and actions for users to access quickly and frequently.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The page summary directive displays critical information and actions for users to access quickly and frequently. The parent `bb-page-summary` directive can contain multiple directives, and each one is optional. You select the directives to include in the summary based on the type of page and the scenario you design for.
 
 The directives available within the `bb-page-summary` directive are simple wrappers that you can specify in any order. The page summary component arranges the directives to allow for perfect placement, spacing, etc. It maintains this even when the CSS classes that arrange the directives change behind the scenes.
