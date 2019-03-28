@@ -4,6 +4,9 @@ icon: files-o
 summary: The pagination component displays list data across multiple pages and inserts a pagination control to page through the list.
 ---
 
+<bb-alert bb-alert-type="warning">This site describes <a href="https://angularjs.org/">the AngularJS (1.x) implementation</a> of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version, and we recommend the latest version of SKY UX instead. For more information, see <a href="https://developer.blackbaud.com/skyux">developer.blackbaud.com/skyux</a>.</bb-alert>
+
+
 The pagination component allows you to display list data across multiple pages. The component uses the `bb-pagination` and `bb-pagination-content` directives in conjunction with the `bbPaging` service.
 
 The `bb-pagination-content` directive wraps the paged content to maintain a constant height regardless of the page content. When the list data is bound, the wrapper sets the height based on the largest page so that the height does not fluctuate. When the list exceeds the number of items that fit on a page, the `bb-pagination` directive displays a pagination control. The `bbPaging` service wraps the paged data and responds to changes in the pagination directives.
