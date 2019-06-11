@@ -31,6 +31,7 @@ module.exports = function (config) {
             bs_windows_firefox_latest: {
                 base: base,
                 browser: 'firefox',
+                browser_version: '68.0 beta',          
                 os: 'Windows',
                 os_version: '8.1'
             },
@@ -49,6 +50,7 @@ module.exports = function (config) {
             bs_osx_firefox_latest: {
                 base: base,
                 browser: 'firefox',
+                browser_version: '68.0 beta',          
                 os: 'OS X',
                 os_version: 'Yosemite'
             }
