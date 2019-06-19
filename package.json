@@ -95,7 +95,7 @@
     "fastclick": "1.0.6",
     "free-jqgrid": "git+https://github.com/blackbaud/jqGrid.git#v4.7.0",
     "intl-tel-input": "12.4.0",
-    "jquery": "2.2.4",
+    "jquery": "2.2.1",
     "jquery-ui-bundle": "1.12.1",
     "jquery-ui-touch-punch": "0.2.3",
     "moment": "2.11.2",
