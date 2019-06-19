@@ -342,16 +342,16 @@ module.exports = function (grunt, env, utils) {
                 'lint',
                 'build',
                 'unittest',
-                'exec:uploadCoverage',
-                'visualtest'
+                'exec:uploadCoverage' // ,
+                // 'visualtest'
             ];
             break;
         case env.SUPPORTED.LOCAL_BS:
             tasks = [
                 'lint',
                 'build',
-                'unittest',
-                'visualtest'
+                'unittest' //,
+                // 'visualtest'
             ];
             break;
         case env.SUPPORTED.CI_PR_FORK:
