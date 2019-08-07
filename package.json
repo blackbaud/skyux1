@@ -1,7 +1,7 @@
 {
   "name": "blackbaud-skyux",
   "description": "Sky UX provides an HTML, CSS and JavaScript framework to implement Blackbaud's design patterns.",
-  "version": "1.23.0",
+  "version": "1.23.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/blackbaud/skyux"
@@ -60,7 +60,6 @@
     "karma-jasmine": "1.0.2",
     "karma-safari-launcher": "1.0.0",
     "mkdirp": "0.5.1",
-    "patch-package": "6.1.2",
     "path": "0.12.7",
     "to": {
       "dependencies": {
@@ -99,7 +98,8 @@
     "jquery-ui-bundle": "1.12.1",
     "jquery-ui-touch-punch": "0.2.3",
     "moment": "2.11.2",
-    "ng-file-upload": "12.0.4"
+    "ng-file-upload": "12.0.4",
+    "patch-package": "6.1.2"
   },
   "scripts": {
     "test": "grunt test",
