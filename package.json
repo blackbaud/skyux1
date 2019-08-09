@@ -102,8 +102,9 @@
     "patch-package": "6.1.2"
   },
   "scripts": {
-    "test": "grunt test",
-    "postinstall": "patch-package"
+    "copy-design-tokens": "node scss/scripts/copy-design-tokens.js",
+    "postinstall": "npm run copy-design-tokens && patch-package",
+    "test": "grunt test"
   },
   "main": "index.js"
 }

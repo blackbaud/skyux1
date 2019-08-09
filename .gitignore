@@ -223,3 +223,6 @@ config/wdio/tmpconfig.js
 
 #IntelliJ Directories
 .idea/
+
+# Copied during postinstall.
+scss/vendor/
