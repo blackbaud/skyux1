@@ -93,6 +93,7 @@
     "enquire.js": "git+https://github.com/WickyNilliams/enquire.js.git#v2.1.2",
     "fastclick": "1.0.6",
     "free-jqgrid": "git+https://github.com/blackbaud/jqGrid.git#v4.7.0",
+    "fs-extra": "8.1.0",
     "intl-tel-input": "12.4.0",
     "jquery": "2.2.1",
     "jquery-ui-bundle": "1.12.1",
@@ -102,8 +103,9 @@
     "patch-package": "6.1.2"
   },
   "scripts": {
-    "test": "grunt test",
-    "postinstall": "patch-package"
+    "copy-design-tokens": "node scss/scripts/copy-design-tokens.js",
+    "postinstall": "npm run copy-design-tokens && patch-package",
+    "test": "grunt test"
   },
   "main": "index.js"
 }
