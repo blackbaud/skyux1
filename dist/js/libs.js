@@ -31936,8 +31936,13 @@ function baseExtend(dst, objs, deep) {
         } else if (isElement(src)) {
           dst[key] = src.clone();
         } else {
-          if (!isObject(dst[key])) dst[key] = isArray(src) ? [] : {};
-          baseExtend(dst[key], [src], true);
+          // Apply fix for "Prototype pollution attack in AngularJS" vulnerability.
+          // https://github.com/advisories/GHSA-89mq-4x47-5v83
+          // https://github.com/angular/angular.js/commit/add78e62004e80bb1e16ab2dfe224afa8e513bc3
+          if (key !== '__proto__') {
+            if (!isObject(dst[key])) dst[key] = isArray(src) ? [] : {};
+            baseExtend(dst[key], [src], true);
+          }
         }
       } else {
         dst[key] = src;
