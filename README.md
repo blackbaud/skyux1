@@ -1,5 +1,5 @@
 # DEPRECATED
-DEPRECATED This site contains the codebase for the AngularJS (1.x) implementation of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version of SKY UX, and we recommend that you use the latest version instead. https://developer.blackbaud.com/skyux/
+This site contains the codebase for the AngularJS (1.x) implementation of the SKY UX framework. We still support this version, but it is in maintenance mode. We no longer develop features for this version of SKY UX, and we recommend that you use the latest version instead. https://developer.blackbaud.com/skyux/
 
 # SKY UX
 
