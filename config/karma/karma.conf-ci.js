@@ -50,7 +50,7 @@ module.exports = function (config) {
             bs_osx_firefox_latest: {
                 base: base,
                 browser: 'firefox',
-                browser_version: '68.0 beta',          
+                browser_version: '78',          
                 os: 'OS X',
                 os_version: 'Yosemite'
             }
