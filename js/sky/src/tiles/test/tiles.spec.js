@@ -991,10 +991,11 @@ describe('Tile', function () {
             $scope.layout = {
                 two_column_layout: [
                     [
-                        'Tile1',
-                        'Tile2'
+                        'Tile1'
+
                     ],
                     [
+                        'Tile2'
                     ]
                 ]
             };
@@ -1021,19 +1022,6 @@ describe('Tile', function () {
 
             tile1Scope = dashboard.el.isolateScope().$new();
             tile2Scope = dashboard.el.isolateScope().$new();
-
-            //ensure that layout is reloaded when new tiles are initialized
-            $scope.layout = {
-                two_column_layout: [
-                    [
-                        'Tile1'
-
-                    ],
-                    [
-                        'Tile2'
-                    ]
-                ]
-            };
 
             tile1El = $compile(
                 '<bb-tile>Tile 1</bb-tile>'
@@ -1149,6 +1137,164 @@ describe('Tile', function () {
 
             expect(tile2.collapsed).toBe(false);
             expect(tile2.collapsed_small).toBe(false);
+        });
+
+        it('should not reload the layout when new tiles are initialized if they are in an existing tile view that has already been placed into the layout', function () {
+            var $scope = $rootScope.$new(),
+                tile1Scope,
+                dashboard,
+                tile1,
+                tile1El,
+                tile2,
+                tile2El,
+                tile2Scope,
+                tile1TitleEl,
+                tile2TitleEl;
+
+            dashboard = createTileDashboard($scope, 'lg', true);
+
+            $scope.layout = {
+                two_column_layout: [
+                    [
+                        'Tile1',
+                        'Tile2'
+                    ]
+                ]
+            };
+
+            tile1 = {
+                id: 'Tile1'
+            };
+
+            tile2 = {
+                id: 'Tile2'
+            };
+
+            $scope.tiles = [tile1, tile2];
+
+            $scope.$digest();
+
+            $timeout.flush();
+
+            $scope.$digest();
+
+            tile1Scope = dashboard.el.isolateScope().$new();
+            tile2Scope = dashboard.el.isolateScope().$new();
+
+            $scope.layout = {
+                two_column_layout: [
+                    [
+                        'Tile1'
+
+                    ],
+                    [
+                        'Tile2'
+                    ]
+                ]
+            };
+
+            tile1El = $compile(
+                '<bb-tile>Tile 1</bb-tile>'
+            )(tile1Scope);
+
+            tile2El = $compile(
+                '<bb-tile>Tile 2</bb-tile>'
+            )(tile2Scope);
+
+            dashboard.el.find('div[data-tile-id="Tile1"]').append(tile1El);
+            dashboard.el.find('div[data-tile-id="Tile2"]').append(tile2El);
+
+            tile1Scope.$digest();
+            tile2Scope.$digest();
+            $timeout.flush();            
+
+            tile1TitleEl = dashboard.el.find('div[data-dashboard-column="1"] div[data-tile-id="Tile1"] .bb-tile-title');
+            expect(tile1TitleEl.length).toBe(1);
+
+            //Tile 2 should still in column 1, because the tiles are not layed out after a tile comes into an existing tile view
+            tile2TitleEl = dashboard.el.find('div[data-dashboard-column="1"] div[data-tile-id="Tile2"] .bb-tile-title');
+            expect(tile2TitleEl.length).toBe(1);            
+        });
+
+        it('should reload the layout when new tiles are initialized if they are in an  tile view that has not already been placed into the layout', function () {
+            var $scope = $rootScope.$new(),
+                tile1Scope,
+                dashboard,
+                tile1,
+                tile1El,
+                tile2,
+                tile2El,
+                tile2Scope,
+                tile1TitleEl,
+                tile2TitleEl;
+
+            dashboard = createTileDashboard($scope, 'lg', true);
+
+            $scope.layout = {
+                two_column_layout: [
+                    [
+                        'Tile1',
+                        'Tile2'
+                    ]
+                ]
+            };
+
+            tile1 = {
+                id: 'Tile1'
+            };
+
+            tile2 = {
+                id: 'Tile2'
+            };
+
+            $scope.tiles = [tile1, tile2];
+
+            $scope.$digest();
+
+            $timeout.flush();
+
+            $scope.$digest();
+
+            tile1Scope = dashboard.el.isolateScope().$new();
+            tile2Scope = dashboard.el.isolateScope().$new();
+
+            $scope.layout = {
+                two_column_layout: [
+                    [
+                        'Tile1'
+
+                    ],
+                    [
+                        'Tile2'
+                    ]
+                ]
+            };
+
+            tile1El = $compile(
+                '<bb-tile>Tile 1</bb-tile>'
+            )(tile1Scope);
+
+            tile2El = $compile(
+                '<bb-tile>Tile 2</bb-tile>'
+            )(tile2Scope);
+
+            dashboard.el.find('div[data-tile-id="Tile1"]').append(tile1El);
+            dashboard.el.find('div[data-tile-id="Tile2"]').append(tile2El);
+
+            //Remove flag that notes the tile view has already been layed out.  In practice this is removed when the view
+            //is created/destroyed based on state change.
+            dashboard.el.find('div[data-tile-id="Tile2"]').removeAttr('data-tile-initial-layout-complete');
+
+            tile1Scope.$digest();
+            tile2Scope.$digest();
+            $timeout.flush();
+
+            tile1TitleEl = dashboard.el.find('div[data-dashboard-column="1"] div[data-tile-id="Tile1"] .bb-tile-title');
+            expect(tile1TitleEl.length).toBe(1);
+
+            //Tile 2 should now be in column 2, because the tiles are layed out after a tile comes into an tile view that has not been layed out
+            tile2TitleEl = dashboard.el.find('div[data-dashboard-column="2"] div[data-tile-id="Tile2"] .bb-tile-title');
+            expect(tile2TitleEl.length).toBe(1);            
         });
     });
 });
